@@ -93,6 +93,8 @@ geometry:
     vehicle: { tris: 10000, height: [0.5, 5] }
     rock: { tris: 2000, height: [0.1, 8] }
     terrain: { tris: 60000, height: [0, 6000] }
+    character: { tris: 12000, height: [1.5, 2.1] }
+    pad: { tris: 2000, height: [0, 0.5] }
 lighting:
   sky: "{colors.sky}"
   horizon: "{colors.horizon}"
@@ -185,7 +187,8 @@ A phone starts on `low` (one shadow split, no glow, no detail), anything else on
 
 ## Geometry & Proportions
 
-1 unit = 1 metre. Person 1.8 m, door 2.0 m. `terrain_*` and the far backdrop have their own class.
+1 unit = 1 metre. Person 1.8 m, door 2.0 m. `terrain_*` and the far backdrop have their own class, and so do
+`character_*` (the Quaternius astronaut is 10.6k triangles; never decimate a skinned model) and `pad_*` (flat).
 
 ## Lighting & Camera
 
