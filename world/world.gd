@@ -56,9 +56,10 @@ func build(design: Dictionary) -> void:
 	dust.name = "Dust"
 	add_child(dust)
 	dust.build(self)
-	# the probe's light on rough ground came out as a bright square around the base (measured): the ground
-	# and the rocks sit on render layer 2, which the probe draws but does not shade
-	for g: GeometryInstance3D in terrain.find_children("*", "GeometryInstance3D", true, false) + rocks.find_children("*", "GeometryInstance3D", true, false):
+	# the probe's light on rough ground came out as a bright square around the base (measured): the ground,
+	# the rocks and the dust sit on render layer 2, which the probe draws but does not shade. Dust under the
+	# probe came out twice as bright as the shaded ground it rose from (measured in a shadow)
+	for g: GeometryInstance3D in terrain.find_children("*", "GeometryInstance3D", true, false) + rocks.find_children("*", "GeometryInstance3D", true, false) + dust.find_children("*", "GeometryInstance3D", true, false):
 		g.layers = 2
 	# the patch is within 2 m of flat over 400 m, so its shadow on itself is a few pixels at most, and each
 	# chunk in the shadow range was drawn again per split (the base view was over its 150 draw calls)

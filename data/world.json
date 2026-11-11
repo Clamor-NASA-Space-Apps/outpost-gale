@@ -502,11 +502,11 @@
   "wheel_launch_deg": [10, 30],
   "speed_spread": 0.3,
   "min_speed": 0.2,
-  "grit": 28,
+  "grit": 14,
   "grit_size": 0.02,
   "haze": 3,
   "haze_size": [0.55, 0.12],
-  "haze_alpha": 0.2,
+  "haze_alpha": 0.07,
   "haze_life": 2.5,
   "haze_burst": 0.4
  },

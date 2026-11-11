@@ -3,9 +3,12 @@ extends Node3D
 ## ankle height a body length to the side of a step. Each view fires its steps the moment it is chosen, so a
 ## film started on it shows the contact and what follows.
 ##   set_view("ankle"): one walking step;  set_view("wheel"): a wheel at the rover's top speed;
+##   set_view("shade"): one walking step inside the storm shelter's long shadow (the day sun is low in the
+##   south, so the shadow runs north): the dust there must be no brighter than the shaded ground round it;
 ##   set_view("ten"): ten steps in flight at once, for draw calls.
 
 const STEP := Vector3(2, 0, 12)  # open ground beside spawn, no rock or item on it
+const SHADE := Vector3(-5.1, 0, 6.5)  # 3.5 m north of the storm shelter, in its shadow
 
 @onready var sandbox: Node3D = $Sandbox
 var world: Node3D
@@ -25,14 +28,14 @@ func render_game_to_text() -> Dictionary:
 
 
 func set_view(v: String) -> void:
-	var at := STEP
+	var at := SHADE if v == "shade" else STEP
 	at.y = world.height_at(at.x, at.z)
 	var cam: Camera3D = sandbox.get_node("ViewCam")
 	# eye level at 12 cm, so a grain above it shows against the sky and not against the ground it came from
 	cam.look_at_from_position(at + Vector3(1.6, 0.12, 0), at + Vector3(0, 0.12, 0))
 	cam.current = true
 	match v:
-		"ankle":
+		"ankle", "shade":
 			world.mark(at, 0.0, "foot_l")
 			world.puff(at, Vector3(0, -0.3, -1.0), 0.5)
 		"wheel":

@@ -9,6 +9,7 @@ extends Node3D
 ## - the storm front: big slow clouds close around the camera, the storm state only.
 ## What shows in which sky is data/world.json `weather`; the wind's direction is `wind`.
 
+const DUST := preload("res://world/dust.gdshader")
 const GRIT := 6  # grit lives under half a second at a walk, so a few emitters cover any walk or drive
 const HAZE := 8  # haze lives 2.5 s and a walk lands a foot every half second or so
 
@@ -23,8 +24,8 @@ var _soft: StandardMaterial3D  # one billboard material for every cloud, so one 
 var _line: StandardMaterial3D
 var _dir: Vector3  # where the wind blows to, flat
 var _devil_angle := 0.0
-var _haze_mat: StandardMaterial3D
-var _grit_mat: StandardMaterial3D
+var _haze_mat: ShaderMaterial
+var _grit_mat: ShaderMaterial
 var _c: Dictionary  # data/world.json `contact`
 var _g: float  # gravity, from the reality sheet
 var _live: Dictionary = {}  # emitter -> {kind, age, life, top}: what is in flight, for checks and for hiding
@@ -50,15 +51,10 @@ func build(world: Node3D) -> void:
 	for r: Dictionary in JSON.parse_string(FileAccess.get_file_as_string("res://data/reality.json")).rows:
 		if r.id == "world.gravity":
 			_g = float(r.value)
-	_grit_mat = _material(dot, BaseMaterial3D.BILLBOARD_PARTICLES)
-	# grains are opaque: no blending, no sorting, no overdraw; the dot's soft edge cut by the scissor makes
-	# the last tenth's fade a shrink rather than a pop
-	_grit_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
-	_grit_mat.alpha_scissor_threshold = 0.5
-	# a camera-facing grain turned from a low sun came out dark brown (measured); light passing through it
-	# lights it about as the ground under it is lit, from either side
-	_grit_mat.backlight = Color(0.9, 0.9, 0.9)
-	_haze_mat = _material(_blot(), BaseMaterial3D.BILLBOARD_PARTICLES)
+	# grains are cut out and opaque: no blending, no sorting, no overdraw; the dot's soft edge cut by the
+	# scissor makes the last tenth's fade a shrink rather than a pop
+	_grit_mat = _ground_lit(dot, true)
+	_haze_mat = _ground_lit(_blot(), false)
 	var gs := float(_c.grit_size)
 	for i in GRIT:
 		var e := _emitter("Grit%d" % i, int(_c.grit), 0.5, Vector2(gs, gs), _grit_mat, [1.0, 1.0, 1.0], [1.0, 1.0])
@@ -125,8 +121,9 @@ func build(world: Node3D) -> void:
 ## Colours from the design's `dust` role (the sky's light does the rest: the clouds are lit), and the weather row.
 func restyle(design: Dictionary, weather: Dictionary) -> void:
 	# grit is the ground itself, lit like it; the colour is the dust role's, a fixed preset per surface
-	_grit_mat.albedo_color = Color.html(design.materials.dust.color)
-	for m: StandardMaterial3D in [_soft, _line, _haze_mat]:
+	_grit_mat.set_shader_parameter("albedo", Color.html(design.materials.dust.color))
+	_haze_mat.set_shader_parameter("albedo", Color.html(design.materials.dust.color).lerp(Color.html(design.lighting.horizon), 0.5))
+	for m: StandardMaterial3D in [_soft, _line]:
 		# fine dust in the air is paler than the ground it rose from: it takes on the haze, and a cloud the
 		# colour of the ground vanished against it (measured: the first puffs did not show)
 		m.albedo_color = Color.html(design.materials.dust.color).lerp(Color.html(design.lighting.horizon), 0.5)
@@ -247,12 +244,19 @@ func _material(tex: Texture2D, billboard: BaseMaterial3D.BillboardMode) -> Stand
 	m.vertex_color_use_as_albedo = true
 	m.albedo_texture = tex
 	m.cull_mode = BaseMaterial3D.CULL_DISABLED
-	m.disable_receive_shadows = true
-	# lit like the ground, so a night or a storm darkens the dust with no colour of its own; backlight lets a
-	# cloud glow when the sun is behind it, the way fine dust does
-	m.shading_mode = BaseMaterial3D.SHADING_MODE_PER_VERTEX
-	m.backlight_enabled = true
-	m.backlight = Color(0.6, 0.6, 0.6)
+	# lit and shadowed like everything else: a night, a storm or a building's shadow darkens the dust too.
+	# A backlit, unshadowed cloud stayed bright in the shade (Ravindu's playtest, 12 Nov 2026)
+	m.roughness = 1.0
+	return m
+
+
+## Grit and haze: the dust role's colour, matte, lit as the ground they rose from (world/dust.gdshader).
+func _ground_lit(tex: Texture2D, cut: bool) -> ShaderMaterial:
+	var shader := Shader.new()
+	shader.code = DUST.code.replace("// VARIANT\n", "#define GRIT\n" if cut else "")
+	var m := ShaderMaterial.new()
+	m.shader = shader
+	m.set_shader_parameter("shape", tex)
 	return m
 
 
