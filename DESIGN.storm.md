@@ -22,6 +22,7 @@ colors:
   light: "#8ef7ea"
   suit: "#e9e4da"
   plant: "#76a83c"
+  visor: "#b8913c"
   sky: "#6a3a2c"
   horizon: "#7e4a3a"
   ground: "#3e1e16"
@@ -83,6 +84,7 @@ materials:
   light: { color: "{colors.light}", roughness: 0.4, metalness: 0, emissive: 2.5 }
   suit: { color: "{colors.suit}", roughness: 0.85, metalness: 0, detail: { texture: "textures/suit_albedo.jpg", normal: "textures/suit_normal.jpg", roughness: "textures/suit_rough.jpg", textureSize: 0.4, strength: 0.7, pattern: grain, size: 0.4 } }
   plant: { color: "{colors.plant}", roughness: 0.6, metalness: 0 }
+  visor: { color: "{colors.visor}", roughness: 0.12, metalness: 1 }
 geometry:
   shading: smooth
   bevel: 0.03

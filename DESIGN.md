@@ -22,6 +22,7 @@ colors:
   light: "#8ef7ea"
   suit: "#e9e4da"
   plant: "#76a83c"
+  visor: "#b8913c"
   sky: "#c27d4c"
   horizon: "#f6d9a6"
   ground: "#9a5f3d"
@@ -83,6 +84,7 @@ materials:
   light: { color: "{colors.light}", roughness: 0.4, metalness: 0, emissive: 2.5 }
   suit: { color: "{colors.suit}", roughness: 0.85, metalness: 0, detail: { texture: "textures/suit_albedo.jpg", normal: "textures/suit_normal.jpg", roughness: "textures/suit_rough.jpg", textureSize: 0.4, strength: 0.7, pattern: grain, size: 0.4 } }
   plant: { color: "{colors.plant}", roughness: 0.6, metalness: 0 }
+  visor: { color: "{colors.visor}", roughness: 0.12, metalness: 1 }
 geometry:
   shading: smooth
   bevel: 0.03
@@ -182,7 +184,7 @@ always with an icon, pulsing no faster than 3 times a second.
 
 ## Materials
 
-Eleven roles: the seven core ones plus `dust` (the ground), `hazard`, `suit` (the astronauts' fabric, so they never wear hull panels) and `plant` (lettuce green, Ravindu's pick on 12 Nov; NASA's Veggie grew red romaine, but green reads as lettuce). Kit models map by material name (`kit`).
+Twelve roles: `visor` (an EVA helmet's gold sun visor: opaque, so no face ever shows), plus the seven core ones and `dust` (the ground), `hazard`, `suit` (the astronauts' fabric, so they never wear hull panels) and `plant` (lettuce green, Ravindu's pick on 12 Nov; NASA's Veggie grew red romaine, but green reads as lettuce). Kit models map by material name (`kit`).
 
 Photo sets (CC0, `textures/README.md`): body MetalPlates009, metal Metal011, trim Rubber004, suit
 Fabric061, rock cliff_side, dust moon_02 (fine powder, after Ravindu asked for a soft Sahara / *The Martian*

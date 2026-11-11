@@ -22,6 +22,7 @@
   "light": "#8ef7ea",
   "suit": "#e9e4da",
   "plant": "#76a83c",
+  "visor": "#b8913c",
   "sky": "#0e0d1f",
   "horizon": "#26233d",
   "ground": "#0c0a10",
@@ -218,6 +219,11 @@
    "color": "#76a83c",
    "roughness": 0.6,
    "metalness": 0
+  },
+  "visor": {
+   "color": "#b8913c",
+   "roughness": 0.12,
+   "metalness": 1
   }
  },
  "geometry": {
