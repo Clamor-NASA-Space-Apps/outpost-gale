@@ -99,13 +99,31 @@
  "materials": {
   "body": {
    "color": "#efe4d0",
-   "roughness": 0.6,
-   "metalness": 0
+   "roughness": 0.55,
+   "metalness": 0.1,
+   "detail": {
+    "texture": "textures/body_albedo.jpg",
+    "normal": "textures/body_normal.jpg",
+    "roughness": "textures/body_rough.jpg",
+    "textureSize": 2,
+    "strength": 0.8,
+    "pattern": "grain",
+    "size": 2
+   }
   },
   "trim": {
    "color": "#4f4744",
-   "roughness": 0.65,
-   "metalness": 0
+   "roughness": 0.75,
+   "metalness": 0,
+   "detail": {
+    "texture": "textures/trim_albedo.jpg",
+    "normal": "textures/trim_normal.jpg",
+    "roughness": "textures/trim_rough.jpg",
+    "textureSize": 0.75,
+    "strength": 0.6,
+    "pattern": "grain",
+    "size": 0.75
+   }
   },
   "accent": {
    "color": "#2ed3c0",
@@ -115,7 +133,16 @@
   "metal": {
    "color": "#9c948c",
    "roughness": 0.4,
-   "metalness": 1
+   "metalness": 1,
+   "detail": {
+    "texture": "textures/metal_albedo.jpg",
+    "normal": "textures/metal_normal.jpg",
+    "roughness": "textures/metal_rough.jpg",
+    "textureSize": 1,
+    "strength": 0.8,
+    "pattern": "grain",
+    "size": 1
+   }
   },
   "glass": {
    "color": "#5b7182",
@@ -127,9 +154,13 @@
    "roughness": 0.95,
    "metalness": 0,
    "detail": {
+    "texture": "textures/rock_albedo.jpg",
+    "normal": "textures/rock_normal.jpg",
+    "roughness": "textures/rock_rough.jpg",
+    "textureSize": 1.83,
+    "strength": 1,
     "pattern": "grain",
-    "size": 0.6,
-    "strength": 0.35
+    "size": 1.83
    }
   },
   "dust": {
@@ -137,9 +168,13 @@
    "roughness": 1,
    "metalness": 0,
    "detail": {
+    "texture": "textures/dust_albedo.jpg",
+    "normal": "textures/dust_normal.jpg",
+    "roughness": "textures/dust_rough.jpg",
+    "textureSize": 2.48,
+    "strength": 1,
     "pattern": "grain",
-    "size": 1.5,
-    "strength": 0.25
+    "size": 2.48
    }
   },
   "hazard": {
@@ -156,7 +191,16 @@
   "suit": {
    "color": "#e9e4da",
    "roughness": 0.85,
-   "metalness": 0
+   "metalness": 0,
+   "detail": {
+    "texture": "textures/suit_albedo.jpg",
+    "normal": "textures/suit_normal.jpg",
+    "roughness": "textures/suit_rough.jpg",
+    "textureSize": 0.4,
+    "strength": 0.7,
+    "pattern": "grain",
+    "size": 0.4
+   }
   }
  },
  "geometry": {
@@ -233,10 +277,10 @@
   "fog": {
    "color": "#f6d9a6",
    "near": 25,
-   "far": 5200,
+   "far": 3500,
    "sky": 0.25,
-   "curve": 1.6,
-   "density": 0.7,
+   "curve": 1,
+   "density": 0.75,
    "sun": 0.4
   }
  },

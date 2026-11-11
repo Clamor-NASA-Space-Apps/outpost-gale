@@ -62,15 +62,22 @@ void fragment() {
 		n = normalize(mix(n, normalize(vec3(t.x, t.z, t.y)), inside));
 	}
 	float rock = 1.0 - smoothstep(rock_full, rock_from, n.y);
+	// photo detail fades out with distance: past a few hundred metres it only sparkles. Broad light and dark
+	// zones take over there, about a kilometre across on the (squeezed) skyline
+	float dist = length(wpos - CAMERA_POSITION_WORLD);
+	float near = 1.0 - smoothstep(60.0, 350.0, dist);
+	float zones = 0.8 + 0.4 * (0.65 * noise(wpos.xz / 900.0) + 0.35 * noise(wpos.xz / 260.0 + 5.0));
 	// metres-wide patches of lighter and darker dust, the way wind sorts it
 	float drift = 0.88 + 0.24 * (0.6 * noise(wpos.xz / 23.0) + 0.4 * noise(wpos.xz / 7.0 + 13.0));
 
 	vec2 du = wpos.xz / dust_size;
 	vec2 ru = wpos.xz / rock_size;
-	vec3 albedo = mix(dust_color * shade(dust_albedo, du) * drift, rock_color * shade(rock_albedo, ru), rock);
+	vec3 albedo = mix(dust_color * mix(vec3(1.0), shade(dust_albedo, du), near) * drift, rock_color * mix(vec3(1.0), shade(rock_albedo, ru), near), rock);
+	albedo *= mix(zones, 1.0, near);
 	vec3 dn = texture(dust_normal, du).xyz * 2.0 - 1.0;
 	vec3 rn = texture(rock_normal, ru).xyz * 2.0 - 1.0;
 	vec3 tn = normalize(mix(mix(vec3(0.0, 0.0, 1.0), dn, detail_strength), rn * vec3(detail_strength, detail_strength, 1.0), rock));
+	tn = normalize(mix(vec3(0.0, 0.0, 1.0), tn, near));
 	// the photos are laid flat on x and z: their right is +X, their up (+v) is +Z
 	vec3 tx = normalize(vec3(1.0, 0.0, 0.0) - n * n.x);
 	vec3 tz = normalize(cross(tx, n));

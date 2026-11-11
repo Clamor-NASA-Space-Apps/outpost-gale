@@ -83,7 +83,7 @@ void fragment() {
 #ifdef DETAIL
 	// each face takes the detail from the side it mostly looks at, so walls get rows and floors get slabs
 #if defined(FLAT) && defined(LOCAL)
-	vec3 g = normalize((inverse(MODELVIEW_MATRIX) * vec4(NORMAL, 0.0)).xyz);  // flat rebuilt NORMAL just now
+	vec3 g = normalize(inverse(mat3(MODEL_MATRIX)) * (INV_VIEW_MATRIX * vec4(NORMAL, 0.0)).xyz);  // flat rebuilt NORMAL just now
 #elif defined(FLAT)
 	vec3 g = normalize((INV_VIEW_MATRIX * vec4(NORMAL, 0.0)).xyz);
 #else
@@ -131,7 +131,7 @@ void fragment() {
 	tn.xy *= detail_strength * (1.0 - far);
 	vec3 bent = normalize(tu * tn.x + tv * tn.y + g * tn.z);
 #ifdef LOCAL
-	NORMAL = normalize((MODELVIEW_MATRIX * vec4(bent, 0.0)).xyz);
+	NORMAL = normalize((VIEW_MATRIX * (MODEL_MATRIX * vec4(bent, 0.0))).xyz);  // MODELVIEW_MATRIX is vertex-only
 #else
 	NORMAL = normalize((VIEW_MATRIX * vec4(bent, 0.0)).xyz);
 #endif

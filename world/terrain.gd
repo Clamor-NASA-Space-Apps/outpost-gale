@@ -42,6 +42,13 @@ func restyle(design: Dictionary) -> void:
 		var t: Dictionary = design.materials[r]
 		material.set_shader_parameter(r + "_color", Color.html(t.color))
 		material.set_shader_parameter(r + "_roughness", float(t.get("roughness", 1)))
+		# the role's photo set (DESIGN.md detail), so the ground and a rock model share one surface
+		var d: Dictionary = t.get("detail", {})
+		for map: String in ["texture", "normal", "roughness"]:
+			var file := "res://" + str(d.get(map, ""))
+			var param: String = r + {"texture": "_albedo", "normal": "_normal", "roughness": "_rough"}[map]
+			material.set_shader_parameter(param, load(file) if d.has(map) and ResourceLoader.exists(file) else null)
+		material.set_shader_parameter(r + "_size", float(d.get("textureSize", 3.0)))
 	var level: String = design.get("_quality", {}).get("detail", "texture")
 	material.set_shader_parameter("detail_strength", 0.0 if level == "off" else 1.0)
 

@@ -71,16 +71,16 @@ components:
     rounded: "{rounded.sm}"
     padding: 8px 16px
 materials:
-  body: { color: "{colors.body}", roughness: 0.6, metalness: 0 }
-  trim: { color: "{colors.trim}", roughness: 0.65, metalness: 0 }
+  body: { color: "{colors.body}", roughness: 0.55, metalness: 0.1, detail: { texture: "textures/body_albedo.jpg", normal: "textures/body_normal.jpg", roughness: "textures/body_rough.jpg", textureSize: 2.0, strength: 0.8, pattern: grain, size: 2.0 } }
+  trim: { color: "{colors.trim}", roughness: 0.75, metalness: 0, detail: { texture: "textures/trim_albedo.jpg", normal: "textures/trim_normal.jpg", roughness: "textures/trim_rough.jpg", textureSize: 0.75, strength: 0.6, pattern: grain, size: 0.75 } }
   accent: { color: "{colors.accent}", roughness: 0.45, metalness: 0 }
-  metal: { color: "{colors.metal}", roughness: 0.4, metalness: 1 }
+  metal: { color: "{colors.metal}", roughness: 0.4, metalness: 1, detail: { texture: "textures/metal_albedo.jpg", normal: "textures/metal_normal.jpg", roughness: "textures/metal_rough.jpg", textureSize: 1.0, strength: 0.8, pattern: grain, size: 1.0 } }
   glass: { color: "{colors.glass}", roughness: 0.08, metalness: 0 }
-  rock: { color: "{colors.rock}", roughness: 0.95, metalness: 0, detail: { pattern: grain, size: 0.6, strength: 0.35 } }
-  dust: { color: "{colors.dust}", roughness: 1, metalness: 0, detail: { pattern: grain, size: 1.5, strength: 0.25 } }
+  rock: { color: "{colors.rock}", roughness: 0.95, metalness: 0, detail: { texture: "textures/rock_albedo.jpg", normal: "textures/rock_normal.jpg", roughness: "textures/rock_rough.jpg", textureSize: 1.83, strength: 1.0, pattern: grain, size: 1.83 } }
+  dust: { color: "{colors.dust}", roughness: 1, metalness: 0, detail: { texture: "textures/dust_albedo.jpg", normal: "textures/dust_normal.jpg", roughness: "textures/dust_rough.jpg", textureSize: 2.48, strength: 1.0, pattern: grain, size: 2.48 } }
   hazard: { color: "{colors.hazard}", roughness: 0.5, metalness: 0 }
   light: { color: "{colors.light}", roughness: 0.4, metalness: 0, emissive: 2.5 }
-  suit: { color: "{colors.suit}", roughness: 0.85, metalness: 0 }
+  suit: { color: "{colors.suit}", roughness: 0.85, metalness: 0, detail: { texture: "textures/suit_albedo.jpg", normal: "textures/suit_normal.jpg", roughness: "textures/suit_rough.jpg", textureSize: 0.4, strength: 0.7, pattern: grain, size: 0.4 } }
 geometry:
   shading: smooth
   bevel: 0.03
@@ -108,7 +108,7 @@ lighting:
   exposure: 1.0
   sunDisc: 1.2
   toneMapping: aces
-  fog: { color: "{colors.horizon}", near: 25, far: 5200, sky: 0.25, curve: 1.6, density: 0.7, sun: 0.4 }
+  fog: { color: "{colors.horizon}", near: 25, far: 3500, sky: 0.25, curve: 1.0, density: 0.75, sun: 0.4 }
 quality:
   low: { msaa: 0, scale: 0.75, shadows: 1, shadowMap: 1024, glow: 0, detail: off }
   medium: { msaa: 2, scale: 1, shadows: 2, shadowMap: 2048, glow: 0.4, detail: code }
@@ -180,6 +180,9 @@ always with an icon, pulsing no faster than 3 times a second.
 ## Materials
 
 Ten roles: the seven core ones plus `dust` (the ground), `hazard` and `suit` (the astronauts' fabric, so they never wear hull panels). Kit models map by material name (`kit`).
+
+Photo sets (CC0, `textures/README.md`): body MetalPlates009, metal Metal011, trim Rubber004, suit
+Fabric061, rock cliff_side, dust gravelly_sand. Each only shades its role's colour.
 
 ## Quality
 
