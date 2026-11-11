@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Looking for better solution to collect texture pixel color at collision point? - Real Time VFX</title>
+    <meta name="description" content="The Goal: To collect the color of the (closest?) pixel at the intersection point on a collidable mesh…to use in a Niagara system to color debris mesh. I’m in UE5 using blueprints. 
+This is what I’m using and it works BUT…">
+    <meta name="generator" content="Discourse 2026.11.0-latest.1 - https://github.com/discourse/discourse version ae65e05533380219967c9e49bdb1f5868b177910">
+<link rel="icon" type="image/png" href="https://realtimevfx.com/uploads/default/optimized/2X/6/65a89d557035443a290055e551d2b9d4028fa6cb_2_32x32.png">
+<link rel="apple-touch-icon" type="image/png" href="https://realtimevfx.com/uploads/default/optimized/2X/6/65a89d557035443a290055e551d2b9d4028fa6cb_2_180x180.png">
+<meta name="theme-color" media="all" content="#292929">
+
+<meta name="color-scheme" content="dark">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<link rel="canonical" href="https://realtimevfx.com/t/looking-for-better-solution-to-collect-texture-pixel-color-at-collision-point/21396" />
+
+<meta name="discourse-track-view-session-id" content="173MVBWpAXPe3c1TxGrpyUp6ZMlgPoCb">
+  <link rel="search" type="application/opensearchdescription+xml" href="https://realtimevfx.com/opensearch.xml" title="Real Time VFX Search">
+
+    
+    <link href="/stylesheets/color_definitions_dark-color-scheme_8_16_a1a3a28b2962e307ee8f909b50edea5009b0af2d.css?__ws=realtimevfx.com" media="all" rel="stylesheet" class="light-scheme" data-scheme-id="8"/>
+
+<link href="/stylesheets/common_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="common"  />
+
+
+
+  <link href="/stylesheets/checklist_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="checklist"  />
+  <link href="/stylesheets/discourse-details_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="discourse-details"  />
+  <link href="/stylesheets/discourse-lazy-videos_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="discourse-lazy-videos"  />
+  <link href="/stylesheets/discourse-local-dates_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="discourse-local-dates"  />
+  <link href="/stylesheets/discourse-narrative-bot_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="discourse-narrative-bot"  />
+  <link href="/stylesheets/discourse-presence_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="discourse-presence"  />
+  <link href="/stylesheets/discourse-reactions_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="discourse-reactions"  />
+  <link href="/stylesheets/discourse-solved_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="discourse-solved"  />
+  <link href="/stylesheets/discourse-templates_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="discourse-templates"  />
+  <link href="/stylesheets/discourse-topic-voting_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="discourse-topic-voting"  />
+  <link href="/stylesheets/discourse-user-notes_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="discourse-user-notes"  />
+  <link href="/stylesheets/discourse-workflows_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="discourse-workflows"  />
+  <link href="/stylesheets/docker_manager_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="docker_manager"  />
+  <link href="/stylesheets/footnote_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="footnote"  />
+  <link href="/stylesheets/poll_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="poll"  />
+  <link href="/stylesheets/discourse-reactions_mobile_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="(width < 40rem)" rel="stylesheet" data-target="discourse-reactions_mobile"  />
+  <link href="/stylesheets/discourse-reactions_desktop_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="(width >= 40rem)" rel="stylesheet" data-target="discourse-reactions_desktop"  />
+  <link href="/stylesheets/poll_desktop_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="(width >= 40rem)" rel="stylesheet" data-target="poll_desktop"  />
+
+  <link href="/stylesheets/common_theme_14_9d9dd0aebeccaf85fae8912d0efa5f458edb50f8.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="common_theme" data-theme-id="14" data-theme-name="topic list previews"/>
+<link href="/stylesheets/common_theme_12_649b6517bc7fa72665e06972b5b000c3a37801a0.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="common_theme" data-theme-id="12" data-theme-name="flair customizations"/>
+<link href="/stylesheets/common_theme_22_cec923b3a335c2873f7b19bc8de250d3334302bd.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="common_theme" data-theme-id="22" data-theme-name="rtvfx banner component v2"/>
+<link href="/stylesheets/common_theme_19_d16dc05dfa9e4626f7dd66f546ce8d5e8c5ca6b6.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="common_theme" data-theme-id="19" data-theme-name="rtvfx nav bar"/>
+<link href="/stylesheets/common_theme_16_2b9538b3f46fc2b11a89648ce88dfd52436b7ea3.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="common_theme" data-theme-id="16" data-theme-name="dark theme rtvfx"/>
+  <link href="/stylesheets/mobile_theme_14_270a196ee86d0bf07526e0462f1ad7e5efd3d2b8.css?__ws=realtimevfx.com" media="(width < 40rem)" rel="stylesheet" data-target="mobile_theme" data-theme-id="14" data-theme-name="topic list previews"/>
+<link href="/stylesheets/mobile_theme_19_971d208b7d42f823b30ae657eef06217976f95ce.css?__ws=realtimevfx.com" media="(width < 40rem)" rel="stylesheet" data-target="mobile_theme" data-theme-id="19" data-theme-name="rtvfx nav bar"/>
+  <link href="/stylesheets/desktop_theme_14_08f95d567b73c5950466b0b953b4828d9c1740af.css?__ws=realtimevfx.com" media="(width >= 40rem)" rel="stylesheet" data-target="desktop_theme" data-theme-id="14" data-theme-name="topic list previews"/>
+<link href="/stylesheets/desktop_theme_19_68d1fc9a665b419017bb3c060db0a2c424107f90.css?__ws=realtimevfx.com" media="(width >= 40rem)" rel="stylesheet" data-target="desktop_theme" data-theme-id="19" data-theme-name="rtvfx nav bar"/>
+
+
+
+    
+    
+        <link rel="alternate nofollow" type="application/rss+xml" title="RSS feed of &#39;Looking for better solution to collect texture pixel color at collision point?&#39;" href="https://realtimevfx.com/t/looking-for-better-solution-to-collect-texture-pixel-color-at-collision-point/21396.rss" />
+    <meta property="og:site_name" content="Real Time VFX" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:image" content="https://realtimevfx.com/uploads/default/optimized/3X/c/4/c4ae61bf0270a248df196017b41a20eea2947f3f_2_1023x388.png" />
+<meta property="og:image" content="https://realtimevfx.com/uploads/default/optimized/3X/c/4/c4ae61bf0270a248df196017b41a20eea2947f3f_2_1023x388.png" />
+<meta property="og:image:width" content="1815" />
+<meta property="og:image:height" content="688" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:url" content="https://realtimevfx.com/t/looking-for-better-solution-to-collect-texture-pixel-color-at-collision-point/21396" />
+<meta name="twitter:url" content="https://realtimevfx.com/t/looking-for-better-solution-to-collect-texture-pixel-color-at-collision-point/21396" />
+<meta property="og:title" content="Looking for better solution to collect texture pixel color at collision point?" />
+<meta name="twitter:title" content="Looking for better solution to collect texture pixel color at collision point?" />
+<meta property="og:description" content="The Goal: To collect the color of the (closest?) pixel at the intersection point on a collidable mesh…to use in a Niagara system to color debris mesh. I’m in UE5 using blueprints.  This is what I’m using and it works BUT we are seeing a heavy drop in FPS when using. We are pretty sure it’s the capture pixel and read pixel that cause the drops.     Are there better / more efficient methods to collect this this collision color information?" />
+<meta name="twitter:description" content="The Goal: To collect the color of the (closest?) pixel at the intersection point on a collidable mesh…to use in a Niagara system to color debris mesh. I’m in UE5 using blueprints.  This is what I’m using and it works BUT we are seeing a heavy drop in FPS when using. We are pretty sure it’s the capture pixel and read pixel that cause the drops.     Are there better / more efficient methods to collect this this collision color information?" />
+<meta property="og:article:section" content="General Discussion" />
+<meta property="og:article:section:color" content="a8a8a8" />
+<meta property="og:article:tag" content="texture" />
+<meta property="og:article:tag" content="materials" />
+<meta property="og:article:tag" content="ue5" />
+<meta property="og:article:tag" content="particles" />
+<meta property="og:article:tag" content="blueprints" />
+<meta name="twitter:label1" value="Reading time" />
+<meta name="twitter:data1" value="1 min 🕑" />
+<meta name="twitter:label2" value="Likes" />
+<meta name="twitter:data2" value="8 ❤" />
+<meta property="article:published_time" content="2022-10-25T22:38:15+00:00" />
+<meta property="og:ignore_canonical" content="true" />
+
+
+    <link rel="alternate" type="text/markdown" href="https://realtimevfx.com/t/looking-for-better-solution-to-collect-texture-pixel-color-at-collision-point/21396.md">
+    
+<script type="application/ld+json">{"@context":"http://schema.org","@type":"QAPage","name":"Looking for better solution to collect texture pixel color at collision point?","datePublished":"2022-10-25T22:38:14.986Z","mainEntity":{"@type":"Question","answerCount":9,"author":{"@type":"Person","name":"bbastien","url":"https://realtimevfx.com/u/bbastien"},"dateModified":"2022-10-25T22:38:15.174Z","datePublished":"2022-10-25T22:38:14.986Z","name":"Looking for better solution to collect texture pixel color at collision point?","text":"The Goal: To collect the color of the (closest?) pixel at the intersection point on a collidable mesh…to use in a Niagara system to color debris mesh. I’m in UE5 using blueprints.\n\nThis is what I’m using and it works BUT we are seeing a heavy drop in FPS when using. We are pretty sure it’s the capture pixel and read pixel that cause the drops.\n\n[unknown]\n\nAre there better / more efficient methods to collect this this collision color information?","upvoteCount":0,"acceptedAnswer":[{"@type":"Answer","author":{"@type":"Person","name":"Moferad","url":"https://realtimevfx.com/u/Moferad"},"dateModified":"2022-10-26T21:06:57.177Z","datePublished":"2022-10-26T21:06:57.157Z","text":"Is there a reason you arent using the physmats and the niagara gbuffer module?\n\nHave a physmat for the colliding objects, spawn a niagara system with a gbuffer module and capture the color that way.","upvoteCount":1,"url":"https://realtimevfx.com/t/looking-for-better-solution-to-collect-texture-pixel-color-at-collision-point/21396/4"}],"suggestedAnswer":[{"@type":"Answer","author":{"@type":"Person","name":"tharlevfx","url":"https://realtimevfx.com/u/tharlevfx"},"dateModified":"2022-10-26T09:21:39.187Z","datePublished":"2022-10-26T09:21:39.165Z","text":"reading pixel colour data is very expensive i belive - can you pre bake the data at all?  ie landscape rvt or a top down capture of the scene colour?\n\nalternatively you could get the UV on collision hit (there’s an engine option to enable this iirc) and then just look up the same texture as the material being used - although you might have to store a dictionary of the potential materials and what textures they’re using.\n\nthe last option might be projections - but it sounds like if it’s for moving debris pieces then that wouldnt work.\n\ngenerally games just batch the debris types into surface types and spawn the appropriate ones that way - do you really need more control than that over the colours?","upvoteCount":1,"url":"https://realtimevfx.com/t/looking-for-better-solution-to-collect-texture-pixel-color-at-collision-point/21396/2"},{"@type":"Answer","author":{"@type":"Person","name":"bbastien","url":"https://realtimevfx.com/u/bbastien"},"dateModified":"2022-10-26T15:10:49.147Z","datePublished":"2022-10-26T15:03:50.327Z","text":"do you really need more control than that over the colours?\n\nNot sure yet. We have the surface type function in place already and works great; I think this might be a technical exploration to spice up some cinematics or certain gameplay elements.  Ty for the approaches going to mess with them today. (baking could be an option too)","upvoteCount":0,"url":"https://realtimevfx.com/t/looking-for-better-solution-to-collect-texture-pixel-color-at-collision-point/21396/3"},{"@type":"Answer","author":{"@type":"Person","name":"bbastien","url":"https://realtimevfx.com/u/bbastien"},"dateModified":"2022-10-27T17:17:52.545Z","datePublished":"2022-10-27T17:17:52.519Z","text":"Is there a reason you arent using the physmats and the niagara gbuffer module?\n\nWe are using physmats. Didn’t know about the gbuffer module. Have you found it performant?","upvoteCount":1,"url":"https://realtimevfx.com/t/looking-for-better-solution-to-collect-texture-pixel-color-at-collision-point/21396/5"},{"@type":"Answer","author":{"@type":"Person","name":"bbastien","url":"https://realtimevfx.com/u/bbastien"},"dateModified":"2022-10-28T15:24:09.328Z","datePublished":"2022-10-28T15:24:09.301Z","text":"Update: Using Gbuffer in a custom Niagara module in GPU particles has proved the best solution for now. Can’t see a performance difference (yet).\n\n[2022-10-28_11h22_15]","upvoteCount":2,"url":"https://realtimevfx.com/t/looking-for-better-solution-to-collect-texture-pixel-color-at-collision-point/21396/6"},{"@type":"Answer","author":{"@type":"Person","name":"Moferad","url":"https://realtimevfx.com/u/Moferad"},"dateModified":"2022-10-28T18:10:04.249Z","datePublished":"2022-10-28T18:10:04.227Z","text":"Havent noticed a performance hit, but happy you got it working :slight_smile:","upvoteCount":1,"url":"https://realtimevfx.com/t/looking-for-better-solution-to-collect-texture-pixel-color-at-collision-point/21396/7"},{"@type":"Answer","author":{"@type":"Person","name":"TobiasTobasco","url":"https://realtimevfx.com/u/TobiasTobasco"},"dateModified":"2022-11-01T10:52:50.408Z","datePublished":"2022-11-01T10:52:50.387Z","text":"I assume the only drawback would be the limitation of the GBuffer being view depedent. So any offscreen (or occluded) collision will be invalid.\n\nAwesome that Niagara allows us to do these things nowadays though :slight_smile:","upvoteCount":1,"url":"https://realtimevfx.com/t/looking-for-better-solution-to-collect-texture-pixel-color-at-collision-point/21396/8"},{"@type":"Answer","author":{"@type":"Person","name":"bbastien","url":"https://realtimevfx.com/u/bbastien"},"dateModified":"2022-11-01T11:53:09.254Z","datePublished":"2022-11-01T11:53:09.233Z","text":"This is a valid drawback which matters more in multiplayer. I’m also noticing some issues with collisions being turned on with these particles as well.  Will keep exploring and update.","upvoteCount":0,"url":"https://realtimevfx.com/t/looking-for-better-solution-to-collect-texture-pixel-color-at-collision-point/21396/9"},{"@type":"Answer","author":{"@type":"Person","name":"Moferad","url":"https://realtimevfx.com/u/Moferad"},"dateModified":"2022-11-01T20:46:34.436Z","datePublished":"2022-11-01T20:46:34.413Z","text":"I haven’t had the chance to test it in MP , but in that case I would author the fx to have a default look to avoid it just outputting black when out of view\n\nI’m currently doing something similar for work, but I’m finding the middle ground is to have the GBuffer results more as the icing on top of the fx rather than relying on it entirely","upvoteCount":1,"url":"https://realtimevfx.com/t/looking-for-better-solution-to-collect-texture-pixel-color-at-collision-point/21396/10"}]}}</script>
+  </head>
+  <body class="crawler ">
+    <div id="bar">
+    <a class="nav-link" href="/c/General">General</a>
+    <a class="nav-link" href="/c/Resources">Resources</a>
+    <a class="nav-link" href="/c/References">References</a>
+       <!--   <li><a class="nav-link" href="https://jobs.realtimevfx.com/">Jobs</a></li>-->
+    <a class="nav-link" href="/c/Events">Events</a>
+</div>
+<script defer="" src="/theme-javascripts/c62d1c877fd828f64a0760c8b2e752ce5824773f.js?__ws=realtimevfx.com" data-theme-id="19" nonce="IBbmOneTDXjaI31td0TA77yOZ"></script>
+<!--
+<script type="text/javascript">
+    
+    /***
+        
+        An interval function to append the Jobs link to the Hamburger menu.
+    
+    ***/
+    
+    //NIELS : Setting inactive because job link is no longer relevant
+    /*setInterval(function(){
+        let flag = ($(".menu-panel.drop-down").is(":visible") || $(".menu-panel.slide-in").is(":visible")) && $(".menu-container-footer-links > ul").length && !$(".jobs-link").length; // $("header .extra-info-wrapper").is(":visible");
+        
+        if (flag){
+            $(".menu-container-footer-links > ul").append('<li><a class="widget-link jobs-link" href="https://jobs.realtimevfx.com/" title="Jobs"><span class="d-label">Jobs</span></a></li>')
+        }
+    }, 100);
+    */
+</script>
+-->
+
+<script type="text/discourse-plugin" version="0.8" nonce="IBbmOneTDXjaI31td0TA77yOZ">
+
+    var maxTopic = 15;
+    var TPP = 4;
+    var topicList;
+    setup();
+    
+    async function setup(){
+        
+        addEventListener("resize", handleResize);
+        handleResize();
+        
+        let topTopics = await fetch('https://realtimevfx.com/top.json?period=weekly');
+        let topFallback = await fetch('https://realtimevfx.com/top.json?period=monthly');
+        let featuredTag = await fetch('https://realtimevfx.com/tag/featured.json');
+        
+        topTopics = await topTopics.json();
+        topFallback = await topFallback.json();
+        featuredTag = await featuredTag.json();
+        
+        topicList = topTopics.topic_list.topics;
+        let featuredList = featuredTag.topic_list.topics;
+        let fallBackList = topFallback.topic_list.topics;
+        topicList = featuredList.concat(topicList);
+        topicList = topicList.concat(fallBackList);
+        
+        setupSlider(topicList);
+        
+        //handle adding or removing carousel on admin pages
+        api.onPageChange((url) =>{
+            if(url.includes('/admin')){
+                removeSlider();
+                return;
+            }
+            
+            if(document.getElementById("RTVFXBannerBack"))
+                return;
+            
+            setupSlider(topicList);
+        });
+        
+    }
+    
+    function removeSlider(){
+        if(document.getElementById("RTVFXBannerBack"))
+            document.getElementById("RTVFXBannerBack").remove();
+    }
+    
+    async function setupSlider(topicList){
+        injectBannerHmtl();
+        var idList = [];
+        var i = 0;
+        var slider = document.querySelector(".slider");
+       
+        for (const topic of topicList) {
+            
+            if(idList.includes(topic.id))
+                continue;
+            
+            idList.push(topic.id);
+            
+            if (!topic.image_url)
+                continue
+                
+            i += 1;
+            if(i>maxTopic)
+                break;
+            
+            
+            let tileContent =   "<a class='RTVFXBannerLink' href='/t/"+ topic.slug +"/"+ topic.id +"/last'>";
+            tileContent +=          "<div class='RTVFXBannerImage'>";
+            tileContent +=          "</div>";
+            tileContent +=          "<div class='RTVFXBannerTitle'>"+ topic.fancy_title +"</div>";
+            
+            if(topic.tags.includes("featured"))
+                tileContent +=          "<div style='position:absolute; right:15px; bottom:7px; color:white; font-weight:bold;'>FEATURED</div>";
+            
+            tileContent +=      "</a>"
+            
+            let tileItem = slider.appendChild(htmlToElement(tileContent));
+            tileItem.firstChild.style.backgroundImage = "url('"+ topic.image_url +"')"; 
+            
+            
+        }
+        
+        slider.addEventListener("pointerdown", (event) => {
+            event.stopPropagation();
+            event.preventDefault();
+            
+            //attach drag  event and set initial location
+            slider.onpointermove = sliderMove;
+            prevScreenX = event.screenX;
+            
+            //disable auto anim while dragging
+            disableAutoAnimTimer();
+        });
+        
+        slider.addEventListener("pointerup", (event) => {
+            event.stopPropagation();
+            event.preventDefault();
+            
+            slider.onpointermove = null;
+            
+            //snap to nearest tile
+            offsetTarget = Math.round(offsetTarget/((window.innerWidth/TPP)))*(window.innerWidth/TPP);
+            
+            document.querySelectorAll("a").forEach((el)=>{
+                el.style.pointerEvents = "all";
+            });
+            pointerEvents = true;
+            
+            //reenable once you stop dragging
+            startAutoAnimTimer();
+        });
+    }
+    
+    //handle dragging
+    var offsetTarget = window.innerWidth/TPP;
+    var offset = window.innerWidth/TPP;
+    var prevScreenX;
+    var pointerEvents = true;
+    function sliderMove(event){
+        if(!event.isPrimary)
+            return;
+        
+        event.stopPropagation();
+        event.preventDefault();
+        
+        //pointer cpaturing to allow for moving off the banner while still controlling it
+        var slider = document.querySelector(".slider");
+        slider.setPointerCapture(event.pointerId);
+        
+        //movement logic
+        var movementX = event.screenX-prevScreenX
+        offsetTarget += movementX;
+        prevScreenX = event.screenX;
+        
+        //disable links during drag
+        if(pointerEvents){
+            document.querySelectorAll("a").forEach((el)=>{
+                el.style.pointerEvents = "none";
+            });
+            pointerEvents = false;
+        }
+    }
+    
+    //handle animation
+    var prevTime
+    function anim(curTime){
+        var dt = curTime - prevTime;
+        prevTime = curTime;
+        dt = Math.min(dt, 120);
+        
+        requestAnimationFrame(anim);
+        
+        var slider = document.querySelector(".slider");
+        if(!slider)
+            return;
+        
+        offset = offset + (offsetTarget-offset)*.01*dt;
+        
+        var index = 0;
+        for(var el of slider.children){
+            var elOffset = index * window.innerWidth / TPP;
+            var newOffset = ((offset + elOffset).mod(window.innerWidth / TPP * slider.children.length))-elOffset-window.innerWidth/TPP;
+            el.style.transform = "translate3d("+newOffset+"px,0,0)";
+            index++;
+        };
+        
+    }
+    requestAnimationFrame(anim);
+    
+    //handle banner auto animation
+    var timerId;
+    function autoAnim(){
+        startAutoAnimTimer();
+        if(!document.hidden){
+            offsetTarget -= window.innerWidth/TPP;
+        }
+    }
+    function startAutoAnimTimer(){
+        if(timerId)
+            window.clearTimeout(timerId);
+        timerId = setTimeout(autoAnim, 5000);
+    }
+    function disableAutoAnimTimer(){
+        if(timerId)
+            window.clearTimeout(timerId);
+    }
+    startAutoAnimTimer();
+    
+    //inject html
+    function injectBannerHmtl(){
+        let mc = document.getElementById("main-container");
+        let mainContent =  '<div id="RTVFXBannerBack">';
+        mainContent += ' <div id="RTVFXBanner"><div class="slider"></div></div>';
+        mainContent += ' <div id="RTVFXBannerLeft" class="RTVFXBannerNav"></div>';
+        mainContent += ' <div id="RTVFXBannerRight" class="RTVFXBannerNav"></div>';
+        mainContent += ' </div>';
+        mc.appendChild(htmlToElement(mainContent));
+        
+        //Onclick events
+        document.getElementById('RTVFXBannerLeft').addEventListener("click", (event) => {
+            offsetTarget += window.innerWidth/TPP;
+            startAutoAnimTimer();
+        });
+        
+        document.getElementById('RTVFXBannerRight').addEventListener("click", (event) => {
+            offsetTarget -= window.innerWidth/TPP;
+            startAutoAnimTimer();
+        });
+    }
+    
+    //
+    //utils
+    //
+    //theres probably better ways to do this with templates
+    function htmlToElement(html) {
+        var template = document.createElement('template');
+        html = html.trim(); // Never return a text node of whitespace as the result
+        template.innerHTML = html;
+        return template.content.firstChild;
+    }
+    
+    function handleResize(){
+        //set topics per page
+        if(window.innerWidth > 1000){
+            TPP = 4;
+        }else if(window.innerWidth > 600){
+            TPP = 3;
+        }else{
+            TPP = 1;
+        }
+
+        //snap to nearest tile
+        offsetTarget = Math.round(offsetTarget/((window.innerWidth/TPP)))*(window.innerWidth/TPP);
+        
+        
+    }
+    
+    //custom cyclical mod function
+    Number.prototype.mod = function(n) {
+        return ((this % n) + n) % n;
+    }
+    
+    
+
+</script>
+    <header>
+  <a href="/">Real Time VFX</a>
+</header>
+
+    <div id="main-outlet" class="wrap" role="main">
+        <div id="topic-title">
+    <h1>
+      <a href="/t/looking-for-better-solution-to-collect-texture-pixel-color-at-collision-point/21396">Looking for better solution to collect texture pixel color at collision point?</a>
+    </h1>
+
+      <div class="topic-category" itemscope itemtype="http://schema.org/BreadcrumbList">
+          <span itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            <a href="/c/general/9" class="badge-wrapper bullet" itemprop="item">
+              <span class='badge-category-bg' style='background-color: #a8a8a8'></span>
+              <span class='badge-category clear-badge'>
+                <span class='category-name' itemprop='name'>General Discussion</span>
+              </span>
+            </a>
+            <meta itemprop="position" content="1" />
+          </span>
+        <span itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          <meta itemprop="name" content="Looking for better solution to collect texture pixel color at collision point?" />
+          <link itemprop="item" href="https://realtimevfx.com/t/looking-for-better-solution-to-collect-texture-pixel-color-at-collision-point/21396" />
+          <meta itemprop="position" content="2" />
+        </span>
+      </div>
+
+      <div class="topic-category">
+        <div class='discourse-tags list-tags'>
+            <a href='https://realtimevfx.com/tag/texture' class='discourse-tag' rel="tag">texture</a>, 
+            <a href='https://realtimevfx.com/tag/materials' class='discourse-tag' rel="tag">materials</a>, 
+            <a href='https://realtimevfx.com/tag/ue5' class='discourse-tag' rel="tag">ue5</a>, 
+            <a href='https://realtimevfx.com/tag/particles' class='discourse-tag' rel="tag">particles</a>, 
+            <a href='https://realtimevfx.com/tag/blueprints' class='discourse-tag' rel="tag">blueprints</a>
+        </div>
+      </div>
+  </div>
+
+  
+
+    <div itemscope="itemscope" itemtype="https://schema.org/QAPage">
+      <meta itemprop='name' content='Looking for better solution to collect texture pixel color at collision point?'>
+      <link itemprop='url' href='https://realtimevfx.com/t/looking-for-better-solution-to-collect-texture-pixel-color-at-collision-point/21396'>
+      <meta itemprop='datePublished' content='2022-10-25T22:38:14Z'>
+      <meta itemprop='keywords' content='texture, materials, ue5, particles, blueprints'>
+
+      
+
+        <div itemprop="mainEntity" itemscope="itemscope" itemtype="https://schema.org/Question">
+          <meta itemprop='answerCount' content='9'><meta itemprop='datePublished' content='2022-10-25T22:38:14Z'><meta itemprop='name' content='Looking for better solution to collect texture pixel color at collision point?'><meta itemprop='upvoteCount' content='0'>
+
+
+          <div id='post_1' data-qa-question="true" class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+                <a rel='nofollow' href='https://realtimevfx.com/u/bbastien'><span itemprop="name">bbastien</span></a>
+                  <meta itemprop='url' content='https://realtimevfx.com/u/bbastien'>
+                
+              </span>
+
+
+                <link itemprop="image" href="https://realtimevfx.com/uploads/default/original/3X/c/4/c4ae61bf0270a248df196017b41a20eea2947f3f.png">
+
+              <span class="crawler-post-infos">
+                  <time  datetime='2022-10-25T22:38:15Z' class='post-time'>
+                    October 25, 2022, 10:38pm
+                  </time>
+                  <meta itemprop='dateModified' content='2022-10-25T22:38:15Z'>
+              <span itemprop="position">1</span>
+              </span>
+            </div>
+            <div class='post' itemprop="text">
+              <p>The Goal: To collect the color of the (closest?) pixel at the intersection point on a collidable mesh…to use in a Niagara system to color debris mesh. I’m in UE5 using blueprints.</p>
+<p>This is what I’m using and it works BUT we are seeing a heavy drop in FPS when using. We are pretty sure it’s the capture pixel and read pixel that cause the drops.<br>
+<div class="lightbox-wrapper"><a class="lightbox" href="https://realtimevfx.com/uploads/default/original/3X/c/4/c4ae61bf0270a248df196017b41a20eea2947f3f.png" data-download-href="https://realtimevfx.com/uploads/default/c4ae61bf0270a248df196017b41a20eea2947f3f" title="unknown"><img src="https://realtimevfx.com/uploads/default/optimized/3X/c/4/c4ae61bf0270a248df196017b41a20eea2947f3f_2_690x261.png" alt="unknown" data-base62-sha1="s3Vc7DIq7nWtn1AJYOB9NuZ3c5x" width="690" height="261" srcset="https://realtimevfx.com/uploads/default/optimized/3X/c/4/c4ae61bf0270a248df196017b41a20eea2947f3f_2_690x261.png, https://realtimevfx.com/uploads/default/optimized/3X/c/4/c4ae61bf0270a248df196017b41a20eea2947f3f_2_1035x391.png 1.5x, https://realtimevfx.com/uploads/default/optimized/3X/c/4/c4ae61bf0270a248df196017b41a20eea2947f3f_2_1380x522.png 2x" data-small-upload="https://realtimevfx.com/uploads/default/optimized/3X/c/4/c4ae61bf0270a248df196017b41a20eea2947f3f_2_10x10.png"><div class="meta">
+<svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">unknown</span><span class="informations">1815×688 139 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg>
+</div></a></div></p>
+<p>Are there better / more efficient methods to collect this this collision color information?</p>
+            </div>
+
+
+
+            
+
+
+          </div>
+          <div id='post_2' itemprop="suggestedAnswer" itemscope="itemscope" itemtype="https://schema.org/Answer" class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+                <a rel='nofollow' href='https://realtimevfx.com/u/tharlevfx'><span itemprop="name">tharlevfx</span></a>
+                  <meta itemprop='url' content='https://realtimevfx.com/u/tharlevfx'>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop="datePublished" datetime='2022-10-26T09:21:39Z' class='post-time'>
+                    October 26, 2022,  9:21am
+                  </time>
+                  <meta itemprop='dateModified' content='2022-10-26T09:21:39Z'>
+              <span itemprop="position">2</span>
+              </span>
+            </div>
+            <div class='post' itemprop="text">
+              <p>reading pixel colour data is very expensive i belive - can you pre bake the data at all?  ie landscape rvt or a top down capture of the scene colour?</p>
+<p>alternatively you could get the UV on collision hit (there’s an engine option to enable this iirc) and then just look up the same texture as the material being used - although you might have to store a dictionary of the potential materials and what textures they’re using.</p>
+<p>the last option might be projections - but it sounds like if it’s for moving debris pieces then that wouldnt work.</p>
+<p>generally games just batch the debris types into surface types and spawn the appropriate ones that way - do you really need more control than that over the colours?</p>
+            </div>
+
+
+
+            
+
+<meta itemprop='upvoteCount' content='1'><meta itemprop='url' content='https://realtimevfx.com/t/looking-for-better-solution-to-collect-texture-pixel-color-at-collision-point/21396/2'>
+          </div>
+          <div id='post_3' itemprop="suggestedAnswer" itemscope="itemscope" itemtype="https://schema.org/Answer" class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+                <a rel='nofollow' href='https://realtimevfx.com/u/bbastien'><span itemprop="name">bbastien</span></a>
+                  <meta itemprop='url' content='https://realtimevfx.com/u/bbastien'>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop="datePublished" datetime='2022-10-26T15:03:50Z' class='post-time'>
+                    October 26, 2022,  3:03pm
+                  </time>
+                  <meta itemprop='dateModified' content='2022-10-26T15:10:49Z'>
+              <span itemprop="position">3</span>
+              </span>
+            </div>
+            <div class='post' itemprop="text">
+              <blockquote>
+<ul>
+<li>do you really need more control than that over the colours?</li>
+</ul>
+</blockquote>
+<p>Not sure yet. We have the surface type function in place already and works great; I think this might be a technical exploration to spice up some cinematics or certain gameplay elements.  Ty for the approaches going to mess with them today. (baking could be an option too)</p>
+            </div>
+
+
+
+            
+
+<meta itemprop='upvoteCount' content='0'><meta itemprop='url' content='https://realtimevfx.com/t/looking-for-better-solution-to-collect-texture-pixel-color-at-collision-point/21396/3'>
+          </div>
+          <div id='post_4' itemprop="acceptedAnswer" itemscope="itemscope" itemtype="https://schema.org/Answer" class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+                <a rel='nofollow' href='https://realtimevfx.com/u/Moferad'><span itemprop="name">Moferad</span></a>
+                  <meta itemprop='url' content='https://realtimevfx.com/u/Moferad'>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop="datePublished" datetime='2022-10-26T21:06:57Z' class='post-time'>
+                    October 26, 2022,  9:06pm
+                  </time>
+                  <meta itemprop='dateModified' content='2022-10-26T21:06:57Z'>
+              <span itemprop="position">4</span>
+              </span>
+            </div>
+            <div class='post' itemprop="text">
+              <p>Is there a reason you arent using the physmats and the niagara gbuffer module?</p>
+<p>Have a physmat for the colliding objects, spawn a niagara system with a gbuffer module and capture the color that way.</p>
+            </div>
+
+
+
+            
+
+<meta itemprop='upvoteCount' content='1'><meta itemprop='url' content='https://realtimevfx.com/t/looking-for-better-solution-to-collect-texture-pixel-color-at-collision-point/21396/4'>
+          </div>
+          <div id='post_5' itemprop="suggestedAnswer" itemscope="itemscope" itemtype="https://schema.org/Answer" class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+                <a rel='nofollow' href='https://realtimevfx.com/u/bbastien'><span itemprop="name">bbastien</span></a>
+                  <meta itemprop='url' content='https://realtimevfx.com/u/bbastien'>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop="datePublished" datetime='2022-10-27T17:17:52Z' class='post-time'>
+                    October 27, 2022,  5:17pm
+                  </time>
+                  <meta itemprop='dateModified' content='2022-10-27T17:17:52Z'>
+              <span itemprop="position">5</span>
+              </span>
+            </div>
+            <div class='post' itemprop="text">
+              <blockquote>
+<p>Is there a reason you arent using the physmats and the niagara gbuffer module?</p>
+</blockquote>
+<p>We are using physmats. Didn’t know about the gbuffer module. Have you found it performant?</p>
+            </div>
+
+
+
+            
+
+<meta itemprop='upvoteCount' content='1'><meta itemprop='url' content='https://realtimevfx.com/t/looking-for-better-solution-to-collect-texture-pixel-color-at-collision-point/21396/5'>
+          </div>
+          <div id='post_6' itemprop="suggestedAnswer" itemscope="itemscope" itemtype="https://schema.org/Answer" class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+                <a rel='nofollow' href='https://realtimevfx.com/u/bbastien'><span itemprop="name">bbastien</span></a>
+                  <meta itemprop='url' content='https://realtimevfx.com/u/bbastien'>
+                
+              </span>
+
+
+                <link itemprop="image" href="https://realtimevfx.com/uploads/default/original/3X/b/d/bd1e6a9e9a14c06dca5886a74fb5cc897609c18d.png">
+
+              <span class="crawler-post-infos">
+                  <time itemprop="datePublished" datetime='2022-10-28T15:24:09Z' class='post-time'>
+                    October 28, 2022,  3:24pm
+                  </time>
+                  <meta itemprop='dateModified' content='2022-10-28T15:24:09Z'>
+              <span itemprop="position">6</span>
+              </span>
+            </div>
+            <div class='post' itemprop="text">
+              <p><strong>Update:</strong> Using Gbuffer in a custom Niagara module in GPU particles has proved the best solution for now. Can’t see a performance difference (yet).</p>
+<p><div class="lightbox-wrapper"><a class="lightbox" href="https://realtimevfx.com/uploads/default/original/3X/b/d/bd1e6a9e9a14c06dca5886a74fb5cc897609c18d.png" data-download-href="https://realtimevfx.com/uploads/default/bd1e6a9e9a14c06dca5886a74fb5cc897609c18d" title="2022-10-28_11h22_15"><img src="https://realtimevfx.com/uploads/default/optimized/3X/b/d/bd1e6a9e9a14c06dca5886a74fb5cc897609c18d_2_690x255.png" alt="2022-10-28_11h22_15" data-base62-sha1="qZ1plV30JB9YG7t3sf6PPDJjnHL" width="690" height="255" srcset="https://realtimevfx.com/uploads/default/optimized/3X/b/d/bd1e6a9e9a14c06dca5886a74fb5cc897609c18d_2_690x255.png, https://realtimevfx.com/uploads/default/optimized/3X/b/d/bd1e6a9e9a14c06dca5886a74fb5cc897609c18d_2_1035x382.png 1.5x, https://realtimevfx.com/uploads/default/optimized/3X/b/d/bd1e6a9e9a14c06dca5886a74fb5cc897609c18d_2_1380x510.png 2x" data-small-upload="https://realtimevfx.com/uploads/default/optimized/3X/b/d/bd1e6a9e9a14c06dca5886a74fb5cc897609c18d_2_10x10.png"><div class="meta">
+<svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">2022-10-28_11h22_15</span><span class="informations">2127×787 145 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg>
+</div></a></div></p>
+            </div>
+
+
+
+            
+
+<meta itemprop='upvoteCount' content='2'><meta itemprop='url' content='https://realtimevfx.com/t/looking-for-better-solution-to-collect-texture-pixel-color-at-collision-point/21396/6'>
+          </div>
+          <div id='post_7' itemprop="suggestedAnswer" itemscope="itemscope" itemtype="https://schema.org/Answer" class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+                <a rel='nofollow' href='https://realtimevfx.com/u/Moferad'><span itemprop="name">Moferad</span></a>
+                  <meta itemprop='url' content='https://realtimevfx.com/u/Moferad'>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop="datePublished" datetime='2022-10-28T18:10:04Z' class='post-time'>
+                    October 28, 2022,  6:10pm
+                  </time>
+                  <meta itemprop='dateModified' content='2022-10-28T18:10:04Z'>
+              <span itemprop="position">7</span>
+              </span>
+            </div>
+            <div class='post' itemprop="text">
+              <p>Havent noticed a performance hit, but happy you got it working <img src="https://realtimevfx.com/images/emoji/twitter/slight_smile.png?v=12" title=":slight_smile:" class="emoji" alt=":slight_smile:" loading="lazy" width="20" height="20"></p>
+            </div>
+
+
+
+            
+
+<meta itemprop='upvoteCount' content='1'><meta itemprop='url' content='https://realtimevfx.com/t/looking-for-better-solution-to-collect-texture-pixel-color-at-collision-point/21396/7'>
+          </div>
+          <div id='post_8' itemprop="suggestedAnswer" itemscope="itemscope" itemtype="https://schema.org/Answer" class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+                <a rel='nofollow' href='https://realtimevfx.com/u/TobiasTobasco'><span itemprop="name">TobiasTobasco</span></a>
+                  <meta itemprop='url' content='https://realtimevfx.com/u/TobiasTobasco'>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop="datePublished" datetime='2022-11-01T10:52:50Z' class='post-time'>
+                    November 1, 2022, 10:52am
+                  </time>
+                  <meta itemprop='dateModified' content='2022-11-01T10:52:50Z'>
+              <span itemprop="position">8</span>
+              </span>
+            </div>
+            <div class='post' itemprop="text">
+              <p>I assume the only drawback would be the limitation of the GBuffer being view depedent. So any offscreen (or occluded) collision will be invalid.<br>
+Awesome that Niagara allows us to do these things nowadays though <img src="https://realtimevfx.com/images/emoji/twitter/slight_smile.png?v=12" title=":slight_smile:" class="emoji" alt=":slight_smile:" loading="lazy" width="20" height="20"></p>
+            </div>
+
+
+
+            
+
+<meta itemprop='upvoteCount' content='1'><meta itemprop='url' content='https://realtimevfx.com/t/looking-for-better-solution-to-collect-texture-pixel-color-at-collision-point/21396/8'>
+          </div>
+          <div id='post_9' itemprop="suggestedAnswer" itemscope="itemscope" itemtype="https://schema.org/Answer" class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+                <a rel='nofollow' href='https://realtimevfx.com/u/bbastien'><span itemprop="name">bbastien</span></a>
+                  <meta itemprop='url' content='https://realtimevfx.com/u/bbastien'>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop="datePublished" datetime='2022-11-01T11:53:09Z' class='post-time'>
+                    November 1, 2022, 11:53am
+                  </time>
+                  <meta itemprop='dateModified' content='2022-11-01T11:53:09Z'>
+              <span itemprop="position">9</span>
+              </span>
+            </div>
+            <div class='post' itemprop="text">
+              <p>This is a valid drawback which matters more in multiplayer. I’m also noticing some issues with collisions being turned on with these particles as well.  Will keep exploring and update.</p>
+            </div>
+
+
+
+            
+
+<meta itemprop='upvoteCount' content='0'><meta itemprop='url' content='https://realtimevfx.com/t/looking-for-better-solution-to-collect-texture-pixel-color-at-collision-point/21396/9'>
+          </div>
+          <div id='post_10' itemprop="suggestedAnswer" itemscope="itemscope" itemtype="https://schema.org/Answer" class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+                <a rel='nofollow' href='https://realtimevfx.com/u/Moferad'><span itemprop="name">Moferad</span></a>
+                  <meta itemprop='url' content='https://realtimevfx.com/u/Moferad'>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop="datePublished" datetime='2022-11-01T20:46:34Z' class='post-time'>
+                    November 1, 2022,  8:46pm
+                  </time>
+                  <meta itemprop='dateModified' content='2022-11-01T20:46:34Z'>
+              <span itemprop="position">10</span>
+              </span>
+            </div>
+            <div class='post' itemprop="text">
+              <p>I haven’t had the chance to test it in MP , but in that case I would author the fx to have a default look to avoid it just outputting black when out of view</p>
+<p>I’m currently doing something similar for work, but I’m finding the middle ground is to have the GBuffer results more as the icing on top of the fx rather than relying on it entirely</p>
+            </div>
+
+
+
+            
+
+<meta itemprop='upvoteCount' content='1'><meta itemprop='url' content='https://realtimevfx.com/t/looking-for-better-solution-to-collect-texture-pixel-color-at-collision-point/21396/10'>
+          </div>
+
+        </div>
+    </div>
+
+
+    
+
+
+
+
+    </div>
+    <footer class="container wrap">
+  <nav class='crawler-nav'>
+    <ul>
+      <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+        <span itemprop='name'>
+          <a href='/' itemprop="url">Home </a>
+        </span>
+      </li>
+      <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+        <span itemprop='name'>
+          <a href='/categories' itemprop="url">Categories </a>
+        </span>
+      </li>
+      
+      <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+        <span itemprop='name'>
+          <a href='/guidelines' itemprop="url">Guidelines </a>
+        </span>
+      </li>
+        <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+          <span itemprop='name'>
+            <a href='http://realtimevfx.com/t/terms-of-service/' itemprop="url">Terms of Service </a>
+          </span>
+        </li>
+        <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+          <span itemprop='name'>
+            <a href='http://realtimevfx.com/t/privacy-policy/' itemprop="url">Privacy Policy </a>
+          </span>
+        </li>
+    </ul>
+  </nav>
+  <p class='powered-by-link'>Powered by <a href="https://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled</p>
+</footer>
+
+    
+    
+  </body>
+  
+</html>

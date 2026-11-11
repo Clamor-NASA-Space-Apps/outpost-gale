@@ -1,0 +1,436 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="search" title="Search" href="../search.html" /><link rel="next" title="Physically-Based Rendering and Per-Pixel LOD - Rogue &amp; Volcanic Performance" href="physically-based-rendering-and-per-pixel-lod---rogue-performance.html" /><link rel="prev" title="Balancing Workloads on PowerVR to Eliminate Bottlenecks" href="balancing-workloads-on-powervr-to-eliminate-bottlenecks.html" />
+
+    <link rel="shortcut icon" href="../_static/favicon.ico"/><!-- Generated with Sphinx 7.3.7 and Furo 2024.08.06 -->
+        <title>Optimal Particle Rendering on PowerVR</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=302659d7" />
+    <link rel="stylesheet" type="text/css" href="../_static/furo_custom.css?v=b0eb8cd5" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="img-header">
+    <div class="container header-container">
+        <a href="https://www.imaginationtech.com">
+          <img src= ../_static/header-logo-white.png alt="Logo." class="header-logo only-dark"/>
+          <img src= ../_static/header-logo-black.png alt="Logo." class="header-logo only-light"/>
+        </a>
+        <div class="navbar" id="header-nav">
+          <a class="docs-button" href="https://docs.imgtec.com/">PowerVR Docs</a>
+          <div class="dropdown">
+            <button class="dropbtn-min-width">Support
+              <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+              <a href="https://forums.imgtec.com/">Developer Forum</a>
+              <a href="mailto:devtech.portal@imgtec.com" title="devtech.portal@imgtec.com">Email Developer Support</a>
+            </div>
+          </div>
+          <div class="dropdown">
+            <button class="dropbtn-min-width">Resources
+              <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+              <a href="https://developer.imaginationtech.com/downloads/">PowerVR Tools Downloads</a>
+              <a href="https://github.com/powervr-graphics/Native_SDK">PowerVR SDK on GitHub</a>
+              <a href="https://developer.imaginationtech.com/terms/powervr-tools-software-eula/">PowerVR Tools EULA</a>
+              <a href="https://developer.imaginationtech.com/terms/powervr-sdk-software-eula/">PowerVR SDK EULA</a>
+            </div>
+          </div>
+          <div class="dropdown">
+            <button class="dropbtn">Company
+              <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+              <a href="https://www.imaginationtech.com/company/">Imagination
+                Technologies</a>
+              <a href="https://www.imaginationtech.com/careers/">Careers</a>
+            </div>
+          </div>
+        </div>
+    </div>
+  </header>
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">PowerVR Graphics Recommendations</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+    
+    <div style="margin: auto;">
+    <span class="sidebar-brand-text">PowerVR Graphics Recommendations</span>
+    </div>
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="introduction.html">Introduction</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Introduction</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="optimal-development-approach.html">Optimal Development Approach</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optimising-applications-for-powervr-graphics-cores.html">Optimising Applications for PowerVR Graphics Cores</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analysing-application-performance.html">Analysing Application Performance</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="optimising-geometry.html">Optimising Geometry</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Optimising Geometry</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="choosing-the-level-of-geometry-complexity.html">Choosing the Level of Geometry Complexity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optimising-vertex-and-index-buffers.html">Optimising Vertex and Index Buffers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vertex-buffer-objects-in-opengl-es.html">Vertex Buffer Objects in OpenGL ES</a></li>
+<li class="toctree-l2"><a class="reference internal" href="choosing-attribute-data-types.html">Choosing Attribute Data Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="determining-optimal-draw-call-size.html">Determining Optimal Draw Call Size</a></li>
+<li class="toctree-l2"><a class="reference internal" href="triangle-size.html">Triangle Size</a></li>
+<li class="toctree-l2"><a class="reference internal" href="the-parameter-buffer.html">The Parameter Buffer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advantages-of-face-culling.html">Advantages of Face Culling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="z-pre-pass-and-powervr.html">Z Pre-pass and PowerVR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sorting-geometry-effectively-on-powervr.html">Sorting Geometry Effectively on PowerVR</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="optimising-textures.html">Optimising Textures</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Optimising Textures</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="choosing-appropriate-texture-sizes.html">Choosing Appropriate Texture Sizes</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="texture-compression.html">Texture Compression</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of Texture Compression</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="astc/texture-compression-using-astc.html">Texture Compression using ASTC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pvrtc/texture-compression-using-pvrtc.html">Texture Compression using PVRTC</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="using-mipmapping-to-improve-quality-and-performance.html">Using Mipmapping to Improve Quality and Performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="texture-sampling.html">Texture Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uploading-textures-efficiently.html">Uploading Textures Efficiently</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mathematical-look-ups-in-textures.html">Mathematical Look-ups in Textures</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="optimising-shaders.html">Optimising Shaders</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Optimising Shaders</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="pvrshadereditor.html">PVRShaderEditor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="choose-the-right-algorithm.html">Choose the Right Algorithm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="know-your-spaces.html">Know Your Spaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flow-control.html">Flow Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demystifying-precision.html">Demystifying Precision</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scalar-operations.html">Scalar Operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="constant-data-in-shaders.html">Constant Data in Shaders</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geometry-shaders-and-tessellation-shaders.html">Geometry Shaders and Tessellation Shaders</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="optimising-specific-techniques.html">Optimising Specific Techniques</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of Optimising Specific Techniques</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="using-multiple-render-targets-efficiently.html">Using Multiple Render Targets Efficiently</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preferred-lighting-solution.html">Preferred Lighting Solution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preferred-shadowing-solution.html">Preferred Shadowing Solution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="msaa-performance.html">MSAA Performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preferred-analytical-aa-solution.html">Preferred Analytical AA Solution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="screen-space-ambient-occlusion.html">Screen Space Ambient Occlusion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ray-marching.html">Ray-Marching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="separable-kernels.html">Separable Kernels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="efficient-sprite-rendering.html">Efficient Sprite Rendering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="on-chip-memory-performance.html">On-Chip Memory Performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optimising-register-pressure-on-powervr.html">Optimising Register Pressure on PowerVR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optimal-depth-buffer-usage-for-large-scale-games.html">Optimal Depth Buffer Usage for Large-scale Games</a></li>
+<li class="toctree-l2"><a class="reference internal" href="balancing-workloads-on-powervr-to-eliminate-bottlenecks.html">Balancing Workloads on PowerVR to Eliminate Bottlenecks</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Optimal Particle Rendering on PowerVR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="physically-based-rendering-and-per-pixel-lod---rogue-performance.html">Physically-Based Rendering and Per-Pixel LOD - Rogue &amp; Volcanic Performance</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="opengl-es-specific-optimisations.html">OpenGL ES-Specific Optimisations</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of OpenGL ES-Specific Optimisations</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="using-glclear-and-glcolormask-on-powervr.html">Using glClear and glColorMask on PowerVR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reducing-overhead-with-draw-indirect-and-multidraw-indirect-ext.html">Reducing Overhead with Draw Indirect and MultiDraw Indirect EXT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uploading-textures-into-pbos.html">Uploading Textures into PBOs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="using-gltexstorage2d-and-gltexstorage3d.html">Using glTexStorage2D and glTexStorage3D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vaos%2C-ubos%2C-transform-feedback-buffers%2C-and-ssbos-in-opengl-es.html">VAOs, UBOs, Transform Feedback Buffers, and SSBOs in OpenGL ES</a></li>
+<li class="toctree-l2"><a class="reference internal" href="synchronisation.html">Synchronisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="efficient-frame-buffer-downsampling-with-powervr.html">Efficient Frame Buffer Downsampling with PowerVR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pixel-local-storage-extension.html">Pixel Local Storage Extension</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="vulkan-specific-optimisations.html">Vulkan-Specific Optimisations</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of Vulkan-Specific Optimisations</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="the-powervr-with-vulkan-advantage.html">The PowerVR with Vulkan Advantage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="available-memory-types-in-vulkan.html">Available Memory Types in Vulkan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optimising-pipelines.html">Optimising Pipelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="using-descriptor-sets-on-powervr.html">Using Descriptor Sets on PowerVR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="push-constants.html">Push Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="queues-and-queue-families-on-powervr.html">Queues and Queue Families on PowerVR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command-buffers.html">Command Buffers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="using-render-passes-and-sub-passes.html">Using Render Passes and Sub-passes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="performing-msaa-on-powervr-using-vulkan.html">Performing MSAA on PowerVR using Vulkan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="selecting-appropriate-image-layouts.html">Selecting Appropriate Image Layouts</a></li>
+</ul>
+</li>
+</ul>
+
+</div></div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="optimal-particle-rendering-on-powervr">
+<h1>Optimal Particle Rendering on PowerVR<a class="headerlink" href="#optimal-particle-rendering-on-powervr" title="Link to this heading">¶</a></h1>
+<p>Game developers like to use particle systems extensively to add effects such as smoke, dust, and dirt to their games. These particle systems usually consist of many 2D quads that sample a texture and use alpha blending to composite them. This can be a good solution for implementing some of these effects, but it can come with a significant performance impact if used carelessly. In particular, lots of alpha-blended particles can cause a massive overdraw issue, which means the GPU has to rasterize many more fragments for each pixel than usual. This issue may be present for even small amounts of particles if their on-screen size is large. <a class="reference external" href="https://developer.imgtec.com/pvrtune">PVRTune</a> can be used to check the current overdraw value, which needs to be kept as low as possible.</p>
+<p>If a performance bottleneck happens only due to an out-of-control overdraw issue, the following suggestions may help:</p>
+<ul class="simple">
+<li><p>Reduce the number of particles used if possible.</p></li>
+<li><p>Use meshes for particles that closely follow the opaque-transparent edges within the texture used, such as a circular mesh for a puff of smoke. This way, completely transparent parts will not be causing unnecessary overdraw.</p></li>
+<li><p>For particles, it may not be important to have crisp textures in the distance, so anisotropic filtering could be disabled.</p></li>
+</ul>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="physically-based-rendering-and-per-pixel-lod---rogue-performance.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Physically-Based Rendering and Per-Pixel LOD - Rogue &amp; Volcanic Performance</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="balancing-workloads-on-powervr-to-eliminate-bottlenecks.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Balancing Workloads on PowerVR to Eliminate Bottlenecks</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="branding-container">
+                <div class="footer-copyright">&#169; Imagination Technologies Limited. All rights reserved.<br /><a
+                    href="https://www.imaginationtech.com/privacy-policy/">Privacy Policy</a> | <a
+                    href="https://www.imaginationtech.com/terms-and-conditions/">Terms &amp; Conditions</a>
+                </div>
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a href="https://github.com/pradyunsg/furo">Furo</a>.
+            
+          </div>
+          <div class="right-details">
+            <div class="social-icons-wrapper">
+                <a class="social-icon-box" href="https://www.linkedin.com/company/imaginationtech/" target="_blank"><svg class="social-icon" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="-32 0 512 512" style="fill: currentColor;"><path d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 142.3V448z"/></svg></a>
+                <a class="social-icon-box" href="https://twitter.com/imaginationtech" target="_blank"><svg class="social-icon" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 512 512" style="fill: currentColor;"><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg></a>
+                <a class="social-icon-box" href="https://www.facebook.com/imgtec/" target="_blank"><svg class="social-icon" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 512 512" style="fill: currentColor;"><path d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.78 90.69 226.38 209.25 245V327.69h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48 27.14 0 55.52 4.84 55.52 4.84v61h-31.28c-30.8 0-40.41 19.12-40.41 38.73V256h68.78l-11 71.69h-57.78V501C413.31 482.38 504 379.78 504 256z"/></svg></a>
+                <a class="social-icon-box" href="https://www.youtube.com/user/Imgtec/" target="_blank"><svg class="social-icon" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="32 0 512 512" style="fill: currentColor;"><path d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"/></svg></a>
+                <a class="social-icon-box" href="https://github.com/powervr-graphics/" target="_blank"><svg class="social-icon" xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 512 512" style="fill: currentColor;"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></a>
+              </div>
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=3b5cce75"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    </body>
+</html>

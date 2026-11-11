@@ -1,0 +1,35 @@
+                                                                       The last point raised by Andreotti (1) is wrong: That the
+ LETTER
+                                                                    trajectories on Mars are much higher than on Earth has also
+                                                                    been shown before by White (4). It is true that our model
+Reply to Andreotti: Consistent                                      does not agree with Andreotti’s model, which is based on the
+                                                                    assumption that the grains of Mars dunes have diameters
+saltation height measurements and                                   ⬍100 ␮m. If the grains were so small, dunes would not be
+physical assumptions                                                stable under the observed Mars sand storms.
+                                                                    Murilo P. Almeida*, Eric J. R. Parteli*, José S. Andrade, Jr.*†‡,
+In response to the comments of Andreotti (1), first, we do          and Hans J. Herrmann*
+not maximize the flux; instead we calculate the saturated sand      *Departamento de Fı́sica, Universidade Federal do Ceará, 60455-
+flux (2). Thus, no ‘‘criterion’’ is adopted, because the value of   760, Fortaleza, CE, Brazil; and †Computational Physics, Institute
+sand flux is a result of the calculations and not an assump-        for Building Materials, Eidgenössiche Technische Hochschule,
+tion. Second, the statement that our model ignores the ability      Schafmattstrasse 6, 8093 Zürich, Switzerland
+of the transported grains to eject other grains (‘‘splash’’) is
+                                                                     1. Andreotti B (2008) Contradictory saltation height measurements and unphysical as-
+false. The simulations do account for the splash; however, it           sumptions. Proc Nat Acad Sci 105:E60.
+is well known that in the saturation regime each grain–bed           2. Almeida MP, Parteli EJR, Andrade JS, Jr, Herrmann HJ (2008) Giant saltation on Mars.
+                                                                        Proc Nat Acad Sci 105:6222– 6226.
+collision results in one ejected grain—as in the simulations         3. Rioual F, Valance A, Bideau D (2000). Experimental study of the collision process of a
+(2). Furthermore, of course one has a complex splash func-              grain on a two-dimensional granular bed. Phys Rev E 62:2450 –2459.
+                                                                     4. White BR (1979) Soil transport by winds on Mars. J Geophys Res 84:4643– 4651.
+tion giving the probability into which directions grains are
+ejected with which velocity (3). But putting that function in
+any calculation would make the calculation impossible. This         Author contributions: M.P.A., E.J.R.P., J.S.A., and H.J.H. wrote the paper.
+function is known only empirically and with low precision,          The authors declare no conflict of interest.
+and thus, in practice, such kinds of simulations would be nei-      ‡To whom correspondence should be addressed. E-mail: soares@fisica.ufc.br.
+
+ther useful nor possible.                                           © 2008 by The National Academy of Sciences of the USA
+
+
+
+
+www.pnas.org兾cgi兾doi兾10.1073兾pnas.0805637105                                              PNAS 兩 September 30, 2008 兩 vol. 105 兩 no. 39 兩 E61
+

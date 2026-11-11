@@ -1,0 +1,2199 @@
+                                   Publication status: Preprint has not been submitted for publication
+
+
+                                        Tracking Bodies Motions on the Lunar Surface: Apollo XVI
+                                                               Footage
+                                                                        Andrea Simon, Alessio Michelotti
+
+                                                                   https://doi.org/10.1590/SciELOPreprints.9077
+
+
+                                   Submitted on: 2024-06-05
+                                   Posted on: 2024-06-11 (version 1)
+                                   (YYYY-MM-DD)
+
+
+
+
+Powered by TCPDF (www.tcpdf.org)
+SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+
+
+Tracking Bodies Motions on the Lunar Surface: Apollo XVI
+Footage
+Andrea Simon
+
+Waldorf High School, San Vendemiano, Treviso, Italy.
+ORCID: https://orcid.org/0009-0001-3971-4305
+
+
+Alessio Michelotti
+
+Tech Creative Commons, Bruxelles, Belgium.
+ORCID: https://orcid.org/0000-0002-3822-104X
+
+
+
+
+ABSTRACT
+
+This manuscript introduces a robust analytical method to trace and analyze the movement of
+bodies shot during the Apollo XVI mission on the lunar surface. By employing both 2D and
+3D analysis techniques, we aim to provide a detailed comparison of the observed kinematic
+events against theoretical models.
+
+The paper extends a previous work focused on the kinematics of lunar dust utilizing footage
+from the “Grand Prix” sequence of the Apollo XVI mission "Ballistic motion of dust particles in
+the Lunar Roving Vehicle dust trails" published in 2012 on the American Journal of Physics
+by Mihaly Horanyi and Hsiang-Wen Hsu:
+https://www.researchgate.net/publication/258468670 [Ann. 1 – Ann. 2].
+
+The objective is to validate lunar environmental models and enhance the understanding of
+motion dynamics on the lunar surface. This comprehensive analysis reconstructs the image
+production chain and the photographic and television transmission technology used during
+the Apollo 16 mission and indicates the good practices to follow for the correct digital
+transposition of the various types of film produced. Not only does it reassess existing data
+but also introduces new methodologies in order to interpret the lunar surface motions of
+bodies captured during Apollo missions.
+
+
+
+Keywords:
+
+Apollo 16, Lunar dust ballistic motion, Apollo footage
+
+
+
+Authors' contribution statement
+
+Alessio Michelotti: Conceptualization, Data curation, Investigation, Project administration,
+Visualization, Writing – original draft
+
+
+
+
+SciELO Preprints - preprints.scielo.org
+                                                                                                                                1
+SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+
+
+Andrea Simon: Conceptualization, Formal Analysis, Methodology, Software, Supervision,
+Validation
+
+
+
+Conflict of interest statement
+
+The authors declare that there are no conflicts of interest.
+
+
+
+Research data availability statement
+
+- The entire dataset supporting the results of this study was published in the article itself
+(they can be downloaded through specific links and attachments reported within the
+manuscript)
+
+
+
+
+SciELO Preprints - preprints.scielo.org
+                                                                                                                                2
+SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+
+
+                    Tracking Bodies Motions on the Lunar
+                             Surface: Apollo XVI Footage
+                                                                                                          A case of study
+  SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+
+
+                                             Tracking Apollo XVI Footage. Preamble.
+
+
+
+
+PREAMBLE
+The study of Horanyi-Hsu, approach and criticalities
+
+
+
+
+                                                                                                                                        4
+
+
+
+
+                            Figure 1- “Tracking Lunar Dust” – Poster by Hsiang-Wen Hsu
+
+
+Mihály Horányi and Hsiang-Wen Hsu of the Laboratory of Atmospheric and Space Physics
+(University of Colorado Boulder, NASA Lunar Science Institute) carried out the study “Ballistic
+motion of dust particles in the Lunar Roving Vehicle dust trails” in 2011, with the stated intent
+to suggest a useful educational path on ballistic trajectories and angular motion for high schools and
+introductory university physics courses. Following its publication in the American Journal of
+Physics, in May 2012, the study benefited from important attention, also through the media, in the
+context of the debate on the authenticity of the Apollo missions, given the results achieved in
+     SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+
+
+                                                Tracking Apollo XVI Footage. Preamble.
+
+
+
+
+identifying the characteristics of the motion of the lunar dust triggered by the Lunar Rover in the
+famous Apollo 16 sequence known as the "Grand Prix".
+Unfortunately, the study presents a series of shortcomings and critical issues that invalidate its
+scientific results. Far from wanting to go into the merits of the debate on the authenticity of the
+lunar missions, before starting the discussion of this study we intend to summarize the problems
+that the paper of the two researchers of the American team presents.
+
+Errors in basic technical assumptions.
+In the introduction, the study in question proposes the recordings of the Apollo TV camera as the                                          5
+source of the analyzed images, asserting that this camera was able to provide “high resolution color
+video that was transmitted in real-time to Earth”. Paragraph II of the script then begins by affirming
+that “the frame rate of the TV camera used during the Apollo 16 mission was 29.97 fps”, supported
+by the note 2 which refers to the “Apollo color television subsystem: Operation and training
+manual” of the Westinghouse Defense and Space Center, 1971. Immediately after the authors
+continue: “The footage was digitally scanned and transformed into a series of images”.
+
+Indeed, as verifiable in the Apollo 16 Index of Photographs and Film Strips 1, drafted by NASA
+(Manned Spacecraft Center Houston, Texas) in 1972, the sequence named “Grand Prix” was filmed
+by the Maurer Data Acquisition Camera (DAC) at 24 fps.
+
+
+
+
+    Figure 2 - Maurer Data Acquisition Camera (DAC), Smithsonian National Air and Space Museum, Washington, D.C.
+
+
+
+1
+ https://www.hq.nasa.gov/wp-content/uploads/static/history/alsj/a16/a16.photidx.pdf Apollo 16 index of 70 mm
+Photographs and 16 mm filmstrips pag 19, Manned Spacecraft Center Houston, Texas - November 1972 [Ann. 3]
+     SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+
+
+                                                Tracking Apollo XVI Footage. Preamble.
+
+
+
+
+Furthermore, the camera used in the EVA (Extra Vehicular Activities) of the Apollo 16 mission was
+not the Westinghouse, but the RCA's Colour TV (CTV). The latter, among other things, was unable
+to send to the Earth high-definition images of a quality comparable to those recorded by the DAC.
+On the contrary, the television images had very low quality due to a series of problems related to
+the availability of bandwidth for sending the signal and to the necessity of converting the images
+into the NTSC standard of the television circuit (29.97 interlaced fps).
+
+
+
+                                                                                                                                           6
+
+
+
+
+                           Figure 3 - RCA CTV Camera, at Steven F. Udvar-Hazy Center Virginia US
+
+
+By verifying the sources that the authors of the study have released, it is clear that the analysed
+frames contain one clone for every 4 images. This is evident by scrolling the images in succession 2.
+This is a typical phenomenon called 3:2 pulldown, through which are carried out the conversions
+from 24 fps format to 30 fps television format.
+
+The images analysed by Horanyi-Hsu do not represent the digitization of the original film, as stated
+in the study, but indeed the copy of subsequent NTSC television versions for which, among other
+things, the number of suffered conversions and alterations is not known.
+
+It is surprising to find that who made the measurements on the images has identified a movement of
+the lunar dust even on the cloned frames. Not only this is obviously impossible, but it also makes
+the entire measurement procedure used hardly credible.
+
+2
+    https://youtu.be/MI4_H7rqkG8 “Grand Prix sequence” / Clip2, Apollo 16 – Video a 1 fps x 46 frames [Ann. 4]
+  SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+
+
+                                             Tracking Apollo XVI Footage. Preamble.
+
+
+
+
+Here below is an extract from one of the two tables of measurements released by the team of the
+American university, relating to the first analysed clip. Measurements are in pixels. The scale is of
+0.0148 m/pixel.
+
+
+             Image number                X_fender               Z_fender               X_dust                 Z_dust
+
+                   4192                     422                    235                    476                   165
+                   4193                     420                    235                    476                   162
+                                                                                                                                        7
+                   4194                     416                    236                    476                   157
+                   4195                     411                    231                    476                   152
+                   4196                     403                    232                    476                   150
+
+                   4197                     402                    232                    476                   150
+
+                   4198                     398                    235                    478                   148
+                   4199                     393                    236                    478                   147
+                   4200                     392                    235                    478                   144
+                   4201                     392                    234                    483                  140
+                   4202                     392                    234                    483                 141 ±2
+                   4203                     390                    232                    485                 136 ±2
+                   4204                     387                    231                    488                   130
+                   4205                     387                    230                    497                   127
+                   4206                     389                    228                    501                   122
+                   4207                     388                  228 ±1                 503 ±3                  123
+                   4208                     392                  223 ±3                 512 ±4                  120
+                   4209                     396                   223                    518                    116
+                  Table 1 – Extract from table Clip 2 of “Tracking Lunar Dust” study of Horanyi-Hsu
+
+
+
+The lines marked in yellow refer to the frames cloned from those immediately preceding due to the
+conversion process. As you can see in the red boxes, the values collected by the authors highlight
+differences between the original frame and the cloned frame which in some cases even reach 5
+pixels (equivalent in reality to about 7.5 cm) and in one case 9 pixels (over 13 cm in the reality).
+Whereas in some cases the error remains within the confidence interval, admitting to consider as
+such the sum of the absolute errors declared for the measurements of each of the two identical
+frames, in other cases it exceeds it of 1 or 2 pixels, thus proving that the confidence interval is too
+optimistic.
+
+Regardless of the correctness of the measurement system, the use of an incorrect frame rate has - as
+it will be easily understood - an important impact on the analysis of the speed of the dust,
+considering that between one event and another does not elapse 1/29.97 seconds as supposed by
+authors, but 1/24 seconds indeed.
+
+Also, in chapter II of the study to which we refer, it is asserted that "The resolution of the images is
+720x480 pixels". This statement leads us to suppose that a correct conversion of images filmed with
+analogical technology into digital homographic images has not been made. The DAC camera in fact
+    SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+
+
+                                               Tracking Apollo XVI Footage. Preamble.
+
+
+
+
+had a 16 mm sensor and therefore produced images with an aspect ratio of 10.26 mm / 7.49 mm =
+1.37 while the aspect ratio relating to the indicated resolution is 1.5. This does not necessarily lead
+to a change in aspect ratio since the different aspect ratios of the converted image could be related
+to a cropping of the original one.
+
+The presence of black side bands (Nominal Analogue Blanking) in the photographic sources
+released, indicates that the analysed images come from a television video, presumably a conversion
+to the NTSC TV format at 29.97 fps of the original sequence filmed at 24 fps. The real aspect ratio
+of the images themselves, considering the black columns of 8 pixels on each side, is therefore 704 x
+                                                                                                                                          8
+480 rectangular pixels. In order to be correctly displayed on the PC while maintaining the same
+aspect ratio, the frames in question would have required an adjustment of the proportions by a
+reduction of 10/11 of their width, as required by the good practices defined by the international
+standards 3. If the aspect proportion had been respected, by measuring horizontally and vertically
+the diameter of the Rover wheels on the images that the study authors provided, an identical
+measurement should have been found. After performing various tests on different frames, it is found
+that the ratio between the vertical axis and the horizontal axis is equivalent to about 9.1 (10/11).
+This confirms the missed adjustment. A missed adjustment, in this case, is confirmed.
+
+
+
+
+               Figure 4 – Verification of the correct aspect ratio of the images analysed by Horányi and Hsu
+
+
+3
+  https://www.itu.int/dms_pubrec/itu-r/rec/bt/R-REC-BT.601-7-201103-I!!PDF-E.pdf: Studio encoding parameters of
+digital television for standard 4:3 and wide screen 16:9 aspect ratios, Recommendation ITU-R BT.601-7 (03/2011).
+International Telecommunication Union Electronic Publication, Radiocommunication Sector, Geneva 2017 [Ann. 5]
+    SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+
+
+                                               Tracking Apollo XVI Footage. Preamble.
+
+
+
+
+Lunar Rover wheel: Vertical Axis / Horizontal Axis = cm 81.28 / cm 88.48 = 0.919
+
+Due to this lack of conversion, the images are distorted on the X axis of the measurement system
+used, and the measurements collected on this axis are therefore burdened by an incorrect increase of
+11/10 compared to the measurements detected on the Z axis. Since the calibration of the system
+scale was carried out starting from a known measurement identified on the X axis (the radius of the
+Rover wheel), it follows that the values measured on Z are 1/10 lower than the correct ones.
+                                                                                                                                          9
+
+
+
+
+                  Figure 5 - “Tracking Lunar Dust” of Horanyi-Hsu, calibration of the measuring system
+
+
+
+In this regard, we also note that the same measurement of the Rover wheel diameter is proposed as
+32 inches, while NASA's Apollo Lunar Roving Vehicle manual identifies it as 32.2 inches. 4
+
+Image Distortion Analysis
+The two authors of the study do not in any way deal with the problems related to the geometric
+distortion of the analysed images that could derive from the optics used for shooting. The
+conclusions on this topic can be drawn by means of elementary calculations, starting from the
+knowledge of the characteristics of the equipment used. These are conclusions that incidentally
+confirm that the problem can be overlooked, but the absence of any treatment in Horanyi and Hsu's
+study is far from justified.
+
+
+
+4
+ https://www.nasa.gov/wp-content/uploads/static/history/alsj/LRV_OpsNAS8-25145.pdf Lunar Roving Vehicle
+Operation Handbook, The Boeing Company LRV Systems Engineering, Huntsville (Alabama, USA) April 19, 1971
+[Ann. 6]
+    SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+
+
+                                               Tracking Apollo XVI Footage. Preamble.
+
+
+
+
+                                                                                                                                          10
+
+
+
+
+          Figure 6 – Barrel distortion simulation for the “Grand Prix” sequence taken with the DAC by C. Duke
+
+
+
+The Grand Prix sequence was actually shot with a 10mm SWITAR wide-angle lens 5, manufactured
+by Kern & Co. of Aarau (Switzerland) 6. By knowing the dimensions of the 16 mm sensor of the
+machine, it is possible to calculate the equivalent focal length (Fe) to the standard format (35 mm), a
+value that can give an indication of the percentage of geometric distortion to be applied.
+
+Focal Length used: F = 10 mm
+Dimensions of Maurer DAC sensor: 10.26 x 7.49 mm (16 mm format)
+Diagonal of sensor: D = √                                       = 12.70 mm
+Diagonal of 35 mm format: Ds = 43.3 mm
+
+
+Fe =            =              = 34.10 mm
+
+
+Lenses with a fixed focal length could result in minimal distortion phenomena of the "barrel" type,
+with a percentage error close to 1% below focal lengths equal to 35 mm. However, considering that
+we are very close to the threshold value and that the technical information available on the lens used
+testifies to the product's excellent performance with regard to distortion, we can consider as
+negligible the aberration of a geometric type on the images produced.
+5
+  https://www.hq.nasa.gov/wp-content/uploads/static/history/alsj/JSC-07210PltOpsEquip.pdf Handbook of Pilot
+Operational Equipment for Manned Space Flight. Report No. CD42-A/SL-997. Prepared By. POE Development
+Section, NASA, Lyndon B. Johnson Space Center, Houston, Texas; June 1973 [Ann. 7]
+6
+  https://www.kern-aarau.ch/fileadmin/user_upload/Aldo/Optik/Haefliger_Kameras_Optik_Objektive_NASA.pdf Kern
+Objektive für das Apollo Raumfahrtprogramm der NASA, von Rolf Häflinger, Photographica Cabinett 67/2016 [Ann. 8]
+  SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+
+
+                                             Tracking Apollo XVI Footage. Preamble.
+
+
+
+
+Lacks in the analysis system
+In paragraph II of the study, the NASA Lunar Science Institute team states the following: “For our
+analysis, we chose periods of time when the velocity vector of the LRV is approximately constant
+and orthogonal to the camera line of sight. This choice simplifies the analysis to a two-dimensional
+geometry”.
+
+It is easy to imagine the limits of the hypothesis of a constant motion of the LRV, given the extreme
+roughness of the lunar soil and the time intervals involved (in the order of 1/24 second): this makes                                   11
+conceptually weak the method of determining the initial speed of the column of dust that the
+Colorado scholars propose to adopt and which, as already mentioned, is based on the angular speed
+of the vehicle wheel. This weakness later proves to be effective also experimentally.
+
+In fact, the measurements performed by the team on the rotation angle of the spokes that depart
+from the centre of the wheel, confirm a significant fluctuation, with intervals that for example in
+clip 2 range from Δϴ = 4 deg. to Δϴ = 37 deg.
+
+T = 1/24 s;  Ω = (ϴ1 - ϴ0) / T;  VLRV = RΩ;
+Wheel circumference of LRV = 2.57 m
+
+
+                                                          ΔTheta
+ Image number                  Theta (deg.)                                       T (s)             Ω (m/s)            VLRV (m/s)
+                                                           (deg.)
+         2148                        306
+                                                               4                  0.042                0.68                 0.29
+         2149                        302
+          ...                         ...                      ...
+         2152                        357
+                                                              27                  0.042                4.59                 1.88
+         2153                        24
+          ...                         ...                      ...
+         2159                         88
+                                                               7                  0.042                1.19                 0.49
+         2160                         95
+          ...                         ...                      ...
+         2169                        222
+                                                              37                  0.042                6.28                 2.57
+         2170                        259
+          ...                         ...                      ...
+         2177                        319
+                                                              16                  0.042                2.72                 1.11
+         2178                        335
+
+Tab. 2 - Extract from table of “Tracking Lunar Dust” by Horanyi-Hsu, Clip 2: Theta intervals and resulting LRV speed
+
+
+
+Assuming a constant speed, these fluctuations in the unit of time should remain within the proposed
+confidence interval which in this clip is ΔVLRV = ± 0.05 m/s. But, as can be seen from table 2, they
+even go as far as to obscure the declared Rover Speed data: VLRV = 2.6 m/s.
+
+The second part of the just mentioned statement ("the speed vector of the LRV is orthogonal to the
+plane of view of the camera") deserves a check. A chance to verify this claim in relation to Clip 2 is
+    SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+
+
+                                               Tracking Apollo XVI Footage. Preamble.
+
+
+
+
+given by the work conducted by Russ Andersson, founder of Andersson Technologies LLC and
+developer of SynthEyes, one of the most accredited 3D camera tracking software.
+
+Precisely on this very famous sequence, Andersson performed a 3D analysis tracing the movement
+of objects and the camera for 173 frames, then released the sources of the analysis as a
+demonstration example for the software users. 7
+
+
+
+                                                                                                                                          12
+
+
+
+
+              Figure. 7 – 3D Analysis, using SynthEyes, of the “Grand Prix” sequence of Apollo 16: trackers.
+
+
+
+The graphs developed by SynthEyes starting from the Andersson preset analysis (Figures 8, 10, 11)
+represent with different blue lines the movement of the Rover and the DAC Camera in the 3
+dimensions describing the relative motions of the system within the sequence which contains, at
+frames 21-57, the images studied by Horanyi and Hsu.
+
+
+
+
+7
+ https://www.ssontech.com/content/apollo.html Apollo Rover Practice Shot © 2003–2019 Andersson Technologies
+LLC, Last Updated 30 May 2019 [Ann. 9 - Ann. 10]
+  SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+
+
+                                             Tracking Apollo XVI Footage. Preamble.
+
+
+
+
+                                                                                                                                        13
+
+
+
+
+   1 pixel = 1,15 m                                                                                           1 pixel = 0,12 m
+
+
+Figure. 8 – 3D Analysis, using SynthEyes, of the “Grand Prix” sequence of Apollo 16: view of LRV motion from the top
+
+
+
+
+       1 pixel = 0,01 m
+
+
+
+
+Figure. 9 – 3D Analysis, using SynthEyes, of the “Grand Prix” sequence of Apollo 16: view of DAC motion from top
+  SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+
+
+                                             Tracking Apollo XVI Footage. Preamble.
+
+
+
+
+    1 pixel = 0,12 m
+
+
+
+
+                                                                                                                                        14
+
+
+
+
+   Figure 10 – 3D Analysis, using SynthEyes, of the “Grand Prix” sequence of Apollo 16: front view of LRV motion
+
+
+
+
+       1 pixel = 1,20 m
+
+
+
+
+Figure 11 – 3D Analysis, using SynthEyes, of the “Grand Prix” sequence of Apollo 16: side view of LRV motion
+
+
+
+As a first element of analysis, it is necessary to underline the motion of the camera, clearly visible
+in detail from the top view (Figure 9), although the overall path it has made does not exceed 30 cm.
+The motion of the Maurer DAC, in addition to drawing a zigzag on the XY plane, consists of a
+  SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+
+
+                                             Tracking Apollo XVI Footage. Preamble.
+
+
+
+
+rotation in the same direction as the motion of the Rover, a circumstance justified by the
+understandable need of the astronaut Charles Duke, who handled it, to follow the subject of filming.
+The second element of the system that can be deduced from the SynthEyes graphs, in this case
+macroscopic, is the approach of the Rover to the camera on the Y axis during the examined
+sequence (Figure 11).
+
+As will be understood, both elements contribute to weakening the model proposed by the Colorado
+University team. This model evidently does not take into account the motion of the observer nor
+does it identify the correct direction of motion of the LRV in space, simply assuming as an initial                                     15
+hypothesis that the vehicle speed vector is orthogonal to the plane of view. In conclusion, given the
+observations made so far, we can affirm that a two-dimensional model is not able to correctly
+represent the relative motions of the bodies within the system.
+
+Finally, it’s worth formulating two other important questions regarding the proposed results to
+which the cited paper does not seem to give sufficient answers.
+
+The first on measurement accuracy: is the propagation of the error proposed by Horányi and Hsu
+correct? How the errors of X0 and Z0, as well as VX0 and VZ0 are calculated ?
+
+The second question that still remains open regards the consistency of results. At the end of the
+paper we read: “The fact that our measurements show no deceleration in the X-direction (see the
+right panel of images 3 and 4) confirms that the footage was recorded in an airless environment”.
+
+But what and how much data confirm the conservation of speed? Are those collected sufficient?
+The lack of tracking for the descending trajectory of the dust does not allow us to verify alternative
+hypotheses. Beyond the presentation of the graphs, no statistical evidence is cited to support this
+statement.
+    SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+
+
+SECTION A
+Big Navy Salute
+
+
+
+
+                                                                                                                                          16
+
+
+
+
+                                                                                                      1
+                                   Figure A1 – J.W. Young salutes the flag, AS16-113-18339
+
+
+A.1. APOLLO 16 2
+Apollo 16 was the tenth manned mission of NASA's Apollo program, the fifth and at the same time
+the penultimate mission to bring humans to the moon. It was successfully concluded by reaching the
+main goal of the mission which, in fact, was the fifth moon landing.
+
+
+1
+  https://www.hq.nasa.gov/alsj/a16/images16.html Apollo Image Library, Apollo 16 Figure Captions Copyright ©
+1996-2017 by Eric M. Jones, last revised 16 March 2019.
+2
+  https://www.nasa.gov/missions/apollo/apollo-16-mission-details/ National Aeronautics and Space Administration.
+Last Updated Sep 29, 2023
+    SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+                                          Tracking Apollo XVI Footage. [I] Big Navy Salute
+
+
+
+
+The crew consisted of Commander John W. Young, the lunar module pilot Charles M. Duke, and
+the command module pilot Thomas K. Mattingly (the only one not to descend on lunar soil). The
+mission began with the launch of the two Apollo 16 modules via the Saturn V rocket from the John
+F. Kennedy Space Center on 16th April 1972. The moon module landed on 21st April 1972 at
+02:23:35 UTC on the Descartes Highlands. The astronauts spent 71 hours, 2 minutes and 13
+seconds on the surface of the Moon, of which 20 hours 14 minutes and 14 seconds were engaged in
+Extra Vehicular Activities. During these activities a total of 95.8 kg of moon rocks were collected.
+On 27th April 1972, at 19:45:05 UTC, Apollo 16 dived into the Pacific Ocean.
+
+A.1.1 ALSEP Off-Load
+21st April 1972 is the day after man's 5th moon landing. Astronauts wake up on the Orion lunar                                            17
+module and are preparing to fit out the EVA 1. They will be engaged in some activities before
+leaving to explore the Descartes Highlands. Among these is the activation of the Lunar Rover and
+the ALSEP scientific unit.
+The Apollo Lunar Surface Experiments Package (ALSEP) comprised a set of scientific instruments
+placed by the astronauts at the landing site of each of the five Apollo missions from 12 to 17. After
+successfully deploying one of the probes, Commander John Young inadvertently caught his foot on
+the cable to the experiment from the Central Station. The cable was pulled out of its connector on
+the Central Station. Although some technicians and astronauts on Earth believed that a repair was
+feasible, mission control ultimately decided that the time necessary for a repair could be put to
+better use on other work, and so the experiment was terminated. 3
+Before leaving the moon landing site for EVA 1, John Young and Charlie Duke also planted the
+U.S. flag in the lunar soil.
+
+A.1.2 DESCRIPTION OF THE SEQUENCE 4:
+Astronaut John W. Young, commander of the Apollo 16 lunar landing mission, leaps from the lunar
+surface as he salutes the United States flag at the Descartes landing site during the first Apollo 16
+extravehicular activity (EVA). Astronaut Charles M. Duke Jr., lunar module pilot, took two pictures
+for two different jumps. The Lunar Module (LM) "Orion" is on the left. The Lunar Roving Vehicle
+(LRV) is parked beside the LM. The object behind Young (in the shade of the LM) is the Far
+Ultraviolet Camera/Spectrograph (FUC/S).
+
+A.1.2.1 Sources: The images used for this study come from Apollo 16 Journey to Descartes,
+complete TV and onboard film © 2005 Spacecraft Film (courtesy NASA). The sequence "Salute to
+the Flag" is published at this link: https://youtu.be/sBta1iBE2NU [Ann. A1]
+
+A.1.2.2 Other official sources containing the same sequence:
+- Apollo 16 Lunar Surface Journal Corrected Transcript and Commentary by Eric M. Jones 1996,
+Revised 24th April 2017. https://www.hq.nasa.gov/alsj/a16/a16salute.mpg [Ann. A2]
+- “Nothing so Hidden” Published by NASA on 12th July 2018
+https://plus.nasa.gov/video/apollo-16-nothing-so-hidden-2/
+
+
+
+
+3
+  http://www.lpi.usra.edu/lunar/missions/apollo/apollo_16/experiments/as/ Apollo 16 Mission Science Experiments -
+Active Seismic, Lunar and Planetary Institute
+4
+  https://www.nasa.gov/image-article/john-w-youngs-lunar-salute/ NASA, John W. Young’s Lunar Salute, Last
+Updated: Sep 23, 2022 Responsible NASA Official: Abigail Bowman
+    SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+                                          Tracking Apollo XVI Footage. [I] Big Navy Salute
+
+
+
+
+A.1.2.3 Chronology and dynamics of motion 5
+120:25:42 Duke: “Come on; a little bit closer. Okay, here we go. A big one”.
+John bends his knees slightly, springs about a half meter off the ground, and salutes. He is off the
+ground about 1.45 seconds which, in the lunar gravity field, means that he launched himself at a
+velocity of about 1.17 m/s and reached a maximum height of 0.42 m. This superb picture is AS16-
+113- 18339. Note that John's total weight - body, suit, and backpack, is about 30 kilograms or 65
+pounds. In Houston, Tony chuckles with delight.
+Ken Glover writes: “For students interested in analyzing John's 'Big Navy Salute', I have made a
+short, 2.7 Mb MPEG-1 clip of better resolution and at 29.97 fps, showing only the two jumps”.
+Jones: “John's jumps says to me he's got a great deal of confidence this early”.
+Duke: “His balance was really extraordinary”.                                                                                             18
+120:25:49 Duke: Off the ground. Once more. (Pause) There we go.
+John's second jump lasts about 1.30 seconds and, consequently, his launch velocity is about 1.05
+m/s and his maximum height is 0.34 m. This picture is AS16-113- 18340.
+Journal Contributor Joe Cannaday notes that the peak of John's first jump was at about 120:25:49
+and the peak of the second was three seconds later at 120:25:52.
+
+
+
+
+                                                                                                                       5
+                  Figure A2 – Second jump by J.W. Young during the salute to the flag, AS16-113-18340
+
+
+
+5
+ https://www.hq.nasa.gov/alsj/a16/a16.alsepoff.html Apollo 16 Lunar Surface Journal Corrected Transcript and
+Commentary by Eric M. Jones. Revised 24th April 2017.
+     SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+                                           Tracking Apollo XVI Footage. [I] Big Navy Salute
+
+
+
+
+A.2. IMAGE PRODUCTION TECHNOLOGY.
+The images of this sequence were filmed by RCA Color TV (CTV) 6, a television camera already
+used in the Apollo 15 mission and improved in its performance and functionality for Apollo 16. The
+camera was set up on board within the Lunar Module during the moon landing phase and then
+transferred to the Lunar Rover (or in some cases on a tripod) for the shooting of Extra Vehicular
+Activities. It integrated the Ground-Controlled Television Assembly (GCTA), which allowed the
+Huston Mission Control Center a remote control in real time (on, off, pan, tilt, zoom, diaphragm
+opening and closing f / 2.2 - f / 22, lighting control) 7. The machine was fitted with a
+photomultiplier tube which contained a 16 mm sensor, equipped with a technology that RCA was
+developing just in that period, the Silicon Intensifier Target Tube 8, capable of a great sensibility; it                                  19
+was also suitable for shooting very shady areas, and it could resist to strong sun exposure without
+being damaged. Sensibility was electronically adjusted within the range of 1 - 1000 lux 9. The
+optical group allowed a zoom range of 12.5-75 mm and the possibility to vary the angle of view
+from 54° to 9° 7.
+
+
+
+
+    Figure A3 – Functionality scheme of SIT Camera Tube RCA, RCA Ultricon® and SIT Camera Tubes, Brighton 1982
+
+
+The mechanics allowed a scan rate of approximately 30 fps (exactly 29.97 fps) with 525 scan lines
+per frame, in line with the standard NTSC of American commercial television. More exactly, 60
+interlaced fields (semi-frames) were produced sequentially every second with a resolution of 200
+TV lines per image and with an image proportion of 4:3.
+The machine was able to produce colour images thanks to a simple additional device developed by
+CBS from the '40s (Col-R-Tel), consisting of a rotating disc with red, green and blue filters, placed
+
+
+6
+  https://tothemoon.ser.asu.edu/files/apollo/apollo_16_lunar_photography.pdf Apollo 16 Lunar Photography, NASA –
+National Space Science Data Center, Greenbelt MD 1973 [Ann. 3]
+7
+  https://www.nasa.gov/wp-content/uploads/static/history/alsj/GCTA-Manual.pdf RCA Government and Commercial
+Systems, Astro-Electronics Division, Princeton NJ 08540; Issued 24 May 1971, Revised January 1972 [Ann. A3]
+8
+  RCA-Norbain Electro - Optics Ltd. Seminar Electro - Optics/Laser Intern. Brighton 23-25 March 1982 [Ann. A4]
+9
+  https://www.nasa.gov/wp-content/uploads/static/history/alsj/Shooting-Moonwalks.pdf "Shooting the Apollo
+Moonwalks" By Sam Russell RCA project engineer of GCTA color television camera, Apollo missions 15 -17 [Ann. A5]
+  SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+                                        Tracking Apollo XVI Footage. [I] Big Navy Salute
+
+
+
+
+in front of the tube sensor. The disk made a turn in exactly one-third of the scanning frequency, thus
+producing 3 half-frames of different colours every twentieth of a second.
+
+
+
+
+                                                                                                                                        20
+
+
+
+
+         Figure A4 – The Field Sequential Colour Wheel (Col-R-Tel) conceived by CBS (Lebar, 1997, p. 52.)
+
+
+
+When the CTV was installed on the Rover, the images were sent via radio through the Lunar
+Communications Relay Unit (also developed by RCA), which allowed the direct connection
+between the Rover and the receiving stations on Earth. The Rover was therefore equipped as a
+completely independent mobile unit, capable of transmitting directly to the ground even when it
+was parked miles away from the lunar module. However, this required operations of new antenna
+pointing every time the vehicle was parked.
+
+A.2.1 Estimate of the geometric aberration of the images
+The electronic photomultiplier of the camera (RCA Vidicon SIT Tube) required a spherical
+photocathode surface and, following the transition from a flat image to a curved surface, the
+geometric distortion increased by a typical value of 2% compared to traditional optical groups, with
+a pincushion effect 8. The use of long focal lengths (which produced narrow field angles) would
+certainly have increased this limit of linearity characteristic of the camera, again in the sense of the
+pincushion, while at short focal lengths (wide angle) there could have been a recovery, or more
+likely a mix between the pincushion and the so-called barrel distortion.
+The spatial measurements of the sequence in question were carried out in the central area of the
+images, where the two types of distortion are in any case almost irrelevant. However, for greater
+     SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+                                           Tracking Apollo XVI Footage. [I] Big Navy Salute
+
+
+
+
+accuracy of the measurement system, it was considered appropriate to calculate the geometric
+distortion anyway.
+
+A.2.1.1 Calculation of the focal length used for shooting.
+From the high-resolution images AS16-113-18339 and AS16-113-18340 (Figures A1 and A2) we
+can draw fundamental information on the "set" in which the sequence was shot. The image AS16-
+113-18340, taken with a 60mm lens 6 (for this reason not subject to appreciable geometric
+aberrations), shows on the back the LR with the CTV in activity. All we need to do is identify the
+distance between the lens and the subject in order to determine the focal length using the
+conventional formulas of photographic optics.                                                                                              21
+Through a perspective analysis made with the Adobe Photoshop CS6 Vanishing Point Filter 10,
+determining the distance between the target and the astronaut John Young is quite simple. By
+identifying the vanishing points, this filter enables the construction of reference planes that
+characterize the perspective development of the image, thereby allowing for accurate measurements
+of the three-dimensional space.
+
+
+
+                                                               CTV LENS              ►
+
+
+
+
+     Figure A5 – AS16-113-18340, measurement system calibration with Adobe Photoshop CS6 Vanishing Point Filter.
+                       The height of the camera from the ground A can be derived as: A = At + Ac
+
+
+
+
+10
+   https://helpx.adobe.com/uk/photoshop/using/vanishing-point.html Adobe Photoshop User Guide, Image
+transformations, Vanishing Point Copyright © 2019 Adobe 345 Park Avenue San Jose, CA 95110-2704
+     SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+                                           Tracking Apollo XVI Footage. [I] Big Navy Salute
+
+
+
+
+A.2.1.1.1 Relevant known dimensions.
+The known dimensions through which it is possible to set up a measuring system can be obtained
+from the diameter of the wheel of the LR 11 (cm 81.8). The wheel allows to have a reference
+measurement both in height and in width. Some dimensions of objects in the foreground are known
+(PLSS Unity and OPS Module): a perspective analysis of the space represented by the photo is
+therefore possible.
+
+Let's set as the origin of our system O the projection of the lens to the ground. We indicate with At
+and Ac respectively the height of the CTV on the chassis and the height of the chassis from the                                            22
+ground in the absence of load 11 (the thickness of the chassis is also considered); finally, Y indicates
+the position on the ground of John Young.
+
+
+
+
+     Figure A6 – AS16-113-18340, Distance of John Young from lens. The projection of the lens to the ground O is the
+                   origin of our measurement system. Y is the position of the astronaut on the X assis.
+
+
+The following measures are known:
+- The diameter of the Rover wheel is 81.8 cm (32.2 in.) 15
+- The height of the camera from the ground A can be derived as: A = At + Ac = 123 cm (48.41 in.) 15
+- The height of the Training PLSS Unity (Portable Life Support System) worn by John Young is 26
+  inches, thus 66.04 cm (module OPS not included) 12
+- The width of module OPS (Oxygen Purge System) of John Young is 19 inches, thus 48.26 cm 12
+
+11
+   https://www.nasa.gov/wp-content/uploads/static/history/alsj/LRV_OpsNAS8-25145.pdf Lunar Roving Vehicle
+Operation Handbook, The Boeing Company, Huntsville (Alabama, USA) April 19, 1971 [Ann. A6]
+12
+   Measurements of Apollo 16 Training Unit, Courtesy Dean Eppler, NASA, Lyndon B. Johnson Space Center, Houston
+Texas, USA. PLSS Unity measurements do not include the OPS module positioned above.
+  SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+                                        Tracking Apollo XVI Footage. [I] Big Navy Salute
+
+
+
+
+The line of contact of the wheel of the LR with the lunar ground traces the base of the main plane
+for the height of which we will rely on similar points having the same quotes on the circumference
+of the wheel itself. There is only one vertical plane that allows us to make the measurements of the
+wheel diameter in width and height concordant: once identified, this will allow us to correctly
+express the perspective. Once the main (vertical) plane has been identified, the Photoshop CS6
+Vanishing Point tool allows us to derive planes that are orthogonal to each other. We can therefore
+proceed to derive the plans allowing us to connect the shape of the astronaut in the foreground with
+the objects whose measurements have been calibrated in the background: the measurements of the
+PLSS Unity and the OPS Module that we can check on the new frontal plane built, exactly match                                           23
+those known. At this point we can derive the horizontal (or ground) plane on which we detect the
+sought distance.
+
+
+
+
+     Figure A7 – Apollo 16 Training PLSS Unity and OPS Module
+
+
+
+A.2.1.1.2 Measurement result
+Using the metric system just set, the distance OD results to
+be: 703.25 cm. The instrumental error relating to the
+Prospective Filter of Adobe PS CS6 is +/- 1.5 pixels, as we
+will demonstrate in C.3.7. On the just measured distance, this
+error is 4.33 cm X 1.5 = 6.49 cm. Definitely, the result of the
+measurement is:
+
+OD = 703 cm +/- 6.5 cm
+
+
+                                                                                  Figure A8 – Dimensions of Apollo 16 Training PLSS
+     SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+                                           Tracking Apollo XVI Footage. [I] Big Navy Salute
+
+
+
+
+A confirmation of the correctness of the investigation carried out comes from the planimetric map
+developed by Brian McInall and published by NASA at the following address:
+                                                                                                                                     13
+https://www.nasa.gov/wp-content/uploads/static/history/alsj/a16/A16ALSEP-DeploymentPlanimetricMapLROC-M175179080LR_Jan2017.jpg
+
+
+
+
+                                                                                                                                           24
+
+
+
+
+          Figure A9 – Extract of the planimetric map of the ALSEP area of Apollo 16, produced by Brian McInall
+
+Given the metric scale of the map with a simple measurement (always carried out with Adobe PS
+CS6) it is possible to confirm the experimental data just obtained starting from high-resolution
+photography AS16-113-18340.
+A.2.1.2 Conclusions on the calculation of the focal length used for the recovery
+By indicating PLSSctv as the height of the PLSS Unity on the CTV sensor and PLSSr as its real
+value, the focal F used is given by the relation F = OD x PLSSctv / PLSSr. In fact even if the optical
+group of the camera was more complex, we can simplify it according to the classic scheme:
+
+
+13
+  https://www.hq.nasa.gov/alsj/a16/a16.alsepoff.html Apollo 16 Lunar Surface Journal Corrected Transcript and
+Commentary by Eric M. Jones. Revised 24 April 2017
+     SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+                                           Tracking Apollo XVI Footage. [I] Big Navy Salute
+
+
+
+
+                                                                                                   ( )
+
+                                                                                                    ( )
+
+                                                                                then
+
+
+
+
+Figure A10 – Relationship between focal length and object size on the sensor                                                               25
+
+By opening one of the images in the study sequence with Adobe Photoshop and setting the sensor
+dimensions 6 (12.8 x 9.6 mm) as reference dimensions we can detect PLSSctv = 2 mm with an
+instrumental error of 1 pixel equivalent to +/- 0.05 mm
+Consequently we obtain: F = 7030 x 2 / 660 = 21.30 mm (+/- 0.73 mm)
+To evaluate the percentage of distortion to be applied based on the focal length used, it is necessary
+to express the latter in terms of "equivalent focal length" Fe, comparing it to a standard sensor
+(36mm X 24mm full-frame, known as 35mm) instead of the sensor of 16 mm with which the scene
+was filmed. If D is the diagonal of the 16 mm sensor and D s is the diagonal of the standard format
+(43.3 mm), then
+Fe = F x Ds / D = 21.30 x 43.3 / 16 = 58 mm (+/- 2 mm)
+
+A.2.2 Conclusions on the geometric aberration of the images
+The equivalent focal length identified is between 56 and 60 mm and therefore does not involve
+further geometric distortion: the correction to be made to the images will only consider the typical
+distortion of the CTV, estimated at + 2% (pincushion) due to the spherical photocathode.
+
+A.3. IMAGE PROCESSING ON EARTH
+The real-time processing sequence for the videos arriving from the lunar surface, for Apollo 16 and
+17 was the following 14:
+           1. Signal reception at one of the Apollo MSFN ground stations. Filtering of video data,
+           compensation of the Doppler effect and its transmission to the Houston Mission Control
+           Center.
+           2. Signal conversion with sequential colour fields into NTSC simultaneous colour fields by
+           means of the RCA Scan Converter installed in Houston. Transfer of the converted NTSC
+           signal to the Image Transform company, North Hollywood - California.
+           3. Reduction of video noise and image improvement through filters. Transfer of the cleaned
+           video to Houston via microwave, for recording and immediate release to the media.
+           4. Recording of the film on 16 mm film by means of a colour Kinescope 15 at 29.97 fps
+
+
+
+
+14
+   https://www.hq.nasa.gov/wp-content/uploads/static/history/alsj/ApolloTV-Acrobat5.pdf “Apollo Television”
+Copyright 2005 By Bill Wood, former Apollo MSFN station engineer [Ann. A7]
+15
+   https://tothemoon.ser.asu.edu/files/apollo/apollo_16_lunar_photography.pdf Apollo 16 Lunar Photografy, NASA –
+National Space Science Data Center, Greenbelt MD 1973 [Ann. 3]
+     SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+                                           Tracking Apollo XVI Footage. [I] Big Navy Salute
+
+
+
+
+A.3.1 Signal management at MSFN stations.
+The three main earth stations of the MSFN Manned Space Flight Network, Honeysuckle Creek and
+Parkes in Australia, Goldstone in California and Madrid in Spain, managed the sequential colour
+signal without converting it, then sent it to Houston via satellite and microwave connections. The
+stations that gave more coverage were the Australian one and Goldstone, California. In these
+stations the frequencies 1.024 MHz (vocal subcarriers) and 1.25 MHz (subcarrier for biomedical
+telemetry) were removed from the FM S-band. The resulting video was then sent to the Mission
+Control Center in Houston. The sequence of the "Big Navy Salute" was received from the Madrid
+station, which represented the best tracking at that moment, in 1.284 seconds. From there it reached
+Houston in 0.074 seconds. 16                                                                                                               26
+
+John Saxon, who was Operations Manager at the Honeysuckle Creek Tracking Station during
+Apollo 16, writes "Honeysuckle usually communicated via microwave to a mid NSW ground station
+at Ceduna (South Australia), then via a pacific (geostationary) satellite to the San Francisco area,
+then various microwaves to/from Houston - via Goddard switching centre in Maryland. But
+occasionally we would use Mwave Houston to Goddard, then Atlantic satellite, then Indian Ocean
+satellite to Carnarvon on the (Australian) west coast to Honeysuckle. 16
+
+At the MSFN stations, the unconverted television transmissions from the Moon were normally
+recorded before the filtering operations, but later the stations themselves were asked to reuse the
+tapes for subsequent needs, consequently it is not known today if such recordings still exist 17.
+Before the conversion, the downlink station had the task of correcting the Doppler Shift of the lunar
+signal caused by the relative motion of the Earth-Moon system. Without this correction, the
+television circuit would have shown deformed and inverted images. The correction process was
+partly mechanical and partly electronic. 15
+
+
+
+
+             Figure A11 - Honeysuckle Creek Tracking Station (Canberra, Australia), photo by Bryan Sullivan
+
+
+
+16
+  https://www.hq.nasa.gov/alsj/a16/a16.alsepoff.html Apollo 16 Lunar Surface Journal Corrected Transcript and
+Commentary by Eric M. Jones. Revised 24 April 2017
+     SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+                                           Tracking Apollo XVI Footage. [I] Big Navy Salute
+
+
+
+
+A.3.2 The RCA Scan Converter 17
+The cost to pay for the production of colour images was a decrease in quality. The resulting image
+was dark and slightly flickering. In addition, another problem arose for the RCA technicians:
+normal televisions could not correctly decode and display the images of the lunar camera, since
+these were recorded in 60 sequential red, green and blue half-frames per second, while for the
+NTSC standard of the American television circuit 30 pairs per second of semi-squares (left and
+right) interlaced with simultaneous colours were required. Huston solved the problem with the use
+of an electromechanical conversion device manufactured by RCA itself. The conversion took 12
+seconds and slightly blurred the edges of the moving objects. On the moon, the RCA camera
+scanned one red, green and blue video field at a time. Furthermore, the scanning proceeded                                                 27
+according to the usual scheme used for NTSC recordings in interlaced format, thus recording a right
+field (or semi-frame) with 262.5 TV lines and then alternating it with a left field consisting of the
+remaining 262.5 lines (a total of 525 lines).
+
+
+
+
+                             Figure 21 - Operating Console of the RCA Apollo Slow Scan Converter
+
+
+
+The sequential production of the image fields created by the RCA "Moon Camera" can therefore be
+represented with the following scheme:
+
+
+
+
+17
+     http://www.hawestv.com/moon_cam/moonctel2.htm Copyright © 2006 by James T. Hawes
+  SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+                                        Tracking Apollo XVI Footage. [I] Big Navy Salute
+
+
+
+
+1/60 sec ↔ red field (Red) right - even (Even)
+2/60 sec ↔ blue field (Blue) left - odd (Odd)
+3/60 sec ↔ green field (Green) right- even (Even)
+4/60 sec ↔ red field (Red) left - odd (Odd)
+5/60 sec ↔ blue field (Blue) right - even (Even)
+6/60 sec ↔ green field (Green) left - odd (Odd)
+7/60 sec ↔ red field (Red) right - even (Even)
+...
+
+The fundamental element of the Scan Converter was the Magnetic Disc Recorder (Stock Ampex                                               28
+HS-100); it was an Ampex recorder used since the 60s for the slow motion of sporting events which
+was suitably modified to reproduce, record and delete the video fields recorded by the RCA Moon
+Cam on parallel tracks, in order to return as a result of 29.97 fps with 60 interlaced colour fields,
+through a process that was called "Moving Window".
+
+
+
+
+               Figure A13 - Stock Ampex HS-100 disc recorder                               Figure A14 - The “Moving Window”
+                                                       RCA
+
+
+The conversion scheme can be represented as follows:
+
+1/30 sec ↔ 1st frame
+1/60 sec ↔ Reven + Bodd↔even + Geven
+2/60 sec ↔ Bodd + Geven↔odd + Rodd
+
+2/30 sec ↔ 2nd frame
+3/60 sec ↔ Geven + Rodd↔even + Beven
+4/60 sec ↔ Rodd + Beven↔odd + Godd
+...
+...
+   SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+                                         Tracking Apollo XVI Footage. [I] Big Navy Salute
+
+
+
+
+The conversion of the intermediate fields of each triad (from left to right and vice versa) was
+necessary in order to obtain perfectly interlaceable fields and it was operated through the
+introduction of a short delay in the recording, equivalent to the reproduction of half a TV line. From
+the point of view of the timeline of the events filmed in the various half-frames by the RCA CTV,
+each converted frame represents the superposition of 4 fields originally produced in sequence by the
+camera.
+
+
+MOON => EARTH FRAMES                                             Earth Frames                                     Time Keeping (s) =>
+
+                                                                                                                                         29
+Moon Time                                         Moon
+Fields Keeping (s)        Colors      Interlacing Frames
+   -2             -2/60 Red           EVEN
+   -1             -1/60 Blue          ODD                                      1    1/30s
+
+   0                   0 Green        EVEN
+                                                        -1       odd
+
+   1               1/60 Red           ODD                              even                  2    2/30s
+
+   2               2/60 Blue          EVEN
+                                                         0                    odd
+
+   3               3/60 Green         ODD                                           even                  3     3/30s
+
+   4               4/60 Red           EVEN
+                                                         1                                  odd
+
+   5               5/60 Blue          ODD                                                         even                  4     4/30s
+
+   6               6/60 Green         EVEN
+                                                         2                                                odd
+
+   7               7/60 Red           ODD                                                                       even
+
+   8               8/60 Blue          EVEN
+                                                         3                                                              odd
+
+   9               9/60 Green         ODD                                                                                     even
+
+  10             10/60 Red            EVEN
+                                                         4
+....                                                 ....                                                                 ....
+.... 60                                              .... 30                                                              .... 30
+
+        Table A1 – Comparison between the timeline of the CTV RCA and the timeline of the converted video signal
+
+
+
+For this reason, the fast-moving objects of the sequence examined by this study in each frame
+present contours that highlight the colour of the last recorded field in the direction of motion.
+Considering the overlap of 3 fields filmed on the Moon for each half-frame of the sequence
+converted on Earth, the dominant colour on said contour will result in the sequence of colours
+Red - Green - Blue.
+
+Exceptions to this sequence and precession mechanisms of the dominant colours on the contours
+may be due to the acceleration of the moving bodies (when the speeds decrease the colours will
+tend to overlap), or to the different distances from the objective (the perspective analysis can
+explain the presence of different colours on objects closer or further away from the camera that is
+filming the scene).
+  SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+                                        Tracking Apollo XVI Footage. [I] Big Navy Salute
+
+
+
+
+                                                                                                                                        30
+  Figure A15 – Moon TV, conversion of the sequence of R-B-G-R fields taken from the CTV RCA into NTSC frames
+
+
+
+
+              Figure A16 – Moon TV, succession of "dominant" colours on the outlines of moving objects
+
+
+Taking this frame production process into consideration is fundamental for the analysis of the
+sequence, and makes the exclusive analysis of the most advanced point of the body in motion
+reliable, since the rest of the image is nothing other than the result of 4 different events.
+
+Once the conversion of the half-frames was completed, the video of the RCA TV camera underwent
+other electronic manipulation processes in Huston: luminance adjustment, chromatic carrier
+suppression, horizontal and vertical synchronization, chromatic signal enhancement, addition of the
+audio subcarrier with the mixing traces from the moon and the earth.
+
+A.3.3 Image Transform 14
+From Huston the signal was sent to North Hollywood, California, to be processed by the Image
+Transform company in order to perform a "cleaning" of the images. Following the limited
+bandwidth availability and the various manipulations made necessary, the video presented a rather
+     SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+                                           Tracking Apollo XVI Footage. [I] Big Navy Salute
+
+
+
+
+heavy chaotic disturbance (or noise). Image Transform algorithms were able to separate motion
+areas from static portions of the image by comparing four frames at a time. In static image regions,
+noise has been reduced by a factor of four, allowing for a significant detail enhancement. The
+moving areas have been spatially filtered obtaining only a partial reduction of the noise. The static
+portions of the images and those relating to the movement have been recombined without the use of
+artefacts.
+
+A.3.4 From Kinescope up to digital images
+The videos that the astronauts shot on the Moon with the RCA TV Camera and that on Earth were
+converted to the American television standard, and were transferred onto 16 mm film for archiving,                                         31
+using the reference technology of the time: the Cinescope (or telerecording). With this format, they
+have been made publicly available, in particular for dissemination or research purposes. 15
+
+
+
+
+                        Figure A17 - Marconi B 3402 Cinescope, created in the late 60's for English TV
+
+
+The Kinescope system simply consisted of the use of a precision camera aimed at the screen of a
+high-performance monitor: the camera, synchronized with the monitor's scanning frequency,
+recorded the images and imprinted them on film. This method was used since the 1930s for the
+conservation, retransmission and sale of television programs before the introduction of the
+videotape. The frame rate most used by this machine, since its origins, was 24 fps (cinema format).
+In the 1970s, however, hand in hand with the diffusion of colour TV, kinescopes capable of filming
+at 29.97 fps (NTSC standard) were introduced. 18 The digital images that were the subject of this
+study, provided by Mark Gray of the SPACECRAFT FILMS company (Atlanta GA), present all the
+29.97 fps that were produced by the Scan Converter RCA: this is proven by the exact succession of
+
+18
+     Frederick M. Remley, Magnetic Recording: The First Hundred Years (1998) New York, IEEE Press
+     SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+                                           Tracking Apollo XVI Footage. [I] Big Navy Salute
+
+
+
+
+the dominant colours on the contours of the moving objects.19 This allows us to say that the
+analysed material is complete and authentic, i.e. there are no cloned frames typical of 24/30 fps
+conversions, nor have new frames been generated by means of digital interpolation processes. The
+transition from analogic images to digital images has certainly led to a change in the aspect ratio
+which must be taken into account if we want to correctly interpret the position of the objects in each
+frame.
+
+A.3.4.1 Display Aspect Ratio
+The term Display Aspect Ratio (DAR) indicates the mathematical relationship between the width
+and height of an image. As we saw in A.2.1.2 the CTV sensor had dimensions 12.8 x 9.6 mm                                                   32
+(Aspect Ratio 4:3 or 1.33). The television broadcast produced 525 TV lines in the NTSC format
+maintaining a DAR of 1.33. The images were subsequently impressed on film by the Kinescope
+with 10.26 x 7.49 mm format: the ratio between the two dimensions is 1.37.
+Finally, the digital images contained by the Spacecraft Film DVDs have a size of 720x480 pixels in
+the 4:3 DVD -Video NTSC format. By starting from these data to understand how to find the
+correct proportion between the two frame sizes, it is necessary to make some considerations.
+
+
+
+
+            Figure A18 – Display Aspect Ratio changes undergone by CTV images during the main conversions
+
+
+The resolution problems in the conversion of an analogic image into digital, have been the subject
+of a recommendation by the International Telecommunication Union known as Rec. 601, BT. 601
+or CCIR 601, which actually defined the standard in 1982 20. Since then, analogic video signals
+have been sampled at 13.5 MHz. The number of active video pixels per TV line is equal to the
+sampling frequency multiplied by the duration of the active line (the part of each analogic video line
+that contains active video, thus not containing synchronization pulses, black bands, etc.). In the
+NTSC signal with 525 lines at 60 Hz, the duration of the active line is 52.856 μs and gives rise to ≈
+713.5 pixels per line. In order to avoid cutting parts of the active image, if the timing of the analogic
+video was equal to or greater than the tolerances established in the relevant standards, a total length
+of the digital line of 720 pixels was chosen.
+
+19
+   For example, in image 25 the astronaut profile to the right of the frame presents the succession of colours frame x:
+RED; frame x+1: GREEN; frame x+2: BLUE which correspond to the colour of the last field superimposed by the RCA
+Scan Converter on earth. On the opposite profile, to the left of the frame, the astronaut presents a sequence CYAN
+(blue+green), YELLOW (green+red), MAGENTA (red+blue) due to the tendency of the original succession of colours
+(red+blue+green) to mix with each other when the motion is perceived by the machine as slower.
+20
+   https://www.itu.int/dms_pubrec/itu-r/rec/bt/R-REC-BT.601-7-201103-I!!PDF-E.pdf: Studio encoding parameters of
+digital television for standard 4:3 and wide screen 16:9 aspect ratios, Recommendation ITU-R BT.601-7 (03/2011).
+International Telecommunication Union Electronic Publication, Radiocommunication Sector, Geneva 2017 [Ann. 5]
+     SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+                                           Tracking Apollo XVI Footage. [I] Big Navy Salute
+
+
+
+
+But the active lines in the NTSC television format are only 483 (a value that is approximated to
+480) so, in order to contain the alteration of the proportion, the digital product has thin black bars (8
+pixels) to the right and left of the image and reproduces the analogic data in 704 pixels. The images
+provided by Spacecraft Films are in fact images of 720 x 480 pixels with black bands of 8 pixels on
+each side (nominal analogue suppression).
+
+A.3.4.2 Pixel Aspect Ratio
+In digital video, and with particular reference to display devices, the Pixel Aspect Ratio (PAR) was
+introduced with the aim of identifying what is the relationship between the density of information
+reachable on the ordinate axis compared to that achievable on the abscissa axis. The LCD monitors                                          33
+used in modern computers have an intrinsic PAR of 1, that is, they display equally dense
+information on the two axes. The analogic television signal has a precise number of scan lines, but
+not a precise number of columns, thus making it unnecessary to introduce the PAR concept.
+
+
+
+
+                                      Figure A19 – Conversion from TV format to PC format
+
+
+
+ITU-R BT.601 specified that the standard definition television images must be encoded by lines of
+720 pixels (704 pixels of pure image) sampled at 13.5 MHz, but the encoding identifies non-square
+pixels. The analogic format NTSC, in fact, finds in the homologous digital format 704 x 480 pixels
+the preservation of the aspect ratio because the referred pixels have a PAR equal to 10/11. Having
+to view the images of the DVD-Video NTSC format with software operating on a square pixel
+system, this conversion coefficient must be taken into account 21. The correct aspect ratio of the
+images on such a system will be obtained by bringing the image to 640x480 pixels.
+
+A.3.5 Other possible alterations
+We cannot be sure of how many successive conversions and transformations the lunar shoots have
+undergone after the already heavy production process, before reaching us in the form delivered by
+Spacecraft Films. However, it is certain that, as confirmed in all the cases that we will present
+below from the findings made on the known dimensions, the dimensional proportions are correct.
+Apollo mission researchers also agree that the videos distributed by Spacecraft are reliable sources,
+perhaps the best reproductions of the original films ever authorized by NASA.
+
+21
+  https://helpx.adobe.com/uk/photoshop/using/creating-images-video.html Adobe Photoshop User Guide, Video and
+animation, Creating images for video © 2019 Adobe 345 Park Avenue S. Jose, CA 95110-2704
+     SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+                                           Tracking Apollo XVI Footage. [I] Big Navy Salute
+
+
+
+
+Our analyses seem to confirm that no particular artefacts or filters have been introduced for the
+production. Proof above all, the very accentuated phenomenon of the flickering of the colours that
+we have exposed in paragraph A.3.2: any hypothetical restoration intervention that did not have a
+conservative character, and that tried to attenuate this effect, very annoying for the viewer, would
+have made the sequence of colours emerging on the contours of the moving objects less evident, or
+even completely altered the order of the dominant colours.
+
+A.3.6 Preparation of videos for the correct metric measurements
+Before proceeding to measurements with specific instruments, it was decided to prepare the films to
+be analysed with a software that represents the professional standard for video editing: Adobe                                             34
+Premiere CS6 22. The preliminary operations carried out were in summary:
+
+      1) Correction of the aspect ratio of the movie according to the good practices described in
+         A.3.4.1 and A.3.4.2
+      2) Correction of geometric distortions considering what has been identified in A.2.2
+
+Here below we describe the operations performed to obtain the corrections referred to in points 1
+and 2, in order to favour repeatability (the same results can be achieved by using procedures and
+software able to guarantee the same quality of work):
+
+a) Import the movie that interests us (for example .VOB files of Spacecraft Film DVD) in 720x480
+format
+b) Following a specific software request, at the end of the import procedure, to adjust the sequence
+settings to the video
+c) Isolate the frames that interest us with the Adobe Premiere editing tools
+d) Through its Effects panel choose the transform section, then apply the "crop" tool to the movie,
+cutting out the image and thus excluding any black band or outline
+e) Export the movie by choosing the Mpeg2 format
+f) In the panel "export settings / movie output tab" select "scale to fill"
+g) In the basic video settings, choose the following parameters: 640x480 format; square pixels
+(1,000); fps 29.97; level: high; bitrate: VBR 2 passages, maximum depth (put the 3 sliders to the 80
+value); maximum rendering quality
+h) Confirm the export settings and then save the new movie.
+
+Saving in MPEG2 format is necessary for the analysis described below in A.4, using the Tracker
+Video Modeling software. Another procedure that we report, more complex but from which a better
+result is obtained, is the export from Adobe Premiere in TIFF format. Also in this case we
+recommend selecting the 640x480 square pixel format and proceeding to export with the highest
+quality and depth of Rendering. The TIFF format is an uncompressed format and retains all the
+original data, thus allowing a more accurate measurement. In case of analysis with Adobe
+Photoshop or other similar editors, all TIFF images must be loaded on different levels in the same
+work area, so that the same measurement system can be applied. For measurements with other
+software that allows tracking only on video files (e.g. Tracker Video Modeling), in case the quality
+result of the conversion from the VOB format is poor, in order to maintain the high quality of the
+source it is possible:
+
+22
+  https://helpx.adobe.com/it/premiere-pro/user-guide.html Adobe Premiere Pro User Guide, © 2019 Adobe 345 Park
+Avenue S. Jose, CA 95110-2704
+     SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+                                           Tracking Apollo XVI Footage. [I] Big Navy Salute
+
+
+
+
+      1) To export movies from VOB to TIFF with Adobe Premiere [Ann. A8]
+      2) To transform TIFF files in MP4 sequence (compatible with Tracker Video Modeling)
+         through the option of Adobe Photoshop: Open / Sequence of Images and then Export /
+         Rendering Video [Ann. A9]
+
+
+A.4 ANALYSIS WITH TRACKER VIDEO MODELING [Ann. A10]
+Tracker 23 is a free video analysis and modeling tool very well known by teachers and students all
+over the world. It’s built on the Open Source Physics (OSP) Java framework 24, completely free and
+open source. It is designed to be used in physics education. It collected over 1 million users in 26                                       35
+different languages. Tracker video modeling is a powerful way to combine videos with computer
+modeling. (The authors: Douglas Brown, Wolfgang Christian, Robert M. Hanson)
+Tracker Video Modeling (TVM) is a very useful tool for tracking kinematic models starting from
+digital images and movies. Its features allow you to track moving objects and obtain metric data,
+speeds and accelerations in a very agile way. It is possible to create models of material points and
+masses, as well as multi-body systems. It makes use of interactive vector graphics and has very
+interesting analysis tools such as the Autofit, capable of estimating the best theoretical model for
+each track identified. Although it also implements a perspective straightening function,
+measurements and calibrations on TVM are possible on a single plane only. This means that it is not
+possible to solve the three-dimensional space and make scientifically reliable measurements when
+the objects that allow the calibration of the system are on planes different than the measurement
+one. However, for the sequence under study in this section, the software is efficacious, considering
+that the motion that we will try to trace can be detected starting from the same object with which we
+can calibrate the system.
+
+A.4.1 Set up of measurement system.
+The first operations to be carried out for the correct use of the software are:
+
+      1) Perspective straightening and system Calibration through the enhancement of height and
+         width of the OPS Unity (66.04 cm X 48.26 cm) (Menu - Tracks - New - Calibration tool;
+         subsequently with Video - Filters - New - Perspective to obtain the balance of the two
+         measures: see the values presented in Figures A21 and A22)
+
+      2) Appropriate positioning of the Cartesian axes X and Y and therefore of the origin of the
+         measurement system (Menu - Tracks - Axes)
+
+
+
+
+23
+   https://physlets.org/tracker/ Tracker, Video Analysis and Modeling Tool, Copyright 2019 Douglas Brown, GNU
+General Public License, Version 3.
+24
+   http://www.opensourcephysics.org/ © 2003-2020 AAPT-ComPADRE National Science Digital Library. Managing
+Editor: Wolfgang Christian - Davidson College (USA); Developers: Doug Brown - Cabrillo College, Francisco
+Esquembre - Universidad de Murcia (ES).
+  SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+                                        Tracking Apollo XVI Footage. [I] Big Navy Salute
+
+
+
+
+                                                                                                                                        36
+
+
+
+
+                           Figure A20 – Perspective straightening with Tracker Video Modeling
+
+
+
+
+ Figure A21 – Tracker: input straightening values                    Figure A22 – Tracker: output straightening values
+
+
+
+With the "Point of Mass" tool (Menu - Tracks - New - Point of Mass) it is now possible to proceed
+with the detection of the quotas that a point suitably chosen on the PLSS Unity reaches
+progressively in each of the frames of the sequence, during each of the two jumps by John Young
+(below we present the analysis and the results relating to the second jump of the astronaut, the
+procedure can be repeated for the first jump with analogous results).
+  SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+                                        Tracking Apollo XVI Footage. [I] Big Navy Salute
+
+
+
+
+                                                                   Frame         Time      Y        Ytracker    Ynasa
+A.4.2 Detection results. [Ann. A11]                                          0   0.00E+00 0.00E+00    0.00E+00 0.00E+00
+Tab. A2 shows the quotes in meters on the                                    1    3.34E-02 4.81E-02    3.98E-02 3.41E-02
+Y-Axis (height), reached by the upper edge                                   2    6.67E-02 9.53E-02    7.78E-02 6.65E-02
+of the OPS module that John Young carried                                    3    1.00E-01 1.37E-01    1.14E-01 9.70E-02
+on his shoulders during the jump. They were                                  4    1.33E-01 1.76E-01    1.48E-01 1.26E-01
+identified with TVM with respect to the                                      5    1.67E-01 2.09E-01    1.81E-01 1.53E-01
+Cartesian system adopted, and refer to the 45                                6    2.00E-01 2.39E-01    2.12E-01 1.78E-01
+frames of the sequence recorded by the CTV.                                  7    2.34E-01 2.68E-01    2.41E-01 2.01E-01
+In the last column you can compare the                                       8    2.67E-01 2.95E-01    2.68E-01 2.23E-01
+                                                                             9    3.00E-01 3.15E-01    2.93E-01 2.42E-01
+values obtained with those of a model built                                                                                             37
+                                                                            10    3.34E-01 3.35E-01    3.17E-01 2.60E-01
+according to the hourly law:                                                11    3.67E-01 3.54E-01    3.39E-01 2.76E-01
+                                                                            12    4.00E-01 3.71E-01    3.59E-01 2.91E-01
+Ymod = Y0 + (Vy0 * t) – ( * g * t2)                                         13    4.34E-01 3.88E-01    3.77E-01 3.03E-01
+                                                                            14    4.67E-01 4.05E-01    3.93E-01 3.14E-01
+setting in the equation Vy0 = 1.05 m / s as                                 15    5.01E-01 4.18E-01    4.08E-01 3.23E-01
+suggested by Eric M. Jones in the Apollo 16                                 16    5.34E-01 4.31E-01    4.20E-01 3.30E-01
+Lunar Surface Journal released by NASA. As                                  17    5.67E-01 4.42E-01    4.31E-01 3.35E-01
+you can see, the model proposed by NASA is                                  18    6.01E-01 4.50E-01    4.41E-01 3.38E-01
+not the best model to interpret the tracked                                 19    6.34E-01 4.55E-01    4.48E-01 3.40E-01
+motion. The TVM software, through the                                       20    6.67E-01 4.60E-01    4.53E-01 3.40E-01
+"Autofit" function, available in the                                        21    7.01E-01 4.63E-01    4.57E-01 3.38E-01
+                                                                            22    7.34E-01 4.65E-01    4.59E-01 3.34E-01
+"Analysis" section (Window - Analysis -
+                                                                            23    7.67E-01 4.63E-01    4.59E-01 3.29E-01
+Select t horizontal and Y vertical columns -                                24    8.01E-01 4.61E-01    4.58E-01 3.21E-01
+Flag on Autofit) identifies the following as                                25    8.34E-01 4.55E-01    4.54E-01 3.12E-01
+most appropriate values for the 3                                           26    8.68E-01 4.49E-01    4.49E-01 3.01E-01
+independent variables of the equation:                                      27    9.01E-01 4.40E-01    4.42E-01 2.89E-01
+                                                                            28    9.34E-01 4.28E-01    4.33E-01 2.74E-01
+Y0 = 1.907E-2 m                                                             29    9.68E-01 4.15E-01    4.22E-01 2.58E-01
+Vy0 = 1.225 m/s                                                             30   1.00E+00 4.00E-01     4.10E-01 2.39E-01
+1/2g = -8.442E-1 m/s2                                                       31   1.03E+00 3.81E-01     3.95E-01 2.19E-01
+                                                                            32   1.07E+00 3.62E-01     3.79E-01 1.98E-01
+In particular, the lunar g results to be 1.69                               33   1.10E+00 3.42E-01     3.61E-01 1.74E-01
+m/s2: this is a surprisingly accurate estimate                              34   1.13E+00 3.19E-01     3.42E-01 1.49E-01
+of the well-known value 1.62 m/s2. In                                       35   1.17E+00 2.94E-01     3.20E-01 1.22E-01
+constructing the "Tracker" model, we will                                   36   1.20E+00 2.68E-01     2.97E-01 9.25E-02
+take into account only the initial speed                                    37   1.23E+00 2.40E-01     2.72E-01 6.17E-02
+calculated by the software, keeping the                                     38   1.27E+00 2.12E-01     2.45E-01 2.91E-02
+                                                                            39   1.30E+00 1.84E-01     2.16E-01 -5.28E-03
+known values for Y0 and g. In the model
+                                                                            40   1.33E+00 1.54E-01     1.85E-01 -4.15E-02
+proposed by Eric M. Jones, Astronaut Young
+                                                                            41   1.37E+00 1.19E-01     1.53E-01 -7.95E-02
+would touch the ground approximately 1,30                                   42   1.40E+00 8.44E-02     1.19E-01 -1.19E-01
+seconds after the jump, while from the                                      43   1.43E+00 4.53E-02     8.30E-02 -1.61E-01
+measurements it would seem that this event                                  44   1.47E+00 -2.09E-05    4.52E-02 -2.04E-01
+should be recorded between frame 43 and                                     45   1.50E+00              5.68E-03
+frame 44, thus between 4/30 and 5/30 of a
+second later. To compare the two models and                              Tab. 4 – Big Navy Salute: quote Y, comparison of
+decide which is actually the best, we rely on                         theoretical models (apex and extreme of traced motion
+                                                                                            in yellow )
+the statistical test of CHI SQUARE.
+χ2(Y, Ytracker) = 9.999*10-1
+χ2(Y, Ynasa) = 4.171*10-45
+  SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+                                        Tracking Apollo XVI Footage. [I] Big Navy Salute
+
+
+
+
+The test was carried out on the measurements in centimetres, excluding the comparison values
+lower than 5 units, giving 35 degrees of freedom for each of the two checks: set the significance
+index α = 0.05 (p-value 49.80), note that the model proposed by "Tracker" passes the test while that
+one proposed by NASA definitely does not.
+
+
+
+
+                                                                                                                                        38
+
+
+
+
+        Figure A23 – Motion plot compared with the Autofit curve (red) generated by Tracker Video Modeling
+
+
+A.4.3 Analysis of the Experimental Error
+Similarly to the measurements made with Photoshop CS6 in C.3.7, also for TVM the instrumental
+error can be referred to as the unit of measurement in pixels. Considering that also on this software
+we proceed with the same system calibration operations and point positioning, the overall error is
+equivalent to +/- 1.5 pixels, which is, in the specific context, +/- 1 cm in reality. For most of the
+track, the maximum differences between the Tracker model and the experimental values are
+maintained within this confidence interval, thus confirming the validity of this theoretical model.
+This cannot be said for the model proposed by NASA on Lunar Surface Journal.
+    SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+
+
+SECTION B
+61135 Falls So Slowly
+
+
+
+
+                                                                                                                                          39
+
+
+
+
+                                                                                                                                   1
+        Figure B1 – Station 1, 4° sample site. Young's shadow is at the right and Flag Crater is in the background.
+
+
+
+B.1.1 EVA 1 2
+The first extravehicular activity of Apollo 16, as we have seen, was characterized by the installation of
+equipment for scientific experimentation, an operation carried out, as always, within a short radius of the
+landing site. Once this phase was concluded, again within the context of EVA 1, the first short trip with
+
+1
+  https://www.hq.nasa.gov/wp-content/uploads/static/history/alsj/a16/AS16-109-17799HR.jpg Apollo Image Library, Apollo
+16 Figure Captions Copyright © 1996-2017 by Eric M. Jones, last revised 16 March 2019.
+2
+  https://www.hq.nasa.gov/wp-content/uploads/static/history/alsj/a16/a16.html Apollo 16 Lunar Surface Journal Corrected
+Transcript and Commentary by Eric M. Jones. Revised 5 March 2016.
+    SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+                                       Tracking Apollo XVI Footage. [II] 61135 Falls So Slowly.
+
+
+
+
+the Lunar Rover (LR) was made, towards the Plum, Flag and Ray craters. The EVA lasted 7 hours and
+11 minutes in total. The distance travelled was 4.2 km. Station 1 was located about 1400 meters west of
+the LM near the edge of the Plum Crater. The astronauts collected samples and took panoramic and
+stereographic photos.
+
+B.1.2 DESCRIPTION OF SEQUENCE 2
+123:46:09 Young: How we doing on time, Tony?
+123:46:10 England: Okay, you've got about 23 minutes left, here.
+123:46:15 Duke: Twenty-three! Hum.
+123:46:19 England: Rog.                                                                                      40
+123:46:21 Duke: By golly. We can pick up a lot of rocks in 23...Hey, I'd like to go to the other side,
+John, of Plum because those rocks over there aren't dust covered, if you can see them.
+123:46:32 Young: That's a good idea, Charlie.
+123:46:34 Duke: See right out there towards South Ray?
+123:46:36 Young: Yeah.
+123:46:37 Duke: Those rocks don't look as dust covered as these. (Pause)
+[Charlie gets into position with his back to us and slides the scoop under a fist-sized rock next to the up-
+Sun gnomon leg. As he raises the rock, it starts to fall out of the scoop.]
+123:46:48 Duke: Uh-oh. Agh. I missed. Wait a minute.
+[Because things fall so slowly on the Moon, Charlie is able to bat the rock upward repeatedly as he
+chases it to his right. It finally falls to the ground.]
+123:46:53 England: Nice juggling!
+123:46:56 Duke: Well, it wasn't dust covered. (Responding to Tony) Well, we missed it. But things really
+fly up here. I'm amazed.
+[Charlie gets the rock in the scoop and raises it high enough that John can grab it. John shakes his
+hand to try to get some of the dust off. This is sample 61135, a 0,25 kg breccia.]
+
+
+
+
+                                                                                                                                      3
+     Figure B2 – Extract of the planimetric map of the STATION 1, EVA 1 of Apollo 16, produced by Brian McInall
+    SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+                                       Tracking Apollo XVI Footage. [II] 61135 Falls So Slowly.
+
+
+
+
+B.1.2.13Sources: The images used for this study are taken from Apollo 16 Journey to Descartes,
+complete TV and onboard film © 2005 Spacecraft Film (courtesy NASA). The sequence relating to the
+collection of sample 61135 is published at this link: https://youtu.be/8Tgej1RmeWs [Ann. B1]
+
+B.1.2.2 Other official sources containing the same sequence:
+- Apollo 16 Lunar Surface Journal Corrected Transcript and Commentary by Eric M. Jones 1996,
+Revised 24 April 2017. https://www.hq.nasa.gov/wp-content/uploads/static/history/alsj/a16/a16v.1234609.mpg
+
+B.1.2.3 The free-fall rock sample 4                                                                                                       41
+Sample 61135 collected during EVA 1
+at the fourth site of STATION 1 is an
+ancient breccia of regolith of 245.1 gr,
+which compacted around 3.9 billion
+years ago. Due to the exposure to cosmic
+rays lasting about 50 million years, it has
+several microcraters. It is a clastic
+breccia made up of many components.
+The geological studies that concern it are
+not concordant at the moment (probably
+because they have concentrated on
+different portions). The lithic fragments
+include basalt, granoblastic and noritic
+anorthosite. It contains a high glass
+percentage      but   few      recognized
+agglutinates.
+
+
+                                                                     Figure B3, Apollo 16, Lunar Finding 61135
+
+
+B.2 ABERRATION OF IMAGES
+With the same procedure followed in A.2.1.1 and A.2.1.2 we use the available floor plan (see Figure
+B2) to derive the distance of the scene from the objective. According to the data processed by Brian
+McInall, on the basis of the information made available by NASA, the sequence takes place at about 10
+m from the objective. Using the same formula shown in A.2.1.2:
+
+
+
+
+with PLSSctv = 2.2 mm, PLSSr = 660 mm and 1 px as the instrumental error we find:
+F = 33.33 mm (+/- 1.6 mm)
+
+
+
+3
+  https://www.hq.nasa.gov/wp-content/uploads/static/history/alsj/a16/A16_EVA_1_STA_1_Planimetric_Map-
+LROC_M177535538L_Feb_2018.jpg Apollo 16 Lunar Surface Journal Corrected Transcript and Commentary by Eric M.
+Jones. Revised 5 March 2016.
+4
+  https://curator.jsc.nasa.gov/lunar/lsc/61135.pdf 61135 Lunar Sample Compendium C. Meyer 2009 [Ann. B2]
+    SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+                                       Tracking Apollo XVI Footage. [II] 61135 Falls So Slowly.
+
+
+
+
+The equivalent focal length compared to the standard format 35 mm is:
+
+                = 33.33 x 43.3 / 16 = 90 mm (+/- 4 mm)
+
+Considering the typical distortion of the CTV of 2% and a distortion due to the focal length between 86
+and 94 mm (light telephoto) it is appropriate to adopt a percentage of geometric distortion higher than
+2% and less than 3% (maximum declared). The choice goes on the value 2.5% as a percentage of
+positive distortion (pincushion) to be corrected on the images of the sequence.
+                                                                                                                                          42
+B.3.1 ANALYSIS WITH TRACKER VIDEO MODELING
+By proceeding as already illustrated in A.3.6 and A.4.1 we adopt the best procedures for the preparation
+of the films and the measurement system, taking care to scale the images [Ann. B3] considering the
+Aspect Ratio, the Pixel Aspect Ratio, following the good practices for the digital video conversion [Ann.
+B4] and implementing the geometric aberration correction produced by the CTV optical group
+according to the value just calculated in B.2.
+
+The frames that strictly concern the free-fall motion of sample 61135 are 40 (of which the first 12 show
+an upward motion of the breccia), and at 29.97 fps indicate an overall duration of the sequence of 1.30 s.
+With TVM, having identified the plane on which the motion insists, we perform the perspective
+straightening as shown in figures B4-B5-B6.
+
+
+
+
+                               Figure B4 – Perspective straightening with Tracker Video Modeling
+    SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+                                       Tracking Apollo XVI Footage. [II] 61135 Falls So Slowly.
+
+
+
+
+                                                                                                                                          43
+
+
+
+
+ Figure B5 – Tracker: input straightening values                      Figure B6 – Tracker: output straightening values
+
+At this point we set the Cartesian plane X, Y with origin in a conventional point (in our case near the
+base of the right heel of Charlie Duke) and through the tool "Point of Mass" we proceed to trace the
+centre of the breccia of regolith in the 40 frames that immortalize the last stages of its ascent and its
+definitive fall towards the ground. In 8 frames the identification of the body position is impossible. In
+particular, between frames 25 and 30 the breach is covered by the Sample Bag that John Young is
+holding in his hand. [Ann. B5]
+
+B.3.2 Results of detecting. [Ann. B6]
+Table B1 shows the results obtained. The hourly model of comparison can be indicated with the
+equation:          (      )
+The curve is fitted from the data collected using the TVM Autofit tool.
+
+
+
+
+         Img. B7 - Motion plot (green) compared with the Autofit curve (red) proposed by Tracker Video Modeling
+    SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+                                       Tracking Apollo XVI Footage. [II] 61135 Falls So Slowly.
+
+
+
+
+The software derives gtvm = -1.201 ± 0.011 m/s2 from which                                Frames T (s)     Y (m)     Ytvm (m)
+                                                                                               0     0.000     1.055      0.997
+gtvm = (-2.40 ± 0.022) m/s2                                                                    1     0.033     1.077      1.030
+                                                                                               2     0.067     1.095      1.060
+The inconsistency with the expected g value (g = - 1.62 m/s2)                                  3     0.100     1.113      1.088
+                                                                                               4     0.133     1.132      1.113
+forces us to seek confirmation of the measurements obtained.
+                                                                                               5     0.167     1.146      1.135
+Photoshop CS6 is then used to examine the same sequence.                                       6     0.200     1.157      1.155
+                                                                                               7     0.234         -      1.172
+B.3.3 ANALYSIS WITH PHOTOSHOP CS6                                                              8     0.267         -      1.186
+Similarly to what has been put into practice in the previous                                   9     0.300     1.193      1.197           44
+sections. we use the Adobe Photoshop CS6 Vanishing Point                                      10     0.334     1.200      1.206
+Filter to "solve" the spatial model of the environment in                                     11     0.367     1.202      1.212
+which the sequence takes place, in order to correctly identify                                12     0.400     1.207      1.216
+the measurement plane and the right system of coordinates                                     13     0.434     1.207      1.216
+that allow us to trace the fall of the breccia 61135. [Ann. B7]                               14     0.467     1.207      1.215
+                                                                                              15     0.501     1.204      1.210
+                                                                                              16     0.534     1.200      1.203
+The relevant known dimensions are many:                                                       17     0.567     1.191      1.193
+                                                                                              18     0.601     1.175      1.180
+- the dimensions of the PLSS already acquired in A.2.1.1.1:                                   19     0.634     1.161      1.165
+PLSS height: m 0.6604                                                                         20     0.667     1.135      1.147
+PLSS width: m 0.4826                                                                          21     0.701     1.113      1.126
+                                                                                              22     0.734     1.090      1.102
+- the length of the Large Adjustable-angle Scoop and of the                                   23     0.767     1.056      1.076
+relative pan (Figure B8) 5:                                                                   24     0.801     1.025      1.048
+Scoop length: 0.91 m                                                                          25     0.834         -      1.016
+                                                                                              26     0.868         -      0.982
+Pan length: 0.152 m
+                                                                                              27     0.901         -      0.945
+                                                                                              28     0.934         -      0.906
+- the height of the Lunar Sample Bag, which however resides                                   29     0.968         -      0.863
+on a more advanced plane than the measurement one (for the                                    30     1.001         -      0.819
+confirmation of this data, please refer to D.2.1)                                             31     1.034     0.709      0.771
+Lunar Sample Bag height: 0.21 m                                                               32     1.068     0.652      0.721
+                                                                                              33     1.101     0.601      0.668
+With these references, the plane on which it is possible to                                   34     1.134     0.544      0.612
+trace the motion of the breccia can be approximated to that in                                35     1.168     0.484      0.554
+Figure B9.                                                                                    36     1.201     0.429      0.493
+                                                                                              37     1.235     0.368      0.429
+                                                                                              38     1.268     0.303      0.363
+                                                                                              39     1.301     0.230      0.294
+                                                                                             Tab B1 – Collection of sample 61135: Y
+                                                                                              quotas and comparison with the Ytvm
+                                                                                                             model
+
+
+
+
+5
+ https://curator.jsc.nasa.gov/lunar/catalogs/other/jsc23454toolcatalog.pdf - Catalog of Apollo Lunar Surface Geological
+Sampling Tools – J. Haley Allton, Lockheed Engineering and Sciences Company, Houston (Texas) March 1989 [Ann. B8]
+      SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+                                         Tracking Apollo XVI Footage. [II] 61135 Falls So Slowly.
+
+
+
+
+                                                                                                                                            45
+
+
+
+
+                                                Figure B8 - Large Adjustable-angle Scoop
+
+     Figure B9 – Adobe Photoshop CS6 Identification of the measurement plan starting from known dimensions
+
+The quotas of the breccia in the 40 frames included in the sequence are detected starting from the base
+of the plane in question with the exception of the 8 in which the breach itself is not identifiable [Ann.
+B6]. The results obtained are shown in Table B2. In order to identify the best fit of the parabolic curve
+they express, the analysis is carried out with the professional software Origin Pro 2018.6 [Ann. B9]
+
+Equation z = Intercept + B1*t + B2*t2
+
+
+
+
+Figure B10 - Fit of the motion result with Origin Pro: parameters obtained and their reliability
+
+6
+    OriginLab at One Roundhouse Plaza, Northampton, MA 01060-4401 USA, http://www.originlab.com
+    SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+                                          Tracking Apollo XVI Footage. [II] 61135 Falls So Slowly.
+
+
+
+
+                                                                                       Frames          T (s)         Z (m)       Zor (m)
+As can be seen from Figure B10, the best estimation of the
+                                                                                                   0        0.000        1.038            1.025
+gravity acceleration acting on the sequence in question is
+                                                                                                   1        0.033        1.065            1.052
+  gor = -1.113 ± 0.013 m/s2 and so:
+                                                                                                   2        0.067        1.083            1.076
+gor = -2.22 ± 0.026 m/s2 (Standard Err). A relatively                                              3        0.100        1.102            1.097
+convergent value with the one obtained in the previous
+                                                                                                   4        0.133        1.116            1.116
+paragraph 3.2 and still largely inconsistent with the
+                                                                                                   5        0.167        1.127            1.132
+expected one considering that the scene was filmed on the
+                                                                                                   6        0.200         1.14            1.146
+Moon:
+                                                                                                   7        0.234            -            1.157
+|           |    |                    |                                                            8        0.267            -            1.166   46
+                                                                                                   9        0.300        1.168            1.172
+                                                                                                  10        0.334        1.173            1.176
+B.3.4 Possible interpretation of the results
+                                                                                                  11        0.367        1.176            1.178
+B.3.4.1 Systemic and accuracy errors                                                              12        0.400         1.17            1.176
+The first hypothesis that can be formulated in order to explain                                   13        0.434        1.172            1.173
+this inconsistency is that the instrumental error is not the only                                 14        0.467        1.164            1.167
+one causing the retrieval of experimental data so far from the                                    15        0.501        1.157            1.158
+elementary model of the applicable motion. Although in the                                        16        0.534        1.153            1.147
+previous case of study (section A), the measurements were                                         17        0.567        1.139            1.134
+immediately very reliable, it is necessary to list other possible                                 18        0.601        1.123            1.118
+sources of error as follows:
+                                                                                                  19        0.634         1.11            1.099
+E1) Systemic errors in the sizing of the images and in the                                        20        0.667        1.091            1.078
+application of the geometric aberration caused by the lens                                        21        0.701        1.068            1.055
+                                                                                                  22        0.734        1.043            1.029
+E2) Systemic errors in the correction of perspective distortion
+made by TVM                                                                                       23        0.767        1.016            1.000
+                                                                                                  24        0.801        0.979            0.970
+E3) Accuracy errors due to the quality of the images and their                                    25        0.834            -            0.936
+particular mechanism of production
+                                                                                                  26        0.868            -            0.900
+With regard to E1, given that the preliminary sizing                                              27        0.901            -            0.862
+operations are analogous to those performed in the previous                                       28        0.934            -            0.821
+case study, based on the quality of the results achieved in that                                  29        0.968            -            0.778
+context, we can restrict the field to geometric aberration only.                                  30        1.001            -            0.732
+But in no way a percentage of distortion caused by the optical                                    31        1.034        0.665            0.684
+system, limited to 3% (technical limit declared by the                                            32        1.068        0.615            0.633
+manufacturers 7, 8) can significantly affect the measurements                                     33        1.101        0.564            0.580
+made, since the motion takes place in a relatively central area
+                                                                                                  34        1.134        0.515            0.524
+of the image and any systemic errors of this entity, according
+                                                                                                  35        1.168        0.464            0.466
+to the Brown-Conrady model 9, are certainly negligible unless
+                                                                                                  36        1.201        0.412            0.406
+they affect the edges of the image itself. Therefore, it seems
+possible to discard the first range of systemic errors defined                                    37        1.235         0.35            0.343
+in E1 as causes of the inconsistency between results and the                                      38        1.268        0.286            0.277
+expected model.                                                                                   39        1.301        0.214            0.209
+                                                                                       Tab B2 – Collection of sample 61135: Zphotoshop
+                                                                                        quotas and comparison with the Zorigin model
+7
+  https://www.hq.nasa.gov/alsj/GCTA-Manual.pdf RCA Government and
+Commercial Systems, Astro-Electronics Division, Princeton NJ 08540; Issued 24 May 1971, Revised January 1972 [Ann. 13]
+8
+  https://archive.org/details/RcaUltriconSitCameraTubes RCA-Norbain Electro – Optics Ltd. Seminar Electro –
+Optics/Laser International ’82 UK Brighton 23-25 March 1982
+9
+  Duane C. Brown. “Decentering distortion of lenses”,Photogrammetric Engineering, 32(3):444-462, 1966. Conrady,
+Alexander Eugen. "Decentred Lens-Systems." Monthly notices of the Royal Astronomical Society 79 (1919): 384–390.
+    SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+                                       Tracking Apollo XVI Footage. [II] 61135 Falls So Slowly.
+
+
+
+
+We can also discard E2, given the relative convergence of the results obtained with TVM and PS CS6.
+Finally, with regard to E3, we can estimate the highest uncertainty due to the superposition of 4
+sequential fields joined in the same frame (see A.3.2): this could entail a (theoretical) difficulty in
+identifying the central point of the body to be traced, even if a clearer area of the breccia is actually
+always clearly visible in each frame, and moreover, the knowledge of the sequence of colours that
+characterize each half-field within the same frame, constitutes an excellent reference element in the
+detection of the perimeter and the centre of the body in each image.
+In any case, considering the scheme shown in Tab. A1, if we admit an uncertainty on the positioning of
+the material point caused by its possible belonging to one of the 4 fields of the same frame, it means we
+declare a theoretical error equivalent to:                                                                47
+
+                                                         –
+Err = zx – zx+1;
+
+In the Annex. B6 we report for each frame the experimental and accuracy errors quadrature-sum, both
+for the results obtained with TVM and with those obtained with PS CS6.
+
+We deduce that the overlap of sequential fields recorded by CTV in order to convert the footage to the
+NTSC standard cannot determine an uncertainty that justifies the inconsistency found between the data
+and the reference model.
+
+Let's exemplify everything with a graph obtained with the Origin Pro 2018 software in which the
+vertical segments that insist on the 32 detected points represent the maximum error that can be
+considered.
+
+
+
+
+                                                                                                                 1
+                                                                                       z = 𝑧 + 𝑉𝑧         𝑡 +
+                                                                                                                 2
+                                                                                                                     𝑔 𝑡
+
+
+
+
+Figure B11 - Comparison graph between the theoretical model (red) and data collected, considering their maximum error
+                                 SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+                                                                     Tracking Apollo XVI Footage. [II] 61135 Falls So Slowly.
+
+
+
+
+                                0,02
+
+                                                                                                                     8
+
+
+
+
+ Regular Residual of Sheet1 B
+                                0,01
+
+                                                                                                                     6
+
+
+
+                                                                                                            Counts
+                                0,00
+
+                                                                                                                     4
+
+                                -0,01
+
+                                                                                                                     2
+
+                                -0,02
+                                                                                                                                                                                           48
+                                                                                                                     0
+                                              0,0           0,5                  1,0         1,5                     -0,02           -0,01           0,00             0,01          0,02
+                                                        Independent Variable                                                             Regular Residual of Sheet1 B
+                                0,02
+                                                                                                            99,5
+
+
+
+
+ Regular Residual of Sheet1 B
+                                0,01                                                                            95
+
+
+
+
+                                                                                              Percentiles
+                                                                                                                70
+                                0,00
+
+                                                                                                                40
+
+                                -0,01
+                                                                                                                10
+
+
+
+                                -0,02                                                                                1
+
+                                                                                                              0,1
+                                        0,0           0,5                  1,0               1,5                -0,03        -0,02           -0,01   0,00      0,01          0,02   0,03
+                                                              Fitted Y                                                                   Regular Residual of Sheet1 B
+
+
+                                  Figure B12 – Origin Pro 2018: study of the variability of the data with respect to the identified equation of motion
+
+The analysis of the variability of the data proposed by the Origin Pro 2018 software in the four diagrams
+shown in Figure B12 highlights some peculiar aspects of the results obtained from the motion tracking.
+First of all, it should be noted that the distribution of residuals (difference between the observed and
+estimated values) is relatively disordered, with at least 4 sign changes with respect to the zero axis.
+Furthermore, the histogram indicates that the random error is normally distributed with the exception of
+the residual range between +0.01 and +0.02 m, which includes 6 values. Finally, the probability diagram
+of the residuals based on the percentiles with respect to the ordered residual confirms that the variance is
+normally distributed since it’s approximately linear except for some values at the extremities. All this
+confirms that the model is significantly validated by the data obtained with the tracing.
+
+B.3.4.2 Other interpretations
+
+A worthwhile factor that we have to take into consideration is the possible flaw in maintaining the
+correct frame rate with which the scene was shot.
+
+g'av =
+
+If z = z0 + vz0                                     t + g av         t2 is satisfied, so the equation z = z0 + v'z0 t' + g'av t'2 will also be
+
+satisfied, where t' = ;                                           v'z0 = α vz0         and             g'av = gav α2 (the quotas in tx are not modified).
+
+By setting α = √                                        = 0.84, the same fit can be obtained with the following parameters:
+
+g = 1.62 m/s2
+    SciELO Preprints - This document is a preprint and its current status is available at: https://doi.org/10.1590/SciELOPreprints.9077
+
+
+                                       Tracking Apollo XVI Footage. [II] 61135 Falls So Slowly.
+
+
+
+
+v'z0 = 0.992 m/s 0.84 = 0.83 m/s
+framerate = 29.97 fps 0.84 = 25.17 fps and therefore ∆t = 0.040 s
+
+Assuming that the sequence was shot on the Moon, we must therefore assume that the original shooting
+framerate is 4.8 fps lower than the one that occurred to us as a result of the various video conversions.
+The sequence we see today would therefore have undergone an acceleration of about 19% compared to
+the original one: however this represents a rather problematic result.
+
+                                                                                                                                          49
+                                   This preprint was submitted under the following conditions:
+
+                                         The authors declare that they are aware that they are solely responsible for the content of the preprint and
+                                         that the deposit in SciELO Preprints does not mean any commitment on the part of SciELO, except its
+                                         preservation and dissemination.
+
+                                         The authors declare that the necessary Terms of Free and Informed Consent of participants or patients in
+                                         the research were obtained and are described in the manuscript, when applicable.
+
+                                         The authors declare that the preparation of the manuscript followed the ethical norms of scientific
+                                         communication.
+
+                                         The authors declare that the data, applications, and other content underlying the manuscript are
+                                         referenced.
+
+                                         The deposited manuscript is in PDF format.
+
+                                         The authors declare that the research that originated the manuscript followed good ethical practices and
+                                         that the necessary approvals from research ethics committees, when applicable, are described in the
+                                         manuscript.
+
+                                         The authors declare that once a manuscript is posted on the SciELO Preprints server, it can only be taken
+                                         down on request to the SciELO Preprints server Editorial Secretariat, who will post a retraction notice in its
+                                         place.
+
+                                         The authors agree that the approved manuscript will be made available under a Creative Commons CC-BY
+                                         license.
+
+                                         The submitting author declares that the contributions of all authors and conflict of interest statement are
+                                         included explicitly and in specific sections of the manuscript.
+
+                                         The authors declare that the manuscript was not deposited and/or previously made available on another
+                                         preprint server or published by a journal.
+
+                                         If the manuscript is being reviewed or being prepared for publishing but not yet published by a journal, the
+                                         authors declare that they have received authorization from the journal to make this deposit.
+
+                                         The submitting author declares that all authors of the manuscript agree with the submission to SciELO
+                                         Preprints.
+
+
+
+
+Powered by TCPDF (www.tcpdf.org)
+

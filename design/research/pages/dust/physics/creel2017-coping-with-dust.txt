@@ -1,0 +1,594 @@
+   COPING WITH DUST FOR EXTRATERRESTRIAL EXPLORATION
+
+                                           Ron Creel
+
+                      Retired Apollo Lunar Roving Vehicle Team Member
+
+
+
+
+INTRODUCTION
+
+
+The author worked at NASA on the thermal control system for the Apollo Lunar Roving Vehicle
+(LRV), America’s “Spacecraft on Wheels”, shown in Figure 1. This included thermal testing,
+modeling, and mission support during the Apollo 15, 16, and 17 missions in 1971 and 1972.
+
+
+
+
+                             Figure 1. Lunar Rover on the Moon.
+
+Figure 2 shows the Apollo 16 LRV racing across the lunar surface and stirring up dust in the
+“Grand Prix” mobility data collection exercise. The loss of fender extensions on the right rear
+wheels on both Apollo 16 and Apollo 17 contributed to even more dust being thrown up onto
+the vehicle and Astronauts.
+
+
+
+
+                                        DAP-2017                                                  1
+ Figure 2. Rovers Provided Increased Moon Mobility in Apollo 15, 16, and 17 Missions
+
+
+Figure 3 shows the author at the thermal model control console at the completion of the last
+LRV dust coping adventure on Apollo 17.
+
+                                                                             R-1
+
+
+
+
+         Figure 3. Ron, Busy at Lunar Rover Thermal Model Control Console
+
+
+This paper discusses a challenge that has haunted the author for over 46 years – Coping with
+Lunar Dust. This includes discussions of Previous Earth-based Dust Removal / Prevention
+Testing, Dust Effects on Lunar Extraterrestrial Missions, Dust Effects on Extended Lunar
+and Mars Extraterrestrial Missions, Dust Mitigation Options for Future Lunar
+Exploration, and Experience Based Recommendations for Coping with Dust.
+
+References start at “R-1”, and are listed at the end of the paper.
+
+
+
+
+                                          DAP-2017                                             2
+PREVIOUS EARTH BASED DUST REMOVAL / PREVENTION TESTING
+
+Example solar heating data provided to the “Working on the Moon” section of Eric Jones’
+excellent Apollo Lunar Surface Journal is shown in Figure 4. Solar heating follows the trend of
+the Moon temperature curve, with 14.75 days of solar heating followed by 14.75 days of solar
+eclipse with no heating. The Rover “J” missions were planned for lunar morning in order to
+minimize exposure of exploration systems to excessive solar heating and high Moon
+temperatures.
+
+                                                                                     R-2
+
+
+
+
+    Figure 4. Example Apollo Mission Solar Heating and Moon Temperature
+
+
+In 1967, Earth based dust testing was sponsored by the NASA Marshall Space Flight Center
+(MSFC), with the purpose of determining the effect of dust coverage on the solar absorptance
+for thermal control radiating surfaces. This testing was accomplished using ground basalt in a
+                                 -5
+modest vacuum environment (10 Torr) with applied solar simulation heating.
+
+The major conclusion of this Earth testing, shown in Figure 5, was that dust could be effectively
+removed by brushing. Fluid jet removal was more effective, but had considerable weight and
+safety issues.
+
+
+
+
+                                         DAP-2017                                                 3
+  Dust Significantly Increases Amount of Solar Heat
+               Absorbed by Space Radiators
+
+
+
+
+                                                                                  R-3
+                                        Brush Test Apparatus
+
+
+
+
+                                                        R-3
+
+
+
+
+                         Apollo Dust Brush
+
+      Figure 5. Results of 1967 Earth Based Dust Coverage and Removal Testing
+
+
+Thermal control weight budget for the Rover was only 10 pounds. As the Lunar Rover design
+was maturing in 1970, special wheel and fender soil interface testing in a vacuum and reduced
+gravity environment was conducted using the NASA KC-135 airplane (also called the “Vomit
+Comet”) and the LSS4 lunar soil simulant. The KC-135 test assembly is shown in Figure 6.
+
+                                                                      R-4
+
+
+
+
+             Figure 6. KC-135 Rover Fender Utility Testing Assembly
+
+
+
+
+                                             DAP-2017                                           4
+The purpose of this vacuum and reduced gravity testing was to determine the utility of the
+fenders to contain dust – which was verified. Thankfully, results of this testing also prevented
+removal of the fenders, which some wanted to do to reduce weight.
+
+Also in 1970, additional Earth based dust removal testing in vacuum was sponsored by the
+Manned Spacecraft Center (later became the Johnson Space Center) using actual lunar dust
+collected in the Apollo 12 mission. Results were that the nylon bristle brush shown in Figure 5
+was effective in removing dust from thermal control surfaces in this additional Earth based
+testing. It was also noted that proposed second surface mirrors could “apparently be cleaned
+easily”. R-5
+
+It will be shown in this paper that all of this Earth based testing was very misleading, and
+brushing of dust was very inadequate for previous lunar exploration.
+
+
+
+DUST EFFECTS ON LUNAR EXTRATERRESTRIAL MISSIONS
+
+As shown in Figure 7, critical Rover electronics and batteries were grouped together in an
+insulated forward chassis compartment, with 4 second surface mirror space radiators to remove
+excess heat when provided dust covers were raised by an Astronaut – nominally at the end of
+driving traverses on these relatively short 3 days duration lunar exploration missions. Clean
+second surface space radiators have a solar absorptance value of 0.07.
+
+
+
+
+                                                                                   R-6
+
+
+
+
+         Figure 7. Lunar Rover Forward Chassis Electronics, Batteries, and Radiators
+
+
+
+
+                                         DAP-2017                                                  5
+Dust covers protected the Rover radiators from exposure to lunar dust while driving, and were
+opened to expose the space radiators for cooling. In spite of the dust covers, lunar dust did get
+deposited onto the LRV space radiators, and the Astronauts spent considerable valuable Moon
+exploration time trying to cope with dust - with very limited success using the dust brush. R-7
+
+Apollo 15 - Astronauts indicated that there was no dust on the space radiators after the first
+EVA and no brushing was necessary, which resulted in the only automatic dust cover closure in a
+Rover mission during the first cooldown period. However, brushing was required for the
+radiators before the second cooldown period, and the result was that there was no battery
+cooldown. As shown in Figure 8, radiator solar absorptance approaching 0.45 was experienced.
+Battery temperatures were then maintained below operating limits during the third EVA.
+
+
+
+
+ Astronaut Brushing Space Radiator
+                                                Time from Dust Covers Opening, hours     R-8
+
+           Figure 8. Apollo 15 LRV Battery Temperatures During Cooldown 2
+
+
+Apollo 16 – As shown in Figure 9, similar lack of battery cooldown was experienced on the
+second Rover mission. Loss of the right rear fender extension during EVA 2 caused a “Rooster
+Tail” which contributed to considerable dust being thrown forward and deposited on the crew
+and Rover surfaces. The LUROVA™ thermal simulation was used to calculate the best time to
+switch power to maintain battery temperatures below operating limits.
+
+After Apollo 16, the author was awarded the Astronaut “Silver Snoopy” for development and
+use of the LUROVA™ thermal simulation for mission support.
+
+
+
+
+                                         DAP-2017                                               6
+                                                                            Silver Snoopy
+                                                                             Awarded for
+                                                                              LUROVA™
+                                                                              Simulation
+
+
+                                                                   R-9
+
+
+
+
+    Figure 9. Apollo 16 Battery 2 Temperature Profile and Silver Snoopy Award
+
+
+Apollo 17 – A few nights before launch, the author was invited to the crew quarters at KSC for a
+discussion of how to cope with lunar dust and get better cooldowns. In addition to parking the
+Rover farther from the Lunar Module (LM) for equipment loading/unloading and cooldowns, it
+was recommended to spend some time cleaning the outside of the dust covers before raising
+them.
+
+As shown in Figure 10, modest cooldowns were then accomplished on Apollo 17, even though
+there was also an accidental removal of the same rear fender extension during the first EVA.
+Fender repair was accomplished before the second EVA using maps and clamps from the LM. A
+solar absorptance value of 0.35 for the battery radiators correlated with the cooldown that was
+achieved. That is five times greater solar absorptance than for the clean radiators.
+
+
+The LUROVA™ thermal simulation was used to provide Mission Control with the best time to
+open the dust covers during EVA 3 on Apollo 17 – which kept the batteries within their
+operating temperature limits as shown in Figure 10. R-11
+
+Other Rover communication equipment required repeated radiator brushing throughout all 3
+Rover missions. This included the Lunar Communications Relay Unit (LCRU) and Ground
+Commanded Television Assembly (GCTA). R-12
+
+Also, the Astronaut crews spent considerable time in unsuccessfully dusting their suits, and had
+problems with dust jamming mechanisms.
+
+
+
+
+                                        DAP-2017                                               7
+                                                                    Fender Repair on Apollo 17
+
+                                                                   R-10
+
+
+
+          Figure 10. Apollo 17 Battery 2 Temperature Profile and Fender Repair
+
+
+The MIT Surface Electrical Properties receiver radiator on Apollo 17, shown in Figure 11, had to
+be brushed frequently, and this experiment equipment ultimately over-heated. The thermal
+engineers at MIT had been warned before the mission about the adverse effects of lunar dust,
+and losing the nearby fender extension certainly didn’t help the situation.
+
+
+
+
+                                                                     R-13
+
+
+Figure 11. MIT Surface Electrical Properties Receiver and Rover Fender Extensions Removed
+
+
+
+Several Astronauts have expressed major concerns about future lunar exploration with respect
+to problems with dust – including health concerns – noting the below summary by the Apollo 17
+Commander in Figure 12.
+
+
+                                        DAP-2017                                                 8
+                                          R-14
+
+
+
+  Figure 12. Astronaut Explorers Have Highlighted Exploration Problems with Lunar Dust
+
+
+Due to lunar dust interference, it was difficult for the Astronauts to negotiate around the Apollo
+Lunar Surface Experiment Package (ALSEP) components that were placed on the lunar surface.
+In fact, the Apollo 16 Heat Flow Experiment cable was hidden by dust and inadvertently kicked
+out of its socket, and could not be repaired.
+
+Figure 13 is a picture taken by an Apollo 14 Astronaut showing dust kicked up onto the ALSEP
+nuclear powered Radioisotope Thermoelectric Generator (RTG), which was used to power and
+maintain components within temperature limits during the long cold lunar night period.
+
+                                       R-15
+                                                                  ALSEP External Temperatures
+
+
+
+
+               RTG
+                                                                      ALSEP Internal
+                                                                    Temperatures Using
+                                                                    RTG Supplied Power
+
+
+
+
+Figure 13. Astronauts Could Not Avoid Getting Dust on Deployed ALSEP Experiments
+
+
+
+
+                                         DAP-2017                                               9
+The author and his senior mentor regretted very much requiring the Astronauts to spend
+valuable Moon exploration time coping with lunar dust. With more weight budget, a closed
+thermal control system using an ammonia boiler could have potentially been implemented to
+avoid adverse dust effects on space radiators.
+
+
+
+DUST EFFECTS ON LUNAR EXTENDED EXTRATERRESTRIAL MISSIONS
+
+
+While helping to develop and test the LRV thermal control system, the author was very
+interested in how the Russian Lunokhod 1 robotic rover had survived 11 month long lunar
+temperature cycles in 1970-1971. After the completion of Apollo 15, an unsolicited translation
+of a full description of the Lunokhod rover appeared on the author’s desk. This translated
+document clearly showed how the Lunokhod used an isotope heater to heat the compartment
+containing support systems. R-16
+
+In 2004, the author was invited to present his retrospective LRV thermal control experiences at
+the Lunokhod development and test facility in St. Petersburg, Russia. While there, the author
+was able to get a full explanation from Lunokhod operator General Dovgan (Figure 14) about
+why and how the Lunokhod 2 robotic rover only lasted through 4 lunar temperature cycles. The
+explanation was that an inexperienced ground crew directed Lunokhod 2 down into a crater
+with the solar panel cover opened. The vehicle began to slide, and when it was driven back up
+the crater wall, dust was deposited onto the solar panel and later dumped onto the radiator
+surface – which ultimately resulted in over-heating and failure.
+                                                                   R-17
+
+
+                                                                              Solar Panel
+
+                                                                  Radiator
+
+
+
+
+  Figure 14. Gen. Dovgan Using Hand Controller to Remotely Guide Robotic Lunokhod
+
+
+Until several extended exploration ALSEP experiments were turned off in Sept. 1977, they
+showed increasing temperature behavior, caused by degradation of surface properties, or
+increasing dust coverage, or both. R-18
+
+
+                                        DAP-2017                                            10
+There are also indications that laser returns from the three ALSEP Laser Ranging Retro-Reflector
+(LRRR) systems left on the Moon have continued to be degraded, most likely due to increasing
+dust coverage (Figure 15).
+
+
+
+
+               Apollo LRRR      R-19                      Chinese Yutu Rover R-20
+
+            Figure 15. Apollo LRRR and Chinese Yutu Rover on the Moon
+
+
+It has been reported that lunar dust may have contributed to the Chinese Yutu robotic rover’s
+(Figure 15) early mobility failure, after only one lunar temperature cycle.
+
+
+
+
+DUST EFFECTS ON MARS EXTENDED EXTRATERRESTRIAL MISSIONS
+
+
+All of the JPL robotic rovers have conducted very successful extended extraterrestrial
+exploration missions on Mars since July 4, 1997. As shown in Figure 16, the Opportunity rover
+experienced significant dust coverage on its solar panels, but in 2014 wind helped clear the
+solar panels on one occasion. Dust deposited by winds had significantly reduced power
+generation capability. The Opportunity rover was fortunately cleaned of heavy dust coverage on
+its solar panels by strong winds blowing over the rim of the Endeavor crater on Mars. There is
+no atmosphere or wind available on the Moon to clean solar panels or radiators.
+
+
+
+
+                                        DAP-2017                                                11
+Figure 16. Mars Opportunity Robotic Rover, Dust Coverage (Left), and Wind Cleaning (Right) R-21
+
+
+JPL now uses nuclear Multi Mission Radioisotope Thermoelectric Generators (MMRTGs) without
+solar panels to provide power that is not influenced by dust on Mars, as shown in Figure 17.
+
+
+                                       MMRTG
+
+
+
+
+                                                                    R-22
+
+
+
+
+                               Curiosity Self-portrait
+
+Figure 17. Latest JPL Mars Rover Uses Dust Independent Nuclear MMRTG for Power
+
+
+
+                                       DAP-2017                                          12
+POST APOLLO LUNAR DUST TESTING FOR STRATEGIC KNOWLEDGE GAPS
+
+Selected dust related Lunar Exploration Analysis Group (LEAG) produced Strategic Knowledge
+Gaps (SKGs) are listed in Tables 1 and Table 2. Mention of “28 days” missions is puzzling
+because that length of stay entails the additional solution of the challenge for survival during
+the long and very cold lunar night. Also, the “Missions to the lunar surface” notation seems to
+be short sighted, as return missions to the Moon must have firm solutions to dust issues before
+departure to the Moon, and not be an experiment which could fail and endanger systems and
+Astronauts.
+
+Table 1. Selected Lunar Exploration Proposed Strategic Knowledge Gaps (SKGs) R-23
+
+
+
+
+Additional “Lunar Dust Adhesion Bell-Jar” testing has been conducted by Dr. James Gaier at the
+NASA Glenn Research Center (GRC), and “Dusty Plasma Lab” testing has been conducted by
+Dr. Mian Abbas at NASA-MSFC.
+
+
+
+
+                                        DAP-2017                                              13
+Table 2. Selected Lunar Exploration Proposed Strategic Knowledge Gaps (SKGs) - continued
+
+
+
+
+The author seriously doubts the utility of “Segway-like vehicles” with fewer than 4 wheels,
+which would pose significant stability issues for negotiating the highly cratered surface of the
+Moon. The author also questions whether “Terrestrial testing in relevant lunar conditions” is
+possible on the Earth. Mining rovers like the “Resource Prospector” will require additional
+power to survive in lunar temperature extremes. More information about development of the
+“Resource Prospector” rover is desired.
+
+
+
+
+                                        DAP-2017                                              14
+DUST MITIGATION OPTIONS FOR FUTURE LUNAR EXPLORATION
+
+Survival on the Moon during the almost 15 days without solar heating is a significant challenge.
+The LUROVA™ thermal simulation was used in a NASA Goddard Space Flight Center
+“Technology” study, and then to calculate survival energy requirements for the non-nuclear
+2012-2013 NASA “Night Rover” Centennial Challenge, as shown in Figure 18. This project was
+cancelled in 2014 after no potential providers had continued interest in participating in
+preliminary testing, because they did not see significant marketability of the technology outside
+of NASA. Also, more than twice the present energy storage capability is required and the duty
+cycle of 14+ days has little application in the private sector.
+
+                                                                                    R-24
+                                                               Forward Chassis
+                                                               Component
+                                                               Temperatures
+
+
+
+
+                                               Lunar Night = 14.75 Earth Days
+                            αS= 0.35
+
+
+                          Moon Temperature
+
+
+
+
+Figure 18. LUROVA™ Thermal Model Used For NASA Centennial Energy Storage Challenge
+
+
+An RTG nuclear power source for a “Dual Mode” rover was studied for the fourth LRV for Apollo
+18 (Figure 19), until this mission was cancelled in 1970. The author contributed to a dual mode
+Rover study at JPL in 2006, also shown in Figure 19.
+
+                                        R-25
+
+
+
+
+                                                                                        R-26
+
+
+
+Figure 19. Dual Mode LRV with RTG Studied for Apollo 18, JPL Concept with MMRTG Power
+
+
+
+                                               DAP-2017                                        15
+Dust mitigation options for dust exposure avoidance include potential use of the “Chariot” rover
+(Figure 20) with isolation suits and/or suit covers. This kind of protected Rover and suit covers
+can provide dust avoidance for Astronaut explorers.
+
+
+
+
+    JSC “Chariot” Provides Dust Isolation    R-27
+
+Figure 20. JSC Chariot Rover Provides Isolation from Direct Dust Exposure
+
+
+This kind of Chariot Rover and suit can also hook up with a clean habitat, as shown in Figure 21.
+
+
+
+                                             R-28
+
+
+
+
+                                                                    R-29
+
+
+
+Figure 21. Special Suits and Habitat Can Provide Additional Dust Exposure Avoidance
+
+
+
+
+                                         DAP-2017                                             16
+EXPERIENCE BASED RECOMMENDATIONS FOR COPING WITH DUST
+
+The author’s experience based recommendations for coping with lunar dust are presented here.
+This includes relying on Apollo exploration veterans for advice, and potential use of the
+LUROVA™ test and mission correlated thermal simulation.
+
+
+    •   Be Very Careful with Interpretation/Extrapolation of Earth Based Dust Testing Results
+
+     - Lesson Learned that Pre-Apollo Testing for Dust Removal by Brushing was misleading
+
+    •   Remove/Minimize Astronauts Having to Spend Valuable Time on Lunar Dust Removal
+
+    •   Design Exploration Systems that Isolate Astronauts and Equipment from Dust Exposure
+
+    •   Focus on Nuclear Systems to Provide Power (Especially for the Long Lunar Nights)
+
+    •   Dual Mode (Crewed, Followed by Robotic Operation) Rovers Increases Utility for
+          Moon Exploration
+
+    •   Full Coverage Fenders are Required for Wheels (Especially for Higher Speed Rovers)
+
+    •   Can Rely on Experience and Advice of Apollo Exploration Veterans
+
+    •   LUROVA™ (LUnar ROVing Adventures) Simulation Can be Used for Analyses and
+           Interactive Exploration Experience R-30
+
+
+
+
+                                      DAP-2017                                             17
+       REFERENCES
+
+R-1 Back to the Future - Retrospective Thermal Experiences for Apollo Lunar Surface Journal and Lectures
+R-2 Working On The Moon – Exploration Information Sub-section of the Lunar Surface Journal
+R-3 Lunar Dust Degradation Effects and Removal/Prevention Concepts Final Report (Nortronics - June 1967)
+R-4 A Study of the MSFC Lunar Roving Vehicle Dust Profile Test Program (University of Alabama - 1971)
+R-5 Lunar Dust Deposition Effects on the Solar Absorptance of Thermal Control Materials (MSC - Apr. 1971)
+R-6 Lunar Roving Vehicle Operations Handbook (Boeing - 1971)
+R-7 Apollo Pictures Archives and Wagner Lessons Learned Constellation Lunar Dust Management Report (2006)
+R-8 AS-510 Flight Evaluation Working Group (FEWG) Report for Apollo 15
+R-9 AS-511 Flight Evaluation Working Group (FEWG) Report for Apollo 16
+R-10 AS-512 Flight Evaluation Working Group (FEWG) Report for Apollo 17
+R-11 From Render Engine to Thermal Model – LUROVA™ Update Presented at TFAWS 2014
+R-12 NASA Lunar Exploration Audio/Video Transcripts/Recordings Provided In Lunar Surface Journal
+R-13 Surface Electrical Properties Experiment Final Report (MIT - 1974)
+R-14 Apollo 17 Mission Report (JSC - March 1973)
+R-15 Apollo Experience Report - Thermal Design of the ALSEP (MSC - March 1972)
+R-16 Lunokhod 1 Mobile Lunar Laboratory – Nov. 22, 1971 Translation of Russian Document
+R-17 Roving in Russia – Article about trip to St. Petersburg, Russia in SAIC Nov.-Dec. 2004 Bridge Newsletter
+R-18 ALSEP Termination Report (NASA - 1979)
+R-19 http://lunarnetworks.blogspot.com/2010/03/long-term-degradation-of-optics-on-moon.html
+R-20 https://en.wikipedia.org/wiki/Yutu_(rover)
+R-21 http://www.jpl.nasa.gov/news/news.php?release=2014-118 (Wind Cleaning of Solar Panels)
+R-22 https://www.nasa.gov/image-feature/jpl/pia20316/curiosity-self-portrait-at-martian-sand-dune
+R-23 SKG SAT Theme 3 (LEAG - September 2016)
+R-24 LUROVA™ Used for NASA Goddard Technology Development (2006) & Night Rover Trade Studies (2012-13)
+R-25 Dual Mode Lunar Roving Vehicle (1969) and Nuclear Power for Exploration - 2004 Inter. Sp. Dev. Conference
+R-26 JPL Concept for a Radioisotope Powered Dual Mode Lunar Rover (2006)
+R-27 JSC Next Generation Rover for Lunar Exploration (Dec. 2007)
+R-28 https://www.nasa.gov/feature/the-next-generation-of-suit-technologies
+R-29 Dust Mitigation Solutions for Lunar and Mars Surface Systems (ILC Dover - 2007)
+R-30 LUROVA™ Retrospective Thermal Experiences Book Being Prepared for STEM and Space Enthusiasts
+
+
+
+
+                                              DAP-2017                                           18
+

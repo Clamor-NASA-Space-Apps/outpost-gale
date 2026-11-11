@@ -1,0 +1,59 @@
+Source: https://history.siggraph.org/wp-content/uploads/2022/10/2015-Talks-Michels_Labs-R_D-Rendering-Techniques-in-Rise-of-the-Tomb-Raider.pdf (SIGGRAPH 2015 Talks abstract). pdftotext, 2026-11-12.
+             Labs R&D: Rendering Techniques in Rise of the Tomb Raider
+                               Anton Kai Michels, Peter Sikachev, Samuel Delmont, Uriel Doyon,
+                                  Francis Maheux, Jean-Normand Bucci, and David Gallardo
+                                           Eidos Montreal, Labs R&D Department
+
+
+
+
+                           Figure 1: Lara Croft in Rise of The Tomb Raider, actual gameplay footage.
+
+
+
+Abstract                                                             It uses temporal reprojection and a Bayer-based dithering and blur
+                                                                     in order to reduce banding.
+In this course/talk we aim to give a cohesive overview of the
+advanced rendering techniques developed for the upcoming 2015        Finally, we wish to give a brief but cohesive overview of our
+blockbuster, Rise of the Tomb Raider. We will present a              production and methodologies, discussing challenges that are
+collection of diverse features, the challenges they presented,       common to our industry and the steps we took to overcome them.
+where current approaches succeed and fail, followed by our own
+solutions and implementation details.
+                                                                     References
+Overview
+                                                                     BARRÉ-BRISEBOIS, C. 2014. Deformable Snow Rendering in
+We present a broad range of advanced rendering techniques            Batman™: Arkham Origins. GDC 2014.
+developed by a team of R&D graphics programmers for the next
+iteration of the Tomb Raider series, Rise of the Tomb Raider.
+                                                                     VOS, N. 2014. Volumetric Light Effects in Killzone: Shadow Fall.
+                                                                      In GPU Pro 5, CRC Press, 2014, pp. 127–147.
+We use a homebrewed SSAO technique we call Broad Temporal
+Ambient Obscurance (BTAO). It is inspired by SAO (Scalable
+Ambient Obscurance) and is greatly superior to the popular           MCGUIRE, M., MARA, M., AND LUEBCKE, D. 2012. Scalable
+HBAO (Horizon Based Ambient Occlusion) in terms of both              Ambient Obscurance. High-Performance Graphics 2012.
+quality and performance. BTAO is temporally stable and provides
+both near and far occlusion.
+
+One of the game’s key features is procedural snow deformation.
+We present a novel technique that is entirely agnostic of the
+original snow mesh and instead leverages compute shaders and
+hardware tessellation for a fast and detailed effect. Due to the
+agnostic nature of our approach we believe it will have many
+other applications in the future.
+
+We use Sample Distribution Shadow Maps (SDSM) to get a
+perfectly tight fit on our CSM view frustum by analyzing the
+depth buffer of our scene. After the analysis, we render the CSM
+with a DrawIndirect call, thus eliminating latency. This algorithm
+allows for efficient shadow map rendering by adjusting itself to
+scene and camera position, thereby enhancing shadow quality.
+                                                                     Permission to make digital or hard copies of part or all of this work for personal or
+Rise of the Tomb Raider also features improved volumetric lights     classroom use is granted without fee provided that copies are not made or distributed
+rendering. We use a resolution-agnostic voxel method.                for commercial advantage and that copies bear this notice and the full citation on the
+                                                                     first page. Copyrights for third-party components of this work must be honored. For all
+Volumetric lights are generated using async compute after            other uses, contact the Owner/Author.
+shadow rendering and correctly handles transparency composition.     Copyright is held by the owner/author(s).
+                                                                     SIGGRAPH 2015 Talks, August 09 – 13, 2015, Los Angeles, CA.
+                                                                     ACM 978-1-4503-3636-9/15/08.
+                                                                     http://dx.doi.org/10.1145/2775280.2792529
+

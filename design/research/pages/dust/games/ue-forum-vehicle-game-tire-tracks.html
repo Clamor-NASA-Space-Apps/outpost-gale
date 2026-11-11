@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Tire tracks in the free &quot;vehicle game&quot;? - Blueprint - Epic Developer Community Forums</title>
+    <meta name="description" content="I’m trying to figure out how exactly the tire tracks work. They seem to appear only on muddy textures. 
+All I can find out is a particle called “Tire Track” inside a particle system called “P_dirt_wheel_kickup” and a sta…">
+    <meta name="generator" content="Discourse 2026.10.1 - https://github.com/discourse/discourse version 3de902071c8ed622c491f175be4cbd136e3c5d16">
+<link rel="icon" type="image/png" href="https://d3kjluh73b9h9o.cloudfront.net/optimized/4X/4/f/c/4fc78ce65be09c7e97b60a65447c99c078aca16b_2_32x32.png">
+<link rel="apple-touch-icon" type="image/png" href="https://d3kjluh73b9h9o.cloudfront.net/optimized/4X/7/1/3/713c9d3f58553f0de89543d76a8a3a2779dc9fa4_2_180x180.png">
+<meta name="theme-color" media="all" content="#000000">
+
+<meta name="color-scheme" content="dark">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<link rel="canonical" href="https://forums.unrealengine.com/t/tire-tracks-in-the-free-vehicle-game/57050" />
+
+<meta name="discourse-track-view-session-id" content="mjWWOigLnIVyfFI0JqqLZkv02bzpxjkI">
+  <link rel="search" type="application/opensearchdescription+xml" href="https://forums.unrealengine.com/opensearch.xml" title="Epic Developer Community Forums Search">
+
+    
+    <link href="https://d1ap1mz92jnks1.cloudfront.net/stylesheets/color_definitions_default_26_14_015c294236487c8183779c0505b950ae18c03516.css?__ws=forums.unrealengine.com" media="all" rel="stylesheet" class="light-scheme" data-scheme-id="26"/>
+
+<link href="https://d1ap1mz92jnks1.cloudfront.net/stylesheets/common_86b80f5fcfd2d9ff85f411c05924b1b7591d294f.css?__ws=forums.unrealengine.com" media="all" rel="stylesheet" data-target="common"  />
+
+
+
+  <link href="https://d1ap1mz92jnks1.cloudfront.net/stylesheets/checklist_86b80f5fcfd2d9ff85f411c05924b1b7591d294f.css?__ws=forums.unrealengine.com" media="all" rel="stylesheet" data-target="checklist"  />
+  <link href="https://d1ap1mz92jnks1.cloudfront.net/stylesheets/discourse-assign_86b80f5fcfd2d9ff85f411c05924b1b7591d294f.css?__ws=forums.unrealengine.com" media="all" rel="stylesheet" data-target="discourse-assign"  />
+  <link href="https://d1ap1mz92jnks1.cloudfront.net/stylesheets/discourse-data-explorer_86b80f5fcfd2d9ff85f411c05924b1b7591d294f.css?__ws=forums.unrealengine.com" media="all" rel="stylesheet" data-target="discourse-data-explorer"  />
+  <link href="https://d1ap1mz92jnks1.cloudfront.net/stylesheets/discourse-details_86b80f5fcfd2d9ff85f411c05924b1b7591d294f.css?__ws=forums.unrealengine.com" media="all" rel="stylesheet" data-target="discourse-details"  />
+  <link href="https://d1ap1mz92jnks1.cloudfront.net/stylesheets/discourse-epic-games_86b80f5fcfd2d9ff85f411c05924b1b7591d294f.css?__ws=forums.unrealengine.com" media="all" rel="stylesheet" data-target="discourse-epic-games"  />
+  <link href="https://d1ap1mz92jnks1.cloudfront.net/stylesheets/discourse-epic-sso_86b80f5fcfd2d9ff85f411c05924b1b7591d294f.css?__ws=forums.unrealengine.com" media="all" rel="stylesheet" data-target="discourse-epic-sso"  />
+  <link href="https://d1ap1mz92jnks1.cloudfront.net/stylesheets/discourse-lazy-videos_86b80f5fcfd2d9ff85f411c05924b1b7591d294f.css?__ws=forums.unrealengine.com" media="all" rel="stylesheet" data-target="discourse-lazy-videos"  />
+  <link href="https://d1ap1mz92jnks1.cloudfront.net/stylesheets/discourse-local-dates_86b80f5fcfd2d9ff85f411c05924b1b7591d294f.css?__ws=forums.unrealengine.com" media="all" rel="stylesheet" data-target="discourse-local-dates"  />
+  <link href="https://d1ap1mz92jnks1.cloudfront.net/stylesheets/discourse-narrative-bot_86b80f5fcfd2d9ff85f411c05924b1b7591d294f.css?__ws=forums.unrealengine.com" media="all" rel="stylesheet" data-target="discourse-narrative-bot"  />
+  <link href="https://d1ap1mz92jnks1.cloudfront.net/stylesheets/discourse-presence_86b80f5fcfd2d9ff85f411c05924b1b7591d294f.css?__ws=forums.unrealengine.com" media="all" rel="stylesheet" data-target="discourse-presence"  />
+  <link href="https://d1ap1mz92jnks1.cloudfront.net/stylesheets/discourse-reactions_86b80f5fcfd2d9ff85f411c05924b1b7591d294f.css?__ws=forums.unrealengine.com" media="all" rel="stylesheet" data-target="discourse-reactions"  />
+  <link href="https://d1ap1mz92jnks1.cloudfront.net/stylesheets/discourse-solved_86b80f5fcfd2d9ff85f411c05924b1b7591d294f.css?__ws=forums.unrealengine.com" media="all" rel="stylesheet" data-target="discourse-solved"  />
+  <link href="https://d1ap1mz92jnks1.cloudfront.net/stylesheets/discourse-templates_86b80f5fcfd2d9ff85f411c05924b1b7591d294f.css?__ws=forums.unrealengine.com" media="all" rel="stylesheet" data-target="discourse-templates"  />
+  <link href="https://d1ap1mz92jnks1.cloudfront.net/stylesheets/discourse-topic-voting_86b80f5fcfd2d9ff85f411c05924b1b7591d294f.css?__ws=forums.unrealengine.com" media="all" rel="stylesheet" data-target="discourse-topic-voting"  />
+  <link href="https://d1ap1mz92jnks1.cloudfront.net/stylesheets/discourse-workflows_86b80f5fcfd2d9ff85f411c05924b1b7591d294f.css?__ws=forums.unrealengine.com" media="all" rel="stylesheet" data-target="discourse-workflows"  />
+  <link href="https://d1ap1mz92jnks1.cloudfront.net/stylesheets/footnote_86b80f5fcfd2d9ff85f411c05924b1b7591d294f.css?__ws=forums.unrealengine.com" media="all" rel="stylesheet" data-target="footnote"  />
+  <link href="https://d1ap1mz92jnks1.cloudfront.net/stylesheets/hosted-site_86b80f5fcfd2d9ff85f411c05924b1b7591d294f.css?__ws=forums.unrealengine.com" media="all" rel="stylesheet" data-target="hosted-site"  />
+  <link href="https://d1ap1mz92jnks1.cloudfront.net/stylesheets/poll_86b80f5fcfd2d9ff85f411c05924b1b7591d294f.css?__ws=forums.unrealengine.com" media="all" rel="stylesheet" data-target="poll"  />
+  <link href="https://d1ap1mz92jnks1.cloudfront.net/stylesheets/spoiler-alert_86b80f5fcfd2d9ff85f411c05924b1b7591d294f.css?__ws=forums.unrealengine.com" media="all" rel="stylesheet" data-target="spoiler-alert"  />
+  <link href="https://d1ap1mz92jnks1.cloudfront.net/stylesheets/discourse-assign_mobile_86b80f5fcfd2d9ff85f411c05924b1b7591d294f.css?__ws=forums.unrealengine.com" media="(width < 40rem)" rel="stylesheet" data-target="discourse-assign_mobile"  />
+  <link href="https://d1ap1mz92jnks1.cloudfront.net/stylesheets/discourse-epic-games_mobile_86b80f5fcfd2d9ff85f411c05924b1b7591d294f.css?__ws=forums.unrealengine.com" media="(width < 40rem)" rel="stylesheet" data-target="discourse-epic-games_mobile"  />
+  <link href="https://d1ap1mz92jnks1.cloudfront.net/stylesheets/discourse-reactions_mobile_86b80f5fcfd2d9ff85f411c05924b1b7591d294f.css?__ws=forums.unrealengine.com" media="(width < 40rem)" rel="stylesheet" data-target="discourse-reactions_mobile"  />
+  <link href="https://d1ap1mz92jnks1.cloudfront.net/stylesheets/discourse-epic-games_desktop_86b80f5fcfd2d9ff85f411c05924b1b7591d294f.css?__ws=forums.unrealengine.com" media="(width >= 40rem)" rel="stylesheet" data-target="discourse-epic-games_desktop"  />
+  <link href="https://d1ap1mz92jnks1.cloudfront.net/stylesheets/discourse-reactions_desktop_86b80f5fcfd2d9ff85f411c05924b1b7591d294f.css?__ws=forums.unrealengine.com" media="(width >= 40rem)" rel="stylesheet" data-target="discourse-reactions_desktop"  />
+  <link href="https://d1ap1mz92jnks1.cloudfront.net/stylesheets/poll_desktop_86b80f5fcfd2d9ff85f411c05924b1b7591d294f.css?__ws=forums.unrealengine.com" media="(width >= 40rem)" rel="stylesheet" data-target="poll_desktop"  />
+
+  <link href="https://d1ap1mz92jnks1.cloudfront.net/stylesheets/common_theme_24_e30b33a0d3e135bd44230d410697088d7acd460a.css?__ws=forums.unrealengine.com" media="all" rel="stylesheet" data-target="common_theme" data-theme-id="24" data-theme-name="topic excerpts"/>
+<link href="https://d1ap1mz92jnks1.cloudfront.net/stylesheets/common_theme_11_793717182e65940ae1322cbebc54892f3bb5b17f.css?__ws=forums.unrealengine.com" media="all" rel="stylesheet" data-target="common_theme" data-theme-id="11" data-theme-name="topic thumbnails"/>
+<link href="https://d1ap1mz92jnks1.cloudfront.net/stylesheets/common_theme_20_70ed7cc3e42dcb3a8b03d48a1689c7bb2e622569.css?__ws=forums.unrealengine.com" media="all" rel="stylesheet" data-target="common_theme" data-theme-id="20" data-theme-name="verse syntax highlighting"/>
+<link href="https://d1ap1mz92jnks1.cloudfront.net/stylesheets/common_theme_30_24b8b7755cd74e5d118a2b1a498020c162145d5b.css?__ws=forums.unrealengine.com" media="all" rel="stylesheet" data-target="common_theme" data-theme-id="30" data-theme-name="hotfix: ipad scroll topic header"/>
+<link href="https://d1ap1mz92jnks1.cloudfront.net/stylesheets/common_theme_38_9c57400f8ceb3ff370cf430012c99ea086f003b4.css?__ws=forums.unrealengine.com" media="all" rel="stylesheet" data-target="common_theme" data-theme-id="38" data-theme-name="hotfix: remove email banner"/>
+<link href="https://d1ap1mz92jnks1.cloudfront.net/stylesheets/common_theme_34_3f1f21b6025db8be2b2424c0e3da2818b31c69b3.css?__ws=forums.unrealengine.com" media="all" rel="stylesheet" data-target="common_theme" data-theme-id="34" data-theme-name="hotfixes"/>
+<link href="https://d1ap1mz92jnks1.cloudfront.net/stylesheets/common_theme_36_3f6224d6552485f1cdbc0acdcd22866324d36039.css?__ws=forums.unrealengine.com" media="all" rel="stylesheet" data-target="common_theme" data-theme-id="36" data-theme-name="remove email preferences page"/>
+<link href="https://d1ap1mz92jnks1.cloudfront.net/stylesheets/common_theme_18_d27f69530f2435420ea80fb81e7f9daaed825449.css?__ws=forums.unrealengine.com" media="all" rel="stylesheet" data-target="common_theme" data-theme-id="18" data-theme-name="temporary styles"/>
+  <link href="https://d1ap1mz92jnks1.cloudfront.net/stylesheets/mobile_theme_11_d0aa600866e9878bdacb56c8f7fafb97e4d4d213.css?__ws=forums.unrealengine.com" media="(width < 40rem)" rel="stylesheet" data-target="mobile_theme" data-theme-id="11" data-theme-name="topic thumbnails"/>
+<link href="https://d1ap1mz92jnks1.cloudfront.net/stylesheets/mobile_theme_18_a70befc0a86b0b784aac89457fd0b88181e04602.css?__ws=forums.unrealengine.com" media="(width < 40rem)" rel="stylesheet" data-target="mobile_theme" data-theme-id="18" data-theme-name="temporary styles"/>
+  
+
+    
+    
+        <link rel="alternate nofollow" type="application/rss+xml" title="RSS feed of &#39;Tire tracks in the free &quot;vehicle game&quot;?&#39;" href="https://forums.unrealengine.com/t/tire-tracks-in-the-free-vehicle-game/57050.rss" />
+    <meta property="og:site_name" content="Epic Developer Community Forums" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://d3kjluh73b9h9o.cloudfront.net/original/4X/2/9/b/29baba797e2c83ded8d953a8b17e3828436ca428.png" />
+<meta property="og:image" content="https://d3kjluh73b9h9o.cloudfront.net/original/4X/4/b/2/4b280f634b056c5ef927c55b924c348550827f02.png" />
+<meta property="og:url" content="https://forums.unrealengine.com/t/tire-tracks-in-the-free-vehicle-game/57050" />
+<meta name="twitter:url" content="https://forums.unrealengine.com/t/tire-tracks-in-the-free-vehicle-game/57050" />
+<meta property="og:title" content="Tire tracks in the free &quot;vehicle game&quot;?" />
+<meta name="twitter:title" content="Tire tracks in the free &quot;vehicle game&quot;?" />
+<meta property="og:description" content="I’m trying to figure out how exactly the tire tracks work. They seem to appear only on muddy textures.  All I can find out is a particle called “Tire Track” inside a particle system called “P_dirt_wheel_kickup” and a static mesh called “SM_Tire_track”, but I can’t seem to find any references in blueprints to either of those.  I’ve tried searching for these names as well inside of every .h, .cp, .cs file in Unreal Projects\VehicleGame\Source\ without any visible references as well.  Where and whe..." />
+<meta name="twitter:description" content="I’m trying to figure out how exactly the tire tracks work. They seem to appear only on muddy textures.  All I can find out is a particle called “Tire Track” inside a particle system called “P_dirt_wheel_kickup” and a static mesh called “SM_Tire_track”, but I can’t seem to find any references in blueprints to either of those.  I’ve tried searching for these names as well inside of every .h, .cp, .cs file in Unreal Projects\VehicleGame\Source\ without any visible references as well.  Where and whe..." />
+<meta property="og:article:section" content="Development" />
+<meta property="og:article:section:color" content="1b1b1b" />
+<meta property="og:article:section" content="Programming &amp; Scripting" />
+<meta property="og:article:section:color" content="B665E9" />
+<meta property="og:article:section" content="Blueprint" />
+<meta property="og:article:section:color" content="B665E9" />
+<meta property="og:article:tag" content="unreal-engine" />
+<meta property="article:published_time" content="2016-03-02T20:30:03+00:00" />
+<meta property="og:ignore_canonical" content="true" />
+
+
+    <link rel="alternate" type="text/markdown" href="https://forums.unrealengine.com/t/tire-tracks-in-the-free-vehicle-game/57050.md">
+    
+  </head>
+  <body class="crawler ">
+    
+    <header>
+  <a href="/">Epic Developer Community Forums</a>
+</header>
+
+    <div id="main-outlet" class="wrap" role="main">
+        <div id="topic-title">
+    <h1>
+      <a href="/t/tire-tracks-in-the-free-vehicle-game/57050">Tire tracks in the free &quot;vehicle game&quot;?</a>
+    </h1>
+
+      <div class="topic-category" itemscope itemtype="http://schema.org/BreadcrumbList">
+          <span itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            <a href="/c/development-discussion/11" class="badge-wrapper bullet" itemprop="item">
+              <span class='badge-category-bg' style='background-color: #1b1b1b'></span>
+              <span class='badge-category clear-badge'>
+                <span class='category-name' itemprop='name'>Development</span>
+              </span>
+            </a>
+            <meta itemprop="position" content="1" />
+          </span>
+          <span itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            <a href="/c/development-discussion/programming-scripting/148" class="badge-wrapper bullet" itemprop="item">
+              <span class='badge-category-bg' style='background-color: #B665E9'></span>
+              <span class='badge-category clear-badge'>
+                <span class='category-name' itemprop='name'>Programming &amp; Scripting</span>
+              </span>
+            </a>
+            <meta itemprop="position" content="2" />
+          </span>
+          <span itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            <a href="/c/development-discussion/programming-scripting/blueprint/28" class="badge-wrapper bullet" itemprop="item">
+              <span class='badge-category-bg' style='background-color: #B665E9'></span>
+              <span class='badge-category clear-badge'>
+                <span class='category-name' itemprop='name'>Blueprint</span>
+              </span>
+            </a>
+            <meta itemprop="position" content="3" />
+          </span>
+      </div>
+
+      <div class="topic-category">
+        <div class='discourse-tags list-tags'>
+            <a href='https://forums.unrealengine.com/tag/unreal-engine' class='discourse-tag' rel="tag">unreal-engine</a>
+        </div>
+      </div>
+  </div>
+
+  
+
+    <div itemscope="itemscope" itemtype="http://schema.org/DiscussionForumPosting">
+      <meta itemprop='headline' content='Tire tracks in the free &quot;vehicle game&quot;?'>
+      <link itemprop='url' href='https://forums.unrealengine.com/t/tire-tracks-in-the-free-vehicle-game/57050'>
+      <meta itemprop='datePublished' content='2016-03-02T20:30:03Z'>
+      <meta itemprop='keywords' content='unreal-engine'>
+          <meta itemprop='articleSection' content='Blueprint'>
+        <div itemprop='publisher' itemscope itemtype="http://schema.org/Organization">
+          <meta itemprop='name' content='Epic Games, Inc.'>
+            <div itemprop='logo' itemscope itemtype="http://schema.org/ImageObject">
+              <meta itemprop='url' content='https://d3kjluh73b9h9o.cloudfront.net/original/4X/7/1/3/713c9d3f58553f0de89543d76a8a3a2779dc9fa4.png'>
+            </div>
+        </div>
+
+      
+
+
+
+          <div id='post_1'  class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+                <a rel='nofollow' href='https://forums.unrealengine.com/u/Gmi'><span itemprop="name">Gmi</span></a>
+                  <meta itemprop='url' content='https://forums.unrealengine.com/u/Gmi'>
+                (Gmi)
+              </span>
+
+                <link itemprop="mainEntityOfPage" href="https://forums.unrealengine.com/t/tire-tracks-in-the-free-vehicle-game/57050">
+
+
+              <span class="crawler-post-infos">
+                  <time  datetime='2016-03-02T20:30:03Z' class='post-time'>
+                    March 2, 2016,  8:30pm
+                  </time>
+                  <meta itemprop='dateModified' content='2016-03-02T20:30:03Z'>
+              <span itemprop="position">1</span>
+              </span>
+            </div>
+            <div class='post' itemprop="text">
+              <p>I’m trying to figure out how exactly the tire tracks work. They seem to appear only on muddy textures.</p>
+<p>All I can find out is a particle called “Tire Track” inside a particle system called “P_dirt_wheel_kickup” and a static mesh called “SM_Tire_track”, but I can’t seem to find any references in blueprints to either of those.</p>
+<p>I’ve tried searching for these names as well inside of every .h, .cp, .cs file in Unreal Projects\VehicleGame\Source\ without any visible references as well.<br>
+Where and when exactly is the sm_tire_track being spawned?</p>
+<p>I apologize for a incredibly stupid question probably, but I just can’t seem to find it.</p>
+            </div>
+
+              <div itemprop="interactionStatistic" itemscope="itemscope" itemtype="http://schema.org/InteractionCounter">
+                  <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+                  <meta itemprop="userInteractionCount" content="0" />
+                <span class='post-likes'></span>
+              </div>
+
+
+            
+
+
+          </div>
+          <div id='post_2' itemprop="comment" itemscope="itemscope" itemtype="http://schema.org/Comment" class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+                <a rel='nofollow' href='https://forums.unrealengine.com/u/SparkyMcSparks'><span itemprop="name">SparkyMcSparks</span></a>
+                  <meta itemprop='url' content='https://forums.unrealengine.com/u/SparkyMcSparks'>
+                (SparkyMcSparks)
+              </span>
+
+
+                <link itemprop="image" href="https://d3kjluh73b9h9o.cloudfront.net/original/3X/e/9/e96498fd7186c61543ffd9eff5729155055a8388.png">
+
+              <span class="crawler-post-infos">
+                  <time itemprop="datePublished" datetime='2016-03-03T14:03:32Z' class='post-time'>
+                    March 3, 2016,  2:03pm
+                  </time>
+                  <meta itemprop='dateModified' content='2021-04-15T22:42:38Z'>
+              <span itemprop="position">2</span>
+              </span>
+            </div>
+            <div class='post' itemprop="text">
+              <p>It’s handled within code in <strong>Class’/Script/VehicleGame.BuggyPawn’</strong> and you’re looking for these two functions in particular:</p>
+<p><div class="lightbox-wrapper"><a class="lightbox" href="https://d3kjluh73b9h9o.cloudfront.net/original/3X/e/9/e96498fd7186c61543ffd9eff5729155055a8388.png" data-download-href="/uploads/short-url/xiGMmnxW98TJmVZndgcZN8b821i.png?dl=1" title="BuggyPawnWheel.png" rel="noopener nofollow ugc"><img src="https://d3kjluh73b9h9o.cloudfront.net/original/3X/e/9/e96498fd7186c61543ffd9eff5729155055a8388.png" alt="BuggyPawnWheel.png" data-base62-sha1="xiGMmnxW98TJmVZndgcZN8b821i" width="678" height="500" data-small-upload="https://d3kjluh73b9h9o.cloudfront.net/optimized/3X/e/9/e96498fd7186c61543ffd9eff5729155055a8388_2_10x10.png"><div class="meta">
+<svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use xlink:href="#far-image"></use></svg><span class="filename">BuggyPawnWheel.png</span><span class="informations">731×539 15.9 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use xlink:href="#discourse-expand"></use></svg>
+</div></a></div></p>
+<p>Basically <strong>VehicleDustType’/Game/Effects/Blueprints/Wheel_fx_default.Wheel_fx_default’</strong> is a custom DataAsset for the different wheel FX specific to a surface, and code detects what surface a wheel is on and uses the corresponding FX to be spawned on a wheel.</p>
+            </div>
+
+              <div itemprop="interactionStatistic" itemscope="itemscope" itemtype="http://schema.org/InteractionCounter">
+                  <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+                  <meta itemprop="userInteractionCount" content="0" />
+                <span class='post-likes'></span>
+              </div>
+
+
+            
+
+
+          </div>
+
+    </div>
+
+
+    
+
+
+
+
+    </div>
+    <footer class="container wrap">
+  <nav class='crawler-nav'>
+    <ul>
+      <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+        <span itemprop='name'>
+          <a href='/' itemprop="url">Home </a>
+        </span>
+      </li>
+      <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+        <span itemprop='name'>
+          <a href='/categories' itemprop="url">Categories </a>
+        </span>
+      </li>
+      
+      <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+        <span itemprop='name'>
+          <a href='/guidelines' itemprop="url">Guidelines </a>
+        </span>
+      </li>
+        <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+          <span itemprop='name'>
+            <a href='https://www.epicgames.com/tos' itemprop="url">Terms of Service </a>
+          </span>
+        </li>
+        <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+          <span itemprop='name'>
+            <a href='https://www.epicgames.com/site/privacypolicy' itemprop="url">Privacy Policy </a>
+          </span>
+        </li>
+    </ul>
+  </nav>
+  <p class='powered-by-link'>Powered by <a href="https://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled</p>
+</footer>
+
+    
+    
+  </body>
+  
+</html>

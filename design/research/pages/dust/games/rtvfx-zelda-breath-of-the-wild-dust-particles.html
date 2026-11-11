@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Zelda Breath of the Wild Dust Particles - Real Time VFX</title>
+    <meta name="description" content="I really like the VFX in breath of the wild. I want to make these cloud/dust effects are made. I like how they have shadow information to the cloudy areas. 
+Rain:           
+          
+
+Not raining:           
+          
+…">
+    <meta name="generator" content="Discourse 2026.11.0-latest.1 - https://github.com/discourse/discourse version ae65e05533380219967c9e49bdb1f5868b177910">
+<link rel="icon" type="image/png" href="https://realtimevfx.com/uploads/default/optimized/2X/6/65a89d557035443a290055e551d2b9d4028fa6cb_2_32x32.png">
+<link rel="apple-touch-icon" type="image/png" href="https://realtimevfx.com/uploads/default/optimized/2X/6/65a89d557035443a290055e551d2b9d4028fa6cb_2_180x180.png">
+<meta name="theme-color" media="all" content="#292929">
+
+<meta name="color-scheme" content="dark">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<link rel="canonical" href="https://realtimevfx.com/t/zelda-breath-of-the-wild-dust-particles/10639" />
+
+<meta name="discourse-track-view-session-id" content="Uibssv1z0yMpEVj5FvCSnL7osWdfLWGl">
+  <link rel="search" type="application/opensearchdescription+xml" href="https://realtimevfx.com/opensearch.xml" title="Real Time VFX Search">
+
+    
+    <link href="/stylesheets/color_definitions_dark-color-scheme_8_16_a1a3a28b2962e307ee8f909b50edea5009b0af2d.css?__ws=realtimevfx.com" media="all" rel="stylesheet" class="light-scheme" data-scheme-id="8"/>
+
+<link href="/stylesheets/common_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="common"  />
+
+
+
+  <link href="/stylesheets/checklist_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="checklist"  />
+  <link href="/stylesheets/discourse-details_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="discourse-details"  />
+  <link href="/stylesheets/discourse-lazy-videos_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="discourse-lazy-videos"  />
+  <link href="/stylesheets/discourse-local-dates_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="discourse-local-dates"  />
+  <link href="/stylesheets/discourse-narrative-bot_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="discourse-narrative-bot"  />
+  <link href="/stylesheets/discourse-presence_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="discourse-presence"  />
+  <link href="/stylesheets/discourse-reactions_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="discourse-reactions"  />
+  <link href="/stylesheets/discourse-solved_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="discourse-solved"  />
+  <link href="/stylesheets/discourse-templates_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="discourse-templates"  />
+  <link href="/stylesheets/discourse-topic-voting_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="discourse-topic-voting"  />
+  <link href="/stylesheets/discourse-user-notes_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="discourse-user-notes"  />
+  <link href="/stylesheets/discourse-workflows_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="discourse-workflows"  />
+  <link href="/stylesheets/docker_manager_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="docker_manager"  />
+  <link href="/stylesheets/footnote_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="footnote"  />
+  <link href="/stylesheets/poll_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="poll"  />
+  <link href="/stylesheets/discourse-reactions_mobile_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="(width < 40rem)" rel="stylesheet" data-target="discourse-reactions_mobile"  />
+  <link href="/stylesheets/discourse-reactions_desktop_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="(width >= 40rem)" rel="stylesheet" data-target="discourse-reactions_desktop"  />
+  <link href="/stylesheets/poll_desktop_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="(width >= 40rem)" rel="stylesheet" data-target="poll_desktop"  />
+
+  <link href="/stylesheets/common_theme_14_9d9dd0aebeccaf85fae8912d0efa5f458edb50f8.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="common_theme" data-theme-id="14" data-theme-name="topic list previews"/>
+<link href="/stylesheets/common_theme_12_649b6517bc7fa72665e06972b5b000c3a37801a0.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="common_theme" data-theme-id="12" data-theme-name="flair customizations"/>
+<link href="/stylesheets/common_theme_22_cec923b3a335c2873f7b19bc8de250d3334302bd.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="common_theme" data-theme-id="22" data-theme-name="rtvfx banner component v2"/>
+<link href="/stylesheets/common_theme_19_d16dc05dfa9e4626f7dd66f546ce8d5e8c5ca6b6.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="common_theme" data-theme-id="19" data-theme-name="rtvfx nav bar"/>
+<link href="/stylesheets/common_theme_16_2b9538b3f46fc2b11a89648ce88dfd52436b7ea3.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="common_theme" data-theme-id="16" data-theme-name="dark theme rtvfx"/>
+  <link href="/stylesheets/mobile_theme_14_270a196ee86d0bf07526e0462f1ad7e5efd3d2b8.css?__ws=realtimevfx.com" media="(width < 40rem)" rel="stylesheet" data-target="mobile_theme" data-theme-id="14" data-theme-name="topic list previews"/>
+<link href="/stylesheets/mobile_theme_19_971d208b7d42f823b30ae657eef06217976f95ce.css?__ws=realtimevfx.com" media="(width < 40rem)" rel="stylesheet" data-target="mobile_theme" data-theme-id="19" data-theme-name="rtvfx nav bar"/>
+  <link href="/stylesheets/desktop_theme_14_08f95d567b73c5950466b0b953b4828d9c1740af.css?__ws=realtimevfx.com" media="(width >= 40rem)" rel="stylesheet" data-target="desktop_theme" data-theme-id="14" data-theme-name="topic list previews"/>
+<link href="/stylesheets/desktop_theme_19_68d1fc9a665b419017bb3c060db0a2c424107f90.css?__ws=realtimevfx.com" media="(width >= 40rem)" rel="stylesheet" data-target="desktop_theme" data-theme-id="19" data-theme-name="rtvfx nav bar"/>
+
+
+
+    
+    
+        <link rel="alternate nofollow" type="application/rss+xml" title="RSS feed of &#39;Zelda Breath of the Wild Dust Particles&#39;" href="https://realtimevfx.com/t/zelda-breath-of-the-wild-dust-particles/10639.rss" />
+    <meta property="og:site_name" content="Real Time VFX" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://realtimevfx.com/uploads/default/original/2X/6/6fcdd751577cc86d4bcc0dd48234b78a41491c87.jpeg" />
+<meta property="og:image" content="https://realtimevfx.com/uploads/default/original/2X/0/08007a81095d58e2d2de1a1a20a74f8347048f25.jpg" />
+<meta property="og:url" content="https://realtimevfx.com/t/zelda-breath-of-the-wild-dust-particles/10639" />
+<meta name="twitter:url" content="https://realtimevfx.com/t/zelda-breath-of-the-wild-dust-particles/10639" />
+<meta property="og:title" content="Zelda Breath of the Wild Dust Particles" />
+<meta name="twitter:title" content="Zelda Breath of the Wild Dust Particles" />
+<meta property="og:description" content="I really like the VFX in breath of the wild. I want to make these cloud/dust effects are made. I like how they have shadow information to the cloudy areas.  Rain:                        Not raining:                        Gerudo Desert:                        are they using a flipbook or are they panning textures? I noticed that the particles are aligned to face the camera and the panning of the texture seems to follow the direction of the wind. Does it has alpha erosions or is it a normal opaci..." />
+<meta name="twitter:description" content="I really like the VFX in breath of the wild. I want to make these cloud/dust effects are made. I like how they have shadow information to the cloudy areas.  Rain:                        Not raining:                        Gerudo Desert:                        are they using a flipbook or are they panning textures? I noticed that the particles are aligned to face the camera and the panning of the texture seems to follow the direction of the wind. Does it has alpha erosions or is it a normal opaci..." />
+<meta property="og:article:section" content="General Discussion" />
+<meta property="og:article:section:color" content="a8a8a8" />
+<meta property="og:article:tag" content="vfx" />
+<meta property="og:article:tag" content="games" />
+<meta property="og:article:tag" content="help" />
+<meta property="og:article:tag" content="unreal" />
+<meta property="og:article:tag" content="particles" />
+<meta name="twitter:label1" value="Reading time" />
+<meta name="twitter:data1" value="1 min 🕑" />
+<meta name="twitter:label2" value="Likes" />
+<meta name="twitter:data2" value="7 ❤" />
+<meta property="article:published_time" content="2019-09-24T21:20:53+00:00" />
+<meta property="og:ignore_canonical" content="true" />
+
+
+    <link rel="alternate" type="text/markdown" href="https://realtimevfx.com/t/zelda-breath-of-the-wild-dust-particles/10639.md">
+    
+<script type="application/ld+json">{"@context":"http://schema.org","@type":"QAPage","name":"Zelda Breath of the Wild Dust Particles","datePublished":"2019-09-24T21:20:53.702Z","mainEntity":{"@type":"Question","answerCount":7,"author":{"@type":"Person","name":"Iby","url":"https://realtimevfx.com/u/Iby"},"dateModified":"2019-09-25T01:18:50.736Z","datePublished":"2019-09-24T21:20:53.702Z","name":"Zelda Breath of the Wild Dust Particles","text":"I really like the VFX in breath of the wild. I want to make these cloud/dust effects are made. I like how they have shadow information to the cloudy areas.\n\nRain:\n\nZelda Breath Of The Wild Dust VFX GIF by\n\nanonymous\n\n#breath of the wild #vfx #zelda\n\nZelda Breath Of The Wild Dust VFX GIF by\n\nanonymous\n\n#breath of the wild #vfx #zelda\n\nNot raining:\n\nZelda Breath Of The Wild Dust VFX GIF by\n\nanonymous\n\n#breath of the wild #vfx #zelda\n\nZelda Breath Of The Wild Dust VFX GIF by\n\nanonymous\n\n#breath of the wild #vfx #zelda\n\nGerudo Desert:\n\nZelda Breath Of The Wild Dust VFX GIF by\n\nanonymous\n\n#breath of the wild #vfx #zelda\n\nZelda Breath Of The Wild Dust VFX GIF by\n\nanonymous\n\n#breath of the wild #vfx #zelda\n\nare they using a flipbook or are they panning textures? I noticed that the particles are aligned to face the camera and the panning of the texture seems to follow the direction of the wind. Does it has alpha erosions or is it a normal opacity fade with a special type of mask. what sort of textures are they using?  are they using the photoshop clouds or some custom texture?","upvoteCount":4,"suggestedAnswer":[{"@type":"Answer","author":{"@type":"Person","name":"Hovl","url":"https://realtimevfx.com/u/Hovl"},"dateModified":"2019-09-25T01:29:59.451Z","datePublished":"2019-09-25T01:29:59.434Z","text":"I think that it just stretched-billboard spites with simulated smoke. Rotation = velocity direction.","upvoteCount":0,"url":"https://realtimevfx.com/t/zelda-breath-of-the-wild-dust-particles/10639/2"},{"@type":"Answer","author":{"@type":"Person","name":"sethhall","url":"https://realtimevfx.com/u/sethhall"},"dateModified":"2019-09-25T16:50:23.453Z","datePublished":"2019-09-25T16:50:23.436Z","text":"looks like a uv distorted painted smoke mask texture. might also use a very low contrast noise scrolling through it.","upvoteCount":0,"url":"https://realtimevfx.com/t/zelda-breath-of-the-wild-dust-particles/10639/3"},{"@type":"Answer","author":{"@type":"Person","name":"Iby","url":"https://realtimevfx.com/u/Iby"},"dateModified":"2019-09-25T23:02:10.920Z","datePublished":"2019-09-25T23:02:10.904Z","text":"I noticed that if you look towards or away from the wind direction the noise seems to go upwards and if you look at from the sides, it pans left or right. I still can’t tell if it is using a flipbook/simulation though…\n\n[Botw%20Dust]\n\nare they overlapping 2 noise textures or is it just one panning noise? Also, are they using the clouds texture from photoshop or is it a custom noise?","upvoteCount":0,"url":"https://realtimevfx.com/t/zelda-breath-of-the-wild-dust-particles/10639/4"},{"@type":"Answer","author":{"@type":"Person","name":"NateLane","url":"https://realtimevfx.com/u/NateLane"},"dateModified":"2019-10-01T21:13:30.509Z","datePublished":"2019-10-01T21:13:30.486Z","text":"Check out the start of @simonschreibt video here and his fire technique. The smoke your’re looking at appears to be very similar, if not using a technique like this (just softer distort/noise like @sethhall brought up )\n\nhttps://www.youtube.com/watch?v=fwKQyDZ4ark\u0026feature=youtu.be\n\nThe only different I would say is what you pointed out. If it’s panning differently based on camera orientation, they may be grabbing the camera vector, comparing it to the wind vector and plugging that data into the scroll direction in the smoke shader.","upvoteCount":1,"url":"https://realtimevfx.com/t/zelda-breath-of-the-wild-dust-particles/10639/5"},{"@type":"Answer","author":{"@type":"Person","name":"sethhall","url":"https://realtimevfx.com/u/sethhall"},"dateModified":"2019-10-02T17:45:41.783Z","datePublished":"2019-10-02T17:45:41.759Z","text":"Feels like they’re overlapping the noise and panning them… Nothing too crazy. As for the texture, … hard to say, I don’t get the sense that its just a simple photoshop noise. They also could be sampling the wind direction  to determine the angle and feed that to the UVs, which would give the sense they were panning based on the world wind.","upvoteCount":1,"url":"https://realtimevfx.com/t/zelda-breath-of-the-wild-dust-particles/10639/6"},{"@type":"Answer","author":{"@type":"Person","name":"Travis","url":"https://realtimevfx.com/u/Travis"},"dateModified":"2019-10-02T18:44:04.096Z","datePublished":"2019-10-02T18:44:04.084Z","text":"Looks like particles with their opacity receiving UV distortion in the direction of the wind, and then something like Unreal’s particle macro uvs for the cloud texture panning across them. I’m guessing the material is either lit, or the lighting is faked really well","upvoteCount":1,"url":"https://realtimevfx.com/t/zelda-breath-of-the-wild-dust-particles/10639/7"},{"@type":"Answer","author":{"@type":"Person","name":"maessof","url":"https://realtimevfx.com/u/maessof"},"dateModified":"2023-06-16T02:04:36.509Z","datePublished":"2023-06-16T02:04:36.480Z","text":"Did you manage to figure it out","upvoteCount":0,"url":"https://realtimevfx.com/t/zelda-breath-of-the-wild-dust-particles/10639/8"}]}}</script>
+  </head>
+  <body class="crawler ">
+    <div id="bar">
+    <a class="nav-link" href="/c/General">General</a>
+    <a class="nav-link" href="/c/Resources">Resources</a>
+    <a class="nav-link" href="/c/References">References</a>
+       <!--   <li><a class="nav-link" href="https://jobs.realtimevfx.com/">Jobs</a></li>-->
+    <a class="nav-link" href="/c/Events">Events</a>
+</div>
+<script defer="" src="/theme-javascripts/c62d1c877fd828f64a0760c8b2e752ce5824773f.js?__ws=realtimevfx.com" data-theme-id="19" nonce="rjH8zfsyQUC4SZq0JqzQimGhX"></script>
+<!--
+<script type="text/javascript">
+    
+    /***
+        
+        An interval function to append the Jobs link to the Hamburger menu.
+    
+    ***/
+    
+    //NIELS : Setting inactive because job link is no longer relevant
+    /*setInterval(function(){
+        let flag = ($(".menu-panel.drop-down").is(":visible") || $(".menu-panel.slide-in").is(":visible")) && $(".menu-container-footer-links > ul").length && !$(".jobs-link").length; // $("header .extra-info-wrapper").is(":visible");
+        
+        if (flag){
+            $(".menu-container-footer-links > ul").append('<li><a class="widget-link jobs-link" href="https://jobs.realtimevfx.com/" title="Jobs"><span class="d-label">Jobs</span></a></li>')
+        }
+    }, 100);
+    */
+</script>
+-->
+
+<script type="text/discourse-plugin" version="0.8" nonce="rjH8zfsyQUC4SZq0JqzQimGhX">
+
+    var maxTopic = 15;
+    var TPP = 4;
+    var topicList;
+    setup();
+    
+    async function setup(){
+        
+        addEventListener("resize", handleResize);
+        handleResize();
+        
+        let topTopics = await fetch('https://realtimevfx.com/top.json?period=weekly');
+        let topFallback = await fetch('https://realtimevfx.com/top.json?period=monthly');
+        let featuredTag = await fetch('https://realtimevfx.com/tag/featured.json');
+        
+        topTopics = await topTopics.json();
+        topFallback = await topFallback.json();
+        featuredTag = await featuredTag.json();
+        
+        topicList = topTopics.topic_list.topics;
+        let featuredList = featuredTag.topic_list.topics;
+        let fallBackList = topFallback.topic_list.topics;
+        topicList = featuredList.concat(topicList);
+        topicList = topicList.concat(fallBackList);
+        
+        setupSlider(topicList);
+        
+        //handle adding or removing carousel on admin pages
+        api.onPageChange((url) =>{
+            if(url.includes('/admin')){
+                removeSlider();
+                return;
+            }
+            
+            if(document.getElementById("RTVFXBannerBack"))
+                return;
+            
+            setupSlider(topicList);
+        });
+        
+    }
+    
+    function removeSlider(){
+        if(document.getElementById("RTVFXBannerBack"))
+            document.getElementById("RTVFXBannerBack").remove();
+    }
+    
+    async function setupSlider(topicList){
+        injectBannerHmtl();
+        var idList = [];
+        var i = 0;
+        var slider = document.querySelector(".slider");
+       
+        for (const topic of topicList) {
+            
+            if(idList.includes(topic.id))
+                continue;
+            
+            idList.push(topic.id);
+            
+            if (!topic.image_url)
+                continue
+                
+            i += 1;
+            if(i>maxTopic)
+                break;
+            
+            
+            let tileContent =   "<a class='RTVFXBannerLink' href='/t/"+ topic.slug +"/"+ topic.id +"/last'>";
+            tileContent +=          "<div class='RTVFXBannerImage'>";
+            tileContent +=          "</div>";
+            tileContent +=          "<div class='RTVFXBannerTitle'>"+ topic.fancy_title +"</div>";
+            
+            if(topic.tags.includes("featured"))
+                tileContent +=          "<div style='position:absolute; right:15px; bottom:7px; color:white; font-weight:bold;'>FEATURED</div>";
+            
+            tileContent +=      "</a>"
+            
+            let tileItem = slider.appendChild(htmlToElement(tileContent));
+            tileItem.firstChild.style.backgroundImage = "url('"+ topic.image_url +"')"; 
+            
+            
+        }
+        
+        slider.addEventListener("pointerdown", (event) => {
+            event.stopPropagation();
+            event.preventDefault();
+            
+            //attach drag  event and set initial location
+            slider.onpointermove = sliderMove;
+            prevScreenX = event.screenX;
+            
+            //disable auto anim while dragging
+            disableAutoAnimTimer();
+        });
+        
+        slider.addEventListener("pointerup", (event) => {
+            event.stopPropagation();
+            event.preventDefault();
+            
+            slider.onpointermove = null;
+            
+            //snap to nearest tile
+            offsetTarget = Math.round(offsetTarget/((window.innerWidth/TPP)))*(window.innerWidth/TPP);
+            
+            document.querySelectorAll("a").forEach((el)=>{
+                el.style.pointerEvents = "all";
+            });
+            pointerEvents = true;
+            
+            //reenable once you stop dragging
+            startAutoAnimTimer();
+        });
+    }
+    
+    //handle dragging
+    var offsetTarget = window.innerWidth/TPP;
+    var offset = window.innerWidth/TPP;
+    var prevScreenX;
+    var pointerEvents = true;
+    function sliderMove(event){
+        if(!event.isPrimary)
+            return;
+        
+        event.stopPropagation();
+        event.preventDefault();
+        
+        //pointer cpaturing to allow for moving off the banner while still controlling it
+        var slider = document.querySelector(".slider");
+        slider.setPointerCapture(event.pointerId);
+        
+        //movement logic
+        var movementX = event.screenX-prevScreenX
+        offsetTarget += movementX;
+        prevScreenX = event.screenX;
+        
+        //disable links during drag
+        if(pointerEvents){
+            document.querySelectorAll("a").forEach((el)=>{
+                el.style.pointerEvents = "none";
+            });
+            pointerEvents = false;
+        }
+    }
+    
+    //handle animation
+    var prevTime
+    function anim(curTime){
+        var dt = curTime - prevTime;
+        prevTime = curTime;
+        dt = Math.min(dt, 120);
+        
+        requestAnimationFrame(anim);
+        
+        var slider = document.querySelector(".slider");
+        if(!slider)
+            return;
+        
+        offset = offset + (offsetTarget-offset)*.01*dt;
+        
+        var index = 0;
+        for(var el of slider.children){
+            var elOffset = index * window.innerWidth / TPP;
+            var newOffset = ((offset + elOffset).mod(window.innerWidth / TPP * slider.children.length))-elOffset-window.innerWidth/TPP;
+            el.style.transform = "translate3d("+newOffset+"px,0,0)";
+            index++;
+        };
+        
+    }
+    requestAnimationFrame(anim);
+    
+    //handle banner auto animation
+    var timerId;
+    function autoAnim(){
+        startAutoAnimTimer();
+        if(!document.hidden){
+            offsetTarget -= window.innerWidth/TPP;
+        }
+    }
+    function startAutoAnimTimer(){
+        if(timerId)
+            window.clearTimeout(timerId);
+        timerId = setTimeout(autoAnim, 5000);
+    }
+    function disableAutoAnimTimer(){
+        if(timerId)
+            window.clearTimeout(timerId);
+    }
+    startAutoAnimTimer();
+    
+    //inject html
+    function injectBannerHmtl(){
+        let mc = document.getElementById("main-container");
+        let mainContent =  '<div id="RTVFXBannerBack">';
+        mainContent += ' <div id="RTVFXBanner"><div class="slider"></div></div>';
+        mainContent += ' <div id="RTVFXBannerLeft" class="RTVFXBannerNav"></div>';
+        mainContent += ' <div id="RTVFXBannerRight" class="RTVFXBannerNav"></div>';
+        mainContent += ' </div>';
+        mc.appendChild(htmlToElement(mainContent));
+        
+        //Onclick events
+        document.getElementById('RTVFXBannerLeft').addEventListener("click", (event) => {
+            offsetTarget += window.innerWidth/TPP;
+            startAutoAnimTimer();
+        });
+        
+        document.getElementById('RTVFXBannerRight').addEventListener("click", (event) => {
+            offsetTarget -= window.innerWidth/TPP;
+            startAutoAnimTimer();
+        });
+    }
+    
+    //
+    //utils
+    //
+    //theres probably better ways to do this with templates
+    function htmlToElement(html) {
+        var template = document.createElement('template');
+        html = html.trim(); // Never return a text node of whitespace as the result
+        template.innerHTML = html;
+        return template.content.firstChild;
+    }
+    
+    function handleResize(){
+        //set topics per page
+        if(window.innerWidth > 1000){
+            TPP = 4;
+        }else if(window.innerWidth > 600){
+            TPP = 3;
+        }else{
+            TPP = 1;
+        }
+
+        //snap to nearest tile
+        offsetTarget = Math.round(offsetTarget/((window.innerWidth/TPP)))*(window.innerWidth/TPP);
+        
+        
+    }
+    
+    //custom cyclical mod function
+    Number.prototype.mod = function(n) {
+        return ((this % n) + n) % n;
+    }
+    
+    
+
+</script>
+    <header>
+  <a href="/">Real Time VFX</a>
+</header>
+
+    <div id="main-outlet" class="wrap" role="main">
+        <div id="topic-title">
+    <h1>
+      <a href="/t/zelda-breath-of-the-wild-dust-particles/10639">Zelda Breath of the Wild Dust Particles</a>
+    </h1>
+
+      <div class="topic-category" itemscope itemtype="http://schema.org/BreadcrumbList">
+          <span itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            <a href="/c/general/9" class="badge-wrapper bullet" itemprop="item">
+              <span class='badge-category-bg' style='background-color: #a8a8a8'></span>
+              <span class='badge-category clear-badge'>
+                <span class='category-name' itemprop='name'>General Discussion</span>
+              </span>
+            </a>
+            <meta itemprop="position" content="1" />
+          </span>
+        <span itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          <meta itemprop="name" content="Zelda Breath of the Wild Dust Particles" />
+          <link itemprop="item" href="https://realtimevfx.com/t/zelda-breath-of-the-wild-dust-particles/10639" />
+          <meta itemprop="position" content="2" />
+        </span>
+      </div>
+
+      <div class="topic-category">
+        <div class='discourse-tags list-tags'>
+            <a href='https://realtimevfx.com/tag/vfx' class='discourse-tag' rel="tag">vfx</a>, 
+            <a href='https://realtimevfx.com/tag/games' class='discourse-tag' rel="tag">games</a>, 
+            <a href='https://realtimevfx.com/tag/help' class='discourse-tag' rel="tag">help</a>, 
+            <a href='https://realtimevfx.com/tag/unreal' class='discourse-tag' rel="tag">unreal</a>, 
+            <a href='https://realtimevfx.com/tag/particles' class='discourse-tag' rel="tag">particles</a>
+        </div>
+      </div>
+  </div>
+
+  
+
+    <div itemscope="itemscope" itemtype="https://schema.org/QAPage">
+      <meta itemprop='name' content='Zelda Breath of the Wild Dust Particles'>
+      <link itemprop='url' href='https://realtimevfx.com/t/zelda-breath-of-the-wild-dust-particles/10639'>
+      <meta itemprop='datePublished' content='2019-09-24T21:20:53Z'>
+      <meta itemprop='keywords' content='vfx, games, help, unreal, particles'>
+
+      
+
+        <div itemprop="mainEntity" itemscope="itemscope" itemtype="https://schema.org/Question">
+          <meta itemprop='answerCount' content='7'><meta itemprop='datePublished' content='2019-09-24T21:20:53Z'><meta itemprop='name' content='Zelda Breath of the Wild Dust Particles'><meta itemprop='upvoteCount' content='4'>
+
+
+          <div id='post_1' data-qa-question="true" class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+                <a rel='nofollow' href='https://realtimevfx.com/u/Iby'><span itemprop="name">Iby</span></a>
+                  <meta itemprop='url' content='https://realtimevfx.com/u/Iby'>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time  datetime='2019-09-24T21:20:53Z' class='post-time'>
+                    September 24, 2019,  9:20pm
+                  </time>
+                  <meta itemprop='dateModified' content='2019-09-25T01:18:50Z'>
+              <span itemprop="position">1</span>
+              </span>
+            </div>
+            <div class='post' itemprop="text">
+              <p>I really like the VFX in breath of the wild. I want to make these cloud/dust effects are made. I like how they have shadow information to the cloudy areas.<br>
+Rain:</p>          <aside class="onebox gfycat">
+            <header class="source">
+              <img src="https://gfycat.com/static/favicons/favicon-96x96.png" class="site-icon" width="64" height="64">
+              <a href="https://gfycat.com/goodsnappyduckling-breath-of-the-wild-zelda-vfx" target="_blank" rel="noopener nofollow ugc">Gfycat.com</a>
+            </header>
+
+            <article class="onebox-body">
+              <h4>
+                Zelda Breath Of The Wild Dust VFX GIF by
+                <a href="https://gfycat.com/@anonymous" target="_blank" rel="noopener nofollow ugc">
+                  <span>anonymous</span>
+                </a>
+              </h4>
+
+              <div class="video" style="--aspect-ratio: 1198/458">
+                <video controls="" loop="" muted="" poster="https://thumbs.gfycat.com/GoodSnappyDuckling-mobile.jpg">
+                  <source id="webmSource" src="https://giant.gfycat.com/GoodSnappyDuckling.webm" type="video/webm">
+                  <source id="mp4Source" src="https://giant.gfycat.com/GoodSnappyDuckling.mp4" type="video/mp4">
+                  <img title="Sorry, your browser doesn't support HTML5 video." src="https://thumbs.gfycat.com/GoodSnappyDuckling-mobile.jpg" width="640" height="244">
+                </source></source></video>
+              </div>
+
+              <p>
+                <span class="label1"><a href="https://gfycat.com/gifs/search/breath%20of%20the%20wild" rel="noopener nofollow ugc">#breath of the wild</a> <a href="https://gfycat.com/gifs/search/vfx" rel="noopener nofollow ugc">#vfx</a> <a href="https://gfycat.com/gifs/search/zelda" rel="noopener nofollow ugc">#zelda</a></span>
+              </p>
+            </article>
+
+            <div style="clear: both"></div>
+          </aside>
+          <aside class="onebox gfycat">
+            <header class="source">
+              <img src="https://gfycat.com/static/favicons/favicon-96x96.png" class="site-icon" width="64" height="64">
+              <a href="https://gfycat.com/belovedearlydragonfly-breath-of-the-wild-zelda-vfx" target="_blank" rel="noopener nofollow ugc">Gfycat.com</a>
+            </header>
+
+            <article class="onebox-body">
+              <h4>
+                Zelda Breath Of The Wild Dust VFX GIF by
+                <a href="https://gfycat.com/@anonymous" target="_blank" rel="noopener nofollow ugc">
+                  <span>anonymous</span>
+                </a>
+              </h4>
+
+              <div class="video" style="--aspect-ratio: 1198/458">
+                <video controls="" loop="" muted="" poster="https://thumbs.gfycat.com/BelovedEarlyDragonfly-mobile.jpg">
+                  <source id="webmSource" src="https://giant.gfycat.com/BelovedEarlyDragonfly.webm" type="video/webm">
+                  <source id="mp4Source" src="https://giant.gfycat.com/BelovedEarlyDragonfly.mp4" type="video/mp4">
+                  <img title="Sorry, your browser doesn't support HTML5 video." src="https://thumbs.gfycat.com/BelovedEarlyDragonfly-mobile.jpg" width="640" height="244">
+                </source></source></video>
+              </div>
+
+              <p>
+                <span class="label1"><a href="https://gfycat.com/gifs/search/breath%20of%20the%20wild" rel="noopener nofollow ugc">#breath of the wild</a> <a href="https://gfycat.com/gifs/search/vfx" rel="noopener nofollow ugc">#vfx</a> <a href="https://gfycat.com/gifs/search/zelda" rel="noopener nofollow ugc">#zelda</a></span>
+              </p>
+            </article>
+
+            <div style="clear: both"></div>
+          </aside>
+<p>
+Not raining:</p>          <aside class="onebox gfycat">
+            <header class="source">
+              <img src="https://gfycat.com/static/favicons/favicon-96x96.png" class="site-icon" width="64" height="64">
+              <a href="https://gfycat.com/polishedbelateddrongo-breath-of-the-wild-zelda-vfx" target="_blank" rel="noopener nofollow ugc">Gfycat.com</a>
+            </header>
+
+            <article class="onebox-body">
+              <h4>
+                Zelda Breath Of The Wild Dust VFX GIF by
+                <a href="https://gfycat.com/@anonymous" target="_blank" rel="noopener nofollow ugc">
+                  <span>anonymous</span>
+                </a>
+              </h4>
+
+              <div class="video" style="--aspect-ratio: 1198/458">
+                <video controls="" loop="" muted="" poster="https://thumbs.gfycat.com/PolishedBelatedDrongo-mobile.jpg">
+                  <source id="webmSource" src="https://giant.gfycat.com/PolishedBelatedDrongo.webm" type="video/webm">
+                  <source id="mp4Source" src="https://giant.gfycat.com/PolishedBelatedDrongo.mp4" type="video/mp4">
+                  <img title="Sorry, your browser doesn't support HTML5 video." src="https://thumbs.gfycat.com/PolishedBelatedDrongo-mobile.jpg" width="640" height="244">
+                </source></source></video>
+              </div>
+
+              <p>
+                <span class="label1"><a href="https://gfycat.com/gifs/search/breath%20of%20the%20wild" rel="noopener nofollow ugc">#breath of the wild</a> <a href="https://gfycat.com/gifs/search/vfx" rel="noopener nofollow ugc">#vfx</a> <a href="https://gfycat.com/gifs/search/zelda" rel="noopener nofollow ugc">#zelda</a></span>
+              </p>
+            </article>
+
+            <div style="clear: both"></div>
+          </aside>
+          <aside class="onebox gfycat">
+            <header class="source">
+              <img src="https://gfycat.com/static/favicons/favicon-96x96.png" class="site-icon" width="64" height="64">
+              <a href="https://gfycat.com/limitedsparklingflies-breaht-of-the-wild-zelda-vfx" target="_blank" rel="noopener nofollow ugc">Gfycat.com</a>
+            </header>
+
+            <article class="onebox-body">
+              <h4>
+                Zelda Breath Of The Wild Dust VFX GIF by
+                <a href="https://gfycat.com/@anonymous" target="_blank" rel="noopener nofollow ugc">
+                  <span>anonymous</span>
+                </a>
+              </h4>
+
+              <div class="video" style="--aspect-ratio: 1198/458">
+                <video controls="" loop="" muted="" poster="https://thumbs.gfycat.com/LimitedSparklingFlies-mobile.jpg">
+                  <source id="webmSource" src="https://giant.gfycat.com/LimitedSparklingFlies.webm" type="video/webm">
+                  <source id="mp4Source" src="https://giant.gfycat.com/LimitedSparklingFlies.mp4" type="video/mp4">
+                  <img title="Sorry, your browser doesn't support HTML5 video." src="https://thumbs.gfycat.com/LimitedSparklingFlies-mobile.jpg" width="640" height="244">
+                </source></source></video>
+              </div>
+
+              <p>
+                <span class="label1"><a href="https://gfycat.com/gifs/search/breath%20of%20the%20wild" rel="noopener nofollow ugc">#breath of the wild</a> <a href="https://gfycat.com/gifs/search/vfx" rel="noopener nofollow ugc">#vfx</a> <a href="https://gfycat.com/gifs/search/zelda" rel="noopener nofollow ugc">#zelda</a></span>
+              </p>
+            </article>
+
+            <div style="clear: both"></div>
+          </aside>
+<p>
+Gerudo Desert:</p>          <aside class="onebox gfycat">
+            <header class="source">
+              <img src="https://gfycat.com/static/favicons/favicon-96x96.png" class="site-icon" width="64" height="64">
+              <a href="https://gfycat.com/grossopendowitcher-breath-of-the-wild-zelda-vfx" target="_blank" rel="noopener nofollow ugc">Gfycat.com</a>
+            </header>
+
+            <article class="onebox-body">
+              <h4>
+                Zelda Breath Of The Wild Dust VFX GIF by
+                <a href="https://gfycat.com/@anonymous" target="_blank" rel="noopener nofollow ugc">
+                  <span>anonymous</span>
+                </a>
+              </h4>
+
+              <div class="video" style="--aspect-ratio: 1198/458">
+                <video controls="" loop="" muted="" poster="https://thumbs.gfycat.com/GrossOpenDowitcher-mobile.jpg">
+                  <source id="webmSource" src="https://giant.gfycat.com/GrossOpenDowitcher.webm" type="video/webm">
+                  <source id="mp4Source" src="https://giant.gfycat.com/GrossOpenDowitcher.mp4" type="video/mp4">
+                  <img title="Sorry, your browser doesn't support HTML5 video." src="https://thumbs.gfycat.com/GrossOpenDowitcher-mobile.jpg" width="640" height="244">
+                </source></source></video>
+              </div>
+
+              <p>
+                <span class="label1"><a href="https://gfycat.com/gifs/search/breath%20of%20the%20wild" rel="noopener nofollow ugc">#breath of the wild</a> <a href="https://gfycat.com/gifs/search/vfx" rel="noopener nofollow ugc">#vfx</a> <a href="https://gfycat.com/gifs/search/zelda" rel="noopener nofollow ugc">#zelda</a></span>
+              </p>
+            </article>
+
+            <div style="clear: both"></div>
+          </aside>
+          <aside class="onebox gfycat">
+            <header class="source">
+              <img src="https://gfycat.com/static/favicons/favicon-96x96.png" class="site-icon" width="64" height="64">
+              <a href="https://gfycat.com/veneratedalienatedfallowdeer-breath-of-the-wild-zelda-vfx" target="_blank" rel="noopener nofollow ugc">Gfycat.com</a>
+            </header>
+
+            <article class="onebox-body">
+              <h4>
+                Zelda Breath Of The Wild Dust VFX GIF by
+                <a href="https://gfycat.com/@anonymous" target="_blank" rel="noopener nofollow ugc">
+                  <span>anonymous</span>
+                </a>
+              </h4>
+
+              <div class="video" style="--aspect-ratio: 1198/458">
+                <video controls="" loop="" muted="" poster="https://thumbs.gfycat.com/VeneratedAlienatedFallowdeer-mobile.jpg">
+                  <source id="webmSource" src="https://giant.gfycat.com/VeneratedAlienatedFallowdeer.webm" type="video/webm">
+                  <source id="mp4Source" src="https://giant.gfycat.com/VeneratedAlienatedFallowdeer.mp4" type="video/mp4">
+                  <img title="Sorry, your browser doesn't support HTML5 video." src="https://thumbs.gfycat.com/VeneratedAlienatedFallowdeer-mobile.jpg" width="640" height="244">
+                </source></source></video>
+              </div>
+
+              <p>
+                <span class="label1"><a href="https://gfycat.com/gifs/search/breath%20of%20the%20wild" rel="noopener nofollow ugc">#breath of the wild</a> <a href="https://gfycat.com/gifs/search/vfx" rel="noopener nofollow ugc">#vfx</a> <a href="https://gfycat.com/gifs/search/zelda" rel="noopener nofollow ugc">#zelda</a></span>
+              </p>
+            </article>
+
+            <div style="clear: both"></div>
+          </aside>
+
+<p>are they using a flipbook or are they panning textures? I noticed that the particles are aligned to face the camera and the panning of the texture seems to follow the direction of the wind. Does it has alpha erosions or is it a normal opacity fade with a special type of mask. what sort of textures are they using?  are they using the photoshop clouds or some custom texture?</p>
+            </div>
+
+
+                <div class='crawler-linkback-list'>
+                    <div>
+                      <a href="https://realtimevfx.com/t/smoothly-changing-noise-scroll-direction-in-a-particle-shader/24865">Smoothly changing noise scroll direction in a particle shader</a>
+                    </div>
+                </div>
+
+            
+
+
+          </div>
+          <div id='post_2' itemprop="suggestedAnswer" itemscope="itemscope" itemtype="https://schema.org/Answer" class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+                <a rel='nofollow' href='https://realtimevfx.com/u/Hovl'><span itemprop="name">Hovl</span></a>
+                  <meta itemprop='url' content='https://realtimevfx.com/u/Hovl'>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop="datePublished" datetime='2019-09-25T01:29:59Z' class='post-time'>
+                    September 25, 2019,  1:29am
+                  </time>
+                  <meta itemprop='dateModified' content='2019-09-25T01:29:59Z'>
+              <span itemprop="position">2</span>
+              </span>
+            </div>
+            <div class='post' itemprop="text">
+              <p>I think that it just stretched-billboard spites with simulated smoke. Rotation = velocity direction.</p>
+            </div>
+
+
+
+            
+
+<meta itemprop='upvoteCount' content='0'><meta itemprop='url' content='https://realtimevfx.com/t/zelda-breath-of-the-wild-dust-particles/10639/2'>
+          </div>
+          <div id='post_3' itemprop="suggestedAnswer" itemscope="itemscope" itemtype="https://schema.org/Answer" class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+                <a rel='nofollow' href='https://realtimevfx.com/u/sethhall'><span itemprop="name">sethhall</span></a>
+                  <meta itemprop='url' content='https://realtimevfx.com/u/sethhall'>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop="datePublished" datetime='2019-09-25T16:50:23Z' class='post-time'>
+                    September 25, 2019,  4:50pm
+                  </time>
+                  <meta itemprop='dateModified' content='2019-09-25T16:50:23Z'>
+              <span itemprop="position">3</span>
+              </span>
+            </div>
+            <div class='post' itemprop="text">
+              <p>looks like a uv distorted painted smoke mask texture. might also use a very low contrast noise scrolling through it.</p>
+            </div>
+
+
+
+            
+
+<meta itemprop='upvoteCount' content='0'><meta itemprop='url' content='https://realtimevfx.com/t/zelda-breath-of-the-wild-dust-particles/10639/3'>
+          </div>
+          <div id='post_4' itemprop="suggestedAnswer" itemscope="itemscope" itemtype="https://schema.org/Answer" class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+                <a rel='nofollow' href='https://realtimevfx.com/u/Iby'><span itemprop="name">Iby</span></a>
+                  <meta itemprop='url' content='https://realtimevfx.com/u/Iby'>
+                
+              </span>
+
+
+                <link itemprop="image" href="https://realtimevfx.com/uploads/default/original/2X/e/ee7aee164bd0169f49d4c93fc027b07876bd84bd.png">
+
+              <span class="crawler-post-infos">
+                  <time itemprop="datePublished" datetime='2019-09-25T23:02:10Z' class='post-time'>
+                    September 25, 2019, 11:02pm
+                  </time>
+                  <meta itemprop='dateModified' content='2019-09-25T23:02:10Z'>
+              <span itemprop="position">4</span>
+              </span>
+            </div>
+            <div class='post' itemprop="text">
+              <p>I noticed that if you look towards or away from the wind direction the noise seems to go upwards and if you look at from the sides, it pans left or right. I still can’t tell if it is using a flipbook/simulation though…<br>
+<div class="lightbox-wrapper"><a class="lightbox" href="https://realtimevfx.com/uploads/default/original/2X/e/ee7aee164bd0169f49d4c93fc027b07876bd84bd.png" data-download-href="https://realtimevfx.com/uploads/default/ee7aee164bd0169f49d4c93fc027b07876bd84bd" title="Botw%20Dust"><img src="https://realtimevfx.com/uploads/default/optimized/2X/e/ee7aee164bd0169f49d4c93fc027b07876bd84bd_2_500x500.png" alt="Botw%20Dust" data-base62-sha1="y1H0T6NXE6W10lhLScDiAJmFzYN" width="500" height="500" srcset="https://realtimevfx.com/uploads/default/optimized/2X/e/ee7aee164bd0169f49d4c93fc027b07876bd84bd_2_500x500.png, https://realtimevfx.com/uploads/default/optimized/2X/e/ee7aee164bd0169f49d4c93fc027b07876bd84bd_2_750x750.png 1.5x, https://realtimevfx.com/uploads/default/optimized/2X/e/ee7aee164bd0169f49d4c93fc027b07876bd84bd_2_1000x1000.png 2x" data-small-upload="https://realtimevfx.com/uploads/default/optimized/2X/e/ee7aee164bd0169f49d4c93fc027b07876bd84bd_2_10x10.png"><div class="meta">
+<svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">Botw%20Dust</span><span class="informations">2048×2048 118 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg>
+</div></a></div></p>
+<p>are they overlapping 2 noise textures or is it just one panning noise? Also, are they using the clouds texture from photoshop or is it a custom noise?</p>
+            </div>
+
+
+
+            
+
+<meta itemprop='upvoteCount' content='0'><meta itemprop='url' content='https://realtimevfx.com/t/zelda-breath-of-the-wild-dust-particles/10639/4'>
+          </div>
+          <div id='post_5' itemprop="suggestedAnswer" itemscope="itemscope" itemtype="https://schema.org/Answer" class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+                <a rel='nofollow' href='https://realtimevfx.com/u/NateLane'><span itemprop="name">NateLane</span></a>
+                  <meta itemprop='url' content='https://realtimevfx.com/u/NateLane'>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop="datePublished" datetime='2019-10-01T21:13:30Z' class='post-time'>
+                    October 1, 2019,  9:13pm
+                  </time>
+                  <meta itemprop='dateModified' content='2019-10-01T21:13:30Z'>
+              <span itemprop="position">5</span>
+              </span>
+            </div>
+            <div class='post' itemprop="text">
+              <p>Check out the start of <a class="mention" href="/u/simonschreibt">@simonschreibt</a> video here and his fire technique. The smoke your’re looking at appears to be very similar, if not using a technique like this (just softer distort/noise like <a class="mention" href="/u/sethhall">@sethhall</a> brought up )</p>
+<p><a href="https://www.youtube.com/watch?v=fwKQyDZ4ark&amp;feature=youtu.be" class="onebox" target="_blank" rel="noopener">https://www.youtube.com/watch?v=fwKQyDZ4ark&amp;feature=youtu.be</a></p>
+<p>The only different I would say is what you pointed out. If it’s panning differently based on camera orientation, they may be grabbing the camera vector, comparing it to the wind vector and plugging that data into the scroll direction in the smoke shader.</p>
+            </div>
+
+
+
+            
+
+<meta itemprop='upvoteCount' content='1'><meta itemprop='url' content='https://realtimevfx.com/t/zelda-breath-of-the-wild-dust-particles/10639/5'>
+          </div>
+          <div id='post_6' itemprop="suggestedAnswer" itemscope="itemscope" itemtype="https://schema.org/Answer" class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+                <a rel='nofollow' href='https://realtimevfx.com/u/sethhall'><span itemprop="name">sethhall</span></a>
+                  <meta itemprop='url' content='https://realtimevfx.com/u/sethhall'>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop="datePublished" datetime='2019-10-02T17:45:41Z' class='post-time'>
+                    October 2, 2019,  5:45pm
+                  </time>
+                  <meta itemprop='dateModified' content='2019-10-02T17:45:41Z'>
+              <span itemprop="position">6</span>
+              </span>
+            </div>
+            <div class='post' itemprop="text">
+              <p>Feels like they’re overlapping the noise and panning them… Nothing too crazy. As for the texture, … hard to say, I don’t get the sense that its just a simple photoshop noise. They also could be sampling the wind direction  to determine the angle and feed that to the UVs, which would give the sense they were panning based on the world wind.</p>
+            </div>
+
+
+
+            
+
+<meta itemprop='upvoteCount' content='1'><meta itemprop='url' content='https://realtimevfx.com/t/zelda-breath-of-the-wild-dust-particles/10639/6'>
+          </div>
+          <div id='post_7' itemprop="suggestedAnswer" itemscope="itemscope" itemtype="https://schema.org/Answer" class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+                <a rel='nofollow' href='https://realtimevfx.com/u/Travis'><span itemprop="name">Travis</span></a>
+                  <meta itemprop='url' content='https://realtimevfx.com/u/Travis'>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop="datePublished" datetime='2019-10-02T18:44:04Z' class='post-time'>
+                    October 2, 2019,  6:44pm
+                  </time>
+                  <meta itemprop='dateModified' content='2019-10-02T18:44:04Z'>
+              <span itemprop="position">7</span>
+              </span>
+            </div>
+            <div class='post' itemprop="text">
+              <p>Looks like particles with their opacity receiving UV distortion in the direction of the wind, and then something like Unreal’s particle macro uvs for the cloud texture panning across them. I’m guessing the material is either lit, or the lighting is faked really well</p>
+            </div>
+
+
+
+            
+
+<meta itemprop='upvoteCount' content='1'><meta itemprop='url' content='https://realtimevfx.com/t/zelda-breath-of-the-wild-dust-particles/10639/7'>
+          </div>
+          <div id='post_8' itemprop="suggestedAnswer" itemscope="itemscope" itemtype="https://schema.org/Answer" class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+                <a rel='nofollow' href='https://realtimevfx.com/u/maessof'><span itemprop="name">maessof</span></a>
+                  <meta itemprop='url' content='https://realtimevfx.com/u/maessof'>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop="datePublished" datetime='2023-06-16T02:04:36Z' class='post-time'>
+                    June 16, 2023,  2:04am
+                  </time>
+                  <meta itemprop='dateModified' content='2023-06-16T02:04:36Z'>
+              <span itemprop="position">8</span>
+              </span>
+            </div>
+            <div class='post' itemprop="text">
+              <p>Did you manage to figure it out</p>
+            </div>
+
+
+
+            
+
+<meta itemprop='upvoteCount' content='0'><meta itemprop='url' content='https://realtimevfx.com/t/zelda-breath-of-the-wild-dust-particles/10639/8'>
+          </div>
+
+        </div>
+    </div>
+
+
+    
+
+
+
+
+    </div>
+    <footer class="container wrap">
+  <nav class='crawler-nav'>
+    <ul>
+      <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+        <span itemprop='name'>
+          <a href='/' itemprop="url">Home </a>
+        </span>
+      </li>
+      <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+        <span itemprop='name'>
+          <a href='/categories' itemprop="url">Categories </a>
+        </span>
+      </li>
+      
+      <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+        <span itemprop='name'>
+          <a href='/guidelines' itemprop="url">Guidelines </a>
+        </span>
+      </li>
+        <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+          <span itemprop='name'>
+            <a href='http://realtimevfx.com/t/terms-of-service/' itemprop="url">Terms of Service </a>
+          </span>
+        </li>
+        <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+          <span itemprop='name'>
+            <a href='http://realtimevfx.com/t/privacy-policy/' itemprop="url">Privacy Policy </a>
+          </span>
+        </li>
+    </ul>
+  </nav>
+  <p class='powered-by-link'>Powered by <a href="https://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled</p>
+</footer>
+
+    
+    
+  </body>
+  
+</html>

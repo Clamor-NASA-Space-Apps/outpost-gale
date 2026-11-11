@@ -1,0 +1,137 @@
+Source: https://advances.realtimerendering.com/s2012/thatgamecompany/SandRenderingInJourney_thatgamecompany.pptx
+John Edwards (thatgamecompany), 'Dynamic Sand Simulation and Rendering in Journey', SIGGRAPH 2012 Advances course (materials updated 24 Aug 2012). Text extracted from slides and speaker notes on 2026-11-12.
+
+[slide 1] Sand Rendering in Journey John Edwards thatgamecompany
+  [notes] Here are some pictures of Journey. To give a little context to the  people who haven't played Journey, it's a  multiplayer  PlaystationNetwork   game. One of the things we were trying to do with the game was recreate the experience of hiking in nature, when you encounter someone else on the trail after not having seen anybody for a while. There's a desire to make some sort of connection with that person, to say hello, maybe even to journey with them for a while. You want to acknowledge them on a human level, something that strangely doesn't happen very often in most online video games. We thought the best environment to encourage this kind of interaction would be a vast and barren desert, and we spent a long time on technology to make the player feel like they were really hiking out in nature, so that when they did eventually encounter another player in the game, they would treat them like another human being. 2
+[slide 2] 
+  [notes] Here's an image from the final game. I'm going to pull away all the hacks we used to make the sand feel the way it does one by one, and then I'll explain how and why we did each one. 13
+[slide 3] 
+  [notes] First is a  mipmap  detail hack. We used this to get extra sand detail in the distance. 14
+[slide 4] 
+  [notes] Now I'm removing our hack to mask out the regions where the anisotropic filter breaks down. 15
+[slide 5] 
+  [notes] I'm removing fake  specular  hack number one. 16
+[slide 6] 
+  [notes] Now I'm removing fake  specular  hack number two. 17
+[slide 7] 
+  [notes] Now I'm removing our diffuse lighting hack. So now you see the sand just lit with a Lambert  shader . 18
+[slide 8] 
+  [notes] And finally removing the geometry detail height maps. This is what Journey would look like if it took place in a giant bowl of pudding. 19
+[slide 9] 
+  [notes] And here's the same breakdown, again, for a different part of Journey. This is a darker, spookier part, with very glittery sand. 20
+[slide 10] 
+  [notes] Why am I calling most of our effects hacks? To explain, we will now enter the vacation photo portion of the SIGGRAPH presentation  ... Don't worry, there's a good reason for this! Very early on in the project the entire team went up to the Pismo dunes a little ways north of here in California. We spent two days running, sliding and diving through the sand, just getting a feel for it. And that was the inspiration for most of the visual development of the sand. I personally only started to look at reference photos very late in the project, because we were never going for photorealism, but we were trying very hard to convey a realistic feeling to put the players in the mindset of being out in the middle of nature so they'd appreciate each other more when they encountered each other during the journey. 27
+[slide 11] 
+  [notes] So, with that in mind,  here's our  first hack, the detailed  mip  map. Notice that the sand remains very detailed and grainy far into the distance. 31
+[slide 12] 
+  [notes] Here's an image with more  normal  mip  maps. It doesn't feel as sandy, but it's actually probably more photorealistic. 32
+[slide 13] Shipping
+  [notes] Here's a picture of a real sand dune. Or should I say a bland dune! Notice how you can't really see any grains. 33
+[slide 14] - Sharp  mips
+  [notes] We can do a little bit of math  to understand why that makes sense. The character is about 100 pixels tall on screen  ... 34
+[slide 15]  Anisotropic masking
+  [notes] ... and assuming  the character is 1 meter tall (Journeyers are  short ... and they like round numbers), then each pixel by  his foot is  about 1  square cm. 35
+[slide 16]  Glitter  specular
+  [notes] Here's a zoomed in picture of actual Pismo sand. Just eyeballing it, it looks like the average grain of sand might be about 0.5 mm. 36
+[slide 17]  Ocean  specular
+  [notes] That means each pixel by the character's feet contains about 400 grains of  sand. For diffuse lighting,  at least, all those grains should be averaging together into the smooth, pudding-y consistency we saw in the image of the real sand dune. The thing is, when you actually go out to the dunes, t he very first thing you notice is just how grainy they are. Eyes have more resolution than TVs right now, so you can see more sand grains, but you're also feeling the grains on every part of you, your face, your clothes, and places sand grains were never meant to go. So we tried to render our sand as grainy as possible, which basically meant a different sand grain for every pixel. 37
+[slide 18]  Diffuse contrast
+  [notes] Most of the texture of the sand is derived from a simple noise normal map. We generate ours dynamically, but this would work for static normal maps as well. Here's some of our noise with its histogram. More  normals  point straight up, and fewer and fewer  normals  point off to the  sides. 38
+[slide 19]  Detail  heightmaps
+  [notes] Now when you do a simple box  downsample  for a  mipmap ,  notice the  distribution tightens. Your normal map gets weaker. 39
+[slide 20] Shipping
+  [notes] But notice how it looks like the histogram is getting exactly half as wide when you  downsample . So, if after every  downsample  you just double the  normals , you can preserve the histogram, meaning you preserve the graininess of the texture. I'm not a mathematician, so I don't know if this is exactly true. If any mathematicians want to explain to me how wrong I am, my email is john@thatgamecompany.com, but for everyone else, I think this is a good enough hack for basically preserving the level of graininess as far out into the distance as you want. We disable the doubling on the last few  mips ,  just  because it eventually starts to  look ridiculous to have sand grains the size of dunes . 40
+[slide 21] - Sharp  mips
+  [notes] Next I want to explain our  sparkle  specular   hack. That's the second thing you notice about sand, by the way. It's very sparkly. 41
+[slide 22] - Anisotropic mask
+  [notes] Pictures don't pick it up too well, but you can see some glinting grains in this one. And when you're actually out in the dunes, the sparkles are constantly leaping to your eyes. 42
+[slide 23] - Glitter  specular
+  [notes] Here are the images  with the glitter  specular  turned on and off. 43
+[slide 24] - Ocean  specular
+  [notes] And zoomed in so you can actually see it ... Glitter  specular  on ... 45
+[slide 25] - Diffuse contrast
+  [notes] … Glitter  specular  off. I  think the physical cause of the glitter is pretty straightforward. Whenever one of the little mirror-like grains of sand happens to be oriented in just the right way, it will reflect the sun into your eyes. Classic  specular  reflection. 46
+[slide 26] - Detail  heightmaps
+  [notes] And that's what we tried,  at first.  Standard  specular  on a very grainy normal map with a very high  specular  power. And it actually looked okay in static images. You can see lots of nice little glints. 47
+[slide 27] 
+  [notes] [VIDEO] But  we could never control the aliasing in motion. Notice how it looks like you were just clubbed over the head or are about to get a migraine. 48
+[slide 28] 
+  [notes] So, instead, we used another hack. The main feeling you get from glinting sand  specular  is that it moves around when you do. In other words, it's view dependant. So instead of using real  specular  to get the glinting effect, we used the simpler "ambient  specular " or "velvet" equation of just normal  dot  view, and that had a lot less aliasing. 49
+[slide 29] 
+  [notes] [VIDEO] As  you can see in this video. 50
+[slide 30] 
+  [notes] As for why that is, here are some equations. They may or may not mean anything. I was never able to figure out why the hack  specular  worked better. But if any mathematician in the audience wants to tell me, again, my email is john@thatgamecompany.com! 51
+[slide 31] Sharp  mips  on
+  [notes] There was a big problem with  the last effect ... 52
+[slide 32] Sharp  mips  off
+  [notes] ... it looked like radioactive oatmeal  around the silhouettes of dunes . This was such a big problem, we nearly abandoned the entire  effect. See, Journey uses full 16-tap anisotropic filtering on the sand texture, the maximum the PS3 allows. 53
+[slide 33] 
+  [notes] The  game looks ... quite different without it . 54
+[slide 34] 
+  [notes] Another comparison of a screenshot with and without aniso-16. 55
+[slide 35] 
+  [notes] I think this illustrates an interesting bit of perceptual psychology, though. It seems like as long as detail is pixel sized (or maybe just uniform), people see it as graininess. So, the pixels by the player's feet don't look like 400-times-too-big sand boulders, they just look like nice grainy sand. But as soon as you can pick out a larger feature, you take its size literally. Make the sand grains one pixel bigger, and all of the sudden you are playing in a rubble heap, not a sand dune. We  spent a long time trying to figure out ways to improve our anisotropic filtering, but never got anywhere.  So instead of fixing our problem, we did the mature thing and swept it under the rug. We ended up just masking out   the  areas where we detected the anisotropic filter failing. 56
+[slide 36] 
+  [notes] Now, there's probably some Cg function that just tells you when your  aniso  filter is breaking down, but I couldn't find it, so in Journey we just created a texture that, given perfect anisotropic filtering, would have predictable values based on distance from the camera. Here's that texture with its  mip  chain. 57
+[slide 37] 
+  [notes] Here's a picture of the dunes with just that texture mapped. Notice the dunes are generally darker closer to the camera and lighter farther away. We added some noise for dithering. 58
+[slide 38] 
+  [notes] And here's an image showing the masked off areas. Anything black is masked off.  This fixed our anisotropic filter problem, but notice how  much of the screen is masked off. With only sparkles in the white areas, the sand just wasn't sparkly enough. 59
+[slide 39] 
+  [notes] So we added more  specular  ...  We added an ocean-style big column of  specular . In this shot you can see it cutting through  where the player is standing.  This is probably the biggest hack we have, since I've never seen any sand, either in real life or in pictures, behave this way, but it ended up feeling right. 60
+[slide 40] 
+  [notes] I think that's because another property of the feel of sand. Sand, on the Pismo dunes at least, was actually very fluid. Walking out in the Pismo dunes was like walking on a giant ocean of sand. 62
+[slide 41] 
+  [notes] And we're not the only ones to think of sand that way. The term "ocean of sand" has quite a few hits on Google. Almost half as many as "ocean of lard", so you know it's a popular term. Also, we added a fluid simulation to the sand, which, again, is totally fake, but it's kind of like the ocean and ended up feeling right in certain scenes. 63
+[slide 42] 
+  [notes] Here's the final real hack. Our modified diffuse shading. Notice how compared  to the Lambert shading, our shipping sand is much higher contrast. 64
+[slide 43] Glitter on
+  [notes] And it took me a long time to realize this, probably  because the Lambert Lobby is so  strong in California,  but Lambert is actually a pretty bad   shader  for just about  everything. It feels like practically any change you do is an improvement. 65
+[slide 44] Glitter off
+  [notes] There's actually  a physically based model for diffuse which is designed for very rough surfaces (like sand) called Oren- Nayar . One of the major properties of this  shader  is that from many views, the contrast between the light side and the dark side of an object is increased. 66
+[slide 45] Glitter on
+  [notes] And we  ended  up using a version of it for our cloth. 67
+[slide 46] Glitter off
+  [notes] It looked pretty good on the dunes, but the problem is, Oren- Nayar   ain't  cheap, and we didn't want to plaster half the screen with  it  by putting it on the sand . 68
+[slide 47] Specular  glitter
+  [notes] So instead of using physical modeling to derive the lighting equation for the sand, we used another method inspired  by my favorite way to reverse a string, random shuffle-verify. Keep trying random things  until it looks good! Surprisingly effect method for many graphics programming problems, if given enough time. 69
+[slide 48] 
+  [notes] So, for the sand, we started with an ugly Lambert. 70
+[slide 49] 
+  [notes] And then threw  a 4 in here ... 71
+[slide 50] 
+  [notes] And multiplied the y-component  of the normal by 0.3. On the way hand, both of these operations increase contrast, which is in line with Oren- Nayar . But really, there wasn't any motivation for these operations other than the fact that they looked good. That's just the way it works, sometimes, I guess, and maybe it's important to admit that. 72
+[slide 51] 
+  [notes] And now the final effect I want to talk about, our detail  heightmaps . This one, I'll admit,  we only added after looking at reference photos. But it's really important for conveying the feeling of sand. So reference photos can be good, too! 73
+[slide 52] Aniso  failure mask off
+  [notes] 74
+[slide 53] 
+  [notes] The dunes in Journey were represented by  layered  heightmaps . For the base, we used a really low  resolution artist-generated  heightmap . The levels in Journey are quite large, but the  heightmaps  were only 256x512. But as we streamed the data into the  verts  on the SPUs, we used B- spline   interpolation.  B- splines  are very smooth. They are second derivative continuous, in fact, so we could use the second derivative for ambient occlusion, incidentally. 75
+[slide 54] Aniso  off
+  [notes] But to get that extra level of detail that is really characteristic of sand dunes, we always layered on top a detail  heightmap . The detail   heightmap  was generated out of a blend of these 4 tiling textures. For each vertex of the detail  heightmap , we chose the X- or the Z-column based on which derivative was greater, and we  lerped  between the shallow and steep rows based on the total steepness of the terrain. 76
+[slide 55] Aniso  16
+  [notes] Okay, that's it. That's sand rendering in  Journey 77
+[slide 56] Aniso  off
+  [notes] 78
+[slide 57] 
+[slide 58] 
+[slide 59] 
+[slide 60] Specular  on
+[slide 61] Specular  off
+[slide 62] 
+[slide 63] “ocean of sand”: 41,700 “ocean of lard”: 111,000
+[slide 64] Shipping diffuse
+[slide 65] Lambert diffuse
+[slide 66] 
+[slide 67] 
+[slide 68] half  OrenNayarDiffuse ( half3 light, half3 view, half3 norm, half roughness ) {     half  VdotN  = dot( view, norm );     half  LdotN  = dot( light, norm );     half  cos_theta_i  =  LdotN ;     half  theta_r  =  acos (  VdotN  );     half  theta_i  =  acos (  cos_theta_i  );     half  cos_phi_diff  = dot( normalize( view - norm *  VdotN  ),                              normalize( light - norm *  LdotN  ) );     half alpha = max(  theta_i ,  theta_r  ) ;     half beta = min(  theta_i ,  theta_r  ) ;     half sigma2 = roughness * roughness;     half A = 1.0 - 0.5 * sigma2 / (sigma2 + 0.33);     half B = 0.45 * sigma2 / (sigma2 + 0.09);          return saturate(  cos_theta_i  ) *         (A + (B * saturate(  cos_phi_diff  ) * sin(alpha) * tan(beta))); }
+[slide 69] void  reverse( char * s,  int  l) {    do  {      random_shuffle (s, s + l);   }  while  (!verify(s)); }
+[slide 70] saturate( dot( N, L ) );
+[slide 71] saturate( 4 * dot( N, L ) );
+[slide 72] saturate( 4 * dot( N, L ) ); N.y  *= 0.3;
+[slide 73] Detail  heightmaps  on
+[slide 74] Detail  heightmaps  off
+[slide 75] 
+[slide 76] 
+[slide 77] Special thanks to: SPU programmer extraordinaire: Martin Middleton Art Director, Chief shadow requester: Matt Nava Mathematicians – email john@thatgamecompany.com
+[slide 78] jobs@thatgamecompany.com

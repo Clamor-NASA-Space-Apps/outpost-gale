@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Horse steps dust particle UE4 - Real Time VFX</title>
+    <meta name="description" content="Hi guys. 
+I’m trying to create a particle system for horse steps dust like what you remember from Red Dead Redemption game. But in a cinematic sequence when my horse rotate in a single animation I can’t handle the emmite…">
+    <meta name="generator" content="Discourse 2026.11.0-latest.1 - https://github.com/discourse/discourse version ae65e05533380219967c9e49bdb1f5868b177910">
+<link rel="icon" type="image/png" href="https://realtimevfx.com/uploads/default/optimized/2X/6/65a89d557035443a290055e551d2b9d4028fa6cb_2_32x32.png">
+<link rel="apple-touch-icon" type="image/png" href="https://realtimevfx.com/uploads/default/optimized/2X/6/65a89d557035443a290055e551d2b9d4028fa6cb_2_180x180.png">
+<meta name="theme-color" media="all" content="#292929">
+
+<meta name="color-scheme" content="dark">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<link rel="canonical" href="https://realtimevfx.com/t/horse-steps-dust-particle-ue4/2640" />
+
+<meta name="discourse-track-view-session-id" content="L80TmJq8EIYSwWgnBZMnEtzUgaHayskS">
+  <link rel="search" type="application/opensearchdescription+xml" href="https://realtimevfx.com/opensearch.xml" title="Real Time VFX Search">
+
+    
+    <link href="/stylesheets/color_definitions_dark-color-scheme_8_16_a1a3a28b2962e307ee8f909b50edea5009b0af2d.css?__ws=realtimevfx.com" media="all" rel="stylesheet" class="light-scheme" data-scheme-id="8"/>
+
+<link href="/stylesheets/common_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="common"  />
+
+
+
+  <link href="/stylesheets/checklist_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="checklist"  />
+  <link href="/stylesheets/discourse-details_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="discourse-details"  />
+  <link href="/stylesheets/discourse-lazy-videos_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="discourse-lazy-videos"  />
+  <link href="/stylesheets/discourse-local-dates_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="discourse-local-dates"  />
+  <link href="/stylesheets/discourse-narrative-bot_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="discourse-narrative-bot"  />
+  <link href="/stylesheets/discourse-presence_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="discourse-presence"  />
+  <link href="/stylesheets/discourse-reactions_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="discourse-reactions"  />
+  <link href="/stylesheets/discourse-solved_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="discourse-solved"  />
+  <link href="/stylesheets/discourse-templates_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="discourse-templates"  />
+  <link href="/stylesheets/discourse-topic-voting_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="discourse-topic-voting"  />
+  <link href="/stylesheets/discourse-user-notes_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="discourse-user-notes"  />
+  <link href="/stylesheets/discourse-workflows_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="discourse-workflows"  />
+  <link href="/stylesheets/docker_manager_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="docker_manager"  />
+  <link href="/stylesheets/footnote_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="footnote"  />
+  <link href="/stylesheets/poll_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="poll"  />
+  <link href="/stylesheets/discourse-reactions_mobile_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="(width < 40rem)" rel="stylesheet" data-target="discourse-reactions_mobile"  />
+  <link href="/stylesheets/discourse-reactions_desktop_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="(width >= 40rem)" rel="stylesheet" data-target="discourse-reactions_desktop"  />
+  <link href="/stylesheets/poll_desktop_27969a79071c8b2da7de06b6ecc6bf3bba3b584a.css?__ws=realtimevfx.com" media="(width >= 40rem)" rel="stylesheet" data-target="poll_desktop"  />
+
+  <link href="/stylesheets/common_theme_14_9d9dd0aebeccaf85fae8912d0efa5f458edb50f8.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="common_theme" data-theme-id="14" data-theme-name="topic list previews"/>
+<link href="/stylesheets/common_theme_12_649b6517bc7fa72665e06972b5b000c3a37801a0.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="common_theme" data-theme-id="12" data-theme-name="flair customizations"/>
+<link href="/stylesheets/common_theme_22_cec923b3a335c2873f7b19bc8de250d3334302bd.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="common_theme" data-theme-id="22" data-theme-name="rtvfx banner component v2"/>
+<link href="/stylesheets/common_theme_19_d16dc05dfa9e4626f7dd66f546ce8d5e8c5ca6b6.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="common_theme" data-theme-id="19" data-theme-name="rtvfx nav bar"/>
+<link href="/stylesheets/common_theme_16_2b9538b3f46fc2b11a89648ce88dfd52436b7ea3.css?__ws=realtimevfx.com" media="all" rel="stylesheet" data-target="common_theme" data-theme-id="16" data-theme-name="dark theme rtvfx"/>
+  <link href="/stylesheets/mobile_theme_14_270a196ee86d0bf07526e0462f1ad7e5efd3d2b8.css?__ws=realtimevfx.com" media="(width < 40rem)" rel="stylesheet" data-target="mobile_theme" data-theme-id="14" data-theme-name="topic list previews"/>
+<link href="/stylesheets/mobile_theme_19_971d208b7d42f823b30ae657eef06217976f95ce.css?__ws=realtimevfx.com" media="(width < 40rem)" rel="stylesheet" data-target="mobile_theme" data-theme-id="19" data-theme-name="rtvfx nav bar"/>
+  <link href="/stylesheets/desktop_theme_14_08f95d567b73c5950466b0b953b4828d9c1740af.css?__ws=realtimevfx.com" media="(width >= 40rem)" rel="stylesheet" data-target="desktop_theme" data-theme-id="14" data-theme-name="topic list previews"/>
+<link href="/stylesheets/desktop_theme_19_68d1fc9a665b419017bb3c060db0a2c424107f90.css?__ws=realtimevfx.com" media="(width >= 40rem)" rel="stylesheet" data-target="desktop_theme" data-theme-id="19" data-theme-name="rtvfx nav bar"/>
+
+
+
+    
+    
+        <link rel="alternate nofollow" type="application/rss+xml" title="RSS feed of &#39;Horse steps dust particle UE4&#39;" href="https://realtimevfx.com/t/horse-steps-dust-particle-ue4/2640.rss" />
+    <meta property="og:site_name" content="Real Time VFX" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://realtimevfx.com/uploads/default/original/2X/6/6fcdd751577cc86d4bcc0dd48234b78a41491c87.jpeg" />
+<meta property="og:image" content="https://realtimevfx.com/uploads/default/original/2X/0/08007a81095d58e2d2de1a1a20a74f8347048f25.jpg" />
+<meta property="og:url" content="https://realtimevfx.com/t/horse-steps-dust-particle-ue4/2640" />
+<meta name="twitter:url" content="https://realtimevfx.com/t/horse-steps-dust-particle-ue4/2640" />
+<meta property="og:title" content="Horse steps dust particle UE4" />
+<meta name="twitter:title" content="Horse steps dust particle UE4" />
+<meta property="og:description" content="Hi guys.  I’m trying to create a particle system for horse steps dust like what you remember from Red Dead Redemption game. But in a cinematic sequence when my horse rotate in a single animation I can’t handle the emmiter direction. For example my emitter emit particles in world X axis and when the horse start to run in another direction the particles doesn’t match with horse movement. I’m working with UE4.16 and notify system for doing this. So can you please help me with this situation? thanks..." />
+<meta name="twitter:description" content="Hi guys.  I’m trying to create a particle system for horse steps dust like what you remember from Red Dead Redemption game. But in a cinematic sequence when my horse rotate in a single animation I can’t handle the emmiter direction. For example my emitter emit particles in world X axis and when the horse start to run in another direction the particles doesn’t match with horse movement. I’m working with UE4.16 and notify system for doing this. So can you please help me with this situation? thanks..." />
+<meta property="og:article:section" content="General Discussion" />
+<meta property="og:article:section:color" content="a8a8a8" />
+<meta property="og:article:tag" content="dust" />
+<meta property="og:article:tag" content="unreal" />
+<meta property="og:article:tag" content="particles" />
+<meta name="twitter:label1" value="Reading time" />
+<meta name="twitter:data1" value="1 min 🕑" />
+<meta name="twitter:label2" value="Likes" />
+<meta name="twitter:data2" value="1 ❤" />
+<meta property="article:published_time" content="2017-07-02T09:47:49+00:00" />
+<meta property="og:ignore_canonical" content="true" />
+
+
+    <link rel="alternate" type="text/markdown" href="https://realtimevfx.com/t/horse-steps-dust-particle-ue4/2640.md">
+    
+<script type="application/ld+json">{"@context":"http://schema.org","@type":"QAPage","name":"Horse steps dust particle UE4","datePublished":"2017-07-02T09:47:49.579Z","mainEntity":{"@type":"Question","answerCount":1,"author":{"@type":"Person","name":"mosssi","url":"https://realtimevfx.com/u/mosssi"},"dateModified":"2017-07-02T09:47:49.704Z","datePublished":"2017-07-02T09:47:49.579Z","name":"Horse steps dust particle UE4","text":"Hi guys.\n\nI’m trying to create a particle system for horse steps dust like what you remember from Red Dead Redemption game. But in a cinematic sequence when my horse rotate in a single animation I can’t handle the emmiter direction. For example my emitter emit particles in world X axis and when the horse start to run in another direction the particles doesn’t match with horse movement. I’m working with UE4.16 and notify system for doing this. So can you please help me with this situation? thanks in advance","upvoteCount":0,"suggestedAnswer":[{"@type":"Answer","author":{"@type":"Person","name":"mosssi","url":"https://realtimevfx.com/u/mosssi"},"dateModified":"2017-07-02T13:49:12.391Z","datePublished":"2017-07-02T13:49:12.385Z","text":"For future reference I managed to handle the problem. I added four socket to feet bones and rotated the sockets the way I want my dust to emit and in notify detail checked the attach so it works now. Just that I’m using sequencer now because matinee is too buggy.","upvoteCount":1,"url":"https://realtimevfx.com/t/horse-steps-dust-particle-ue4/2640/2"}]}}</script>
+  </head>
+  <body class="crawler ">
+    <div id="bar">
+    <a class="nav-link" href="/c/General">General</a>
+    <a class="nav-link" href="/c/Resources">Resources</a>
+    <a class="nav-link" href="/c/References">References</a>
+       <!--   <li><a class="nav-link" href="https://jobs.realtimevfx.com/">Jobs</a></li>-->
+    <a class="nav-link" href="/c/Events">Events</a>
+</div>
+<script defer="" src="/theme-javascripts/c62d1c877fd828f64a0760c8b2e752ce5824773f.js?__ws=realtimevfx.com" data-theme-id="19" nonce="zOzNt1m3YCQA0HKxnIbv73UOV"></script>
+<!--
+<script type="text/javascript">
+    
+    /***
+        
+        An interval function to append the Jobs link to the Hamburger menu.
+    
+    ***/
+    
+    //NIELS : Setting inactive because job link is no longer relevant
+    /*setInterval(function(){
+        let flag = ($(".menu-panel.drop-down").is(":visible") || $(".menu-panel.slide-in").is(":visible")) && $(".menu-container-footer-links > ul").length && !$(".jobs-link").length; // $("header .extra-info-wrapper").is(":visible");
+        
+        if (flag){
+            $(".menu-container-footer-links > ul").append('<li><a class="widget-link jobs-link" href="https://jobs.realtimevfx.com/" title="Jobs"><span class="d-label">Jobs</span></a></li>')
+        }
+    }, 100);
+    */
+</script>
+-->
+
+<script type="text/discourse-plugin" version="0.8" nonce="zOzNt1m3YCQA0HKxnIbv73UOV">
+
+    var maxTopic = 15;
+    var TPP = 4;
+    var topicList;
+    setup();
+    
+    async function setup(){
+        
+        addEventListener("resize", handleResize);
+        handleResize();
+        
+        let topTopics = await fetch('https://realtimevfx.com/top.json?period=weekly');
+        let topFallback = await fetch('https://realtimevfx.com/top.json?period=monthly');
+        let featuredTag = await fetch('https://realtimevfx.com/tag/featured.json');
+        
+        topTopics = await topTopics.json();
+        topFallback = await topFallback.json();
+        featuredTag = await featuredTag.json();
+        
+        topicList = topTopics.topic_list.topics;
+        let featuredList = featuredTag.topic_list.topics;
+        let fallBackList = topFallback.topic_list.topics;
+        topicList = featuredList.concat(topicList);
+        topicList = topicList.concat(fallBackList);
+        
+        setupSlider(topicList);
+        
+        //handle adding or removing carousel on admin pages
+        api.onPageChange((url) =>{
+            if(url.includes('/admin')){
+                removeSlider();
+                return;
+            }
+            
+            if(document.getElementById("RTVFXBannerBack"))
+                return;
+            
+            setupSlider(topicList);
+        });
+        
+    }
+    
+    function removeSlider(){
+        if(document.getElementById("RTVFXBannerBack"))
+            document.getElementById("RTVFXBannerBack").remove();
+    }
+    
+    async function setupSlider(topicList){
+        injectBannerHmtl();
+        var idList = [];
+        var i = 0;
+        var slider = document.querySelector(".slider");
+       
+        for (const topic of topicList) {
+            
+            if(idList.includes(topic.id))
+                continue;
+            
+            idList.push(topic.id);
+            
+            if (!topic.image_url)
+                continue
+                
+            i += 1;
+            if(i>maxTopic)
+                break;
+            
+            
+            let tileContent =   "<a class='RTVFXBannerLink' href='/t/"+ topic.slug +"/"+ topic.id +"/last'>";
+            tileContent +=          "<div class='RTVFXBannerImage'>";
+            tileContent +=          "</div>";
+            tileContent +=          "<div class='RTVFXBannerTitle'>"+ topic.fancy_title +"</div>";
+            
+            if(topic.tags.includes("featured"))
+                tileContent +=          "<div style='position:absolute; right:15px; bottom:7px; color:white; font-weight:bold;'>FEATURED</div>";
+            
+            tileContent +=      "</a>"
+            
+            let tileItem = slider.appendChild(htmlToElement(tileContent));
+            tileItem.firstChild.style.backgroundImage = "url('"+ topic.image_url +"')"; 
+            
+            
+        }
+        
+        slider.addEventListener("pointerdown", (event) => {
+            event.stopPropagation();
+            event.preventDefault();
+            
+            //attach drag  event and set initial location
+            slider.onpointermove = sliderMove;
+            prevScreenX = event.screenX;
+            
+            //disable auto anim while dragging
+            disableAutoAnimTimer();
+        });
+        
+        slider.addEventListener("pointerup", (event) => {
+            event.stopPropagation();
+            event.preventDefault();
+            
+            slider.onpointermove = null;
+            
+            //snap to nearest tile
+            offsetTarget = Math.round(offsetTarget/((window.innerWidth/TPP)))*(window.innerWidth/TPP);
+            
+            document.querySelectorAll("a").forEach((el)=>{
+                el.style.pointerEvents = "all";
+            });
+            pointerEvents = true;
+            
+            //reenable once you stop dragging
+            startAutoAnimTimer();
+        });
+    }
+    
+    //handle dragging
+    var offsetTarget = window.innerWidth/TPP;
+    var offset = window.innerWidth/TPP;
+    var prevScreenX;
+    var pointerEvents = true;
+    function sliderMove(event){
+        if(!event.isPrimary)
+            return;
+        
+        event.stopPropagation();
+        event.preventDefault();
+        
+        //pointer cpaturing to allow for moving off the banner while still controlling it
+        var slider = document.querySelector(".slider");
+        slider.setPointerCapture(event.pointerId);
+        
+        //movement logic
+        var movementX = event.screenX-prevScreenX
+        offsetTarget += movementX;
+        prevScreenX = event.screenX;
+        
+        //disable links during drag
+        if(pointerEvents){
+            document.querySelectorAll("a").forEach((el)=>{
+                el.style.pointerEvents = "none";
+            });
+            pointerEvents = false;
+        }
+    }
+    
+    //handle animation
+    var prevTime
+    function anim(curTime){
+        var dt = curTime - prevTime;
+        prevTime = curTime;
+        dt = Math.min(dt, 120);
+        
+        requestAnimationFrame(anim);
+        
+        var slider = document.querySelector(".slider");
+        if(!slider)
+            return;
+        
+        offset = offset + (offsetTarget-offset)*.01*dt;
+        
+        var index = 0;
+        for(var el of slider.children){
+            var elOffset = index * window.innerWidth / TPP;
+            var newOffset = ((offset + elOffset).mod(window.innerWidth / TPP * slider.children.length))-elOffset-window.innerWidth/TPP;
+            el.style.transform = "translate3d("+newOffset+"px,0,0)";
+            index++;
+        };
+        
+    }
+    requestAnimationFrame(anim);
+    
+    //handle banner auto animation
+    var timerId;
+    function autoAnim(){
+        startAutoAnimTimer();
+        if(!document.hidden){
+            offsetTarget -= window.innerWidth/TPP;
+        }
+    }
+    function startAutoAnimTimer(){
+        if(timerId)
+            window.clearTimeout(timerId);
+        timerId = setTimeout(autoAnim, 5000);
+    }
+    function disableAutoAnimTimer(){
+        if(timerId)
+            window.clearTimeout(timerId);
+    }
+    startAutoAnimTimer();
+    
+    //inject html
+    function injectBannerHmtl(){
+        let mc = document.getElementById("main-container");
+        let mainContent =  '<div id="RTVFXBannerBack">';
+        mainContent += ' <div id="RTVFXBanner"><div class="slider"></div></div>';
+        mainContent += ' <div id="RTVFXBannerLeft" class="RTVFXBannerNav"></div>';
+        mainContent += ' <div id="RTVFXBannerRight" class="RTVFXBannerNav"></div>';
+        mainContent += ' </div>';
+        mc.appendChild(htmlToElement(mainContent));
+        
+        //Onclick events
+        document.getElementById('RTVFXBannerLeft').addEventListener("click", (event) => {
+            offsetTarget += window.innerWidth/TPP;
+            startAutoAnimTimer();
+        });
+        
+        document.getElementById('RTVFXBannerRight').addEventListener("click", (event) => {
+            offsetTarget -= window.innerWidth/TPP;
+            startAutoAnimTimer();
+        });
+    }
+    
+    //
+    //utils
+    //
+    //theres probably better ways to do this with templates
+    function htmlToElement(html) {
+        var template = document.createElement('template');
+        html = html.trim(); // Never return a text node of whitespace as the result
+        template.innerHTML = html;
+        return template.content.firstChild;
+    }
+    
+    function handleResize(){
+        //set topics per page
+        if(window.innerWidth > 1000){
+            TPP = 4;
+        }else if(window.innerWidth > 600){
+            TPP = 3;
+        }else{
+            TPP = 1;
+        }
+
+        //snap to nearest tile
+        offsetTarget = Math.round(offsetTarget/((window.innerWidth/TPP)))*(window.innerWidth/TPP);
+        
+        
+    }
+    
+    //custom cyclical mod function
+    Number.prototype.mod = function(n) {
+        return ((this % n) + n) % n;
+    }
+    
+    
+
+</script>
+    <header>
+  <a href="/">Real Time VFX</a>
+</header>
+
+    <div id="main-outlet" class="wrap" role="main">
+        <div id="topic-title">
+    <h1>
+      <a href="/t/horse-steps-dust-particle-ue4/2640">Horse steps dust particle UE4</a>
+    </h1>
+
+      <div class="topic-category" itemscope itemtype="http://schema.org/BreadcrumbList">
+          <span itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            <a href="/c/general/9" class="badge-wrapper bullet" itemprop="item">
+              <span class='badge-category-bg' style='background-color: #a8a8a8'></span>
+              <span class='badge-category clear-badge'>
+                <span class='category-name' itemprop='name'>General Discussion</span>
+              </span>
+            </a>
+            <meta itemprop="position" content="1" />
+          </span>
+        <span itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          <meta itemprop="name" content="Horse steps dust particle UE4" />
+          <link itemprop="item" href="https://realtimevfx.com/t/horse-steps-dust-particle-ue4/2640" />
+          <meta itemprop="position" content="2" />
+        </span>
+      </div>
+
+      <div class="topic-category">
+        <div class='discourse-tags list-tags'>
+            <a href='https://realtimevfx.com/tag/dust' class='discourse-tag' rel="tag">dust</a>, 
+            <a href='https://realtimevfx.com/tag/unreal' class='discourse-tag' rel="tag">unreal</a>, 
+            <a href='https://realtimevfx.com/tag/particles' class='discourse-tag' rel="tag">particles</a>
+        </div>
+      </div>
+  </div>
+
+  
+
+    <div itemscope="itemscope" itemtype="https://schema.org/QAPage">
+      <meta itemprop='name' content='Horse steps dust particle UE4'>
+      <link itemprop='url' href='https://realtimevfx.com/t/horse-steps-dust-particle-ue4/2640'>
+      <meta itemprop='datePublished' content='2017-07-02T09:47:49Z'>
+      <meta itemprop='keywords' content='dust, unreal, particles'>
+
+      
+
+        <div itemprop="mainEntity" itemscope="itemscope" itemtype="https://schema.org/Question">
+          <meta itemprop='answerCount' content='1'><meta itemprop='datePublished' content='2017-07-02T09:47:49Z'><meta itemprop='name' content='Horse steps dust particle UE4'><meta itemprop='upvoteCount' content='0'>
+
+
+          <div id='post_1' data-qa-question="true" class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+                <a rel='nofollow' href='https://realtimevfx.com/u/mosssi'><span itemprop="name">mosssi</span></a>
+                  <meta itemprop='url' content='https://realtimevfx.com/u/mosssi'>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time  datetime='2017-07-02T09:47:49Z' class='post-time'>
+                    July 2, 2017,  9:47am
+                  </time>
+                  <meta itemprop='dateModified' content='2017-07-02T09:47:49Z'>
+              <span itemprop="position">1</span>
+              </span>
+            </div>
+            <div class='post' itemprop="text">
+              <p>Hi guys.<br>
+I’m trying to create a particle system for horse steps dust like what you remember from Red Dead Redemption game. But in a cinematic sequence when my horse rotate in a single animation I can’t handle the emmiter direction. For example my emitter emit particles in world X axis and when the horse start to run in another direction the particles doesn’t match with horse movement. I’m working with UE4.16 and notify system for doing this. So can you please help me with this situation? thanks in advance</p>
+            </div>
+
+
+
+            
+
+
+          </div>
+          <div id='post_2' itemprop="suggestedAnswer" itemscope="itemscope" itemtype="https://schema.org/Answer" class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person">
+                <a rel='nofollow' href='https://realtimevfx.com/u/mosssi'><span itemprop="name">mosssi</span></a>
+                  <meta itemprop='url' content='https://realtimevfx.com/u/mosssi'>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop="datePublished" datetime='2017-07-02T13:49:12Z' class='post-time'>
+                    July 2, 2017,  1:49pm
+                  </time>
+                  <meta itemprop='dateModified' content='2017-07-02T13:49:12Z'>
+              <span itemprop="position">2</span>
+              </span>
+            </div>
+            <div class='post' itemprop="text">
+              <p>For future reference I managed to handle the problem. I added four socket to feet bones and rotated the sockets the way I want my dust to emit and in notify detail checked the attach so it works now. Just that I’m using sequencer now because matinee is too buggy.</p>
+            </div>
+
+
+
+            
+
+<meta itemprop='upvoteCount' content='1'><meta itemprop='url' content='https://realtimevfx.com/t/horse-steps-dust-particle-ue4/2640/2'>
+          </div>
+
+        </div>
+    </div>
+
+
+    
+
+
+
+
+    </div>
+    <footer class="container wrap">
+  <nav class='crawler-nav'>
+    <ul>
+      <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+        <span itemprop='name'>
+          <a href='/' itemprop="url">Home </a>
+        </span>
+      </li>
+      <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+        <span itemprop='name'>
+          <a href='/categories' itemprop="url">Categories </a>
+        </span>
+      </li>
+      
+      <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+        <span itemprop='name'>
+          <a href='/guidelines' itemprop="url">Guidelines </a>
+        </span>
+      </li>
+        <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+          <span itemprop='name'>
+            <a href='http://realtimevfx.com/t/terms-of-service/' itemprop="url">Terms of Service </a>
+          </span>
+        </li>
+        <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+          <span itemprop='name'>
+            <a href='http://realtimevfx.com/t/privacy-policy/' itemprop="url">Privacy Policy </a>
+          </span>
+        </li>
+    </ul>
+  </nav>
+  <p class='powered-by-link'>Powered by <a href="https://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled</p>
+</footer>
+
+    
+    
+  </body>
+  
+</html>
