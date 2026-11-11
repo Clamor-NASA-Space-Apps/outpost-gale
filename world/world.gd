@@ -114,9 +114,10 @@ func mark(pos: Vector3, yaw_deg: float, kind: String, width := 0.3) -> void:
 	terrain.mark(pos, yaw_deg, kind, width)
 
 
-## A dust puff at a footstep or a wheel (strength 0 to 1).
-func puff(pos: Vector3, strength: float) -> void:
-	dust.puff(pos, strength)
+## Dust thrown by a boot or a wheel at contact: `vel` the foot's (or wheel rim's) world velocity, `strength`
+## 0 to 1, `kind` "foot" or "wheel" (world/dust.gd).
+func puff(pos: Vector3, vel: Vector3, strength: float, kind := "foot") -> void:
+	dust.puff(pos, vel, strength, kind)
 
 
 ## Lowest ground under a world-space box, sampled on a grid: what a footprint rests on.

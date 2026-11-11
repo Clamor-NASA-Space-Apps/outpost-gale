@@ -72,8 +72,7 @@ func play() -> bool:
 		off[i].collision_layer = layers[i]
 
 	_rocks_clear(world)
-	world.puff(world.landmark("spawn").pos, 0.5)
-	check(world.dust.puffs.any(func(e: GPUParticles3D) -> bool: return e.visible and e.emitting), "a puff shows after puff()")
+	await _contact(world)
 
 	for i in game.SKIES.size():
 		check(FileAccess.file_exists("res://%s.json" % game.SKIES[i]), "%s.json exists (node ../../tools/design-tokens.mjs)" % game.SKIES[i])
@@ -85,6 +84,33 @@ func play() -> bool:
 	game._sky(0)
 	OS.remove_logger(errors)
 	return true
+
+
+## A boot's dust (skills/ground-contact-fx checks): standing still throws nothing, a step's grit flies no higher
+## than its arc allows and is gone by its flight time, its haze is gone by its life, a run throws higher than a walk.
+func _contact(world: Node3D) -> void:
+	var at: Vector3 = world.landmark("spawn").pos
+	var dust: Node3D = world.dust
+	world.puff(at, Vector3.ZERO, 1.0)
+	check(dust.contact_state().is_empty(), "standing still throws dust")
+	world.puff(at, Vector3(0, -0.3, -1.0), 0.5)  # a walking boot
+	var live: Array = dust.contact_state()
+	check(live.size() == 2, "a step throws grit and haze, got %s" % [live])
+	var walk_top := 0.0
+	for s: Dictionary in live:
+		if s.kind == "foot":
+			walk_top = s.top
+			# the sheet's g, 1.3 x 1.04 m/s at 60 deg at most: about 17 cm, under a shin
+			check(s.top < 0.25 and s.life < 0.8, "a walking step's grit rises %.2f m and flies %.2f s" % [s.top, s.life])
+	world.puff(at, Vector3(0, -0.3, -1.6), 1.0)
+	var run_top: float = dust.contact_state().filter(func(s: Dictionary) -> bool: return s.kind == "foot").map(func(s: Dictionary) -> float: return s.top).max()
+	check(run_top > walk_top, "a hurried step throws higher than a walk")
+	var grit_life: float = dust.contact_state().filter(func(s: Dictionary) -> bool: return s.kind == "foot").map(func(s: Dictionary) -> float: return s.life).max()
+	await create_timer(grit_life + 0.1).timeout
+	check(dust.contact_state().all(func(s: Dictionary) -> bool: return s.kind == "haze"), "grit outlived its flight time")
+	check(dust.grit.all(func(e: GPUParticles3D) -> bool: return not e.visible), "a spent grit emitter still draws")
+	await create_timer(float(world.data.contact.haze_life)).timeout
+	check(dust.contact_state().is_empty() and dust.haze.all(func(e: GPUParticles3D) -> bool: return not e.visible), "haze outlived its life")
 
 
 ## For every drawn face of every solid: cast a hero-sized capsule at it from outside, on the solid layers.

@@ -496,6 +496,20 @@
    "front": true
   }
  },
+ "contact": {
+  "_note": "footstep and wheel dust (skills/ground-contact-fx, design/research/dust.md). Grit: grains over ~70 um launched at 30 to 60 deg (Kok 2012), each gone when it lands, T = 2 v sin(theta) / g with g from reality.json; a wheel throws them backward and low (fenders, NASM 2015). Haze: dust under ~20 um in the bottom few cm, spreading then drifting downwind and gone in 2 to 3 s (Lemmon 2022). min_speed (nothing thrown standing still), counts, sizes (grit_size: a few pixels at the 4.2 m play camera, ground-contact-fx section 3), alpha and the speed spread are art direction",
+  "launch_deg": [30, 60],
+  "wheel_launch_deg": [10, 30],
+  "speed_spread": 0.3,
+  "min_speed": 0.2,
+  "grit": 28,
+  "grit_size": 0.02,
+  "haze": 3,
+  "haze_size": [0.55, 0.12],
+  "haze_alpha": 0.2,
+  "haze_life": 2.5,
+  "haze_burst": 0.4
+ },
  "devil": {
   "_note": "the dust devil wanders a circle this far from the base centre, at this speed in m/s. Both are design choices (no measured Gale speed in our sources): slow enough to watch, far enough never to reach the base",
   "radius": 160,

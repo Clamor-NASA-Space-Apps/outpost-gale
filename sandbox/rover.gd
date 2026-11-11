@@ -56,7 +56,9 @@ func drive(input: Vector2, _hurry: bool, delta: float) -> void:
 			var p := global_transform * Vector3(side, 0.0, AXLE)
 			world.mark(p, -rad_to_deg(yaw), "wheel", 0.3)
 		if absf(v) > top * 0.5:
-			world.puff(global_transform * Vector3(0.0, 0.0, AXLE + 0.6), 0.5)
+			# a rolling tyre's tread leaves the ground backward at the rover's speed
+			for side: float in [-TRACK, TRACK]:
+				world.puff(global_transform * Vector3(side, 0.0, AXLE + 0.5), -Vector3(-sin(yaw), 0.0, -cos(yaw)) * v, 0.5, "wheel")
 
 
 ## Height and tilt from the ground under the four corner wheels.

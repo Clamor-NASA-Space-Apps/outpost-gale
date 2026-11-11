@@ -1,16 +1,20 @@
 extends Node3D
-## Dust in the air, all GPU particles (the Compatibility renderer has no trails and no sub-emitters):
-## - puff(): a footstep or a wheel. Fine dust does not fall back in arcs: it "became diffuse within seconds"
-##   and drifted downwind (movement-and-look §4), so a puff is a small cloud that drifts and thins.
+## Dust in the air, all GPU particles (the Compatibility renderer has no trails, no sub-emitters and no
+## emit_particle()):
+## - puff(): a boot or a wheel on the dust (skills/ground-contact-fx, design/research/dust.md). Grit: many
+##   small grains in short ballistic arcs under Mars gravity, gone when they land. Haze: a few wide, faint
+##   quads at ankle height that spread, slow, drift downwind and fade in 2 to 3 s. The print is terrain.mark().
 ## - streaks: faint lines low over the ground around the camera, at the wind's speed.
 ## - a dust devil wandering far off (seen crossing the crater floor on summer afternoons), day only.
 ## - the storm front: big slow clouds close around the camera, the storm state only.
 ## What shows in which sky is data/world.json `weather`; the wind's direction is `wind`.
 
-const PUFFS := 8  # clouds in flight at once: a walk lays one every half second, each lasts three
+const GRIT := 6  # grit lives under half a second at a walk, so a few emitters cover any walk or drive
+const HAZE := 8  # haze lives 2.5 s and a walk lands a foot every half second or so
 
 var wind := Vector3.ZERO
-var puffs: Array[GPUParticles3D] = []
+var grit: Array[GPUParticles3D] = []
+var haze: Array[GPUParticles3D] = []
 var streaks: GPUParticles3D
 var devil: GPUParticles3D
 var front: GPUParticles3D
@@ -19,8 +23,13 @@ var _soft: StandardMaterial3D  # one billboard material for every cloud, so one 
 var _line: StandardMaterial3D
 var _dir: Vector3  # where the wind blows to, flat
 var _devil_angle := 0.0
-var _puff_left: PackedFloat32Array  # seconds until each puff has faded and can be hidden
-var _next := 0  # the puff reused next: the oldest
+var _haze_mat: StandardMaterial3D
+var _grit_mat: StandardMaterial3D
+var _c: Dictionary  # data/world.json `contact`
+var _g: float  # gravity, from the reality sheet
+var _live: Dictionary = {}  # emitter -> {kind, age, life, top}: what is in flight, for checks and for hiding
+var _next_grit := 0  # the oldest of each pool, reused next
+var _next_haze := 0
 
 
 func build(world: Node3D) -> void:
@@ -37,22 +46,48 @@ func build(world: Node3D) -> void:
 	_soft = _material(dot, BaseMaterial3D.BILLBOARD_PARTICLES)
 	_line = _material(dot, BaseMaterial3D.BILLBOARD_DISABLED)
 
-	# the Compatibility renderer cannot emit particles by hand ("does not support manually emitting
-	# particles"), so a puff is a one-shot emitter moved to the foot and restarted, the oldest reused
-	for i in PUFFS:
-		var e := _emitter("Puff%d" % i, 8, 3.0, Vector2(0.7, 0.7), _soft, [0.0, 0.7, 0.0], [0.5, 2.0])
+	_c = world.data.contact
+	for r: Dictionary in JSON.parse_string(FileAccess.get_file_as_string("res://data/reality.json")).rows:
+		if r.id == "world.gravity":
+			_g = float(r.value)
+	_grit_mat = _material(dot, BaseMaterial3D.BILLBOARD_PARTICLES)
+	# grains are opaque: no blending, no sorting, no overdraw; the dot's soft edge cut by the scissor makes
+	# the last tenth's fade a shrink rather than a pop
+	_grit_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
+	_grit_mat.alpha_scissor_threshold = 0.5
+	# a camera-facing grain turned from a low sun came out dark brown (measured); light passing through it
+	# lights it about as the ground under it is lit, from either side
+	_grit_mat.backlight = Color(0.9, 0.9, 0.9)
+	_haze_mat = _material(_blot(), BaseMaterial3D.BILLBOARD_PARTICLES)
+	var gs := float(_c.grit_size)
+	for i in GRIT:
+		var e := _emitter("Grit%d" % i, int(_c.grit), 0.5, Vector2(gs, gs), _grit_mat, [1.0, 1.0, 1.0], [1.0, 1.0])
+		var pm: ParticleProcessMaterial = e.process_material
+		var fade := Gradient.new()  # opaque, then the last tenth fades
+		fade.offsets = PackedFloat32Array([0.0, 0.9, 1.0])
+		fade.colors = PackedColorArray([Color.WHITE, Color.WHITE, Color(1, 1, 1, 0)])
+		pm.color_ramp.gradient = fade
+		pm.gravity = Vector3(0, -_g, 0)  # ballistic, no damping: the sheet's g and nothing else
+		pm.scale_min = 0.6
+		pm.scale_max = 1.6
+		pm.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_SPHERE
+		pm.emission_sphere_radius = 0.06  # a sole's width
+		grit.append(_pooled(e))
+	var hs: Array = _c.haze_size
+	for i in HAZE:
+		var e := _emitter("Haze%d" % i, int(_c.haze), float(_c.haze_life), Vector2(hs[0], hs[1]), _haze_mat,
+			[0.0, float(_c.haze_alpha), 0.0], [0.6, 1.6])
 		if i > 0:
-			e.process_material = puffs[0].process_material  # one material, so a wind change reaches all
-		e.one_shot = true
-		e.explosiveness = 1.0
-		e.emitting = false
-		e.visible = false  # a spent emitter still costs a draw call
-		puffs.append(e)
-	var pp: ParticleProcessMaterial = puffs[0].process_material
-	pp.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_SPHERE
-	pp.emission_sphere_radius = 0.15
-	pp.spread = 35.0
-	_puff_left.resize(PUFFS)
+			e.process_material = haze[0].process_material  # one material, so a wind change reaches all
+		haze.append(_pooled(e))
+	var hp: ParticleProcessMaterial = haze[0].process_material
+	hp.direction = Vector3.RIGHT
+	hp.spread = 180.0
+	hp.flatness = 1.0  # out sideways along the ground, in every direction (Lemmon 2022)
+	hp.initial_velocity_min = float(_c.haze_burst) * 0.5
+	hp.initial_velocity_max = float(_c.haze_burst)
+	# quadratic drag: the burst stops quickly and the wind's push settles at the wind's speed (restyle)
+	hp.set_particle_flag(ParticleProcessMaterial.PARTICLE_FLAG_DAMPING_AS_FRICTION, true)
 
 	streaks = _emitter("Streaks", 160, 1.6, Vector2(0.025, 1.1), _line, [0.0, 0.16, 0.0], [1.0, 1.0])
 	streaks.transform_align = GPUParticles3D.TRANSFORM_ALIGN_Z_BILLBOARD_Y_TO_VELOCITY
@@ -89,17 +124,26 @@ func build(world: Node3D) -> void:
 
 ## Colours from the design's `dust` role (the sky's light does the rest: the clouds are lit), and the weather row.
 func restyle(design: Dictionary, weather: Dictionary) -> void:
-	for m: StandardMaterial3D in [_soft, _line]:
+	# grit is the ground itself, lit like it; the colour is the dust role's, a fixed preset per surface
+	_grit_mat.albedo_color = Color.html(design.materials.dust.color)
+	for m: StandardMaterial3D in [_soft, _line, _haze_mat]:
 		# fine dust in the air is paler than the ground it rose from: it takes on the haze, and a cloud the
-		# colour of the ground vanished against it (measured: a walk's puffs did not show)
+		# colour of the ground vanished against it (measured: the first puffs did not show)
 		m.albedo_color = Color.html(design.materials.dust.color).lerp(Color.html(design.lighting.horizon), 0.5)
 	wind = _dir * float(weather.wind)
-	# low over the ground: streaks at the wind's speed and gusts a little over, clouds and puffs slower
-	for e: GPUParticles3D in [streaks, front, puffs[0]]:
+	# low over the ground: streaks at the wind's speed and gusts a little over, the front slower
+	for e: GPUParticles3D in [streaks, front]:
 		var pm: ParticleProcessMaterial = e.process_material
-		pm.direction = _dir if e != puffs[0] else (_dir + Vector3(0, 0.35, 0)).normalized()
-		pm.initial_velocity_min = wind.length() * {streaks: 0.8, front: 0.3}.get(e, 0.35)
-		pm.initial_velocity_max = wind.length() * {streaks: 1.4, front: 0.6}.get(e, 0.6)
+		pm.direction = _dir
+		pm.initial_velocity_min = wind.length() * (0.8 if e == streaks else 0.3)
+		pm.initial_velocity_max = wind.length() * (1.4 if e == streaks else 0.6)
+	# the haze is pushed by the wind against quadratic drag, which balances at the wind's speed:
+	# damping = 20 a / v^2 (engine source, skills/ground-contact-fx); `a` sets how soon it gets there
+	var hp: ParticleProcessMaterial = haze[0].process_material
+	var push := maxf(wind.length(), 0.01)
+	hp.gravity = _dir * push
+	hp.damping_min = 20.0 * push / (push * push)
+	hp.damping_max = hp.damping_min
 	streaks.amount_ratio = float(weather.streaks)
 	streaks.emitting = float(weather.streaks) > 0.0
 	devil.emitting = bool(weather.devil)
@@ -108,22 +152,77 @@ func restyle(design: Dictionary, weather: Dictionary) -> void:
 	front.visible = front.emitting
 
 
-## A small cloud at a foot or a wheel. `strength` 0 to 1: a step is about 0.3, a wheel at speed 1.
-func puff(pos: Vector3, strength: float) -> void:
-	var e := puffs[_next]
-	_puff_left[_next] = e.lifetime
-	_next = (_next + 1) % PUFFS
-	e.global_position = pos
-	e.amount_ratio = lerpf(0.35, 1.0, clampf(strength, 0.0, 1.0))
+## A boot or a wheel touching the dust at `pos`. `vel` is the foot's (or the wheel rim's) world velocity at
+## contact, and the grit goes that way: ahead of a boot, behind a wheel (its rim moves backward at the
+## ground). `strength` 0 to 1 scales how much is thrown, `kind` is "foot" or "wheel". Standing still throws nothing.
+func puff(pos: Vector3, vel: Vector3, strength: float, kind := "foot") -> void:
+	var v := vel.length()
+	if v < float(_c.min_speed) or strength <= 0.0:
+		return
+	var flat := Vector3(vel.x, 0, vel.z)
+	var ahead := flat.normalized() if flat.length() > 0.01 else Vector3.FORWARD
+	var angles: Array = _c.launch_deg
+	if kind == "wheel":
+		angles = _c.wheel_launch_deg  # the fenders keep a wheel's throw low
+	var e := grit[_next_grit]
+	_next_grit = (_next_grit + 1) % GRIT
+	var pm: ParticleProcessMaterial = e.process_material
+	var mid := deg_to_rad((float(angles[0]) + float(angles[1])) / 2.0)
+	pm.direction = ahead * cos(mid) + Vector3.UP * sin(mid)
+	pm.spread = (float(angles[1]) - float(angles[0])) / 2.0
+	var fast := v * (1.0 + float(_c.speed_spread))
+	pm.initial_velocity_min = v * (1.0 - float(_c.speed_spread))
+	pm.initial_velocity_max = fast
+	var steep := sin(deg_to_rad(float(angles[1])))
+	# every grain has landed by the flight time of the fastest, steepest one
+	e.lifetime = 2.0 * fast * steep / _g
+	_fire(e, pos, strength, {"kind": kind, "life": e.lifetime, "top": pow(fast * steep, 2.0) / (2.0 * _g)})
+	_fire(haze[_next_haze], pos + Vector3(0, 0.03, 0), strength, {"kind": "haze", "life": float(_c.haze_life), "top": 0.05})
+	_next_haze = (_next_haze + 1) % HAZE
+
+
+## What is in flight: [{kind, age, life, top}], `top` the highest a grain can get (analytic H).
+func contact_state() -> Array:
+	return _live.values()
+
+
+func _fire(e: GPUParticles3D, at: Vector3, strength: float, info: Dictionary) -> void:
+	info.age = 0.0
+	_live[e] = info
+	e.global_position = at
+	e.amount_ratio = clampf(strength, 0.1, 1.0)
 	e.visible = true
 	e.restart()
 
 
+## A spent emitter still costs a draw call, so it hides until it is reused.
+func _pooled(e: GPUParticles3D) -> GPUParticles3D:
+	e.one_shot = true
+	e.explosiveness = 1.0
+	e.emitting = false
+	e.visible = false
+	return e
+
+
+## An irregular soft blot for the haze: a round falloff broken up by noise, so no ball and no hard quad edge.
+func _blot() -> ImageTexture:
+	var noise := FastNoiseLite.new()
+	noise.frequency = 0.08
+	var img := Image.create_empty(64, 64, false, Image.FORMAT_RGBA8)
+	for y in 64:
+		for x in 64:
+			var r := Vector2(x - 31.5, y - 31.5).length() / 32.0
+			var a := clampf(1.0 - r, 0.0, 1.0) * clampf(0.6 + noise.get_noise_2d(x, y), 0.0, 1.0)
+			img.set_pixel(x, y, Color(1, 1, 1, a * a))
+	return ImageTexture.create_from_image(img)
+
+
 func _process(delta: float) -> void:
-	for i in PUFFS:
-		if _puff_left[i] > 0.0:
-			_puff_left[i] -= delta
-			puffs[i].visible = _puff_left[i] > 0.0
+	for e: GPUParticles3D in _live.keys():
+		_live[e].age += delta
+		if _live[e].age >= _live[e].life:
+			e.visible = false
+			_live.erase(e)
 	var cam := get_viewport().get_camera_3d()
 	if cam:
 		var at := cam.global_position
