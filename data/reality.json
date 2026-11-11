@@ -39,7 +39,7 @@
    "at": [
     0,
     0,
-    0
+    16
    ],
    "hold": [
     "move_forward"
@@ -59,7 +59,7 @@
    "at": [
     0,
     0,
-    0
+    16
    ],
    "hold": [
     "move_forward",
@@ -80,7 +80,7 @@
    "at": [
     0,
     0,
-    0
+    16
    ],
    "hold": [
     "move_forward",
@@ -102,7 +102,7 @@
    "at": [
     0,
     0,
-    0
+    16
    ],
    "tap": [
     "jump"
@@ -298,6 +298,16 @@
    "value": 2.5,
    "unit": "m",
    "source": "https://www.nasa.gov/wp-content/uploads/2015/09/373667main_nasa-sp-2009-566-add.pdf (each array wing 2.5 m high x 58 m long, panels inclined 30 degrees)"
+  },
+  {
+   "id": "hero.slope.max",
+   "real": [
+    15,
+    30
+   ],
+   "value": 25,
+   "unit": "deg",
+   "source": "estimate: no NASA number for a suited walking slope was found; the patch itself (HiRISE at 1 m) is never steeper than 25 degrees, so 25 keeps every real slope walkable and steeper rock faces climbable only by the step row"
   }
  ],
  "pairs": []

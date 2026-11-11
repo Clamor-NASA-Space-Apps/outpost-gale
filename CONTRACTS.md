@@ -28,15 +28,19 @@ Mouse look while captured (`screen_relative`); touch look by finger index, never
 ## How the parts plug together
 The composition root is `sandbox/sandbox.gd`. It calls only these:
 - `world.build(design) -> void`, `world.height_at(x, z) -> float`, `world.restyle(design)` (sky state or quality),
-  `world.landmark(name) -> Vector3`.
+  `world.landmark(name) -> {pos: Vector3, yaw: float}`.
 - `player.place(pos: Vector3, yaw_deg: float)`, `player.enter(vehicle: Node3D)`, `player.exit()`,
   `player.state() -> Dictionary` (the `player`, `cam`, `heroScreen`, `interaction`, `carry`, `vehicle` keys below).
 - The camera belongs to `player/` and follows the hero, or the vehicle the hero drives.
 - An interactable is any node in group `interactable` with `prompt() -> String`, `can_use(hero) -> bool`,
   `use(hero) -> void`. Its `Area3D` (layer 6) sits in front of the thing. `use()` does one physical thing and
   changes no game state (hard rule 1: no meters, no resources before 14 Nov).
-- A vehicle is in group `vehicle` with `drive(input: Vector2, hurry: bool, delta: float)`, `seat() -> Transform3D`,
-  `exit_point() -> Vector3`, `speed() -> float`.
+- A vehicle is in group `vehicle` with `drive(input: Vector2, hurry: bool, delta: float)` (input.x steer, right
+  positive; input.y throttle, forward positive), `seat() -> Transform3D` (global), `exit_point() -> Vector3` (global),
+  `speed() -> float`. The sandbox root calls `player.exit()` on `interact` while driving.
+- `player.restyle(design)`: the sandbox calls it with `world.restyle()` on a sky or quality switch.
+- `player.footstep(pos: Vector3, yaw_deg: float, foot: String)` signal; the root connects it to `world.mark()` and
+  `world.puff()`. `world.mark(pos, yaw_deg, kind, width := 0.3)`: `foot_l`, `foot_r` or `wheel`.
 - Section 1 ships stand-ins with these methods (a capsule hero, box prefabs), so every check runs before a
   lane lands.
 
