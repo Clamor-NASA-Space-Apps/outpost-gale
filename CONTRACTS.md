@@ -41,6 +41,9 @@ The composition root is `sandbox/sandbox.gd`. It calls only these:
 - `player.restyle(design)`: the sandbox calls it with `world.restyle()` on a sky or quality switch.
 - `player.footstep(pos: Vector3, yaw_deg: float, foot: String)` signal; the root connects it to `world.mark()` and
   `world.puff()`. `world.mark(pos, yaw_deg, kind, width := 0.3)`: `foot_l`, `foot_r` or `wheel`.
+- `world.puff(pos: Vector3, vel: Vector3, strength: float, kind := "foot")`: ground-contact dust at the real contact
+  frame (skills/ground-contact-fx): `vel` is the foot's or wheel rim's world velocity at contact, `kind` `foot` or
+  `wheel`.
 - Section 1 ships stand-ins with these methods (a capsule hero, box prefabs), so every check runs before a
   lane lands.
 

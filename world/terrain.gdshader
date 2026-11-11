@@ -102,7 +102,7 @@ void fragment() {
 	tn.xy += rp.xy * ripples * 0.45;
 	tn = mix(tn, tnormal(rock_normal, ru), rock);
 
-	// footprints and tracks: a dent in the dust, darker where it is pressed (fresh prints in Mars dust read darker)
+	// footprints and tracks: a dent in the dust, a little darker where it is pressed
 	vec2 tu = (wpos.xz - trail_rect.xy) / trail_rect.zw;
 	if (tu.x > 0.0 && tu.y > 0.0 && tu.x < 1.0 && tu.y < 1.0) {
 		vec2 e = vec2(1.0 / float(textureSize(trail_map, 0).x), 0.0);
@@ -110,7 +110,7 @@ void fragment() {
 		float dx = texture(trail_map, tu + e.xy).r - texture(trail_map, tu - e.xy).r;
 		float dz = texture(trail_map, tu + e.yx).r - texture(trail_map, tu - e.yx).r;
 		float soft = 1.0 - rock;
-		albedo *= 1.0 - 0.22 * d * soft;
+		albedo *= 1.0 - 0.04 * d * soft;  // a fresh print darkens Mars dust 2 to 4% (design/research/dust.md); the dent does the rest
 		tn.xy += vec2(dx, dz) * 2.5 * soft;
 	}
 
