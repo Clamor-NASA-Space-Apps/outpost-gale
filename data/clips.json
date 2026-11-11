@@ -1,0 +1,183 @@
+{
+ "_about": "Outpost Gale hero clips, made by forge/hero_astronaut.py. length in seconds; speed is the ground speed a gait was made for (m/s); foot_l and foot_r touchdown are the phases (0..1 of the clip) where each boot lands: lowest and still (sole within 2 cm of the floor, moving back at the gait speed within 0.3 m/s). A planted foot bone (the ankle) sits at ankle_height_planted. Measured from the clips, not typed.",
+ "feet": {
+  "left": "foot_l",
+  "right": "foot_r",
+  "ankle_height_planted": 0.12,
+  "facing": "+Z in Godot (-Y in Blender); gait clips run in place"
+ },
+ "clips": {
+  "idle": {
+   "length": 4.0,
+   "loop": true,
+   "knee_peak": 6.0,
+   "lean": [
+    2.7,
+    3.8
+   ]
+  },
+  "walk": {
+   "length": 1.3333,
+   "loop": true,
+   "lean": 6.5,
+   "knee_peak": 28.0,
+   "stance_width": 0.25,
+   "hip_travel": 0.061,
+   "foot_l": {
+    "touchdown": [
+     0.0
+    ],
+    "down_share": 0.5,
+    "ground_speed": 0.998,
+    "slide_max": 0.021,
+    "lift": 0.062
+   },
+   "foot_r": {
+    "touchdown": [
+     0.5
+    ],
+    "down_share": 0.5,
+    "ground_speed": 0.998,
+    "slide_max": 0.021,
+    "lift": 0.062
+   },
+   "flight_share": 0.0,
+   "speed": 1.0,
+   "cadence": 1.5,
+   "stride": 1.333,
+   "duty": 0.56
+  },
+  "lope": {
+   "length": 1.1429,
+   "loop": true,
+   "lean": 10.5,
+   "knee_peak": 28.0,
+   "stance_width": 0.25,
+   "hip_travel": 0.049,
+   "foot_l": {
+    "touchdown": [
+     0.0
+    ],
+    "down_share": 0.21,
+    "ground_speed": 1.599,
+    "slide_max": 0.004,
+    "lift": 0.046
+   },
+   "foot_r": {
+    "touchdown": [
+     0.5
+    ],
+    "down_share": 0.24,
+    "ground_speed": 1.597,
+    "slide_max": 0.02,
+    "lift": 0.046
+   },
+   "flight_share": 0.56,
+   "speed": 1.6,
+   "cadence": 1.75,
+   "stride": 1.829,
+   "duty": 0.32
+  },
+  "hop_start": {
+   "length": 0.34,
+   "loop": false,
+   "knee_peak": 25.5,
+   "lean": [
+    3.2,
+    9.5
+   ],
+   "takeoff_at": 0.34
+  },
+  "hop_air": {
+   "length": 0.63,
+   "loop": false,
+   "knee_peak": 16.0,
+   "lean": [
+    -1.6,
+    4.8
+   ],
+   "air_time": 0.63
+  },
+  "hop_land": {
+   "length": 0.55,
+   "loop": false,
+   "knee_peak": 26.9,
+   "lean": [
+    -4.8,
+    6.4
+   ]
+  },
+  "interact": {
+   "length": 1.6,
+   "loop": false,
+   "knee_peak": 6.0,
+   "lean": [
+    3.2,
+    6.5
+   ],
+   "reach_height": 1.1
+  },
+  "carry_idle": {
+   "length": 4.0,
+   "loop": true,
+   "knee_peak": 6.0,
+   "lean": [
+    2.7,
+    3.8
+   ],
+   "bag": [
+    0.5,
+    0.42,
+    0.27
+   ],
+   "bag_bone": "spine_03",
+   "bag_center_godot": [
+    0.0,
+    1.1,
+    0.46
+   ]
+  },
+  "carry_walk": {
+   "length": 1.3333,
+   "loop": true,
+   "speed": 1.0,
+   "lean": 6.5,
+   "knee_peak": 28.0,
+   "stance_width": 0.25,
+   "hip_travel": 0.061,
+   "foot_l": {
+    "touchdown": [
+     0.0
+    ],
+    "down_share": 0.5,
+    "ground_speed": 0.998,
+    "slide_max": 0.021,
+    "lift": 0.062
+   },
+   "foot_r": {
+    "touchdown": [
+     0.5
+    ],
+    "down_share": 0.5,
+    "ground_speed": 0.998,
+    "slide_max": 0.021,
+    "lift": 0.062
+   },
+   "flight_share": 0.0
+  },
+  "drive_sit": {
+   "length": 1.6667,
+   "loop": true,
+   "knee_peak": 84.6,
+   "lean": [
+    -3.5,
+    -2.6
+   ],
+   "seat_hip": [
+    0.002,
+    0.233,
+    0.523
+   ]
+  }
+ }
+}
