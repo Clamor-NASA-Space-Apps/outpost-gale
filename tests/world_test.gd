@@ -43,6 +43,7 @@ func play() -> bool:
 		else:
 			check(Vector2(n.global_position.x, n.global_position.z).distance_to(Vector2(it.pos[0], it.pos[1])) < 0.01,
 				"%s stays where world.json puts it, not at %s" % [it.id, n.global_position])
+			check(bodies.size() == 1, "%s: a mover holds no body but its own (the import's stay behind when it moves)" % it.id)
 			check(n is AnimatableBody3D and n.collision_layer == (world.VEHICLES if kind == "vehicle" else world.CARRIABLES),
 				"%s: a %s is one body on its own layer" % [it.id, kind])
 		# resting: the lowest drawn point on the lowest ground under the footprint, sampled finer than the loader does

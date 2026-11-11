@@ -164,6 +164,10 @@ func _item(it: Dictionary, design: Dictionary) -> Node3D:
 	if kind == "static":
 		_solidify(model, parts)
 	else:
+		# the import's own bodies (-convcol) sat on layer 1 inside the mover and stayed behind when it moved:
+		# the one hull below replaces them
+		for b: CollisionObject3D in model.find_children("*", "CollisionObject3D", true, false):
+			b.free()
 		_hull(root, model)
 	root.set_meta("parts", parts)
 	var still := _still(root)
@@ -255,6 +259,36 @@ func _solidify(model: Node3D, parts: Array[Node3D]) -> void:
 			mi.create_trimesh_collision()
 	for body: CollisionObject3D in model.find_children("*", "CollisionObject3D", true, false):
 		_layer(body)
+	if authored and model.find_children("*", "CollisionObject3D", true, false).all(func(b: CollisionObject3D) -> bool: return b.collision_layer == THIN):
+		_feet(model)
+
+
+## A pole on feet (a lamp's tripod): its authored body is the pole, and the hero stood inside the drawn feet
+## from 6 of 8 headings (tests/sweep_test.gd). One convex hull of what is drawn below the hero's head covers
+## them; it slopes in toward the pole, so the hero slides round it, and it stays thin (layer 3) for the camera.
+func _feet(model: Node3D) -> void:
+	var to_model := model.global_transform.affine_inverse()
+	var base := drawn(model).position.y
+	var points := PackedVector3Array()
+	for mi: MeshInstance3D in model.find_children("*", "MeshInstance3D", true, false):
+		if mi.mesh:
+			for v in mi.mesh.get_faces():
+				var at := mi.global_transform * v
+				if at.y - base < hero_height:
+					points.append(to_model * at)
+	if points.size() < 4:
+		return
+	var shape := ConvexPolygonShape3D.new()
+	shape.points = points
+	var col := CollisionShape3D.new()
+	col.shape = shape
+	var body := StaticBody3D.new()
+	body.name = "feet"
+	body.collision_layer = THIN
+	body.collision_mask = 0
+	body.add_to_group("thin")
+	body.add_child(col)
+	model.add_child(body)
 
 
 ## Statics on layer 2, anything narrower than the hero on layer 3 (the camera ignores it), groups for the rules.
