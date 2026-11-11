@@ -15,3 +15,11 @@ Since the pause:
 
 Doubts still open: see the report (opaque greenhouse panes, no collision on moving parts, lettuce at pack size,
 my own `flat_label` in Exo 2 because `shapes.label()` has no font option).
+
+## Sweep fix (after the reboot)
+`tests/sweep_test.gd` found drawn faces outside the collision on the habitat (utility box and conduits on its
+west side), the lander (ladder) and the shelter (sign 8 cm in front of the bags). Fix at the root: `base_kit.done()`
+now joins every part that has no collision suffix and does not move (`door`, `dish`, `panel_*`) into one
+`detail-col` node, so what is drawn is what is hit. Lettuce opts out (`solid=False`). All ten rebuilt (no
+previews, geometry unchanged), style-check OK on 14 models, `--import` 0, sweep "0 failed" (hab1, lander and
+shelter: ok from 8 headings).

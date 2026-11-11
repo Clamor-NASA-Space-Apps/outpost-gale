@@ -75,10 +75,23 @@ def status_light(name, loc, size=(0.16, 0.05, 0.05)):
             box(name, size, (loc[0], loc[1] + 0.01, loc[2]), mat("light"))]
 
 
-def done(name):
+COL = ("-col", "-convcol", "-colonly", "-convcolonly")
+
+
+def moves(o):
+    """Parts the game moves get their own bodies in the engine, so they carry no collision suffix."""
+    return o.name in ("door", "dish") or o.name.startswith("panel_")
+
+
+def done(name, solid=True):
     """finish() without the centring: the recipe's own origin stays (the drum's centre, not the centre
-    of a box that a ramp or a pipe stretches), only the lowest point goes to z=0. The three previews
-    are shot from the model's real front (+Y)."""
+    of a box that a ramp or a pipe stretches), only the lowest point goes to z=0. With `solid`, every
+    part not already named for collision and not moving joins one `detail-col` node, so whatever is
+    drawn is also hit: bands, signs, pipes and ladders stuck out past the walls' collision. The three
+    previews are shot from the model's real front (+Y)."""
+    rest = [o for o in lib._meshes() if not o.name.endswith(COL) and not moves(o)]
+    if solid and rest:
+        join("detail-col", rest)
     lo, _ = lib._bounds()
     for o in lib._meshes():
         if o.parent is None:

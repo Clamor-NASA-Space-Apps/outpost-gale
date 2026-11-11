@@ -217,3 +217,5 @@ or orange. Don't put `danger` on a model. Don't use shapes that cannot exist at 
   rejected flat surfaces as low quality on 12 Nov 2026.
 - Download size is not a limit (hosted on Ravindu's home server; an internet build gets a loading bar).
   Texture memory still is: iPhone 16 and 17 Safari are the phones.
+- `vehicle_curiosity.glb` keeps NASA's own textures (the real rover, insignia painted out) instead of role
+  colours, so style-check reports its materials as not roles. Check the other models with it left out.

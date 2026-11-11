@@ -23,4 +23,4 @@ for n in range(1, 5):
     for o in list(bpy.context.scene.objects):
         if o.type != "MESH":
             bpy.data.objects.remove(o)
-    done(f"prop_lettuce_{n}")
+    done(f"prop_lettuce_{n}", solid=False)  # a plant in a bed blocks nobody
