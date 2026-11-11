@@ -148,7 +148,8 @@
   "glass": {
    "color": "#5b7182",
    "roughness": 0.08,
-   "metalness": 0
+   "metalness": 0,
+   "opacity": 0.5
   },
   "rock": {
    "color": "#86716a",

@@ -40,6 +40,8 @@ static func role(design: Dictionary, name: String, still := false) -> Material:
 	if cache.has(key):
 		return cache[key]
 	var color := Color.html(t.color)
+	# `opacity` below 1 is glass you see through: alpha blended, so keep it to the few roles that need it
+	color.a = float(t.get("opacity", 1.0))
 	var glow := float(t.get("emissive", 0))
 	var m: Material
 	if still or moving_detail or _flat(design):
@@ -55,6 +57,9 @@ static func role(design: Dictionary, name: String, still := false) -> Material:
 	else:
 		var s := StandardMaterial3D.new()
 		s.albedo_color = color
+		if color.a < 1.0:
+			s.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+			s.cull_mode = BaseMaterial3D.CULL_DISABLED  # a pane is one sheet: seen from both sides
 		s.roughness = float(t.get("roughness", 0.6))
 		s.metallic = float(t.get("metalness", 0))
 		if glow > 0:
@@ -76,6 +81,8 @@ static func _flat(design: Dictionary) -> bool:
 ## A design nobody has set a quality on shows no detail.
 static func _dress(design: Dictionary, t: Dictionary, s: ShaderMaterial) -> void:
 	var defines := PackedStringArray(["FLAT"] if _flat(design) else [])
+	if float(t.get("opacity", 1.0)) < 1.0:
+		defines.append("SEE")
 	var still: bool = s.get_meta("still")
 	# a moving mesh takes its detail in its own space, so the surface travels with it
 	var d: Dictionary = t.get("detail", {})

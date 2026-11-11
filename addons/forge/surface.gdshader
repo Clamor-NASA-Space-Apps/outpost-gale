@@ -9,7 +9,11 @@ shader_type spatial;
 //             or TEXTURE (a photo). Detail only ever shades the role's colour, it never replaces it.
 //             NORMALMAP and ROUGHMAP add the photo set's normal (OpenGL) and roughness maps.
 //   LIT       the role's `lit`: panes that light up one by one. COLOR.r is a pane's own number.
+//   SEE       the role's `opacity` below 1: glass you see through (alpha blended, so it sorts and costs more).
 // VARIANT
+#ifdef SEE
+render_mode blend_mix, depth_draw_always, cull_disabled;
+#endif
 uniform vec4 albedo : source_color = vec4(1.0);
 uniform float roughness = 0.6;
 uniform float metallic = 0.0;
@@ -115,6 +119,9 @@ void fragment() {
 	shade = mix(vec3(1.0), mix(shade, vec3(1.0), far), detail_strength);
 #endif
 	ALBEDO = albedo.rgb * shade;
+#ifdef SEE
+	ALPHA = albedo.a;
+#endif
 	ROUGHNESS = roughness;
 #ifdef ROUGHMAP
 	// the map's own average stays the role's roughness, so a set never makes a role glossier overall
