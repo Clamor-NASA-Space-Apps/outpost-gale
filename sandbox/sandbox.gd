@@ -19,6 +19,7 @@ const VIEWS := {
 @onready var world: Node3D = $World
 @onready var player: Node3D = $Player
 var interactions: Node3D
+var fps_label: Label  # the frame rate on screen, to read off a phone (game-feel-gate row 16)
 var tuning: Dictionary
 var design: Dictionary
 var sky := 0
@@ -41,11 +42,25 @@ func _ready() -> void:
 	interactions.name = "Interactions"
 	add_child(interactions)
 	interactions.setup(world, player, tuning, JSON.parse_string(FileAccess.get_file_as_string("res://data/reality.json")))
+	var layer := CanvasLayer.new()
+	add_child(layer)
+	fps_label = Label.new()
+	fps_label.theme = load("res://ui/theme.tres")
+	fps_label.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+	fps_label.offset_left = -260
+	fps_label.offset_top = 12
+	fps_label.offset_right = -16
+	fps_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	layer.add_child(fps_label)
 	# a boot pressed into soft dust leaves a print and lifts a little cloud
 	player.footstep.connect(func(pos: Vector3, yaw: float, foot: String) -> void:
 		world.mark(pos, yaw, foot)
 		world.puff(pos, 0.3))
 	Forge.register(self)
+
+
+func _process(_delta: float) -> void:
+	fps_label.text = "%d fps  %s  %s" % [Engine.get_frames_per_second(), quality, SKIES[sky].trim_prefix("design.").replace("design", "day")]
 
 
 func _unhandled_input(e: InputEvent) -> void:
