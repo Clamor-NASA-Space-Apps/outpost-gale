@@ -1,18 +1,304 @@
 {
-  "gravity": 3.73,
-  "probe": { "pos": "player.pos", "scene": "res://sandbox/sandbox.tscn", "tol": 0.12 },
-  "rows": [
-    { "id": "world.gravity", "real": [3.71, 3.73], "value": 3.73, "unit": "m/s2", "source": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html" },
-    { "id": "hero.leg", "real": [0.8, 1.0], "value": 0.9, "unit": "m", "source": "estimate: adult leg about half of a 1.8 m height; research/godot-build/movement-and-look.md uses 0.9 m for the Froude arithmetic" },
-    { "id": "hero.speed.walk", "real": [1.0, 1.1], "value": 1.0, "unit": "m/s", "source": "https://www.nasa.gov/history/alsj/a11/a11.gaits.html (Apollo plausible average 3.6 km/h); model 1.1 m/s on Mars: https://pmc.ncbi.nlm.nih.gov/articles/PMC3327825/",
-      "measure": "speed", "at": [0, 0, 0], "hold": ["move_forward"], "ms": 4000 },
-    { "id": "hero.speed.hurry", "real": [1.4, 2.0], "value": 1.6, "unit": "m/s", "source": "https://www.nasa.gov/history/alsj/a11/a11.gaits.html (Apollo sustained running above 5 km/h); Mars model 2.0 m/s run or skip: https://pmc.ncbi.nlm.nih.gov/articles/PMC3327825/",
-      "measure": "speed", "at": [0, 0, 0], "hold": ["move_forward", "hurry"], "ms": 5000 },
-    { "id": "hero.stop", "real": [1.0, 2.1], "value": 1.5, "unit": "m", "source": "estimate: Aldrin, 'two or three steps to come comfortably to a stable stationary position' (https://www.nasa.gov/history/alsj/a11/a11.gaits.html) times a 0.5 to 0.7 m step",
-      "measure": "stop", "at": [0, 0, 0], "hold": ["move_forward", "hurry"], "ms": 4000 },
-    { "id": "hero.jump.hop", "real": [0.1, 0.18], "value": 0.18, "unit": "m", "limit": "max", "source": "estimate: Apollo 16 suited jump took off at 1.17 m/s and rose 0.42 m on the Moon (https://www.nasa.gov/history/alsj/a16/a16.alsepoff.html); the same push in Mars gravity: 1.17^2 / (2 x 3.73) = 0.18 m",
-      "measure": "jump", "at": [0, 0, 0], "tap": ["jump"] },
-    { "id": "rover.speed.max", "real": [2.2, 2.8], "value": 2.8, "unit": "m/s", "source": "NASA Space Exploration Vehicle fact sheet FS-2011-08-045-JSC (about 10 km/h, crew of two); Apollo 17 rover averaged about 8 km/h: https://nssdc.gsfc.nasa.gov/planetary/lunar/apollo_lrv.html" }
-  ],
-  "pairs": []
+ "gravity": 3.73,
+ "probe": {
+  "pos": "player.pos",
+  "scene": "res://sandbox/sandbox.tscn",
+  "tol": 0.12
+ },
+ "rows": [
+  {
+   "id": "world.gravity",
+   "real": [
+    3.71,
+    3.73
+   ],
+   "value": 3.73,
+   "unit": "m/s2",
+   "source": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html"
+  },
+  {
+   "id": "hero.leg",
+   "real": [
+    0.8,
+    1.0
+   ],
+   "value": 0.9,
+   "unit": "m",
+   "source": "estimate: adult leg about half of a 1.8 m height; research/godot-build/movement-and-look.md uses 0.9 m for the Froude arithmetic"
+  },
+  {
+   "id": "hero.speed.walk",
+   "real": [
+    1.0,
+    1.1
+   ],
+   "value": 1.0,
+   "unit": "m/s",
+   "source": "https://www.nasa.gov/history/alsj/a11/a11.gaits.html (Apollo plausible average 3.6 km/h); model 1.1 m/s on Mars: https://pmc.ncbi.nlm.nih.gov/articles/PMC3327825/",
+   "measure": "speed",
+   "at": [
+    0,
+    0,
+    0
+   ],
+   "hold": [
+    "move_forward"
+   ],
+   "ms": 4000
+  },
+  {
+   "id": "hero.speed.hurry",
+   "real": [
+    1.4,
+    2.0
+   ],
+   "value": 1.6,
+   "unit": "m/s",
+   "source": "https://www.nasa.gov/history/alsj/a11/a11.gaits.html (Apollo sustained running above 5 km/h); Mars model 2.0 m/s run or skip: https://pmc.ncbi.nlm.nih.gov/articles/PMC3327825/",
+   "measure": "speed",
+   "at": [
+    0,
+    0,
+    0
+   ],
+   "hold": [
+    "move_forward",
+    "hurry"
+   ],
+   "ms": 5000
+  },
+  {
+   "id": "hero.stop",
+   "real": [
+    1.0,
+    2.1
+   ],
+   "value": 1.5,
+   "unit": "m",
+   "source": "estimate: Aldrin, 'two or three steps to come comfortably to a stable stationary position' (https://www.nasa.gov/history/alsj/a11/a11.gaits.html) times a 0.5 to 0.7 m step",
+   "measure": "stop",
+   "at": [
+    0,
+    0,
+    0
+   ],
+   "hold": [
+    "move_forward",
+    "hurry"
+   ],
+   "ms": 4000
+  },
+  {
+   "id": "hero.jump.hop",
+   "real": [
+    0.1,
+    0.18
+   ],
+   "value": 0.18,
+   "unit": "m",
+   "limit": "max",
+   "source": "estimate: Apollo 16 suited jump took off at 1.17 m/s and rose 0.42 m on the Moon (https://www.nasa.gov/history/alsj/a16/a16.alsepoff.html); the same push in Mars gravity: 1.17^2 / (2 x 3.73) = 0.18 m",
+   "measure": "jump",
+   "at": [
+    0,
+    0,
+    0
+   ],
+   "tap": [
+    "jump"
+   ]
+  },
+  {
+   "id": "rover.speed.max",
+   "real": [
+    2.2,
+    2.8
+   ],
+   "value": 2.8,
+   "unit": "m/s",
+   "source": "NASA Space Exploration Vehicle fact sheet FS-2011-08-045-JSC (about 10 km/h, crew of two); Apollo 17 rover averaged about 8 km/h: https://nssdc.gsfc.nasa.gov/planetary/lunar/apollo_lrv.html"
+  },
+  {
+   "id": "hero.height",
+   "real": [
+    1.55,
+    2.05
+   ],
+   "value": 1.89,
+   "unit": "m",
+   "source": "estimate: unsuited crew stature 1.486 to 1.946 m (https://www.nasa.gov/wp-content/uploads/2015/03/human_integration_design_handbook_revision_1.pdf) plus about 0.1 m of boot and helmet; no NASA suited height found. Value: the Quaternius astronaut model"
+  },
+  {
+   "id": "hero.width",
+   "real": [
+    0.6,
+    1.0
+   ],
+   "value": 0.8,
+   "unit": "m",
+   "source": "estimate: 1 m is the 99th percentile suited breadth without tools (https://ntrs.nasa.gov/citations/20090032975); a median suit is narrower"
+  },
+  {
+   "id": "hero.reach.work",
+   "real": [
+    0.92,
+    1.28
+   ],
+   "value": 1.1,
+   "unit": "m",
+   "source": "https://ntrs.nasa.gov/citations/20090032975 (prime work area: a 36 cm cylinder centred 1.1 m above the surface)"
+  },
+  {
+   "id": "hero.step",
+   "real": [
+    0.3,
+    0.43
+   ],
+   "value": 0.3,
+   "unit": "m",
+   "source": "https://ntrs.nasa.gov/citations/20250004496 (12 in step accessible to all suited crew; tested front steps 43 to 76 cm)"
+  },
+  {
+   "id": "habitat.diameter",
+   "real": [
+    5.0,
+    5.0
+   ],
+   "value": 5.0,
+   "unit": "m",
+   "source": "https://ntrs.nasa.gov/citations/20110011015 (HDU PEM shell)"
+  },
+  {
+   "id": "habitat.height",
+   "real": [
+    3.5,
+    3.5
+   ],
+   "value": 3.5,
+   "unit": "m",
+   "source": "https://ntrs.nasa.gov/citations/20110011015"
+  },
+  {
+   "id": "hatch.height",
+   "real": [
+    1.52,
+    1.83
+   ],
+   "value": 1.9,
+   "unit": "m",
+   "source": "https://ntrs.nasa.gov/citations/20250004496 (60 x 40 in hatch, about 72 in overhead clearance)",
+   "why": "the game has no crouch and the hero model is 1.89 m: the airlock doorway clears it standing"
+  },
+  {
+   "id": "hatch.width",
+   "real": [
+    1.0,
+    1.02
+   ],
+   "value": 1.02,
+   "unit": "m",
+   "source": "https://ntrs.nasa.gov/citations/20250004496"
+  },
+  {
+   "id": "rover.length",
+   "real": [
+    4.48,
+    4.48
+   ],
+   "value": 4.48,
+   "unit": "m",
+   "source": "https://www.nasa.gov/wp-content/uploads/2015/08/464826main_sev_factsheet_508.pdf"
+  },
+  {
+   "id": "rover.height",
+   "real": [
+    3.05,
+    3.05
+   ],
+   "value": 3.05,
+   "unit": "m",
+   "source": "https://www.nasa.gov/wp-content/uploads/2015/08/464826main_sev_factsheet_508.pdf"
+  },
+  {
+   "id": "rover.wheel",
+   "real": [
+    0.99,
+    0.99
+   ],
+   "value": 0.99,
+   "unit": "m",
+   "source": "https://www.nasa.gov/wp-content/uploads/2015/08/464826main_sev_factsheet_508.pdf"
+  },
+  {
+   "id": "curiosity.length",
+   "real": [
+    3.0,
+    3.0
+   ],
+   "value": 3.0,
+   "unit": "m",
+   "source": "https://www.jpl.nasa.gov/news/press_kits/MSLLaunch.pdf"
+  },
+  {
+   "id": "curiosity.width",
+   "real": [
+    2.8,
+    2.8
+   ],
+   "value": 2.8,
+   "unit": "m",
+   "source": "https://www.jpl.nasa.gov/news/press_kits/MSLLaunch.pdf"
+  },
+  {
+   "id": "curiosity.height",
+   "real": [
+    2.1,
+    2.1
+   ],
+   "value": 2.1,
+   "unit": "m",
+   "source": "https://www.jpl.nasa.gov/news/press_kits/MSLLaunch.pdf"
+  },
+  {
+   "id": "curiosity.wheel",
+   "real": [
+    0.5,
+    0.5
+   ],
+   "value": 0.5,
+   "unit": "m",
+   "source": "https://www.jpl.nasa.gov/news/press_kits/MSLLaunch.pdf"
+  },
+  {
+   "id": "crate.length",
+   "real": [
+    0.5,
+    0.5
+   ],
+   "value": 0.5,
+   "unit": "m",
+   "source": "https://ntrs.nasa.gov/citations/20160002631 (Cargo Transfer Bag, 50 x 42 x 25 cm)"
+  },
+  {
+   "id": "dish.diameter",
+   "real": [
+    1.0,
+    6.0
+   ],
+   "value": 3.0,
+   "unit": "m",
+   "source": "https://www.nasa.gov/wp-content/uploads/2015/09/373667main_nasa-sp-2009-566-add.pdf (base high-gain antenna: 1 m on the Moon, 6 m inflatable on Mars)"
+  },
+  {
+   "id": "solar.wing.height",
+   "real": [
+    2.5,
+    2.5
+   ],
+   "value": 2.5,
+   "unit": "m",
+   "source": "https://www.nasa.gov/wp-content/uploads/2015/09/373667main_nasa-sp-2009-566-add.pdf (each array wing 2.5 m high x 58 m long, panels inclined 30 degrees)"
+  }
+ ],
+ "pairs": []
 }

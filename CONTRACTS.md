@@ -1,0 +1,56 @@
+# CONTRACTS.md
+
+What parallel lanes would otherwise guess differently. A lane reads this file, `DESIGN.md` and its own folder.
+Change it only through the session that merges the lanes.
+
+## Space
+- Metres. +X east, -Z north, +Y up. The patch centre (0, 0, 0) is 200 m west of Bradbury Landing.
+- Yaw in degrees clockwise from north: `rotation.y = -deg_to_rad(yaw)`. A model's front faces -Z at yaw 0.
+- Ground height: `world.height_at(x, z)` only (it reads `data/terrain.json`, the one height source).
+
+## Collision layers (owner: `world/`)
+| Layer | Bit | What | Who looks for it |
+|---|---|---|---|
+| 1 | 1 | ground (terrain heightmap) | hero, rover, camera, rays |
+| 2 | 2 | statics: buildings, machines, rocks, the lander | hero, rover, camera |
+| 3 | 4 | thin statics: masts, poles, cables, lamp posts (narrower than the hero) | hero, rover. **Not the camera** |
+| 4 | 8 | hero body | rover |
+| 5 | 16 | vehicles (the rover, as an `AnimatableBody3D`) | hero, camera |
+| 6 | 32 | interaction areas (`Area3D`, never blocks) | the hero's interaction finder |
+| 7 | 64 | carriables (cargo bags) | hero, rover, camera |
+
+## Input actions (registered in code by `player/controls.gd`, keys and touch feed the same actions)
+`move_forward` W/Up, `move_back` S/Down, `move_left` A/Left, `move_right` D/Right, `hurry` Shift,
+`jump` Space, `interact` E, `look_left/right/up/down` (stick and keys J L I K), `debug_sky` B,
+`debug_teleport` T, `debug_quality` G. Never a browser-owned key (Ctrl+W/T/N, F5, F11, F12, Alt+arrows, Esc).
+Mouse look while captured (`screen_relative`); touch look by finger index, never `relative` (character-body).
+
+## How the parts plug together
+The composition root is `sandbox/sandbox.gd`. It calls only these:
+- `world.build(design) -> void`, `world.height_at(x, z) -> float`, `world.restyle(design)` (sky state or quality),
+  `world.landmark(name) -> Vector3`.
+- `player.place(pos: Vector3, yaw_deg: float)`, `player.enter(vehicle: Node3D)`, `player.exit()`,
+  `player.state() -> Dictionary` (the `player`, `cam`, `heroScreen`, `interaction`, `carry`, `vehicle` keys below).
+- The camera belongs to `player/` and follows the hero, or the vehicle the hero drives.
+- An interactable is any node in group `interactable` with `prompt() -> String`, `can_use(hero) -> bool`,
+  `use(hero) -> void`. Its `Area3D` (layer 6) sits in front of the thing. `use()` does one physical thing and
+  changes no game state (hard rule 1: no meters, no resources before 14 Nov).
+- A vehicle is in group `vehicle` with `drive(input: Vector2, hurry: bool, delta: float)`, `seat() -> Transform3D`,
+  `exit_point() -> Vector3`, `speed() -> float`.
+- Section 1 ships stand-ins with these methods (a capsule hero, box prefabs), so every check runs before a
+  lane lands.
+
+## Test hooks
+`Forge.register(sandbox)`. `render_game_to_text()` returns:
+`player.{pos, speed, onFloor, gait, inside}`, `cam.{inside, dist}`, `heroScreen`, `interaction.{target, prompt}`,
+`vehicle.{driving, speed}`, `carry`, `sky`, `quality`, `fps`.
+`set_view(name)`: `default` (the play camera), `base`, `hero`, `horizon`, `storm`, `airlock`, `rover`.
+`place(pos, yaw_deg)`: the hero, through `player.place()`.
+
+## Prefabs (`data/world.json` `prefabs`: id -> model file; a missing file loads a labelled stand-in box)
+`habitat`, `solar_array`, `battery_bank`, `oxygen_maker`, `water_recycler`, `greenhouse`, `storm_shelter`,
+`dish`, `build_pad`, `lander`, `rover`, `curiosity`, `cargo_bag`, `pip`, `lamp`, `beacon`, `rock_*`.
+Groups: `floor` (anything walkable on top), `wall` (blocks), `thin` (layer 3), `interactable`, `vehicle`, `carriable`.
+
+## Which inits await
+None. `world.build()` is synchronous (it loads everything it needs before returning); the player is placed after it.

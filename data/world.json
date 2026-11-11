@@ -1,0 +1,56 @@
+{
+ "note": "The sandbox base. pos is [x, z] in metres from the patch centre (+X east, -Z north), yaw degrees clockwise from north. Heights come from the terrain. Layout from real surface-base practice where we have it: power away from the habitat, the lander pad far off, Curiosity is a landmark toward Mount Sharp (it is really far up the mountain).",
+ "prefabs": {
+  "habitat": "res://models/building_habitat.glb",
+  "solar_array": "res://models/building_solar_array.glb",
+  "battery_bank": "res://models/prop_battery_bank.glb",
+  "oxygen_maker": "res://models/prop_oxygen_maker.glb",
+  "water_recycler": "res://models/prop_water_recycler.glb",
+  "greenhouse": "res://models/building_greenhouse.glb",
+  "storm_shelter": "res://models/building_storm_shelter.glb",
+  "dish": "res://models/building_dish.glb",
+  "build_pad": "res://models/pad_build.glb",
+  "lander": "res://models/building_lander.glb",
+  "rover": "res://models/vehicle_rover.glb",
+  "curiosity": "res://models/vehicle_curiosity.glb",
+  "cargo_bag": "res://models/prop_cargo_bag.glb",
+  "pip": "res://models/vehicle_pip.glb",
+  "lamp": "res://models/prop_lamp.glb",
+  "beacon": "res://models/prop_beacon.glb"
+ },
+ "standin": {
+  "habitat": [5.0, 3.5, 5.0], "solar_array": [6.0, 2.5, 2.0], "battery_bank": [1.6, 1.2, 0.8],
+  "oxygen_maker": [1.2, 1.6, 1.0], "water_recycler": [1.2, 1.6, 1.0], "greenhouse": [7.0, 3.5, 7.0],
+  "storm_shelter": [3.0, 2.2, 2.5], "dish": [3.0, 3.5, 3.0], "build_pad": [6.0, 0.15, 6.0],
+  "lander": [6.0, 9.0, 6.0], "rover": [2.6, 3.05, 4.48], "curiosity": [2.8, 2.1, 3.0],
+  "cargo_bag": [0.5, 0.25, 0.42], "pip": [0.6, 0.5, 0.8], "lamp": [0.2, 3.0, 0.2], "beacon": [0.3, 1.2, 0.3]
+ },
+ "items": [
+  {"id": "hab1", "prefab": "habitat", "pos": [0, 0], "yaw": 180},
+  {"id": "oxygen", "prefab": "oxygen_maker", "pos": [4.5, 1.5], "yaw": 270},
+  {"id": "water", "prefab": "water_recycler", "pos": [4.5, -1.5], "yaw": 270},
+  {"id": "battery", "prefab": "battery_bank", "pos": [14, 2], "yaw": 270},
+  {"id": "solar1", "prefab": "solar_array", "pos": [24, -4], "yaw": 0},
+  {"id": "solar2", "prefab": "solar_array", "pos": [24, 4], "yaw": 0},
+  {"id": "greenhouse", "prefab": "greenhouse", "pos": [-12, -10], "yaw": 135},
+  {"id": "shelter", "prefab": "storm_shelter", "pos": [-6, 10], "yaw": 0},
+  {"id": "dish", "prefab": "dish", "pos": [6, -16], "yaw": 0},
+  {"id": "pad1", "prefab": "build_pad", "pos": [-14, 6], "yaw": 0},
+  {"id": "pad2", "prefab": "build_pad", "pos": [12, 14], "yaw": 0},
+  {"id": "rover", "prefab": "rover", "pos": [-10, 0], "yaw": 90},
+  {"id": "pip", "prefab": "pip", "pos": [2, 5], "yaw": 200},
+  {"id": "bag1", "prefab": "cargo_bag", "pos": [-3, 5], "yaw": 10},
+  {"id": "bag2", "prefab": "cargo_bag", "pos": [-3.6, 5.4], "yaw": 40},
+  {"id": "bag3", "prefab": "cargo_bag", "pos": [-2.4, 5.8], "yaw": 75},
+  {"id": "lamp1", "prefab": "lamp", "pos": [-4, 4], "yaw": 0},
+  {"id": "lamp2", "prefab": "lamp", "pos": [8, -6], "yaw": 0},
+  {"id": "beacon1", "prefab": "beacon", "pos": [30, 0], "yaw": 0},
+  {"id": "lander", "prefab": "lander", "pos": [90, -70], "yaw": 0},
+  {"id": "curiosity", "prefab": "curiosity", "pos": [80, 95], "yaw": 320}
+ ],
+ "landmarks": {
+  "spawn": [0, 9, 0], "base": [0, 9, 0], "airlock": [0, 4.5, 0], "solar": [20, 0, 270], "greenhouse": [-8, -6, 315],
+  "rover": [-10, 4, 180], "lander": [80, -60, 320], "curiosity": [72, 86, 140], "edge": [140, 0, 90]
+ },
+ "play_half": 150
+}

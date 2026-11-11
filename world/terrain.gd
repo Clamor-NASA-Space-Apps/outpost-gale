@@ -102,6 +102,8 @@ func _collision() -> void:
 	shape.map_data = scaled
 	var body := StaticBody3D.new()
 	body.name = "ground"
+	body.collision_layer = 1  # CONTRACTS.md: layer 1 is the ground
+	body.collision_mask = 0
 	var col := CollisionShape3D.new()
 	col.shape = shape
 	col.scale = Vector3.ONE * step
