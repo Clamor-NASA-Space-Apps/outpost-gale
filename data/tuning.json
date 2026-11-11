@@ -10,5 +10,7 @@
  },
  "input": { "coyote": 0.1, "jump_buffer": 0.12, "stick_deadzone": 0.15 },
  "interact": { "reach": 1.6, "cone_deg": 70 },
- "touch": { "target_px": 96, "stick_px": 260 }
+ "touch": { "target_px": 96, "stick_px": 260 },
+ "hop": { "xfade": 0.2, "anticipation": 0.12, "crouch": 0.12, "tuck": 0.06, "squash": 0.06, "fold_rate": 18.0,
+  "note": "code-posed hop over the idle clip: s of blend, s of crouch before take-off, m the hips drop, m the feet tuck on the way down, m of landing crouch per m/s of impact, 1/s the legs follow" }
 }

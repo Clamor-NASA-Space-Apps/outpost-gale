@@ -35,16 +35,22 @@ func _ready() -> void:
 	world.build(design)
 	var s: Dictionary = world.landmark("spawn")
 	player.place(s.pos, s.yaw)
+	# a boot pressed into soft dust leaves a print and lifts a little cloud
+	player.footstep.connect(func(pos: Vector3, yaw: float, foot: String) -> void:
+		world.mark(pos, yaw, foot)
+		world.puff(pos, 0.3))
 	Forge.register(self)
 
 
 func _unhandled_input(e: InputEvent) -> void:
-	if e.is_action_pressed("debug_sky"):
+	if e.is_action_pressed("interact") and player.vehicle:
+		player.exit()  # CONTRACTS.md: the root gets the hero out; getting in is the rover's interaction
+	elif e.is_action_pressed("debug_sky"):
 		_sky(sky + 1)
 	elif e.is_action_pressed("debug_quality"):
 		quality = QUALITIES[(QUALITIES.find(quality) + 1) % QUALITIES.size()]
 		Forge.HouseStyle.set_quality(self, design, quality)
-		world.restyle(design)
+		_restyle()
 	elif e.is_action_pressed("debug_teleport"):
 		var names: Array = world.data.landmarks.keys()
 		hop = (hop + 1) % names.size()
@@ -62,7 +68,12 @@ func _sky(i: int) -> void:
 	design = _design(SKIES[sky])
 	Forge.HouseStyle.apply_lighting(self, design)
 	Forge.HouseStyle.set_quality(self, design, quality)
+	_restyle()
+
+
+func _restyle() -> void:
 	world.restyle(design)
+	player.restyle(design)
 
 
 func render_game_to_text() -> Dictionary:

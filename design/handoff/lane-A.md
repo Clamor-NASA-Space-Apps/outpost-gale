@@ -1,5 +1,15 @@
 # Lane A (player): handoff, paused 12 Nov 2026 for a reboot
 
+**Update after the reboot: lane A is complete.**
+- Contract items done: probe rows at [0,0,16], drive axes, `player.restyle(design)`, footstep kept, `floor_max_angle` from `hero.slope.max`, the hop feel moved to the tuning.json `hop` block.
+- Checks:
+  - `run.gd`: 0 failed.
+  - `player_test.gd` (with footsteps and restyle): 0 failed.
+  - feel-probe on the real sheet: 4 of 4 pass.
+  - Films on `player/dev.tscn` (side view `hero`): looked at.
+  - capture-view default and hero: exit 0, no errors.
+- The notes below are the state before the reboot.
+
 Scratch files live in the session scratchpad (`/tmp/claude-1000/-home-ravindu644-Documents-NASA-Space-apps-tooling/d10120dd-6233-49a1-8d98-3cc7bd666f89/scratchpad/`). A reboot may wipe them, but each one can be made again with the commands below. Nothing is committed.
 
 ## 1. Finished and verified
