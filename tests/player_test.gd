@@ -26,6 +26,7 @@ func play() -> bool:
 	radius = (player.body.find_children("*", "CollisionShape3D", false, false)[0].shape as CylinderShape3D).radius
 	check(is_equal_approx(float(ProjectSettings.get_setting("physics/3d/default_gravity")), player.gravity),
 		"project.godot gravity is the sheet's")
+	await no_sinking()
 	await footsteps()
 	await sweep()
 	await turn_beside()
@@ -66,6 +67,26 @@ func hold(actions: Array, n: int, what: String) -> void:
 	for a: StringName in actions:
 		action(a, false)
 	check(bad == 0, "%s: the drawn body was inside a solid on %d frames" % [what, bad])
+
+
+## The feet stay on the floor they walk on: the engine's floor snap once pulled the step-lifted body a whole
+## snap length into the ground (0.30 m, for good). Both spots are the sweep test's repros.
+func no_sinking() -> void:
+	var space := game.get_world_3d().direct_space_state
+	for spot: Array in [[Vector3(-1.42, 0, 4.0), 270.0, 0], [Vector3(0, 0, 30), 90.0, 30]]:
+		game.place(spot[0], spot[1])
+		await frames(spot[2])  # the second starts from standstill
+		action(&"move_forward", true)
+		var worst := 0.0
+		for i in 120:
+			await frames(1)
+			var b: Vector3 = player.body.global_position
+			var q := PhysicsRayQueryParameters3D.create(b + Vector3.UP * 2.0, b + Vector3.DOWN * 2.0, 1 | 2, [player.body.get_rid()])
+			var hit := space.intersect_ray(q)
+			if hit:
+				worst = maxf(worst, hit.position.y - b.y)
+		action(&"move_forward", false)
+		check(worst < 0.02, "walking from %s: the feet sank %.3f m below the floor" % [spot[0], worst])
 
 
 ## Feet plant in turn while walking, both come down on a landing, and each mark is under the body.

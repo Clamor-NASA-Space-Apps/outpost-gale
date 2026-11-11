@@ -51,6 +51,7 @@ var launch := -1.0  # seconds of crouch left before take-off, negative when no h
 var last_pos := Vector3.ZERO
 var moved := 0.0  # horizontal speed from the change of position
 var lower := -1  # which foot is drawn lower, the one bearing the body
+var on_floor := false  # the body's floor contact, or a floor it was snapped down onto this frame
 
 
 func _ready() -> void:
@@ -80,7 +81,9 @@ func _ready() -> void:
 	body.name = "Hero"
 	body.collision_layer = HERO_LAYER
 	body.collision_mask = MASK
-	body.floor_snap_length = step
+	# no engine snap: under Jolt it pulls the lifted cylinder a full snap length down past the separation ray
+	# (measured: the feet sank exactly the snap length and stayed there). _settle() does it by hand.
+	body.floor_snap_length = 0.0
 	body.floor_max_angle = deg_to_rad(row.call("hero.slope.max"))
 	add_child(body)
 	var design := Forge.HouseStyle.load_design("res://design.json")
@@ -107,8 +110,12 @@ func _ready() -> void:
 func _collider() -> void:
 	var b := model.bounds
 	var cyl := CylinderShape3D.new()
-	cyl.radius = Vector2(b.size.x, b.size.z).length() / 2.0
-	cyl.height = b.end.y - step
+	# Jolt lets a body rest this far inside what it touches (its margin is a share of the shape's size): the
+	# skin keeps the drawn body out of a wall, and out of a sloping underside over the head
+	var half := Vector2(b.size.x, b.size.z).length() / 2.0
+	var skin: float = half * ProjectSettings.get_setting("physics/jolt_physics_3d/collisions/collision_margin_fraction")
+	cyl.radius = half + skin
+	cyl.height = b.end.y + skin - step
 	var shape := CollisionShape3D.new()
 	shape.shape = cyl
 	shape.position.y = step + cyl.height / 2.0
@@ -178,7 +185,7 @@ func _walk(delta: float) -> void:
 	body.velocity.x = -sin(yaw) * speed
 	body.velocity.z = -cos(yaw) * speed
 
-	coyote = tuning.input.coyote if body.is_on_floor() else coyote - delta
+	coyote = tuning.input.coyote if on_floor else coyote - delta
 	buffer = tuning.input.jump_buffer if Input.is_action_just_pressed(&"jump") else buffer - delta
 	if buffer > 0.0 and coyote > 0.0 and launch < 0.0:
 		buffer = 0.0
@@ -192,19 +199,48 @@ func _walk(delta: float) -> void:
 			body.velocity.y = hop_speed
 			launching = true
 			model.take_off()
-	# gravity on the take-off frame too: the arc then peaks just under the sheet's rise, never over it
-	if launching or not body.is_on_floor():
-		body.velocity.y -= gravity * delta
+	# gravity on every frame, on the floor too: the body then presses its feet ray on the floor, which keeps the
+	# floor contact real and lets move_and_slide() step it up with the cylinder checked. On the take-off frame
+	# it puts the arc's peak just under the sheet's rise, never over it.
+	body.velocity.y -= gravity * delta
 	var falling := maxf(0.0, -body.velocity.y)
-	var was_on_floor := body.is_on_floor()
+	var was_on_floor := on_floor
+	var before := body.global_position
 	body.move_and_slide()
+	on_floor = _settle(before, was_on_floor and not launching and body.velocity.y <= 0.0)
 
 	var real := body.get_real_velocity()
 	var flat := Vector2(real.x, real.z).length()
 	gait = _gait(flat)
-	model.update(flat, idle_below, body.is_on_floor(), body.velocity.y > 0.0, falling, delta)
-	_steps(flat > idle_below, body.is_on_floor() and not was_on_floor)
-	cam.follow(delta, yaw, flat > idle_below, body.is_on_floor())
+	model.update(flat, idle_below, on_floor, body.velocity.y > 0.0, falling, delta)
+	_steps(flat > idle_below, on_floor and not was_on_floor)
+	cam.follow(delta, yaw, flat > idle_below, on_floor)
+
+
+## Puts the feet on the floor under them, if it is within a step: up at once, when the body fits there (the
+## feet ray alone lagged a frame behind a curb edge), and down only when the body was on the floor and is not
+## rising (the engine's floor snap sank the step-lifted body under Jolt). A step with no room above it, like
+## a curb under a low overhang, is a wall: the body goes back to where it was. True when on a floor.
+func _settle(before: Vector3, may_drop: bool) -> bool:
+	var at := body.global_position
+	var q := PhysicsRayQueryParameters3D.create(at + Vector3.UP * step, at + Vector3.DOWN * step, MASK & ~4, [body.get_rid()])
+	var hit := body.get_world_3d().direct_space_state.intersect_ray(q)
+	if hit.is_empty():
+		return body.is_on_floor()
+	var y: float = hit.position.y
+	# up onto any lip (a bevelled curb edge is steep where the ray meets it), down only onto a walkable slope
+	if y <= at.y and hit.normal.angle_to(Vector3.UP) > body.floor_max_angle:
+		return body.is_on_floor()
+	if y > at.y:
+		var standing := Transform3D(body.global_basis, Vector3(at.x, y + body.safe_margin, at.z))
+		if body.test_move(standing, Vector3.ZERO):
+			body.global_position = Vector3(before.x, at.y, before.z)
+			return body.is_on_floor() or may_drop
+	elif not (body.is_on_floor() or may_drop):
+		return false
+	body.global_position.y = y
+	body.velocity.y = 0.0
+	return true
 
 
 ## A foot plants when it becomes the lower of the two: heel strike in a walk, touchdown after the flight in a
@@ -217,13 +253,13 @@ func _steps(moving: bool, landed: bool) -> void:
 	if landed:
 		for i in f.size():
 			footstep.emit(Vector3(f[i].x, floor_y, f[i].z), heading, FEET[i])
-	elif low != lower and moving and body.is_on_floor():
+	elif low != lower and moving and on_floor:
 		footstep.emit(Vector3(f[low].x, floor_y, f[low].z), heading, FEET[low])
 	lower = low
 
 
 func _gait(v: float) -> String:
-	if not body.is_on_floor():
+	if not on_floor:
 		return "hop"
 	if v < idle_below:
 		return "idle"
@@ -252,6 +288,7 @@ func place(pos: Vector3, yaw_deg: float) -> void:
 	yaw = -deg_to_rad(yaw_deg)
 	body.rotation.y = yaw
 	body.velocity = Vector3.ZERO
+	on_floor = false  # put down, not snapped: it settles onto whatever is under it
 	speed = 0.0
 	launch = -1.0
 	buffer = 0.0
@@ -307,7 +344,7 @@ func inside() -> Array:
 func state() -> Dictionary:
 	var feet := body.global_position
 	return {
-		"player": {"pos": feet, "speed": moved, "onFloor": body.is_on_floor(), "gait": gait, "inside": [] if vehicle else inside()},
+		"player": {"pos": feet, "speed": moved, "onFloor": on_floor, "gait": gait, "inside": [] if vehicle else inside()},
 		"cam": {"inside": cam.inside(), "dist": cam.dist},
 		"heroScreen": 0.0 if vehicle else cam.on_screen(feet, model.bounds.end.y),
 		"interaction": {"target": "", "prompt": ""},
