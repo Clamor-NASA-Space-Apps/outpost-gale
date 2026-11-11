@@ -328,6 +328,7 @@
   }
  },
  "kit": {
+  "^terrain$": "dust",
   "metalDark": "metal",
   "metalRed": "hazard",
   "^metal$|_defaultMat": "body",

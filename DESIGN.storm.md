@@ -116,6 +116,7 @@ quality:
   medium: { msaa: 2, scale: 1, shadows: 2, shadowMap: 2048, glow: 0.4, detail: code }
   high: { msaa: 4, scale: 1, shadows: 2, shadowMap: 4096, glow: 0.5, detail: texture }
 kit:
+  "^terrain$": dust
   "metalDark": metal
   "metalRed": hazard
   "^metal$|_defaultMat": body
