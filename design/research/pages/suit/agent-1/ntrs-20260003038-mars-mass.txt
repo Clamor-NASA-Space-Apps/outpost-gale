@@ -1,0 +1,817 @@
+55th International Conference on Environmental Systems                                                            ICES-2026-127
+12-16 July 2026, Rio Grande, Puerto Rico
+
+
+
+
+                               Mars Spacesuit Mass Requirements
+                                               Ryan Ogilvie1, Ben Swartout2
+                                      NASA Johnson Space Center, Houston, Texas, 77058
+
+                                                     Bradley Hoffmann3
+                                                  KBR, Houston, Texas, 77058
+                                                              and
+                                              Shane McFarland4, Lauren Hickox5
+                                            Aegis Aerospace, Houston, Texas, 77058
+
+                     The gravity on Mars is 3/8th of Earth gravity. The latest exploration Extravehicular
+                 Mobility Unit (xEMU) designed for lunar exploration is just under 400 lbm. While it would
+                 be reasonable for a crewmember to operate the xEMU on Earth’s Moon with 1/6 gravity,
+                 related studies have demonstrated that this same suit would not be feasible to operate on the
+                 surface on Mars. Studies involving Martian offloading are limited and the few available have
+                 demonstrated difficulty in suit operation with current advanced suit prototypes. Furthermore,
+                 deconditioning due to a long-term journey to Mars is expected to affect the overall suit mass
+                 that a crewmember can operate. This initial study aims to provide an initial mass requirement
+                 to bound the Mars spacesuit design within a reasonable range. It is expected that detailed
+                 Mars-simulation testing will subsequently refine the estimate to support Martian mission
+                 timelines. Considerations such as crew deconditioning due to the long exposure to
+                 microgravity, pressure garment system (PGS) weight offloading, restricted mobility
+                 increasing metabolic rate, and human fitness and size are combined into an initial assessment.
+                 Based on preliminary considerations, 230 lbm is recommended as a starting maximum Mars
+                 suit mass, which will be split between the PGS and Portable Life Support System (PLSS)
+                 subsystems.
+
+                                                         Nomenclature
+        AIBEL = Anthropometry, Injury Biomechanics, and          MkIII = Mark-III Suit
+                Ergonomics Laboratory                            MxEMU = Mars Exploration Extravehicular Mobility
+        ARGOS = Active Response Gravity Offload System                   Unit
+        BTU   = British Thermal Units                            NBL   = Neutral Buoyancy Lab
+        CG    = Center of Gravity                                NIOSH = National Institute for Occupational Safety
+        DCU   = Display and Control Unit                                 and Health
+        DRM   = Design Reference Mission                         PLSS  = Portable Life Support System
+        EPG   = Environmental Protection Garment                 PGS   = Pressure Garment System
+        EMU   = Extravehicular Mobility Unit                     RER   = Respiratory Exchange Ratio
+        EVA   = Extravehicular Activity                          VO2   = Volumetric Oxygen
+        EVVA  = Extra Vehicular Visor Assembly                   VCO2  = Volumetric Carbon Dioxide
+        f     = Force                                            xPGS  = Exploration Pressure Garment System
+        HUT   = Hard Upper Torso                                 TRL   = Technology Readiness Level
+        ISS   = International Space Station                      xEMU  = Exploration Extravehicular Mobility Unit
+        JSC   = Johnson Space Center
+
+
+
+
+        1
+          Mars PLSS Project Lead, Space Suit and Crew survival Systems Branch, EC5
+        2
+          PLSS Development Engineer, Space Suit and Crew Survival Systems Branch, EC5
+        3
+          Senior Biomedical Engineer, EVA and Environmental Physiology Laboratory (EEPL), SK3
+        4
+          Pressure Garment Technology Development Lead, Space Suit and Crew Survival Systems Branch, EC5
+        5
+          Human Factors Design Engineer, Anthropometry, Injury Biomechanics, and Ergonomics Laboratory (AIBEL), SK3
+
+        Trade names and trademarks and company names are used in this report for identification only. Their usage does
+        not constitute an official endorsement, either expressed or implied, by the National Aeronautics and Space
+        Administration.
+                                                  I. Introduction
+    The Mars Exploration Extravehicular Mobility Unit (MxEMU) is currently being developed to operate on Mars,
+with gravity approximately 3/8th that of Earth and 2.3 times that of Earth’s Moon. Up to now, suit developments have
+not considered this increased gravity level, and recent designs have increased the mass of the suit to meet demanding
+requirements for fault tolerance, re-usability, and maintainability that do not consider mass a large driver. Going
+forward it is expected that a mass-centric design will be crucial to support a crewmember on Mars and requirements,
+design, and testing will need to consider mass at the forefront of the design. To achieve an acceptable mass, some
+existing requirements may need to be modified or addressed through alternate solutions.
+A. Historical Suit Numbers
+   Table 1 shows the breakdown of relative weight between the Pressure Garment System (PGS) and Portable Life
+Support System (PLSS) for the Apollo suit, the Extravehicular Mobility Unit (EMU) for shuttle and the International
+Space Station (ISS), the Russian Orlan suit, and Exploration EMU (xEMU) [1][2][5]. Historically, the average
+PLSS/PGS percentage is broken out with 60% PLSS and 40% PGS with only a +/– 5% maximum variation. Luna and
+Mars equivalents weights, 1/6th and 3/8th gravity respectively, are also shown for illustration below. Furthermore,
+assuming an average of 180 lbm (82kg) human, mass of the combined suit-human system is given to demonstrate
+overall mass on the surface of the respective celestial bodies.
+   It is important to note the latest xEMU suit has far exceeded previous suit design weights in part due to
+consideration of more regenerable elements and additional fault tolerance. If the xEMU suit was used on a Mars
+mission, the crewmember could be carrying more than their own Earth weight even with the reduced gravity of Mars.
+
+                                   Table 1. Suit Relative Weight Comparison
+                        Apollo, lbf (N)    EMU, lbf (N)       Orlan, lbf (N)    xEMU, lbf (N)       Avg., lbf (N)
+     Earth PGS*          60 (266) [1]       110 (489) [1]      88 (391) [2]        167 (742)          106 (472)
+     Earth PLSS          110 (489) [5]      141 (627) [5]      143 (636) [2]       209 (929)          150 (670)
+     Earth Total           170 (756)         251 (1116)         231 (1027)         376 (1672)         257 (1143)
+   Luna equivalent         28 (126)           41 (186)           38 (171)           62 (278)           42 (190)
+   Mars equivalent         63 (283)           94 (418)           86 (385)          141 (627)           96 (428)
+   Luna equivalent
+                           58 (259)           71 (319)           68 (304)           92 (412)           72 (323)
+    (with human)
+  Mars equivalent
+                         131 (583)          161 (718)        154 (685)           208 (927)          163 (728)
+   (with human)
+*PGS mass is variable and typically depends on anthropomorphic sizing factors, especially for modular suits such as
+EMU and xEMU.
+B. PLSS Mass Breakdown
+    Table 2 compares the Apollo, EMU, and xEMU masses broken out by the Oxygen Loop, Thermal Loop, Avionics,
+Batteries, and Packaging. Packaging includes structure, cover, Environmental Protection Garment (EPG), fasteners,
+tubing, manifolds, and harnesses. Apollo and EMU data were derived from more detailed tables and combined into
+similar systems [5]. The percentages reported in the table are percent of the component mass (not including
+packaging). From this table, we can see that electrical/avionics size has doubled and component masses across the
+board have increased from Apollo to xEMU. Packaging factors are included in this table, though discussed in detail
+in a later section.
+    The mass of the xEMU PLSS—not including the Display and Control Unit (DCU)—was indirectly measured and
+calculated to be approximately 209 lbm dry. This may vary slightly depending on configuration and the consumables
+on-board. The oxygen and water consumables add additional 16.3 lbm. The mass of the DCU that mounts on the front
+of the HUT is approximately 7.6 lbm.
+
+
+
+
+                                                         2
+                                International Conference on Environmental Systems
+                                       Table 2. PLSS Suit Mass Breakdown*
+                                      Apollo (lbm) [5]   EMU (lbm) [5]   xEMU (lbm)                 Average (lbm)
+   Oxygen Loop                          37.1 (58%)         33.6 (51%)     47.7 (46%)                 39.5 (51%)
+   Thermal Loop                          9.6 (15%)          6.5 (9%)      14.3 (13%)                 10.1 (13%)
+   Avionics                              6.7 (10%)          15 (23%)      21.6 (21%)                 14.5 (18%)
+   Power Supply                          9.5 (15%)          10 (15%)      19.2 (18%)                 12.9 (16%)
+   Components                               63.1              65.2          103.0                        77.1
+   Packaging                                47.3              75.8          105.7                        76.2
+   Total                                   110.3             141.0          208.7                       153.3
+   Packaging Factor                          1.7                  2.2                 2.0                 2.0
+   (Total / Components)
+   Volume Packaging Factor                   3.0                  2.0                 2.6                 2.5
+   * Percentage is a percent of the component mass, not counting packaging
+C. PGS Mass Breakdown
+    As shown in Table 1, there are significant mass differences between the pressure garments. One of the largest
+contributors is mobility design differences among the three suit systems.
+    The Apollo A7L and A7L/B suits served the function of not only lunar Extravehicular Activity (EVA) but also
+Earth launch and entry, including crew survival needs such as minimal mass and thermal burden when unpressurized
+for emergency egress. These functions, as well as the need to fit into the capsule, drove a PGS architecture that favored
+reduced mass and volume over pressurized mobility. This reduced mobility performance has often been noted in both
+crew reports and videos of EVA crewmembers during the Apollo missions.
+    The EMU suit was designed and optimized for microgravity EVAs outside of the Space Shuttle and the
+International Space Station. Upper torso mobility was required for translation and maintenance tasks while lower torso
+mobility was not needed. This resulted in an architecture with a heavier upper torso mass, but lighter Lower Torso
+Assembly (LTA) mass.
+    Conversely, in a surface EVA context, both upper torso mobility (for tool manipulation, sample collection,
+assembly and science tasks), as well as lower torso mobility (for walking, site placement, and kneeling) are required.
+These mobility needs are the primary driver behind the typically higher mass of surface exploration suits, and the
+reason why the exploration PGS (xPGS), the government reference design advanced planetary suit, is 57 lbm (26kg)
+higher than the EMU Space Suit Assembly (SSA), which is 51 lbm (23kg) higher than the Apollo Pressure Garment
+Assembly (PGA) before that.
+    The detailed breakdown of the xPGS suit masses is summarized in Table 3. Note also the mass of the hatch
+assembly—the rear entry architecture of the xPGS Hard Upper Torso (HUT)—makes donning easier and helps to
+mitigate dust intrusion into the suit through multiple EVAs. But there is a significant mass penalty seen on both the
+hatch, and the HUT hatch opening surrounding structure.
+                                        Table 3. xPGS Suit Mass Breakdown
+                                            Component                                  Mass (lbm)
+                    Waist brief hip (long)                                                36.0
+                    Hard Upper Torso Assembly                                             29.0
+                    Hatch Assembly (regular, dry)                                         29.0
+                    Environmental Protection Garment (all components)                     22.0
+                    Shoulders (small)                                                     11.5
+                    Boots                                                                  9.4
+                    Legs                                                                   7.3
+                    Liquid Cooling and Ventilation Garment (LCVG) (wet)                    6.5
+                    Helmet                                                                 6.3
+                    Arms                                                                   4.4
+                    Extra Vehicular Visor Assembly (EVVA)                                  4.0
+                    Gloves                                                                 4.3
+                    Total                                                                169.7
+
+
+                                                          3
+                                 International Conference on Environmental Systems
+                                          II. Existing Models and Studies
+A. Drivers for Maximum Mass on Mars
+    There are multiple factors that could limit the maximum suit mass on Mars. Expected primary factors include
+maximum extended metabolic rate for traverse, peak task exertion, and fall recovery. Each factor may depend on
+multiple variables, such as crew weight and fitness, tool mass, deconditioning, pressure offload, and injury risk. There
+has been limited previous work on Mars suit mass and while this study attempts to characterize mass limit impacts
+from these different perspectives, there is not enough data at this point to drive a fully conclusive limit. The intent is
+to provide an estimate for a maximum suit mass on Mars to help drive early designs and studies. MxEMU design work
+is expected to require a paradigm shift towards a mass-centric design driver whereas previous suit designs for
+microgravity and the Lunar surface have not emphasized mass to the same degree due to the lower gravity.
+B. Metabolic Profiles
+    A large driver for suit mass is the metabolic rate that the astronaut sustains during EVA. A higher gravity field
+will increase the metabolic rate cost to operate a suit with the same mass. Metabolic rates are limited by physiological
+factors, including individual size and fitness. To avoid exceeding these limitations on metabolic rates, the suit mass
+and other design factors influencing metabolic rates must be optimized for Mars.
+    For background, crew metabolic rates during the Apollo and Shuttle/ISS EMU Programs were just below 1,000
+BTU/hr (293 Watts) [7]. However, an increasing number of EVAs on ISS have been exceeding 1000 BTU/hr [7] and
+are shortened to less than 8 hours due to suit available consumables. Additionally, a diverse set of exploration activities
+for the Lunar surface are predicted to have higher metabolic rates, therefore the metabolic average rate for exploration
+suit sizing is currently at 1200 BTU/hr (352 Watts) [7]. It is expected that the average BTU/hr will be higher for Mars
+exploration due to the increased gravity, though characterizing this is future work and the Lunar value of 1200 BTU/hr
+is used as a starting point here.
+    Another factor is the peak metabolic rate that the person and/or suit system can withstand. The xEMU
+specifications require a short duration capability to manage a 3000 BTU/hr peak rate for 10 minutes for the max
+transient profile [7]. The ISS EVA profile has an average metabolic rate of 850 BTU/hr with a peak of 2000 BTU/hr
+built from Apollo, Skylab, and Shuttle missions [8]. Figure 1 shows two metabolic profiles for xEMU (1a) and the
+ISS EVA (1b) profile that are used to size and test the suit.
+
+
+
+
+          (a) xEMU Max Transient Metabolic Profile [7]     (b) ISS EVA Metabolic Load Profile [8]
+                                     Figure 1. Suited metabolic rates
+C. Task Exertion Testing
+    NASA has done extensive characterization of microgravity EVA workloads. Microgravity EVAs occur in two to
+three events lasting six to eight hours in the suit. These EVAs are generally separated by six to eight months.
+Workloads are expected to increase as NASA moves to more exploration surface EVA paradigms for Artemis lunar
+operations and longer duration Martian operations. There is limited experience in completing exploration EVA with
+Apollo missions being the last opportunity for lunar surface tasks. NASA has developed extensive analog test facilities
+including the Neutral Buoyancy Laboratory (NBL) and Active Response Gravity Offload System (ARGOS) that
+enable early characterization and development of advanced suits. Workload characterizations and task capabilities for
+Lunar operations have been completed to understand how surface operations will impact crew ability to perform while
+staying within consumable limits. Lunar surface EVAs are expected to increase in cadence (e.g., 24 hours of EVA in
+a week) and include more full body workloads—a drastic difference from microgravity EVA operations for ISS.
+Moving beyond lunar surface EVA, there is limited information on how the Martian gravity environment and Earth-
+independent operations will impact crew performance during EVA.
+
+                                                          4
+                                 International Conference on Environmental Systems
+    NASA has an ongoing study that has investigated the ability to perform tasks upon landing on the Martian surface
+[16]. As part of this study, crew returning from ISS missions don the xEMU PGS in the ARGOS test facility. ARGOS
+offloading is set to Martian gravity, and early work has been completed to drive understanding of offload settings and
+simulation quality. Crew are asked to perform EVA tasks including lander egress, traverse, and geology. Preliminary
+results have shown an increase in general workloads due to increased gravity equivalents, suit mass, and crew
+deconditioning. Crew workloads will be impacted by both deconditioning that occurs on transit to Mars and the mass
+of the suit. Along with mass, fitness and planned EVA tasks should be taken into consideration in the hardware
+development and capabilities.
+    Another NASA study has shown that metabolic costs for functional tasks, such as walking and object relocation,
+can vary significantly based on mobility of suit designs [25]. The Mark III (MKIII, 64 kg mass) and Rear Entry I-suit
+(REI, 43 kg mass) and Demonstrator (27 kg mass) suits were compared across 6 subjects with the Demonstrator having
+up to 60% higher metabolic costs even though it was the lightest suit. This finding underscores the importance of
+considering mobility, as well as mass, in optimizing suit design for Martian operations.
+D. 10-km Walkback Study
+    A previous study tested a 10-km walkback with Lunar offloading [9]; however, it
+did explore some test points with Mars offloading. Figure 3 was taken from the study
+and illustrates the metabolic rates from a suited test simulating (a) Mars and (b) the
+Moon compared to suited, unsuited, and unsuited weight-matched [9]. Unsuited
+weight-matched would have test subjects wear a simulated weight for the suit and
+gravity enviroment when walking on the treadmill. The results indicated feasibility
+concerns with the MKIII suit in Mars gravity as the combination of higher gravity load
+and suited constraints imposed a significant physiological burden. For a Mars offload,
+subjects approached near Volumetric Oxygen Maximum (VO2max) during brisk
+walking (<3.5mph) and small increases in walking speed resulted in significant
+increases in metabolic rate [9]. With the same suit in lunar offloading, it was shown
+that the suited crewmember can easily reach higher speeds. This study showed that the
+suit design will have to be changed or reduced in mass to better perform the walkbacks
+for Mars. The MKIII tested in this study had a mass of 265 lbm (120 kg) which is
+already significantly lower than the xEMU mass: 391 lbm (177 kg) [9]. Results
+                                                                                         Figure 2. 10-km study [9]
+demonstrated that the Mars suit mass will need to be lowered significantly below the
+MKIII suit based on this test.
+    The study team suggested additional assessments to determine the individual effects of factors such as inertial
+mass, center of gravity shifts, pressure-volume work, and kinematic constraints. This study’s authors also
+acknowledged their limited subject pool (six male astronauts) and suggested that future testing would benefit from an
+expanded subject pool that would include female subjects and subjects with a wider variety of anthropometry.
+    This test also illustrated some insightful differences between suited and unsuited weight-matched conditions,
+which could be used to help determine the metabolic cost required to operate the suit not including the weight of the
+suit.
+
+
+
+
+                  (a) Martian Offloading                                 (b) Lunar Offloading
+                 Figure 3. EVA walkback study metabolic rates (VO2max) vs. walking speed [9]
+
+
+                                                         5
+                                International Conference on Environmental Systems
+E. Fall Recovery Testing
+    The University of Maryland has investigated the effect of PLSS mass on Mars EVA task performance through a
+series of functional recovery tasks including kneel, prone, and supine recovery, as well as step/up down [18].
+Shirtsleeve testing was conducted in 1G and in an NBL with varying backpack weights representing Mars-equivalent
+PLSS masses (0 lbm/kg, 154 lbm (70 kg), and 220lbm (100 kg)). This preliminary evaluation suggested that current
+PLSS mass projections, at both 154 lbm (70 kg) and 220lbm (100 kg), may present substantial mobility challenges for
+Martian surface operations. Larger male subjects, representing the upper 20% of the crew size range, experienced
+significant difficulty with the 220lbm (100 kg) configuration, and even the 154 lbm (70 kg) configuration posed
+considerable challenges. These feasibility concerns may be amplified in more comprehensive testing that includes
+realistic suit weight, a pressurized PGS, center of gravity (CG) simulation, and a subject pool more representative of
+the potential crew population, as well as deconditioning and fatigue effects expected after long-duration microgravity
+transit and Mars EVAs.
+
+
+
+
+                                Figure 4. University of Maryland weight studies [18]
+
+    An earlier parabolic flight study compared the Apollo A7LB, Shuttle EMU, and MKIII suits simulated lunar and
+Martian gravity to assess full-body mobility characteristics [19]. Fall recovery from both prone and supine positions
+were significantly influenced by suit mass and mobility design, with Mars gravity presenting the greatest challenge.
+While the MKIII was the heaviest suit and required overcoming more inertia to regain an upright posture, its increased
+mobility compared to the two lighter suits enabled better fall recovery capability, including multiple recoveries within
+the first parabola. In contrast, the Apollo suit, with limited hip, waist, and shoulder mobility, required several parabolas
+to recover from prone position (reported as very difficult by the subject) and the Shuttle EMU suit, designed for
+microgravity, could not recover. Mobility features, such as joint bearings, waist rotation, and hard vs. soft components,
+had major implications on task feasibility, CG control, and stability. Increased mobility also reduced fatigue and
+shortened learning curves. Understanding the interaction between suit mass and mobility is critical for optimizing
+design and ensuring sufficient EVA task capability, particularly for those tasks that are safety critical. For instance,
+increasing suit mass to enable greater mobility can sometimes be a good trade, depending on the mission requirements
+and suit architecture.
+
+                          III. Aerobic Modeling of a Maximum Suit Mass for Mars
+A. VO2 as a modeling driver
+    Crewmembers go through extensive evaluations for spaceflight or testing, one of these being a VO2max test that
+measures the maximum oxygen uptake of the individual in ml/min/kg. It is a good measure of human fitness and can
+be used for comparing fitness levels across a variety of human body sizes and weights. VO2max can also help set
+thresholds for test termination criteria.
+    VO2max can also be reported in liters per minute (L/min). This can sometimes be more useful when designing
+hardware and comparing capability of the hardware to meet requirements. It is very important to understand the
+distinction and specify units, since they use the same term, but have different applications. In the following hardware
+discussions, VO2max (L/min) will be favored to compare hardware capability, and VO2max (ml/min/kg) will be used
+for discussing human fitness levels.
+    VO2max (ml/min/kg) across human weights can also be correlated to metabolic rate (in kcal/min) using the Perronet
+formula [21] in equation 1. To get metabolic rate in BTU/hr, equation 1 can be reformulated using a respiratory
+exchange ratio (RER) = 0.85. RER is 0.7 for low intensity activity, 0.85 for average activity, and close to 1.0 for high
+intensity activity [22]. It is assumed for VO2max, RER would be close to 1.
+
+
+                                                           6
+                                  International Conference on Environmental Systems
+          𝒌𝒄𝒂𝒍                  𝒌𝒄𝒂𝒍                𝑳                   𝒌𝒄𝒂𝒍                𝑳                    𝑩𝑻𝑼       𝑲𝒄𝒂𝒍
+𝑴𝒆𝒕𝑹𝒂𝒕𝒆(         ) = 𝟒. 𝟎𝟑𝟗 (          ) ∗ 𝑽𝑶𝟐 (         ) + 𝟏. 𝟏𝟓𝟕 (          ) ∗ 𝑽𝑪𝑶𝟐 (       ) [21] |   𝟐𝟑𝟖         =                      (1)
+           𝐦𝐢𝐧                   𝑳                 𝒎𝒊𝒏                   𝑳              𝐦𝐢𝐧                      𝒉𝒓        𝒎𝒊𝒏
+
+                                                                                                                              𝑳
+          𝑩𝑻𝑼                                                     𝒎𝒍                                                   𝑽𝑪𝑶𝟐 (   )
+𝑴𝒆𝒕𝑹𝒂𝒕𝒆(
+           𝒉𝒓
+                 ) = (𝟎. 𝟗𝟔𝟏 + (𝟎. 𝟐𝟕𝟓 ∗ 𝑹𝑬𝑹)) ∗ 𝑽𝑶𝟐 (
+                                                                 𝐦𝐢𝐧∗𝒌𝒈
+                                                                          ) ∗ 𝒎𝒂𝒔𝒔(𝒌𝒈) | Assuming: 𝑹𝑬𝑹 =                    𝐦𝐢𝐧
+                                                                                                                             𝑳      = 𝟎. 𝟖𝟓   (2)
+                                                                                                                       𝑽𝑶𝟐 ( )
+                                                                                                                            𝐦𝐢𝐧
+
+
+
+   Using the above formula, Table 4 shows the metabolic rate compared across different human masses and fitness
+levels.
+
+                                     Table 4. Metabolic Rate vs. VO2 (ml/min/kg) and Mass
+        BTU/HR (RER=.85)                                           VO2 (ml/kg/min)
+        Mass lbm (kg)                       10         15         20        25       30                                  35            40
+             120 (55)                      652       978       1304       1630     1955                                2281          2607
+             140 (64)                      760      1141       1521       1901     2281                                2662          3042
+             160 (73)                      869      1304       1738       2173     2607                                3042          3476
+             180 (82)                      978      1467       1955       2444     2933                                3422          3911
+             200 (91)                    1086       1630       2173       2716     3259                                3802          4345
+            220 (100)                    1195       1793       2390       2988     3585                                4183          4780
+
+    In many cases VO2max (ml/min/kg) is also set as minimum fitness level criteria for flight. Currently that is set at
+36 ml/min/kg for surface EVAs [10]. This may be increased to handle more demanding missions and environments
+like Mars.
+    As a tolerance limit for an 8-hour workday, VO2max is not expected to exceed 35% on average for untrained
+personnel, and 50% average for trained personnel on a bicycle/treadmill [12]. As a crewmember is expected to be
+trained, it is assumed that for missions they should be able to support a 50% average VO2max for 8 hours (if just
+considering walking). Capability is reduced by 20–40% for lifting /anaerobic exercises [12] leading to a limit of ~35%
+VO2max for lifting activities. As EVA is a mixed activity (split between aerobic and anaerobic activities), then the
+tolerance limit would be between 35% and 50% of VO2max or ~43% VO2max average. The VO2 must then be sized for
+the smallest crewmembers, which for exploration is a female with a 5th percentile weight and a 36ml/min/kg VO2max.
+Using equation 2 above with the RER of 1.0 for peak/anaerobic output, a mass of 108 lbm (49 kg) for a 5th percentile
+female, and a VO2max of 36ml/min/kg, this crewmember has an estimated metabolic rate of ~2200 BTU/hr. Using
+35%–50% of VO2max as noted above would result in a met rate range of 760–1100 (avg: 940) BTU/hr maximum over
+an 8-hour EVA. For other crewmembers, this range may be much greater, and the suit should be sized to handle the
+larger range. But the EVA profile should consider capabilities of the individual in the suit. This is reflected in the
+current suit sizing of 1000 BTU/hr for Shuttle/ISS and 1200 BTU/hr for exploration [7]. Designers of exploration and
+Mars suits may have to consider heightened requirements (weight and VO2max minimums) for crewmembers to handle
+higher metabolic rates.
+B. Considerations for Maximum Mass Based on Aerobic Limits
+   For overall mass of the suit, there are many considerations expected to drive the mass of the suit. For a model
+based on aerobic limits of the human, the main factors are:
+       1. Crew physical characteristics
+       2. Human weight carry limit as defined by NIOSH
+       3. Suit restricted mobility
+       4. Deconditioning over mission journey
+       5. Pressure offload of the suit
+       6. Additional tool/sample carry weight
+
+The following sections attempt to estimate mass factors for each of these considerations to combine them into an
+overall equation to predict an optimal suit mass.
+
+1. Crew Physical Characteristics
+   Current NASA standards related to crew physical characteristics [17] include a mass range of 94 to 243 lbm (1st
+percentile female to 99th percentile male). There is also a range of fitness levels reported as VO2 max (ml/min/kg).
+
+
+                                                                  7
+                                         International Conference on Environmental Systems
+Table 5 and Table 6 show a mass percentile and fitness level breakdown [17], [23]. The 30–39 age range is shown for
+average astronaut ages, though other age ranges should be considered
+
+                                      Table 5. Human Mass Percentile Chart
+    Mass Percentile          1%         5%        25%        50%         75%                    95%           99%
+     Male, lbm (kg)        120 (55)    138 (63)       164 (74)   181 (82)      199 (90)     225 (102)       243 (110)
+    Female, lbm (kg)       94 (43)     108 (49)       128 (58)   142 (65)      156 (71)      176 (80)       191 (87)
+
+                                        Table 6. VO2max Ranges (ml/min/kg)
+   VO2max                                    1%       5%       25%      50%               75%         95%      99%
+   Male age 30–39                                27        31        37        42         48          54        58
+   Female age 30–39                              23        26        31        35         40          47        52
+
+    While recent exploration suit designs have been working toward meeting 1st–99th percentile accommodation
+requirements, historically, both custom suit sizing (Apollo) and fleet sizing (EMU) based on a 5th–95th percentile
+range have been used [6]. It is expected that custom suit sizing will be considered for Mars and there may be limitations
+at the ends of the sizing spectrum for initial missions. Therefore, for this report, a 5th percentile female mass was
+considered as the limiting case, to represent the low-end range for crew mass without overly constraining the suit
+design at this early stage (see section C below).
+
+2. NIOSH carry limit
+    According to the National Institute for Occupational Safety and Health (NIOSH), the maximum weight a human
+can safely carry is 51 lbf under ideal conditions (e.g., infrequent, close to body, no twisting) [4]. This is for hand
+carried lifting which may not be directly analogous in all suit usage cases (e.g. combined PLSS mass vs carry mass),
+but is used as a starting factor that may be refined later.
+
+   NIOSH Max Carry Weight = 51 lbf (227 N)
+
+3. Suit Restricted Mobility
+    A design goal of the optimal pressurized space suit is to minimize impact on human (shirtsleeve) mobility and
+energy expenditure to the extent possible. While effective suit design, including bearings and other mobility elements,
+will attempt to minimize this as much as possible, the suit will inherently take extra work to operate. This provides a
+significant driver for a maximum mass model based on aerobic fitness that will affect the maximum suit mass a human
+can operate. In the 10-km walkback study [9], a comparison was made between a suited and unsuited subject carrying
+the equivalently weighted suit mass on Mars. VO2 (ml/min/kg) was measured for both cases and depending on
+walking speed, there was a difference of 10–18 ml/min/kg in VO2 between suited and unsuited conditions [9].
+Therefore, an average value increase of 14 VO2 (ml/min/kg) could be assumed to operate the suit on Mars. The mean
+subject VO2max (ml/min/kg) was 48ml/min/kg with little variation [9].
+    This metabolic rate increase with mobility restriction could be used as a type of knock down factor on the
+maximum weight a human can support assuming no extra loads. A formula to estimate the percent weight reduction
+is shown below.
+                                               𝒎𝒍
+                                          𝟏𝟒 (      )
+   𝑺𝒖𝒊𝒕 𝑹𝒆𝒔𝒕𝒓𝒊𝒄𝒕𝒆𝒅 𝑴𝒐𝒃𝒊𝒍𝒊𝒕𝒚 % = 𝟏 −          𝐦𝐢𝐧 𝒌𝒈
+                                                  𝒎𝒍                                                                 (3)
+                                        𝑽𝑶𝟐𝒎𝒂𝒙 (       )
+                                                 𝐦𝐢𝐧 𝒌𝒈
+
+
+
+For instance, an average human weight of 162 lbf combined with the NIOSH limit for carrying of 51 lbf (227 N)
+results in this human being able to support a total weight of 213 lbf. Assuming a 14 VO2 (ml/min/kg) additional cost
+of work for operating the suit and a fitness level of 48 VO2max (ml/min/kg), the suit restricted mobility factor would
+be 71%. This would reduce the maximum weight that the example human can support while continuously walking
+and working against the mobility restrictions of the suit to 151 lbf, including their own weight.
+
+
+
+
+                                                          8
+                                 International Conference on Environmental Systems
+4. Deconditioning
+    It is expected that crewmembers shall maintain an in-mission VO2max at or above 36.5ml/min/kg for surface EVAs
+[10]. VO2max deconditioning historically has been observed from 15%–25% [10], thus pre-mission VO2max would
+need to be from 43–49ml/min/kg to maintain 36.5ml/min/kg at the time of EVA. For a Mars mission, conservatively,
+the crewmember must have a pre-mission VO2max at the upper end of the range (49ml/min/kg). To account for
+deconditioning in the suit design model, a VO2max = 36.5ml/min/kg would be used as input. It would also be important
+to test the suit weight with either test subjects at a similar 36ml/min/kg level, or approximately 25% higher relative
+mass to ensure the same crewmembers can handle the weight after deconditioning.
+    Along with aerobic deconditioning, long duration spaceflight significantly reduces musculoskeletal capacity. Over
+3–6-month missions in microgravity, crew can experience up to a 30% loss in both muscle mass and lower limb
+strength [20]. This effect poses challenges for successful EVAs, including reduced suited task performance, increased
+fatigue, and elevated injury risk. Exercise countermeasures, including resistive devices, are required during long-
+duration missions to minimize muscle atrophy.
+
+5. Pressure Offload
+    The PGS can provide a variable amount of pressure offload from the pressurized legs supporting the weight of the
+suit and depending on the current task. A preliminary proof of concept test was conducted to evaluate this effect in
+the xPGS. Load cells installed in the shoulder straps measured the total amount of force applied to the shoulder from
+the weight of the suit. The PGS weight can be variable based on suit configuration and sizing, though in the pressure
+offload study the xPGS weighed an average of 180 lbf [11]. With an unpressurized suit, the strap force measured 161
+lbf on average [11]. Therefore, about 19 lbf of the suit weight is supported in other locations such as the arms.
+    There were multiple activities considered in the study: walking, standing, squatting, kneeling, and shrugging [11].
+However, to inform the maximum weight for the Mars suit, we concentrated on standing and walking, since those
+activities result in longer-term loading. For best fit in the suit, a nominal strap tension was determined during suit
+sizing. For a standing configuration with nominal strap tension, the strap force measured 79 lbf (351 N) [11]. For a
+walking task with nominal strap tension, the strap force measured 113 lbf (503 N) [11] average. The pressure offload
+would be the difference between the weight of the suit and the measured strap load. For standing, that would be 101
+lbf of offload and for walking that would be 67 lbf. Subtracting the 19 lbf supported elsewhere, that would be 82 lbf
+offload for standing and 48 lbf offload for walking. When walking the legs are no longer straight upright so they
+provide less pressure offload. As walking is a standard task that is expected to be a limiting factor for extended high
+metabolic loads and it is the more conservative case, the 48 lbf offload will be used as a standard offload factor. It is
+notable to consider that while this factor is not gravity dependent (same amount of offload force will be applicable to
+Mars or Earth), it is suit architecture dependent and will need to be refined for a Mars suit design.
+
+   Pressure Offload = 48 lbf (213 N)
+
+6. Tool/Sample Carry Mass
+    It is expected that the crew may need to carry tools and/or samples during EVA, which contribute to the maximum
+load a crewmember can support. NASA system compatibility standards EHP-10028 has a 149 lbm (67 kg) carry limit
+for Lunar operations. However, this would likely be too much mass to pick up on Mars so 50 lbm was used as an
+initial estimate for carry mass. This number may be updated once more information is known on Mars mission
+requirements and based on the final suit mass.
+
+   Carrymass = 50 lbm (23kg)
+C. Modeling a Max Suit Carry Mass on Mars
+   The above weight factors can now be used as inputs into equations for estimating maximum suit mass.
+
+1. Equations and Assumptions
+The system mass is a combination of suit mass, crew mass, and carry mass.
+
+𝑺𝒚𝒔𝒕𝒆𝒎𝒎𝒂𝒔𝒔 = (𝑺𝒖𝒊𝒕𝒎𝒂𝒔𝒔 + 𝑪𝒓𝒆𝒘𝒎𝒂𝒔𝒔 + 𝑪𝒂𝒓𝒓𝒚𝒎𝒂𝒔𝒔 )                                                                    (4)
+
+The crew perceived force on Mars is a combination of the total system mass multiplied by the gravity field minus the
+pressure offload force provided by the pressurized suit. The pressure offload force is the reduction in force they will
+feel on their shoulders when pressurized and walking. The pressure offload force is not affected by the gravity field.
+
+                                                          9
+                                 International Conference on Environmental Systems
+                                                                                                         𝒎       𝒇𝒕
+𝑪𝒓𝒆𝒘 𝑷𝒆𝒓𝒄𝒊𝒆𝒗𝒆𝒅 𝑴𝒂𝒓𝒔𝒇𝒐𝒓𝒄𝒆 (𝒇) = 𝑺𝒚𝒔𝒕𝒆𝒎𝒎𝒂𝒔𝒔 ∗ 𝑨𝒄𝒄𝒆𝒍.𝑴𝒂𝒓𝒔 − 𝑷𝒓𝒆𝒔𝒔𝒖𝒓𝒆 𝑶𝒇𝒇𝒍𝒐𝒂𝒅𝒇 | 𝑨𝒄𝒄𝒆𝒍.𝑴𝒂𝒓𝒔 = 𝟑. 𝟕𝟑 𝟐 , 𝟏𝟐. 𝟐 𝟐 (5)
+                                                                                                         𝒔       𝒔
+
+
+The crew capability represents the amount of downward force the crew can handle in any gravity field. The capability
+is calculated based on earth down force values. Crew capability is a combination of the crewmember’s own
+weight/force on Earth, and the NIOSH carry limit (51 lbf (227 N)) on Earth, factoring in the mobility restriction due
+to the pressurized nature and bearing friction of the suit.
+
+𝑪𝒓𝒆𝒘 𝑪𝒂𝒑𝒂𝒃𝒊𝒍𝒊𝒕𝒚𝒇 = (𝑪𝒓𝒆𝒘𝒇,𝒆𝒂𝒓𝒕𝒉 + 𝑵𝑰𝑶𝑺𝑯𝒇,𝒆𝒂𝒓𝒕𝒉 ) ∗ 𝑹𝒆𝒔𝒕𝒓𝒊𝒄𝒕𝒆𝒅 𝑴𝒐𝒃𝒊𝒍𝒊𝒕𝒚%                                          (6)
+
+The crew perceived force on Mars must not exceed the crew capability force. Therefore, the maximum mass of the
+suit for Mars is determined by setting the crew capability force equal to the crew perceived Mars force.
+                  (𝑪𝒓𝒆𝒘𝒇 +𝑵𝑰𝑶𝑺𝑯𝒇)∗𝑹𝒆𝒔𝒕𝒓𝒊𝒄𝒕𝒆𝒅 𝑴𝒐𝒃𝒊𝒍𝒊𝒕𝒚% +𝑷𝒓𝒆𝒔𝒔𝒖𝒓𝒆 𝑶𝒇𝒇𝒍𝒐𝒂𝒅𝒍𝒃𝒇
+𝑴𝒂𝒙 𝑺𝒖𝒊𝒕𝒎𝒂𝒔𝒔 = (                                                              ) − 𝑪𝒓𝒆𝒘𝒎𝒂𝒔𝒔 − 𝑪𝒂𝒓𝒓𝒚𝒎𝒂𝒔𝒔           (7)
+                                         𝑨𝒄𝒄𝒆𝒍.𝑴𝒂𝒓𝒔
+
+
+2. Initial Estimates
+    Figure 5 takes the above equation and varies the factors for crewmember weight and fitness to demonstrate how
+the maximum suit mass varies based on the individual’s weight and fitness level. It is important to note that this
+graphic adopts many assumptions from the previous equations and is intended to be a preliminary model that will be
+refined with focused testing.
+
+
+
+
+      Figure 5. Max Suit Mass vs Crewmember Earth Weight (lbm) and Fitness (VO2 Max, mL/min/kg)
+
+   To size the suit, it is important to bound the equation to the potential end ranges for crewmember mass and fitness.
+For this initial suit mass estimate, a 5th percentile female mass of 108 lbm (49 kg) was considered as discussed
+previously. Using this crew mass and the 36 ml/min/kg VO2 Max requirement results in a total suit mass of 229 lbm
+(104kg).
+
+3. Walking Speed
+    On Earth, a person’s average walking speed is 5.0 kph (3.1 mph) [13]. In general, crew walked at much lower
+speeds during Apollo EVAs. It was assumed that for a walkback from a failed rover, the crew could walk at 3.6 kph
+(2.2 mph) for 1 hour or 2.7 kph (1.7 mph) for greater than 1 hour [14]. For Apollo 15, the crew walked between 1.1
+
+                                                          10
+                                  International Conference on Environmental Systems
+and 1.6 kph (0.7–1 mph) during the first EVA, then improved to 1.6–2.2 kph (1–1.4 mph) during the second EVA
+most likely due to not walking any significant distances, operating mostly around the lunar module or at geology stops
+[14].
+    Walking back after a failure/terminate case is typically considered a limiting factor for safe distances a
+crewmember can travel from the craft. For a walkback on Mars, either 30 minute or 1-hour walkback are being
+considered. Assuming the same 2.2 mph walking speed from Apollo, this would be 1.1 miles (1.8 km) or 2.2 miles
+(3.5 km) respectively. The overall walkback duration will be dependent on hardware capabilities and mission
+priorities. Although, without additional backup/ambulatory systems, it is expected that the maximum distance away
+from the craft will not exceed a 1-hour walkback or 2.2 mile (3.5 km), assuming sizing in the suit allows for a walkback
+that long.
+    Data from the walkback study [9] can be extrapolated to predict the expected BTU/hr. For a 2.2 mph walking
+speed, the VO2 consumption rate was approximately 19 ml/min/kg [9]. Therefore, an average crewmember (162 lbm)
+with a RER of 0.85 would have a metabolic rate of approximately 1700 BTU/hr while a larger male crewmember
+(95th percentile mass of 225 lbm) would have a higher metabolic rate of approximately 2300 BTU/hr. While this does
+exceed the assumed average 1200 BTU/hr, traverse is considered to require a higher metabolic rate than many other
+EVA tasks and when combined with periods of rest and lower effort tasks, the average metabolic rate may even out
+the near the 1200 BTU/hr. However, the larger crewmember metabolic rates may help to illustrate an upper limit for
+the metabolic rate that the suit may need to handle for short periods of time.
+    Assuming the VO2max at the time of EVA is maintained at 36ml/min/kg, and maximum exertion is limited to 50%
+VO2max (18 ml/min/kg) for a walkback at 2.2 mph, then the VO2 max = 19 ml/min/kg estimated as part of the walkback
+study at 2.2mph would be close to the limit for sustained capability. Therefore, a suit of slightly less mass (~250 lbm
+(114 kg)) than the 265 lbm (120 kg) suit tested as part of the walkback study could be tenable. Although, the walkback
+speed of 2.2mph is an assumption that will need to be verified. This matches closely to the model estimated in the
+previous section. However, the suit mass will need to be significantly lowered if there is a desire to operate at higher
+speeds or run for extended periods.
+
+                                          IV. Suit Mass Budget Strategy
+A. Physiology Requirements Development and Testing
+    To establish a suit mass budget, it is essential to define the main physiological requirements that directly relate to
+suit mass. These requirements include factors influencing both metabolic rate and overall suit mass:
+     • Metabolic rate profiles and peak sustained rate
+     • Suit architecture and mobility
+     • Crewmember size, strength, and fitness
+     • Functional task capability (e.g., fall recovery, traverse)
+     • Nominal and off-nominal suit pressures
+     • Traverse speed and distance
+     • Exercise countermeasures
+
+    Destination and mission parameters (expected mission number of EVAs and expected EVA duration) will also
+drive physiological requirements and overall suit design.
+    A combination of suited testing and computational simulations will be conducted to characterize the primary
+drivers of suit mass and their relationship to mission parameters. Initial efforts will focus on evaluating the simulation
+quality of varying PLSS mass conditions in NASA’s ARGOS environment under Mars gravity offloading. This test
+will provide baseline data on mass-dependent settings to inform subsequent studies.
+    As part of the workload characterization effort, task capability and metabolic energy during extended simulated
+EVA tasks at Martian offloading will feed suit and physiology requirements. Data collection will include gait and task
+kinematics, metabolic rate, heart rate, workload, and subjective workload ratings. This dataset will be used to update
+an effort of Martian physiology capabilities through the development of a Crew State and Risk Model (CSRM) to aid
+in correlations for Mars and predict metabolic rates across EVAs on the Martian surface. Data from this effort will
+continue to aid in MxEMU suited requirements by generating crew physiology modeling states based on EVA
+workload. Continually, as part of this development the Mars based traverse workload and fatigue states will help to
+inform suit mass limit.
+    A parametric study will also be planned to evaluate the impact of varying suit mass on metabolic rate, task exertion,
+and task performance. Functional performance testing will assess capabilities such as fall recovery, reach, balance,
+object relocation, and ground access across multiple suit mass configurations. These tests will directly inform the
+                                                         11
+                                 International Conference on Environmental Systems
+MxEMU mass limit and provide input data for modeling efforts. An effort will be made to select subjects covering a
+wider range of potential crew anthropometry than previous studies, including ensuring that females are represented.
+    Modeling and simulation tools will be leveraged to provide estimates for mass factors that are difficult to test or
+where we are currently lacking sufficient data, such as suited fall injury risk. Potential increased likelihood of adverse
+fall outcomes on Mars due to higher impact forces and accelerated fall dynamics related to suit mass and CG location
+will be addressed.
+    As Mars concept of operations evolve and new data are gathered from lunar and low-Earth orbit missions,
+physiological requirements will need iterative refinement. For example, some expected refinement will be based on
+additional data on anthropometric and physiological changes during/after exposure to microgravity and partial gravity
+environments.
+    Initial testing to inform Mars requirement and suit design development will likely be performed using existing
+xEMU suits with architecture that may or may not reflect future MxEMU architecture. Once an MxEMU prototype is
+available, testing will need to be repeated to validate prior findings and suitability of the design, including evaluation
+of suit mass and architecture changes on mobility and workload.
+B. Packaging Factors
+     An important factor in predicting future suit mass and volume is the packaging factor of the suit. The packaging
+factor is the ratio of total system mass/volume to combined component mass/volume. While the component mass and
+volume are considered in architecture studies for the overall system, the PLSS itself must also provide structure,
+electrical, and plumbing to keep the system together and functional. The packaging factors for the Apollo, EMU, and
+xEMU suits are shown above in Table 2.
+     Between the Apollo and EMU PLSS, it can be surmised that there is a tradeoff between volume and mass. In Table
+2 for suits with higher mass packaging factors there is a lower volume factor and vice versa. For a small volume suit,
+mass will increase, or for a lower mass suit, volume will increase. It is postulated that a larger volume provides more
+flexibility on structural design allowing for more efficient mass savings, if the volume is not restricted. There are also
+external architecture requirements that drive favoring volume or mass for packaging. For instance, the airlock hatch
+size on the ISS defines the maximum depth of the EMU PLSS which would decrease volume and increase complexity
+and mass.
+     Apollo used Aluminum subcomponents (sheet metal and wetted Aluminum loops), since long term corrosion was
+not a concern [5]. On the other hand, suit mass was less of a concern when designing the EMU. It was intended for
+long term, multiple uses in zero-G but was constrained by a requirement to fit between inter deck hatchways, limiting
+its volume. Therefore, many of its systems are designed with stainless steel parts and dense packaging, which require
+more support structure that drives up mass [5]. It is evident that the different design philosophies and requirements
+for each system have guided their packaging factors.
+     For Mars, it is expected that lower mass will be a priority. Therefore, requirements and the design philosophy will
+need to be carefully selected to prioritize mass reduction and keep the mass packaging factor low. Following some of
+the design philosophy from Apollo suits where it can apply may help with mass. To start with, allowing for a larger
+volume on the Mars PLSS may be key to lowering the mass packaging factor. A Mars PLSS may also consider using
+components as structure like Apollo did. Additionally, investments in lighter mass systems and advanced materials
+such as thermoplastics may be required as aluminum cannot be considered for wetted locations due to the long-term
+journey to Mars.
+     A Mars Architecture study was recently completed [15]. While the xEMU has a packaging factor of 2.0 and was
+used to estimate suit mass for the Mars EMU, lower packaging factors like Apollo at 1.7 may be considered to re-
+model the mass estimates from the study to be able to meet overall weight budgets. Although, those packaging factors
+must ensure that mass is a driving factor in the design to assume certain models of schematics meet allocations.
+C. PLSS/PGS Mass Allocation
+   To start with mass budget, the mass of the overall suit can be broken down into PLSS mass and PGS mass. Based
+on historical data from Table 1, the 60% PLSS and 40% PGS mass breakdown is used as a starting estimate. The PGS
+mass has been increasing in recent years to improve mobility, so the PGS may consider a higher mass allocation that
+may be adjusted during design evolution. For the 60% PLSS, 40% PGS split, a 229lbs (104kg) suit as estimated above,
+would have the PLSS mass to be 137 lbm (62 kg) and PGS to be 92 lbm (42 kg).
+D. PLSS Mass Budget and Trades
+       For a 137 lbm (62 kg) initial mass allocation for the PLSS, an initial/simple approach that prioritizes mass
+would take the historical percentage breakdown and apply the Apollo packaging factor of 1.7. Table 7 shows a
+potential mass allocation breakdown to provide a starting estimate with the design based on percentages from Table
+
+                                                         12
+                                 International Conference on Environmental Systems
+2. It should be noted that this is just an initial breakdown to help bound the design, and the exact breakdown is expected
+to change as the project evolves.
+                                       Table 7. Mars PLSS Initial Mass Breakdown
+                                                     Average Percent      Mars PLSS lbm (kg)
+                             Oxygen Supply                51%                   41.1 (18.6)
+                              Thermal Loop                13%                    10.4 (4.7)
+                                 Avionics                 18%                    14.5 (6.5)
+                              Power Supply                16%                    12.8 (5.8)
+                                Packaging                   -                   56.4 (25.6)
+                               Components                   -                   80.5 (36.6)
+                                    Total                   -                   137 (62.2)
+                            Packaging Factor                -                       1.7
+
+    In conjunction, a study is being conducted to compare all different configurations of components and stack the
+options by mass [15]. This study is intended to determine both the max EVA duration the suit can meet and the overall
+mass. From this study, a preliminary plan for designing a Mars PLSS has been started [24]. For instance, Lithium
+Hydroxide (LiOH) may be traded in to favor a lightweight CO2 removal solution, but LiOH is not regenerable like the
+Rapid Cycle Amine (RCA) swing bed or Metal Oxide (MetOx) Canisters [24]. Also, reducing modularity to favor
+mass, such as integrating structure into the components or combining the backplate and hatch for the HUT, could help
+improve the packaging factor [24],[5]. Lastly, advanced materials are considered to lower the mass of individual
+components and thus overall PLSS mass by ~15% [3]. The next step will be to conduct performance assessments to
+further refine the estimates, which will inform the design. Furthermore, a review and adaptation of xEMU
+requirements to MxEMU requirements that accommodate a mass-centric design could help with both packaging and
+individual component/system mass. Adaptions may include items such as reduced EVA duration, single fault
+tolerance, and reduced terminate time [24],[15]. Additionally, communication delay with Mars may change or reduce
+requirements for PLSS informatics systems.
+    If physical design constraints do not support other mission requirements (e.g., required EVA duration), more novel
+approaches may be considered, such as a consumables cache or an umbilical with a follower robot for the life support
+system [18].
+    Lastly, of note, the PLSS recommended mass of 137 lbm (62 kg) is lower than the 154 lbm (70 kg) tested in the
+University of Maryland fall recovery study. Even though that study did not include PGS mass and other considerations,
+the subjects had difficulties performing the fall recovery task while wearing the 154 lbm (70 kg) PLSS, and they had
+significant difficulties while wearing the 220lbm (100 kg) PLSS [18]. Future verification will be required to ensure
+this PLSS mass combined with the PGS is acceptable.
+E. PGS Mass Budget and Trades
+    From a pressure garment perspective, one of the largest architectural challenges for Mars is the fact that sufficient
+mobility is required to conduct Mars surface EVAs. But unlike lunar surface EVAs, the mass penalty associated with
+superior mobility (as seen in the xPGS architecture, a high mobility but heavy PGS) is incurred, resulting in diminished
+subject strength and increased fatigue. On the Moon, the xPGS weighs 28 lbf, but on Mars, the same suit would weigh
+63 lbf. While the crew may not feel this full 63 lbf due to pressure offloading and other factors, it is still likely
+untenable. Advanced development of low-mass structural and bearing components are in work at NASA, but the xPGS
+already demonstrated significant mass savings by changing from the EMU’s stainless-steel bearings to Titanium, and
+to fabricating a composite HUT structure. Continued development of low-mass alternatives may reduce some
+individual component masses by up to 30%, but others are unlikely to change or may increase due to more challenging
+surface impact resistance requirements for Mars.
+    Therefore, regardless of what a Mars PGS mass target becomes for NASA, it is very likely that a significant
+architectural change from the xPGS is required–one that eschews a rear entry design for a lighter waist entry design,
+and simplification of the mobility system (for example, soft shoulders instead of rolling convolute; elimination of
+ankle bearings, etc.).
+    As such, a reduced mass PGS for Mars may see notable mass savings in components like the HUT, shoulder,
+hatch, and waist brief hip, as they may benefit from both advanced material developments and mobility compromises.
+Conversely, components like arms, legs and EPG will likely see minimal mass savings, because they are made from
+soft materials, which are already low density and cannot be reduced in surface area. Other components like the helmet,
+EVVA, gloves and boots may see modest mass reductions through design optimization.
+
+                                                         13
+                                 International Conference on Environmental Systems
+    Additionally, one aspect that must be considered for potential mass reduction in a Mars suit is cycle life. Designing
+the PGS for maximum life, either in a Sustaining Lunar or long-duration Mars Design Reference Mission (DRM)
+context, typically requires additional mass for environmental durability and ease of maintenance. However, if a suit
+were to be designed to support only a limited number of EVAs (for example, a 30-day Mars surface DRM), this will
+allow for mass reductions due to simplification of interfaces, design for maintenance, and environmental durability.
+    Lastly, while the EMU and xEMU were designed for maximum sizing using adjustable axial restraint brackets and
+sizing rings, these sizing features significantly add to the overall mass. A custom-sized suit for each crewmember
+would likely result in significant mass savings, and overall improved mobility and comfort. While this has not been
+done since Apollo, it appears that a custom-sized EVA architecture may be considered for a Mars mission, allowing
+for significant improvements in PGS system mass and performance.
+    Going forward, it will be important to coordinate these assumptions and decisions to ensure that any Mars PGS
+undergoing development aligns with expected mission architectures, reference missions, and requirements.
+
+                                                    V. Conclusion
+    Previous suit designs of xEMU, while sufficient for lunar EVAs, have far exceeded the mass budget for a Mars
+suit. The current xEMU mass is 391 lbm (177kg). An initial estimate for a Mars suit mass would suggest limit of 229
+lbm (104 kg), 56% of the current xEMU mass. This assumes a 5th female crewmember, 36mL/min/kg VO2 max fitness
+level, restricted mobility due to pressurized suit, pressure offload, a 51 lbm NIOSH carry limit, and 50 lbm reserved
+for carrying tools/samples/equipment. This estimate will require substantial testing efforts using the ARGOS test
+facility to verify that the estimates and breakdowns are correct and the most efficient. Regardless, the difference is
+large enough that even after refining the mass, significant redesign and mass savings efforts will need to be
+implemented to build a suit for Mars.
+    A Mars suit will need to be designed with a mass-centered mindset to operate efficiently. Consistent long-term
+direction and resources will be key to meeting this goal. Based on historical data, the preliminary estimate for a
+maximum Mars suit mass will be broken into 60% PLSS mass (137 lbm (62 kg)) and 40% PGS mass (92 lbm (42
+kg)). Suit designers may use multiple methods to lower mass. It is expected that they will lean on the principles that
+kept the Apollo suit mass low, while using advanced technologies and materials available today to lower mass but
+maintain full capability. Furthermore, the selected crew will need to be in excellent physical condition. Appropriate
+exercise countermeasures for the crew will need to be implemented during/after transit to mitigate deconditioning
+effects and help them maintain a minimum VO2max (36 ml/min/kg) for EVAs.
+
+                                                     References
+[1] Brown, M., and S. Schentrup, “Requirements for Extravehicular Activities on the Lunar and Martian Surfaces,”
+     NASA Johnson Space Center, Intersociety Conference on Environmental Systems, 901427, July 1990.
+[2] Larson, W., and L. Pranke, “Human Spaceflight Mission Analysis and Design,” 1999.
+[3] Ogilvie, R., S. Miller, and R. Hetherington, “Advanced Material Options for the Portable Life Support System,”
+     NASA JSC, International Conference on Environmental Systems, ICES-2024-127, July 2024.
+[4] NIOSH. “Applications Manual for the Revised NIOSH Lifting Equation. By Waters TR, Ph.D., V. Putz–
+     Anderson, Ph.D., A. Garg, Ph.D. Cincinnati, OH: U.S. Department of Health and Human Services, Centers for
+     Disease Control and Prevention, National Institute for Occupational Safety and Health, DHHS (NIOSH)
+     Publication No. 94-110, 1994 (Revised 2021)
+[5] Gretchen, T. “Packaging Factors for Portable Life Support Subsystems Based on Apollo and Shuttle Systems”.
+     NASA Johnson Space Center, International Conference on Environmental Systems, 932182, July 1993.
+[6] Benson, E. and S. Rajulu, “Complexity of Sizing for Space Suit Applications,” MEI Technologies, NASA
+     Johnson Space Center, 2009.
+[7] Campbell, C., “Subsystem Specification for the Exploration EMU Portable Life Support Subsystem,” NASA
+     CTSD-ADV-780 Rev B. 2020.
+[8] Kalnenieks, P., and D. Hassmann, “EMU Requirements Evolution”, NASA Johnson Space Center, Rev. C,
+     February 2017.
+[9] Norcross J., et. al., “Feasibility of Performing a Suited 10-km Ambulation on the Moon — Final Report of the
+     EVA Walkback Test (EWT),” NASA/TP-2009-214796, October 2009.
+[10] “NASA SPACEFLIGHT HUMAN-SYSTEM STANDARD, VOLUME 1: CREW HEALTH”, NASA-STD-
+     3001, Volume 1, Revision V, National Aeronautics and Space Administration, 2023-09-15.
+
+                                                         14
+                                 International Conference on Environmental Systems
+[11] Davis, K., D. Ngyuen, Z. Siddiqui, Z. Tejral, and S. Stockfleth, “Measuring xEMU Loads Through Shoulder
+     Straps”, NASA Johnson Space Center, International Conference on Environmental Systems, ICES-2024-158,
+     July 2024.
+[12] Jørgensen, K., “Permissible Loads Based on Energy Expenditure Measurements,” August Krogh Institute,
+     University of Copenhagen, Denmark, Ergonomics, 1985, Vol. 28 No. 1 365-369.
+[13] Bohannon, R., and A. Andrews, “Normal walking speed: a descriptive meta-analysis”, Physiotherapy 97 (2011)
+     182–189.
+[14] Jones, E., “Lunar Gaits” Apollo 11 Lunar Surface Journal, Nov 2010.
+[15] Oliver, M., et. al., “Martian Exploration Portable Life Support System Schematic Study: Architecture Down-
+     Selection” ICES-2026-158, NASA Johnson Space Center, International Conference on Environmental Systems,
+     July 2026
+[16] Norcross, J., T. Schlotman, L. Cox, B. Peters, R. Rhodes, N. Strock, ... and K. Marshall-Goebel, CIPHER:
+     Egress Fitness. In Human Research Program Investigators’ Workshop (HRP IWS), (2025)
+[17] “NASA Spaceflight Human-System Standard, Volume 2: Human Factors, Habitability, and Environmental
+     Health”, NASA-STD-3001, Volume 2, Revision E, National Aeronautics and Space Administration, 2025-05-
+     01.
+[18] Mahon, R., et. al., “Optimizing Portable Life Support System Sizing Given Crew Capabilities and In-Situ
+     Recharging” ICES-2025-539, International Conference on Environmental Systems, July 2025.
+[19] Kosmo, J., and A. Ross, “Space Suit Mobility Evaluations in Lunar/Mars Gravity Environments,” SAE
+     Technical Paper 981627, 1998, https://doi.org/10.4271/981627.
+[20] Williams, D., et al., “Acclimation During Space Flight: Effects on Human Physiology,” Canadian Medical
+     Association Journal, 2009, 180 (13), p. 1317-1323, doi: 10.1503/cmaj.090628
+[21] Péronnet, F., and D. Massicotte, Table of nonprotein respiratory quotient: an update. Can J Sport Sci, 1991.
+     16(1): p. 23–29.
+[22] Leonard, W. R., Measuring Human energy expenditure and metabolic function: Basic principles and methods.
+     Journal of Anthropological Sciences, 2010. 88: p. 221–230.
+[23] “Age and Gender Norms,” Cooper Institute.
+[24] Ogilvie, R., C. Chullen, L. Barrett, M. Oliver, and B. Conger, “Mars Portable Life Support System Status and
+     Plan”, NASA Johnson Space Center, ICES, ICES-2026-126, 2026.
+[25] Norcross, J., S. McFarland, and R. Ploutz-Snyder, “Metabolic Assessment of Suited Mobility Using Functional
+     Tasks”, in ACSM Annual Scientific Meeting, Boston, MA, 2016.
+
+
+
+
+                                                       15
+                               International Conference on Environmental Systems
+

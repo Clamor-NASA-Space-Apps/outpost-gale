@@ -1,0 +1,1376 @@
+                                                                             CHAPTER                        6
+                                               EXTRAVEHICULAR                                        MOBILITY                        UNIT
+
+                                                                                             by
+
+                                                                          Maurice            A. Carson
+                                                                          Michael            N. Rouen
+                                                                              Charles C. Lutz
+                                                                     James W. McBarron,                            II
+
+                                                           Lyndon            B. Johnson                 Space Center
+
+
+
+                                                                              Introduction
+
+        The            Apollo       extravehicular                mobility          unit          was     designed              to meet        a unique            set of needs.
+To      assure            the     maximum               return      of scientific                 information                 from      the      moon,         a method               was
+required                for collecting            samples,          deploying/retrieving                         instruments,                 and     performing               cxpcri-
+ments             on     the     lunar        surface      and      in free space.                Man       had to be able to operate                              safely      in free
+space             to     provide         an     emergency                mode          of      translation               from         the     l,unar         Module            to     the
+Command                   Module         in the         event      a complete                linkup           could           not    be accomplished                   after        lunar
+lift-off.              Since     the     weight          required         to provide               redundant                  pressure        vessels        for each           space-
+craft       would          have        been      prohibitive,            a space        suit was            required.
+        The            extravehicular             mobili_            unit        (EMU)             design         reflected            these        needs.         Figure        1 is a
+cutaway                 representation             of the EMU.                The       unit      consisted             of a highly            mobile,         anthropomor-
+phic pressure                   vessel    and a portable                 life support              system          (PI,SS).           The pressure             vessel,         known
+as the            pressure          garment             assembly          (PGA),            when         operatcd              in conjunction                 with      the      Com-
+mand           Module             and     Lunar          Module           life    support               systems,          provided             pressurization                  backup
+during            critical        mission         phases,         including            launch           and      return.            It provided          primary            pressur-
+ization            for     the     extravehicular                activity        conducted                from          the     Command              Module            during         the
+...............
+m;_;                     _ ,_po!!o        15,     _,_,, ,,u
+                                                         --J       ,,.
+                                                                    "_      _x,,,vctac_
+                                                                               ................ of       four      to seven           Hours         (luratlon        were made
+with       the PLSS               on the lunar            surface         to perform               the lunar             science        tasks.
+        A description                    of     the      EMU         used        for        the     first       lunar         landing         is given         here.        A short
+description                is included             of     the     changes           made           in the         EMU           design        during         the     program           to
+incorporate                the     results       of experience               and to provide                   new        capabilities.
+
+
+The EMU was supplied by three different concerns. The pressure garment assembly was supplied by
+ILC Industries, Incorporated,   and the portable life support system by the Hamilton Standard Division
+of United Aircraft Corporation.   Both were under the monitorship    of the Crew Systems Division of the
+Engineering and Development      Directorate of the Johnson Space Center. The communications    equip-
+ment was supplied by RC A under the monitorship      of the Tracking and Communications  Development
+Division, also of the Engineering and Development Directorate.
+
+
+                                                                                            545
+
+
+
+
+                                    _F.,CEDING                           PAGE               BLANK                  NOT               FILMED
+546                                                       Biomedical        Results       of Apollo
+
+
+
+
+                                                                                                       LUNAR        EXTRAVEHICULAR
+           OXYGENPURGE                                                                                         VISOR      ASSEMBLY
+               SYSTEM
+
+
+                                                                                                          REMOTE          CONTROL     UNIT
+
+
+
+
+                                                                                              _r._TH    ERMAL       MICROMETEOROID
+                                                                                                                  GARMENT
+
+
+                      ELECTRICAL                                                                  _              PRESSURE        GARMENT
+                       UMBILICAL                                                                                          ASSEMBLY
+
+
+
+           GAS      UMBILICAL
+
+
+
+            PORTABLE            LIFE
+
+           SUPPORT        SYSTEM                                                                  I
+
+           LIQUID       COOLING          GARMENT
+                                                                                                  \       LUNAR        GLOVE
+           BLADDER         (GAS        RETENTION)
+
+
+
+
+                                                                                  "_'._                URINE       COLLECTION
+
+           RESTRAINT            LAYER
+
+
+
+
+                                Figure       1.     Cutaway   of   Apollo     extravehicular           mobility        unit.
+
+
+
+
+                      Apollo             11 Pressure           Garment            Assembly               Configuration
+
+      Two configurations        of the PGA were worn on the Apollo I1 mission.         The
+ intravehicular  configuration     was worn by the Command Modulc Pilot (figure 2). The
+ extravehicular  configuration,    shown in figure 3, was worn by the Commander  and Lunar
+ Module Pilot. The two configurations          were similar in most respects. However, the
+ intravehicular  version was equipped with a lighter weight and less bulky coverlaycr and
+ did not include hardware and controls necessary for extravehicular   use.
+      Both versions of the PGA consisted of a torso-limb suit assembly (TLSA) with an
+ integrated protective coverlayer, a pressure helmet, pressure gloves, controls, instrumenta-
+ tion, and communication      equipment.  In addition, extravehicular equipment consisting of
+ a lunar extravehicular  visor assembly, lunar boots, a liquid cooling garment, and fecal and
+ urinary containment    systems were provided to complete the EVA PGA configuration.
+ These components    of the EMU are pictured in figure 4.
+      Apollo space suits were individually    tailored for each mission. Fifteen suits were
+ required to fully equip the mission. Each prime crewmembcr       had three suits - a training
+ suit and two flight suits, and each backup crewmcmber     had two suits - a training suit and
+ a flight suit.
+      The following                    sections        describe        the      components                of        the        extravehicular   PGA
+ configuration.        Table 1 lists the characteristics                        of the suit assembly.
+           Extravehicular Mobility Unit              547
+
+
+
+
+Figure 2. Extravehicular configuration of the EMU.
+
+
+
+
+Figure 3. Intravehicular configuration of the EMU.
+548        Biomedical Results of Apollo
+
+
+
+
+                                  ..
+           X                      w
+                                  >
+                                  s
+                                  W
+                                  U
+                                  4
+                                  3
+                                  uI
+                                  w
+                                  >
+                                  a
+                                  U
+                                  I-           .-
+                                               Y
+                                  X       I-
+                                  w             2
+                                          5    n
+
+
+
+
+      t;
+      fw
+      I
+                                                                   Extravehicular           Mobility         Unit                                                           549
+
+
+                                                                                  Table        1
+
+                                                 Pressure         Garment           Assembly              Characteristics
+
+                                                                                                      PressureGarment Assembly
+                                 Characteristics                                                            with Thermal
+                                                                                                       Micrometeoroid Garment
+
+          Weight                                                                            19.69 kg                                           (43.42 Ib)
+          Operational temperature limitations                                                -+394°K                                           (-+250 ° F)
+             Leak rate at 25 511 N/m 2 (3.7 psig)                                         180 scc/min                                          (.0315 Ib/hr)
+              (maximum)
+          Operating pressure                                                      25 855 -+1724 N/m 2                                 (3.75 -+0.25 psig)
+          Structural pressure                                                             41 369 N/m 2                                         ( 6.00 psig)
+          Proof pressure                                                                  55 158 N/m 2                                         ( 8.00 psig)
+          Burst pressure                                                                  68 948 N/m 2                                         (10.00 psig)
+          Pressure drop, water
+              .34 m3/min (12 cfm),                                                          11.9 cm                                            (4.70 in.)
+                24 132 N/m 2 (3.5 psia), _283°K
+                (50 ° F), and inlet diverter
+                valve open (IV position)
+              .17 rn3/min (6 cfm), 26 890 N/m 2                                               4.6 cm                                           (1.80 in.)
+                 (3.9 psia), _298°K (77°F),and
+                inlet diverter valve closed
+                 (EV position)
+          Pressuregage range                                                     17 237 to 41 369 N/m 2                               (2.5 to 6.0 psig)
+
+
+Torso-Limb                Suit       Assembly             (TLSA)
+
+       The          torso-limb                 suit       assembly             consisted             of     that          portion         of     the      PGA           which
+encompassed                     the       entire          body          with        the     exception               of      the     head         and       hands.           The
+cxtraw_hicular                  co_ffiguration              is shown           diagrammatically                    in fig'are 5. The             torso     portion          was
+custom-sized                   and       the       limb         portions          were       graduated              in      size    and        were      adjustable             to
+accommodate                    individual             crewman           limb     lengths.
+       A pressure               sealing        and restraint             slide    fastener          permitted             the crewman             to enter           the suit.
+A lock           assembly              prevented           inadvertent              opening.          The        pressure-containing                   bladder         of   the
+TLSA          was       a neoprene-coated                       nylon       fabric.       Directly          over      the     bladder          outer     surface        was       a
+nylon         restraint          layer      that       controlled           the conformal                  shape     and      provided          structural           support
+to     the      bladder.          Dipped              rubber       convoluted             joints          were     located         at the       shoulders,           elbows,
+wrists,         hips,      knees,           and       ankles,       to      permit         movement                with      a minimum                 expenditure             of
+energy.          Restraint            cables          or cords          sustained         axial      limb        loads      during        pressurized            operation
+and       prevented             ballooning             of the convoluted                  joints.         A biomedical             injection           patch     was built
+into      the     right        thigh       portion         of     the      torso-limb         suit        to permit         a crewman            to self-administer
+a hypodermic                   injection          without         jeopardizing              the gas retention                 quality       of the PGA.
+       The       arm       assembly             had       a bearing          to enhance              rotational             movements            above         the     elbow.
+The       PGA        boot,        which           was     connected              to the      torso-limb             suit,     was sized           to the        individual
+crewman's               foot      and had             an ankle          convolute          which          permitted           ankle       extension            and flexion
+movements.
+550                                            Biomedical     Results     of Apollo
+
+
+
+
+       UPPER PORTABLE LIFE SUPPORT SYSTEM
+             ATTACHMENT   BRACKET
+
+                                                                                      HELMET ATTACHING
+                                                                                          NECK RING
+
+
+                                                                                           MULTIPLE         WATER CONNECTOR
+
+           ELECTRICAL                                                                     TORSO TIEDOWN ADJUSTMENT
+           CONNECTOR                                                                           STRAP ASSEMBLY
+          GAS CONNECTOR                                                                    CONNECTOR          (INLET)
+               (INLE-f)                                                                      CONNECTOR         (OUTLET)
+          GAS
+              (OUTLET)                                                                                 RELIEF VALVE
+
+                                                                                             GLOVE ATTACHING
+       LOWER PORTABLE LIFE                                                                      DISCONNECT
+          SUPPORT SYSTEM
+       ATTACHMENT   BRACKET                                                                 SLIDE FASTENER
+
+      LUNAR MODULE  RESTRAINT
+      AND TETHER ATTACHMENTS
+
+      URINE TRANSFER    FITTING
+
+      BIOMEDICAL   INJECTION         PATCH
+
+
+
+
+           COMMAND MODULE
+           COUCH RESTRAINT
+
+
+
+               Figure   5.    Extravehicular       configuration        of torso   limb   suit   assembly     (TLSA).
+
+
+
+       The innermost         layer    of the torso-limb              suit was a nylon            liner (figure 6) for comfort
+and improved donning. A series of noncollapsible       ducts attached on the inner surface of
+the pressure bladder served as part of the ventilation system.
+     The ventilation  system directed all inlet gas flow to the helmet for respiration    and
+helmet defogging during lunar surface operations.        The gas flow then traveled over the
+body to the extrcmities     where return ducting      routed the flow to the suit outlet. A
+ventilation  flow director valve was located on the inlet gas connectors.      The PGA suit
+pressure    was displayed        on a gagc mounted                 on the lower arm.
+
+Pressure Helmet Assembly
+
+     The pressure helmet was a detachable, transparent      closure with provisions for feeding,
+drinking, and attachment    of the lunar extravehicular    visor assembly (LEVA). The helmet
+was made by a special heat forming process from high optical quality polycarbonate
+plastic. The helmet and neckring which attached         it to the torso-limb suit are shown in
+figure 7. It contained  a feedport which allowed insertion         of a probe for administering
+                                                                                Extravehicular                          Mobility                 Unit                                                                               551
+
+
+
+water          and        contingency                      food        to        a crewman                             while              wearing              the      complete                 PGA            in either           the
+
+pressurized                  or        unpressurized                   condition.                         A synthetic                          elastomer                   foam          vent       pad         was      bonded
+to      the      back             of      the      helmet             shell           to          provide                a headrest,                        and         to act           as      a ventilation                   flow
+
+manifold               for        directing               the      flow          of        gas      to          the      oral-nasal                     area.        This       flow          caused             an     efficient
+
+exhaust           of       carbon               dioxide           from           the            nasal           area      through                     the       torso        neck         opening.
+
+
+
+
+                                                                                                COMMUNICATIONS
+                                                                                                 LEAD   SNAP   FLAP                                                                 SNAP         ASSEMBLY
+
+
+
+
+                       LI;O IIIIII LIIIH
+                          COMMUNICATIONS                          _
+
+                                                                                                                                                CUSHION              PADS
+
+
+                                                                                                                                  I           \_WATER                 CONNECTOR
+
+
+
+
+                                                                                       ,___                                                                   PASSTH         ROUGH
+                             PASSTH         ROUGH
+
+
+
+
+                                                                                                                                                                VELCRO          FASTENER              TAPE
+
+
+
+
+                                                                                           --            _                            /       URINE         TRANSFER             HOSE
+
+
+
+
+                                                                                                         lJ{.                 f                        PASSTH         ROUGH
+
+
+
+
+                                                         Figure       6.        Pressure                garment            assembly                    (PGA)          liner.
+
+
+
+         The         lunar             extravehicular                    visor         assembly,                         shown                  in     figure         8, furnished                    visual,           thermal,
+
+and           mechanical                   protection                 to        the             crewman's                         helmet                and          head.         It     was        composed                    of       a
+
+plastic          shell,           three          eyeshades,                 and        two              visors.            The                outer,          or      sun       visor         was          made          of     high-
+
+temperature                       polysulfone                   plastic.              The           inner,               or           protective                   visor      was         made             of    ultraviolet-
+
+stabilized                 polycarbonate                          plastic.             The               outer             visor                filtered              visible            light        and            rejected             a
+
+significant                  amount                of     ultraviolet                  and              infrared                      rays.          The        inner          visor            filtered             ultraviolet
+
+rays,          rejected                infrared             and,           in     combination                                 with              the         sun         visor           and       pressure               helmet,
+formed               an      effective                  thermal             barrier.                    The            two                visors         in        combination                     with          the         helmet
+
+protected                 the          crewmember                     from            micrometeoroid                                       damage               and         from          damage                in     the      event
+552                            Biomedical Results of Apollo
+
+
+of falling o n the lunar surface. A hard shell protected the sun visor during non-use
+periods. The eyeshades were adjusted by the crewman t o prevent glare from hampering
+vision during EVA. The central eyeshade was added at the suggestion of' the Apollo 11
+lunar surface crew who reported the need for greater glare protection.
+
+
+
+
+          HYDROFORME
+
+         POLYCARBONAT
+
+
+
+          POLYURETHANE
+
+                                                              \NECKRING
+
+                                Figure 7. Pressure helmet.
+
+
+
+
+                                                                 CENTER EYESHADE
+                                                                  HINGE ASSEMBLY
+                                                                     VIEWPORT DOOR
+
+                                                                     SUN VISOR
+                                                                     ASSEMBLY
+ SIDE
+                                                                  PROTECTIVE VISOR
+                                                                     ASS EMBL Y
+
+
+
+        THERMAL COVER
+           ASSEMBLY
+
+
+                   Figure 8. Lunar extravehicular visor assembly (LEVA).
+                                   Extravehicular Mobility Unit                       553
+
+Pressure Gloves
+   The pressure glove was a flexible, gas-retaining device which was attached and locked
+to the torso-limb suit by means of a quick-disconnect coupling. The glove (figure 9) was a
+protective hand covering which was attached to the torso-limb suit prior to egress for
+extravehicular operations.
+
+
+
+
+                             Figure 9. Extravehicular pressure gloves.
+
+    The glove consisted of a modified intravehicular pressure glove covered by a glove
+shell. The shell covered the entire hand and had an integral cuff or gauntlet which
+extended above the wrist disconnect on the arm as far as the PGA pressure gage or the
+pressure relief valve. The gauntlet provided a convenient surface on which to put a
+checklist for lunar extravehicular activities (figure 10).
+    The extravehicular glove shell was a multilayered assembly which provided scuff,
+abrasion, and thermal protection to the pressure glove. A woven metal fabric
+(Chromel-R) was incorporated over the palm and fingers to provide abrasion
+protection. The thumb and fingertip shells were made of high-strength silicone
+rubber-coated nylon tricot for improved tactility and strength. A silicone dispersion
+coating was applied to the palm, around the thumb, and to the inner side of each finger
+to improve the grip. The outer cover conformed so that it did not appreciably restrict
+dexterity. A palm restraint strap could be tightened to minimize the ballooning effect of
+pressurization. The shell assembly was secured to the pressure glove at the back and palm
+areas of the hand by hook-and-pile fastener tape and near the tip of each finger by two
+anchor straps and neoprene adhesive.
+554                               Biomedical Results of Apollo
+
+
+
+
+              Figure 10. Extravehicular pressure gloves showing gauntlet checklist.
+
+
+
+    Cotton wristlets were used to prevent arm chafing caused by the pressure garment
+assembly wrist disconnects when the gloves were removed and the torso-limb suit was
+worn. Comfort gloves constructed of nylon tricot were worn under both intravehicular
+and extravehicular gloves. The comfort glove made donning the pressure glove easier and
+acted as a sweat absorption layer between the hand and the pressure glove bladder.
+
+Electrical Harness and Bioharness
+    The PGA electrical harness shown in figure 11 provided electrical connections for the
+biosensor harness and for communications equipment. A central 61-pin connector was
+designed to receive the engagement mechanism of the communications and bioinstrumen-
+tation umbilical of the spacecraft or the portable life support system.
+
+Integrated Thermal Micrometeoroid Garment
+    The integrated thermal micrometeoroid garment (ITMG) (figure 12) was a lightweight
+multilaminate assembly which covered the torso-limb suit assembly to afford protection
+against the thermal and micrometeoroid hazards encountered during free space and lunar
+excursions. Figure 13 illustrates the makeup of the suit, layer by layer. For protection
+against abrasion, an additional external layer of Teflon fabric was attached to the knee,
+waist, elbow, and shoulder areas, and a layer of Chromel-R was added on the back under
+the P I S . Pockets and flaps accommodated items needed by the crewman and permitted
+the use of the urine transfer connector.
+    Lunar surface boots covered the PGA boots exclusive of the sole and heel. Boots were
+made of the same material as the garment itself. Tape and lacing cords secured the ITMG
+boots to the PGA boots a t the boot top and around the sole and heel area. A zipper a t the
+top of each boot attached the boot to the leg of the ITMG. A Teflon patch encircling the
+ankle of the boot prevented abrasion caused by the lunar boot.
+                                           Extravehicular                     Mobility                  Unit                                                       555
+
+
+
+
+                                                                     ...-.:_-_""'-; -.                                       .-COMMUN,CAT,ONS
+                                                              _"_*"                   "_,           _,_         ".       /              CARRIER
+
+
+
+
+                                                        I[           '_          "_f'-,'-f                  ,=:,¢
+                                                        II            I
+                                                                                 ,i                 t
+                                                        ,;            ,,                            , l,,,',-,_
+                                                            t__.          .
+
+                                                             r%-"--';'"="-.-_
+                                                               ,,,
+                                                               ,ff
+
+                                  ELECrmCAL             _ _                                                                    TWENTY-ONEP_N
+
+
+
+                                    HARNESS                  "''_=-_Z':_';'-_":                           "'_        /           CONNECTOR
+
+
+
+
+                                                                                                                                    ELECTRICAL
+
+
+
+
+                                                                               cO
+
+
+
+
+           oct )°s                                                                          L---J
+
+
+
+                        Figure   1 i.   £ressure   garment                    assembly                  electrical           harness.
+
+
+
+Liquid Cooling Garment
+     A liquid cooling garment (LCG) was worn next to the skin under the pressure
+garment     assembly  during lunar and free space extravehicular        activity.  The LCG
+(figure 14), made of nylon-spandex    knit, provided for comfort, perspiration    absorption,
+and thermal transfer. The garment supplied a continuous flow of temperature-controlled
+water through a network of polyvinylchloride      (PVC) tubing stitched to the inside surface
+of the open-mesh fabric garment (figure 15). A lightweight nylon comfort liner separated
+the body from the tubing network. The network had a parallel flow path for maximum
+surface coverage and optimum     cooling. The LCG could be supplied with coolant water
+from the Lunar Module support system and, during EVA, from the portable life support
+system.
+     The coolant water was warmed by heat transfer from the crewman's body and was
+returned   to the PLSS through the outlet channel of the multiple water connector.         The
+LCG could         remove    heat  at a maximum                                         rate                 of       62 ll2J/hr                   (=2000Btu/hr).
+Characteristics    of the LCG are listed in table 2.
+556                                                                Biomedical                Results              of Apollo
+
+
+
+                              ENTRANCE        CLOSURE
+
+
+
+
+                                  Ag_CESS
+                                    LAr_ _     F    _,,     PC RTA BsLEsLIEFME S U PPO R T
+
+
+
+
+                          _                                    ABRASION           PATCHES
+
+
+
+
+                                                      _LOWER                                 ARM
+
+
+
+
+                                                                  TETHER_TTACHMENT
+
+
+
+                                                                                                                                             LINER       & INSULATION         ASSEMBLY
+                                   - ASS,STSTRAPS
+                                                                                  .T       LOOPS                                     /
+
+                                                                     (5 PER       LEG)
+
+                                                                                                                                                              PENLIGHT          POCKET
+                                __POCKET                                    BEt
+
+
+
+
+                 L_BOOT                                             SUNGLASSES               _,,_,                      m,,
+                                                                       POCKET --                              _'/0            e •1
+                                             TORSO        ADJUSTMENT          STRAP           _          _        _,_ 1 _                .
+                                                           COVER                                     _]"_--       _ _/ _                 ;
+
+
+                                       pR ESSU R E GAG            e COVE    R ,''_"                "'_            _              _
+
+                                                                                                                  "_           tm__j
+                                                                                                                                                     _         PENLIGHT          POCKET
+
+
+
+                                                   OPENING         ACCESS      FLAP                      _        _              _
+
+                                       UR,NE
+                                          COLLECT,ON
+                                               OEV,CE-/[Fr'{                                                                                   "-''--      SCISSORS      POCKET
+
+                                           _MEO,OAL,N,EOT,ON                                                                                    _               PENCIL     POCKET
+
+                                            ACOESSELAP                                                                                                       UTILITY      POCKET
+                                                          SCISSORSPOCKETf                     _                   _
+
+
+
+
+                                                    CHECKLIST          POCKET          /                     __                                                  DATA     LIST    POCKET
+
+
+
+
+                     Figure 12. Lunar integrated thermal                                         micrometeoroid                               garment configuration.
+
+
+Lunar Boots
+
+       The       lunar        boots,         donned            prior        to lunar                 surface                  activity,                  provided          thermal          and abra-
+sion     protection             for    the pressure                 garment                 assembly                     boots                during          lunar       surface         operations.
+The      outer       layer       of a lunar               boot,      except                for       the sole, was                             fabricated              from       Chromel-R         and
+the    tongue        area was              made           of Teflon-coated                           Beta              cloth.                Ribs         projected         from          the bottom
+of     the     silicone           rubber           sole      to     increase                thermal                    insulation                        qualities,        to     provide       lateral
+rigidity,        and to provide                    traction          on the lunar                            surface.                The inner                  layers        consisted        of two
+layers       of Kapton            followed            by five layers                   of aluminized,                                perforated                 Mylar. The Mylar                 layers
+were       separated            by four        layers          of nonwoven                           Dacron                   followed                    by an inner             liner of Teflon-
+coated        Beta       cloth.        Two         layers         of Nomex                   felt            in the sole                       provided            additional             thermal       in-
+sulation       from           the lunar surface.                   Figure          16 shows                       the lunar                    boot.
+                                                                  Extravehicular
+                                                                            Mobility
+                                                                                  Unit                                                                                       557
+
+
+
+
+                                MATERIAL                                    FUNCTION             1              FUNCTION      2               FUNCTION       3
+
+
+
+
+                 RUBBER-COATED                   NYLON               INNER         LINER
+
+                                (RIPSTOP)
+
+
+
+
+                 ALUMINIZED                 MYLAR                    THERMAL             RADIATION
+
+                         (5     LAYERS)                                      PROTECTION
+
+
+
+
+                 NONWOVEN               DACRON          8            THERMAL             SPACER                   THERMAL                     THERMAL,
+
+                         (4 LAYERS)                                            LAYER                                CROSS             MICROMETEOROID
+
+                                                                                                                   SECTION                  PROTECTION
+
+                                                                                                                                           CROSS   SECTION
+
+
+
+
+                  ALUMINIZED                KAPTON                   THERMAL             RADIATION
+
+                              FILM/BETA
+                                                                             PROTECTION                     j
+                 MARQUISETTE                 LAMINATE
+
+                              (2   LAYERS)
+
+
+
+
+                 TEFLON-COATED                                       NONFLAMMABLE                    AND
+
+                 FILAMENT             BETA                          ABRASION          PROTECTION
+
+                          CLOTH                                                    LAYER
+
+
+
+
+                TEFLON             CLOTH                             NONFLAMMABLE                    ABRASION
+
+                                                                                     FATCHES
+
+
+
+                 8Alternating          layers   of   insulation   and    spacer.
+
+
+
+                                                Figure 13. Material                   cross-section              of Apollo         10-14
+                                                lunar integrated             thermal         micrometeoroid                  garment.
+
+
+Constant        Wear          Garment
+
+       The     constant             wear        garment           (CWG)        (figure            17) was a cotton                   fabric     undergarment             worn
+next      to    the      skin         during           intravehicular                 Command                    Module            operations.           It provided       for
+comfort         and      perspiration                   absorption,                and     for       attachment               of a biobelt           which       contained
+the    bioinstrumentation                        system.          In the           Command                 Module,           the     CWG was             worn    under     the
+pressure  garment                    assembly.              A fly       opening            and       a rear        buttock          port      allowed        for urination
+and defecation.
+558                                         Biomedical     Results           of   Apollo
+
+
+
+
+                                                                   ALUMINUM    TUBING   MULTIPLE
+  LIQUID    COOLING     GARMENT                                         OUTLET   90°ELBOW
+            CONNECTOR
+
+                                                                                    _                      MULTIPLE       TUBING
+           ENTRY   CLOSURE
+
+
+
+
+                                                              --                     MANIFOLD              ASSEMBLY
+
+                                                                                                   POLYVlNYL           CHLORIDE
+                                                                                                     MODIFIED          FLEXIBLE
+                                                                                                          PLASTIC   TUBING
+
+
+
+
+                                                                    ',              ).j
+
+
+                                                                         1
+
+                                                              "          i                                   PLASTIC      TUBING   TIE
+
+                                                                                                               MULTIPLE     OUTLET
+
+
+                                  ._j           PASSIVEPOCKETS
+                                                          DOSIMETER
+
+
+                         Figure     14.    Liquid   cooling       garment         and coolant        system.
+
+
+
+
+                         L         LIGHTWEIGH            T.
+                                                         :::='--
+                                                          NY        ON
+
+
+
+                             Figure       15.   Liquid   cooling         garment          construction.
+                                   Extravehicular Mobility Unit                                     559
+
+
+                                           Table 2
+                            Liquid Cooling Garment Characteristics
+
+                Characteristic                                        Value
+
+      Weight (chargedl                               2.09 kg                       (4.60 Ibl
+      Operating pressure                   28 958 to 158 579 Nlm2             (4.20 to 23.0 psigl
+      Structural pressure                   217 185 f 3447 Nlm2               (31.50 f 0.50 psigl
+      Proof pressure                        21 7 185 f 3447 Nlm2              (31.50 f 0.50 psigl
+      Burst pressure                              327 501 Nlm2                    (47.50 psigl
+      Pressure drop, 1.81 kglmin                   22 063 Nlm2                      (3.2 psi1
+       ( 4 Iblmin) at = 294'+ 5.5'K                    (including both halves of connector)
+       (70" f 10°Fl inlet
+      Leak rate, 131 000 Nlm2                     0.58 cm3lhr
+       (19 psigl a t = 280°K (45OF)
+
+
+
+
+                                      SNAP FASTENER              DONNING STRAP
+                                              \                     /         LINER AND INSULATION
+                                                                                    ASS EM6LY
+     SHELL ASSE
+
+
+RETAlNlNG STRAP
+   ASSEMBLY
+
+
+
+                                                                                   STRAP ASSEMBLY
+
+
+
+
+             SOLE ASSEMBLY
+
+
+
+
+                                      Figure 16. Lunar boots.
+
+Communications Carrier
+    The communications carrier (figure 18) provided redundant microphones and
+earphones in a soft-suspension skull cap. Proper fitting insured acoustic isolation between
+the earphone and microphone. The connection could be made directly to the spacecraft
+communications system or through the PGA internal communication harness.
+Bioinstrumentation associated with the PGA is described in Section VI, Chapter 3. The
+communications carrier permitted suited crewmen to talk to each other, and to the
+Mission Control Center, through the Lunar Module systems. Telemetry data from both
+crewmen were also communicated to the ground through the Lunar Module.
+560                        Biomedical        Results         of     Apollo
+
+
+
+
+                DOSIMETER
+
+
+
+
+       BIOINSTRUMENTION
+        BELT    ATTACHMENT
+
+
+
+
+               DOSIMETER
+
+
+
+
+                     Figure      17.     Constant          wear       garment.
+
+
+
+
+                                         EARPHONE                                   PERSPIRATION
+
+
+
+
+      ACOOST,OA'T
+            _                                                                -_ A"SO22T'ON
+
+          _,CROPHONE
+                 --,,__
+
+                       EARPIECE          WITH          _'_\"_'_ k
+                           MICROPHONE'_ ,_)
+                       AND      EARPHONE                 _, [_ }
+                      DRIVERS           MOLDED            '_(_)
+
+
+
+
+                       PIN    CONNECTOR
+
+
+
+                     Figure      18.     Communications                  carrier.
+                                 Extravehicular Mobility Unit                                               56 1
+
+
+                            Portable Life Support System
+    T o provide a suitable protective environment during both lunar surface and free space
+excursions, the astronaut carried on his back a compact assembly of various environ-
+mental control devices, which formed the portable life support system (PLSS), pictured
+in figure 19. Figure20 shows two views of the system packaged as it would be for a
+mission. The PLSS supplied breathing oxygen; controlled suit pressure; recycled oxygen
+by removing carbon dioxide, odors, moisture, and some trace contaminant gases;
+controlled temperature; provided warnings of system malfunctions; and provided voice
+communications and telemetry data. Table 3 lists the specifications for the PLSS. A
+separate emergency system provided oxygen for breathing, suit pressure, and cooling in
+case of PLSS failure. This system was called the oxygen purge system (OPS) and was
+manually activated.
+
+
+
+
+      O X Y G E N P U R GIE
+        SYSTEM (OPS)
+                                     I-ANTENNA
+
+
+
+
+                                                             -MAIN
+                                                             YOXIGIN
+                                                                                     (ERECT1
+                                                                        LOCKING M E C H A N I S M
+                                                                        OXYGtN HOSf
+                                                                        ACTUATOR M E C H A N I S M
+                                                                                 POWER S W l l C H
+                                                                                    BOTTLES
+
+                      \L                                     -HEATER
+                                                             -BATlERY
+
+
+
+
+                                                             -SUBLIMAlOR
+                                                             TLIOH               CANISTER PESfRVOIR
+                                                             -HARD                POINT M O U N T S
+                                                             ~ I E R M I N A L
+                                                                             BOXES
+       P O R T A B L E LIFE
+           SUPPORT
+             SYSTEM
+             (PLSS)
+                      4,                                     EF
+                                                             k::L
+                                                                        VENT FLOW SENSOR
+
+
+                                                                            AN
+
+                                                                        PRIMARY O X Y G E N SUPPLY BOTTLE
+
+
+                                                             *OXYGEN                 FILL CONNECTOR
+                                                             -DRAIN                CONNECTOR
+
+
+
+
+                                         -
+                                                             -OXYGEN               REGULATOR
+                                                             -VENT               CONNECTOR
+                                                                        SIGHT GLASS
+                                                 U   W   A      l       E        R 1111 CONNECTOR
+
+
+
+                Figure 19. Portable life support system and oxygen purge system.
+
+    The portable life support system supplied oxygen to thf pressure garment assembly
+and cooling water to the liquid cooling garment. The PLSS subsystems were an oxygen
+ventilating circuit, a primary oxygen subsystem, a liquid transport loop, a feedwater loop,
+and an electrical power subsystem.
+
+Oxygen Ventilating Circuit
+   The oxygen ventilating circuit (figure 21) provided temperature, humidity, and
+contaminant control of breathing oxygen. Recycled gas and fresh oxygen entered the
+562                                 Biomedical Results of Apollo
+
+
+suit, absorbing heat, moisture, and body contaminants. The contaminated gas was then
+returned to the PLSS contaminant control assembly where contaminants were removed.
+The decontaminated gas then entered the sublimator (heat exchanger) where heat was
+given up, and the excess moisture in the stream was condensed. Next, water was removed
+by a water separator and transferred to a storage reservoir. A fan forced the air through a
+back flow check valve, finishing the recycling process.
+
+
+
+
+                   Figure 20. Operational packaging of portable life support system.
+
+
+                                               Table 3
+                      Specifications for the Portable Life Support System
+
+                                                                   Specifications
+             Design Requirements
+                                                  Apollo 11 - 14                    Apollo 15 - 17
+
+      Average metabolic load                  6694 Jlhr (1600 Btulhr)      6694 Jlhr (1600 Btulhr)
+      Peak metabolic load                     8368 Jlhr (2000 Btulhr)      8368 Jlhr (2000 Btulhr)
+      Maximum heat leak i n                   1046 J/hr ( 250 Btulhr)       1255 Jlhr ( 300 Btulhr)
+      Maximum heat leak out                   1046 Jlhr ( 250 Btulhr)       1464 Jlhr ( 350 Btulhr)
+      Maximum COP partial pressure            2000 Nlm2 (15 mm Hg)         2000 Nlm2 (15 mm Hg)
+      Pressure garment assembly pressure      26 545 N/m* (3.85 psia)      26 545 Nlm2 (3.85 psia)
+      Ventilation flow                        .I 557 m3/min (5.5 cfm)       .I557 m3lmin (5.5 cfm)
+      Duration                                          4 hr                          7 hr
+      Oxygen charge pressure a t            7 032 652 Nlm2 ( 1020 psia) 3 721 607 N/m2 (1410 Psis)
+       = 2940K (70OF)
+      Battery capacity                                279 W-hr                         431 W-hr
+      Emergency oxygen
+       Duration (minimum)                              30 m i n                        30 m i n
+       Maximum flow                              3.63 kglhr ( 8 Iblhr)           3.63 kglhr (8 Ib/hr)
+       Pressure garment assembly pressure      25 510 N/m2 (3.7 psia)          25 510 Nlm2 (3.7 Psia)
+                                                             Extravehicular                      Mobility        Unit                                                        563
+
+
+
+
+                                                                                                                                     OXYGEN
+
+
+
+
+                                                       _                            FROM
+
+
+
+                                                       NNECTOR               PRIMARY
+                                                                              SUPPLY           OXYGEN
+                                                                                               SYSTEM           STEAM                                     OXYGEN
+                                                                                                                  TO
+
+
+                                                                                                               VACUUM           FAN
+
+
+                                                                                                                         WATER
+                                          \                                                                            SEPARATOR
+
+
+                                                                                                                 DRAIN       WATER
+                                                            CONTAMINANT
+                                  TRANSPORT                    CONTROL
+                                     WATER
+                                                                                                                             FEEDWATER
+                     OXYGEN                                                                                                      FROM
+                                                                                                                              RESERVOIR
+
+
+
+                                                                                                                             PLATE
+
+
+                       OXYGEN      _FEEDWATER                      :
+
+                                                                                                                STEAM   TO
+                                                  OXYGEN                    OUT                                  VACUUM
+
+
+
+                                         Figure 21.               Oxygen ventilating                         circuit        schematic
+
+
+Primary     Oxygen          Subsystem
+
+     The    gaseous           oxygen           in the            portable                 life     support             system         primary           oxygen       subsystem
+(figure    22)    provided             oxygen              for         suit       pressurization                       and     astronaut            breathing.         Oxygen,
+stored     in the primary              bottle,         was regulated                           to the correct                pressure          before     entering      the rest
+of the system.         A quick-fill              connector                    allowed             for oxygen                recharging.
+
+
+                                                                                        PRIMARY   OXYGEN
+                              PRIMARY         OXYGEN       BOTTLE                           PRESSURE
+
+
+
+
+                                                                                              TRANSDUCER
+
+
+
+
+                              _PORT                                     \           I              /                   /"                                AMB!ENT
+                                                                                                                 /
+
+                                                                            \l
+                                                                             I                   _. PRESSURE
+                                                           FILL                                  I REGULATOR
+                                                                             I                   I
+                              OXYGEN      FLOW     SENSOR                               _,_        F LOW RATE                            FILL
+                                                                                                     SENSOR
+                 UPSTREAM
+                                                     OXYGEN                                                                                    PGA PRESSURE
+                  SENSOR
+                                                 CONNECTOR                                      FROM           LOW PRESSURE                     TRANSDUCER
+
+
+
+                       BRIDGE                                          DETECTOR                  FAN          WARNING         SWITCH     _._
+                     DC                                                                                                        WHT                         GRN
+                                                                                                                                                           RED
+                 EXCITATION                                                      SWITCH                                        ORN                         YEL
+                                                   DC16V TOFLOW                  LEVEL                   _
+
+                                                           20.5V
+                                                           INPUT            POWER                      DECREASING                     INCREASING
+                       DOWNSTREAM
+                          SENSOR                 HEATER                     SUPPLY                      PRESSURE                       PRESSURE
+
+
+
+                                                  Figure 22. Primary                             oxygen        subsystem.
+564                                   Biomedical Results of Apollo
+
+
+Liquid Transport    Loop
+    The liquid transport loop (figure 23) was the primary means of crewman temperature
+control. Water from the liquid cooling garment entered the loop through the multiple
+water connector.   The water was then pumped through the sublimator where heat was
+given up. The cooled water was used for fan motor                              cooling         before   return       to the LCG
+through the multiple water connector.
+
+
+                                                         TRANSPORT
+
+
+
+
+                                                                                                                   "POROUS
+
+                                                                                                                     PLATE
+
+                                                              WATER
+                                                                         °UT;I
+                                                 WATER
+
+                                                  PUMP           FEEOWATER
+                                                                                                           STEAM      TO
+
+
+
+
+                            WATER                                                 SUBI     IMATOR
+                           MULTIPLE                       _           OXYGEN
+                                                                                  ,/
+
+
+
+                                                                                         FAN   JACKET
+
+
+
+
+                                                                                                WATER
+
+
+
+
+                                Figure 23. Liquid transport loop schematic.
+
+
+Feedwater    Loop
+
+     The feedwater   loop (figure 24) supplied expendable    water to the sublimator     for
+cooling, and stored     condensation   removed  by the water separator       in the oxygen
+ventilation circuit. As the water passed through the sublimator,  it absorbed system heat.
+The hot water was then discharged to the outside.
+
+Electrical   Power Subsystem
+    The electrical power subsystem provided electrical power to the fan and pump motor
+assemblies,  the communications   system, and the instrumentation.    The extravehicular
+communications    system (EVCS) provided voice communications       and telemetry    trans-
+mission of system operation. The capabilities included voice communication    between the
+spacecraft   and the astronaut,   voice communication    between  astronauts,   and voice
+communication    between   Earth and astronaut. The EVCS consisted of two extravehicular
+communicators   that were integrated with the PLSS. The first extravehicular      communica-
+tor (EVC-1) consisted of two amplitude-modulated       (AM) transmitters,   two AM receivers,
+one frequency-modulated   (FM) receiver, signal-conditioning    circuits, a telemetry system,
+                                 Extravehicular Mobility Unit                             565
+
+a warning system, and other components required for operation. The EVC-2 was similar
+to the EVC-1 except that the EVC-2 had an FM transmitter instead of an FM receiver.
+
+
+
+
+                                                         WATER D R A I N C O N N E C T
+                                                         R E S E R V O I R VENT C O N N
+                                                         WATER F I L L CONNECT0
+
+
+
+
+                                     VALVE
+
+
+
+
+               Figure 24. Portable life support system feedwater loop schematic.
+
+    Much of the instrumentation was located in the remote control unit. This
+chest-mounted unit, shown in figure 25, housed electrical controls for the PLSS, a
+primary oxygen quantity indicator, and warning devices. The warning devices would
+signal the astronaut if system components failed to work properly. Malfunctions checked
+were low feedwater pressure, low ventilation flow, low PGA pressure, and high oxygen
+flow. In an emergency, the mission would be aborted or the emergency oxygen purge
+system activated.
+
+
+
+
+                  Figure 25. Portable life support system remote control unit.
+566                            Biomedical Results of Apollo
+
+Oxygen Purge System
+    The oxygen purge system (OPS) (figure 26) provided an oxygen supply and pressure
+control for certain failure modes. In the normal EVA configuration, the OPS was
+mounted on top of the PLSS and used only for emergencies. The OPS was self-contained,
+independently powered, and nonrechargeable. The OPS provided a minimum of
+30 minutes of operation. The system consisted of two interconnected bottles of high
+pressure oxygen, an automatic temperature control module, a pressure regulator, a
+battery, an oxygen indicator, and the necessary checkout instrumentation. The OPS had
+no communications capability, but provided the mount for the PLSS very-high-frequency
+(VHF) antenna.
+
+
+
+
+       G
+
+
+
+
+                                      REGULAlOR
+
+
+
+
+        IHIGH PRESS 0 2
+        0 LOW PRESS 0 2
+           0 2 , COz, H2O.
+           6 BODY GASES
+        -- MECH LINKAGE                             PRESSURE GARMENT ASSEMBLY
+
+                             Figure 26. Oxygen purge system.
+
+                                 EMU Performance
+    The life support system underwent changes during the program to meet new
+requirements and incorporate improvements based on experience. The PLSS was
+redesigned for Apollo,l5, 16, and 17 to allow longer lunar missions by increasing oxygen
+storage pressure, adding more contaminant control material, increasing the size of the
+power supply, and adding an auxiliary feedwater tank. A longer duration emergency
+system was required for Apollo 14, 15, 16, and 17 because of the greater distances of
+traverse from the Lunar Module. This requirement was accomplished by the addition of
+the buddy secondary life support system (BLSS) shown schematically in figure 27. It
+could provide backup cooling in the event of a failure of the PLSS cooling loop.
+    The extravehicular mobility unit was one of the outstanding engineering successes of
+the Apollo Space Program. While there were some minor problems experienced with the
+suit, for example, the lunar visor tended to scratch easily and finger dexterity was not
+optimum, never was a major or even minor failure experienced with the suit or backpack
+system.
+                                                                 Extravehicular            Mobility       Unit                                                              567
+
+
+
+                                                                 PRESSURE        GARMENT       ASSEMBLY
+
+
+
+
+               OXYGEN          PURGE
+                  SYSTEM       INLET
+
+
+
+
+                                                                  )E'ECT"CA'I
+                                                                  ,_/EWATER
+                                                                      coNNE°cMT_oR
+                                                                              U_?_
+                                                                              ,,, , __,
+
+
+
+
+                                 OXYGEN            PURGE     SYSTEM                             OXYGEN         PURGE      SYSTEM
+
+
+
+
+                                                              "i-%-i
+                  SUBLIMATOR            02
+
+
+                                                                                                                }
+
+
+                                                                                                                   I_                     SUBLIMATOR
+
+
+                                                                                                                          PORTABLE        LiFE
+
+                                                                                                                         SUPPORT       SYSTEM
+
+
+
+                           FAILED       SYSTEM                                                BUDDY     HOSE     FUNCTIONING            SYSTEM
+
+
+
+                                               Figure 27.         Buddy secondary               life support            system.
+
+
+        Rigorous           preflight               testing       was          accomplished             during            suit     development,                  and       each
+individual           flight      suit        was      tested          prior     to    every       mission.          The         Apollo         suits     were          impact
+tested        against          various             objects,          including          extremely              sharp        devices,           for       resistance          to
+penetration           and       rips.        Quality          control         was meticulous.             Pins used             in the manufacture                     of the
+garment        were        accounted                 for and          each     suit   was      X-rayed          to preclude              the      possibility            of an
+oversight.          Training           suits       were       used      in most       preflight        tests     rather         than     flight        suits    to ensure
+there     would        be no compromise                         of the integrity              of the      flight        suit. However,                 each    flight      suit
+was      tested       in      a limited              number            of altitude          chamber            tests,      after       which           the     suits     were
+thoroughly            inspected              for any possible                 damage.
+        The   helmet           used          during        EVA        had an extremely                 high     resistance             to impact.             The      helmet
+material,         Lexan,         will        not     break       even         upon    impact          with     a hammer.               Lexan         was substituted
+568                              Biomedical Results of Apollo
+
+
+for the Project Gemini visor material. The latter lacked the impact      resistance necessary
+for lunar operations.   During one Gemini reentry, the visor cracked     when the astronaut
+lurched forward, hitting the instrument panel.
+     The extravehicular mobility unit and its associated components,  the pressure garment
+assembly, the portable life support system, and the oxygen purge system, were used in
+various configurations   in the Apollo 7 through     17 missions. Components    were opera-
+tionally tested before integration into the EMU. In all cases, the components     performed
+effectively.
+     No outside spacecraft activities were performed      during the missions of Apollo 7 and
+8. The only EMU system aboard the spacecraft,            therefore,  was the pressure garment
+assembly for use as a backup to the pressure and environmental          control system and for
+protection   against noise and vibration    during launch and reentry. The pressure garment
+assembly    performed    satisfactorily  during    these missions,  and crews reported    that
+ventilation   in the PGA was adequate        during the orbital phase. Further, donning and
+doffing were found to be much easier at zero g than at one g.
+    The first use of the complete EMU under flight conditions was accomplished         during
+the Apollo 9 mission. The Lunar Module Pilot, wearing the complete EMU, opened the
+side hatch of the LM and stepped out to simulate contingency       transfer to the Command
+Module. At the same time, the Command Module Pilot operating with an interface with
+the environmental     control system, opened the Command Module side hatch and stood up
+in the hatch area several times to retrieve thermal samples and take photographs.        Both
+crewmen reported that they were comfortable       and experienced   no visual problems with
+the extravehicular   visor assembly.
+     After completion     of the EVA, the Lunar Module Pilot doffed the PLSS, the OPS, and
+the LEVA with no problems. At this point, the PLSS was successfully recharged in the
+Lunar Module cabin for possible contingency          reuse and for demonstration      of this
+operation   under actual flight conditions.     Each Apollo 9 crewman wore his PGA for
+approximately    52 hours, for most of this time with the helmet and gloves off.
+    The Apollo 10 mission was similar to the Apollo 7 and 8 missions in that the EMU
+was not used for extravehicular     activities and the PGA was used only as backup to the
+Command Module environmental     control system. Again, the performance of the PGA was
+satisfactory.
+     The Apollo 11 mission was the first mission during which the EMU was exposed to
+the lunar environment   for which it had been designed. All aspects of EMU operation
+demonstrated    during testing and on previous flights were proved on the lunar surface. No
+significant problems were noted at Lunar Module egress. The crew stated that they were
+comfortable   wearing the PLSS/OPS and that the mass of the unit was not objectionable.
+In fact, the lunar surface crewmen reported that they were so comfortable       in the suits
+that, after a brief period of time on the lunar surface, they virtually forgot they were
+wearing them. Mobility and balance were sufficiently adequate to allow stable movement
+while performing     lunar surface   tasks. The Lunar Module      Pilot demonstrated   the
+capability to walk, run, change directions while running, and stop without difficulty.
+    The liquid cooling garment worn by the crew was controllable by each astronaut           to
+maintain   a temperature   suitable for his needs. During the Apollo 11 mission,            the
+                                 Extravehicular
+                                          Mobility
+                                                 Unit                                     569
+
+Commander   kepthisLCGtemperature      muchhigherthandidtheLunarCommand                      Pilot,
+athisownoption.
+    TheApollo12mission    wasthefirstmission    involving  twoperiods      of extravehicular
+activity.Bothcrewmen   spentapproximately   fourhoursonthelunarsurface              duringeach
+of theEVAs,withtheEMUperforming         satisfactorily.
+                                                     Because   of theadditional          EVA,a
+rechargeofeachPLSS   wasperformed   forthefirsttime.Noproblems           werenoted.
+    ThefullEMUwasnotusedduringtheApollo13mission,              asthemission        wasaborted
+anda lunarlandingwasnotmade.      Thepressure  garment   assemblies     wereworn,however,
+asbackup  tothespacecraft environmental  controlsystem.
+    TheApollo14mission    included  twoEVAperiods,      andwasthefirstmission              during
+whichthebuddysecondary      life supportsystemwascarriedasthecrewmen                   traversed
+approximately  1.5kilometers  fromtheLunarModule.Again,        performance         of theEMU
+wassatisfactory.
+    Thelunarrovingvehicle  wasusedfor thefirsttimeduring       themission        ofApollo15.
+Thevehicleallowedthe astronauts     to travelfartherfromtheLunarModulethanon
+earliermissions.For the mission,   the portablelife support    system      carriedadditional
+expendables  (water,power,lithiumhydroxide      for absorption    of carbondioxide,and
+oxygen)whichallowedformuchlongerextravehicular          activities  thanhadbeenpossible
+before.In addition,thenumberof EVAperiods          wasincreased       fromtwo to threeto
+permitmoreextensive  lunarexploration.
+    TheApollo15mission    included  anEVAfromtheCommand               Modulein additionto
+the lunarsurfaceEVAs.Duringthe returnto Earthfromthemoon,theCommand
+ModulePilotperformed    theEVAto retrieve     a film package   fromtheService            Module
+portionof thespacecraft.  Oxygen   wassupplied  for thisEVAby anumbilicalfromthe
+Command    Modulelifesupport   system, andtheastronaut     woretheoxygen          purgesystem
+asabackup.
+    TheApollo16 and17 missions,       liketheApollo15mission,           involved     threehmar
+surfacextravehicular activityperiods andoneCommand         Module      EVAoneachmission.
+Thelongest  EVAof the Apollo Program wax tt.e ,_cu_lu_-
+                                                     -' lunar _u,,,,,_r
+                                                                    .... _xr._
+                                                                            • _A,,.._ Ae,,..
+                                                                                       o_..u 1"7,.
+which lasted seven hours and thirty-seven     minutes.
+
+
+                                            Summary
+
+     On July 20, 1969, man took his first step onto the surface of another planet and
+collected scientific data while his life was sustained by the extravehicular mobility unit.
+Throughout    the course of the Apollo Program, the EMU was used to provide a habitable
+environment     for astronauts  on seven different missions. During its entire span of
+performance, no significant problems were experienced  with any part of the system.       The
+emergency oxygen system provided never had to be used.
+

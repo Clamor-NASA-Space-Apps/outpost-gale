@@ -1,0 +1,931 @@
+                         CREW AND THERMAL SYSTEMS DIVISION                      JSC #33497
+                               NASA - LYNDON B. JOHNSON SPACE CENTER
+
+
+
+
+                               Checkout and Standard Use
+                             Procedures for the Mark III Space
+                                     Suit Assembly
+
+
+
+
+                   DOCUMENT NUMBER, REV          DATE
+
+                   CTSD-ADV-197, Rev. I          August 1, 2012
+
+PREPARED BY:            Eng / Dana Valish
+
+REVIEWED BY:            Eng / Amy Ross
+
+REVIEWED BY:            Tech / Kevin Groneman
+
+APPROVED BY:            EC5 / Raul Blanco
+
+No. Of Pages: 24
+                                          REVISIONS
+
+       REVISION        PREPARER                         APPROVALS                    AUTHORZIED
+     LETTER/DATE                              BRANCH                   SAFETY
+Baseline/          A. Ross             C. Dinsmore
+10-26-2001
+A/ 6-21-2004       A. Ross             C. Dinsmore
+B/ 8-30-2006       J. Harris           C. Dinsmore
+C/                 A. Lesser           C. Dinsmore
+D/ 11-10-2009      L. Aitchison        R. Blanco
+E/ 8-25-2010       K. Mitchell         R. Blanco
+F/ 9-10-2010       K. Mitchell         R. Blanco
+G/ 2-25-2011       K. Mitchell         R. Blanco
+H/ 8-2-2011        K. Mitchell         R. Blanco
+I/ 8-1-2012        D. Valish           R. Blanco
+ CTSD-ADV-197, Rev. I (JSC# 33497)   Checkout and Standard Use Procedures for the Mark III Space
+                                     Suit Assembly
+ Date: 8-1-2012                                                                       Page 2 of 23
+
+
+Rev/Date           Change Log
+E/ 8-25-2010         Added Change Log
+                     Revised the document title.
+                     Updated Scope (removed reduced gravity environments)
+                     Updated to common format for suit procedures
+                     Reworked all out of date sections/steps
+F/ 9-10-2010           Added step to verify attenuator in-line in comm. system if needed.
+                       Removed step to record name of CPR certified test support
+                       personnel.
+G/ 2-3-2011            Updated Step 1 of Inspection and Assembly Procedure to be
+                       applicable for LAB operations only
+                       Updated Step 8 of visual inspection to include verification that
+                       hatch pins are fully installed
+                       Added 5 minute wait period between structural and leakage
+                       checks
+                       Added additional notes to the pre-test safety briefing
+                       Added steps to Section H per proficiency run redlines
+                       Updated Appendix B per Jan 2011 Emergency Drill redlines
+                       Added Appendix C: Medical Monitor Contact Information
+H/ 8-2-2011        Changes made as part of an effort to sync up all suit procedures.
+                     Added suit pressures table in “Notes” section
+                     Added step to verify no open maintenance items which are a
+                     constraint to test
+                     Updated Transfer of Equipment section
+                     Made small changes to several sections of the document to sync
+                     all suit procedures.
+I/ 8-1-2012          Added information about colored Ortman wires to aid in the
+                     verification of correct Ortman wire being installed
+                     Editorial changes
+                     Changed all “Liquid Air Backpack” references to “Portable Air
+                     Backpck” because LAB is obsolete
+ CTSD-ADV-197, Rev. I (JSC# 33497)   Checkout and Standard Use Procedures for the Mark III Space
+                                     Suit Assembly
+ Date: 8-1-2012                                                                       Page 3 of 23
+
+
+
+
+                                     TABLE OF CONTENTS
+
+
+I. PRE TEST CHECKOUT PROCEDURES
+
+   A. INSPECTION AND ASSEMBLY OF MARK III SPACE SUIT ASSEMBLY (SSA)
+
+   B. SYSTEM FUNCTIONAL CHECKOUT
+
+II. TEST PROCEDURES
+
+   A. TRANSFER OF EQUIPMENT
+
+   B. PREPARATION OF DON/DOFF STAND
+
+   C. PREPARATION OF COMMUNICATION SYSTEM
+
+   D. PREPARATION OF PRESSURIZATION SYSTEM
+
+   E. PREPARATION OF COOLING SYSTEM
+
+   F. FINAL PREPARATION FOR MANNED TEST ACTIVITY
+
+   G. PRE-TEST SAFETY CHECKLIST
+
+   H. SUPPORT OF TEST ACTIVITY
+
+   I. TERMINATION OF TEST ACTIVITY
+
+III. POST TEST PROCEDURES
+
+   A. POST TEST INSPECTION
+
+
+                                        APPENDICES
+
+APPENDIX A – MARK III SSA SIZING RECORD
+
+APPENDIX B – MARK III SUIT EMERGENCY EVENT PROCEDURE
+CTSD-ADV-197, Rev. I (JSC# 33497)    Checkout and Standard Use Procedures for the Mark III Space
+                                     Suit Assembly
+Date: 8-1-2012                                                                        Page 4 of 23
+
+
+ACRONYM LIST
+
+ACFM -      Actual Cubic Feet per Minute
+DV -        Designated Verifier
+GC-         Generally Clean
+GCC-        Ground Cooling Cart
+GFCI -      Ground Fault Circuit Interrupted
+GP/EP -     Graphite/Epoxy Composite
+HUT -       Hard Upper Torso
+LCG -       Liquid Cooling Garment
+LTA -       Lower Torso Assembly
+MAWP -      Maximum Allowable Working Pressure
+MPT-        Manned Pressurized Time
+PAB -       Portable Air Backpack
+PCB -       Portable Cooling Box
+PGA-        Pressure Garment Assembly
+PLSS -      Portable Life Support System
+PSID -      Pounds per Square Inch Differential
+RV -        Relief Valve
+SPACIS-     Spacesuit Audio Communications Interface System
+SSA -       Space Suit Assembly
+STE -       Suit Test Engineer
+TCU-        Thermal Comfort Undergarment
+TDS -       Test Data Sheet
+TMG -       Thermal Micrometeoroid Garment
+UL -        Underwriters Laboratories
+WAD -       Work Authorizing Document
+CTSD-ADV-197, Rev. I (JSC# 33497)   Checkout and Standard Use Procedures for the Mark III Space
+                                    Suit Assembly
+Date: 8-1-2012                                                                       Page 5 of 23
+
+
+SCOPE: These procedures are standard operating procedures for the Mark III Space Suit
+Assembly (SSA) to support manned pressurized operations in ambient environments.
+Procedures include pre-test suit assembly and checkout, test support procedures, and post-
+test Mark III SSA procedures.
+
+NOTES:
+
+The various Mark III suit pressures are as follows:
+ Suit Component           Operational        Structural            Proof          MAWP
+                       Pressure Range         Pressure            Pressure
+   Lower Torso
+                      0 – 6.2 ( 0.1) psid                         12.6 psid      11.3 psid
+     Assembly
+Cast Aluminum HUT 0 – 8.3 ( 0.1) psid                             16.8 psid      15.1 psid
+                                           1.5 x specified
+ Heavy Composite
+                      0 – 6.2 ( 0.1) psid   test pressure         12.6 psid      11.3 psid
+        HUT
+    Lightweight
+                      0 – 4.3 ( 0.1) psid                          8.8 psid       7.9 psid
+  Composite HUT
+
+The operational pressure range is the range to which the suit can be nominally
+operated for manned testing. The top end of the nominal operational pressure range
+is equivalent to 1/2 the proof pressure. Structural pressure is 1.5 times the specified
+test pressure for any given test. Proof pressure is the maximum unmanned pressure
+to which the suit was tested by the vendor prior to delivery. The maximum allowable
+working pressure (MAWP) is 90% of the proof pressure. The pressure systems RVs
+are set to keep components below their MAWPs. If the suit is pressurized over its
+MAWP, the suit will be taken out of service and an in-depth inspection/review of the
+suit will be performed before the suit is put back in service.
+
+
+The procedures outlined in this document should be followed as written. However, the
+suit test engineer (STE) may make redline changes real-time, provided those changes
+are recorded in the anomaly section of the test data sheet.
+
+If technicians supporting suit build-up, check-out, and/or test execution believe that a
+procedure can be improved, they should notify their lead. If procedures are incorrect
+to the point of potentially causing hardware damage or affecting safety, bring the
+problem to the technician lead and/or STE’s attention and stop work until a solution
+(temporary or permanent) is authorized.
+
+Certain steps in the procedure are marked with a ‘DV’, for Designated Verifier. The
+Designated Verifier for this procedure is an Advanced Space Suit Technology
+Development Laboratory technician, not directly involved in performing the procedural
+steps, who will verify that the step was performed as stated. The steps to be verified
+by the DV were selected based on one or more of the following criteria: the step was
+deemed significant in ensuring the safe performance of the test, the data recorded in
+the step is of specific interest in monitoring the suit system operation, or the step has
+a strong influence on the successful completion of test objectives.
+CTSD-ADV-197, Rev. I (JSC# 33497)   Checkout and Standard Use Procedures for the Mark III Space
+                                    Suit Assembly
+Date: 8-1-2012                                                                       Page 6 of 23
+
+
+
+
+Prior to all manned test activities, Advanced Suit Test Data Sheet (TDS) Parts A - E
+shall be completed to verify system and team are ready for test. Advanced Suit TDS
+Parts F-G shall be completed at the end of the suited activity.
+
+Appendix B identifies the appropriate Mark III suit emergency event procedures.
+  CTSD-ADV-197, Rev. I (JSC# 33497)    Checkout and Standard Use Procedures for the Mark III Space
+                                       Suit Assembly
+  Date: 8-1-2012                                                                        Page 7 of 23
+
+
+
+
+                        I. PRE-TEST CHECKOUT PROCEDURES
+
+A. INSPECTION AND ASSEMBLY OF MARK III SPACE SUIT ASSEMBLY (SSA)
+
+   1. ______Verify remaining Manned Pressurized Time (MPT) exceeds anticipated test
+             duration.
+
+NOTE: MPT shall not exceed 40 hrs between detailed inspections and maintenance.
+
+   2. ______ Verify that there are no open maintenance items which are a constraint to test
+      and record on TDS.
+
+   3. ______Record the M # and calibration due date of the torque driver to be used on the
+      TDS. N/A step if not required for PAB installation or re-size.
+
+   4. ______ Gather Mark III components and subassembly elements, including gloves,
+      based on suit components identified on subject’s sizing record (Appendix A).
+
+   5. ______ Verify all exposed mating and interfacing surfaces are clean, lip seals properly
+      installed with no twists or cuts.
+
+   6. ______ Verify that the suit and suit hardware are Generally Clean (GC) per the latest
+      revision of JPR 5322.1, and clean the suit and suit hardware to the GC level if
+      necessary.
+
+   7. ______ Visually inspect, clean, and lubricate (as necessary) all exposed Lip Seals and
+      “O” rings using Krytox 240AC as follows:
+
+                   a. ______ Right and Left wrist adapters
+
+                   b. ______ Right and Left suit side wrist disconnects (BLUE–LEFT/RED–
+                             RIGHT)
+
+                   c. ______ Right and Left lower leg to boot interface and sizing rings
+
+                   d. ______ Right and Left lower leg to hip interface and sizing rings
+
+                   e. ______ Right and Left lower arm to shoulder interface and sizing rings
+
+                   f. ______ Waist joint ring assembly, HUT adapter ring assembly, and sizing
+                             rings
+
+                   g. ______ Helmet neck Ring (suit side)
+
+                   h. ______ Gas and LCG connectors
+  CTSD-ADV-197, Rev. I (JSC# 33497)       Checkout and Standard Use Procedures for the Mark III Space
+                                          Suit Assembly
+  Date: 8-1-2012                                                                           Page 8 of 23
+
+
+
+
+                   i.   ______ Rear entry hatch seal
+
+                   j.   ______ Hatch pins fully installed (ball detents visible)
+
+   8. ______ Ensure that correct Ortman wires are installed as shown on Figure 1.
+
+NOTE: For each sizing ring used, an additional Ortman wire is required
+
+   9. ______ If requested on WAD, install Portable Air Backpack (PAB) or Portable Life
+      Support System (PLSS) Mock-up onto hatch. Torque screws (4) to 50 in-lbs in a
+      diagonal sequence.
+
+   10. ______ Visually examine all exposed soft goods/hardware for sharp edges and
+       damage, including tears, cuts, abrasions, and defective component elements. Record
+       damage in the maintenance log.
+
+                   a. ______ HUT (Examine locking segments on rear hatch and HUT adapter
+                             ring assembly, verify locking segments move freely)
+
+                   b. ______ Bladder/Restraint (Tears, cuts, excessive wear or damage)
+
+                   c. ______ Scye, Arm, Waist, and Hip Bearings (Smooth operation/rotation)
+
+                   d. ______ Shoulder, Waist and Thigh Rolling Convolutes
+
+                   e. ______ Boots (Sole, composite disconnect/bearing, primary and
+                             secondary restraint)
+
+                   f. ______ Helmet
+
+                   g. ______ Sizing Rings
+
+                   h. ______ Gloves (TMG, restraint, and bladder condition, bearing operation)
+
+                   i.   ______ Screw heads for sharp edges, burrs
+
+   11. ______ Visually inspect and verify that internal LCG lines are secure and no damage is
+       evident.
+
+   12. ______ Visually inspect internal communication wires and connection/connectors for
+       damage (bent or broken pins, broken clips, debonded potting, etc.)
+
+   13. ______ Visually verify the cover layer is installed, per WAD request. (Tests can be
+       performed without the cover layer to allow better observation of joint performance)
+CTSD-ADV-197, Rev. I (JSC# 33497)   Checkout and Standard Use Procedures for the Mark III Space
+                                    Suit Assembly
+Date: 8-1-2012                                                                       Page 9 of 23
+
+
+ 14. ______ As needed, sparingly apply anti-fog to the interior of the helmet and spread over
+     the entire surface with a soft (non-abrasive), lint free cloth.
+
+ 15. ______ Complete necessary suit component assembly per provided sizing sheet prior
+     to system functional checkout.
+
+                  a. ______ Arm sizing rings plus Ortman wires
+
+                  b. ______ Leg sizing rings plus Ortman wires
+
+                  c. ______ Fabric arm and leg assemblies
+
+                  d. ______ Boots
+
+                  e. ______ Waist Sizing Ring installed
+  CTSD-ADV-197, Rev. I (JSC# 33497)          Checkout and Standard Use Procedures for the Mark III Space
+                                             Suit Assembly
+  Date: 8-1-2012                                                                             Page 10 of 23
+
+
+
+
+Helmet to Hut --------------------------------------
+-No Color (42 7/8”)
+
+
+
+Lower Arm to Shoulder---------
+-Blue (19 1/4”)
+
+
+
+Lower Arm To Wrist------------
+-Orange (16”)
+                                                                                        Upper Hip to Brief
+                                                                                        -No Color
+
+
+
+Lower Leg to Hip -----------------------------
+-No Color (Square Wire)
+
+
+
+
+Lower Leg to Boot------------------------------
+-White (20 3/8”)
+
+
+
+
+                                   Figure 1: Ortman Wire Installation
+     CTSD-ADV-197, Rev. I (JSC# 33497)   Checkout and Standard Use Procedures for the Mark III Space
+                                         Suit Assembly
+     Date: 8-1-2012                                                                      Page 11 of 23
+
+
+B.       SYSTEM FUNCTIONAL CHECKOUT
+
+NOTE: If in-suit communications are not required for the test, N/A steps 1, 2, and 3.
+
+         1. ______ Verify comm. system plugged into GFCI outlet or power cord.
+
+         2. ______ Visually verify physical communication connections at:
+
+                      a. ______ Umbilical to PLSS or HUT
+
+                      b. ______ PAB or PLSS to HUT
+
+                      c. ______ HUT to speakers/microphones
+
+         3. ______ Verify good transmit and receive with a voice check (5-count)
+
+         4. ______ Perform Liquid Cooling Garment (LCG) check per the following steps:
+
+                      a. ______ Connect water connector to HUT external LCG connector.
+
+                      b. ______ Connect LCG connector to suit side connector.
+
+                      c. ______ Start water flow and verify no leaks at the LCG and external HUT
+                                connector.
+
+NOTE: If the test is unpressurized, N/A steps 5 - 7.
+
+         5. ______ Perform a structural pressure check per the “Building 34 Structural Test of
+                   CEI Using the PGA Test Stand”, CTSD-ADV-822.
+
+         6. ______ Pause for 5 minutes after the structural pressure check before continuing
+                   with Step 7 (leakage test).
+
+         7. ______ Perform a leak check per the “B34 Leakage Test of CEI/TARE of the PGA
+                   Test Stand”, CTSD-ADV-823.
+
+NOTE: Operational checklist to be completed by DV, a qualified suit technician not involved
+      with the build-up of the Mark III suit for this test.
+
+         8. ______ DV perform a Mark III operational check to verify the following:
+
+                 a. ______ Normal operation of all disconnects and hatch locking mechanisms,
+                           including locks/lock-locks.
+
+                 b. ______ Proper orientation of suit side wrist disconnects (BLUE–LEFT/RED–
+                           RIGHT)
+
+                 c. ______ Free and smooth rotation of all bearings.
+CTSD-ADV-197, Rev. I (JSC# 33497)    Checkout and Standard Use Procedures for the Mark III Space
+                                     Suit Assembly
+Date: 8-1-2012                                                                       Page 12 of 23
+
+
+
+
+            d. ______ Correct Ortman wires properly installed. (Refer to Figure 1)
+
+            e. ______ Ad/Ab stop-straps on thigh
+
+            f. ______ Internal comm. system secured and properly routed (N/A if not
+                      required)
+
+            g. ______ Arm and LTA bladders properly aligned and not twisted.
+
+            h. ______ Structural, RV, and leak checks completed successfully, if applicable.
+
+            i.   ______ Suit, including gloves, are the correct configuration and size.
+
+            j.   ______ Screw heads smooth and free of burrs.
+
+            k. ______ DV initial the TDS
+     CTSD-ADV-197, Rev. I (JSC# 33497)   Checkout and Standard Use Procedures for the Mark III Space
+                                         Suit Assembly
+     Date: 8-1-2012                                                                      Page 13 of 23
+
+
+
+                                     II. TEST PROCEDURES
+A.       TRANSFER OF EQUIPMENT
+
+NOTE: N/A this section if equipment transfer is not required. If transferring equipment, N/A
+      items not required for test support
+
+      1. ______ Transfer the following equipment to the test area, per the specifications in the
+                WAD/Daily Details Summary Sheet:
+
+             a. ______ Mark III suit hardware assembled per subject sizing record (Appendix A)
+
+             b. ______ Any ancillary support or preference equipment as listed on the WAD (e.g.
+                       TCU, LCG, socks, etc.)
+
+             c. ______ Protective booties
+
+             d. ______ Mark III Don/Doff stand, Don/Doff stairs and power cord
+
+             e. ______ UL rated GFCI power cord
+
+             f. ______ Portable cooling unit, cooling lines, power supply and ice as needed
+
+             g. ______ LCG Jumper Loop (as needed) and Burrito
+
+             h. ______ Towels
+
+             i.   ______ Technician’s tool kit with accessories
+
+             j.   ______ LPO Manifold (Record pertinent information on TDS) and air hose
+
+             k. ______ Back Pressure Regulator (Record pertinent information on TDS)
+
+             l.   ______ Portable comm. system with external speaker and headsets
+
+B.       PREPARATION OF DON/DOFF STAND
+
+      1. ______ Install power cord and plug into power source.
+
+      2. ______ Install and lock Mark III in don/doff stand.
+
+      3. ______ Raise or lower don/doff stand until boot heel is touching the ground and the
+                slack is out of the leg.
+
+      4. ______ Place don/doff stairs in position against hatch opening and lock in place.
+
+      5. ______ Adjust seat height on stairs to be level with the bottom of the hatch opening.
+     CTSD-ADV-197, Rev. I (JSC# 33497)   Checkout and Standard Use Procedures for the Mark III Space
+                                         Suit Assembly
+     Date: 8-1-2012                                                                      Page 14 of 23
+
+
+C.       PREPARATION OF COMMUNICATION SYSTEM
+
+NOTE: N/A Section C for unpressurized testing.
+
+      1. ______ Plug comm. system into a UL rated GFCI power cord as required.
+
+      2. ______ Connect comm. system to PAB/PLSS/HUT connector.
+
+      3. ______ Verify proper internal comm. connections are made.
+
+      4. ______ Verify attenuator in-line when not using in-suit speaker system to receive
+                comm.
+
+      5. ______ Perform communications check. Record on TDS.
+
+D.       PREPARATION OF PRESSURIZATION SYSTEM
+
+NOTE: N/A Section D for unpressurized testing.
+
+      1. ______ When using the PGA test stand, follow the steps in “Manned Testing Using the
+                Building 34 PGA Test Stand”, CTSD-ADV-821 to prepare the pressurization
+                system and record the specified information on the TDS. (N/A if using a
+                pressurization system other than the PGA test stand.)
+
+      2. ______ When using the B34 LPO Manifold, follow the steps in “Operating Procedures
+                for the Building 34 Low Pressure Outlet 6 K-Bottle Manifold”, CTSD-ADV-908 to
+                prepare the pressurization system and record the specified information on the
+                TDS. (N/A if using a pressurization system other than the LPO Manifold.)
+
+      3. ______ When using an alternate approved pressurization system, follow the steps in
+                the operating procedure specific to the pressurization system, and record the
+                procedure name and document number along with specified information on the
+                TDS. (N/A if using the PGA test stand or LPO Manifold.)
+
+      4. ______ Complete air supply connections to the suit.
+
+      5. ______Ensure that inlet/outlet connectors are fully seated and lock-locks are engaged.
+
+      6. ______Verify positive air flow through the vent port.
+
+E.       PREPARATION OF COOLING SYSTEM
+
+      1. ______ When using the portable cooling box (PCB) (N/A if using the ground cooling cart
+                (GCC) or chiller):
+
+                 a. ______ Visually inspect the 12 V power supply and verity it is free from
+                           damage, defects, sharp edges, and burrs.
+     CTSD-ADV-197, Rev. I (JSC# 33497)   Checkout and Standard Use Procedures for the Mark III Space
+                                         Suit Assembly
+     Date: 8-1-2012                                                                      Page 15 of 23
+
+
+
+
+                 b. ______ Place no less than 1 gallon of water in cooling system container or
+                           until water level is midway up pump body (avoid dry pump operation).
+
+                 c. ______ Fill cooling system with ice.
+
+                 d. ______ Connect to UL rated GFCI power source.
+
+                 e. ______ Connect water connector to HUT external LCG connector
+
+                 f. ______ Connect LCG connector to suit side connector.
+
+                 g. ______ Start water flow and verify no leaks at the LCG and external HUT
+                           connector.
+
+      2. ______ When using an approved alternate cooling system, reference applicable
+                approved procedures.
+
+F.       FINAL PREPARATION FOR MANNED TEST ACTIVITY
+
+      1. ______ Install breathing air line, water line, comm. line and other lines as needed into
+                an umbilical sheath.
+
+      2. ______ Verify work space/test area is free, if possible of all tripping hazards and sharp
+                edges, and condensation from the portable cooling box. Continue to inspect for
+                condensation and wipe up if required.
+
+      3. ______ Place LCG, protective booties, and preference items in the dress/changing
+                area.
+
+      4. ______ Place gloves, comfort gloves, wristlets, and helmet by don/doff stand.
+
+      5. ______ Suit test personnel sign the TDS to verify hardware readiness for test.
+
+G.       PRE-TEST SAFETY CHECKLIST
+
+NOTE: Verify that suit technicians are trained and familiar with the Emergency Event
+      Procedure for manned activities as defined in Appendix B of this document. A
+      minimum of two certified suit personnel are required to perform emergency extraction.
+
+NOTE: This section is to be completed by the Suit Test Engineer.
+
+      1. ______ Verify that supporting suit test personnel have signed the Test Data Sheet
+                 indicating hardware is acceptable for test (TDS, Part E).
+
+      2. ______ Verify subject has reviewed and signed the summary and consent form.
+
+      3. ______ Conduct pre-test briefing:
+CTSD-ADV-197, Rev. I (JSC# 33497)        Checkout and Standard Use Procedures for the Mark III Space
+                                         Suit Assembly
+Date: 8-1-2012                                                                           Page 16 of 23
+
+
+        a. ______ The test director is in charge of the test and will direct all activities.
+
+        b. ______ Test termination criteria:
+
+             i.   At subject’s request
+
+             ii. Suit technician/engineer monitoring the subject believes there’s a reason
+
+             iii. Low airflow problem – if airflow drops below 5 ACFM, verify:
+
+             (a) The period of time does not exceed 5 minutes.
+
+             (b) The suited personnel be informed of the situation and directed to minimize
+                 activity
+
+             (c) Suit test team to be informed of the reduced air flow and appropriate
+                 individuals begin monitoring for high CO2 symptoms, including headache,
+                 flushed feeling, dizziness, blurred vision, light-headedness
+
+             (d) The test will be terminated if the flow falls below 4 ACFM.
+
+             (e) Discuss sound changes associated with drop in airflow with test subject.
+
+             iv. Loss of communication
+
+             (a) Determine basic hand signals for communication with test subject should
+                 there be a loss of communication.
+
+        c. ______ Response to fire alarm or other facility emergency (emergency escape
+                  routes and procedures to be followed).
+
+        d. ______ Emergency phone numbers, location of phone. Verify that STE has
+                   emergency numbers in phone if testing at the rock yard or off-site.
+
+        e. ______ Verify that the test subject has a current and appropriate physical. Mark
+                  “N/A” for crewmember.
+
+        f. ______ Verify that the test subject is physically and mentally prepared to
+                   participate in test today (rested, hydrated, fed, no current/recent
+                   injuries, etc.).
+
+        g. ______ Discuss test specific suit and non-suit hazards (exhaustion, heat stress,
+                   slip/trip/fall, sharp edges, etc).
+
+        h. ______ Discuss the hazards involved with breath holding and the excessive use
+                  of the valsalva maneuver (can damage ear drums). Offer use of
+                  valsalva block.
+
+        i.   ______ Instruct subject on hazards associated with the aspiration of vomit and
+                    how to avoid it.
+     CTSD-ADV-197, Rev. I (JSC# 33497)     Checkout and Standard Use Procedures for the Mark III Space
+                                           Suit Assembly
+     Date: 8-1-2012                                                                        Page 17 of 23
+
+
+             j.   ______ Instruct subject to avoid “hanging” in the suit (since suspension may
+                         increase risk of fainting).
+
+             k. ______ Remind test subject that it is their responsibility to request cooling and
+                        audio volume adjustments as needed during the test.
+
+             l.   ______ Inform test subject to notify STE or technician in event of ear or sinus
+                          problems during testing.
+
+             m. ______ Note medical monitor’s name and phone number on list in MKIII binder.
+
+              n. ______ Test subject signs Test Data Sheet verifying they have been briefed,
+                         understand, and accept the suit and non-suit equipment hazards
+                         involved with the test.
+
+H.       SUPPORT OF TEST ACTIVITY
+
+      1. ______ At test director/STE direction, the test subject will perform the following:
+
+             a. ______ Don ancillary (e.g. LCG, TCU, socks)
+
+             b. ______ Climb don/doff stairs and sit on top of platform with feet in hip/brief area
+                       of lower torso.
+
+             c. ______ Don LCG thumb loops
+
+             d. ______ Connect LCG connector; initiate water flow and verify no leaks. Install
+                       burrito. Adjust water flow as required.
+
+      2. ______ Complete suit donning by lowering into the lower torso and arms.
+
+      3. ______ Connect shoulder straps.
+
+      4. ______ Install ear bud as required.
+
+      5. ______ Remove the donning stairs.
+
+      6. ______ Close rear hatch. Verify locked.
+
+      7. ______ Don comfort gloves and wristlets as required.
+
+      8. ______ Assist test subject with donning gloves.
+
+      9. ______ Conduct comm. check and verify at minimum test subject, suit safety
+                technician, and test conductor are online.
+
+      10. ______ Verify all suit connections are locked and secure.
+
+      11. ______ Adjust breathing air inlet controller to initiate flow. Verify airflow at vent port.
+     CTSD-ADV-197, Rev. I (JSC# 33497)   Checkout and Standard Use Procedures for the Mark III Space
+                                         Suit Assembly
+     Date: 8-1-2012                                                                      Page 18 of 23
+
+
+NOTE: A technician will be in visual contact and audio contact with test subject at all times to
+      watch for indications of stress, CO2 build-up, extreme fatigue or other conditions that
+      may require immediate attention.
+
+      12. ______ Install helmet. Verify Ortman wire fully installed.
+
+      13. ______STE start time for manned pressurized use.
+
+                       Start time: _________
+
+      14. ______ Pressurize suit. Communicate with the subject while pressurizing to ensure
+                 subject’s ears are clear. Hold, as necessary, per test subject feedback.
+                 Pressurization rate not to exceed 1 pound for every 15 seconds.
+
+NOTE: Specific procedures for the operation of the breathing air system provide explicit
+      instructions for the operator during pressurization.
+
+      15. ______ When suit reaches pressure, remove the waist pin.
+
+      16. ______ Transfer control of the test to the Test Director and begin using test specific
+                 procedures.
+
+NOTE: Maintain a minimum of 5 ACFM airflow rate at all times.
+
+NOTE: Monitor breathing air and cooling at all times.
+
+NOTE: Manage test subject’s umbilicals throughout the test to ensure that they do not create a
+      trip hazard.
+
+NOTE: Control of the test is returned to the suit test team at the completion of the test specific
+      procedures.
+
+I.       TERMINATION OF ACTIVITY
+
+      1. ______ Once the subject is back in the donning stand, install the waist pin.
+
+      2. ______ Notify suit subject of depressurization and to not hold their breath.
+
+      3. ______ Reduce suit pressure to less than 0.5 psid.
+
+      4. ______ Remind subject to exhale. Remove Glove.
+
+      5. ______ STE Stop time for manned pressurized use.
+
+                       Record duration: _________
+
+      6. ______ Remove Helmet.
+
+      7. ______ Shut off and secure airflow, water flow and comm.
+CTSD-ADV-197, Rev. I (JSC# 33497)    Checkout and Standard Use Procedures for the Mark III Space
+                                     Suit Assembly
+Date: 8-1-2012                                                                       Page 19 of 23
+
+
+ 8. ______ Open rear hatch and roll and lock don/doff stairs in place.
+
+ 9. ______ Disconnect LCG connector.
+
+ 10. ______ Assist test subject in doffing suit.
+
+ 11. ______ Transfer all equipment to the Advanced Suit Lab (N/A if not required).
+     CTSD-ADV-197, Rev. I (JSC# 33497)   Checkout and Standard Use Procedures for the Mark III Space
+                                         Suit Assembly
+     Date: 8-1-2012                                                                      Page 20 of 23
+
+
+
+                                III. POST-TEST PROCEDURES
+
+A.       POST TEST INSPECTION
+
+NOTE: This section is to be completed by the STE.
+
+      1. ______ Inspect suit and components for damage.
+
+      2. ______ Transfer any out of family comments to the TDS.
+
+      3. ______ Update Suit Use and Maintenance logs as appropriate.
+
+      4. ______ Sign TDS to indicate all post-test activities were completed.
+
+      5. ______ Add completed TDS to Mark III binder.
+
+      6. ______ Notify technicians that inspection is complete and hardware may be returned to
+                storage.
+
+
+NOTE: When manned pressurized time reaches 40 hours as recorded on the Mark III Suit
+      Use Log or as required by harsh environment usage, perform component
+      maintenance per the “Mark III Space Suit Assembly Maintenance and Repair Manual”,
+      CTSD-ADV-298.
+CTSD-ADV-197, Rev. I (JSC# 33497)   Checkout and Standard Use Procedures for the Mark III Space
+                                    Suit Assembly
+Date: 8-1-2012                                                                      Page 21 of 23
+
+
+
+
+                                     APPENDICES
+CTSD-ADV-197, Rev. I (JSC# 33497)    Checkout and Standard Use Procedures for the Mark III Space
+                                     Suit Assembly
+Date: 8-1-2012                                                                       Page 22 of 23
+
+
+
+         APPENDIX A: MARK III SSA SIZING RECORD SHEET
+ Subject: _________________________________________            Date:_____________________
+
+ HUT Size: _______________________________________             Brief Size: ________________
+
+Gloves                                    Size         Arms
+David Clark:     Phase V   ______         ______       Soft Good Size:       Lng _________
+                                                                             Med _________
+Other:                                                                       Sht _________
+                 _________________        ______                             XSht _________
+                                                       Sizing Rings
+                                                       Upper Arm Left:       Upper Arm Right:
+ILC:             Phase VI ______          ______       None      ________    None      ________
+                 4000     ______          ______       01 (.304) ________    01 (.304) ________
+                                                       02 (.604) ________    02 (.604) ________
+
+Waist Sizing                                           Lower Arm Left:       Lower Arm Right:
+Breech Lock Rings           None    _________          None      ________    None      ________
+                            0.75”   _________          06 (.304) ________    06 (.304) ________
+                            1.25”   _________          07 (.604) ________    07 (.604) ________
+                            2.5”    _________          Legs
+                                                       Soft Good Size:       Lrg XLng _______
+Boots                                                                        Lrg Lng _______
+David Clark, ILC or                                                          Lrg Med _______
+Modified EMU                                                                 Lrg Sht _______
+Shoe Size:
+LCVG                                                   Upper Leg Left:       Upper Leg Right:
+TCU’s:                      Large _________            None       _______    None        _______
+                            Med   _________            -11 (.304) _______    -11 (.304) _______
+                            Small _________            -12 (.604) _______    -12 (.604) _______
+                                                       -14 (1.204)_______    -14 (1.204)_______
+Comfort Pads                                           Lower Leg Left:       Lower Leg Right:
+Shoulder Straps:                                       None       _______    None       _______
+Padding:                                               -01 (.301) _______    -01 (.301) _______
+                                                       -02 (.601) _______    -02 (.601) _______
+                                                       -04 (1.201)_______    -04 (1.201)_______
+
+Comments
+Was the Liquid Air Backpack Used? Circle Yes/No
+
+
+
+                                                 Data Recorded By:_______________________
+     CTSD-ADV-197, Rev. I (JSC# 33497)    Checkout and Standard Use Procedures for the Mark III Space
+                                          Suit Assembly
+     Date: 8-1-2012                                                                       Page 23 of 23
+
+
+
+APPENDIX B: MARK III EMERGENCY EVENT PROCEDURES FOR
+              ONE-G MANNED ACTIVITIES
+NOTE: The suit engineer/test director shall direct appropriate emergency
+         personnel as required.
+NOTE: A minimum of two certified suit personnel are required to perform the following
+        procedures.
+NOTE: If spinal injury suspected, do not move subject until qualified medical personnel
+        arrives.
+1. Verify emergency extraction condition exists.
+
+2. Verify/clear all non-essential personnel from the test area and verify medical personnel are
+   called. (On-site x33333, Ellington x44444)
+
+3. Place suited subject on the floor, in a semi-sitting position, and remove all obstructions from
+   the suit.
+
+4. Reduce suit pressure. Verify pressure is less than 0.5 psid.
+
+5. Remove gloves and helmet.
+
+        If spinal injury NOT suspected:                If spinal injury suspected:
+6.      Assist subject as required and wait for        Maintain subject in stable position until
+        medical personnel.                             qualified medical personnel arrive.
+
+NOTE: Perform Steps 7-11 only if chest access is required to perform CPR or at the
+      direction of qualified medical personnel.
+
+        If working from UMBILICALS:                    If working from LAB:
+7.      Unlock waist connection (safety tab on         Remove rear hatch pins and lift hatch
+        right side of MK-III waist bearing) and lift   off of suit with LAB attached.
+        up on HUT.
+8.      Disconnect Liquid Cooling Garment              Disconnect Liquid Cooling Garment
+        connector.                                     connector.
+9.      Continue to lift HUT off of subject while      Pull subject’s arms and head out of
+        cradling head and neck to prevent further      upper torso while cradling head and
+        injury.                                        neck to prevent further injury.
+
+10. Undo boot straps
+
+11. Remove the subject from the lower part of the suit and transfer to a predetermined
+   emergency medical pick up point.
+
+12. Secure the test area as required.
+
+13. Notify appropriate management, NASA medical, and safety personnel.
+

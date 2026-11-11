@@ -131,12 +131,12 @@
   {
    "id": "hero.width",
    "real": [
-    0.6,
+    0.8,
     1.0
    ],
-   "value": 0.8,
+   "value": 0.95,
    "unit": "m",
-   "source": "estimate: 1 m is the 99th percentile suited breadth without tools (https://ntrs.nasa.gov/citations/20090032975); a median suit is narrower"
+   "source": "1 m horizontal corridor from the 99th percentile suited breadth (https://ntrs.nasa.gov/citations/20090032975); 0.95 m is the NASA suit model scaled to size"
   },
   {
    "id": "hero.reach.work",
@@ -338,6 +338,96 @@
    "value": 0.3,
    "unit": "m",
    "source": "estimate: a leaf or romaine lettuce head at harvest is commonly 20 to 35 cm across; the saved NASA Veggie paper (NTRS 20190028955) gives days to harvest, not size"
+  },
+  {
+   "id": "hero.cadence.walk",
+   "real": [
+    1.2,
+    1.5
+   ],
+   "value": 1.5,
+   "unit": "steps/s",
+   "source": "Apollo crews 70 to 80+ steps a minute (https://www.nasa.gov/history/alsj/a11/a11.gaits.html); a suited 1 g treadmill study 88.8 steps/min (design/research/suit.md, Cullinane 2017). Value: walk speed / half the stride"
+  },
+  {
+   "id": "hero.stride.walk",
+   "real": [
+    1.04,
+    1.4
+   ],
+   "value": 1.33,
+   "unit": "m",
+   "source": "two steps; Apollo 16 3.4 to 4.6 ft per stride (https://www.nasa.gov/history/alsj/a11/a11.gaits.html) and Cullinane 2017 1.243 m (design/research/suit.md); value = 1.0 m/s / 1.5 steps/s x 2"
+  },
+  {
+   "id": "hero.cadence.hurry",
+   "real": [
+    1.5,
+    1.75
+   ],
+   "value": 1.75,
+   "unit": "steps/s",
+   "source": "estimate: Apollo 16 fastest about 105 steps a minute (https://www.nasa.gov/history/alsj/a11/a11.gaits.html); no Mars-gravity measurement"
+  },
+  {
+   "id": "hero.knee.swing",
+   "real": [
+    20,
+    30
+   ],
+   "value": 28,
+   "unit": "deg",
+   "source": "peak knee flexion suited in reduced gravity, read off a graph (Norcross et al. 2010, https://ntrs.nasa.gov/citations/20110003409, Fig. 26): about 60 unsuited"
+  },
+  {
+   "id": "hero.stance.width",
+   "real": [
+    0.19,
+    0.38
+   ],
+   "value": 0.25,
+   "unit": "m",
+   "source": "feet apart while walking suited: Cullinane 2017 and Apollo 15 video (design/research/suit.md)"
+  },
+  {
+   "id": "hero.froude.walk_run",
+   "real": [
+    0.25,
+    0.47
+   ],
+   "value": 0.36,
+   "unit": "Fr",
+   "source": "suited walk-to-run transition, Froude 0.36 +/- 0.11 over 38 Apollo gait events (https://pmc.ncbi.nlm.nih.gov/articles/PMC2719915/)"
+  },
+  {
+   "id": "hero.jump.time",
+   "real": [
+    0.5,
+    0.63
+   ],
+   "value": 0.63,
+   "unit": "s",
+   "source": "derived: 2 x 1.17 m/s / 3.73 m/s2, the Apollo 16 take-off speed under Mars gravity (see hero.jump.hop)"
+  },
+  {
+   "id": "hero.lean.max",
+   "real": [
+    25,
+    35
+   ],
+   "value": 25,
+   "unit": "deg",
+   "source": "forward lean of suited crew bending to pick things up, Apollo 16 (https://www.nasa.gov/history/alsj/a11/a11.gaits.html; design/research/suit.md)"
+  },
+  {
+   "id": "hero.contact.height",
+   "real": [
+    0.0,
+    0.02
+   ],
+   "value": 0.02,
+   "unit": "m",
+   "source": "estimate: a foot counts as landed within 2 cm of the floor; a check on footstep timing, not a feel number"
   }
  ],
  "pairs": []

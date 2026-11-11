@@ -1,0 +1,79 @@
+National Aeronautics and Space Administration
+
+
+
+
+Extravehicular Mobility Unit
+
+
+
+
+                                                                                                              Johnson Space Center
+The Extravehicular Mobility Unit (EMU) is comprised mainly of the spacesuit assembly and the Portable Life
+Support System, which provides breathable air for the astronaut and battery power for the suit’s electrical
+functions. The EMU accommodates a variety of interchangeable systems that interconnect easily and
+securely in a single-handed operation for either normal or emergency use.
+
+Services Provided
+• System-level engineering insight into the
+  hardware operational performance and detailed
+  leadership into anomaly resolution.
+• Real-time mission support for on-orbit activities.
+• Ground training simulations for training and
+  crew extraction from the Neutral Buoyancy
+  Laboratory and vacuum chamber facilities.
+• Engineering risk-based guidance for
+  management and sustaining of the EMU
+  hardware and forecast for long-term hardware
+  life-cycle usage.
+• Developmental proof of concept for changes
+  and additions to the EMU hardware system.
+                       J   O    H       N   S   O   N     S   P   A   C   E      C   E   N    T   E   R
+
+
+
+EMU Description
+Spacesuits are unique in that they are anthropomorphic, customized spacecraft. They must provide environmental
+protection, mobility, and life support to the crewmember during spacewalks. The suit is modular in design, with many
+interchangeable parts. The upper torso, lower torso, arms, and gloves are manufactured in three different sizes for the major
+hard-good components (such as the hard upper torso) and can be assembled for each mission in combinations needed to
+fit male and female astronauts. This design is cost effective because the suits are reusable and not custom fitted as were
+Extravehicular Activity (EVA) spacesuits used in previous NASA manned space flight programs.
+
+When preparing to work in space, the astronaut goes into the airlock of the International Space Station (ISS) and puts on the
+following parts of the EMU:
+• A maximum absorbency garment, which is a modified incontinence diaper. (Urine collection devices are no longer used.)
+• A liquid cooling and ventilation garment, a one-piece mesh suit made of spandex, zippered for front entry. The garment
+  has water-cooling tubes running through it to keep the wearer comfortable during active work periods.
+• An in-suit drink bag containing 21 ounces of potable water.
+• The “Snoopy Cap,” which is a communications carrier assembly with earphones and microphones for two-way
+  communications and caution-and-warning tones.
+• A biomedical instrumentation subsystem to provide flight doctors on the ground insights into a crewmember’s health
+  during EVAs.
+
+
+Interesting Facts
+• The original EMU was used from 1979 to 2002. The EMU design was upgraded in 2002 and has been in use since that time.
+• The EMU design is modular, which means that it has separate pieces that can be put together to fit each astronaut. The
+  current suit design is capable of fitting a 5th percentile female (5’ tall,
+  110 lb) up to a 95th percentile male (6’2” tall, 223 lb).
+• The shuttle EMU, with the life support backpack and
+  the Simplified Aid for Extravehicular Rescue (SAFER),
+  weighs approximately 275 lb (124.7 kg)
+  on Earth and is pressurized
+  to 4.3 psia (29.6 kPa).
+• The ISS EMU, with the life
+  support backpack and SAFER,
+  weighs approximately 319 lb
+  (145 kg) on Earth and is
+  pressurized to 4.3 psia (29.6 kPa).
+
+
+
+
+                           For the benefit of all
+                                      For more information:       Point of contact:
+                     https://www.nasa.gov/centers/johnson/        JSC Engineering Directorate
+                      partnerships/JSC-Partnership-Gateway        jsc-ea-partnerships@mail.nasa.gov
+www.nasa.gov                                                                                              FS-2019-07-JSC-EA010
+

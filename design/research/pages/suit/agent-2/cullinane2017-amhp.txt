@@ -1,0 +1,516 @@
+                                                                                                                                                         T E C H N I C A L N OT E
+
+
+
+
+                  Mobility and Agility During Locomotion in the Mark III
+                  Space Suit
+
+
+
+
+                                                                                                                                                                                       Downloaded from https://prime-pdf-watermark.prime-prod.pubfactory.net/ at 2026-10-21 via free access
+                  Conor R. Cullinane; Richard A. Rhodes; Leia A. Stirling
+
+
+
+
+ INTRODUCTION:    The Mark III (MIII) space suit assembly (SSAs) implements a multibearing, hard-material hip brief assembly (HBA). We
+                  hypothesize that: 1) the MIII HBA restricts operator mobility and agility which manifests in effects to gait parameters; 2)
+                  the waist bearing provides rotational motion, partially alleviating the restrictions; and 3) there are resistive, speed-
+                  dependent torques associated with the spinning bearings which further diminish mobility and agility.
+      METHODS:    A subject (Suited and Unsuited) performed two planetary tasks—walking forward (WF) and backward (WB). An analysis
+                  of variance (ANOVA) and post hoc comparisons were performed to determine interaction effects. Motion capture data
+                  was processed to obtain gait parameters: static base (m), dynamic base (m), step length (m), stride length (m), cadence
+                  (steps/min), center of mass speed (m · s21), foot clearance (toe and heel) (m), and bearing angular velocities (° · s21).
+       RESULTS:   The static base when Suited (0.355 m) was larger than Unsuited (0.263 m). The Suited dynamic base (pooled, 0.200 m)
+                  was larger than both Unsuited WF (0.081 m) and WB (0.107 m). When Suited, the operator had lower clearance heights.
+                  The waist bearings provided about 7.2° of rotation when WB and WF. The maximum torque, while WF, in the right upper
+                  and mid bearings was 15.6 6 1.35 Nm and 16.3 6 1.28 Nm.
+    DISCUSSION:   This study integrated suit component properties and the emergent biomechanics of the operator to investigate how
+                  biomechanics are affected. The human hip has three collocated degrees of freedom (DOFs), whereas the HBA has a
+                  single DOF per bearing. The results can inform requirements for future SSA and other wearable system designs and
+                  evaluations.
+    KEYWORDS:     programmed motion, static base, dynamic base, step length, stride length, clearance analysis, bearing analysis, joint
+                  torque, degrees of freedom, biomechanics, anthropometry, computer-aided design, motion capture.
+
+                  Cullinane CR, Rhodes RA, Stirling LA. Mobility and agility during locomotion in the Mark III space suit. Aerosp Med Hum Perform. 2017; 88(6):589–596.
+
+
+
+
+M
+           anned spaceflight necessitates life support for crew-                              The Mark III (MIII) Planetary SSA was developed to evalu-
+           members during extravehicular activities (EVAs) in                              ate technology that extends planetary explorer capabilities
+           the form of space suit assemblies (SSAs), which                                 beyond those of the Apollo A7L, the suit used for lunar explora-
+should maximize human performance and efficiency while                                     tion. One technology tested is a hip brief assembly (HBA) that
+preventing injury.7 New suit designs consider the interaction of                           implements a multibearing hard-material (IM7–997–3 and
+mass, volume, walking effort, mobility, agility, and suit fit.2 By                         S-Glass, improved strength E-fiberglass)3,16 solution to provide
+increasing mobility and reducing deviations from unsuited                                  constant-volume joints. The Mark III HBA architecture imple-
+operator kinematics, injury risk and metabolic cost may be                                 ments three bearings in series for each hip, an upper, mid, and
+reduced,22 and could extend exploration capabilities and improve
+                                                                                           From Health Sciences and Technology, and the Institute for Medical Engineering and
+exploration mission operations. While more recent SSA designs                              Science, Aeronautics and Astronautics, Massachusetts Institute of Technology,
+increase mobility, these systems lead operators to perform pre-                            Cambridge, MA; Harvard Medical School, Boston, MA; and Advanced Pressure Garment
+                                                                                           Technology Development Lab, Crew Survival and Space Suit Systems Branch EC5, NASA
+determined (programmed) motions that are inconsistent with                                 Johnson Space Center, Houston, TX.
+natural biomechanics, causing the operator to fight against the                            This manuscript was received for review in April 2016. It was accepted for publication in
+suit to achieve mission goals.13 Crewmembers spend many                                    March 2017.
+hours in a given suit to learn and adapt to the programmed                                 Address correspondence to: Conor R. Cullinane, Health Sciences and Technology,
+                                                                                           Massachusetts Institute of Technology, 77 Massachusetts Ave., Cambridge, MA 02139;
+motions, with training important for learning to operate a suit                            cullincr@mit.edu.
+and discover ways to map the human joint degrees of freedom                                Reprint & Copyright © by the Aerospace Medical Association, Alexandria, VA.
+(DOFs) with the suit DOFs.6                                                                DOI: https://doi.org/10.3357/AMHP.4650.2017
+
+
+
+                                                                                Aerospace Medicine and Human Performance Vol. 88, No. 6 June 2017   589
+LOCOMOTION IN THE MARK III—Cullinane et al.
+
+
+
+rolling convolute bearing (Fig. 1), where the upper bearing is       provide insight on overall stability, with a wide dynamic base
+the most proximal and the rolling convolute bearing is the most      providing improved balance and stability for controlling body
+distal. The upper and mid bearings provide hip flexion/exten-        mass over the supporting limb. In child development, the
+sion and adduction/ abduction. Cowley et al.4 computationally        dynamic base decreases until the age of three and a half,19 which
+estimated the HBA hip rotation to have 84° of flexion, 7° of pure    can be interpreted as an improvement in coordination and bal-
+abduction, and 93° of transversely rotated abduction (a pro-         ance, causing the child to require less stability through foot
+grammed motion that combines hip flexion with abduction).            placement while controlling body mass. Within the elderly
+    Experiments at NASA comparing the MIII HBA to the                population, the dynamic base increases among those at risk of
+Apollo A7L hip joint reveal the HBA to have improved perfor-         falling and when walking at faster speeds,12 providing addi-
+mance over its predecessor in two important categories: walk-        tional stability. LaFiandara et al.10 found adding a load to the
+ing effort and retrieving a rock sample. However, the HBA has        body decreased the transverse pelvic rotation and stride length
+limitations in bent torso stability, standing on one knee, and       while maintaining speed and increasing cadence. Abe et al.1
+requires programmed motion.2 While the HBA eliminates the            postulate that the change in stride length and cadence may be
+
+
+
+
+                                                                                                                                             Downloaded from https://prime-pdf-watermark.prime-prod.pubfactory.net/ at 2026-10-21 via free access
+volume change during joint motions, it introduces an instability     due to attempts to minimize energy expenditure.
+that could lead to altered biomechanics during planetary                 In addition to adding mass, the spacesuit provides resistive
+tasks.9,13 Operators wearing earlier EVA suits have developed a      forces to the operator. Cullinane et al.5 previously characterized
+range of injuries in a range of locations, including the shoulder    the torque required to rotate the HBA upper and mid bearings
+and hip, due to prolonged use, including erythema, abrasions,        for a range of angular velocities. Coupling these data with the
+muscle soreness/fatigue, paresthesia, bruising, blanching, and       measured bearing angular velocities during ambulation may lead
+edema.14,17 If the suit alters natural biomechanics, it may result   to an improved understanding of the underlying programmed
+in increased injury risk over long-term usage inherent in loco-      motions and provide future design guidelines for wearable sys-
+motion and utility tasks.15 Even a small alteration in natural       tems. In this paper, we present the results of a pilot study of loco-
+biomechanics can result in injury when amplified through             motion while Unsuited and Suited with the MIII SSA. This study
+many cycles.11,13                                                    aims to integrate underlying suit component characteristics with
+    There have been many studies in the biomechanics literature      the emergent biomechanics of the operator to investigate how
+examining and characterizing unsuited gait. It has been shown        biomechanics are affected by the MIII, specifically how the HBA
+that cadence (the number of steps per unit time) increases           architecture effects hip kinematics and dynamics. We hypothe-
+while step length and speed decrease when walking backward           sized that 1) the MIII HBA architecture has DOF limitations
+(WB) as compared to walking forward (WF).8,20 The gait cycle         that restrict operator mobility and agility. The limitations
+(1/cadence) and stride length are also functions of speed and        manifest in effects to both static and dynamic (WF and WB) gait
+direction (WF or WB).8 Changes in dynamic base (the per-             parameters. 2) Based on subjective feedback from experienced
+pendicular distance between heels during double stance) can          suit testers, the waist bearing provides rotational motion in the
+                                                                     transverse plane during ambulation, partially alleviating
+                                                                     mobility restrictions introduced by the HBA. 3) Although the
+                                                                     HBA volume does not change during hip joint motion, there is
+                                                                     still a resistive speed-dependent torque associated with the spin-
+                                                                     ning bearings. Those torques further diminish the mobility and
+                                                                     agility of the operator, requiring increased hip joint torques
+                                                                     along the limited DOFs. The data presented in this study are rel-
+                                                                     evant for improving future SSA engineering through design
+                                                                     requirements development and evaluation methods.
+
+
+                                                                     METHODS
+
+                                                                     Subject
+                                                                     This pilot study was performed on a single subject who repre-
+                                                                     sents an astronaut. The subject was 30 yr old and 72˝ tall, which
+                                                                     falls within the astronaut selection criteria for age (26–46 yr
+                                                                     old) and height (62–75˝) of astronaut candidates. The subject
+                                                                     had extensive experience operating the suit, enabling the
+                                                                     assumption of a trained operator. The subject was cleared with
+                                                                     a class I medical to participate as a suit operator. The study pro-
+                                                                     tocol was approved by the NASA Johnson Space Center IRB
+                                                                     and the subject provided written informed consent prior to
+Fig. 1. The Mark III HBA.                                            participation.
+
+590  Aerospace Medicine and Human Performance Vol. 88, No. 6 June 2017
+                                                                                                       LOCOMOTION IN THE MARK III—Cullinane et al.
+
+
+
+Equipment
+The study was performed in the Anthropometrics and Biome-
+chanics facility (ABF) at the NASA Johnson Space Center. Data
+were collected using 11 Vicon Bonita cameras imaging at 100
+frames per second. The MIII was pressurized to nominal suit
+pressure (4.3 psi) in a tethered configuration [i.e., not with the
+closed-loop portable life support system (PLSS)]. The MIII in
+the tethered configuration weighs 59 kg.2,21 No mass was added
+in this configuration to simulate the PLSS. While unsuited, the
+subject wore a compression shirt and pants.
+
+Procedure
+For the Unsuited condition, passive reflective motion capture
+
+
+
+
+                                                                                                                                                              Downloaded from https://prime-pdf-watermark.prime-prod.pubfactory.net/ at 2026-10-21 via free access
+markers were placed at anatomical landmarks (Fig. 2, top).
+The subject stood still to obtain a static pose, then performed
+trials that included WF (12 trials) and WB (6 trials) within the
+motion capture volume (10 m long by 1 m wide walkway).
+Following Unsuited operations, the subject donned the MIII
+SSA, which was then pressurized. For the Suited configura-
+tion, the motion capture markers were placed external to the
+SSA (Fig. 2, bottom). It can be difficult, or sometimes impos-
+sible, to identify anatomical landmarks to guide marker place-
+ment; rather the placement was intended to highlight features
+of interest on the suit, especially on the HBA. While Suited,
+the static pose, as well as WF (10 trials) and WB (5 trials) were
+repeated.
+
+Data Analysis
+Logarithmic and hyperbolic fit equations from Grasso et al.8
+were used to predict the Unsuited stride length and cadence,
+respectively. The hyperbolic equation was originally expressed
+for gait cycle. Here we take the inverse to predict cadence. An
+HBA model was created in the computer-aided design (CAD)
+package SolidWorks18 (Fig. 1) to predict functional motion
+envelopes.4 The position data (x, y, z) of the motion capture
+markers were used to calculate static and dynamic gait
+parameters for the subject while Suited and Unsuited. For the        Fig. 2. Unsuited (top) and Suited (bottom) marker placement. “L” and “R” denote
+                                                                     left and right. Markers were placed on the Unsuited subject at the clavicle (CLA),
+dynamic trials, the data sets were trimmed to include the            sternum (STR), anterior superior iliac spines (ASI), greater trochanters (GTR),
+steady state gait within the capture volume, which tended to         thigh (THI), medial knees (MKN), lateral knees (LKN), shins (SHN), medial ankle
+include 2–3 strides.                                                 (MAK), lateral ankle (LAK), 5th metatarsals (MT5), big toes (TOE), heels (HEE), pos-
+    The gait parameters examined for Hypothesis 1 were static        terior superior iliac spines (PSI), 10th thoracic vertebrae (T10), 7th cervical verte-
+base (m), dynamic base (m), step length (m), stride length (m),      brae (C7), and scapula (SCA). When Suited, three markers were evenly spaced
+                                                                     on each of the bearings. Two triads of markers were placed on the main brief
+cadence (steps/min), center of mass speed (m · s21), and foot        section, one in the front and one in the rear. Another triad was placed on the
+clearance (toe and heel, m). The static base was defined as the      hard upper torso (HUT). Other markers were chosen to replicate anatomical
+distance between the left and right heel markers when the sub-       marker placements (MKN, LKN, MAK LAK, MT5, TOE, and HEE).
+ject was standing in a static pose. The HBA CAD model was
+also used to predict the minimum static base while suited by         calibrated origin, where the calibrated origin was the height
+orienting the HBA to minimize the distance between the rolling       when the foot was in contact with the ground.
+convolute joints. Step length was defined as the parallel distance      The parameter necessary for testing Hypothesis 2 was the
+between two consecutive heel strikes of opposite feet, while         waist bearing rotation (degrees), which was defined as the dif-
+stride length was defined as the distance between two consecu-       ference in motion between the HUT and main brief section.
+tive heel strikes of the same foot. Cadence was defined as the       Normal vectors were calculated from the motion capture
+step length divided by the time to complete that step. Speed was     marker triads on both the front of the HUT and HBA. For
+determined as a center of mass speed and was calculated from         example, if the three markers in the triad were labeled
+                                                                                                                             A, B, 
+                                                                                                                                   and
+                                                                                                                                     
+a chest or hard upper torso (HUT) marker. The heel and toe           C, the normal vector could be calculated as N = AB X AC .
+clearance was defined as the vertical distance above the             With the two normal vectors (N1 and N2) calculated from each
+
+                                                              Aerospace Medicine and Human Performance Vol. 88, No. 6 June 2017   591
+LOCOMOTION IN THE MARK III—Cullinane et al.
+
+
+
+triad, the angle between the vectors was calculated as shown in                                            RESULTS
+Eq. 1. The difference between the maximum and minimum
+angles for each trial is the range that the waist bearing rotated                                          As this was a pilot study that contained only one subject,
+during ambulation.                                                                                         Unsuited stride length and cadence were compared with values
+                                    N1⋅ N 2                                                             estimated using the regressions from Grasso et al.8 The mea-
+                        θ = cos−1                         Eq. 1
+                                    N1N 2                                                             sured mean speed, taken from the speed of a chest marker, for
+                                                                                                           WF (1.12 m · s21) and WB (0.904 m · s21) provided predicted
+To test Hypothesis 3, the upper/mid bearing angular velocities                                             stride lengths of 1.30 m and 1.19 m for WF and WB, respec-
+(° · s21) are determined. The bearing angular velocities,                                                  tively. These values were within the 95% confidence intervals of
+( ω x , ω y , ω z ), were calculated with the system of equations:                                         the stride lengths determined from the measured data (1.31 6
+                                                                                                           0.0262 m and 1.20 6 0.0347 m). The predicted cadence for WF
+   x1 (t + ∆t ) − x1 (t )       x (t + ∆t ) − x (t )                                                       and WB (102 steps/min and 94.4 steps/min) were outside the
+                            −                          = ω y (z1 − z ) − ωz ( y1 − y )         Eq. 2
+            ∆t                          ∆t                                                                95% confidence intervals (98.6 6 1.58 steps/min and 79.2 6
+
+
+
+
+                                                                                                                                                                                   Downloaded from https://prime-pdf-watermark.prime-prod.pubfactory.net/ at 2026-10-21 via free access
+                                                                                                           2.40 steps/min).
+  y (t +∆t )− y1 (t ) y (t +∆t ) − y (t )                                                                   The static base for Unsuited and Suited was 0.263 m and
+− 1                −                      = ωx (z1 − z ) − ωz ( y1 − y ) Eq. 3                        0.355 m, respectively. Using the HBA CAD model, the sagittal
+       ∆t                  ∆t                                                                         plane vertical distance from the rolling convolute medial edge to
+                                                                                                           the center of the main brief section (hip joint center) was calcu-
+   z1 (t + ∆t ) − z1 (t )       z (t + ∆t ) − z (t )                                                       lated to be 218.9 mm. The transverse plane horizontal distance
+                            −                          = ω x (z1 − z ) − ω y ( y1 − y )        Eq. 4
+            ∆t                          ∆t                                                                from the rolling convolute medial edge to the center of the HBA
+where ( x1 , y1 , z1 ) is the position of a single marker on a bearing                                     was calculated to be 41.16 mm. The minimum angle created by
+and ( x , y , z ) is the average of all three position markers, the cen-                                   the brief at the hip joint was 10.65°. The subject’s leg length from
+troid. Here, ωx and ω y represent angular velocities that result in                                        the greater trochanter (GTR, Fig. 2) to the floor was 0.953 m.
+pivoting out of plane, while ωz is the bearing rotation and                                                Therefore, with the legs pressed against the medial edge of the
+results in a change in the HBA shape. The estimated bearing                                                rolling convolute joint, the predicted static base was 0.354 m.
+torques to achieve the calculated angular velocities are then cal-                                             When analyzing the dynamic gait parameters, the outlier
+culated using the parabolic fits from Cullinane et al.5                                                    analysis found a single outlier for the Suited WF dynamic base
+                                                                                                           (0.64 m), which may have been the result of an abnormal step
+                                                                                                           (i.e., stepping with a wider base than normal to catch oneself
+Statistical Analysis                                                                                       when off balance). This point was removed from the analysis as it
+A 95% confidence interval for the cadence and step length were                                             was not considered a steady state step. An ANOVA found a sig-
+constructed to assess the predicted values from Grasso et al.8                                             nificant interaction effect of task (WF/WB) and configuration
+An analysis of variance (ANOVA) was performed for each gait                                                (Suited/Unsuited) for all gait parameters (P , 0.005) (Table I).
+parameter to examine effects of task type (WF, WB) and suit                                                When contrasting the treatment conditions, there was a statisti-
+configuration (Suited, Unsuited). Post hoc comparisons were                                                cally significant difference between Suited and Unsuited for WF
+performed within each gait parameter between task types and                                                and WB found for all gait parameters (P , 0.05), except for the
+suit configurations. Two-sample t-tests were used to compare                                               mean dynamic base and cadence between the Suited WF and
+between left/right leg and Unsuited/Suited heel and toe height                                             WB conditions (Table I). There was no statistical difference
+within the clearance analysis. Two sample t-tests were also used                                           between WF and WB (P 5 0.069). The mean waist bearing rota-
+to compare the bearing rotation and required torques between                                               tion ranges were 7.18° and 7.23° for WF and WB, respectively,
+the upper and mid bearings on both the left and right side. A                                              which were not significantly different (P 5 0.928).
+one-sample t-test was used to test the null hypothesis that the                                                The clearance analysis results are shown in Fig. 3. The
+mid bearing data when WB comes from a normal distribution                                                  ANOVA results showed no effect of Leg (Right vs. Left) (P 5
+with mean equal to zero. An outlier analysis was performed to                                              0.161) on the maximum clearance height. However, there was
+give statistical reasoning for removing any data points. Signifi-                                          an effect of anatomical landmark (Heel vs. Toe), suit configura-
+cance was set at P , 0.05 for all tests.                                                                   tion (Suited vs. Unsuited), and task (WF vs. WB) (P , 0.005).
+
+Table I. Mean and SD of Dynamic Gait Parameters.
+                                           STEP             MEAN             STRIDE               MEAN                          MEAN                       MEAN
+                  MEAN STEP              LENGTH             STRIDE           LENGTH              CADENCE        CADENCE SD      SPEED        SPEED        DYNAMIC     DYNAMIC
+                  LENGTH (m)              SD (m)          LENGTH (m)          SD (m)           (STEPS/MIN)      (STEPS/MIN)    (m · s21)   SD (m · s21)   BASE (m)   BASE SD (m)
+                                                                                                                                                           †
+ Suited WF             0.595                 0.030            1.243            0.053             *88.794            3.017       1.061         0.058         0.190       0.027
+ Unsuited WF           0.631                 0.045            1.309            0.050              98.651            4.262       1.117         0.076         0.081       0.021
+                                                                                                                                                           †
+ Suited WB             0.476                 0.044            0.860            0.085             *90.181            5.477       0.833         0.082         0.220       0.037
+ Unsuited WB           0.549                 0.070            1.197            0.056              79.160            5.190       0.904         0.096         0.107       0.032
+The *mean dynamic base and the †mean cadence are not statistically different between WF and WB while suited.
+
+
+
+592  Aerospace Medicine and Human Performance Vol. 88, No. 6 June 2017
+                                                                                                          LOCOMOTION IN THE MARK III—Cullinane et al.
+
+
+
+                                                                                phase while WB were different (P , 0.005). The mean mid
+                                                                                bearing torque when WB was not different from zero rotation
+                                                                                (P 5 0.111). The angular velocities and torques are consistent
+                                                                                with this motion profile. For example, when WF, the maximum
+                                                                                torque in the right upper (15.6 6 1.35 Nm) and mid (16.3 6
+                                                                                1.28 Nm) bearings were not different (P 5 0.1729).
+
+
+                                                                                DISCUSSION
+
+                                                                                This study aimed to integrate the underlying suit component
+                                                                                properties to the emergent biomechanics of the operator to
+                                                                                describe how the biomechanics were affected by the MIII. Spe-
+
+
+
+
+                                                                                                                                                        Downloaded from https://prime-pdf-watermark.prime-prod.pubfactory.net/ at 2026-10-21 via free access
+                                                                                cifically, we hypothesized that 1) the MIII HBA architecture
+                                                                                had DOF limitations that restricted operator mobility and agil-
+                                                                                ity (as defined by static and dynamic gait parameters); 2) the
+                                                                                waist bearing provided rotational motion in the transverse
+                                                                                plane during ambulation, partially alleviating mobility restric-
+                                                                                tions introduced by the HBA; and 3) there was a resistive
+                                                                                speed-dependent torque associated with the spinning bear-
+                                                                                ings that further diminished the mobility and agility of the
+                                                                                operator, requiring increased hip joint torques along the lim-
+                                                                                ited rotational DOFs.
+                                                                                    Prior to examining the hypotheses, the Unsuited pilot data
+                                                                                were first compared to the literature. Although the stride
+                                                                                lengths were predicted accurately for the experimental walking
+                                                                                speed, the cadences were slower than predicted. Also, this sub-
+                                                                                ject had a lower Unsuited cadence and stride length when WB
+                                                                                than WF, which is not consistent with previous studies that
+                                                                                show an increase in cadence when WB to compensate for the
+                                                                                decrease in stride length.8,20 Here we observed that when
+                                                                                Unsuited while WB, the subject had a wider dynamic base,
+                                                                                smaller stride length, smaller step length, slower cadence, and
+                                                                                slower speed, which all provide improved control of body mass
+                                                                                over the supporting limb.19 The selection of increased stability
+                                                                                may be due to the experimental setup, which used an elevated
+                                                                                walkway. The walkway may be easier to navigate when WF with
+                                                                                visual cues, but more difficult when WB because it was narrow
+                                                                                (1 m). This subject may have been more cautious than seen in
+Fig. 3. Clearance analysis. The two top plots are the heel and toe clearances
+                                                                                the literature.
+while WF and the two bottom plots are while WB. The dashed lines represent          When Suited, an operator is not only manipulating the suit,
+Unsuited and the solid lines represent Suited.                                  but also carrying its weight. As mentioned previously, carrying
+                                                                                a load on top of body mass decreases stride length while increas-
+Within each suit configuration and task combination, the maxi-                  ing cadence.10 Our data show a decrease in stride length when
+mum heel clearance was greater than the toe clearance (P ,                      Suited; however, the change in cadence is not consistent. When
+0.005). For both WF and WB, the maximum clearance for the                       WB and WF, the cadence increases and decreases, respectively,
+Unsuited Heel and Toe was larger than when Suited (P , 0.005).                  from the Unsuited to Suited condition. If the weight alone was
+   The upper and mid bearing kinematics and torque estimates                    altering gait, we would expect consistent change across WF and
+are shown in Fig. 4. When WF, the upper and mid hip bearings                    WB. This implies that the differences in the Unsuited and Suited
+rotated in opposite directions simultaneously, allowing the                     gait may have additional factors.
+HBA to change shape and follow the subject’s limb. However,                         The heel clearance analysis showed the Suited condition
+the maximum rotation angle for the upper bearings were larger                   resulted in lower clearance heights, which could be due to
+than the mid bearing (P , 0.005). When WB, the upper bear-                      motion restrictions, or could be related to adapting the motion
+ings rotated; however, the mid bearing had very little motion.                  to minimize added torques due to the suit. The reduction in the
+For example, the maximum rotation in the right upper (23.1 6                    maximum clearance heights of both heel and toe, for both WF
+3.97°) and mid (2.11 6 2.93°) bearing during the right swing                    and WB, confirm that operator mobility and agility is being
+
+                                                                         Aerospace Medicine and Human Performance Vol. 88, No. 6 June 2017   593
+LOCOMOTION IN THE MARK III—Cullinane et al.
+
+
+
+
+                                                                                                                                                                           Downloaded from https://prime-pdf-watermark.prime-prod.pubfactory.net/ at 2026-10-21 via free access
+Fig. 4. HBA bearing analysis. The left side of the figure represents WF data, while the right represents the WB data. The top plot on both sides represents the rota-
+tional displacement angle normalized to be zero during double stance (x 5 0.5 on the x axis). The middle plots represent the calculated angular velocities that
+achieve the experimental displacements in the top plots. Finally, the bottom plots show the calculated torques required to achieve the angular velocities. The bearings,
+matched to the legend, are seen in Figure 1. In each plot, the solid lines represent data from the right bearings and the dashed lines represent the left bearings.
+
+
+restricted by the suit. The diminished mobility and agility, when                     Unsuited WF (0.081 m) and WB (0.107 m). This is consistent
+compared to Unsuited, also manifested as a decrease in speed,                         with the HBA limiting adduction as the minimum dynamic
+stride length, and step length for both WF and WB. In addition                        base was seen to have an adduction hard-stop while Suited that
+to the added weight, these changes may be a result of the inter-                      forced the dynamic base to be larger than the naturally selected
+action and disparity between the natural hip biomechanics                             dynamic base observed in the Unsuited case.
+with the operational motion envelope of the HBA. The MIII                                 In the CAD model, when manipulating the HBA into the
+HBA has a smaller range of motion than the human hip, as                              double stance gait phase configuration, the dynamic base was
+well as fewer DOFs. A human hip joint has three DOFs located                          predicted to increase (0.626 m) when no other degrees of free-
+within the single joint, whereas the HBA has a single degree of                       dom were altered. However, this increase in dynamic base was
+freedom per bearing and those are spread out distally from                            not seen in the measured data. During ambulation, there was
+the hip. This is highlighted in the comparison of the Suited                          actually a reduction in base as compared to the static condition.
+and Unsuited static bases.                                                            We hypothesized that this could be attributed to the waist bear-
+    Since a difference in static base exists, we examined if the                      ing, which rotates to allow further adduction of the compound
+architecture of the suit contributed to the wider base. The CAD                       hip assembly. The CAD model and static base showed that the
+HBA model confirmed the limitations in adduction and showed                           HBA was in its most adducted position when in the static pose.
+that the selected Suited static base was essentially the same as                      When walking, the HBA dynamically changes configuration as
+the minimum adduction permitted by the architecture. In this                          the operator drives the rotation of the bearings. Any rotation in
+configuration, the medial thigh of the Suited operator contacted                      the upper and mid bearings away from their static pose loca-
+the medial edge of the rolling convolute joint, which acted as a                      tions decreases the adduction of the operator due to the irregu-
+physical hard-stop. This architecture also restricted the dynamic                     lar geometry of the HBA sections between the bearings. This
+base, but Hypothesis 2 explores how the waist bearing may pro-                        study confirmed Hypothesis 2 as a nonzero waist bearing rota-
+vide additional motion to partially alleviate that restriction dur-                   tion was measured, which allowed the operator to have foot
+ing dynamic task performance.                                                         placement closer to the walking centerline and reduced the
+    When Unsuited, the dynamic base was larger when WB                                dynamic base. The waist bearing connects the HUT to the hips,
+than WF. This finding is different than the Suited dynamic base                       transferring load while allowing for rotation along the bearing
+(pooled, 0.200 m), which was found to be larger than both                             (Fig. 1). Here we found that the waist bearing rotations were not
+
+594  Aerospace Medicine and Human Performance Vol. 88, No. 6 June 2017
+                                                                                                     LOCOMOTION IN THE MARK III—Cullinane et al.
+
+
+
+statistically different in the WF and WB tasks. Thus, it is consis-   comparable weight in the Unsuited configuration applied at a
+tent that the dynamic bases were not significantly different          similar center of gravity locations without limiting mobility
+when WF and WB. The HBA design increased static base width,           to control for load effects on mobility restriction. To determine
+but the waist bearing provides transverse plane rotation to           the comparable weight, a differentiation should be made
+reduce that effect during dynamic motion. This is similar to the      between the load transferred to the ground through the opera-
+Unsuited case, where the rotation in the spine provides this          tor and the load transferred to the ground through the suit. This
+same reduction in static v. dynamic base.23                           could be further examined by comparing total ground reaction
+    Hypothesis 3 was also supported, as the circumferential           forces (GRFs) with force plates and the GRFs on the foot using
+rotation of the bearings during Suited WF and WB created              foot sole pressure sensors.
+additional torques for the user. The motion of the bearings is            The results of this study are beneficial in informing and eval-
+not aligned with the natural desired joint trajectories because of    uating future SSA design requirements, as well as those for
+DOF limitations inherent in the architecture, which produces          other wearable systems. For example, the results of Hypothesis
+programmed movements. The operator drives the HBA con-                1 showed altered gait because of the SSA architecture. Design
+
+
+
+
+                                                                                                                                                        Downloaded from https://prime-pdf-watermark.prime-prod.pubfactory.net/ at 2026-10-21 via free access
+figuration through limb contact with the interior of the HBA as       requirements on certain static and dynamic gait parameters
+the hip is rotated. The limb, however, has to traverse the trajec-    (e.g., step length or dynamic base) could be created to inform
+tories that the bearings and HBA geometry will allow, while           maximum allowable percent deviations from nominal kine-
+exerting additional required torques to overcome the resistive        matics. For example, a requirement could be imposed that
+bearing torques. To generate bearing rotation, the force has to       the dynamic base must permit a certain tolerance from the
+be transferred from the operator’s limb to the SSA distal to the      Unsuited mean. Requirements can also be generated for spe-
+bearings, increasing the moment arm of the applied force, and         cific suit components, such as the HBA bearings or waist
+resulting in an increase in the required joint torques. As seen in    bearings, requiring a minimum performance, or a maximum
+the estimated torques, there is a difference between the bearing      allowable added torque for relevant angular velocities. Future
+performance during WF and WB. When WF, the upper and                  studies can also inform design requirements based on energy
+mid bearings rotate in opposite directions. While WB, the             expenditure differences between the Unsuited and Suited con-
+upper bearing rotates while the mid bearing only rotates slightly     dition, supplementing the biomechanical analyses with meta-
+or not at all. Thus, when WF, complementary motion occurs in          bolic analyses.
+both bearings, while when WB, only the upper bearing is neces-            This study aimed to integrate the underlying suit component
+sary to achieve the foot placement observed. This is consistent       properties to the emergent biomechanics of the operator to
+with the strategy measured through the dynamic gait parame-           describe how an operator’s biomechanics are affected by the
+ters. The smaller step lengths when WB as compared to WF              MIII. Specifically, we showed that 1) the MIII HBA architecture
+while Suited are associated with less hip extension (as compared      had DOF limitations that restricted operator mobility and agil-
+to the greater hip flexion when WF) and thus less bearing rota-       ity. The limitations manifested in effects to both static and
+tion. This strategy may be an attempt to minimize energy              dynamic gait parameters. 2) The waist bearing provided rota-
+expenditure as proposed by Abe et al.1 When WB, the overall           tional motion in the transverse plane during ambulation, par-
+speed and step length decrease from the Unsuited to Suited            tially alleviating mobility restrictions introduced by the HBA.
+configuration, while the cadence increased. This shows that           3) Although the HBA volume does not change during hip joint
+when WB, it may be more efficient to only force one bearing to        motion, the resistive speed-dependent torques associated with
+spin and take smaller faster steps than it is to spin both bearings   spinning the bearings further diminish the mobility and agility
+and take larger, slower steps while fighting the greater amount       of the operator, requiring increased hip joint torques along the
+of resistive torque.                                                  limited rotational DOFs and reducing ground clearance.
+    This pilot study was limited in that it only included one
+subject. Thus, conclusions and trends must be considered
+appropriately. The data show sufficient evidence to support the       ACKNOWLEDGMENTS
+hypotheses and can be used to inform future studies with an
+increased sample size. An experimental limitation was the total       This work was supported by NASA award NNX15AR20G and by the National
+distance that a subject could walk. It would be beneficial to have    Space Biomedical Research Institute through NASA NCC 9-58. The views
+a larger track to walk, providing more continuous strides per         expressed in this paper are not endorsed by the sponsors. The authors would
+trial. It may also be beneficial to remove the elevated walkway       like to thank Alan Natapoff from MIT, and Matthew Cowley, Scott England,
+and determine if that was truly the root cause of the need for        Dan Nguyen, and Robert Sweet from the ABF.
+increased control and stability when Unsuited and WB. In this         Authors and affiliations: Conor Cullinane, B.S., Health Sciences and Technol-
+study, the spacesuit added weight to the subject and we exam-         ogy, Aeronautics and Astronautics, Massachusetts Institute of Technology,
+ined the combined effect of the weight with the system architec-      Cambridge, MA, and Harvard Medical School, Boston, MA; Richard Rhodes,
+ture. However, the PLSS weight was not included and future            B.S., M.S., Advance Pressure Garment Technology Development Lab, Crew
+                                                                      Survival and Space Suit Systems Branch EC5, NASA Johnson Space Center,
+studies should consider that added effects of the PLSS such as        Houston, TX; and Leia Stirling, M.S., Ph.D., Aeronautics and Astronautics,
+the changes to the center of gravity and total load can affect gait   Institute for Medical Engineering and Science, Massachusetts Institute of Tech-
+parameters. Also, future studies could examine the addition of        nology, Cambridge, MA.
+
+
+                                                               Aerospace Medicine and Human Performance Vol. 88, No. 6 June 2017   595
+LOCOMOTION IN THE MARK III—Cullinane et al.
+
+
+
+REFERENCES                                                                        12. Nelson AJ. The functional ambulation performance of elderly fallers and
+                                                                                      non-fallers walking at their preferred velocity. NeuroRehabilitation.
+  1. Abe D, Yanagawa K, Niihata S. Effects of load carriage, load position, and       1999; 13(3):141–146.
+     walking speed on energy cost of walking. Appl Ergon. 2004; 35(4):329–        13. Newman D, Barratt M. Life support and performance issues for
+     335. [Accessed 2016 March 22]. Available from: http://www.sciencedirect.         extravehicular activity (EVA). In: Churchill S, editor. Fundamentals of
+     com/science/article/pii/S0003687004000572.                                       Space Life Sciences. Melbourne (FL): Krieger Publishing Co.; 1997.
+  2. Abramov I, Moiseyev N, Stoklitsky A. Concept of space suit enclosure for     14. Opperman RA, Waldie JM, Natapoff A, Newman DJ, Jones JA.
+     planetary exploration. SAE Conference [Internet]. 2001 [Accessed 2014            Probability of spacesuit-induced fingernail trauma is associated with
+     March 18]. Available from: http://spacecraft.ssl.umd.edu/design_lib/             hand circumference. Aviat Space Environ Med. 2010; 81(10):907–13.
+     ICES01-2168.suit_enclosure.pdf.                                                  [Accessed 2014 March 31]. Available from: http://openurl.ingenta.com/
+  3. Atwell B, Boeder P, Ross A. Space radiation analysis for the Mark III            content/xref?genre5article&issn50095-6562&volume581&issue510&
+     spacesuit. 2013 [Accessed 2014 March 18]. Available from: http://arc.aiaa.       spage5907.
+     org/doi/pdf/10.2514/6.2013-3381.                                             15. Powers CM. The influence of abnormal hip mechanics on knee injury: a
+  4. Cowley MS, Margerum S, Hharvill L, Rajulu S. Model for predicting the            biomechanical perspective. J Orthop Sports Phys Ther. 2010; 40(2):42–51.
+     performance of planetary suit hip bearing designs. 2012 [Accessed 2016       16. Ross A, Rhodes R, Dover ILC. Z-2 prototype space suit development.
+
+
+
+
+                                                                                                                                                                   Downloaded from https://prime-pdf-watermark.prime-prod.pubfactory.net/ at 2026-10-21 via free access
+     May 4]. Available from: http://ntrs.nasa.gov/search.jsp?R520130000596.           44th International Conference on Environmental Systems; July 13–17,
+  5. Cullinane C, Rhodes R, Stirling L. Mark III technology demonstrator              2014; Tuscon, AZ. Stafford Springs (CT): International Conference on
+     suit: hip brief assembly bearing analysis. In: International Conference          Environmental Systems, Inc.; 2014:1–11.
+     on Environmental Systems; 2015; Bellevue, WA. Stafford Springs (CT):         17. Scheuring RA, Mathers CH, Jones JA, Wear ML. Musculoskeletal injuries
+     International Conference on Environmental Systems, Inc.; 2017.                   and minor trauma in space: incidence and injury mechanisms in U.S.
+  6. Gast MA, Moore SK. A glimpse from the inside of a space suit: what is            astronauts. Aviat Space Environ Med. 2009; 80(2):117–124. [Acessed
+     it really like to train for an EVA? Acta Astronaut. 2011; 68(1-2):316–325.       2014 March 31]. Available from: http://openurl.ingenta.com/content/
+     [Accessed 2016 Feb. 29]. Available from: http://www.sciencedirect.com/           xref ?genre5article&issn50095-6562&volume580&issue52&spa
+     science/article/pii/S0094576510003036.                                           ge5117.
+  7. Gernhardt M, Jones J, Scheuring R, Abercromby F, Tuxhorn J, Norcross J.      18. SolidWorks Corporation. SolidWorks. Waltham (MA): Dassault Systèmes;
+     Risk of compromised EVA performance and crew health due to inadequate            2016.
+     EVA suit systems. In: McMurphee J, Charles J, editors. Human Health and      19. Sutherland D. The development of mature gait. Gait Posture. 1997;
+     Performance Risks of Space Exploration Missions. Houston (TX): NASA              6(2):163–170. [Accessed 2016 March 9]. Available from: http://www.
+     Lyndon B. Johnson Space Center; 2009. NASA SSP-2009-3405.                        sciencedirect.com/science/article/pii/S0966636297000295.
+  8. Grasso R, Bianchi L, Lacquaniti F. Motor patterns for human gait:            20. Thorstensson A. How is the normal locomotor program modified to
+     backward versus forward locomotion. J Neurophysiol. 1998; 80(4):1868–            produce backward walking? Exp Brain Res. 1986; 61(3):664–668. [Accessed
+     1885. [Accessed 2016 March 21]. Available from: http://jn.physiology.org/        2016 March 21]. Available from: http://link.springer.com/10.1007/
+     content/80/4/1868.short.                                                         BF00237595.
+  9. Kosmo J, Ross A. Space suit mobility evaluations in lunar/Mars gravity       21. Wade M. NASA Mark III [Internet]. Encyclopedia Astronautica.
+     environments. Warrendale (PA): SAE; 1998. SAE Technical Paper                    [Accessed 2015 Dec. 13]. Available from: http://www.astronautix.com/n/
+     981627.                                                                          nasamarkiii.html.
+ 10. LaFiandra M, Wagenaar RC, Holt KG, Obusek JP. How do load carriage           22. Wehner M, Quinlivan B, Aubin PM, Martinez-Villalpando E, Baumann
+     and walking speed influence trunk coordination and stride parameters? J          M, et al. A lightweight soft exosuit for gait assistance. In: IEEE Inter­
+     Biomech. 2003; 36(1):87–95. [Accessed 2016 March 22]. Available from:            national Conference on Robotics and Automation (ICRA); May 6–10,
+     http://www.sciencedirect.com/science/article/pii/S0021929002002439.              2013; Karlsruhe, Germany. New York: IEEE; 2013:3362–3369.
+ 11. Mitchell K, Ross A, Blanco R, Wood A. Hazard analysis for the                23. Whittle MW, Levine D. Three-dimensional relationships between the
+     Mark III Space Suit Assembly (SSA) used in one-g operations. 2012                movements of the pelvis and lumbar spine during normal gait. Hum Mov
+     [Accessed 2014 March 18]. Available from: http://ntrs.nasa.gov/search.           Sci. 1999; 18(5):681–692. [Accessed 2016 March 7]. Available from: http://
+     jsp?R520120017944.                                                               www.sciencedirect.com/science/article/pii/S0167945799000329.
+
+
+
+
+596  Aerospace Medicine and Human Performance Vol. 88, No. 6 June 2017
+

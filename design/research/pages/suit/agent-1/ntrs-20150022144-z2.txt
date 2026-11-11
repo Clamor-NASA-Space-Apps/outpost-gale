@@ -1,0 +1,42 @@
+       Z-2 Architecture Description and Requirements Verification Results Abstract
+
+ ILC Dover Authors: Dave Graziosi, Bobby Jones, Jinny Ferl, Steve Scarborough, Linda
+                                      Hewes
+
+                          NASA Authors: Amy Ross, Richard Rhodes
+
+The Z-2 Prototype Planetary Extravehicular Space Suit Assembly is a continuation of NASA’s Z
+series of spacesuits. The Z-2 is another step in NASA’s technology development roadmap
+leading to human exploration of the Martian surface. The suit was designed for maximum
+mobility at 8.3 psid, reduced mass, and to have high fidelity life support interfaces. As Z-2 will
+be man-tested at full vacuum in NASA JSC’s Chamber B, it was manufactured as Class II,
+making it the most flight-like planetary walking suit produced to date.
+
+The Z-2 suit architecture is an evolution of previous EVA suits, namely the ISS EMU, Mark III,
+Rear Entry I-Suit and Z-1 spacesuits. The suit is a hybrid hard and soft multi-bearing, rear entry
+spacesuit. The hard upper torso (HUT) is an all-composite structure and includes a 2-bearing
+rolling convolute shoulder with Vernier sizing mechanism, removable suit port interface plate
+(SIP), elliptical hemispherical helmet and self-don/doff shoulder harness. The hatch is a hybrid
+aluminum and composite construction with Apollo style gas connectors, custom water pass-thru,
+removable hatch cage and interfaces to primary and auxiliary life support feed water bags. The
+suit includes Z-1 style lower arms with cam brackets for Vernier sizing and government
+furnished equipment (GFE) Phase VI gloves. The lower torso includes a telescopic waist sizing
+system, waist bearing, rolling convolute waist joint, hard brief, 2 bearing soft hip thigh, Z-1 style
+legs with ISS EMU style cam brackets for sizing, and conformal walking boots with ankle
+bearings.
+
+The Z-2 Requirements Verification Plan includes the verification of more than 200 individual
+requirements. The verification methods include test, analysis, inspection, demonstration or a
+combination of methods. Examples of unmanned requirements include suit leakage, proof
+pressure testing, operational life, mass, isometric man-loads, sizing adjustment ranges, internal
+and external interfaces such as in-suit drink bag, partial pressure relief valve, purge valve,
+donning stand and ISS Body Restraint Tether (BRT). Examples of manned requirements include
+verification of anthropometric range, suit self-don/doff, secondary suit exit method, donning
+stand self-ingress/egress and manned mobility covering eight functional tasks. The eight
+functional tasks include kneeling with object pick-up, standing toe touch, cross-body reach,
+walking, reach to the SIP and helmet visor.
+This paper will provide an overview of the Z-2 design. Z-2 requirements verification testing was
+performed with NASA at the ILC Houston test facility. This paper will also discuss pre-delivery
+manned and unmanned test results as well as analysis performed in support of requirements
+verification.
+

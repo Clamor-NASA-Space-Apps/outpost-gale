@@ -1,0 +1,533 @@
+GAIT ANALYSIS - Normal Gait
+
+
+           Antoine de Gheldere
+            Paediatric Orthopaedic Consultant
+
+
+
+
+    Great North Children’s Hospital – Royal Victoria Infirmary
+                   Newcastle upon Tyne, UK
+                Contents
+1. Gait basics
+2. Gait analysis lab
+3. Normal gait
+4. Abnormal gait
+Gait Basics
+Definition of gait
+           Principle of gait
+• CNS control
+• Bones, joints, muscles/tendons
+• Anatomical/biomechanical gait description
+  limited to pelvis and lower limbs
+          Joints and Bones
+• Hip: pelvis and femur
+• Knee: femur, tibia/fibula and patella
+• Ankle: tibia/fibula and talus
+
+• Foot: >26 bones
+
+
+
+
+                                  See video for joint ROM
+         Muscles - Histology
+• Type 1 fibres
+  – Myoglobin++ (red)
+  – Weak/slow contraction, but not fatigable
+• Type 2b fibres
+  – Glycolytic enzyms++ (white)
+  – Strong/fast contraction, but fatigable
+• Type 2a fibres (between 1 and 2b)
+        Muscle - Contraction
+• Concentric contraction:
+  – Shortening muscle length
+  – Positive work
+• Eccentric contraction:
+  – Lengthening muscle length
+  – Negative work
+
+
+
+
+                                See video of Soleus muscle
+Gait Analysis Laboratory
+           Types of analysis
+• Clinical observations
+• Video
+• Quantified analysis:
+     • Vicon (IR camera)
+     • Force platform
+     • EMG
+     • Pressure platforms
+     • Energy consumption
+             Gait definition
+• Automatic function
+
+• Cycle
+    • Begins with foot contact
+    • Standing phase and swinging phase
+    • 2 periods of double standing
+                      Gait Cycle
+Foot contact                             Toe off                     Foot contact
+
+
+
+
+    Absorb               Support                   Progressing
+
+                     Stance                                  Swing
+         Double       Single         Double
+         support      support        support
+
+
+      0-10%          10-50%         50-60%                60-100%
+    0%         10%                 50%       60%                             100%
+                       30%                             73%           87%
+Gait Cycle
+       1. Loading Response
+• Initial contact: 0-3%
+• Loading response: 3-10%
+• Double support: load transfer
+• Stabilise lower limb
+• Absorb impact
+             2. Mid Stance
+              Support load
+              Stability (controlateral swing)
+
+
+
+
+• Foot flat on the ground
+        3. Terminal Stance
+             Support load
+             Stability (controlateral swing)
+
+
+
+
+• Weight of body passes
+  forward
+             4. Pre Swing
+
+• Double support: load transfer
+
+• Ready for swing
+                5. Initial Swing
+
+• First third
+
+• Foot clearance:
+  – Knee flexion
+  – Ankle dorsal flexion
+            6. Mid Swing
+
+• Second Third
+          7. Terminal Swing
+
+• Last third
+Gait Lab
+Gait Lab
+         More definitions…
+
+• Closed chain = weight bearing
+• Open chain = NWB
+
+
+
+    Same muscle has different function!
+          Ankle Movement
+• Kinematic: angular motion around a joint
+• Foot movement to the tibia
+• 0° = neutral position
+• Above = dorsal flexion
+• Below = plantar flexion
+ Ankle Kinematic – Loading Response
+
+• Neutral position: 30° to the ground
+• PF: foot flat on the ground
+• First rocker
+    Ankle Kinematic – Stance
+• DF: Tibia forward
+• DF max = 15°
+• Second rocker
+  Ankle Kinematic – Pre Swing
+• Fast PF up to 20°
+• Third rocker
+     Ankle Kinematic – Swing
+• Return to a neutral position
+ Ground Reaction Force (GRF)
+• Newton’s third law
+• 3D vector
+• Static (body weight) and
+     Dynamic (speed of ground contact)
+• Orientation: passive angular motion
+• Kinetics
+          Knee Movement
+• Kinematic: angular motion around a joint
+• Tibia movement to the femur
+• 0° = neutral position
+• Above = flexion
+• Below = extension
+• No extension!
+ Knee Kinematic – Load Response
+• Initial contact: 5°
+• Flexion up to 20°
+    Knee Kinematic – Stance
+• Reduced flexion
+• Max at 40%
+  Knee Kinematic – Pre Swing
+• Fast flexion
+     Knee Kinematic – Swing
+• Max flexion at the end of initial swing
+            Hip Movement
+• Kinematic: angular motion around a joint
+• femur movement to the pelvis
+• 0° = neutral position
+• Above = flexion
+• Below = extension
+Hip Kinematic – Load Response
+• Initial contact: 30° flexion
+     Hip Kinematic – Stance
+• Neutral
+• Max extension at 50%
+    Hip Kinematic – Pre Swing
+• Return to neutral
+      Hip Kinematic – Swing
+• Max flexion at end of mid swing
+          More definitions…
+• Concentric = Energy lost
+  – Joint motion in the same direction than the
+    internal motion
+  – Muscle activity with shortening
+
+
+• Eccentric = Energy absorbed
+  – Joint motion opposed to the internal motion
+  – Muscle activity with lengthening
+          Double Pendulum
+• Swing phase
+• Motor:
+    • Hip flexors
+• Passive motion of knee and hip
+    • Hip and knee flexion
+    • Maximal flexion
+       – Hip = 30°
+       – Knee = 60°
+    • Passive extension until stance phase
+           Flexors of the Hip
+• Psoas (Ps)
+    • Strongest hip flexor
+    • Biarticular muscle
+
+
+
+
+• Rectus Femoris (RF)
+    • Hip flexor
+    • Knee extensor (quadriceps)
+    • Biarticular
+Hip’s Flexors Function
+
+
+
+      Hip in
+      Extension                                     Active Flexion
+
+
+
+
+                  Pre-Swing         Initial Swing
+
+
+
+
+                              Double Pendulum’s power
+Extra role for Rectus Femoris
+
+
+
+                                              Control knee flexion
+                                              (eccentric) to absorb
+                                              impact
+
+
+
+
+              Terminal Swing   Loading Response
+         Adductors of the hip
+
+                          Adductor Longus
+                          Adductor Magnus
+                          Adductor Brevis
+
+
+
+
+Transfer of load before
+double support phase
+          Gluteus Muscle
+• Gluteus Maximus = extensor
+
+• Gluteus Medius
+                     = abductor
+• Gluteus Minimus
+
+
+
+                                  Anterior insertion
+Gluteus Maximus Function
+
+      Slow down
+      hip flexion
+
+
+
+                                                          Pull the upper body
+                                                          forward
+                                   Hip in
+                                   Flexion
+
+
+
+
+                     Loading Response        Mid Stance
+
+
+
+               Powerful hip extensor to pass the whole body
+               weight over the foot in contact with the ground
+  Gluteus Medius and Minimus
+• Gluteus Medius:
+    • Powerful muscle
+    • Abductor for open chain
+    • Pelvic stabilizer in closed chain (eccentric)
+
+                                                      Anticipation
+
+• Gluteus Minimus:
+    • Mainly Abductor
+    • Slightly Flexor
+      Tensor Fasciae Latae
+• Hip and Knee Abductor
+• Delayed action
+                  Hamstrings
+• Medial = Semimembranosus + Semitendinosus
+     • Hip Extensor
+     • Knee Flexor
+     • Internal Rotation of the Leg
+
+
+• Lateral = Biceps femoris
+     • Hip Extensor
+     • Knee Flexor
+     • External Rotation of the Leg
+Hamstrings
+
+
+
+
+ Adapt step
+ length
+
+
+
+
+              Terminal Swing   Loading Response
+
+
+
+   1. Slow down Knee Extension and Hip Flexion
+   2. Help Hip Extension
+       Hamstrings Stiffness
+
+• Reduce step length
+
+• Loading Response
+  with tip toeing
+Knee Extensors Function
+
+
+
+
+                       Continue the
+                       extension
+
+                                                      Absorb impact
+
+
+
+
+           Terminal Swing             Load Response
+
+
+
+                1. Absorb impact (eccentric)
+                2. Concentric Knee Extension
+          Leg Compartments
+
+
+                       Anterior
+
+
+Lateral
+
+
+
+
+                       Posterior (2)
+Foot ROM
+Anterior Compartment Function
+
+
+
+
+                              Lift up the
+                              Foot
+
+
+
+         Absorb Impact
+
+
+
+          Load Response              Initial Swing
+
+
+
+
+                          1. Absorb load (eccentric)
+                          2. Clearance (concentric)
+Superficial Posterior Compartment
+
+
+
+
+                                    1. Slow down Tibia
+                                    Movement (Soleus)
+
+
+
+                              2. Plantar propulsion
+                              (GCN)
+
+
+            Milieu et fin d’appui
+
+
+
+
+                                        1. Slow down tibia (eccentric)
+                                        2. Plantar propulsion (concentric)
+    Soleus vs Gastrocnemius
+• Soleus
+  – Horizontal red fibers
+  – Slow down tibia (eccentric)
+
+
+• GCN
+  – Vertical white fibers
+  – Biarticulair
+  – Plantar flexor
+                      Rockers
+
+
+
+
+1st Rocker = Heel   2nd Rocker = Ankle    3rd Rocker = Toes
+Ex moment = PF      Ex moment = DF        Ex moment = DF
+Tib Ant             Soleus                GCN
+Eccentric           Eccentric             Concentric
+Absorb impact       Ankle trunk forward   Propulsion
+  Deep Posterior Compartment
+• Tibialis posterior
+     • Extensive insertion
+     • Invert foot
+     • Stabilize the foot in WB (Balance with the lateral compartment)
+
+• Flexor hallucis longus
+• Flexor digitorum longus
+
+  Ankle Plantar Flexion
+       Lateral Compartment
+• Peroneus longus
+    • Longer activity than PB
+    • Support longitudinal arch
+    • Plantar flex 1st ray (pronation)
+
+
+• Peroneus brevis
+    • Evert foot
+
+
+  Ankle Plantar Flexion
+  Gage’s prerequisites for normal
+               gait
+
+1. Prepositioning of the foot
+2. Clearance of the foot swing
+3. Stability in stance
+4. Adequate step length
+5. Energy conservation
+End of swing phase
+Preparation for initial contact
+Slow down (eccentric) the pendulum (GMx+H)
+Prepare to absorb choc
+Tib Ant present the heel in neutral position
+                       Initial contact
+                 Reaction to GRF
+                 Continue the previous phase
+                 Slow down the momentum of the whole body: GMx, H, Tib Ant
+
+
+
+
+      30°
+
+
+
+
+10°
+
+
+
+            0°
+Loading Response
+Impact phase
+Plantar flexion and knee flexion
+Tib Ant control PF and knee extensors control KF (eccentric)
+GMx to pull the upper body forward (concentric)
+GMd stabilize the pelvis
+          Mid Stance
+Stability phase
+GMd stabilize the pelvis
+The foot flat on the ground don’t need the action of the Tib Ant
+Tib Post and P are balanced
+Soleus slow down the dorsal flexion (eccentric)
+ Terminal Stance
+Prepare for load transfer
+Centre of gravity in front of the ground contact
+Knee locked in extension
+Soleus slow down tibial advancement (eccentric)
+           Pre Swing
+Load Transfer
+Concentric action of GCN helped by the load transfer
+RF slow down the knee flexion (eccentric)
+Plantar propulsion leading to the hip flexion
+         Initial Swing
+Clearance
+Huge and fast activity of the hip flexors (Psoas)
+Concentric action for Tib Ant
+Double pendulum: Knee flexion
+           Mid Swing
+Double pendulum
+Passive phase
+Only Tib Ant is active
+   Terminal Swing
+Preparation for initial contact
+Slow down (eccentric) the double pendulum (GMx+H)
+Prepare to absorb impact
+Tib Ant present the heel in neutral position
+Thank you…
+

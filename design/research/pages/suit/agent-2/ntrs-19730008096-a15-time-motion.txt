@@ -1,0 +1,3394 @@
+NATIONAL   AERONAUTICS            AND      SPACE     ADMINISTRATION
+
+
+
+
+                         APOLLO   15
+
+                Time and Motion        Study
+
+                   (Final Report)
+
+
+
+
+                  MANNED                 SPACECRAFT            CENTER
+                                        HOUSTON,TEXAS
+
+                                           January   1972
+                 NATIONAL
+                        AERONAUTICS
+                                 ANDSPACEADMINISTRATION
+                          MANNED
+                               SPACECRAFT
+                                        CENTER
+                           HOUSTON,
+                                  TEXAS77058
+
+
+
+
+                                        M72-4
+                                      APOLLO15
+
+                             Time and Motion         Stud_
+
+                                (Final Report)
+
+                                    January   1972
+
+                       by Joseph F. Kubis, John T. Elrod,
+                       Rudolph Rusnak and John E. Barnes
+
+
+
+
+Submitted   to                                           Submitted by
+Medical   Research and Operations    Directorate         Fordham University
+Project   Support Division                               NASA Contract NAS 9-I1839
+                                         PREFACE
+
+
+     This report presents the results of the Time and Motion Study per-
+
+formed on Apollo 15 as authorized by the J-l Mission Requirements Docu-
+
+ment (MRD). This study is the responsibility               of the Medical Research and
+
+Operations Directorate      and is performed by FordhamUniversity            under NASA
+Contract NAS9-I1839.
+
+     As stated in the MRD(Section 4, Detailed Objectives),                 the purpose
+
+of this study is "to evaluate the differences,              correlation   and relative
+consistency between ground-based and lunar surface task dexterity                and
+
+locomotion performance."          The ground-based (l-g)      data were collected by
+
+performing time and motion studies of the crewmembersduring their                  suited
+
+EVAsimulations at KSC. Lunar surface data consists of television,                   motion
+
+picture film,     air-to-ground     voice transcriptions      madeduring the lunar
+
+landing visit     and subjective commentsmadeduring astronaut debriefing
+
+following   the mission.     No specific     crew tasks were required to support
+
+this objective.
+     Various aspects of crewmanactivity            are included in this report:          an
+
+analysis of lunar mobility,         a comparative activity      analysis (l-g versus
+
+lunar) at three levels of complexity, a comparative analysis of metabolic
+
+rates during lunar activity         and a fall/near-fall      analysis.    It is meant
+
+to provide a documenteddescription           of lunar surface performance, to iso-
+
+late the variables which affect         lunar surface performance, and hopefully
+
+to provide an input for future lunar activity              planning.
+                                                                                                                             ii
+
+
+
+
+                                           ACKNOWLEDGEMENTS
+
+
+
+The principal              investigator            wishes      to    thank         the      entire      Fordham
+
+staff     for     their       unstinting           cooperation            and whole-hearted                      effort
+
+over     and above          the   call       of    duty     during        the      hectic       days        of    the
+
+"Quick     Look"          and Preliminary              Reports.
+
+
+
+He sincerely              appreciates          the     support       of     Dr.     Moseley           and
+
+Dr.     Humbert      in     making        facilities         available             at    NASA to        view        the
+
+Apollo     15 EVAs and for                 the     metabolic         data         supplied           by Dr.       Humbert.
+                                                                         iii
+
+
+                                   TABLE   OF CONTENTS
+
+
+Section                                                             Page
+
+          Preface                                                   i
+
+          Acknowledgements                                          ii
+
+          List of Tables                                            iv
+
+          Summary                                                   V
+
+
+I         Quantity    and Quality    of Data                        l
+
+II        Mobility    Evaluation                                    5
+
+III       Comparison of Lunar       EVA Work Performance
+          With l-g Training                                         17
+
+IV        Metabolic    Analyses                                     36
+
+V         Fall and Near-fall       Analysis                         41
+
+Vl        Conclusions                                               48
+
+          Appendix    A - EVA Timelines       - CDR and LMP         52
+
+          Appendix    B - Partition    of Tasks    into Sub-tasks   59
+                                                             iv
+
+                               LIST OF TABLES
+
+
+Table                                                    Page
+
+  1     Planned and Actual TV Coverage                   2
+
+  2     Summaryof Mobility   Segments                    14
+
+  3     Task Comparisons: Lunar EVAand l-g Training      20
+
+  4     ComprehensiveSample Collection                   26
+
+  5     Double Core Sample Collection                    28
+
+  6     Training and EVATimes for Sub-tasks Requiring
+        Gross Motor Control                              33
+
+        Training and EVATimes for Sub-tasks Requiring
+        Fine Motor Control                               34
+
+        Average Metabolic Rate (BTU/HR)Associated with
+        Mobility Along Traverses with Varying Slopes     37
+
+        Metabolic ChangesAssociated with Adaptation to
+        Lunar EVATasks                                   39
+                                                                                            v
+
+                                       SUMMARY
+
+
+     The Time and Motion Study of Apollo 15 lunar surface activity led to
+an examination of four distinct areas of crewmenactivity.    These areas
+are: an analysis of lunar mobility, a comparative analysis of tasks per-
+formed in l-g training and lunar EVA, an analysis of the metabolic cost
+of two activities  that are performed in several EVAs, and a fall/near-fall
+analysis.
+      An analysis of mobility showedthat the crewmenused three basic
+mobility patterns (modified walk, hop, side step) while on the lunar sur-
+face. These mobility patterns were utilized as adaptive modesto compen-
+sate for the uneven terrain and varied soil conditions that the crewmen
+encountered.
+       A comparison of the time required to perform tasks at the final l-g
+lunar EVAtraining sessions and the time required to perform the sametask
+on the lunar surface indicates that, in almost all cases, it took signifi-
+cantly more time (on the order of 40%) to perform tasks on the moon. This
+increased time was observed even after extraneous factors (e.g., hardware
+difficulties)   were factored out. Further, tasks which predominant}y
+require fine motor activity are more likely to be adversely affected by
+lunar working conditions        than those which require predominantly gross
+motor activities.
+        Metabolic cost decreases as the crewmanrepeats a task over successive
+EVAs.     From the first to the second       EVA performance,      this decrease    is on
+
+the order of I0%.      In general   there was an overall        in_roveme_t     in perfor-
+mance over the three EVAs.
+
+        A pilot study of falls and near-falls          points up several   com_ri_ting
+
+factors--the     near-failure   condition    of soil at the edges      of craters,    the
+difference     in angular   and frictional    forces    {reduced   traction),    and limited
+
+visibility.
+I.   QUANTITY
+            ANDQUALITYOF DATA
+
+A.   Television
+
+     For general viewing, the quality      of the TV transmission from the
+
+lunar surface undoubtedly exceeded expectations.          Time and Motion (TAM)
+
+requirements, however, are muchmore stringent           and a number of problems
+
+associated with the actual TV coverage have limited          both the quantity
+
+and quality    of the data available    for analysis.     In particular   these
+
+problems were:
+
+          Deviations from planned TV coverage.
+          Direction of camera during TV coverage.
+          Quality of kinescopes.
+
+     I.   Deviations from Planned TV Coverage
+
+          The discrepancy between the planned and actual TV coverage is
+summarizedin Table I.
+
+     2.   Direction of Cameraduring TV Coverage
+
+          Our primary interest   was in the activities       of the crewmenas they
+
+performed their assigned tasks.        However, it   is recognized that geological
+
+and hardware priorities    were paramount in Apollo 15.         As a result   of these
+
+emphasesseveral important activities        of prime interest     to us were missed.
+
+     3.   Quality of Kinescopes
+
+          Another obstacle to efficient     analysis was the relatively       poor
+
+quality   of the black and white kinescopes comparedto the color TV trans-
+
+missions.     Although these kinescopes are better than those obtained in
+previous missions, the loss of resolution       and detail    in kinescope repro-
+
+duction coupled with the added loss of the color dimension makes detailed
+
+TAManalysis very difficult.
+                                     Table 1
+                           PLANNED
+                                 ANDACTUALTV COVERAGE
+                                   (APOLLO15)
+          Planned    TV Coveraqe                        Actual   TV Coverage
+
+
+EVA l
+
+
+  CDR and LMP Egress                       As planned.
+* LRV Off-load                             As planned     but too distant   for detail.
+
+  LRV Configuration                        Same as LRV off-load.
+
+* Station   #1 Geology                     Activity    in poor position in relation
+                                           to sun.     Extensive geological pans.
+
+* Station   #2 Geology                     As planned     - Generally   good data.
+
+  Station   #3 Geology                     Short   stop - TV not activated.
+* ALSEP Off-load                           No coverage     - TV not activated.
+
+* ALSEP Deploy                             As planned - Coverage diffused by
+                                           attempt to document both crewmen.
+  EVA Closeout                             No coverage     - TV not activated.
+EVA 2
+
+  Preparation       for Traverse           No coverage     - TV not activated.
+
+* 5 Geological       Stops Planned         Real-time    Planning.
+
+  Station    #6                            TV coverage     - good data for analysis.
+  Station    #6A                            No coverage    - TV not activated.
+  Station    #7                            TV activated     - good data for analysis.
+  Station    #4                            No coverage     - TV not activated.
+
+  At LM (Real-time       change)            No coverage    - TV not activated.
+
+* ALSEP Operations Completion              TV - Station #8 coverage was good         -
+  including Station #8                     but ALSEP coverage poor.
+
+* EVA Closeout       (with Flag deploy)    TV activated     - poor coverage    (Flag ok).
+EVA 3
+
+  Preparation       for Traverse            TV activated    - poor coverage.
+
+* Core Stem Recovery                       TV activated     - very poor coverage.
+* Station    #9                             TV activated    - very poor coverage.
+* Station    #9A                            TV activated    - good coverage.
+  Station    #10                            TV activated    - limited   coverage.
+  EVA Closeout                              TV activated    - limited   coverage.
+
+
+
+
+* Where TV coverage       was expected    to give best opportunity      for TAM analysis
+
+  of crew activity.        The phrase    "poor coverage"    refers   to TAM requirements
+  only.
+     4.    General Comment
+
+            In spite of the fact that a good portion of the planned activity
+
+was not realized,          enough of the TV coverage was adequate to accomplish a
+
+good deal of our planned analysis.
+
+B.      16mmLunar Surface Movie Film
+
+        Failure of the 16mmData Acquisition          Camera(DAC) system reduced the
+
+quantity of usable film to one roll.              The sequences on this roll    were shot
+
+during one of the LRVrides and were not of muchuse for this project.
+
+        An important phase of our analysis was dependent upon the 16mmDAC
+
+System, especially          for the accurate measurementof the crewman's locomo-
+tion.      The advantages of the DACare that it uses a fixed lens system, it
+
+is not pannedduring use, and it             has a muchhigher resolution       than the TV
+camera.
+
+
+C. Voice Data
+
+        Official      transcripts   of the voice transmissions during the three EVAs
+
+have been used in our analyses.             Any discrepancies between the time given
+
+on the voice transcript             as comparedto the kinescopes have been corrected
+
+in our analyses.
+
+D.      Astronaut Technical Crew Debriefing
+
+        This information       has been helpful   in resolving difficulties     in inter-
+
+pretation          of the data.
+                                                                               4
+
+
+
+E.   Physiological   Data
+     Wherever feasible   and meaningful metabolic and heart rate data were
+
+comparedwith crewmanmobility      and task performance data.
+
+F.   EVATimelines
+
+     The EVAtimelines    as determined by TAManalysis may be found in Appen-
+
+dix A.   Within each EVA, a table is allotted     to each crewman. The time
+
+points were determined from kinescopes and voice transcripts.
+
+     These tables present a succinct but synoptic view of the varied char-
+acteristics   involved in the three EVAactivities.      They are valuable as
+
+quick reference markers to identify    specific   areas for analysis,   to point
+
+up important correlations    amongvariables and as inputs to the planning
+
+for future Apollo missions.
+II.       MOBILITY              EVALUATION
+
+
+ A.       Introduction
+
+
+          Mobility             of      crewmembers                     on the            lunar       surface                 is        of     prime            interest                in
+
+ any      lunar          EVA.          On Apollo                 II,      a specific                 segment                 of        the     EVA was devoted
+
+ to    mobility               evaluation                (Analxsis                of      Apollo            Xl      Lunar               EVA [Mobilit                  X Evalua-
+
+ti__*).                  It    was determined                          that      no serious                  problems                   were            presented               by
+
+ the      lunar         environment                    (I/6-g,            soil         conditions,                  pressure                   suits,               etc.)         and
+
+ the      crewmembers                  readily           adapted               to      these         factors.                     Two types                    of    mobility
+
+are       considered;                  (I)      walking                from      one        site        to        another,                  more         or     less           "free"
+
+walking,            and        (2)      manuevering                     at     an experiment                       or        similar               site         in       the      per-
+
+formance            of        a task.             As contrasted                        to     previous              Apollo                  lunar         missions,                  the
+
+crewmembers                   on Apollo               15,    because                of      the      LRV,          had relatively                              short        walk-
+
+ing       segments.                 The       longest            walk          on Apollo                15 was about                         400'-500'                    (from
+
+LM to       ALSEP site),                      several            were          of      100'-200',                  but        the           majority                of    trips
+
+are     estimated               at      less          than        30'.           However,               more        actual                  time        was spent                 at
+
+task       sites,             which          required             a different                    kind        of     mobility.                       These            situations
+
+are     analyzed               in     detail           in    this             section.
+
+       The        low         lunar          gravity         presented                   few       problems.                      Although                it        (I/6-g)
+
+reduces           mobility              traction             to         I/6      that        on earth,                  only            rarely            did        a crew-
+
+member        slip            and/or          fall.          (See Section                      V on Falls                    and Near                   Falls.)                The
+
+reduced           traction              was compensated                          for        by the           lower           weight                of     the        crewmember,
+
+as well           as by the                  ribbed         boot         design             and     soil          characteristics.                                   In     general,
+
+sideways            movements                 were       noticed               more         frequently                  in        task         performance,                      while
+
+hopping           type         motions           were        observed                  more        frequently                     in        free        walking.                 These
+
+
+
+*Fordham            University                  1970
+movementsseemto be the crewmembers'methods of adapting to the lunar
+
+environment.
+
+
+B.   Factors Affecting        Crewmembers'Mobility
+     A number of factors affect         the crewmembers'ability         to move about on
+
+the lunar surface.          These are identified     in the following     outline.
+
+     I.   Terrain
+
+          a.   Consistency, density,          compactness, and other characteristics
+
+               of soil.
+
+          b.   Slope of terrain.
+          c.   Presence of rocks, small depressions and rises,              and other
+
+               microfeatures of the area.
+
+          d.   Position of sun, which affects          ability     to pick up terrain
+
+               features.
+
+          e.   Lunar gravity       - I/6-g.
+
+     2.   Task, equipment, etc.
+          a.   Crewmembercarrying objects of various sizes, bulk, mass,
+
+               fragility,      etc.
+          b.   Distance of traverse.
+
+          c.   Traverse configuration.
+               (I)    Straight     line - forward, back, sideways.
+
+               (2)    Curved path - length of radius; forward, back, sideways.
+
+          d.   Nature of activity,        such as photography, geological search,
+
+               setup of equipment, or pure movementto another location.
+
+     3.   Crewmember
+
+          a.   Previous experience, conditioning:                amount of time spent in
+
+               lunar mobility.
+            b.     Familiarity    with   particular      area.
+
+            c.     Physical    condition    - fatigue,     other    physiological      factors.
+
+
+
+C.     Types of Mobility
+
+       I.   Walk
+
+            This    involves    the usual walking        gait,   but frequently     in lunar
+
+translation        one foot will     lead, or take a longer stride.*              Because      of suit
+
+restrictions,        soil conditions,       and I/6-g,     the two step stride was not
+
+long    (those measured        were about    30"),    and there was some "floating,"             or
+
+times at which        both feet were off the ground.               The suit also required
+
+the crewmember        to walk with       his feet spread apart        lO" to 15".
+
+       2.   Hop
+
+            a.     In both short and long distances,             crewmembers    also moved
+
+(forward     and back) by means          of a hopping     motion,    in which   one foot always
+
+preceded     the other.        It was not uncommon        to have both walk and hop used
+
+intermittently        during     a particular    traverse.       The pattern    frequently       fol-
+
+lowed was to start out in a walking               gait,    but change      to a hop.     The soil
+
+appeared     to be a factor        in this, since      in many     areas   the crewmember       would
+
+kick up soil while walking,              and then change     to the hop, which         meant    that
+
+only one foot would           kick up soil.      Further,    the hopping      motion    would     lift
+
+the feet clear and avoid some soil kicking.
+
+            b.     The length     of a hopping    stride,    approximately      24", was shorter
+
+than    that of a walk.          Again   the feet had to be carried          lO - 15" apart
+
+because     of the suit.
+
+            c.     Occasionally     the crewmember       would   use a short    shuffle.        This
+
+appeared     where the soil created          an extra     restriction,      and where    better
+
+control     of locomotion        was desired.     This    latter is a subjective         evaluation,
+
+*A stride        is defined    as two successive       steps.
+                                                                                             8
+
+
+based on kinescope observation.
+
+        3.     Side-step
+
+               Muchof the activity     in the equipment area required moving around
+
+or along side the equipment. The gait employed in these situations                    was
+
+frequently          a side-step or shuffle,     which occasionally       included a hop.   In
+
+many such cases, the general path was curved, the crewmemberworking and
+
+moving around an object or piece of equipment, or performing a task such
+
+as photography which required getting into position.                     The side-step was
+
+also used in changing directions              (or heading), again with the hop as an
+
+integral        part.    This occurred especially     on rough or rock terrain.
+
+
+D.      Method of Analysis
+        I.     Source of Data
+
+               The data and descriptions       were obtained from the analysis of
+
+kinescope film of lunar TV.            Kinescopes were projected on a Vanguard Motion
+
+Analyzer for frame-by-frame analysis.               GMTis superimposed on the kine-
+
+scope to the nearest second. Parts of seconds (I/24 second per frame)
+
+are obtained by reading the frame counter on the Vanguard.
+     2.        Measurementof Distances
+
+               The distances crewmembersmovedwere determined by first              measur-
+
+ing the height of the image of a PLSSor crewmemberon the screen, and con-
+
+verting this to a scale factor           (l" on screen = X inches on lunar surface).
+
+Use of X - Y crosshairs on the Vanguard screen (readout in .OOl") enables
+the analyst to determine actual distances moved, or other dimensions with
+
+good accuracy, probably within _ 5%. Accuracy is affected by distance
+
+of subject from camera, position              of subject,   resolution     of the camera and
+film,        etc.
+          An additional     problem associated with measurementof mobility                is
+
+that in many cases the camerawas moving (panning or zooming).                      This pre-
+vented point-to-point       scaling on the screen.          Attempts were made, however,
+
+to select scenes for analysis in which the camera did not move, and also
+
+scenes in which the subject moveddirectly                across the camera, or normal
+
+to the lens.     Since these conditions coincided only rarely,                approximations,
+
+averages, and single frame measurements, were used to secure reasonably
+accurate data.
+
+     3.   Qualitative     Analysis
+
+          In addition to the quantitative             data, the kinescopes provided a
+
+good basis for the qualitative          descriptions      given earlier     in this section.
+
+These descriptions      revealed several different          mobility    patterns in the
+movementof astronauts on the lunar surface.
+
+
+E.   Analysis of Mobility      Segments
+     I.   EVAl
+
+          a.   CDRmovestoward LM during LRVdeployment.
+
+               (GMT212:14:04:35).            Time into EVAl - 52 min.
+               Location    - at LM.
+
+               Mode:    Hop and "bounce"       forward    in straight     path:   not carry-
+                        ing anything.
+
+               Data:    Distance     moved   - 4.8'    in 4.0 sec. for 1.2'/sec.      rate.
+
+               Comment:    Area near LM on slight slope and relatively smooth,
+                           with loose soil.  Picture showed CDR to knees only,
+                           so that details of foot action not known.  The
+                           appearance of short hops and a "bouncing" motion
+                           was evident.
+                                                                                     lO
+
+
+b.   LMPnear LM, carrying 70mmcamera.
+
+     (GMT 212:14:09:09).            Time    into EVA l - 57 min.
+
+     Location    - at LM.
+
+     Mode:   Walk in straight path with                hop interspersed;   70mm camera
+             mounted on pressure suit.
+
+     Data:   Distance moved - 6.1' in 6.0 sec. for l.O'/sec.  Sec.
+             by sec. rates in ft./sec:  .9, 1.2, .9, .9, 1.2, l.l.
+
+     Comment:     Same conditions as in (1) above.  Sec. by sec. rates
+                  indicate the variability in the walk-hop type of
+                  mobility.
+
+Co   LMP moving     up slight       slope    on far side of LM, following      CDR
+     in LRV.
+
+     (GMT 212:14:10:35).            Time into EVA l - 58 min.
+
+     Location     - at LM.
+
+     Mode:   Hopping       walk up slope with          70mm camera.
+
+     Data:      Distance    moved    - 6.7'    in 7.5 sec. for .9'/sec.
+
+     Comment:      This was a short segment of an extensive traverse
+                   (the first in this EVA).   Only this portion was in
+                   camera range because the LM was between it and LMP.
+                   Movement was by characteristic hopping type walk
+                   with one foot leading the other most of the time.
+
+d.   CDR carries     LCRU from MESA          to LRV.
+
+     (GMT 212:15:20).         Time    into EVA l - 2 hr. 7 min.
+
+     Location     - at LM.
+
+     Mode:      Combination    walk and hop.
+
+     Data:      Distance    moved    - 9.0' in 6 sec. for 1.5'/sec.         rate.
+
+     Comment:      This traverse only included the actual walk-hop
+                   segment, and not the start and end. CDR took rather
+                   short steps, and varied the gait even in this short
+                   move.   The LCRU is a relatively small object, and
+                   did not appear to impede mobility.
+                                                                                                         II
+
+
+           eo       LMP carrying         extension   handle    for core.
+
+                    (GMT 212:16:40:59).          Time   into EVA 1 - 3 hr. 28 min.
+
+                    Location      - Station    #2.
+
+                    Mode:       Walk with extension handle.  Relatively                    level, smooth
+                                surface, except for slight depressions.
+
+                    Data:       This segment was analyzed for each step to show                     length
+                                of steps and rate of movement.
+
+
+       Time         (sec.)       Distance    (ft.)
+Step   Unit            Cum.      Ste E        Cum___z
+                                                  ..                     Description
+
+  l             0           0       0            0   Left     foot. Left surface during             step.
+                                                                    (Starting point.)
+
+  2     1.3            1.3        1.8          1.8   Right     foot.     Left surface         during   step.
+
+  3         .9         2.2       2.5           4.3   Left     foot.    Sank    8 -   I0"   into   a depres-
+                                                                       sion.
+
+  4     l .6           3.8        l .l         5.4   Right     foot.     Kicked      soil and shortened
+                                                                         step.
+
+  5     l.2            5.0       2.1           7.4   Left foot.         Recovered      and took longer
+                                                                        step.
+
+Distance covered            - 7.4' in 5.0 sec. for 1.5'/sec.               rate.      Rate fluctuated
+appreciably step            by step.
+
+Comment:        In this case the left foot seemed to lead in that it took the
+                longer steps, with the right foot pulling just ahead.  It is
+                also noted that frequently both feet are off the ground during
+                a step, resulting in a bouncing or "floating" effect.  The
+                I/6-g, soft soil, minor depressions, all tend to cause the
+                irregular gait and the tendency for one foot to lead the other.
+                                                                           12
+
+2,   EVA 2
+
+     a.   LMP on long straight path down gradual       slope, then down steeper
+          slope; and then level.
+
+          (GMT 213:13:52:57).      Time into EVA 2 - 2 hr. 5 min.
+
+          Location   - Station   #6.
+
+          Mode:   Walk, with right foot leading, or taking longer steps
+                  for first segment on relatively smooth, gradual slope.
+                  On steeper slope used shorter steps, or hops, then
+                  reverted to first mode.  LMP carrying camera.
+
+          Data:   Distance covered in first, relatively level, smooth
+                  segment - 38.5' in 20 sec. for a rate of 1.9'/sec.
+                  Second part - 42' in 20.8 secs. for a rate of 2.O'/sec.
+                  Overall average - approximately  2.0'/sec.
+
+          Comment:   This represented a relatively long, straight,
+                     uninterrupted  traverse over relatively smooth, level
+                     terrain, with one decline of a few feet in the mid-
+                     dle. The soil seemed typical in that it was soft
+                     and was kicked up in small amounts.    The 2.0'/sec.
+                     probably represents an optimum rate for this type
+                     of terrain for longer distances.
+
+     b.   CDR in side-hop   for short     distance.
+
+          (GMT 213:13:58:07).      Time   into EVA 2 - 2 hr. lO min.
+
+          Location   - Station   #6.
+
+          Mode:   Side-hop in a circular path of about 90 ° arc, to pick
+                  up rock with tongs and return to place rock in con-
+                  tainer held by LMP.   This is more a manuever to get
+                  into position to pick up specimen rock than perform a
+                  traverse as described above.   Tongs held in right hand
+                  used to pick up and carry rock.
+
+          Data:   Moves to right by alternately moving right foot then
+                  left, accompanied by a hop so that both feet are off
+                  surface.  A turn is also made by pivoting as feet
+                  touch surface.   Four such side hops in a 90 ° arc and
+                  traversing about 5' were accomplished  in 5.5 sec. for
+                  a rate of O.9'/sec.
+
+                  After grasping rock in tongs, CDR pivots 90 ° , and
+                  returns to starting point in three hops, feet together
+                  and stops by sliding in soil.  The distance traversed
+                  was about 3' in 1.6 sec. for a rate of 1.9'/sec.
+                                                                                               13
+
+                  Comment:     The surface was relatively flat.   The initial part
+                               included getting set to pick up a particular rock
+                               with tongs, which meant using more and shorter side
+                               hops.   The return included a side hop and a forward
+                               hop to a not so precise location.   The skidding stop
+                               with both feet kicked up a large amount of soil.
+                               The difference in velocities is a result of different
+                               objectives at the end of each short traverse.
+
+        .    EVA 3
+
+             a.
+                  LMP involved in geological description and taking photographs
+                  at the beginning of Station #9A.   The camera is mounted on
+                  his suit and he is carrying tongs with his left hand.
+
+                  (GMT 214:11:05:05).      Time     into   EVA - 2 hr.    13 min.
+
+                  Location   - Station   #9A.
+
+                  Mode:   Walk    (in essentially      a straight     path).
+
+                  Data:   Distance moved    is 15' in 12.6 seconds             for a rate of
+                          1.2'/sec.
+
+                  Comment:     The surface was smooth, compact and level.   The LMP
+                               was merely walking from one spot to another.   The
+                               length of the average step with the right foot was
+                               l.l; with the left foot was 1.2; and with both feet
+                               was 1.2. The lengths of the steps ranged from .5'
+                               to 1.8'.
+
+             b.   LMP moving     to aid CDR after      fall.
+
+                  (GMT 214:11:06:49).      Time     into EVA - 2 hr. 15 min.
+
+                  Location   - Station   #9A.
+
+                  Mode:   Walk
+
+                  Data:   A short segment, close up, showed LMP hurrying to aid
+                          CDR who had just taken a fall.   It is assumed LMP is
+                          traveling at his best speed.   He moved at the rate of
+                          1.9'/sec. and one step was determined from foot imprints
+                          in soil to be 31". Distance moved was 4.8' in 2.5 sec.
+
+                  Comment:     Since this constituted what might have been an emer-
+                               gency, it is assumed that LMP moved as rapidly as
+                               possible.  The rate (and length of step) may be
+                               close to maximum for short distances.
+
+NOTE:       The data for each of these      mobility       segments   is summarized    in
+            Table 2.
+                                                                                             14
+
+                                     Table 2
+                             SUMMARY
+                                  OFMOBILITYSEGMENTS
+
+
+                Clock (I )   Distance      Time (2)     Rate
+ No.       CM    Time          (feet)      (sec.)     (ft/sec)   Location     Conditions
+EVAl
+
+  a       CDR    0 :52          4.8          4.0        1.2         LM      Uphill   slope,
+                                                                            smooth
+
+  b       LMP    0:57           6.1          6.0        l.O         LM      Uphill   slope,
+                                                                            smooth
+
+  c       LMP    0:58           6.7          7.5        0.9         LM      Uphill   slope,
+                                                                            smooth
+
+ d        CDR    2:07           9.0          6.0        1.5         LM      Level, smooth
+                                                                            carrying LCRU
+
+ e        LMP    3:28           7.4          5.0        1.5       Sta. 2    Level, smooth
+                                                                            carrying
+                                                                            extension
+                                                                            handle
+EVA 2
+
+ a        LMP    2:05        (Ist part)
+                               38.5         20.0        l.9      Sta. 6     Downhill    slope,
+                                                                            smooth
+                             (2nd part)
+                               42.0         20.8        2.0      Sta. 6     Downhill slope,
+                                                                            smooth, carry-
+                                                                            ing camera
+
+ b        CDR    2:10        (Ist part)
+                                5.0          5.5         .9      Sta. 6     Level,   smooth
+
+                             (2nd part)
+                                3.0          l .6       l.9      Sta. 6     Level,   smooth
+
+EVA 3
+
+ a        LMP    2:13         15.0          12.6        l.2      Sta. 9A    Level, and
+                                                                            relatively
+                                                                            rough terrain
+
+ b        LMP    2:15         4.8            2.5        l.9      Sta. 9A    Level,     and
+                                                                            relatively
+                                                                            rough terrain
+
+(1)     Hours, minutes into EVA.
+(2)     Seconds required to cover         distance.
+                                                                                                  15
+
+F.      General Summary
+
+        I.     Certain subtle changes are noted between EVAsI, 2, and 3.                      Con-
+
+fidence is gained with experience and the crewmembersmovedabout the
+
+lunar surface with increasing confidence and skill.                        Velocity,   too
+
+increases.         However, part of the increase is due to the downhill segment
+
+in EVA2.          Comparedto the first            three uphill   segments of EVAl, downhill
+mobility        is about twice as fast.
+
+     2.        It appears that the soft,           powdery characteristics      of the soil
+
+(varying from one location             to another), the presence of manysmall depres-
+
+sions and rises,           even in smooth, uncluttered areas, and the other variables
+
+listed        at the beginning of this report,           induce variations      in mobility     on
+
+the lunar surface.             Each step may be of different         length and time dura-
+
+tion,        as well as varying in coordination.             Crewmembers
+                                                                       would frequently
+
+change from a walk, to a hopping-walk, or canter, with one foot in the
+
+lead, to a pure hop, and occasionally                  take two or three very short shuf-
+
+fling-like        steps.    Undoubtedly, the varying nature of the soil                and ter-
+
+rain,        plus restricted    downwardvisibility,          contributed     to this pattern.
+
+It seemedas if          the crewmembershad to "feel"             their way along, and the
+
+hopping-like        motion provided the greatest sense of security                 - the same
+foot was always in front.
+
+     3.        The side-hop, with crewmenleaving the surface with both feet
+
+during the hop, was used primarily                  for work around equipment or for get-
+
+ting into position           to pick up an object,        to photograph or assist        the other
+
+crewmember. Frequently, the hop, or occasionally a step, would be to the
+rear, and no particular            difficulties       were observed in such backward move-
+ments.
+                                                                                         16
+
+
+    4.     In general, man readily adapts to the lunar environment as far as
+
+mobility   is concerned. The terrain,      soil,    and visibility        factors seemed
+
+to present somedifficulties       and probably contributed           to falls,   mishandling
+
+of objects,   etc.    The constraints   of the suit also affected mobility,
+causing a wide stance stride,      and relatively     short steps.         A stride   (two
+
+steps) was typically     30 - 36", and occasionally       up to 48 - 52".         Even in
+the longer strides,     one foot would take a longer step than the other.
+This produced a hopping-like     walk, somewhatresembling the canter of a
+horse.
+                                                                                                     17
+
+Ill.    COMPARISON
+                OF LUNAREVAWORK
+                              PERFORMANCE
+                                      WITHl-g TRAINING
+   A.   Introduction
+
+        I.    Purpose
+
+              One of the principal       purposes of time and motion analysis of
+
+   Apollo 15 activities         was to compare similar          activities     performed by crew-
+
+   membersduring l-g suited training              and during lunar EVAs. The basis for
+
+   comparison was the time required for performance; however, other factors
+   such as environmental conditions,             difficulties      encountered, nature of
+   task, etc.,     were considered and evaluated.
+
+              These comparative analyses attempt to quantify task performance
+
+   under l-g and lunar conditions in order to develop a better understanding
+   of how humanactivity          is performed on the lunar surface and to facilitate
+
+   future planning for such activities.               Qualitative      conclusions are drawn
+
+   also, and these amplify and complementthe quantitative                       results.
+        2.    Definitions      of Activity     Segmentsand Criteria           for Selection
+
+              Those activities      were selected for analysis for which sufficient
+   data (or opportunities         for recording data) were available.               Another cri-
+
+   terion was that they be performed at least twice during the last three
+   training    sessions (especially          the last one).       The final     criterion   called
+
+   for adequate lunar TV coverage.
+
+              a.   Tasks.      The largest activity       segment is the task, a complete,
+   identifiable     activity     with a single purpose.           An example of this would be
+
+   "Deploy Lunar Roving Vehicle."             A task may be performed by one crewmember
+
+   alone, or it may be a joint          two-maneffort.           In the analysis of tasks,
+   only the overall      time for the task performance is considered.
+
+                   Table 3, "Task Comparisons; Lunar EVAand l-g Training,"
+                                                                                                    18
+
+
+lists    the task together with performance times during training                        and during
+EVA.
+
+                 Most of the tasks shown in this table could not be further
+
+divided into sub-tasks because of data recording limitations.                            Four of
+
+the tasks (LMP, 4, 5, 7, 8) however, were divided into sub-tasks as shown
+
+in Appendix B.
+           b.    Sub-tasks.      The first     level of task breakdown           is the sub-task.
+
+A sub-task       is identifiable       as a complete     unit of work within        itself,       and
+
+only has relevance         as it fits into the patterned          sequence       of a total task.
+
+For example,       "PSE Deploy"    is a task, while         "Unstow    PSE Stool"    is a sub-
+
+task.
+
+                 Sub-tasks     are created     by grouping     a series       of items    (elements)
+
+as listed       in the "Detailed       EVA Procedures"      section    of the "Apollo       15 Lunar
+
+Surface    Procedures"       document.      Specifically,     if it was not possible          in
+
+training    or EVA to distinguish           or record    such elements,        they were    combined
+
+into sub-tasks       for this analysis.
+
+           c.     Element.     An element     is the smallest     unit of work which          is
+
+still identifiable          and homogeneous.      For example,        under    the task    "PSE
+
+Deploy"    the sub-task       "Unstow     PSE Stool" was     listed.     This    sub-task    was
+
+further    separated       into the elements:       "Stow carry       bar on sub-pallet,"          and
+
+"Unstow    PSE stool from sub-pallet."
+
+                  Analysis    at the element     level was confined           to selected    segments
+
+of the "Comprehensive          Sample     Collection"    and "Double     Core Sample       Collection"
+
+tasks.     The reason for this           is that in these     two cases       the elements    in ques-
+
+tion were       repeated    a number     of times within     the task, providing          not only a
+
+basis for statistical          evaluation,     but a more detailed        insight    into the
+                                                                                                    19
+
+nature of these activities.
+
+
+B.     Task Comparisons (Lunar EVAand l-g Training)
+       I.     Introduction
+
+              Tasks, as defined above in Section I, were chosen because they
+
+were the only ones for which time analyses could be madeover a complete
+task.        In some cases        it was not possible    to break    the tasks      into smaller
+
+segments        (sub-tasks,    elements    - see Sections       IIIC, IIID below)      because      of
+
+technical       limitations.        Four of the tasks        (LMP 4, 5, 7, 8) are broken          down
+
+into sub-tasks          and analyzed     in more   detail    in Section     IIIC.   The results
+
+of task analysis          are therefore     much more    general    than more detailed        analy-
+
+sis.
+
+
+              Table    3 lists the activities,       performance     time    (in minutes)     during
+
+training       sessions,     performance    time on the lunar surface,          and the source of
+
+information       specifying       the end points    of characteristic       activities.       It
+
+also presents          the ratio of the EVA time and the last l-g training                 time
+
+(D/C column        in table).       Training    times were obtained       through   direct    obser-
+
+vation;       EVA times were       determined    from kinescope     (TV) and voice      (V) trans-
+
+cripts.
+
+       2.     Results
+
+
+              The outstanding       characteristic    of these     data is the relatively
+
+greater       time it takes to perform          activities    on the moon    as compared      to the
+
+last training          session.     For both astronauts       the time increase      ranges    from
+
+20% to 97%       (items LMP 5 and 6 in Table          3).
+
+              The overall     increase    for both CDR and LMP on all total           tasks    is
+
+58%.        Although    the CDR had an average       increase    of 38% and LMP 63%, the
+                                                                                                20
+                                        Table 3
+                                        LUNAREVAANDI-GTRAINING
+                          TASKCOMPARISONS:
+
+
+                                        l-G TRAINING SESSION         EVA l                 EVA
+                  TASK                 6/4/71   7/I/71 7/16/71      7/31/71   RATIO       DATA
+                                        (A)      (B)       (C)        (D)        D/C     SOURCE
+
+A. Commander
+
+  I. Deploy Lunar Roving
+     Vehicle                            N.D,     5.75      3.64       5.88*      1.62      TV
+
+   .
+        Deploy High Gain
+        Antenna & TV Camera
+        on LRV                          N.D,    6.34       6.10       7.57       l .24      V
+
+
+
+B. Lunar Module          Pilot
+
+  I. Align High Gain
+     Antenna                            2.10     3.10      l .42      2.78       l .96      V
+
+   .
+        Contingency Sample
+        Collection (Stowage
+        not included)                   l .30   N,D.       l.30       2.08       l .46      V
+
+
+  3. Deploy Lunar Roving
+     Vehicle                            3.60    2.65       2.95       5.12"      l .74    Both
+
+
+  4. ALSEP       Interconnect          I0.25    8.88       8.99     15.95        l .77    Both
+
+
+  5. Deploy Passive          Seismic
+     Experiment                         8.05    7.02       6.91      8.27        l .20   Both
+
+
+  6. Deploy Solar Wind
+     Experiment                         3.10    2.70       l .85      3.65       l .97      V
+
+
+  7. Deploy Lunar Surface
+     Magnetometer                       7.10    5.85       5.67      8.62        l .52   Both
+
+   .    Deploy Sunshield         &
+        ALSEP Antenna
+        Installation                   I0.67    12.90     12.50     20.07        l .61   Both
+
+
+ 9.     Deploy    SIDE                  N.D.    5.35       4.62      8.41        l.82     Both
+
+
+TOTAL    FOR CDR & LMP                                    55.95     88.4O        l .58
+
+
+   N.D. - NO Data
+  *Time spent troubleshooting            LRV deployment   problem   (5.4 min.)    not included.
+  TV - Television
+  V -Voice
+                                                                                       21
+
+
+fact that only two samples were available for the CDRand that the tasks
+
+were not completely comparable makes it           inappropriate     to emphasize these
+
+differences.       The high average ratio of 1.63 for LMPis also attributed,
+
+partially,      to the fact that his tasks contained a relatively           high portion
+
+of "fine motor control"        activities.     (See Section IIIE below.)
+        3.   Discussion
+
+             There are many factors that contribute          to the fact that activities
+
+usually take longer to accomplish on the moonthan they do on earth.                   One
+
+such factor is that the crewmenare more careful on the moonthan during
+the training      session.    On the lunar surface, there is no one there to
+
+assist them if      they have problems.       In addition,     the experiments that they
+
+deploy and the equipment that they operate are muchmore fragile                 than the
+
+l-g experiment mockupsand equipment used in training.
+
+             The unusual environment of the lunar surface also causes problems.
+
+The crewmenhave to adapt to their            weight of about 67 Ibs. on the moon
+(with their      EMUs)comparedto about 330 Ibs.* during the training             sessions.
+
+The high intensity        and sometimes low angle of the sun has to be dealt
+
+with.        Other factors such as absence of dust in the atmosphere and absence
+
+of familiar      objects of known size contribute       to problems of distance deter-
+
+mination.       The lunar soil and terrain      are also relatively     unique and diffi-
+cult to simulate.
+
+             The use of tasks as a basis for analysis presents certain limita-
+
+tions on conclusions that can be drawn. A total                task generally contains
+
+
+
+*Training suit and hardware with 180 lb. man (l-g) weighs 330 Ibs. The
+ samemanwith lunar suit weighs 404 Ibs. in l-g, or 67 Ibs. on the lunar
+ surface.
+                                                                                      22
+
+
+smaller segments of more homogeneousnature (sub-tasks and elements) which
+
+can be more readily     classified    and analyzed as to effects     of variables.
+
+The total     tasks also frequently    contain segmentswhich are beyond the con-
+
+trol   of the crewmember,or are extraneous to the main task.             In somecases
+these can be deducted from the task time (see Table 3), but frequently                this
+
+is not feasible,     resulting   in artificially   higher times.     The total    task
+
+analysis is useful from an overall         standpoint,   but to satisfactorily     deter-
+mine effect     of variables on work performance, it       is necessary to be able
+
+to analyze sub-tasks and/or elements.
+
+            The high work load of the EVAscomparedto the training              sessions
+must also be considered.         There is a considerable amount of work performed
+
+by the astronauts before each EVAin donning and checking out the EMUs
+within   the limiting   confines of the LM, whereas in training         the crewmen
+
+are suited up in an area which is not cramped and are assisted by suit
+technicians.
+
+            It is not possible to determine the relative        contribution     of these
+factors during the performance of a particular           activity.    However, it would
+
+be accurate to say that all the activities          that have been analyzed have
+
+been affected by most of these factors.
+                                                                                            23
+
+C. Sub-task Comparisons (Lunar EVAand l-g Training)
+     I.   Introduction
+
+          The tasks discussed under Section IIIB above and listed               in Table 3
+
+are madeup of smaller segments or sub-tasks.                These sub-task activities
+
+and data are tabulated in Appendix B.
+
+          One objective       of sub-task analysis is to determine more precisely
+
+which types of activity         are affected positively      by lunar conditions,       which
+
+apparently are not affected,          and which show performance deterioration           in
+the lunar environment.
+
+          Another reason for partitioning           the tasks into sub-tasks is to
+provide a better understanding of the effects              of the lunar environment on
+
+humantask performance.           For example, segmentsof someactivities           are not
+
+performed in the sameway in training            as on the lunar surface:        (1)     TV
+
+deployment is done at a greater distance on the moon, (2)                  adjustments on
+mockupsare often simulated,           (3) apparatus may get stuck, as for example,
+
+Boyd bolts on the lunar surface, drill           in bore stems, and (4) soil          char-
+
+acteristics      may differ    and affect   sometypes of activities.        Most of these
+differences      are due to situational     or instrumental factors and not to the
+work efforts      of the crewmen. If one were to eliminate the effect             of these
+
+differences      from the analysis,    the result    could more clearly     be attributed
+
+to other effects      as, lunar gravity,     visual perception, etc.
+
+     2.   Table of Sub-tasks (Appendix B)
+
+          It was not possible to partition          all   the activities   into relatively
+
+small segments. The data source (kinescopes and voice transcripts)                    did
+
+not always provide enough information to determine end points of all acti-
+
+vities.       Consequently, in somesituations        where it was known that several
+                                                                                                              24
+
+
+ sub-tasks had taken place, but the time could not be broken out for each,
+
+ the sub-tasks or elements were analyzed in groups.
+        3.     Results
+.J
+
+
+
+
+               a.     The ratio of the time          required    for sub-tasks          on the lunar         sur-
+
+ face to the last suited               training     session    at Cape    Kennedy       (D/C ratio      - see
+
+ Appendix       B) is in the range         of 1.20 to 1.90 for most activities.                     There
+
+ are some       instances      where    the ratio     is much    greater       than    this,   and there
+
+ is one where          the ratio is      .74.     In most     cases    where    the ratio      was greater
+
+ than 2.00, the accomplishment                  of the sub-task        was not nominal,         with    crew-
+
+ men encountering           some technical        difficulty     in performing          the task.
+
+               b.     It was noted earlier          that   a number     of situational         and instru-
+
+ mental       differences      between    l-g suited       training     and lunar       EVA task perfor-
+
+ mance       tended    to increase      the time     for the EVA tasks.           For example,         TV
+
+ deployment         is done    at a greater       distance     on the moon.           When   activities
+
+ affected       by the more obvious         of these       factors     were    eliminated      from calcu-
+
+ lation,       the D/C ratio is of the order               of 1.39 for the CDR and 1.43 for the
+
+ LMP, resulting          in a combined      ratio     of 1.41,     a substantial         decrease      from
+
+ combined       ratio of 1.58 for the CDR and the LMP as shown                         in Section      IIIB,
+
+ Task    Comparisons        (Lunar EVA and l-g Training).
+
+        4.     Comments
+
+               The implication         of this anaTysis        is that,       if all the situational,
+
+ operational,          and technical      differences        between    working       conditions    on the
+
+ lunar surface          and training      site can be minimized,              the time increase         for
+
+ lunar activity          could be completely          attributed       to lunar       conditions.       At
+
+ the same time          elemental      activities     with    shorter    lunar    than l-g training
+
+ times would          become   more apparent        and more    easily    isolated       for analysis.
+                                                                                      25
+
+Films of training       sessions, especially   those close to flight,     and films
+
+of lunar activity       would help immeasurably in attaining     such goals.
+
+
+D.   Element Comparisons (Lunar EVAand l-g Training)
+     I.    Introduction
+
+           a.    The ComprehensiveSampleCollection       and Double Core Tube Sam-
+
+ple Collection      activities   have been chosen for detailed element comparison
+
+of l-g training       and lunar surface performance.
+           b.    The data for the training     sessions were obtained from direct
+observation.       The lunar EVAdata were obtained from TV kinescopes.
+
+           c.     The data for ComprehensiveSample Collection       are presented in
+
+Table 4.        Double Core Tube Sample data are presented in Table 5.         The
+
+tables show the data from training         at two different   stations,   and data
+
+from three EVAs.
+
+           d.     Both tasks are performed primarily    by the LMPwith assistance
+
+from the CDR.
+
+     2.    ComprehensiveSampleCollection
+           a.     Description
+                  Two successive elements of the ComprehensiveSample Collection
+
+have been selected for analysis.          The Rake and Shake element consists of
+
+the LMPusing the rake to scrape a swath approximately one meter long by
+
+ten inches wide by two to three inches deep. He then shakes the rake in
+
+order to have the fine particles         drop out while retaining    the larger ones.
+
+The second element, Fill         Bag, consists of the LMPlifting     the rake with
+
+the larger rock fragments inside,         positioning   it over the sample bag held
+
+by the CDRand then rotating          the rake so that the rocks pour out of the
+rake into the bag. This procedure requires coordination between the two men.
+                                                                                                                                            26
+
+                                                                      TABLE 4
+
+                                                       COMPREHENSlVE SAMPLE COLLECTION
+
+                                                                   Time     Analysis
+                                                                                                                                        =
+
+
+
+                                                                   LUNAR MODULE PILOT
+                                                                                   i
+                                                                                                    (LMP)
+
+                                                         TRAINING    (7-19-71)                               EVA                m
+
+                     TRIALS                                 l             2                                    2            3
+,m                                                                                                                                  1
+
+
+     l    .   Rake and Shake*                              .65#             .60              .42              •38     _42
+
+              Fill      Bag*                               •20              .20              .25              .40     • 28
+
+              (Total)                                     (.85)            (.80)           (.67)            (.78)    (.70)
+
+          .   Rake and Shake                               •70              .75              .45             • 38     .33
+
+              Fill      Bag                                •20              .26              .25             .30      .17
+
+              (Total)                                     (.90)           (l.Ol)           (.70)            (.68)    (.50)
+
+          o   Rake and Shake                                                .85                               .52     .62
+
+              Fill      Bag                                                 .34                              .22      .20
+
+              (Total)                                                     (I.19)                            (.74)    (.82)
+
+     no       Rake and Shake                                                                                          .33
+
+              Fill      Bag                                                                                           .22
+
+              (Total)                                                                                                (.55)
+
+     Average:                Rake & Shake                  .675             .733             •435            .427     .425
+
+                             Fill      Bag                 .200             .267             .250            .307     .218
+
+                             (Total)                      (.875)          (I .000)         (.685)           (.730)   (.643)
+
+     Range:           Rake & Shake                         .05              .25             .03              .14      .29
+
+                      Fill          Bag                    .00              .14             .00              .18      .II
+
+                      (Total)                             (.05)            (.39)           (.03)            (.I0)    (.32)
+
+
+
+
+     (#) All            times          are    in    minutes.
+
+     (*) Element                    Description:
+
+                (i) Rake and Shake:                         using the rake,            LMP scrapes   swath approximately
+                         1 meter             long    by I0" wide by 2-3"               deep of lunar   soil,  then shakes
+                         out the             fine    particles•
+
+                (2)      Fill    Bag:       after   shaking,     LMP lifts rake with rock fragments   inside,
+                         positions       it    over sample bag held and positioned       by CDR, and then
+                         rotates     rake so that          rocks pour out of the rake into   the bag.    This
+                         requires      close      coordination     by both men.
+                                                                                                           27
+
+                  The entire       sequence     is repeated        from two to four times         during
+
+each performance          of the Comprehensive            Sample    Collection.
+
+            b.     Results
+
+                   (1) Rake and Shake
+
+                         (a)     The average       for the five training          data points     is .71
+
+                                 min; that for the nine EVA trials                is .43 min.
+
+                         (b)     The difference       between      these means     is statistically
+
+                                 significant,      with    the element    "Rake and Shake"         per-
+
+                                 formed    appreciably      faster on the lunar surface            than
+
+                                 on the training       grounds      at Cape   Kennedy.
+
+                         (c)    There     is no appreciable         difference     in the ranges.
+
+                   (2) Fill Bag
+
+                         (a)     The average       for the five training         data points      is .24
+
+                                min;    that for nine EVA trials          is .25 min.
+
+                         (b)    There     is no significant         difference    between    these
+
+                                means.
+
+                         (c)    There     is no appreciable         difference    in the ranges.
+
+          3.      Double       Core Tube    Sample
+
+                  a.     Description
+
+                         The double       core tube sample         task consists       of:   (l.O)*
+
+The LMP obtaining          the core tubes from the CDR's               sample    container    bag and
+
+assembling       them.     (2.1) He then positions            the tube over       the chosen      sample
+
+location,        (2.2) and pushes         it into the ground as far as possible.                  (2.3)
+
+The LMP next hammers             the tube into the ground.             (3.1) The LMP carefully
+
+removes   the double           core tube.     (3.2) The tubes are capped,               tamped,   sepa-
+
+rated and stowed          in the CDR's       sample   bag container.          The CDR assists         by
+
+handing   the LMP the hammer,              caps,   etc. and takes       pictures       of the activity.
+
+
+*The   numbers     correspond       to the element        numbers     in Table    5.
+                                                                                                          28
+
+                                                 Table 5
+
+                           DOUBLE
+                                CORESAMPLE
+                                         COLLECTION
+                                                  - LMP
+
+                                          Training 7-19-71                           EVA
+
+             Elements                       l          2                   1                 3
+    1.0    Assemble                              .85   (1)     1.40       l .08             l .43
+
+    2.0    Implant
+           2.1     Position                (2)                 (2)             .40           .32
+           2.2     Push                    (2).                (2)             .20           .15
+
+           2.3     Hammer                  (2)                 (2)         .50               .83
+
+                   (Total)                 (1.15)              (.95)     (l.lO)            (1.30)
+
+    3.0    Stow
+
+           3.1     Remove                  (2)                  .26        .43               .55
+
+           3.2     Disassemble &
+                   Stow                    (2)                 (3)        4.60             3.38
+
+                   (Total)                 (2.70)                        (5.03)            (3.93)
+
+                   TASKTOTAL                4.70                          7.21             6.66
+
+                   (1) All times       in decimal        minutes.
+
+                   (2) Individual       element times not determined; therefore,
+                       only total       times for training exercises were used.
+                   (3) In this trial the core tubes could not be separated.
+                       Therefore, the training exercise was terminated.
+
+          b.     Results
+
+                 As shown in Table       5, element          breakdown   was limited          to EVA.
+
+Such a breakdown         could not be used during training               because       of techni-
+
+cal problems      in data recording.           Thus only total         sub-task       time can be used
+
+for comparative      purposes.        The results        represent     three    different         types   of
+
+activities,      viz.,    (l.O) Assemble,         a manually     controlled      mechanical         opera-
+
+tion requiring      moderate       care and precision,          with   the times not signifi-
+
+cantly different         between    training      and EVA;     (2.0) Implant,         an operation
+                                                                                                   29
+
+depending to a large extent on the relative                 characteristics       of the soils;
+
+and (3.0) Stow, a manually controlled                mechanical operation requiring           extreme
+
+care and precision,         in which the lunar time was significantly               greater than
+
+in training.       The first     and third    items apparently are affected by the
+
+nature of the activities          themselves, in this        case the degree of care and
+precision required, with the increased care and precision resulting                       in
+
+greater times for lunar activities.              (See Section IIIE on Fine and Gross
+
+Motor Control.)       The Implant sub-task, however, involved the driving                     of
+the core tube into the soil,            this latter      being a variable factor on which
+
+no data are available          as to resistance to penetration.           However, if times
+
+for the individual         elements could have been obtained through film               (movie,
+
+kinescope) during training,            more definitive     analysis and conclusions could
+
+have been drawn. For example, the Position element is a manually controlled
+operation requiring        primarily     gross motor control,        with no effect     of soil
+
+being present.       The Hammerelement, however, is directly               affected by the
+soil    characteristics.
+       4.   Discussion
+
+            The results    from the ComprehensiveSample Collection                (Table 4) and
+the Double Core Tube Sample Collection                (Task 5) are summarizedon the basis
+
+of time considerations,         namely, whether performance time is longer or shorter
+
+during lunar EVAthan during training.                 In addition,     the factors which
+
+apparently affect        the relative     times for individual       element (or sub-tasks)
+
+are pointed up in the analysis of the data, and types of activities                       are
+
+categorized.      The lack of data breakdown into            elements    during    training     for
+
+the Double     Core Sample     Collection    study    prevented   a more complete      analysis
+
+of this task.
+                                                                                                                                                                           3U
+
+                               a.        The elements                  "Remove"              and     "Disassemble                    and Stow"                took
+
+ considerably                      longer         to      perform          during            EVA because                 of     the        extreme            care       and
+
+precision                required               in     handling            the        lunar        core          samples            to     insure          that      the
+
+strata         inside                the       cores         would      not       be disturbed.                     Also            the     flight            core       tube
+
+caps       were          more         difficult               to     assemble            on the          cores           than        were         the      caps      used
+
+in      training.
+
+                              b.         The      "Rake        and Shake"                element           took          less        time.             This       element
+
+required            only            gross         motor        control,             but       other        factors,                as yet          unidentified,
+
+probably            contributed                      to      the     rather         large          (41%)          time        reduction.                   This      was
+
+one of        only            two        activities                which      were         observed              and analyzed                     as requiring
+
+less       time          on the            lunar          surface.            The        relatively                large           number          of      data      points
+
+(training                -    5;      EVA -          9) which          were         quite          consistent                 as     indicated                by the
+
+ranges,           point             to     reliable            data        values.             Causal            factors             need         to    be identi-
+
+fied,       and          if     possible               quantified,               to      explain           this      phenomenon.
+
+                              c.         Some elements                 took         approximately                   the         same time               on the
+
+lunar       surface                 as they            did     during         l-g        training.                The elements                     "Fill          Bag,"
+
+"Assemble,"                   and        "Implant"             represent              this         type.
+
+                              d.         Certain           groupings             or      categorizations                       can        be made in               connec-
+
+tion      with       the            elements              analyzed         herein:
+
+                                         (I)         An activity              (element,               sub-task)                which         is        a manually
+
+controlled                   mechanical                operation           requiring                moderate             care            and precision,                   and
+
+not     materially                   affected              by unusual               or    limiting               conditions                 imposed           by equip-
+
+ment,       soil,             or     other           external          factors.               "Assemble,"                     and        "Position,"               are
+
+examples            of        this         category.
+
+                                         (2)       An activity,                  similar            to     (I)      above           but      requiring               a high
+
+degree       of      care            and precision.                      "Remove"             and "Disassemble                            and Stow"            are
+                                                                                               31
+
+
+examples    of this category.
+
+                     (3)    An activity   which    is primarily      affected    by external
+
+conditions     such as machine      control   of operation,       soil conditions      which
+
+vary from trial to trial,          physical   variables    such as degree of adhesion
+
+between     two surfaces,    all beyond   the control      of the crewmember.          An exam-
+
+ple of this is "Hammer,"        the time for which        is a function       of soil charac-
+
+teristics.
+
+                e.   Photography     of training    sessions      would   greatly    improve   the
+
+usefulness     and accuracy    of the data for the basic           comparisons      in this
+
+study.      Lunar photography      (either TV or DAC) could         provide    more useful
+
+data by concentrating        on crewmembers     performing     tasks,     by holding    the TV
+
+camera as still as possible          (minimum of pans and zooms)           during   task per-
+
+formance.      In addition,    voice   documentation      could    _e more explicit      as to
+
+co._ments pertaining       to task performance.
+                                                                                             32
+
+
+E.   Fine and Gross Motor Control and Dexterity              (Lunar EVAand l-g
+     Training)
+
+     I.      Introduction    and Purpose
+
+             Although lunar task performance usually takes a longer period of
+
+time than that required during the last l-g training                 session, the ratio
+
+of sub-task EVAtime to training            time vary over a wide range, viz.,         4.06
+to 0.74.       (See Appendix B.)      These are identified        as D/C ratios.    In order
+
+to account for differences          in D/C ratios,   the hypothesis was established
+that gross motor activity         would be less affected by lunar conditions than
+
+would fine motor activity.           To test this hypothesis, motor dexterity          was
+classified      into fine and _,         with the expectation that the ratio of
+
+lunar-performance-time         to last-training-session-time         (D/C) would be greater
+
+for tasks (or sub-tasks or elements) requiring             fine motor dexterity       than
+for those requiring         gross motor dexterity.
+     2.     Definitions     and Classification    of Activities
+
+            Precision required for the execution of motor activities               can be
+
+classified     as fine or _ross.       Fine motor control activities        will   be defined
+
+as those requiring        motions with an accuracy of approximately + I/4".             Gross
+
+motor control activities         are those requiring     less precision than this cri-
+terion.
+
+            A number of sub-tasks, selected from Appendix B, were identified
+as requiring     predominantly fine or gross motor activity.              These are shown
+
+in Tables 6 and 7, with the samelist             numbers as assigned in Appendix B.
+            Sub-tasks in which anomalies occurred were not included in the
+
+analysis.      Similarly,     sub-tasks in which motor activity        was about equally
+
+divided between fine and gross were not considered.
+                                                                                            33
+
+
+                                          TABLE    6
+
+
+                     TRAINING    AND EVA TIMES         FOR SUB-TASKS
+                           REQUIRING     GROSS    MOTOR   CONTROL
+
+
+
+
+                COMMANDER                        Training      7/16    EVA 7131   Ratio
+                                                        (c)              (D)      (D/C)
+LRV Offload
+
+2.   Continue   offload   of LRV until
+     front   wheels   on surface                        1.67"            l .75     1.04
+
+
+
+HFE Deploy
+
+3.   Deploy  electronics    box & pre-
+     pare rack and drill                                5.83             7.70      1.33
+
+                                          TOTAL         7.50             9.54     (I .27)
+
+
+
+                     LMP
+
+LRV Configuration
+
+     Photo CDR/LRV    & configure                       4.59             4.96      l .08
+
+
+
+PSE Deploy
+
+I.   Remove carry bar from C/S                            .33             .83      2.51
+2.   Align C/S                                            .51             .38        .74
+3.   Unstow PSE stool                                     .92            l.06      l .15
+4.   Deploy PSE stool                                     .73             .82      l .12
+
+                                          TOTAL         7.08             8.05     (I .13)
+
+
+
+
+                                 GRAND    TOTAL        14.58            17.59     (l .20)
+
+
+
+
+*Time is expressed     in decimal      minutes.
+                                                                                            34
+
+                                            TABLE7
+
+                         TRAININGANDEVATIMESFORSUB-TASKS
+                            REQUIRINGFINE MOTOR
+                                              CONTROL
+
+                  COMMANDER                             Training     7/16   EVA 7/31   Ratio
+                                                              (c)             (D)      (D/C)
+
+LRV Configuration        & Traverse    Prep
+
+2.   Mount TCU on LRV & connect
+     power cable                                              ,85             l,47      l .72
+4.   Unstow HGA                                               .44              .80      l.81
+5.   Mount HGA on LRV                                         ,55              ,87      l .58
+
+
+HFE Deploy
+
+2.   Release    & remove      electronics     box
+     from pallet                                             l.62             2.45      l .51
+
+
+Deep Core Samplin B
+
+5.   Assemble 5th & 6th core stem sec-
+     tions onto core stem                                     .69             1.98      2.86
+6.   Retrieve drill & attach to core
+     stems                                                    .48              .63      l .31
+
+                                                    TOTAL    4.63             8.20     (l .77)
+
+                        LMP
+
+
+ALSEP   Interconnect
+
+2.   Deploy    subpallet                                     1.00             4.06      4.06
+
+
+PSE Deploy
+
+7.   PSE level and align                                      .66              .93      l ,40
+
+
+LSM Deploy
+
+2.   Carry,    deploy    & align LSM                         4.17             6.02      1.44
+
+
+Sunshield Deploy & ALSEP Antenna
+Installation
+
+2.   Complete    sunshield deployment                        5.03             6.02      l .19
+3.   Complete    antenna alignment                           l .42            2.78      l .95
+                                                    TOTAL   12.28            19.81     (l.61)
+
+                                       GRAND        TOTAL   16.91            28.01     (l .65)
+                                                                                               35
+
+         3.    Results and Conclusion
+
+               The basic data and the ratios         of lunar-performance-time    to last-
+
+training-time           (D/C) are given in two tables, Table 6 and Table 7.
+
+Table 6 presents gross motor activities                 executed by the Commander
+                                                                                and
+LMP. In general the ratios               are rather low, averaging 1.27 for the Comman-
+
+der, 1.13 for the LMP. In contrast,                 the data in Table 7 (Fine Motor
+
+Control) produces corresponding ratios of 1.77 and 1.65.                    The averages
+
+for the Commander
+                and LMPare not significantly                    different   either for the
+
+fine or the ro__rg_ssmotor
+                        sub-tasks;                 in fact they were unusually close and
+homogeneous. In view of this,                the data (i.e.,   the D/C ratios)   for both
+
+crewmenwere combined and a sum of ranks procedure applied to test for the
+
+significance           of the difference     between fine and _ross motor dexterity
+(i.e.,        between the Grand Total ratios         of 1.65 and 1.20).
+
+              The results      of this test indicate     that the D/C ratios for the fine
+
+dexterity        tasks are significantly        greater than those for the gross       dex-
+
+terity        tasks.    This   result   supports   the hypothesis    that fine motor   tasks
+
+are more        significantly     affected   by lunar   conditions   than gross motor    tasks.
+                                                                                           36
+
+IV.   METABOLIC
+              ANALYSES
+
+
+ A.   Metabolic Analysis of Traverse Segments
+
+      I.    Purpose
+
+            The purpose of this analysis was to determine if short segments of
+
+ physical activity        which require different    energy expenditures would be
+
+ reliably     detected by corresponding changes in metabolic rates.              For our
+
+ purposes the variation         in the inclination   of the lunar terrain      provided
+
+ work situations       with different     energy requirements.   Specifically,      we
+ wished to determine if metabolic rates were affected by the inclination
+
+ of the terrain        that the crewmenwere traversing,      with particular      attention
+
+ to those traverse segments in view of the TV camera and easily identified
+
+ as uphill,     level,    or downhill.     Further, to insure that the traverse acti-
+
+ vities     have a measurable impact on the one minute metabolic rate averages,
+ traverse sections of about 20 seconds or more were selected.
+
+             Metabolic rate (BTU/HR)was determined through a regression equa-
+
+ tion with heartrate as the independent variable.             There are acknowledged
+
+ difficulties      in such procedures but, for present purposes, consistent and
+
+ positively     related metabolic changes to differing        "work loads" would be
+
+ adequate. These "work loads," as mentioned earlier              were three types of
+
+ traverse:      uphill,     level,   and downhill.   It was anticipated,    naturally
+
+ enough, that the metabolic readings would be greatest for the uphill                   tra-
+ verse and smallest for the downhill ones.
+
+      2.     Traverse Data
+
+             A total     of 19 traverse segmentswere selected, almost evenly divi-
+
+ ded between the CDR(9) and the LMP (lO).              Five of these were downhill,            six
+
+ level and eight uphill          -- evenly divided except for the downhill segments,
+                                                                                                       37
+
+two of which were executed by the CDRand three by the LMP.
+
+           The median time length for the CDR's segmentswas 30 seconds, that
+
+for the LMP's segments 50 seconds.
+
+           On the basis of an estimate provided by Dr. David Carrier of the
+
+NASAMSCGeophysics Branch, we can assumethat the slopes of all                              segments
+
+analyzed in this report are no greater than about 12°.
+           The crewman's      activities       five minutes     before      and after   each traverse
+
+segmentwere     examined      for any anomalous         influences     and for a better       under-
+
+standing    of the traverse      data.
+
+    3.     Results
+
+           The metabolic      data are summarized          in Table    8 which    presents       the
+
+averages    for each crewmember      for each type of slope.                 The results    show a
+
+
+
+                                           Table    8
+
+                AVERAGE METABOLIC RATE (BTU/HR) ASSOCIATED WITH
+                 MOBILITY ALONG TRAVERSES WITH VARYING SLOPES
+
+                                      Character         of Traverse
+                      Crewmen       Downhill            Level     Uphill
+
+                        CDR              717             I183         1337
+
+                        LMP              743              869         I164
+
+         Weighted    Averages            733             I026         1251
+
+consistent     rise in metabolic     rate with          increase    in slope    of terrain,       the
+
+lowest   rate associated       with downhill       traverses       and the highest       rate with
+
+uphill   traverses.     The incremental          changes    are not the same for the CDR
+
+and LMP, but the averages         of the different          types of traverses          show a
+
+definite    linear   trend.     The statistical          evaluation    indicates    significant
+
+variation     in metabolic     rate among       the different       types    of traverses.
+                                                                                       38
+
+     4.     Conclusion
+
+            Despite the difficulties       involved in metabolic estimates,   in
+
+evaluating the character of the terrain,           and in obtaining   representative
+mobility     segments, the consistency of the results tends to confirm the
+
+usefulness of the basic approach for estimating the metabolic rates for
+
+crewmanactivities          even though they be relatively    short in duration.
+
+B.   Metabolic Analysis of Two Lunar Activities
+     I.     Introduction
+
+            The purpose of this analysis was to examine the metabolic cost of
+
+an activity     that was performed in several EVAsto determine if          adaptation
+to the lunar environment affected the crewman's metabolic cost for that
+
+activity.
+     2.     Data
+
+            The activities     selected,   "Double Core Tube Sampling" and "Compre-
+
+hensive Sample Collection"         were analyzed in detail    on the element level
+in Section IIID.         In the present analysis the "Rake and Shake" and "Fill
+
+Bag" elements of the ComprehensiveSample Collection             were combined to
+
+form the "Rake, Shake and Fill         Bag" sub-task.    Also, the Double Core Tube
+
+Sample Collection      was analyzed on a sub-task level.       This consolidation
+
+of elements into sub-tasks was to insure that the activity             was long enough
+to have a measurable impact on the one minute metabolic rate averages.
+     3.     Results
+
+            The data for the two performances of the Double Core Tube Sample
+
+Collection     and for the nine performances of the ComprehensiveSample Col-
+
+lection     are presented in Table 9.       It may be observed that the metabolic
+
+cost on performing the Double Core Tube Sample Collection             decreases from
+                                                                               39
+                                       TABLE9
+
+
+
+                         METABOLICHANGESASSOCIATED
+                                                 WITH
+                        ADAPTATION
+                                 TO LUNAREVATASKS(LMP)
+
+                               EVA l            EVA 2           EVA 3
+
+DOUBLE    CORE
+
+  I.     Assemble              18.4"                            15.0
+
+  2.     Implant               18.7                             23.2
+  3.     Stow                 65.0                              54.2
+
+                      TOTAL   102.1                             92.4
+
+
+RAKE_ SHAKE & FILL BAG
+
+  Trial    l                   I0.7             lO.l            I0.3
+
+  Trial    2                  ll.4               9.7             7.5
+
+  Trial    3                                     9.2            I0.4
+
+  Trial 4                                                        7.3
+
+                    AVERAGE   ll.l               9.7             8.9
+
+
+
+
+*All values in table are in BTUs.  They     are calculated   by multiplying   the
+ metabolic rate by the time (to perform     activity).
+the value 102.1 BTUduring EVAI to 92.4 BTUin EVAIII,         a decrement of
+9.5%.
+
+          Similar results    are noted for the performance of the Comprehensive
+
+Sample Collection.     A general decrease in metabolic cost may be observed --
+
+with a value of ll.l     BTUfor EVAI, 9.7 BTUfor EVAII,     and 8.9 BTUfor
+EVAIII.     Successive decrements amount to 12.6%from EVAI to EVAII and
+7.9% from EVAII to EVAIll.
+
+    4.    Conclusion
+
+          There is a general tendency for metabolic cost to decrease as per-
+formance of a specific      task is repeated over successive EVAs. This can be
+
+taken as evidence of adaptation to the general working conditions on the
+
+lunar surface.    For the two different   tasks selected for study the decre-
+
+ment from the first    to the second EVAperformance is of the order of I0%.
+                                                                                                                                                                         41
+
+
+V.       FALL AND NEAR-FALL                              ANALYSIS
+
+
+A.        Introduction
+
+         I.         Objective
+
+                       During          the      Apollo          15 lunar               EVAs there                were      instances              where          the
+
+astronauts                  momentarily                  lost        their          balance              and sometimes                 even       fell,           The
+
+purpose             of      this        analysis               is    to      determine               the        characteristics                   of      such
+
+falls             (and      near-falls                as well)              and        to    identify              the     specific             reasons           for
+
+their         occurrence.
+
+         2.         Procedure
+
+                    Black           and white               kinescopes                 (frame            rate      -    24 FPS)          of     all       three
+
+lunar         EVAs plus                 the      voice          transcripts                  were         available             for      analysis.                The
+
+segments               of      film          involving              the     falls           or     near-falls             were         analyzed            in     detail
+
+using         a Vanguard                  motion          analyzer.                   The in-flight                     voice         transcripts               were
+
+used         with        the        films        to     establish                the        events          that        occurred             before        and after
+
+the      actual             fall.
+
+
+
+B,       Description                    of     Visible              Falls
+
+        I.          CDR Scott's                  Fall        At      Station            #6
+
+                    This        fall          occurred              at    GMT 213:14:02:00                         (GET 6:00:28:00)                       at    Sta-
+
+tion         #6 during                 the     second           EVA.            LMP Irwin                has just         dug a trench                    near     the
+
+edge         of     a small             crater.              CDR Scott                is     photographing                  the        trench.             CDR Scott
+
+walks         near          the        rim     of     the       crater           with        the         camera         mounted         and carrying                    the
+
+tongs;            he proceeds                  without              any     problem              until          he is     near         the      trenching
+
+site.             At     that          point        he takes              a short            hop and steps                  onto        the      inside           slope
+
+of      the       rim.          This          slope       is        unexpectedly                  soft          and he loses              his         balance          and
+
+starts            falling              forward          and to            the       left.           With         both     arms         extended            to     break
+                                                                                                      42
+
+the fall, he lands on his left side.                  He turns    clockwise       until he is sit-
+
+ting on the ground           and then turns       counterclockwise       until he is kneeling
+
+on the ground.          He does not attempt         to get up by himself;         instead    he stays
+
+on his knees with           his left hand on the ground          and his right        arm extended
+
+overhead     and waits       for the LMP to help him.
+
+     2.     CDR's    Fall At Station       9A
+
+
+            This fall occurred       at GMT 214:11:06:28          (GET 6:21:32:28)        during
+
+the third lunar EVA.            CDR Scott       and LMP Irwin    are at Station        9A describ-
+
+ing the area and Scott is taking                 photographs.     The CDR begins moving
+
+toward    a new area as he gives           the camera    reading     and summarizes       the des-
+
+cription     of the area.        He steps around       a group    of rock fragments         and then
+
+his right foot steps           into a small      depression     and he begins to lose his
+
+balance.      As he steps with       his left foot,       it slides off a small           rock and
+
+continues     sliding       on the loose    surface    soil.     While   trying    to drive     his
+
+feet back under his center of gravity,                 Scott    increases    his forward       velo-
+
+city.     He then falls forward with             both hands     extended    to break    the fall.
+
+Landing    on his left side, he rolls counterclockwise                   and on his back and
+
+is then out of view of the TV camera.
+
+
+
+C.   Description       of Visible    Near Falls
+
+     I.    The LMP's Near Fall at the ALSEP              Site
+
+           This     near fall occurred       at GMT 212:14:14:50         (GET 5:04:40:50)       dur-
+
+ing the first EVA.           CDR Scott     and LMP Irwin are at the ALSEP             site deploy-
+
+ing experiments.         Irwin is trying         to attach     the SIDE cable      connector    to
+
+the central       station    (C/S), but he is having difficulty.               While    leaning
+
+over the C/S, the SIDE cable             connector    pulls     loose.     He loses    his balance
+
+and begins    leaning       to his right with       his hands     on the C/S.       He turns
+                                                                                            43
+
+ counterclockwise with his right             hands on the C/S and the weight of his
+ body tipping         the C/S.   He continues to turn until       his back is to the C/S
+
+ at which point he regains his balance and turns clockwise to face the
+C/S and continue working.
+        2.    CDRScott's     Near Fall at the ALSEPSite
+
+              This near fall     occurred at the ALSEPsite at GMT212:18:21:50
+ (GET5:04:47:50),          just seven minutes after the LMP's near fall.          The CDR
+
+has been working on the Heat Flow Experiment and is going to throw the
+
+pallet       away and give a demonstration of I/6 gravity.             With the pallet     in
+
+his left          hand he steps back and then swings his body and the pallet             clock-
+
+wise.        As he throws the pallet      in the air,      his body is extended and pulled
+slightly       off the ground.     He lands on his right        foot which slides under
+
+his body and to the left.           At one point he is leaning right with both his
+
+feet off the ground to the left.              Once again he steps on his right      foot
+
+and with his right arm extended he falls                to the right   and supports his
+weight on his right          leg and right    hand. He turns clockwise until       he is
+
+facing the ground and then takes a few quick steps to get his feet back
+under his body and to regain his balance.
+
+D.     Discussion
+
+       I.    Possible Causes
+
+             a.     Surface Conditions.      An important and obvious cause of falls
+and near-falls         is the condition of the surface, or rather the crewmembers'
+
+inability         to recognize and/or cope with certain surface conditions.              Such
+
+surface features as minor depressions, frequently                associated with loose
+
+soil    at the edges, sloping terrain          with soil    of varying density,   strength
+                                                                                                      44
+
+and compressibility         (I),     scattered rocks of various sizes, reflectivity
+
+and other changing or unexpected conditions,                      may contribute       to slipping,
+
+tripping,        or otherwise temporarily          losing footing and balance.              Falls
+from this cause (surface conditions)                    did occur at Hadley Rille         (Station
+
+9A) where the CDRtripped over somerock fragments and stepped on loose
+soil   (at near failure            condition at the edge of a depression), which did
+
+not support him.           Another fall       occurred at Station 6 where the CDRstum-
+
+bled as he stepped onto the relatively                    steep inside slope of a crater,
+
+where again the soil             may have been in near failure           condition and could
+
+not support him.
+
+            b.     Visibility.        The unexpected surface characteristics                (see
+
+above) may not have been recognized as potentially                       hazardous because of
+
+limitations        on visibility.        First,    the angle, position          and glare of the
+
+sun and subsequent changing of reflectivity                       of the surface can affect
+
+visual acuity.          Second,       the position       of the RCU on the A7LB suit          inter-
+
+feres with full-range              downward    visual    perception.     In addition,       objects
+
+mounted     on the RCU (camera,          sample    bags,    etc.)    being   carried    by the crew-
+
+man may also obscure             downward     vision.     This,    of course,    prevents    the
+
+crewmember        from recognizing       and avoiding       hazards    immediately      in front     of
+
+him, particularly          if he has just made a turn or pivot                and then stepped
+
+forward.         This may have been the situation             in the CDR's       fall at Station
+
+9A.
+
+
+
+(I) Mitchell, J. K., et al.    Preliminary Analysis of Soil Behavior,
+MSC (1971):   "...considerable  variability in soil prop-e'rTies, both region-
+ally and locally and with depth...In-situ    densities range from 1.36 to
+2.15 g/cm 3, a range which indicates very great ranges in strength and com-
+pressibility behavior..., and the soil on steep slopes along the (Apennine)
+Front is in a near failure condition."     (p. 2)
+                                                                                                         45
+
+               c.    Gravitational     Effects.      The lower gravitational            forces (I/6-g)
+
+on the moonis an important factor in falls                       and near falls.         In general,
+
+crewmembershave adapted very well to this environmental condition,                              but
+under certain circumstances where "instinctive"                         reflex     action occurs, such
+
+as in tripping            or stumbling, the l-g conditioned reflex                  takes over, and a
+
+slip     or fall        may occur.   Reactive forces and those involving                 turning or
+
+torque are a function of mass, not weight, and give essentially                             the same
+
+results        on the moonas on earth.             However, the crewmens' resistance to
+
+torque, due to contact of the boots with the lunar surface, is (I/6)                                of
+what it would be on earth.
+
+        2.     Analysis of the Specific Cases
+               a.    The two falls     occurred under somewhatsimilar                 conditions in
+
+that the crewmemberswere walking on uneven terrain,                              then slipped and/or
+tripped.            In the Station 9A fall        the CDR,carrying the 500mmcamera, moved
+
+off from a standing position,                  turned to the left        at the sametime, placing
+
+first        his left     and then his right       foot,    utilizing     about one second for each
+
+step, a rather slow gait.               It was here that his right                foot slipped in the
+loose soil           (probably at near failure        condition)        on the edge of a small
+
+depression, and his left              struck and slipped on, or by, a small rock between
+
+the feet.           The combination of the right            foot losing traction,         and the left
+
+foot striking            the rock and slipping,       created an imbalance where the center
+of gravity was past the support base, and momentum
+                                                 carried the CDRforward
+
+more rapidly            than his feet could compensatefor due to slippage.                    This
+illustrates          the l/6th    frictional      force's    (as comparedto earth conditions)
+
+effect        on traction.       On the other hand, the acceleration                 due to lunar
+
+gravity        (I.63 m/sec2 comparedto 9.8 m/sec2 on earth) will                       cause an object
+                                                                                               46
+
+to fall     I/6 slower.    Thus, if    an unexpected event occurs, such as tripping
+
+on a rock, or a sudden release of a connector, the low frictional                     force
+
+between boot and surface would cause slipping               muchsooner, and reflexes,
+
+accommodationand balance would not serve to correct the anomaly as effec-
+
+tively     as under l-g.       But, since a person falls         muchslower on the moon,
+
+he has more time to correct for a slip             before reaching the surface.           This
+
+is apparent from the kinescope which gives the impression of a slow-motion
+
+film.      The samecausal relationships          would seem to apply to the other fall
+
+at Station 6.       The soil condition at crater and depression edges appears,
+as mentioned above, to be at near failure,              thus not being able to support
+
+the crewmember. This knowledge of the near failure                    condition of soil    on
+
+the slopes of depressions and the I/6th             frictional      force for traction,       can
+
+be used to help avoid or reduce the possibility                  of falls.
+            b.   Two near-falls     occurred at the ALSEPsite.               One occurred when
+
+the LMPwas attempting to attach the SIDE connector to the C/S.                       In this
+
+case the connector mounted horizontally,             was difficult       to attach, and as
+
+the LMPtried to complete the connection it               suddenly released, creating
+the horizontal      reactive force (torque) causing the LMPto spin around.
+
+This force was the sameas it would have been on earth.                       However, since
+
+the LMP's resistance to torque was through contact of his boots with the
+
+surface, and the reactive force exceeded the resistance forces, the spin
+
+and near-fall      resulted.      Fortunately,    the surface was relatively         smooth
+
+and level and the LMPused the C/S to catch himself,                    both of which pro-
+
+bably prevented a fall.
+
+                 The other near-fall     occurred when the CDRattempted to throw
+
+a pallet     muchas a discus is tossed.          The rotational        forces (torque) were
+                                                                                  47
+
+not affected by the low gravity;     but the frictional   resistance at boot-
+
+soil   interface   was I/6 earth force.   This unusual combination, and the
+
+rapid, complex motions caused the CDRto temporarily        lose "balance."
+
+               Both observed near-falls   shared the samephenomena- sudden
+
+rotation   of the body and momentaryloss of traction      due to low frictional
+resistance at the boot-surface     interface.
+                                                                                                      48
+
+VI.   CONCLUSIONS
+
+ A.   Mobility   Evaluation
+
+      Because of the LRV, Apollo 15 EVAsrequired no lengthy mobility                            seg-
+
+ ments, the longest being about 400'-500'.                  Factors influencing           mobility,
+
+ other than I/6-g,      appear to be:       unevenessof terrain,            due to small depres-
+
+ sions, rocks or other "micro" features and due to variation                       in slope and
+
+ other "macro" features;      nature of soil,            which is loose, dry and easily
+
+ dislodged, and particularly        soil    on the edge of craters,            both large and
+
+ small, which frequently      is in near failure            condition;     reflectivity       and
+
+ sun angle, tending to makevisual perception difficult;                      pressure suit
+
+ restrictions,    including limited        visibility.
+
+      Most traverses by crewmembersrevealed that steps were irregular,
+
+uneven in length, and changed frequently                  from a walking gate, to a hopping-
+
+walk, or canter, to a pure hop depending on the surface conditions encoun-
+
+tered.     The nature of many tasks on the lunar surface require movementfor
+
+short distances in which side-hops, or side shuffle                      together with short
+
+steps, both forward and back were observed.                  These types of mobility             indi-
+cate an adaptive procedure to compensatefor the uneven terrain                            and soil
+conditions.
+
+      Rates of movementvaried from 0.9 ft/sec                to about 2.0 ft/sec,            the lat-
+
+ter occurring on relatively         long traverse (about 41 ft.)              over "smooth"
+
+terrain,    partially   downhill.     The slight         increase in rates that occurred
+
+over the three EVAsindicated adaptability                  and increased confidence as
+
+crewmembersgained experience.
+                                                                                      49
+
+B. Comparison of Lunar EVAWork Performance With l-g Training
+
+    I.     The results    indicate that tasks take longer to do on the moonthan
+
+in the last training      session before flight.     A measure of this discrepancy
+is the ratio    (lunar-performance-time)/(last-training-time).           This ratio       is
+
+of the order 1.58, or, a 58%increase in time for lunar performance com-
+
+pared to l-g training.
+    2.     A review of the basic data and the circumstances associated with
+
+lunar EVApointed up a numberof situational            and instrumental    factors
+
+impacting task time on the lunar surface.          Though increasing the time to
+do a task, these factors could not be considered as componentsof astro-
+
+naut performance.        Whenthese were eliminated from the calculations,           the
+
+ratio of lunar-performance-time        to last-training-time     was considerably
+reduced.     It became1.39 for the CDRand 1.43 for the LMP.
+
+    3.     In two cases element analysis was possible (ComprehensiveSample
+
+Collection     and Double Core Sample Collection),      in which the elements were
+
+repeated a number of times.          Such data were the basis for identifying
+homogeneous
+          work segments for which accurate times were obtained.                 In one
+case, Rake and Shake, the lunar time was 41%lower than training              time,
+
+an exceptional occurrence.          Although this element involved gross motor
+
+control,     the lack of film analysis of the training         performances precludes
+determination of identifiable         causal factors for this unusual difference
+
+in times.
+
+    4.     Although tasks on the average took longer to do on the moonthan
+
+in training,     a few activities     were performed more quickly on the lunar
+surface.      An examination of such tasks led to the hypothesis that perfor-
+
+manceinvolving      gross motor activity     would be less affected than fine motor
+                                                                                                   50
+
+activity        by lunar working conditions.          It was found that ratio of lunar-
+
+performance-time to last-training-time                was 1.20 for gross dexterity           tasks
+
+and 1.65 for fine dexterity            tasks.   In other words, fine motor activity
+
+takes about 65%more time.              This difference     is statistically     significant.
+
+C. Metabolic Analysis of Lunar Activities
+
+        I.     The usefulness of the regression equation for estimating metabolic
+
+rates for short time intervals            is confirmed by its ability         to significantly
+
+differentiate        traverse segments of differing         slope (downhill,        level,    uphill).
+
+        2.     Metabolic cost decreases as the crewmanrepeats a task over suc-
+
+cessive EVAs. Fromthe first              to the second EVAperformance, this decre-
+
+ment is of the order of I0% for two different                 types of tasks.       This may
+
+be taken as evidence of adaptation to the general working conditions on
+the lunar surface.
+
+
+D.      Fall and Near Fall Analysis
+
+        During Apollo 15 lunar EVAsinstances occurred in which crewmembers
+
+momentarily lost their            balance resulting     in a fall   or near-fall.       The two
+
+falls        occurred as the CDRwas moving over uneven terrain             and encountered
+
+the edge of a crater,            soil of which could not support him.          The limited
+
+visibility        may have also contributed to the falls.
+
+        The near-falls     occurred when crewmemberswent into rotation                or angu-
+
+lar motion in which mass affected the motion as it would under l-g,                          but
+the traction,        or frictional     resistance of the boots with the surface was
+
+only I/6th        of what it would be on earth.         The sudden rotating         motions
+
+(induced by LMPwhen a balky connector pulled loose, and by CDRin tossing,
+
+discus style,        a pallet)    and lack of traction      were quickly compensatedfor
+                                                                                  51
+
+
+by the crewmembersso that an actual fall     did not occur.
+
+    Recognition of hazardous surface conditions,        especially   at crater
+edges, and the difference   in angular and frictional      forces will   assist
+
+crewmembersin avoiding possibly dangerous situations         resulting   from falls.
+                                52
+
+
+
+
+       APPENDIX A
+
+
+
+EVA TIMELINES   -   CDR & LMP
+                                                                                              53
+
+                                          CDR EVA #1
+
+
+                                               GET (1)           T (2)       GET (I)         T (2)
+
+
+Start EVA Watch                                                            04:23:38:33
+Pre-Egress                                                                 04:23:50:45      12.20
+Egress                                                                     04:23:59:28       8.72
+TV Deploy                                                                  05:00:11:13      II.75
+LRV Offload and Deploy                                                     05:00:31:40      20.45
+LRV Config. and Trav. Prep.                                                05:01:44:35      72.92
+Trav. to Station #1(_)                                                     05:02:10:46      26.18
+Station #1 Tasks:
+  Geol. Site Selection                       05:02:14:52          4.10
+  Radial Sample                              05:02:24:04          9.20
+  Trav. Prep.                                05:02:28:36          4.53      05:02:28:36      17.83
+Trav. to Station #2                                                         05:02:35:20       6.73
+Station #2 Tasks:
+  Geol. Description & Doc. Samples           05:02:57:22         22.03
+  Comprehensive  Sample                      05:03:05:11          7.82
+  Double Core                                05:03:16:04         I0.88
+  500mm Photo and Trav. Prep.                05:03:26:02          9.97      05:03:26:02      50.70
+Trav. to Station #3                                                         05:03:42:50      16.80
+Station #3 Tasks:
+  Samples and Trav. Prep.                    05:03:47:08          4.30      05:03:47:08       4.30
+Trav. to LM                                                                 05:03:59:35      12.45
+ALSEP Offload                                                               05:04:24:05      24.50
+ALSEP Trav.                                                                 05:04:33:28       9.38
+ALSEP Tasks:
+  HFE Deploy                                 05:05:24:01         50.55
+  LR 3 Deploy                                05:05:33:21          9.33
+  ALSEP Photo and Trav. Prep.                05:05:38:17          4.93      05:05:38:17      64.81
+Trav. to LM                                                                 05:05:42:36       4.32
+EVA Closeout                                                                05:05:57:40      15.07
+SWC Deploy and EVA Termination                                              05:06:12:23      14.72
+
+                                                                   Total    EVA #1 - 6 hr 33.83 min
+
+
+
+
+(I)   GET is in days:hours:minutes:seconds        and represents         the end point    of a speci-
+      fic activity.
+
+(2)   aT is in decimal     minutes   and represents    elapsed    time.
+
+(3)   Unless   otherwise   noted, all traverses       are via LRV.
+                                                                              54
+
+                                LMP- EVA#I
+
+
+                                         GET        AT           GET          AT
+
+Start EVAWatch                                              04:23:38:33
+Pre-Egress                                                  05:00:00:00      21.45
+Egress                                                      05:00:03:39       3.65
+Contingency Sample                                          05:00:13:45      lO.lO
+LRVOffload and Deploy                                       05:00:30:51      17.10
+LRVConfig.                                                  05:01:15:41      44.83
+Pallet Trans., LM Pwr. Down&Trav.
+  Prep.                                                     05:01:44:35      28.90
+Trav. to Station #1                                         05:02:10:46      26.18
+Station #1 Tasks:
+  Photo Pan                          05:02:14:35   3.82
+  Radial Sample                      05:02:24:04   9.48
+                                     05:02:28:36   4.53     05:02:28:36      17.83
+  Trav. Prep.
+Trav. to Station #2                                         05:02:35:20       6.73
+Station #2 Tasks:
+  Photo Pan and DocumentedSamples    05:02:57:22   22.03
+  ComprehensiveSample                05:03:05:11    7.82
+  Double Core                        05:03:16:04   I0.88
+  70mmPan and Trav. Prep.            05:03:26:02    9.97     05:03:26:02     50.70
+Trav. to Station #3                                          05:03:42:50     16.80
+Station #3 Tasks:
+  Monitor CDRFrom LRV                05:03:47:08    4.30     05:03:47:08      4.30
+Trav. to LM                                                  05:03:59:35     12.45
+ALSEPOffload                                                 05:04:23:42     24.12
+ALSEPTrav. (walking carrying ALSEP
+                                                             05:04:26:51      3.15
+  Barbell)
+ALSEPTasks:
+  ALSEPInterconnect                  05:04:42:49   15.97
+  PSEDeploy                          05:04:51:06    8.28
+  SWEDeploy                          05:04:54:45    3.65
+  LSMDeploy                          05:05:04:03    9.30
+  Sunshield Deploy                   05:05:18:14   14.18
+  ALSEPAntenna Installation          05:05:25:05    6.85
+  Side Deploy                        05:05:33:30    8.42
+  C/S Activate & LSMSunshield Deploy 05:05:38:33    5.05      05:05:38:33    71.70
+Trav. to LM                                                  05:05:42:49      4.27
+EVACloseout                                                  05:05:53:32     I0.72
+EVATermination                                               05:06:12:23     18.65
+                                                         Total EVA #1 6 hr   33.83 mi n
+                                                                                    55
+
+                                        CDR - EVA #2
+
+
+
+                                                  GET        AT           GET        AT
+
+Start EVA Watch                                                       05:22:14:20
+Pre-Egress                                                            05:22:24:03    9.72
+Egress                                                                05:22:29:28    5.42
+Equip. Prep.                                                          05:23:03:45   34.28
+LRV Nav. Init.                                                        05:23:11:13    7.47
+Trav. to Station #6                                                   05:23:53:56   42.72
+Station #6 Tasks:
+  Documented Samples                          06:00:25:33   31.45
+  Soil Mech. Trench                           06:00:34:50    9.45
+  Single Core                                 06:00:38:55    4.08
+  Documented Samples                          06:00:43:57    5.03
+  500mm Photo and Trav. Prep.                 06:00:58:29   14.54     06:00:58:29   64.55
+Tray. to Station #6A                                                  06:01:00:59    2.50
+Station #6A Tasks:
+  Samples and Trav. Prep.                     06:01:22:40   21.68     06:01:22:40   21.68
+Trav. to Station #7                                                   06:01:25:46    3.10
+Station #7 Tasks:
+  Documented Samples                          06:01:57:20   31.57
+  Comprehensive  Sample                       06:02:06:52    9.53
+  Documented Samples &Trav.     Prep.         06:02:15:28    8.60     06:02:15:28   49.70
+Trav. to Station #4                                                   06:02:28:24   12.93
+Station #4 Tasks:
+  Documented Sample                           06:02:41:35   13.18
+  Trav. Prep.                                 06:02:45:44    4.15     06:02:45.44   17.33
+Trav. to LM                                                           06:03:08:08   22.40
+Config. LRV for ALSEP Tasks                                           06:03:19:33   II.42
+Trav. to ALSEP Site                                                   06:03:21:15    1.70
+ALSEP Site Tasks:
+  HFE Deploy Completion                       06:03:57:13   35.97
+  Select Geol. Site for LMP                   06:04:14:05   16.87
+  Deep Core and Trav. Prep.                   06:04:31:08   17:05     06:04:31:08   69.88
+Trav. to LM                                                           06:04:32:17    l .15
+EVA Closeout:
+  Closeout Activities                         06:04:53:14   20.95
+  Flag Deploy                                 06:04:57:40    4.43
+  Continue Closeout   Activities              06:05:18:51   21.18     06:05:18:51   46.57
+EVA Termination                                                       06:05:27:21    8.50
+
+                                                              Total   EVA #2 - 7 hr 13.02 min
+                                                                                            56
+
+                                              LMP - EVA #2
+
+
+
+                                                    GE__T.T    A_T_T        GE_._T_T   AT
+
+Start   EVA Watch                                                        05:22:14:20
+Pre-Egress                                                               05:22:35:56   21.60
+Egress                                                                   05:22:37:33    1.62
+                                                                         05:23:03:46   26.22
+Equip.    Prep.
+LRV Nav, Init.                                                           05:23:11:13    7.45
+Trav.   to Station     #6                                                05:23:53:56   42.72
+Station    #6 Tasks:
+   Photo Pan                                    05:23:58:17     4.35
+   Documented     Samples                       06:00:26:01    27.73
+   Soil   Mech. Trench                          06:00:34:50     8.82
+   Single   Core                                06:00:38:55     4.08
+   Documented     Samples                       06:00:43:57     5.03
+                                                06:00:58:29    14.54     06:00:58:29   64.55
+   70mm Mag. Ch. &Trav.       Prep.
+Trav.    to Station   #6A                                                06:01:00:59    2.50
+Station    #6A Tasks:
+   Photo Pan and Geol,      Desc.               06:01:19:10    18.18
+                                                06:01:22:40     3.50     06:01:22:40   21.68
+   Trav.   Prep.
+Trav.    to Station   #7                                                 06:01:25:46    3.10
+Station    #7 Tasks:
+   Photo Pan                                    06:01:34:30     8.73
+   Documented     Samples                       06:01:55:04    20.57
+   Comprehensive     Sample                     06:02:06:52    ll.80
+                                                06:02:15:28     8.60     06:02:15:28   49.70
+   Documented     Samples &Trav.      Prep.
+Trav.    to Station   #4                                                 06:02:28:24   12.93
+Station    #4 Tasks
+  Photo   Pan and Documented        Samples     06:02:41:35    13.18
+  Tr_v. Prep.                                   06:02:45:44     4.15     06:02:45:44   17.33
+Trav. to LM                                                              06:03:08:08   22.40
+Config. LRV for ALSEP and Photo                                          06:03:30:24   22.27
+Trav. to ALSEP Site (walking)                                            06:03:34:31    4.12
+ALSEP Site Tasks:
+  ALSEP Photo and Ch. 70mm Mag.                  06:03:48:26   13.92
+  Samples and C/S Align Check                    06:03:55:15    6.82
+  Photo and Description                          06:04:02:10    6.92
+  Soil Mech. Trench                              06:04:17:39   15.49
+  Penetrometer                                   06:04:28:18   I0.65     06:04:28:18   53.78
+ALSEP Photo and Trav. to LM (walking)                                    06:04:33:11    4.88
+EVA Closeout:
+  Closeout Activities                            06:04:52:18   19.11
+  Flag Deploy                                    06:04:57:40    5.37
+  Continued Closeout Activities                  06:05:04:22    6.70     06:05:04:22   31.18
+EVA Termination                                                          06:05:27:21   22.98
+
+
+                                                                 Total   EVA #2 - 7 hr 13.02 min
+                                                                                         57
+
+                                            CDR - EVA #3
+
+
+
+                                                   GET       AT            GET         aT
+
+Start EVA Watch                                                       06:19:17:38
+Pre-Egress                                                            06:19:28:16     I0.63
+Egress                                                                06:19:32:19      4.05
+Equip. Prep. & LCRU Activate                                          06:20:04:13     31.90
+Trav. to ALSEP Site                                                   06 :20:07 :07    2.90
+ALSEP Site Tasks:
+  Recover Core Tubes                          06:20:17:57   I0.83
+  Disassemble Core Tubes                      06:20:36:42   18.75
+  LRV Photo/16mm                              06:20:45:15    8.55     06:20:45:15     38.13
+LRV Nav. Init.                                                        06:20:48:26      3.18
+Trav. to Station #9                                                   06:21 :Ol :44   13.30
+Station #9 Tasks:
+  Documented Samples &Trav.         Prep.     06:21:16:50   15.10     06:21:16:50     15.10
+Traverse to Station #9A                                               06:21:19:26      2.60
+Station #9A Tasks:
+  Geol. Desc. & 500mm Photo                   06:21:36:00   16.57
+  Documented Samples                          06:21:53:10   17.17
+  Comprehensive Sample                        06:22:00:58    7.80
+  Double Core                                 06:22:08:34    7.60
+  Samples &Trav.   Prep.                      06:22:14:25    5.85     06:22:14:25     54.98
+Trav. to Station #10                                                  06:22:16:45      2.33
+Station #10 Tasks:
+  500mm Photo, Samples     &Trav.     Prep.   06:22:28:49   12.07     06:22:28:49     12.07
+Tray. to ALSEP Site                                                   06:22:43:40     14.85
+Trav. to LM                                                           06:22:45:45      2.08
+EVA Closeout:
+  Closeout Activities                         06:23:15:08   29.38
+  Demonstration  (Stamp and Gravity)          06:23:23:06    7.97
+  Position LRV for Liftoff                    06:23:52:30   29.40
+  Continue Closeout Activities                07:00:00:37    8.03     07:00:00:37     74.78
+EVA Termination                                                       07:00:08:09      7.62
+
+
+                                                              Total   EVA #3 - 4 hr 50.52 min
+                                                                                      58
+
+                                          LMP - EVA #3
+
+
+
+                                                 GET       AT           GET          aT
+
+Start EVA Watch                                                     06:19:17:38
+Pre-Egress                                                          06:19:32:21     14.88
+Egress                                                              06:19:34:11      1.67
+Equip. Prep.                                                        06:20:02:30     28.32
+Trav. to ALSEP Site (walking)                                       06:20:07"07      4.62
+ALSEP Site Tasks:
+  Recover Core Stems                        06:20:17:57   I0.83
+  Disassemble Core Stems                    06:20:21:43    3.77
+  ALSEP Photo                               06:20:28:35    6.87
+  Disassemble Core Stems                    06:20:36:42    8.12
+  LRV Photo &Trav.    Prep.                 06:20:45:15    8.55     06:20:45:15     38:13
+LRV Nav. Init.                                                      06:20:48:26      3.18
+Trav. to Station #9                                                 06:21 :Ol :44   13.30
+Station #9 Tasks:
+  Troubleshoot  Camera Malfunction          06:21:08:53    7.15
+  Documented Samples &Trav.    Prep.        06:21:16:50    7.95     06:21:16:50     15.10
+Trav. to Station #9A                                                06:21:19:26      2.60
+Station #9A Tasks:
+  Documented Samples                        06:21:53:10   33.73
+  Comprehensive Sample                      06:22:00:58    7.80
+  Double Core                               06:22:08:40    7.70
+  Samples &Trav.   Prep.                    06:22:14:25    5.75     06:22:14:25     54.98
+Trav. to Station #10                                                06:22:16:45      2.33
+Station #10 Tasks:
+  70mm Photo Pan                            06:22:20:02    3.28
+  Samples &Trav.   Prep.                    06:22:28:49    8.78     06:22:28:49     12.07
+Trav. to ALSEP Site                                                 06:22:43:40     14.85
+Retrieve Core Stems                                                 06:22:45:23      1.72
+Trav. to LM (walking)                                               06:22:46:47      1.40
+EVA Closeout
+  Closeout Activities                       06:23:14:06   27.32
+  Transfer Samples   & Film Mags.    to
+    MESA                                    06:23:55:34   41.47     06:23:55:34     68.70
+EVA Termination                                                     07:00:08:09     12.58
+
+
+                                                            Total   EVA #3 - 4 hr 50.52 min
+                                 59
+
+
+
+
+         APPENDIXB
+
+
+
+PARTITIONOF TASKSINTOSUB-TASKS
+                                                                                              60
+
+
+                            PARTITION OF TASKS INTO SUB-TASKS*
+
+
+                                             l-G Training              EVA l          Ratio    EVA
+                                           6/4    7/I     7/16         7/31                   Data
+               Comma nder                  (A)    (B)      (C)          (D)           (D/C)   Source
+
+TV Deploy
+  I.    Unstow, Configure TV &             (i)
+        Position at 12:00/50'                    1.72 (2)   1.71 (2)   3.13            1.83    TV
+
+  2.    Adjust TV                                 .50(3)     .41(3)    1.43            3.48    TV
+
+
+
+LRV Offload
+  I.    Offload LRV until rear wheels
+        on surface                               2.16       2.71       4.82
+                                                                              (")      1.77    VTV
+
+  2.    Continue offload of LRV until
+        front wheels on surface                  1.89       1.67       1.75            1.04    VTV
+
+
+
+LRV Configuration & Traverse Prep.
+  I.    Mount LRV and complete LRV
+        checklist                                2.75 (s)   2.20 (s)   3.85            1.75    VTV
+
+  2.    Mount TCU on LRV and connect
+        power cable                               .88        .85       1.47            1.72    VTV
+                                                                              #   l
+
+
+
+
+  3.    Install LGA on LRV                       2.10       1.90       2.25 _)         1.18    VTV
+
+  4.    Unstow HGA                                .80        .44        ,80            1.81    TV
+  5.    Mount HGA on LRV                          .50        .55        .87            1.58    TV
+  6.    Connect HGA & install TV on
+        LRV                                      5.04       5.11       5.90            1.15    VTV
+
+
+
+
+(1)    No data collected on CDR on 6/4/71.
+(2)    In training the TV was positioned    at 25' from the LM, rather than the 50' EVA
+       distance.
+
+(3)    In the training sessions a mockup camera was used, adjustments were only simu-
+       lated.
+
+(4)    Subactivities were interrupted for .7 min. when the CDR helped the LMP to his
+       feet after a fall.
+
+(5)    In training crewmen always required assistance when mounting the LRV.
+
+(6)    Subactivities were interruped for 1.20 min. when the CDR refastened a LMP PLSS
+       flap.
+
+*See pages    65 to 70   for a complete description of the sub-tasks.
+                                                                                            61
+
+                   PARTITION
+                           OFTASKSINTOSUB-TASKS
+                                              (continued)
+
+                                               l-G Training              EVA l      Ratio    EVA
+                                             6/4 7/I      7/16           7/31                Data
+              Commander                      (A) (B)          (C)         (D)       (D/C)    Source
+HFE Deploy
+  I.    Offload LR & lunar drill,            (I)
+        deploy HFE pallet & prepare
+        for first drill side.                      7.63       8.28_7JI
+                                                                     _ 14.71         1.77        VTV
+
+  2.    Release & remove electronics
+        box from pallet.                           1.30       1.62       2.45        1.51         TV
+
+  3.    Deploy electronics box &
+        prepare rack & drill.                      5.71       5.83       7.79        1.33        VTV
+
+  4.    Prepare first bore stem
+        sections.                                  1.60        .92         .94       1.02         TV
+
+  5.    Carry rack, rod & drill to
+        2nd site & drill Ist
+        bore stems into surface.                   1.81 (8)   2.40 (B)   3.24        1.35        VTV
+ 6.     Remove drill from bore stems.               .21        .26       3.17 (9)   12.19        VTV
+
+
+
+(7)    CDR encountered some difficultywith    "stuck" Boyd bolts during this group of
+       subactivities.
+
+(8)    In training the soft soil made the drilling activity very easy.
+(9)    To accomplish this subactivity the CDR had to obtain the vise from the Ist
+       site and use it on the drill and bore stems at site 2.
+                                                                                          62
+
+                 PARTITION OF TASKS INTO SUB-TASKS (continued)
+
+
+                                         l-G Training        EVA 2       Ratio   EVA
+                                        6/4   7/I 7/16        8/I                Data
+              Commander                 (A)   (B)    (C)      (D)        (D/C)   Source
+peep Core Sampling
+  I.   Lift & Place core bit             (i)
+       into treadle.                            •23    .35    .43         1.22     TV
+  2.   Drill core stem into
+       surface.                                 .23    .23    .35        1.52      TV
+  3.   Remove drill from core
+       stem & place on surface.                 .27    .40   2.18 (I°)   5.45      TV
+
+  4.   Assemble & drill 3rd & 4th
+       core stem sections into
+       surface.                                1.60   1.74   3.33        1.91     VTV
+  5.   Assemble 5th & 6th core stem
+       sections onto core stem.                 .82    .69   1.98        2.86     VTV
+  6.   Retrieve drill & attach to
+       core stems.                              .35    .48    .63        1.31    VTV
+  7.   Drill core stem into surface•            .22    .20   1.22 (11) 6.10      VTV
+
+
+
+
+(Io) CDR encountered much difficulty removing drill•
+
+(ll)   Lunar subsurface rock is much more difficult to penetrate with the drill
+       than the sand at the training site.
+                                                                                                    63
+
+                           PARTITION
+                                   OFTASKSINTOSUB-TASKS
+
+                                                      l-G Training               EVA l      Ratio   EVA
+        Lunar ModulePilot                       6/4        7/I     7/16          7/31               Data
+                                                (A)        (B)      (C)           (D)       (D/C)   Source
+LRV Offload
+        Pull LRV aft cable.                      ND       4.20        3.40       3.78 (I)   I.II     VTV
+
+
+
+LRV Configuration
+        Photo CDR/LRV & con-
+        figure.                                4.50       4.90        4.59       4.96       1.08     VTV
+
+
+ALSEP Interconnect
+
+  I.    Connect power pack to
+        central station (C/S).                 4.20       3.10        3.00       4.53       1.51     VTV
+
+  2.    Deploy subpallet.                      2.05       l.lO        1.00       4.06       4.06          V
+  3.    Release & connect SIDE
+        to C/S.                                4.00       4.68        4.99       7.36 (2)   1.47     VTV
+
+
+
+PSE Deploy
+  I.    Remove carry     bar    from    C/S.   1.20        .50         .33        .83       2.51     VTV
+  2.    Align    C/S.                           .75        .77         .51        .38         .74    VTV
+  3.    Unstow PSE stool.                        ND        ,85         .92       1.06       1.15     VTV
+  4.    Deploy    PSE stool.                     ND        .80         .73        .82       1.12         TV
+  5.    Remove C/S dust        cover.           .20        .60         .23        .55       2.39         TV
+ 6.     PSE deploy.                            3.60 (3)   2.90 (3)    2.63 (3)   3.70       1.40     VTV
+
+  7.    PSE level and align.                    .80        .60         .66        .93       1.40          V
+
+
+
+
+(1)    The subactivity was interrupted for .72 min. when the LMP fell.
+
+(2)    LMP had difficulty connecting SIDE             cable to C/S.
+
+(3)    In training the wind caused problems for the LMP deploying the thermal skirt.
+                                                                                       64
+
+               PARTITION OF TASKS INTO SUB-TASKS
+
+
+                                         I-G   Training         EVA 1          Ratio   EVA
+       Lunar   Module   Pilot           6/4       7/I   7/16    7/31                   Data
+                                        (A)       (B)     (C)     (D)          (D/C)   Source
+LSM Deploy
+                                                                       #   _
+
+
+
+
+  I.    Release LSM from C/S.           1.50    1.30     1.50   2.60 {W)        1.73    VTV
+
+  2.    Carry, deploy & align LSM.     5.80     4.55     4.17   6.02            1.44        V
+
+
+Sunshield Deploy & ALSEP Antenna
+Installation
+  I.    Release & raise sunshield.     4.40     4.30     4.22   II.27 (s)       2.67    VTV
+
+  2.    Complete sunshield deploy'
+        ment.                          6.00     5.50     5.03   6.02            1.19    VTV
+
+  3.    Complete antenna alignment.    2.10     3.10     1.42   2.78            1.95        V
+
+
+
+(4)    Subactivities were interrupted for .68 min. when the LMP encountered a PLSS
+       problem.
+
+(5)    Hardware malfunction:  A cord broke requiring LMP to get down on hands and
+       knees to pull some pins.
+                                                                               65
+
+
+
+
+                       SUB-TASK    DESCRIPTIONS
+
+
+
+This   section   of Appendix     B presents      a full composition     of
+
+sub-tasks    which were   synoptically      presented    in the
+
+previous    tables   comparing    the l-g training      and lunar     EVA.
+
+These sub-tasks      are those which      appear    in the "Detailed
+
+EVA Procedures"      section    of the Apollo      15 Lunar   Surface   Pro-
+
+cedures    Document.    The number preceding         the list of sub-
+
+tasks corresponds      to the same number        for the snyoptic
+
+term in the comparison         tables,   pages    59 to 64.
+                                                                                              66
+
+                                 SUB-TASK     DESCRIPTIONS      (1)
+
+
+COMMANDER
+
+
+
+TV Deploy
+
+  I.    Unstow     and mount TV camera        on tripod.
+        Position     TV at 12:00/50'.
+
+  2.    Adjust     TV per   MCC request.
+
+
+LRV Offload
+
+  I.    Deploy LRV aft      cable.
+        Deploy     right LRV offload         tape.
+        Check LRV released        from     LM
+        Pull   offload   tape until        rear wheels     on surface.
+
+  2.    Remove right     outrigger   cable.
+        Remove left     outrigger   cable.
+        Pull offload     tape until   front      wheels     on surface.
+
+
+
+LRV Configuration       and Traverse       Preparation
+  I.    Mount LRV.
+        Accomplish     LRV post-deploy        checklist.
+  2.    Mount TCU on front of LRV.
+        Connect TCU power cable.
+  3.    Unstow     rake and move aside        on MESA.
+        Open LRV antenna stowage can.
+        Unstow LGA from cannister.
+        Mount LGA in CDR handhold.
+
+  4.    Unstow HGA from cannister.
+
+  5.    Mount HGA on LRV.
+
+  6.    Rotate antenna onto staff.
+        Unstow cable.
+        Connect HGA cable to LCRU.
+        Retrieve and carry TV camera/tripod                to +X strut.
+        TV power switch-off.
+        Disconnect and stow TV cable.
+        Remove TV camera from tripod.
+        Mount TV on TCU.
+        Connect TV power cable.
+
+(1)a.   Tasks (underlined) correspond to those listed in this Appendix,
+        pages 59 to 64.
+   b.   Sub-tasks (numbered) are not necessarily all those required for the
+        Task, but are restricted to those for which analysis times are avail-
+        able.
+   c.    Some sub-tasks       (e.g., LRV Offload,          l) consist     of more   than one ele-
+        ment; elements        are listed      in sequence     and make     up the sub-task.
+                                                               67
+
+HFE Deploy
+  I.   Offload LR and set on surface.
+       Offload drill and set on surface.
+       Release HFE pallet Boyd bolts.
+       Lift HFE pallet from power package.
+       Carry HFE pallet 15' N. of C/S.
+       Unstow HFE connector.
+       Place HFE pallet on surface.
+       Connect HFE cable to C/S.
+       Carry HFE pallet 30' N. of C/S.
+       Place HFE pallet on surface and fold braces.
+       Tip pallet down.
+       Release probe box Boyd bolts.
+       Lift probe box from pallet.
+       Separate box and lean probe with tool against pallet.
+       Carry other probe to drill site, deploying cable.
+       Place probe on surface.
+       Carry first probe to drill site, deploying cable.
+       Place probe on surface.
+
+ 2.    Release electronics box Boyd bolts.
+       Lift electronics box from pallet.
+       Place box on surface.
+
+ 3.    Remove dust cover.
+       Level and align electronics   box.
+       Throw pallet clear of area.
+       Walk to LRV.
+       Erect LMP seat post and lower seat pan.
+       Retrieve drill from surface.
+       Place drill on LMP seat.
+       Push drill switch to test drill.
+       Install handle on drill.
+       Remove rack from treadle and deploy   rack legs.
+       Place rack on surface.
+       Remove drill from treadle.
+       Carry drill and rack to first drill   site.
+       Place rack and drill on surface.
+
+ 4.    Remove and discard   stem cover.
+       Release stem retaining Velcro.
+       Assemble first two bore stem sections.
+
+ 5.    Carry rack rod and drill to second site.
+       Place equipment on surface.
+       Assemble first two bore stems sections.
+       Insert sections into drill chuck.
+       Set drill bit down on surface at mark on HFE cable.
+       Drill bore stems into surface.
+
+ 6.    Remove   drill from bore stems.
+                                                                                        68
+
+Deep Core Samplin 9 - EVA 2
+
+  I.      Lift drill     and place   core bit into treadle•
+  2.      Drill core stem     into surface•
+
+  3.      Remove drill from core stem and place on surface.
+  4.      Assemble third and fourth core stem sections.
+          Thread sections onto stem.
+          Retrieve drill and attach drill to core stem.
+          Drill core stem into surface.
+          Remove drill from core stem and place on surface.
+  5.      Assemble fifth and sixth core stem sections•
+          Thread sections onto core stem.
+
+  6.      Retrieve   drill and attach     drill    to core stem.
+
+  7.      Drill core stem     into surface•
+
+
+
+
+LUNAR MODULE     PILOT
+
+
+
+LRV Offload
+
+  I.      Pull LRV aft cable as required          to offload   LRV•
+
+
+
+LRV Configuration
+  I.      Photo CDR/LRV, 16mm camera.
+          Stow 16mm on LRV.
+          Unstow 70mm from MESA.
+          Remove filter and reseal cover from 70mm and stow.
+          Obtain magazine from ETB and attach to 70mm camera.
+          Stow 70mm camera in CDR floor pan.
+
+
+ALSEP     Interconnect
+  l   •   Disconnect power package from bar.
+          Reposition power package lO' East.
+          Remove HFE stowage pins.
+          Tilt power package down.
+          Release RTG cable Boyd bolts.
+          Deploy RTG cable and discard cable reel.
+          Report shorting switch reading.
+          Connect RTG cable to C/S.
+
+  2.      Release subpallet Boyd bolts•
+          Lift subpallet from power package          and place   lO' N. of power   package•
+                                                      69
+
+   .   Release SIDE Boyd bolts and CCIG cover.
+       Lift SIDE from subpallet.
+       Remove Boyd bolt blocking cable reel.
+       Unstow cable reel.
+       Deploy SIDE legs and place SIDE on surface.
+       Unstow SIDE cable connector.
+       Open EXPTS. package dust cover.
+       Connect SIDE cable to C/S.
+
+
+
+PSE Deploy
+
+  I.   Remove   carry bar from C/S.
+
+  2.   Tip C/S down and align. _
+
+  3.   Stow carry bar on subpallet.
+       Unstow PSE stool from subpallet.
+
+  4.   Carry PSE stool 9' W. of C/S.
+       Implace PSE stool.
+
+  5.   Remove   C/S dust cover.
+
+  6.   Release PSE Boyd bolts.
+       Carry PSE to stool.
+       Remove Boyd bolts from PSE.
+       Place PSE on stool.
+       Deploy thermal   skirt.
+  7.   PSE level and align.
+
+
+
+LSM Deploy
+  I.   Release LSM Boyd bolts.
+       Remove tie down and discard.
+       Lift LSM from C/S.
+  2.   Check cable free of sunshield.
+       Carry LSM 50' W.NW.,      deploying   cable.
+       Select LSM site.
+       Remove stowage bracket.
+       Deploy legs.
+       Align LSM and place on surface.
+       Remove from collar.
+       Deploy   sensor arms.
+       Remove   dust covers and PRA covers.
+       Align and level LSM.
+       Check doors open.
+       Report level and alignment.
+                                                                                                            70
+
+
+Sunshield   Deploy   and ALSEP    Antenna   Installation
+  I.   Release    perimeter Boyd bolts.
+       Release    two inner Boyd bolts.
+       Release    center Boyd bolt and raise       sunshield.
+  2.   Remove    side curtain    covers   and discard.
+       Check side curtain and engage Velcro          tabs.
+       Retrieve and install antenna mast.
+       Release antenna gimbal Boyd bolts.
+       Remove gimbal from subpallet.
+       Remove gimbal housing cover.
+       Install gimbal on mast.
+       Remove housing and discard.
+       Install antenna on gimbal.
+
+  3.   Check C/S alignment.
+       Level and align antenna base.
+       Enter elevation and azimuth offsets.
+       Report antenna    level    and alignment.
+
+
+
+
+                                                                U.S.   GOVERNMENT   PRINTING   OFFICE:   1972--779-262/   52 2
+

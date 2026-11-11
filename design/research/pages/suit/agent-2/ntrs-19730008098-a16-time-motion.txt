@@ -1,0 +1,3536 @@
+                                                                   _°
+
+
+
+
+NATIONAL   AERONAUTICS         AND       SPACE    ADMINISTRATION
+
+
+
+
+                          APOLLO16
+
+                 TIME    AND   MOTION     STUDY
+
+                (FINAL    MISSION       REPORT)
+
+
+
+
+                   MANNED               SPACECRAFT           CENTER
+                                     HOUSTON.TEXAS
+
+                                             JULY 1972
+                                    M72-6
+                                   APOLLO
+                                        16
+
+
+                            Time and Motion    Study
+
+
+
+                            (Final Mission   Report)
+
+
+                     by Joseph F. Kubis, John T. Elrod,
+                      Rudolph Rusnak, John E. Barnes,
+                             and Susan C. Saxon
+
+
+
+
+Submitted To:                                          Submitted By:
+Life Sciences Directorate                              Fordham University
+Bioengineering Division                                NASA Contract NAS 9-I1839
+Data Management Office                                 July   II, 1972
+                                     PREFACE
+
+
+      This report presents the results of the Time and Motion Study per-
+
+formed on Apollo 16 as authorized by the J-2 Mission Requirements Docu-
+ment (MRD). This study is the responsibility       of the Life Sciences Direc-
+
+torate    (LSD) and is performed by FordhamUniversity       under NASAContract
+NAS9-I1839.
+
+      As stated in the MRD(Section 4, Detailed Objectives),            the purpose
+
+of this study is "to evaluate the differences,         correlation    and relative
+
+consistency between ground-based and lunar surface task dexterity            and
+
+locomotion performance."      The ground-based (l-g)     data were collected     by
+
+performing time and motion studies of the crewmembersduring their              suited
+
+extravehicular   activity   (EVA) simulations at KennedySpace Center (KSC).
+
+Lunar surface data consisted of television,     motion picture film,        air-to-
+ground voice transcriptions     madeduring the lunar landing visit         and sub-
+jective   commentsmadeduring astronaut debriefing         following    the mission.
+
+No specific   crew tasks were required to support this objective.
+                                                                           ii
+
+                              ACKNOWLEDGEMENTS
+
+
+
+      The staff   of the Apollo Time and Motion Study is indebted to the
+
+Metabolic AssessmentTeam(MAT)for supplying heart rate and metabolic
+
+rate data.    These data included the training   session and lunar EVA.
+
+      Our appreciation is also given to Dr. E. Moseley for his cooperative
+efforts   in our behalf.
+                                                                                           iii
+
+
+
+                                       TABLE OF CONTENTS
+
+
+
+Section                                                                                   Page
+
+              Preface                                                                            i
+
+              Acknowledgements                                                             ii
+
+              List of Tables                                                               iv
+
+              Summary                                                                            V
+
+
+          I   Quantity    and Quality     of Data                                                l
+
+     II       Mobility    Evaluation                                                             3
+
+   III        Time Comparisons:        Lunar    Performance   and l-g Training             II
+
+     IV       Metabolic    Comparisons:        l-g Training   vs Lunar   EVA               18
+
+         V    Metabolic    Adaptation                                                      22
+
+    VI        Fall Analysis                                                                27
+
+  VII         Additional    Analyses                                                       36
+
+ VIII         Concluding    Statements                                                     42
+
+     IX       Recommendations                                                              44
+
+              Appendix    A - EVA Timelines       - CDR and LMP                            45
+
+              Appendix    B - Detailed     Analyses   of Three    Mobility     Segments    55
+
+              Appendix    C - Time     Comparisons    of Sub-tasks                         61
+                                                                                     iv
+
+
+
+
+                                     LIST OF TABLES
+
+
+
+Table                                                                              Page
+
+   l    Mobility    Evaluation                                                       5
+
+   2    LMP ALSEP Traverse                                                           8
+
+   3    Time Comparisons:        Lunar     EVA and l-g Training         Tasks       12
+
+   4    Comparisons of Tasks         Identically      Performed    On
+        Apollo 15 and Apollo         16                                             14
+
+
+   5    Time Comparisons        of Sub'tasks                                        16
+
+
+   6    Metabolic     Comparisons:        l-g Training    and Lunar      EVA        19
+
+
+   7    Average     Metabolic    Rates Associated       with Riding      the LRV    22
+
+
+   8    Core Tube     Sampling    (LMP)                                             24
+
+
+   9    Metabolic     Indices    Associated    with    Hammering                    25
+
+
+  lO    Double     Core Tube Sampling                                               41
+                                                                                SUMMARY
+
+
+
+        The Time               and Motion                 Study         of      astronaut              lunar         surface                activity             on
+
+Apollo           16 consists                 of        five      distinct               analyses:              an evaluation                        of     lunar
+
+mobility,               a comparison                     of     task      performance                  in     l-g        training              and        lunar        EVA,
+
+a study           of     metabolic                 costs         and adaptation,                       a discussion                     of     falls         and
+
+retrieval               of     fallen         objects.
+        Two basic               mobility                 patterns,              the       hop or        canter             and the             traditional
+
+walking           gait,         were         consistently                      utilized           in    longer             traverses.                     The meta-
+bolic       rates            associated                  with         these        two mobility                 types            --     each        used         by a
+
+different               astronaut                 --     were         relatively            equivalent.
+
+         The time              to     perform                 tasks      on the           lunar        surface             was significantly
+
+longer           (on      the        order         of         70%) than            the     time        to     perform                 the     same tasks               dur-
+
+ing      the      last         l-g      training                session.                 These     results               corroborated                      the     findings
+
+on Apollo               15 and were                     not     significantly                 different                   from         them.
+         Metabolic                rates           (BTU/h_)             associated             with          task          performance                    during        the
+
+last       l-g         training            session              were         approximately                  90% higher                      than     those         on the
+
+lunar          surface.               The average                     metabolic            cost        (BTU),             however,                 was only
+
+slightly               higher         in     the         training              session,           because                lunar         task         time        was
+
+appreciably                   longer.
+         There          was general                     improvement                in     lunar        EVA performance                             upon     repetition
+of      tasks.               Metabolic                 rate      (BTU/h_)             and metabolic                      cost         (BTU)         decreased           over
+
+successive                   EVAs.         Specifically,                       the       metabolic             rate        associated                    with      riding
+
+the      lunar          roving          vehicle                 (LRV)        decreased            by approximately                            18% from             EVA 1
+
+to      EVA 2 and by 15% from                                  EVA 2 to            EVA 3.
+         Falls           observed             on Apollo                 16 seemed            related                to    the         method           used       in
+
+ retrieving                  fallen        objects               and      in     operating              the         penetrometer.
+                                      Section I
+                              QUANTITY
+                                     ANDQUALITYOF DATA
+
+
+A. GENERAL
+         COMMENT
+
+     Time and Motion Study (TAMS)personnel observed all                three Apollo 16
+
+EVAsin real time at the MannedSpacecraft Center (MSC)building                     36, room
+
+210.      The quality     of the television     (TV) coverage was judged to be parti-
+
+cularly     good.      In addition,    there was an abundanceof data available        for
+
+analysis.
+
+B.     TELEVISION
+
+       Problems associated with Apollo 15 data, such as frequent panning and
+
+zooming, were not present in the Apollo 16 data.                A previously unexperienced
+problem was the loss of TV coverage for the initial                phase of EVA1 activity
+
+due to the lunar module (LM) S-Band antenna failure.                 For the rest of EVA1
+
+and the other EVAsthe TV coverage was very good.
+       There were only two major deviations from the planned TV coverage,
+
+these being the loss of initial             EVA1 activity    (mentioned above), and those
+
+EVA3 activities          eliminated becyauseof the shortened EVA3 period.             Of the
+activities     lost,     the more important were the initial        EVA1 activities     such
+
+as LM egress, LRVoffload,              LRVconfiguration,    and far-ultraviolet    (Far-UV)
+
+camera deployment.
+       The overall      direction     of the TV camera by ground control during all
+
+three EVAswas generally excellent.               Sometasks, however, performed by the
+commander(CDR)during Apollo lunar surface experiment package (ALSEP)
+
+deployment and observed on previous Apollo flights,                could not be viewed on
+
+the TV. The quality           of the kinescopes was the best received to date.
+
+       TV coverage of Apollo 16 introduced data which had been lacking from
+
+previous missions.          There were several long traverses completely visible
+to the viewer and the amount of crew activity              in the field   of view exceeded
+
+that of all      other missions.      The end result     is a representative   cross sec-
+
+tion of crew geological activities            and various modesof locomotion.
+
+C.   I6mmLUNARSURFACE
+                    COLOR
+                        MOTIONPICTUREFILM
+
+     It was anticipated         that one magazine of film would be devoted to eval-
+
+uating crew mobility.           However, the early termination of EVA3 brought
+about a cancellation          of this test.
+
+     The film that was exposed on the lunar surface is spectacular and of
+
+the finest      quality    taken to date.     Becausemost of the film was shot dur-
+
+ing LRVrides, the data obtained bear little               relevance to TAMSobjectives.
+
+D.   VOICEDATA
+
+     Official     transcripts     of the voice transmissions during the three EVAs
+
+were particularly          important in analyzing the TV data because the time
+
+encoded on the kinescopes has not been accurate in someinstances.
+
+E. ASTRONAUT
+          TECHNICAL
+                  DEBRIEFING
+                           COMMENTS
+
+     The debriefing         commentsprovided additional      information about terrain
+
+characteristics,          suit comfort and capability,     and work performance.
+
+F.   PHYSIOLOGICAL
+                DATA
+
+     Metabolic and heart rate data are related to crewmanactivity                where
+
+such analyses are feasible          and meaningful.
+
+G.   EVATIMELINES
+
+     The EVAtimelines,          as determined by TAMSanalysis,       may be found in
+Appendix A.       These were determined from kinescopes and voice transcripts.
+Within each EVA, a table is allotted            to each crewman.
+                                                                                                           3
+
+
+                                          Section II
+                                     MOBILITY EVALUATION
+
+
+
+A.     INTRODUCTION
+
+       Lunar mobility      on two prior missions          has been analyzed         and reported
+
+previously      by Ml51, Time and Motion            Study.l, 2     Apollo    16 provided       addi-
+
+tional data for further          understanding        of this activity.           Again,   no seri-
+
+ous problems       developed,    and the crewmen         readily    adapted      to the lunar envi-
+
+ronment.
+
+       On Apollo    16, two distinct        types    of mobility     were used for those             trav-
+
+erses greater       than 5-I0 feet.         The CDR used a walking           gait, while       the
+
+lunar module       pilot   (LMP) generally       used the hopping        mode.      In addition,
+
+both crewmen       used the side-step         in moving    short    distances,      especially
+
+while working       around   equipment,       or performing      other    tasks    such as photo-
+
+graphy,    etc.     One general      feature    of all mobility       is the variation          in step
+
+or stride       (two successive      steps)    length,    although    the average       number       of
+
+strides    per time unit is quite           consistent     from one traverse          to the next.
+
+The terrain       conditions     undoubtedly     contribute      to the uneven        stride    and
+
+step pattern.
+
+
+B.     METHOD   OF ANALYSIS
+
+       While a large number        of mobility       segments    occurred     during    Apollo       16,
+
+only    nine were     suitable    for analysis.         The principal       reasons    for this were
+
+that    (1) the crewmen      moved    directly      toward or away       from the camera,        and
+
+(2) the camera        panned and zoomed        during    traverses.       Both of these condi-
+
+
+
+
+     lFordham University,          ANALYSIS     OF APOLLO     Xl LUNAR      EVA (MOBILITY       EVALUA-
+TION), 1970.
+     2Fordham University,          APOLLO     15 TIME AND MOTION         STUDY    (FINAL REPORT),
+1972.
+                                                                                                4
+
+
+tions madeaccurate distance determination difficult.                     Also at times only
+
+portions of the crewmenwere visible.                Whenthe camera is at maximumor
+
+minimumfocal length, and the crewmanis completely in view, the distance
+from camera to crewmancan be determined.                 Otherwise measurementssuch as
+
+length of stride have to be determined by using a knownmeasurement(e.g.,
+height of crewman)and scaling the desired measurement. This latter                         method
+
+was used in most mobility          analyses.
+
+C. ANALYSISOF SPECIFICTRAVERSES
+
+      Table l, Mobility        Evaluation, lists     the pertinent      data on seven mobil-
+
+ity   traverses which were suitable            for complete analysis.       Two of these,
+
+segments 2 and 7, are discussed in detail               in Appendix B.      One other trav-
+
+erse, the ALSEPtraverse,           is covered in Section D below and in Appendix B.
+
+      Certain general trends in mobility            rates and other measures can be
+
+noted.    With the exception of segment 2, the terrain                 was level,     with only
+
+slight   inclines    or downhill slopes.          Thus, no data are analyzed for effect
+of slope.    Mobility     rate, length of stride,         and metabolic rate tend to
+increase with distance covered in traverse.                Other variables such as ob-
+
+jects carried,      nature of terrain,         preceding activities,      motivational     or
+other situational       conditions,    etc.,     influence these factors.           Shorter trav-
+
+erses (e.g.,     23-25 ft.),      showedmobility      rates at less than 2.0 ft./sec.,
+
+stride   length less than 3.0 feet,            and metabolic rates less than lO00 BTU/hr.
+
+An exception to this was the short beginning segmentof the ALSEPtraverse,
+which is reported in Section D below.               For longer traverses (e.g.,          50 ft.
+
+or more) the mobility          rates exceeded 2.0 ft./sec.,       the stride        lengthened
+
+ranging from 3.4 to 4.6 feet,          and metabolic rates exceeded llO0 BTU/hr.
+
+Exceptions occur here also.           For example, segment l in Table l,              shows a
+                                                                                                                                                                                                 5
+
+
+
+
+                                                                                                                            d
+                                                                                                                                                                     0
+                                                                                                     E       e-                                                      O
+                                                                                                  ¢41 0
+                                                            .._                c-                                 ,--" E                     r's,
+                                                              (._            .j--            •                    •r-- O                                   (lJ       _1
+                                     O                                                                             0    _.
+                                   .r-
+                                    +a                                                           "-5
+                                                                                                 o_- 0
+                                                                                                                   _n4J
+                                                                                                                        GJ                        0
+                                                                                                                                                           r_        $._
+
+                                   -r-                      ,--         0     tOO                                                              -0
+                                   7O                                                                1:21.          u_      _J   _-    O      O')O
+                                     C                       n_         tn                                          0       _-
+                                     O                                                                              0                                      •I..a _J
+                                                                                                                  r--       O_
+                                                                                                                            c"                u'1 ¢-"
+                                                                  _ 0r--     o1--       t_
+                                                                                                 ,._g                            _--   n:l
+                                                                                                                                              f1_ ,r,-
+
+                                                                                                                                                             ajz--
+                                                                                                  _          U
+                                                                                                  q.I        O                    _0
+                                                            -'J         U    _          I.       --J         I-   -.J       U    --.14-)     V')O
+
+
+                                             "-7.
+                                                            O,J              r-_                 OO               ,_-            O           OO            N
+                      ,_;                    =              U_               _D                  _                I,O            O_          O'_           ,-'-
+                       tO           (1J _                                    I_                  CO               '_             GO          O0            ,--
+                                                                                                                                                           r-"
+                       aJ           rt_ r_
+
+
+
+
+       Z               Oji .r-                                                                                                               N
+       O              -o           E
+       I---4
+       I--
+
+
+       .-J
+
+
+  _la_l                            -O        .I-a P_
+r--
+
+ _1-'-
+I-- '--4              ,_           (J')      --I    "---_
+       .-I
+
+       r_
+                                    U
+       O
+                                    (lJ
+                                    i/)
+
+                                                                                                                                                   •       _
+
+                                                                                                                                                                           _    _   un
+                                                                                                                                                                           l_J 4-) .r-
+
+               o.,I                      •                                                                                                                                  O._-           ;_,
+                                                                                                                                                                           4-a -I_       ,--
+                                                            S                                                           "        M           M
+                                                                                                                                                                           • ,-     _     IZ
+                      I--v
+
+
+
+
+                      •e--         14_                                                                                                                                       _J    4-J    0J
+                       Ov                                                                                                                                  N
+                                                                                                                                                                                    O
+
+                                                                             _                   _                _              _           _             O                 m'-          O
+                                                            _                _                   _                _              _           O_            O_
+
+                                                                                                                                                                            ul    $.. e_
+                       U                                                                                                                                                    (]J .e-
+                       O            EE                       ""     _         .,    _             ,,     _         -.       _     0,   _      .,       _     .0      W     4-a    _    X
+                                   ol--
+
+                                                                                                                                                                           .,...    S.    c"
+                                                                                                                                                                             IE           _u
+                           !
+
+
+                                    no5                                                                                                                                             O
+                                                                                                                                                                             _      OO
+                                                                                                                                                                            O       O_U
+                                                                                                                                                                           "r      o,') _O
+                               o
+
+                      q.I   O
+                      L/')Z
+lower rate and stride        length,    but also a very        low metabolic        rate,    indicating
+
+a less than average       energy expenditure          for the 53 foot traverse.
+
+       The above mobility     examples      are based     on complete      traverses,       or nearly
+
+so, in that in some cases the TV camera missed                   a small      part of the start
+
+or end of a traverse.         Apollo    15 analysis       studied     short    segments     of trav-
+
+erses to determine       specific     types   and modes     of accomplishing        mobility.
+
+The specific    types were       repeated     in this mission,        but with    the CDR basi-
+
+cally using the "walk,"          the LMP using       the "hop."       Based on the analysis
+
+of the traverses       reported    herein,    plus the less rigorous            analysis     of 30
+
+other traverses,       no real difference        appears    to exist     in the results        of
+
+these two types.        In one specific       case    (segment      7 in Table    l) both     the CDR
+
+and the LMP completed        the traverse       simultaneously,        each using     his own
+
+mobility    type.     The metabolic     rate for the LMP was I185 BTU/hr.,                  compared
+
+with the CDR's rate of Ill2,           indicating       relatively     equivalent     expenditure
+
+rates.
+
+       The principal    difference     in the two types of mobility              is in stride
+
+length.     The walking     type mobility       generates     a stride     length in excess          of
+
+4 feet, while       the hopping    type is generally         less than 3 feet.          Exceptions
+
+to the latter appear        when the LMP was carrying            the ALSEP      package     in the
+
+early parts of his traverse           (see Table      2, LMP ALSEP      Traverse,     and Appendix
+
+B).     Here he was exerting       considerably       more effort,      as evidenced        by the
+
+BTU/hr.    rates,    resulting    in larger     hops.     In the part of the traverse               fol-
+
+lowing    recovery    of the fallen     ALSEP    package,     the LMP utilized        a fast walk
+
+with    the same stride     length,    but much more        rapid    rate of stride.         The
+
+exceptionally       high effort    involved     in walking     at the rate of 3 ft./sec.
+
+with    a 41 pound     (lunar weight)    load is shown        by the 2300 BTU/hr.           metabolic
+
+rate.
+D.      ALSEP TRAVERSE
+
+        At        1.67         hours            into          EVA I,         the       LMP carried                   two      large         packages         from        the
+
+LM toward                the         ALSEP site,                  a distance                  of        about        230 feet.                Each of        the      pack-
+
+ages       was approximately                                  21 pounds             lunar           weight,           and approximately                      25X27X21
+
+inches            in     dimension.                      They were                 carried              at    shoulder              height,        one on each
+
+side,         by means of                       a "barbell"                  arrangement.                         Early        in    the      traverse,            due       to
+
+a malfunction                        of      the        retaining              clip,          Package               #2,     the      radioisotope              thermo-
+
+electric               generator                   (RTG)         package            fell           to    the        surface.               The LMP reacted                   to
+
+this         by stopping                     quickly,                experiencing                   temporary               imbalance,             but     not      falling.
+
+In     about           6 seconds                  he had recovered,                           turned              90 ° and located                 the      package.
+
+He reassembled                            the      package              to    the      support               in     slightly              less    than      3 minutes
+
+and continued                        toward             the      ALSEP site,                    covering              180 feet             up a slight             incline
+
+ (5%)        in        1 minute,                or      at      a rate         of      3.0         ft./sec.
+
+         Detailed                analysis                 of     the         individual                 segments,              or     portions           thereof,
+
+are      given            in     Appendix                 B and are                 summarized                 in     Table          2.     The outstanding
+
+features                observed                 in     this         traverse              are:
+
+         I.            Change             from         "hopping"              type         mobility.                  After          the     RTG package             fell,
+
+
+ the     LMP changed                       to      a "walking"                  mode.
+
+         2.            High          rates         of        traverse           and enerqw                   expenditure.                     Short      initial
+
+ segments                of     approximately                        20 feet            and 52 feet                   were          covered        at    rates       of
+
+ 2.3     ft./sec,                    and 2.15                ft./sec,           respectively.                         Appendix             B includes              portions
+
+ of     these            as Segments                     I,     2,      and 3 with                  detailed              analyses.              These       segments
+
+ are     only            portions                of      the      total         ALSEP traverse.                             The high             1600    BTU/hr.          meta-
+
+ bolic            rate         for        these          segments              is      also         significant,                    and results            from       a com-
+
+ bination                of     mobility                 rate        and load.                  During              these       segments           the     LMP used
+
+ the       hopping              type            mobility              referred             to       above.
+                                                                                      QJ ,-..
+
+                                                                                                                                     3=
+                                        :_e-         O        _
+                                       .,1_ O       "1_       O   4.._ O              i/}
+                                             .r--
+                                        0)4.-}      "O
+              E                         c"     O     _J ..I-_      ¢" O               Q._ v                            ¢_    c"-
+              _=                      ","" E         r_           •,-- E                  (_-
+              O                         (D-O         _.. "-,i      .m o                                                Qj    .._
+                                        ¢'_ U        O ",--_       i_.-u              _-    (_'.0
+                                                                                                                       E     o-     ,,./)
+                                        O      O    ..I_ "_
+                                      "T'_          t,,/3 t_l     -t-       m...      _/1 r._                          _")   ct3
+                                                                                                                                    4J,
+
+
+                                                                                                                                    4-
+
+                                                                                                                                    O
+                                                                                            o        O,J   O
+             ,._             _.c=
+                             "_
+                                            o
+                                            O                                               o
+                                                                                                                                    00
+                                                                                                           O     O'_         O3
+            •I-._ 4,.J b,.-                                                                                O,J
+             ,0J rO r_
+            _" r'_ v
+
+
+
+
+             (_      °r'-                                                                                                             ¢-.
+                                                                                                                                    I'--
+            °ira,-                              •
+                                                                                            M_             qM
+
+            {./') __
+                                                                                                                                    _J,
+                                                                                                                                    O
+    i,i
+                      (3,,I '¢--                                                                                                    f,,..
+    r,,,"            "O '.,IJ _ "_.                                                                        OO
+    ILl
+             &'T-. _-j,                                                                     '.::t-
+
+                                                                                                           OO
+
+
+
+tn. r.,                                                                                                                            ol,m
+
+                         U
+    .__1                 _                  0                                                              CO
+
+                                                                        :                       Q
+                                                                                                                                             E
+                                                                                                                                   ,--      ._
+    ._.1
+                     v                                                                                                             •no      O
+                                                                                                                                    c-      _,_
+
+
+
+                                                                                            o.J            O
+             _4-;                           o                                               M'3            O0
+                                                                                                                                    _J
+                                                                                                                                    >   u,-
+                                                                                                                                    ,OJ O
+
+                                                                                                                                    >., ,_
+                                                                                                                                            r'.,
+                                                                                                                                            O
+
+                                                                                                                                    f,--    u"}
+                                                                                            o                                       _J
+                                                                                                                                    c-"
+                                                                                            ,5                                      _.;     c-
+             _._l.           a;            O                                                "=:1"                                   O'_     O'1
+
+
+
+                                                                                                                                    tO
+                                                                        i                                                            f,-    t13
+
+
+                                                                                                                                   I--      "_
+                                                          O
+
+             Ej,                                          MD
+                                                                                                                                    o.
+
+            t-"--        _                 O              O
+                                                                                                                                    c-
+                                                                                                                                    O
+             <3v
+                                                                                                                                   or-
+
+                                                                                                                                   or=-
+                                                                                                                                   "O
+
+                                                                                                                                    O
+
+
+
+
+                                                                               ....
+     After the dropped       package was reassembled           (a 2.91 min. operation          with
+
+an average     metabolic    rate of 1992 BTU/hr.)        the LMP picked up the package
+
+and moved toward        the ALSEP site area.         This 180 foot distance          was covered
+
+in just over 60 seconds,           up a slight     (approximately       5%) incline,    over
+
+relatively     even, uncluttered       terrain     for an average       rate of 3.0 ft./sec.
+
+The keavy "workload"        of this segment        is evidenced      by the metabolic        rate
+
+of 2300     BTU/hr.     This was one of the highest          rates    registered     by the LMP
+
+on any EVA.      Table 2 shows also that the LMP made quick                 recovery    from the
+
+high energy     rate.     The BTU rate dropped        from 2300 to 1282 BTU/hr.           in 3
+
+minutes.      During    this traverse    the stride     rate was also high, at 52.5
+
+strides/min.,        or 105 steps/min.      (For comparison,         a 3 mile/hr,     walking
+
+rate and a 30 in. step is considered               a good pace for a man on earth.               At
+
+this pace he is taking        I05.6    steps/min.)      The entire       ALSEP    traverse    was
+
+an example     of maximum    or near maximum        effort   over a nearly        5 minute    period
+
+(total 4.62 min.).
+
+     3.     Reaction    to load_ and emergenc _.        This was the bulkiest          and heavi-
+
+est load carried        by a crewman     under    lunar conditions.        The event    of the
+
+package     falling    was met with quick        reactions   and prompt     correction.        But
+
+the energy     cost of the total       effort was unusually          high, and such perfor-
+
+mance     probably    cannot be maintained        for long periods       of time.
+
+
+E.   GENERAL    SUMMARY
+
+     I.     Analysis    of longer,    complete     traverses    again    showed    the excellent
+
+adaptability     of crewmen    to the lunar        environment.       One measure     of this
+
+adaptability     was evidenced       by the strides     per minute       which    increased    from
+
+an estimated     average    of about     35 on EVA l to better          than 40 on EVAs 2 and
+
+3.   Each crewmember       chose    to utilize     a type of mobility       which    seemed to
+                                                                                       lO
+
+
+suit him best.      The CDRused a more conventional walk, while the LMP
+
+adopted the now familiar     hopping type lunar mobility.        Each was equally
+
+successful in moving about on the lunar surface, with comparable expen-
+
+diture of energy.
+    2.      Apollo 16 provided the opportunity to study the carrying of a
+
+large, bulky load over a considerable distance.           The LMPcarried the
+
+ALSEPpackage a distance of over 250 feet toward the ALSEPsite at a faster
+
+than average rate.      While the energy expenditure was high (2300 BTU/hr.
+
+for a segment lasting     one minute in which 180 ft.      were traversed),     this
+
+particular     traverse did demonstrate the capability       of a crewmanto carry
+
+a heavy, bulky object somedistance at a fast rate.             An interesting    fea-
+ture of the traverse was that the LMPchangedfrom his usual hopping type
+
+of mobility     to a walking type during the long traverse.
+
+     3.     The general mobility   patterns,   except as mentioned above for the
+
+different     types used, were essentially     similar   to those of previous
+
+Apollo missions.      The lunar soil characteristics       cause uneven strides,
+and occasional change from walk to hop and vice versa.            However, no major
+
+problems presented themselves, and adaptability           to lunar mobility     was
+
+again demonstrated.
+                                                                                                                                                                     II
+
+
+
+                                                            Secti on I I I
+                 TIME COMPARISONS:                     LUNAR WORK PERFORMANCE AND I-G                                               TRAINING
+
+
+A.        INTRODUCTION
+
+          The objective                of     this     section               is      to      compare             the    time        it     takes      to      com-
+
+plete        a task         during           lunar     EVA with               the           time      to        perform        the       same task            in
+
+the       last     suited          EVA training                 session             on earth.
+
+          Comparable           tasks          have     been       analyzed                   as well             as    those        sub-tasks             which
+
+were       free      of     anomalies.               In     addition,                  tasks          performed               in    identical             fash-
+
+ion       during         Apollo        15 and        16 were            given               separate             treatment.
+
+          The terms          used       --     task,        sub-task,                 element              --     are       described            as follows.
+
+"The       largest          activity           segment           is     the          task,          a complete,                identifiable                 activ-
+
+ity       with     a single            purpose              .          The first                   level         of    task        breakdown          is      the
+
+sub-task.                A sub-task            is    identifiable                     as a complete                     unit        of     work    within
+
+itself,           and only          has       relevance           as it              fits          into         the    patterned            sequence            of
+
+a total           task              . An element                 is     the          smallest              unit        of     work       which       is     still
+
+identifiable                and homogeneous"                     (pp.         17-18           of      Apollo           15 Time           and Motion
+
+Study        Final         Report).
+
+
+B.        TASK TIME COMPARISONS (LUNAR EVA AND I-G                                                        TRAINING)
+
+          The     tasks       chosen          were     those           for         which           time         analyses           could      be made over
+
+the       complete          task.            Table     3 lists               the       activities,                    performance             time        during
+
+training            sessions,           performance                   time         on the           lunar         surface,               and the      source
+
+of     the       data.        It    also       presents               the         ratio       of      the        EVA time            and    the      last           l-g
+
+training            time      (D/C      column         in       the     table).                    Training            times        were      obtained
+
+through           direct       observation;                 EVA times                  were         determined                from        kinescopes                (TV)
+
+and voice            (V)      transcripts.
+                                                                                                     12
+
+                                                       Table 3
+                                                      APOLLO 16
+                               TIME      COMPARISONS: LUNAR EVA AND I-G        TRAINING   TASKS
+
+
+
+                      Task                       I-G Training    Session         EVA 1      Ratio      EVA
+                                              2/24/72    3/29/72     4/11/72    4/21/72               Data
+                                                 (A)         (B)         (C)       (D)      (D/C)    Source
+
+
+A.    Commander
+
+      I,    Offload      LRV                   10.50       I0.I0        7.30     12.37       1.69         V
+
+                                                5.10         4.10       4.20      5.88       1.40         V
+      2.    Setup      LRV
+
+      3.    Offload      Far      U.V.          9.80         8.40       8.75     17.67       2.02         V
+
+
+      4.    Load      LRV                      14.75       16.25       13.85     20.68       1.49      VTV
+
+                                                4.01         4.90       3.30      7.13       2.16      VTV
+      5.    Flag      Deploy
+
+      6.    Connect         RTG                 6.60         7.15       7.60     12.52       1.65         V
+
+                                                 8.30        5.90       5.70     10.70       1,87      VTV
+       7.   Deploy      PSE
+
+      8.    Remove LSM                           1.40        1.35       1.40       2.12      1.51          TV
+
+
+       9.   Erect   Central
+            Station   I                          NID         4.95       4.70       7.80      1.66         VTV
+
+
+                                                 N/D        5.45     i :4.05     6.52         1.61         TV
+     I0.    Deploy      LSM
+
+                                                 N/D        10.60       8.90      12.90       1.44        VTV
+     II.    Deploy      Geophones
+
+
+B.     Lunar       Module      Pilot
+
+                                                 3.20        3.50       3.40       5.45       1.60         V
+     12.    Setup      LRV
+
+      13.   ALSEP Package
+            Placement  & Deploy
+            HFE Hardware                         9.85       13.39      I0.00      23.08       2.31        VTV
+
+
+
+TOTAL FOR CDR & LMP                                         96.04      83.15     144.82       1.74
+
+
+
+
+     INot including            fastening     thermal    curtains
+     V - Voice
+     TV- Television
+     N/D - No Data
+                                                                                                                                                                                         13
+
+
+
+        The data             in      Table           3 confirm                  the      results                   obtained             for        Apollo         15.          It
+
+took     more         time        to     perform                activities                  on the                 moon than             it        did     during         the
+
+last      l-g      training              _.ession               at     KSC.            The time                    increase             ranges           from      40%
+
+(D/C      ratio          1.40)          to     131% with                the        average                increase                 being           74%.      This         aver-
+
+age is          slightly             larger           than           the        average            increase                   of     58% obtained                  on
+
+Apollo          15.        The difference                         is    not           statistically                       significant.
+
+
+C.       IDENTICALLY                 PERFORMED TASKS (APOLLO 15 AND APOLLO 16)
+
+        The slightly                    larger             overall              D/C ratio             for               Apollo          16 could            be due to
+
+a number           of      factors             among which                      a difference                        in     task         requirements                    from
+
+Apollo          15 to        Apollo            16 might                berelevant.                                To offset             such        differences
+                                                                            i
+
+
+
+only      those          tasks          which         were           performed                in     identical                     fashion            during            Apollo                 15
+
+and 16 are               included              in     Table            4.
+
+        The outstanding                        features                of       this        table                 are    the       consistencies,                       especi-
+
+ally      those          observed              in      the        EVA ; column,                           In        three          of    the        four     tasks,
+
+there        is    almost            exact           correspondence                         in     unar                 performance                 times         for
+
+Apollo          15 and Apollo                       16.         The only               discr!pancy                       is     in      Deploy           PSE which              took
+
+appreciably                longer             to     do on Apollo                       16.        l',ontrariwise,                       performance                    time             for
+
+this      task          during          the         last        training                session                   (Column          C) was appreciably
+
+shorter           on Apollo                  16.       The combination                           o-_\these                effects                 produced         the         large
+
+discrepancy                in      the        D/C ratios.                       Neverthel_l,s,                          considering                 the     varied             nature
+                                                                                                      i
+
+of     the      tasks,            the        complexities                   of        the     con( itions                     under           which        they         were             per-
+                                                                                                          J
+
+formed,           and the              inherent              individual                  differences                       in      performance                  style,              it         is
+                                                                                                              1
+
+
+
+
+a remarkable                  fact           that         the        congruences                 betl_en                 Apollo          15 and Apollo                     16 per-
+
+formance              times        were         as close               as indicated                       i._Table                 4.
+
+
+
+
+                                                                                                                                         \    \
+                                                                                14
+
+
+
+                                  Table   4
+
+                COMPARISONS OF TASKS IDENTICALLY PERFORMED
+                         ON APOLLO 15 AND APOLLO 16
+
+
+
+
+  Task                 Mission      I-G   Training          EVA 1       Ratio
+                                  (A)       (B)      (C)      (D)       (D/C)
+
+
+       CDR
+
+                        A-16      5.11     4.1       4.2      5.9       1.40
+Set up LRV
+                        A-15      N/D        5.7     3.6      5.9       1.62
+
+
+
+       LMP
+
+                        A-16      3.2        3.5     3.4      5.4       1.60
+Set up LRV
+                        A-15      3.6        2.7     3.0      5.1       1.74
+
+
+Deploy       PSE 2      A-16      8.3        5.9     5.7      I0.7      l .87
+                        A-15      8.0        7.0     6.9       8.3      l .29
+
+
+                        A-16      N/D        6.8     5.5       8.6      l. 56
+Deploy       LSM2, 3
+                        A-15      7.1        5,9     5.7       8.6      l .51
+
+
+
+   TOTAL                A-16      N/A        N/A     18.8     30.6      l .63
+                        A-15      N/A        N/A     19.2     27.9      l .45
+
+
+
+
+ IAII times are in decimal        minutes.
+
+
+2Task performed         by LMP on A-15 and CDR on A-16
+
+
+ 3A-15 task "Deploy LSM" equivalent           to A-16 tasks   "Remove   LSM"
+  plus "Deploy LSM."
+
+ N/A - Not Applicable
+
+
+ N/D     - No Data
+                                                                                                                                                                                             15
+
+
+
+D.      SUB-TASK TIME COMPARISONS (LUNAR EVA AND I-G                                                                             TRAINING)
+
+        The tasks                      discussed                  in     the       previous              section               can,           in    general,              be par-
+
+titioned               into            smaller           segments                  or        sub-tasks.                   Such          sub-tasks               are       listed
+
+in     Appendix                  C.
+
+         By partitioning                               the        tasks           into        smaller              segments              it        is    possible               to
+
+identify                   anomalous              conditions                      affecting              performance                     time.             The elimination
+
+of     segments                  so affected                      improves               the     validity                 of     comparisons                     within           and
+
+between               missions.                   With            this         objective                in        mind,         all      sub-tasks                   in   which
+
+performance                      was nominal                      were         selected              from          Appendix              C and developed                          into
+
+Table         5.            In        other       words,                these           sub-tasks                 were         relatively                free          from       anoma-
+
+lous        or        unusual              conditions                    present               either             in     the      l-g         training               sessions            or
+
+in     lunar               EVA.
+
+           The D/C ratio                        for          sub-tasks                  in     Table          5 ranges                from          1.16        to     2.18.            Not
+
+included                   in     the       table            is        one sub-task                  performed                   by the             LMP --           "obtain            and
+
+configure                   Apollo             lunar          surface               drill         (ALSD)"                --     with           a D/C ratio                 of        1.43.
+
+When this                   sub-task               is        added           to     those         of         the        CDR, the              weighted               D/C average
+
+becomes                1.66.               This        ratio            is     slightly              larger              than         the          corresponding
+
+Apollo            15 average                      of     1.41.                Again,           the      difference                    between              these          ratios         is
+
+ not       statistically                          significant.
+
+
+ E,        FACTORS AFFECTING LUNAR EVA AND I-G                                                               TRAINING              COMPARISONS
+
+           A number                   of      factors              can        be proposed                    to        explain           the        differences                   in
+
+ lunar           EVA and                l-g       training                   comparisons.                     The more                obvious              of        these        are
+
+ rooted               in        the     differences                      associated               with             lunar         and earth-bound                          condi-
+
+ tions           --        gravitational                          effects,               differences                    in     soil           and       terrain,             in      visi-
+
+ bility,               etc.             That           these           are        important              in        any        evaluation                 of      the      results
+
+ is     not           to        be denied.                   There            are,           moreover,                 attitudinal                   influences                 which
+                                                                                          16
+                                              Table  5
+                                             APOLLO 16
+                                    TIME COMPARISONS OF SUB-TASKS
+
+
+                                                   l-G Training         EVA l    Ratio     EVA
+Sub-task                                         2/24   3/29    4/I l   4/21               Data
+                                                  (A)     (B)     (C)     (D)    (D/C)     Source
+Commander
+
+Offload      Far U.V. Camera
+
+  I.     Remove camera from LM and
+         carry to deployment site                3.901   3.20    2.60   4.80      l .85
+
+  2.     Deploy camera        & battery    on
+         surface                                 1.75    1.40    1.90   2.68     l .41
+
+Flag Deploy
+
+  I.     Unstow     and assemble    flag         2.10    2.00    1.80   3.58      l.99          TV
+
+  2.     Deploy     flag on surface               .55     .35     .55     .92     l .67          V
+
+  3.       Photography    at flag                1.36    1.55     .85   l .12     l .32         TV
+
+Connect      RTG
+
+           Remove subpallet and PSE
+           stool from Package 2                  3.70    4.95    3.60   5.21      l .45        VTV
+
+Deploy      PSE
+           Deploy and level PSE                  6.40    4.45    4.00   8.47      2.12
+
+Offload      Mortar    Package
+           Remove and deploy mortar
+           package (M/P)                         2.40    2.45    2.00   2.38      l .19         TV
+
+Assemble      and Align Antenna
+           Activate    central   station          .50    N/D      .45     .98     2.18
+
+Deploy      LSM
+  I.       Carry LSM to deploy      site         N/D     1.85    1.55    l .80    l .16         TV
+
+  2.       Deploy   and align LSM                N/D     3.55    2.50   4.72      l .89        VTV
+
+Set Up Mortar         Package
+
+   I.      Deploy M/P                            N/D     1.60     .95   l .76     l .85        VTV
+
+  2.       Place M/P in base                     N/D     1.05    1.75   3.75      2.14         VTV
+
+
+                      TOTAL                                     24.50   42.17     l .72
+
+
+
+  IAII times are in decimal           minutes.
+  V - Voice
+  TV - Television
+   N/D - No Data
+                                                                                                    17
+
+
+are relatively       pervasive   and important.
+
+       Central    to these is the attitude      of care or carefulness.              Lunar    equip-
+
+ment    is not damage-proof      and the crew has very limited             repair capability
+
+available    to them on the lunar         surface.     During    lunar    EVA, the astronaut
+
+has no one to correct         mistakes    or to help in difficult          situations.        This
+
+is in contrast       to the training      sessions    where   numerous     individuals       were
+
+available    to check experiment         deployment    and equipment       setups.     The simu-
+
+lated lunar surface         at KSC is not only smoother          than the actual       lunar    ter-
+
+rain but is also more         familiar    and creates    no problems       relative    to site
+
+selection    for experiment      deployment.      When on the moon,         the astronaut       is
+
+keenly    aware of the fact that he has only one chance                  to complete     his task
+
+and that that performance         must be efficient.          And, in this performance,
+
+he is being intently         observed    by a large portion       of the world       population.
+
+In short,    lunar EVA induces       an attitude      of great    care    in the execution          of
+
+the allotted       tasks.
+
+       There are also matters       of rest and pacing.          During    training,     it would
+
+not be possible       to continue    working    for very      long in the suited       condition.
+
+Work    periods    are shorter   and astronauts       tend to mobilize       their    energies
+
+for swift but effective          performance.     Training      time,    then, would     tend   to
+
+be shorter.
+
+       These are some of the factors         that must     be kept in mind         in a proper
+
+evaluation       of any differences      in performance       during    training   and lunar
+
+EVA.
+                                                                                      18
+
+
+                               Section IV
+                 METABOLICOMPARISONS:
+                                    I-G TRAININGVS LUNAREVA
+
+
+A.   INTRODUCTION
+
+     The purpose of this section is to compare the metabolic data associ-
+
+ated with tasks performed during l-g training          and during lunar EVA. In
+
+this analysis,    rate of energy expenditure and total          metabolic cost per
+
+completed task are utilized.
+
+     It may be recalled that somepreliminary          results     concerning metabolic
+
+rates have been presented in Section II:           Mobility     Evaluation.   Those
+
+results    tended to confirm the data obtained in Apollo 15 and indicated
+
+somevariation     in rate of energy expenditure due to changes in work con-
+ditions.
+
+
+B. TASKSANALYZED
+
+     Those tasks were chosen whose activity         patterns were identical     during
+
+training    sessions and lunar EVA. On the basis of this criterion            seven of
+
+the CDR's tasks and one of the LMP's tasks were selected for analysis.
+
+These are presented in Table 6.         It may be recalled that no biomedical
+data were available      for approximately the first      hour of EVAl because of
+
+a problem with the S-band antenna.
+
+C.   CALCULATION
+               PROCEDURE
+
+     Crewmenheart rates served as the bases for computing metabolic rates
+
+(BTU/hrJ.     For the training   session the following        regression functions
+
+were developed by the LSDMetabolic AssessmentTeam:
+                  CDR: Metabolic Rate = 36.9       (heartrate)     - 2136
+
+                  LMP:   Metabolic   Rate = 29.5   (heartrate)     - 1568
+                                                                                                                               19
+
+  °
+
+               o_                 O0        Cx;     u3       _
+
+
+
+
+                                                                                                                               e-
+_I_           0 _-_    0          _         ,--     03       _          0 _,        O_            ,--           O0
+          (lJ-,- 0
+                                                                                                  0 _,          Od
+
+
+                                                                                                                              l,.
+                                                                                                                             -IJ
+                                                                                                                     i
+
+                                                                                                                             °t-
+
+
+ -;J  u'_        r-_                                                                              1.13          03
+      0         _-_                                                                               O0            Od
+ _"C.)                                                                                                                          O
+
+
+                                                                                                                                qJ
+                                                                                                                               4.J
+                                                                                                                                qJ
+                                                                                                  _0
+
+                                                                                                  09
+                                                                                     0            qD            0               0
+                       ,--.       C_,       O0      _        kid                     C_           O0            tO              (J
+
+
+                                                                                                                                0
+
+
+
+
+                                                                                     ,---                       kO             "0         (I;
+
+
+
+
+                                                                                                                                _.- -I-J qJ
+
+                                                                                        0          _n           O0
+                                                                                                   _D           0               _...,-
+
+                                                                                                   (D_          03       I--- (lJ (J (I_
+                                                                                                                         n'_ -rrO     "-_
+                                                                                                                         _I- u_      _)
+
+
+
+
+                                                    O0       O_         O0
+                       0          (D_       '_"     O_l      0          0                          CO            nO
+                                                                                                   _n            oO
+
+
+
+
+                       ,--         0         _       I_      O_         0
+
+
+
+
+                        ;'_        O0        "d"     cO       _          ,d"
+
+                        o_         o_        c_                                         ,---                     0
+                                                     GO       O_         0
+
+
+
+
+   Q_                      0          0      0       0        0          u3
+                           _0         tO     _       '_"      _          0                         qD            0
+
+   _       E                                                                            o0         u_            o
+                                                                                                   ¢v3           ,---     u_
+  t_l--
+
+
+                                                                                                                           c" .I-J
+                                                                                                                          0_.-
+                            _._       (-0
+                            0         I--    Ud      _-                  _"                 (3;                            EE c-
+                           ,--        _-_    _       _           _/)     t,_                c-     ,--.
+                            _3.              13-     --;                 ..-I               0       rO        _---r-
+                                      4,J                        (..)                       _"     -I_
+                                                                                   _-               0                      E    _   _-
+                                                                             0     0        0      ;'--   _.   (1) 0      •,-- .Io_
+  I-.--                                _"    ,._.        Q        (J                                      I.a3 U ,--
+                            _0         _      _          E        _._        _3.   13. (..0                                _        _--
+                                                                                                          -.I,.--(3.;     _00
+                                                                                                         20
+
+
+
+
+     Similar    linear    functions     were   used for lunar         EVA.     These,       however,
+
+changed    each hour depending         on the average        heart    rate and 02 consumption
+
+exhibited    during    the preceeding        hour.     With this improvement,               first    used
+
+on Apollo    16, BTU rates were more reliably                determined.
+
+     Metabolic     cost    (BTU) was calculated          in the usual straightforward
+
+manner:
+
+                          BTU = (Elapsed Time/60)          X BTU Rate
+
+
+D.   RESULTS
+
+     A study of Table        6 reveals       several    definite     uniformities.           As found
+
+in previous      analyses,     training      times    are all shorter        than corresponding
+
+lunar performance         times.     Heart    rates    are uniformly       higher     for the train-
+
+ing sessions       with correspondingly          higher metabolic         rates.      Metabolic        cost
+
+during    training,      however,     is sometimes      larger    and sometimes         smaller       than
+
+the corresponding         metabolic     cost during lunar          EVA.    These     results        are in
+
+agreement      with the simulation         studies     reviewed      by Shavelson       (1968), I
+
+     Two ratios,      A/C and B/D, were calculated               to provide       a precise         measure
+
+of the percentage         increase     or decrease      in metabolic       rates     and metabolic
+
+costs.      The A/C ratios,        which   compare     the metabolic         rates   in training        with
+
+those in lunar EVA, consistently               demonstrate       a higher      rate of energy          expen-
+
+diture    during    training    over that during         lunar     EVA.    The weighted         average
+
+for the CDR isl.91           indicating      that on the average          metabolic         rates    during
+
+training     are   91%higher        than those    obtained    during      lunar      EVA.     (Since only
+
+one task has been analyzed             for the LMP, his result            can be given         only    pass-
+
+ ing attention      in this report.          However,    the A/C rate for his data is
+
+
+
+
+     iShavelson, R. J. Lunar gravity simulation and its effect                                on human
+ performance.   Human Factors 1968, lO (4), 393-402.
+                                                                                    21
+
+
+relatively    high in comparison to those computedfor the CDR.)
+
+     The case is quite different        for metabolic cost.    In somecases it     is
+
+smaller in the training    sessions than in lunar EVA. The weighted average
+
+is 1.13, indicating    a slightly      greater total   energy expenditure during
+
+training     than during lunar EVA.
+
+     In summary, then, although the metabolic rate is almost twice as large
+
+in training    sessions than in lunar EVA, the energy cost for the sametasks
+
+is only slightly    greater during the training        sessions.
+
+E.   COMMENTS
+
+     The higher metabolic rates during training          can be attributed   to sev-
+
+eral factorsamong which the most important is the extra weight (approxi-
+
+mately lO0 Ibs. for a 180-1b. man) associated with the suited condition.
+
+Heat storage, fatigue,    a strong desire to complete the tasks as quickly
+
+as possible also contribute         to this effect.    On the other hand, there seems
+
+to be a greater overall     equivalence of metabolic cost for l-g training          and
+
+lunar EVAtask performance.
+                                                                                                                                                 22
+
+
+
+                                                           Section V
+                                                     METABOLIC ADAPTATION
+
+
+
+         This      section            examines           the    metabolic           rates          (BTU/hr.)       and energy          costs
+
+(BTU)     associated              with          repeated          lunar      activities             as these         were        performed
+
+on at     least          two    EVAs.            This      type      of     analysis            should      provide       some information
+
+as to     the      presence               or    absence        of    adaptation             over        repeated       performances.
+
+         The three             activities               chosen       for     analysis            included         a sedentary          mode
+
+and two         active         energy-consuming                     activities.                 These     were:        Riding        the     LRV,
+
+Double        Core       Tube        Sampling,           and Hammering.
+
+A.     RIDING          THE LRV
+
+       During          the     three           EVAs the        crewmen         spent        approximately              8 man-hours             rid-
+
+ing    on the          LRV.          In    these        excursions           the    CDR was the              driver,         the     LMP the
+
+navigator.
+
+       Metabolic             rates         (BTU/hr.)        were       computed           for      both     the    CDR and the              LMP
+
+during        twelve         LRV riding             segments.               Three      of       these     occurred          in     EVA I,      six
+
+in    EVA 2,       and       three         in    EVA 3.           The average             metabolic          rates       are       presented
+
+in    Table       7.
+
+
+                                                                    Table      7
+
+                   AVERAGE METABOLIC RATES ASSOCIATED WITH RIDING                                                     THE LRV
+
+
+                                                                    EVA                             Average        for
+                         Crewman                    I                II             III             Crewman
+
+                         CDR                       5961             531             472                     532
+
+                         LMP                       669              509             412                     525
+
+
+                         AVerage
+                         For EVA                   633              520             442                     529
+
+                % Decrement                                18%              15%
+
+
+                IAII         rates        in    BTU/hr.
+                                                                                                                                                      23
+
+
+       Both crewmenshowpronounced adaptation in metabolic rate over the
+three EVAs. The decrease in BTU/hr. (633 to 520) is approximately 18%
+
+from EVA1 to EVA2 and 15%from EVA2 to EVA3.                                                                   An analysis of variance
+
+indicates         that the decrement over EVAsis significant                                                        at the .01 level.
+
+It is clear that there is no significant                                               difference                between metabolic
+
+rates for the two crewmen.
+
+
+B. DOUBLE
+        CORESAMPLING
+                   - LMP
+
+       Four double core tube samples were collected                                                       during the Apollo 16
+EVAs. Of these, three were visible                                          on television                      and two of these were
+
+performed by the LMP. One of these was on EVA2 (Station 8), the other
+on EVA3 (Station I0).                             The data for the activities                                    associated with these
+
+tasks are presented in Table 8.                                      These include Time (in decimal minutes),
+
+Metabolic Rate (BTU/hrJ, and Metabolic Cost (BTU). For completeness and
+
+better understanding, a single                                  core        sampling                activity            performed           by the
+
+LMP at         Station         9 is       also        included.             It    is         felt      that       the     activity           associa-
+
+ted    with      Station           9 is         relevant        to      and enhances                   the      adaptation            effect.
+
+The inclusion                 of   the         data     from     Station          9 (single                core)         enables           one   to
+
+observe         the      regular           progression             in     the     adaptation                   effect          over   repeated
+
+similar         operations.
+
+       (Hammering              was excluded                from      this        analysis               because          its     performance
+
+was dependent                 on soil           conditions           at     each        location.                 Hammering            as an opera-
+
+tion      is    analyzed            separately             in     the     next         section.)
+
+       An examination                     of    Table      8 reveals             progressive                   decrements             in    Time,       in
+
+Metabolic             Rate,        and in         Metabolic             Cost.          All          indices        reveal         an increase            in
+
+ efficiency            with        time        and task         repetition.
+                                                                                                                                 24
+
+
+
+
+                                                                  r--                           CO
+
+
+
+
+                                                   O_             CO                O0
+
+
+
+
+                                                   LO             O                 OO          CO
+
+
+
+
+                     JrJ --_                       O              CO                CO          Od             O0
+
+                      _
+                      Or,'_                        I_             o6                ,---        Od             O0
+
+
+              C_
+
+
+                                                                                                               c_
+      __I
+                                                   O_             _O                _-          CO             O0
+                                                   O              O                 OJ          0'3
+                                                   O              O_                O           O              0
+                                                                                                               r--
+      Z              rY" I-"                       r--                              r--
+
+O0    _--,    ,--4       I::13
+
+
+
+
+                                                                                                               O0
+I--                    E       e--                 Od              LO           •   O                          r--
+
+                                                                              _-                       °
+      ill            • r--   °r"                                                                               o_
+                                                                             .r-                                      ,r-
+
+                                                                                                                       E
+      I----
+                                                                              _J
+                                                                                                                      O0
+      _               4-) -"_                      oO              O          c_
+      O               m I'..--
+                                                   O4              OJ                                          cO
+      _.)             Om
+                                                                                                 r--           O0
+                                                                                                 r--           r--    "0
+                                                                                                                       c-
+
+                                                                              C_
+
+              _        0; t-                                                                                           c-
+              m       4.-)_                                                                                    O0
+                                                    O              OO         _-     OO          O             0       E
+
+                              e_
+                                                                             "O                                       r--
+
+
+
+                                                                              N
+                                                                                     0                          0
+                                                    O              LO        r--     r--         O_             r--         I
+
+                         E          e--
+                      °r,-    .r-                   CO                         _-
+                       t--          E
+                              v
+
+
+
+
+                                                                                                                           0
+
+                                          ,                   ,        _-      _                  r--
+                                                   •I-I                C_.     _-             _-) -_
+                                           _        _. _-              _      .r-             _-E
+                      4-)                 r-"       O   O              _-      $-             O    _
+                                                                                                                                {-
+                                                                                                                           OJ   C_
+                      °r-                     O_   _''r -   _-                            0   _'- rO       _
+                                              _    n_ _     _          O        _         E   rO cq        0
+                        U                     _    £.- 0    _          _'-     -r         _   __._-        _
+                                                                                                                                                 25
+
+
+C.       HAMMERING - LMP AND CDR
+
+
+         During      the       core      tube        sampling,          a considerable              amount            of   hammering         was
+
+required.            This       activity             was analyzed            in     terms     of    Hammer Hits,                 Time,      Meta-
+
+bolic        Rate    (BTU/h_),             Metabolic             Cost     (BTU),      Hits/BTU,            and Hits/minute.
+
+These        data    are       presented             in   Table     9 which          parallels            the        analysis       presented
+
+in     the    previous          table.             One added        feature          is     the    data        for      the     CDR on EVA 2 -
+
+Station        I0.
+
+
+
+
+                                                                   Table 9
+                               METABOLIC INDICES                   ASSOCIATED WITH HAMMERING
+
+
+
+               Crewman                     Hits            aT l          BTU/hr.            BTU           Hits/BTU               Hits/min.
+
+       LMP
+
+         EVA 2 -      Sta. 8                  69          2.28            1308            49.71                1.39                 30.26
+
+         EVA 2 -      Sta. 9                    8          .20             936              3.12               2.56                 40.00
+
+         EVA 3 -      Sta. 10'                28           .58             807              7.80                3.59                48.28
+
+
+
+       CDR
+
+         EVA 2 -      Sta. lO                 45          1.65            1129            31.04                 1.45                27.27
+
+
+
+
+        IElapsed      time        is     In     decimal      minutes.
+
+
+
+
+         The data        for      the      LMP clearly             indicate          a decrement                in    Metabolic          Rate,
+
+a progressive               increase            in    Hits/BTU           (another         measure         of     energy         cost)     and
+
+Hits/minute           (a measure                reflecting              increased         efficiency).                  These      progres-
+
+sive      changes        occur         over         EVA and task            repetition.
+                                                                                               26
+
+
+
+     Of significant     interest    and importance    are the data for the CDR during
+
+EVA 2 at Station      IC.     The congruence   of his set of data with that of LMP
+
+during    EVA 2 at Station      8 is particularly     striking.     Of direct     relevance
+
+are the data      for BTU/hr., Hits/BTU,   and Hits/minute.         These    indicate    that
+
+the metabolic     and efficiency     indices   are relatively      equivalent.        This is
+
+a meaningful      result since both crewmen      were at equivalent         stages    in their
+
+EVA Hammering     experience.      The LMP used the hammer very briefly              before
+
+Station   8 and the CDR used the hammer for a few rounds              before     Station      lO
+
+in order to get samples         from a large   boulder.
+
+
+D.   CONCLUSION
+
+     In Apollo     16, as in Apollo    15, there     is strong    evidence    of adaptation
+
+to task performance         from one EVA to the next.      There    are decrements       in
+
+Metabolic    Rate, Metabolic      Cost and increases      in efficiency.       These    results
+
+hold for both a sedentary         type of activity,     as Riding    the LRV, and a vigor-
+
+ous type, as Hammering.
+                                                                                                                                                                         27
+
+
+
+                                                                           Secti on Vl
+                                                                          FALL ANALYSIS
+
+
+
+A.      INTRODUCTION
+
+        I.          Purpose
+
+                    During             the     three          lunar         EVAs of         Apollo         16 six          falls          of     the      crewmen
+
+were         recorded                 on the          TV kinescopes.                   The two          falls         of        the     CDR occurred                    in
+
+his    attempt                  to     pick         up an object.                    Two of      the       LMP's          falls         occurred             in     a
+
+similar             fashion;                 the      other        two      involved         the      use       of    the         penetrometer.                     The
+
+purpose             of         this     analysis              is     to      investigate           the       falls         --      to     determine                the
+
+manner          of        falling             and      recovering              and to        determine               the        reasons          for      the       falls.
+
+        2.          Procedure
+
+                    The TV kinescope                          segments            comprising             the      falls           were        analyzed             qual-
+
+itatively                 and,         where          possible,             quantitatively.                     The qualitative                        analysis
+
+included             descriptions                      of     the      terrain,         what         the     crewman              carried,             the    activ-
+
+ity     preceding                     the     fall,         the      recovery,           and the            apparent              reason         for      the       fall.
+
+Time         into         EVA was also                     obtained.              The quantitative                    analysis                 included            the
+
+measurement                      (at    every          V2second)                of    the     angles         of      the        right          knee,      left           knee
+
+and the             body             (measured             from      the      horizontal)              as well            as descriptions                     of         the
+
+arms,         upper             torso         and lower              torso.           Both     types         of      analysis             were         accomplished
+
+by using             the          Vanguard             motion          analyzer.
+
+
+B.      DESCRIPTION                         OF FALLS
+
+
+        Two different                         types         of      falls       were     observed            on Apollo                  16.      One type                was
+
+related             to         the     procedure              used          by the      crewmen          when        picking             up objects                with-
+
+out     the         aid         of     tongs          or    other           hardware.           This        procedure                 involved          approach-
+
+in k the            object,                 hopping,          bending           the     knees,         grabbing             the         object         and        get-
+
+ting         up;         all         done      in     one continuous                  motion.              Variations                 included          hopping               and
+                                                                                                 28
+
+
+kneeling    on one knee, kneeling        down on both knees         (without hopping);         hopp-
+
+ing up, stepping      forward    and up, stepping        back and up.
+
+    The other type of fall occurred             when    the LMP was pushing         the penetro-
+
+meter.
+
+    I.     Pickup   Falls
+
+           a.   LMP's fall at the ALSEP         site.     EVA I.
+
+
+
+    Time:       05:01:53:32     - 53:39 Ground        Elapsed    Time   (GET)
+
+    Terrain:  Loose surface soil;             small to medium-sized  rocks scattered
+    about; LMP is standing within             the rim of a small crater and facing
+    uphill.  ALSEP site.
+
+    Carrying:       He was holding      a small    object.
+
+    Apparent     Reason:      He slipped      (slid) on the loose         surface   soil.
+
+    Previous Activity:  LMP had jacked up the deep core,                        emplaced    the heat
+    flow probe, and attempted to pick up the rammer.
+
+    Description - Fall:  On the second attempt to pick it up, the LMP went
+    down on his knees.  As he tried to get up, his feet slid on the loose
+    soil and he fell to his knees and hands.   (Feet could not get the
+    necessary traction in the loose soil.)
+
+    Description - Recovery:   To recover, the LMP leaned forward on his
+    hands.   He then pushed himself back with enough momentum to bring him-
+    self to his knees and then to his feet.
+
+    Time    into EVA:       3:00:36
+
+    Quality     of Film:      Good view of the fall and recovery.
+
+           b.   CDR's fall near the LM at closeout.                EVA I.
+
+
+    Time:       05:05:32:32     - 32:42 GET
+
+    Terrain:  Loose surface           soil;   small    rocks    scattered;      level;   near the
+    LM and LRV.
+
+    Carrying:       Nothing.
+
+    Apparent     Reason:      Feet slipped     on the loose       soil.
+
+    Previous Activity:  Both the CDR and LMP were dusting each other when
+    the brush fell to the surface.  The CDR went to pick up the brush.
+                                                                                      29
+
+
+Description - Fall:  The CDR's usual procedure in picking something
+up is to approach the object (brush), bend one knee (in this case the
+right knee is bent), pick up the object, and stand up on both feet.
+All this is done in a somewhat continuous motion.   In this particular
+instance, the CDR appeared to slip as he was about to stand up after
+getting the brush.  His feet slid and would not take hold on the loose
+soil and so he ended up on his hands and knees.
+
+Description - Recoverx:   The CDR knelt upright (his hands were no
+longer on the ground) with the brush in his right hand.   His left hand
+gets a little support from the LMP. Then he extends his left hand;
+the LMP holds the hand and elbow and he helps the CDR to stand on his
+feet.   CDR rolls back on his feet and then steps to his left, then
+right.
+
+Time    into EVA:      6:39:36
+
+
+qualitx of Film:  CDR's back is facing the camera throughout the inci-
+dent.  Also at the time of the fall his feet are not in view.
+
+
+       c.   LMP's fall at Station       8.    EVA 2.
+
+
+
+Time:       06:03:32:30     - 32:56 GET
+
+Terrain:      Small and medium      rocks    scattered;   mostly   level.   Station   8.
+
+Carrying:      Camera     and sample   bags are mounted.
+
+Apparent Reason:  He had hopped down to pick up the tongs; in doing so
+he stepped on the tongs so that when he tried to lift them he lost his
+balance.
+
+
+Previous Activity:  The CDR and LMP were sampling and the CDR had just
+stowed a sample In the LMP's sample collection bag (SCB).   The CDR
+started to walk away and the LMP went to pick up the tongs.
+
+Description - Fall:  The LMP bent his knees and got down on his right
+knee to pick up the tongs.  He missed the tongs and fell.
+
+Description  - Recoverx: With his left hand the LMP held on to the
+CDR who assisted him in getting up.
+
+Time    into EVA:      4:53:05
+
+qualitx     of Film:      Most   of the time the LMP was hidden       by the CDR.
+                                                                                      30
+
+
+     d.    CDR's fall at Station       II.   EVA 3.
+
+
+
+Time:      06:22:58:37     - 58:59 GET
+
+Terrain:     Small rocks to large        boulders;    craters.     Station   II.
+
+Carrying:     Camera     and bags mounted.      Carrying    SCB.
+
+Apparent Reason:  When picking up the bag, the CDR leaned too far to
+the right and lost his balance.
+
+Previous Activity:  The CDR is sampling at Station II.  As he went to
+  new sampling slte he dropped one of the sample bags so he returned
+to pick it up.
+
+Description - Fall:  The CDR returned to pick up the sample bag,
+approached it, took about five steps, bent his knees (right knee touched
+the ground), leaned right and reached out with his right hand to pick
+up the bag. After he grabbed the bag and his right arm was coming up,
+he lost his balance, was unable to regain his balance and fell on both
+hands.
+
+Description - Recovery:  The CDR backed up on his knees, raised the
+upper part of his body, rested on his left hand.   (The sample bag is
+in his right hand and the SCB is in his left hand.)   As he straightened
+up he moved his feet very rapidly until he was standing.    (His method
+of recovery differs from the LMP who uses a rocking motion to get to
+his feet.)
+
+Time into EVA:      1:31:19
+
+Quality of Film:  Generally good.  The CDR's right side is to the cam-
+era; however, his legs are not distinct because of the shadows.
+
+2.   Penetrometer      Falls
+
+     a.    LMP's fall at Station       4.    EVA 2.
+
+
+Time:      06:00:35:48     - 35:55 GET
+
+Terrain:     Loose surface     soil;   small and medium      rocks scattered;      shallow
+craters.     Station 4.
+
+Carrying:     Nothing.
+
+Apparent Reason:  He was in an unstable position to begin with and then
+when he tried to get up he slipped on the loose soil.
+
+Previous Activity:         LMP is walking     around with    the penetrometer,      obtain-
+ing readings.
+                                                                                    31
+
+
+Description - Fall:   The LMP pushed in the penetrometer by leaning on
+it. The penetrometer was located near the top of a small slope and
+the LMP's feet were down the slope.   The penetrometer went in al] the
+way and since the LMP was leaning on it, his body approached the sur-
+face.   He paused and started to stand up but his feet slid on the
+loose soil and he ended up on his hands with his body and legs parallel
+to the surface.
+
+
+Description - Recoverx:          He leaned forward some more and pushed back
+with his arms, obtaining         enough momentum to get to his knees and then
+to his feet.
+
+Time into EVA:       1:56:23
+
+
+qualitx of Film:  The LMP was facing            the camera;    thus much of the
+detail was not clear.
+
+
+       b.   LMP's fall at Station     lO.
+
+
+Time:       06:05:11:50     - 12:16 GET
+
+Terrain:    Many    small rocks    scattered;    loose soil;    shallow   depressions.
+Stati o'n lO.
+
+Carrying:      Nothing.
+
+Apparent Reason:          He lost his balance    when the penetrometer      went   in
+all the way.
+
+Previous Activity:          LMP was walking   around   with   the penetrometer
+obtaining readings.
+
+Description - Fall:   The LMP pushed in the penetrometer by leaning on
+it. The penetrometer went in all the way (unexpectedly), and he lost
+balance.   He fell to his right side and extended his right arm to
+break the fall while his left was still on the penetrometer.     He fell
+forward and his feet went in the "air," then down.    He adjusted the
+position of his body, released the penetrometer, and put both hands
+on the surface.
+
+Description-Recover_:   After adjusting his body and putting both hands
+on the surface, he leaned forward, pushed back, got to his knees but
+did not make it up.   He leaned forward a second time, pushed back, got
+to his knees, tried to stand up but ended up back on the ground again.
+He leaned forward a third time,, pushed back, got to,his knees, went
+back on his feet and finally stood up.
+
+Time    into EVA:    6:32:25
+
+qualitx     of Film:  Good sequence.  The LMP has his right side to the
+camera.      The rocking sequence where he tries to get up is also good.
+                                                                                         32
+
+
+C.     POSSIBLECAUSAL
+                    FACTORS
+
+       A preliminary    analysis suggested that loss of traction         on loose soil
+caused crewmento slip and fall.             A more thorough analysis revealed that
+
+the crew's unique method of picking up objects with their                hands instead
+
+of with tongs also contributed to loss of balance and subsequent falls.
+
+       The fails    associated with the penetrometer were related to the method
+
+used by the LMPto push in the penetrometer and also to the penetration
+
+and plate-load-sinkage        characteristics      of the lunar soil.     In each instance
+
+where a fall       occurred, the penetrometer shaft was pushed into the soil             to
+
+its maximumpenetration depth.              In order to push the penetrometer into the
+
+soil     the LMPleaned on the instrument with his entire weight.              As the pene-
+
+trometer sank to its maximumdepth, and occasionally               this occurred rapidly
+when the soil offered little         resistance,     he either   lost his balance and
+
+fell     (Station lO), or else he ended up in an unstable position            and fell
+
+trying    to stand up (Station 4).
+
+       The pickup falls     involved other reasons.       The crewmen's method of
+
+picking up objects was to approach the object,             hop, bend the knees, reach
+
+out, grab the object,        and stand up.      In two of the pickup falls     the crew-
+
+man went through the pickup procedure but reached out too far to grab
+
+the object.        This caused the loss of balance and the fall.           These were
+the LMP's fall       at the ALSEPsite and the CDR's fall         at Station 8.    At the
+
+ALSEPsite,         the LMPleaned over until      he was only 15° from the horizontal
+in reaching out to pick up the rammer. This was so great a displacement
+
+of his center of gravity        that when he started to bounce up again his feet
+sl_id and he fell.        The CDR's fall     at Station 8 was similar.      In order to
+
+pick up the sample bag he leaned too far to the right              and so when he tried
+                                                                                              33
+
+
+to stand up, he also lost his balance and fell.
+
+        The unique pickup procedure involves a high degree of coordination
+
+amongits      components. If,       for example, the approach-hop places the astro-
+
+naut too far from the object he must necessarily                   reach out too far in
+
+order to get it.          This, in turn, places the astronaut in an unstable posi-
+
+tion.      Even if     the approach-hop is "on target,"           the astronaut must have
+
+an accurate place-memory because the object is often not in view at the
+
+momentof pickup.           (The limitations     on visibility       of the EVAsuit are
+discussed in a later         section entitled      "HammerRetrieval.")
+
+        The LMP's fall     at Station 4 differed      from the other pickup falls.
+
+In this instance the LMPwent to pick up the tongs and in doing so he
+
+hoppedand stepped on the tongs with his left                    foot.   Then, when he grabbed
+
+the tongs and started to pull them up, he knocked himself off balance and
+
+fell.      This fall     can be partly attributed       to limited      visibility   and/or
+inaccurate visual estimation.
+
+        The reasons for the CDR's fall        at the LM during closeout were not too
+evident because he was not in full            view of the camera. However, since he
+
+lost his balance after he had the brush, it was possible that he reached
+
+out too far and was in an unstable position and unable to attain                      traction
+on the loose soil.
+
+
+D. METHOD
+        OF RECOVERY
+
+        In one fall     the LMPhelped the CDRget up on his feet (at the LM), in
+
+another the CDRhelped the LMP(Station 8).                   In the other falls       the crew-
+men differed         in their methods of recovery.        The LMPwas able to get up by
+
+using a rocking motion.           This involved getting on all           fours, leaning for-
+
+ward, pushing back with his hands to acquire enough momentumto get to his
+                                                                                          34
+
+
+knees and then to his feet.          The CDR,on the other hand, got to his feet
+
+by kneeling upright and then pushing up fast with his feet until                he was
+
+standing and stable.
+
+E. A SUCCESSFUL
+             PICKUPANDA PICKUPFALL
+
+       In order to determine why pickup falls          occurred, a detailed analysis
+
+was done on an unsuccessful pickup fall             and a successful pickup.     The
+
+pickup at 05:01:52:22 GET (ALSEPsite)               and the pickup fall    at 05:01:53:10
+GET were chosen for comparison because they involved the samecrewman,
+
+EVA, terrain    and time period.           In addition_ the camera angle was good so a
+detailed analysis was possible.
+
+       At the successful pickup, the LMPapproached the HFEprobe, started
+
+to pick it     up, bounced back up and got in position         to try again.     On the
+
+second try he approached the probe, hoppedand stepped on his right foot
+
+as he knelt on his left          knee.     He leaned forward and towards the left,
+
+reaching downalong his left              knee to pick up the probe with his left       hand.
+
+After getting       it he bounced back up.
+       At the unsuccessful pickup, the LMPapproached the rammer, started to
+
+pick it    up, bounced back up and got in position          to try again.     On the sec-
+
+ond attempt he approached the rammer, hopped and knelt on both knees,
+
+leaned forward and left          and reached out to pick up the rammerwith his
+left    hand. But in order to get the rammerhe had to reach out at least a
+
+foot beyond his left       knee and in reaching so far he bent over until           his
+
+body was almost       parallel    to the surface.     When he attempted    to bounce
+
+back up, his feet slid and he lost his balance             and fell.      He then used a
+
+rocking    motion    to get back to his feet.
+                                                                                         35
+
+
+     The detailed analysis pointed out that when the LMPpicked up the
+
+probe, he leaned forward approximately 25° from vertical                and picked up
+
+the probe just         in front of his left   knee.      However, when he picked up the
+rammer, he extended his left          hand beyond his left      knee and in doing so he
+
+leaned forward approximately 75° from vertical.                This placed the LMPin
+
+an unstable position and when he started to bounce back up, his feet slid
+
+and he fell.      The overextended lean was the major difference               between the
+
+successful and the unsuccessful pickup.
+
+F.   FALLSIN APOLLO15 ANDAPOLLO
+                              16
+
+     The falls    occurring on Apollo 15 resulted from the soil            conditions,
+
+specifically     tripping     over rocks (uneven terrain)       and tripping     at the edge
+
+of craters     (soil     in near failure   condition).      The falls   on Apollo 16 were
+
+mainly the result         of the methods used by the crewmento pick up objects
+
+and to deploy the penetrometer.            On Apollo 16 there were no falls         observed
+
+that were caused by tripping           due to soil conditions.
+
+G.   SUMMARY
+
+     An analysis of the falls          on Apollo 16 was undertaken to determine the
+
+circumstances associated with falling            and the methods used in recovering
+
+from the falls.          Six falls   were analyzed:      four of these were related to
+
+the crewmen's unique method of picking up objects while two occurred dur-
+
+ing the insertion         of the penetrometer.     The recovery operations were
+
+slightly     different     for the two astronauts.
+                                                                                                    36
+
+
+                                           Section VII
+                                        ADDITIONALANALYSES
+
+
+A.   HAMMER
+          RETRIEVAL
+
+     Both crewmembersdropped the hammer(geology type) while driving                               dou-
+ble core tubes on EVA2.                (CDRat Station lO:          core tubes #27 and #32;
+
+LMPat Station 8:             core tubes #29 and #36).          See Section V of this report
+
+for core tube driving           analysis.      The CDRwas able to pick up the hammer
+(15 in. long, 3 lb. l-g wt., 0.5 lb. lunar wt.) from the lunar surface at
+
+the first        attempt, while the LMPwas not able to achieve this in four
+
+attempts.         The latter    retrieved     the hammerby use of the tongs, and suc-
+
+cessfully        continued driving       the core tubes.
+
+     I.     Suit Restraints        - Analysis     of the methods      used and other       factors
+
+involved     in these hammer          retrieval   attempts   are revealing        in the insight
+
+they provide        into performance        of a task at the threshold           of pressure-suited
+
+capability.         The suit is the principal           restraining     factor    in this activity
+
+from at least three aspects:
+
+            a.     Vision.     The helmet     allows    downward    vision    to about    6 inches       in
+
+front of the subject           when    he is standing     in a normal       "erect"    position.
+
+If the helmet        visor assembly       is at maximum      opening,    peripheral      vision    is
+
+not obstructed.          A more    serious    obstruction     to downward      vision    is the
+
+Hasselblad        camera mounted       on the RCU which      restricts      the crewman    from
+
+viewing     anything     closer    than 2 feet directly        in front of him.          Other    angles
+
+of vision        for various     positions    assumed    by the crewman       are affected       by his
+
+positional        attitude     in leaning    forward    or to the side.
+
+                   The CDR, in picking        up the hammer,       leaned    forward    up to 35 °
+
+and to the right up to 40 ° in order               to retain    sight of the hammer as long
+                                                                                                       37
+
+
+as possible.        The LMPleaned forward 17-23° , and to the right                     25-30° maxi-
+
+mum.     The latter    also started     his retrieval          attempts    farther    away     from the
+
+hammer,    40-60    inches vs. 36 inches for the CDR.                  The LMP appeared        to have
+
+his visor partially          closed which     would   hamper     side,    especially     side and
+
+down, vision.        The reduced     visual    range of the LMP due to visor              position
+
+and not leaning       as far forward       and to the right undoubtedly              lessened     his
+
+chances.
+
+           b.     Flexibility.      The picking       up of an object       the size and shape
+
+of the hammer       requires     the crewman    to flex       the suit at the knees and hips
+
+to the maximum.        Both crewmen     used the method          of    "crouching"     on the right
+
+knee while       extending    the left leg and leaning           to the right      to reach      the
+
+hammer    lying on the surface.         To achieve      maximum        flexure   requires      consid-
+
+erable    force which       is difficult     to maintain.        The CDR was able to attain
+
+the flexed       position    and reach the surface,           while    the LMP did not in at
+
+least two of the attempts.            (It was not possible             to see the LMP's        right
+
+hand in all attempts.)            The LMP used a jumping          motion    to gain downward
+
+momentum    and facilitate        flexure.     Apparently       the restraint      of the suit
+
+was such that sufficient           flexing    could    not be achieved.
+
+                  It is not known whether        such factors          as the respective        heights
+
+(CDR - 5 ft. 9 in.; LMP - 5 ft. ll-I/2                 in.), suit       fit, or other      physical
+
+characteristics       of the crewmen       and/or     their    suits    contributed     to the
+
+results.        However,    when such a threshold        activity        (as this apparently          was)
+
+is attempted,       minor    differences     show up as important           contributors       to per-
+
+formance.
+
+           c.     Conditionin 9.     In a threshold       activity,       as previously        men-
+
+tioned,    small differences        are magnified       in the performance.            While    precise
+                                                                                                       38
+
+
+data are not available,             it has been established that the CDRspent consid-
+
+erable time in testing             suit mobility     and operational       limits,      and also
+
+trained in the KC-135at I/6-g in picking up objects.                           Included in these
+
+conditioning         and training     exercises were numerousperformances of a re-
+
+trieval       such as hammerpickup.            This experience was a positive             factor in
+the successful retrieval             on the lunar surface.
+
+       2.    Method    Analysis     - Given    the suit restrictions         and relative       amount
+
+of training        referred     to above,     the methods    used by the crewmen          are of
+
+interest.
+
+
+              a.   CDR.      The CDR got in position         3 feet from the hammer and down
+
+sun.        He leaned forward       35 ° while   making     two quick    hopping     motions     to move
+
+forward       a few inches.        Then he jumped     forward      so that his left foot was
+
+extended       forward      and to the left and his right           knee touched       the surface
+
+5 inches from the hammer.              At this point        he was at maximum         crouch,    and
+
+leaned       right about 40 ° to reach         the hammer.        The forward     and side lean
+
+enabled       him to keep the hammer          in view the maximum        length      of time before
+
+the grasp.          Having gained     forward    momentum     through    lean,    jump,   and crouch,
+
+this movement         is continued     after     grasping    the hammer.        It appears      that the
+              _
+forward       motion was necessary         to keep from falling,         such was the extent           of
+
+lean, both forward            and to the side.       Since mass governs          momentum,      this had
+
+a stronger         effect    on the recovery      after   grasp    of hammer     than weight,      reduced
+
+to I/6-g.          The CDR went from 0.7 ft./sec,            at point of grasp         to 1.5 ft./sec.
+
+in 1.5 seconds,           nearly   straight    forward,     indicating    the acceleration         at-
+
+tained.        The average      velocity    for the entire        performance      was 1.25 ft./sec.,
+
+the 5 foot distance            being covered      in 4 seconds.       Timing,      coordination        and
+
+adaptability          to suit, lunar conditions,          etc., must     be considered         as criti-
+
+cal to success.             The CDR used a continuous,          "swooping"      type of motion,         with
+                                                                                                       39
+
+
+the grasp at the low point of the crouch, and accelerating                           to regain equi-
+
+librium and normal position.
+
+            b.     LMP. The LMPpositioned himself in a line and 40 inches away
+from the hammer,cross sun, and leaned forward 17°.                          He then took a short
+
+hop and a jump forward           with his left foot forward              and to the left,       even
+
+with the hammer.           The right knee touched        the surface,       even with    the hammer.
+
+The LMP leaned 25 ° to the right,               but there was no forward         lean during       the
+
+grasp attempt,        which failed.        He then boucned        back,    his left foot moving
+
+back 15 inches        right,    12 inches back,       then continued        to move    back about
+
+30 inches for the second             attempt.      The three     other    attempts    were    in the
+
+same pattern,        except    the jump to attain        grasp    position    was higher       and more
+
+pronounced.         On the last attempt,          the LMP moved     in the opposite          direction
+
+and between        the hammer    and tube, then straightened              vertically    and proceeded
+
+on to the right.
+
+                   It would appear       that the LMP had difficulty           keeping       the hammer
+
+in view because        he did not lean far enough           forward       or to the right.        While
+
+he jumped        to flex the suit, he did not "follow              through"    or continue       for-
+
+ward    to counteract        a forward    lean.
+
+       3.   Conclusion       - The methods      used by the two cre_nen         to pick up a
+
+dropped     hammer were       different    but the metabolic        rates were       similar    (I098
+
+BTU/hr.     for CDR, I128 for LMP).             Analysis   indicates       that this activity
+
+requires maximum           flexing   of the suit,     leaning     forward    and to the right          to
+
+see the object,        deep crouch       on one knee with        opposite    foot extended,       but
+
+particularly,        continuous      forward    motion   to counterbalance       forward       lean and
+
+facilitate        return    to normal    standing    position.      The forward        and side lean
+
+are essential        to keep the object         in view as long as possible             as the move
+                                                                                                40
+
+
+is madetoward it.          This type of activity          also requires sufficient         experi-
+
+ence and training        to give the crewmencomplete feel of the effort                   and
+
+coordination    neededfor the performance.,
+
+B. TWOMANVERSUS
+              ONEMANPERFORMANCE
+                            OF A SIMILARTASK(DOUBLE
+                                                  CORETUBE
+   SAMPLING)
+
+    I.    Purpose
+
+          The purpose      of this analysis       is to determine      if this representa-
+
+tive activity,       double   core tube sampling,         can be more efficiently         accom-
+
+plished   by one man or by the combined            efforts    of two men.
+
+    2.    Sources      of Data
+
+          The double      core tube sampling       was performed      two times     on the
+
+Apollo    15 mission     and four times on the Apollo          16 mission.       On the
+
+Apollo    15 mission,     the two astronauts       on the lunar surface       worked      together
+
+to accomplish     this task.        On Apollo    16, however,     the task was performed           by
+
+the LMP alone.         Of the four performances          by the LMP, only    two were analyz-
+
+able.
+
+           In the analysis       of this task, the part that required              hammering     was
+
+not included.        Since hammering      is a soil dependent        activity,     eliminating
+
+it made    the double core       tube sampling     performances      comparable.
+
+    3.     Results
+
+           The data for this analysis           appear    in Table   lO.   On the average,
+
+the Apollo     16 performances       of this task    required     34% less time,      in terms
+
+of total man-minutes,         than the Apollo      15 performances.        However,    the clock
+
+time on Apollo       15 was 24% less      (6.27 min.      vs. 8.25 min.)    because    two crew-
+
+men were working        simultaneously.      Also,   with    two men, the individual         energy
+
+expenditure     rate    (BTU/hr.)    was about    I0% less on the average          for Apollo      15.
+                                                                                           41
+
+
+
+                               Table lO
+                        DOUBLECORETUBESAMPLING
+             APOLLO
+                  15 (TWOMANTASK)ANDAPOLLO16 (ONEMANTASK)
+
+                                                   Avg. Tot.
+Trials          Clock Time      Man-Minutes         Energy           Energy Cost
+                  (Bin.)          (min.)             Rate         CDR    LMP Total
+                                                   (BTU/hr.)     (BTU)     (BTU)     (BTU)
+
+Apollo 15
+(Two Men)
+#1                     6.71           13.42            925       I13.3        93.6   206.9
+
+#2                     5.83           II.66            803        78.2        77.6   155.8
+
+Average                6.27            12.54           9031       95.7        85.6   181.3
+
+
+Apollo 16
+(One Man)
+#1                  lO.lO             lO.lO           1089         2       183.1     183.1
+
+
+#2                     6.46            6.46            839         2          90.3    90.3
+
+Average                8.28            8.28            9911        2       136.7     136.7
+
+
+
+IWeighted    Average
+
+2This task was performed by the LMP.              Therefore,   the CDR has no energy
+ cost charged to this activity.
+
+
+
+
+However,    the total energy cost       (BTU) for the Apollo       16 performances    of
+
+ this task amounted      to an average     of 24% less energy      required    than did the
+
+ Apollo   15 performances.
+
+     4.     Conclusion
+
+            The single    crewman   performance    during    the double   core tube sam-
+
+ pling required    fewer man-minutes       and a lower energy      cost   than the two crew-
+
+ man performance       of the same task.
+                                                                                        42
+
+
+                                   Section Vlll
+                                CONCLUDINGSTATEMENTS
+
+
+    The research presented in this report represents a varied approach to
+
+the evaluation of astronaut lunar performance.           This was an inevitable
+
+outcome of our basic approach -- non-intrusive          acquisition     of data.     The
+
+basic source was TV kinescopes.         Our data consisted of those elements of
+astronaut activity       which we could see, or document by voice record.            Of
+
+particular    interest    were those activities    which were repeated either in
+
+a single EVAor over several EVAs. Repeated activities             enabled us to
+
+evaluate both the consistencies and variations          in performance.       Natural
+changes in conditions provided an analogue to the experimental intrusion
+
+planned by an investigator.         This report,   then, represents essentially,
+
+applied natural research.
+    Astronaut mobility       was evaluated both qualitatively     and quantitatively.
+
+The two astronauts of Apollo 16 exhibited two sharply divergent methods of
+
+locomotion:     one a traditional     walking mode, the other a skipping,          "canter-
+
+ing" activity    with one foot always preceding the other.            Of significant
+
+interest     was the fact that both modeswere performed at equivalent meta-
+
+bolic expenditure rates (BTU/hr.).
+
+    Whenlunar performance was comparedwith the last l-g training                   perfor-
+
+manceof the sametask, a numberof significant             results were obtained.
+
+Lunar performance took, longer but was done at a reduced metabolic rate
+with the result      that the metabolic cost in BTUwas only slightly           lower
+
+for task performance on the moon.
+
+    Metabolic adaptation over EVAsand performance trials               was clearly
+
+exhibited for three different        types of tasks ranging from sedentary (Rid-
+
+ing the LRV) to very energetic (Hammering).
+                                                                            43
+
+
+    As on Apollo 15, there were several falls    on Apollo 16.   On Apollo 15
+
+such falls   were strongly associated with the lunar terrain.    Falls on
+
+Apollo 16, on the other hand, seemedto be related to the unique method
+of object retrieval    and to penetrometer operation.
+
+    Additional    analyses confirmed the soundnessof the decision to utilize
+
+one man rather than two (as on Apollo 15) in double core tube sampling.
+The single crewmanrecuired fewer man-minutes and a lower energy expendi-
+
+ture (BTU)than the two-crewmanperformance of the sametask.
+
+    The resJlts    obtained seemparticularly   relevant to future mission
+
+planning, especially    for missions in which astronauts would have to oper-
+
+ate under reduced gravity conditions.
+                                                                            44
+
+
+                                 Section IX
+                                RECOMMENDATIONS
+
+
+A.   Since the method the astronauts utilized    for object retrieval   seems
+
+promising, a training    program (KC-135) should be initiated   for those astro-
+
+nauts of Apollo 17 who might be inclined     to use it.
+
+
+B.   The slipping   of the hammer(or any other object used extensively    by
+
+the astronauts) could be eliminated by the application      of Velcro to glove
+
+and hammer. In addition a lanyard attached to the hammer,encircled about
+
+the glove, would prevent the fall    of the hammerto the lunar surface.
+                         45
+
+
+
+
+     APPENDIX
+            A
+
+
+EVATIMELINES- CDR& LMP
+                                                                                         46
+
+
+                                        CDR- EVA#I
+
+
+              Event                           GETI           AT2           GETI        AT 2
+
+
+Start EVA Watch                                                       04:22:52:56
+Pre-Egress                                                            04:23:00:34     7.63
+Egress                                                                04:23:03:54     3.33
+Familiarization                                                       04:23:05:38     1.73
+Deploy TV Camera                                                      04:23:15:03     9.42
+Offload LRV                                                           04:23:27:25    12.37
+Set Up LRV                                                            04:23:33:18     5.88
+Checkout LRV                                                          04:23:40:12     6.90
+Offload Far U.V. Camera                                               04:23:58:34    18.37
+Load LRV                                                              05:00:19:15    20.68
+Flag Deploy                                                           05:00:26:23     7.13
+ALSEP Prep.                                                           05:00:31:05     4.70
+Reset Far U.V. Camera                                                 05:00:38:10     7.08
+Deploy Cosmic Ray Exp.                                                05:00:39:11     1.02
+Trav. Prep.                                                           05:00:40:56     1.75
+Trav. to ALSEP Site 3                                                 05:00:52:38    ll.70
+ALSEP Station Tasks:
+  ALSEP Site Prep.                       05:00:55:12         2.57
+  Connect RTG                            05:01:07:43        12.52
+  Deploy PSE                             05:01:20:12        12.48
+  Offload Mortar Package                 05:01:24:53         4.68
+  Remove LSM                             05:01:27:00         2.12
+  Erect C/S & Assemble & Align
+    Antenna                               05:01:43:47       16.78
+  Deploy LSM                              05:01:52:40        8.88
+  Deploy Geophones                        05:02:05:40       13.00
+  Thumper Geophone Experiment             05:02:22:40       17.00
+  Setup Mortar Package                    05:02:43:24       20.73
+  Doc. Samples                            05:02:47:13        3.82
+  Trav. Prep.                             05:02:56:30        9.28      05:02:56:30   123.87
+Trav. to Station #1                                                    05:03:23:54    27.40
+Station #1 Tasks:
+  Geol. Prep.                             05:03:28:28        4.57
+  Rake Samples                            05:03:36:45        8.28
+  Doc. Samples                            05:04:09:07       32.37
+  Trav. Prep.                             05:04:14:05        4.96      05:04:14:05    50.18
+
+
+
+
+    IGET is in days:hours:minutes:seconds           and represents     the end point of a speci-
+     fic activity.
+
+    2AT is in decimal     minutes    and represents     elapsed    time.
+
+    3Unless   otherwise   noted,    all traverses     are via LRV.
+                                                                                         47
+
+
+
+
+              Event                     GET       AT            GET               aT
+
+Trav,   to Station    #2                                   05:04:21       :I0     7.08
+Station   #2 Tasks:
+   Geol,   Prep.                   05:04:24:38    3.47
+   LPM Measurement                 05:04:45:50   21.20
+   Tray.   Prep.                   05:04:48:07    2.28     05:04:48:07           26.95
+Trav.    to Station   #3                                   05:04:54:14            6.12
+Station    #3 Tasks:
+   Photo Prep.                     05:04:56:28    2.23
+   LRV "Grand Prix"      Driving   05:04:59:24    2,93
+   Mortar   Pack Activation        05:05:06:01    6.62
+   Tray.    Prep,                  05:05:08:00    1.98     05:05:08:00           13.77
+Trav.    to LM                                             05:05:10:41            2.68
+EVA Closeout:
+  Station    Prep.                 05:05:13:41    3,00
+  Closeout    Activities           05:05:16:04    2.38
+  Reset Far U.V. Camera            05:05:18:20    2.27
+  Redeploy    CRE                  05:05:22:18    3.97
+  Closeout    Activities           05:05:53:14   30.93
+  Reset Far U.V. Camera            05:05:58:14    5,00     05:05:58:14           47.55
+EVA Termination                                            05:06:05:04            6.83
+
+
+                                                   Total   EVA #I     -    7 hr. 12.13        min.
+                                                                                    48
+
+
+
+                                  LMP -   EVA #I
+
+
+
+                   Event                  GET       AT            GET        aT
+
+Start   EVA Watch                                           04:22:52:56
+Pre-Egress                                                  04:23:04:34     11.63
+Egress                                                      04:23:05:43      1.15
+Familiarization                                             04:23:15:47     10.07
+Offload      LRV                                            04:23:27:17     11,50
+Set Up LRV                                                  04:23:32:44      5.45
+LM Inspection        a:_d Pans                              04:23:42:45     10.02
+Load LRV                                                    05:00:15:21     32.60
+ALSEP Prep.                                                 05:00:23:52      8.52
+Flag Deploy                                                 05:00:26:50      2,97
+ALSEP Prep,                                                 05:00:33:48      6.97
+ALSEP Trav.   (Walking Carrying
+   ALSEP Barbell)                                           05:00:42:45      8.95
+_LSEP Tasks:
+   HFE Deploy                       05:01:21:23    38.63
+   Drill Core Sample                05:01:54:12    32.82
+   Assist in Geophone Deploy        05:02:00:57     6.75
+   ALSEP Photos                     05:02:23:38    22.68
+   Drill Core Disassemble           05:02:31:28     7.83
+  Trav. Prep. and Doc. Samples      05:02:56:30    25.03    05:02:56:30    133.75
+Tray. to Station #1                                         05:03:23:54     27.40
+Station #1 Tasks:
+  Geol. Prep.                       05:03:30:35     6.68
+  Rake Samples                      05:03:36:59     6.40
+  Doc. Samples                      05:04:09:07    32.13
+  Trav. Prep.                       05:04:12:21     3.23    05:04:12:21     48.45
+Tray. to Station #2                                         05:04:21:20      8.98
+Station #2 Tasks:
+  Geol. Prep.                       05:04:24:04     2.73
+  Photo Pan and 500mm Photos        05:04:29:54     5.83
+  Doc. Samples                      05:04:45:56    16.03
+  Trav. Prep.                       05:04:48:07     2.18    05:04:48:07     26.78
+Trav. to Station #3                                         05:04:54:14      6.12
+Station #3 Tasks:
+  Photo Prep. and Photo CDR/
+    LRV "Grand Prix"                05:04:59:24     5.17
+  Tray. Prep.                       05:05:01:20     1.93    05:05:01:20      7.10
+Trav. to LM (Walking)                                       05:05:02:59      1.65
+EVA Closeout                                                05:05:39:47     36.80
+EVA Termination                                             05:06:05:04     25.28
+
+
+                                                    Total   EVA   #1 - 7 hr. 12.13 min.
+                                                                         49
+
+                            CDR- EVA#2
+
+         Event                   GET        AT          GET       AT
+
+Start EVAWatch                                     05:22:39:25
+Pre-Egress                                         05:22:44:33    5.14
+Egress                                             05:22:47:05    2.53
+Reset Far U.V. Camera                              05:23:03:06   16.02
+Trav. Prep.                                        05:23:09:02    5.93
+Doc. Samples                                       05:23:16:22    7.33
+Trav. Prep.                                        05:23:22:33    6.18
+Reset Far U.V. Camera                              05:23:24:03    1.50
+Trav. Prep.                                        05:23:25:24    1.35
+Tray. to Station #4                                06:00:09:14   43.83
+Station #4 Tasks:
+  Geol. Prep.               06:00:13:39     4.42
+  Geol. Description         06:00:16:51     3.20
+  Rake Samples              06:00:24:06     7.25
+  Doc. Samples              06:00:35:31    11.42
+  Trenching                 06:00:38:01     2.50
+  Doc. Samples              06:00:51:37    13.60
+  Rake Samples              06:00:56:36     4.98
+  Trav. Prep.               06:01:02:20     5.73   06:01:02:20   53.10
+Tray. to Station #5                                06:01:I0:58    8.63
+Station #5 Tasks:
+  Geol. Prep.               06:01:16:21     5.38
+  RakeSamples               06:01:41:27    25.10
+  LPMMeasurement& Samples   06:01 53:42    12.25
+  Trav. Prep.               06:01:57:42     4.00   06:01:57:42   46.73
+Trav. to Station #6                                06:02:08:16   I0.57
+Station #6 Tasks:
+  Geol. Prep.               06:02:12:18     4.03
+  Doc. Samples              06:02:24:27    12.15
+  Trav. Prep.               06:02:26:15     1.80   06:02:26:15   17.98
+Trav. to Station #8                                06:02:41:15   15.00
+Station #8 Tasks:
+  Geol. Prep.                06:02:44:42    3.45
+  Rake Samples               06:02:53:16    8.57
+  Doc. Samples               06:02:59:43    6.45
+  LRVTroubleshooting and
+     Repositioning           06:03:07:54    8.18
+  Doc. Samples               06:03:33:34   25.67
+  Trav. Prep.                06:03:47:05   13.52   06:03:47:05   65.84
+Trav. to Station #9                                06:03:53:48    6.72
+Station #9 Tasks:
+  Geol. Prep.                06:03:58:24    4.60
+  Doc. Samples               06:04:19:56   21.53
+  Trav. Prep.                06:04:28:11    8.25   06:04:28:11   34.38
+                                                                           50
+
+
+
+
+           Event                   GET        AT           GET        AT
+
+Trav. to Station #10                                   06:04:54:51   26.67
+Station #10 Tasks:
+  Geol. Prep.                  06:05:00:26    5.58
+  Double Core                  06:05:10:II    9.75
+  Doc. Samples and Photo Pan   06:05:21:08   I0.95
+  Trav. Prep.                  06:05:21:50     .70     06:05:21:50   26.98
+Trav. to LM                                            06:05:24:08    2.30
+EVA Closeout:
+  Reset Far U.V. Camera        06:05:27:36    3.47
+  Closeout Activities          06:05:49:43   22.12
+  Reset Far U.V. Camera        06:05:51:19    1.60
+  Closeout Activities          06:05:58:38    7.32     06:05:58:38   36.81
+EVA Termination                                        06:06:02:34    3.93
+
+
+                                               Total   EVA #2 - 7 hr.23.15      min.
+                                                                            51
+
+
+                                 LMP- EVA#2
+
+
+           Event                      GET       AT          GET        aT
+
+Start EVAWatch                                          05:22:39:25
+Pre-Egress                                              05:22:48:03    8.63
+Egress                                                  05:22:49:29    1.43
+Trav. Prep.                                             05:23:26:32   37.05
+Trav. to Station #4                                     06:00:09:14   42.70
+Station #4 Tasks:
+  Geol. Prep.                    06:00:12:56     3.70
+  500mmPhotos                    06:00:16:49     3.88
+  Rake Samples                   06:00:24:06     7.28
+  Penetrometer                   06:00:37:09    13.05
+  Double Core                    06:00:48:51    ll.70
+  Rake Samples                   06:00:56:25     7.57
+  Photo Pan                      06:00:58:09     1.74
+  Trav. Prep.                    06:01:01:29     3.33   06:01:01:29   52.25
+Trav. to Station #5                                     06:01:ll:16    9.78
+Station #5 Tasks:
+  Geol. Prep.                     06:01:17:02    5.77
+  Rake Samples                    06:01:41:18   24.27
+  Doc. Samples                    06:01:50:46    9.47
+  Trav. Prep.                     06:01:56:47    6.02   06:01:56:47   45.53
+Trav. to Station #6                                     06:02:08:13   II .43
+Station #6 Tasks:
+  Geol. Prep.                     06:02:12:07    3.90
+  Doc. Samples                    06:02:24:27   12.33
+  Trav. Prep.                     06:02:25:58    1.52   06:02:25:58   17.75
+Trav. to Station #8                                     06:02:41:15   15.28
+Station #8 Tasks:
+  Geol. Prep.                     06:02:43:23    2.14
+  Double Core                     06:03:02:01   18.63
+  LRVTroubleshooting & Walk to
+     a NewSampling Site           06:03:06:48    4.78
+   Doc. Samples                   06:03:33:34   26.77
+  Trav. Prep.                     06:03:45:45   12.18   06:03:45:45   64.50
+Trav. to Station #9                                     06:03:53:48    8.05
+Station #9 Tasks:
+   Geol. Prep.                    06:03:55:21    1.55
+   500mmPhotos                    06:03:56:45    1.40
+   Single Core                    06:04:14:31   17.77
+   Doc. Samples                   06:04:19:43    5.20
+   Trav. Prep.                    06:04:27:30    7.78   06:04:27:30   33.70
+                                                                    52
+
+
+
+
+          Event             GET       AT            GET        AT
+
+Trav. to Station #10                            06:04:54:51   27.35
+Station #10 Tasks:
+  Geol. Prep.           06:05:02:21    7.50
+  Penetrometer          06:05:18:15   15.90
+  Trav. Prep.           06:05:20:40    2.42     06:05:20:40   25.82
+Trav. to LM (Walking)                           06:05:21:28      .80
+EVA Cl oseout                                   06:05:47:50   26.37
+EVA Termination                                 06:06:02:34   14.73
+
+
+                                        Total   EVA #2 - 7 hr. 23.15 min.
+                                                                              S3
+
+
+
+                                 CDR - EVA #3
+
+
+
+               Event                  GET        AT           GET        AT
+
+Start   EVA Watch                                         06:21:27:18
+Pre-Egress                                                06:21:36:03    8.75
+Egress                                                    06:21:3g:45    3.70
+LRV Load Trav,     Prep.                                  06:22:00:34   20.82
+Reset Far U.V. Camera                                     06:22:03:44    3.17
+Tray.   Prep.                                             06:22:04:35     .85
+Tray.   to Station    #II                                 06:22:45:09   40.57
+Station    #11 Tasks:
+  Geol,  Prep.                    06:22:48:41    3.53
+  Geol.  Description & Samples    06:22:56:27    7.77
+  Doc. Samples                    06:23:19:17   22.83
+  Rake Samples                    06:23:40:59   21.70
+  Doc. Samples at "House Rock"    06:23:55:36   14.62
+  Samples and Trav. Prep.         07:00:08:58   13.37     07:00:08:58   83.82
+Trav. to Station #]3                                      07:00:17:39    8.68
+Station #13 Tasks:
+  Geol. Prep.                     07:00:21:43    4.06
+  Rake Samples                    07:00:27:31    5.80
+  LPM Measurements                07:00:42:53   15.37
+  Trav. Prep.                     07:90:46:33    3.67     07:00:46:33   28.90
+Trav. to Station #10'                                     07:01:15:38   29.08
+Station #10' Tasks:
+  Geol. Prep.                     07:01:22:02    6.40
+  Rake Samples                    07:01:35:51   13.82
+  Double Core                     07:0l:38:27    2.60
+  Doc. Samples                    07:01:42:43    4.27
+  Trav. Prep.                     07:01:48:39    5.93     07:01:48:39   33.02
+Tray. to LM                                               07:01:51:05    2.43
+EVA Closeout:
+  Closeout Activities             07:01:55:16    4.18
+  Reset Far U.V. Camera           07:01:57:03    1.78
+  Closeout Activities             07:02:03:16    6.22
+  Retrieve Cosmic Ray Exp.        07:02:14:11   I0.92
+  Closeout Activities             07:02:22:43    8.53
+  Park LRV                        07:02:27:09    4.43
+  Closeout Activities             07:02:37:27   I0.30
+  LPM Measurements                07:02:48:20   ]0.88
+  Closeout Activities             07:03:01:23   13.05
+  Remove Far U.V. Camera
+     Film Mag.                    07:03:02:11     .80
+  Closeout Activities             07:03:07:40    5.48     07:03:07:40   76.58
+EVA Termination                                           07:03:11:20    3.67
+
+
+                                                  Total   EVA #3 - 5 hn 44.03      min.
+                                                                              54
+
+
+                                    LMP- EVA#3
+
+
+             Event                         GET        AT           GET        AT
+
+Start EVAWatch                                                 06:21:27:18
+Pre-Egress                                                     06:21:39:22   12.07
+Egress                                                         06:21:39:55     .55
+LRVLoad and Trav. Prep.                                        06:22:04:28   24.55
+Trav. to Station #ll                                           06:22:45:09   40.68
+Station #ll Tasks:
+  Geol. Prep.                          06:22:48:52    3.72
+  Photo Pan and Geol. Description      06:23:07:24   18.53
+  Doc. Samples                         06:23:12:42    5.30
+  500mmPhotos                          06:23:16:0l    3.32
+  Doc. Samples                         06:23:29:56   13.92
+  Rake Samples                         06:23:40:59   ll.05
+  Doc. Samples at "House Rock"         06:23:55:36   14.62
+  Samples and Trav. Prep.              07:00:08:58   13.37     07:00:08:58   83.82
+Tray. to Station #13                                           07:00:17:39    8.68
+Station #13 Tasks:
+  Geol. Prep.                          07:00:18:56    l .28
+  Photo Pan and Geol. Description      07:00:22:55    3.98
+  RakeSamples                          07:00:27:31    4.60
+  Doc. Samples                         07:00:42:04   14.56
+  Trav. Prep.                          07:00:46:33    4.48     07:00:46:33   28.90
+Trav. to Station #10'                                          07:0l:15:38   29.08
+Station #10' Tasks:
+  Geol. Prep.                          07:01:20:52    5.23
+  Rake Samples                         07:01:34:43   13.89
+  Double Core                          07:01:42:43    8.00
+  Tray. Prep.                          07:01:43:49    I .I0    07:01:43:49   28.18
+Trav. to LM (Walking)                                          07:01:44:41      .87
+EVACloseout                                                    07:02:59:37   74.93
+EVATermination                                                 07:03:11:20   II.72
+
+
+                                                       Total   EVA #3 - 5 hr. 44.03 min.
+                                          55
+
+
+
+
+             APPENDIXB
+
+
+
+DETAILEDANALYSES
+               OFTHREEMOBILITYSEt_MENTS
+                                                                                             56
+
+
+       EVA1 - ALSEPTraverse
+
+       Detailed    analysis   of certain   segments   of this traverse      are given
+
+below.     Reference    time refers    to the cumulative       time in Table      l, Section
+
+II.
+
+       Segment    l- Move from LM toward ALSEP        site with ALSEP     package.     Stopped
+
+to adjust    package.     Left foot leading,       kicked    up soil.
+
+                          Distance    - I0.2 ft.
+
+                          Time - 4.75 sec.
+
+                          Rate - 2.15 ft./sec.
+
+       Segment    2 - LMP started,    after    stop to adjust    package.
+
+           Initial stride,       with right    foot first.     Leaned   forward.
+
+                          Distance    - 1.6 ft.
+
+                          Time - 2.1 sec.
+
+                          Rate - .76 ft./sec.
+
+           Continue    to move with ALSEP       package.
+
+                          Distance    - 8.7 ft.
+
+                          Time    - 5.3 sec.
+
+                          Avg.    Rate - 1.64 ft./sec.
+
+                          Max.    Rate - 2.08 ft./sec.
+
+       Segment    3 - LMP entered    field of view while       carrying   ALSEP    package
+
+to site    location.     This was a continuation        of segments     l and 2 above,       but
+
+portions    were    lost due to TV camera       not following    in synchronization.
+
+This    segment    ends with ALSEP    Package    #2 coming    loose and dropping       to the
+
+surface.
+
+       A significant    feature    of this Segment     3 is that the left foot fre-
+
+quently    trailed     the right in a "canter"      type of motion.       Column     5 in the
+                                                                                            57
+
+
+
+ following    table shows the respective right        and left   foot distances as
+
+ each was placed in advance of the other.            Note the generally shorter step
+ distance for the left      foot.
+
+      Successive stride I lengths, times, and rates, plus the foot advance
+
+ distances, are as shown.
+
+ Col. 1                 Col. 2        Col. 3        Col. 4                         Col. 5
+                        Stride                                                      Step
+   Step             Distance (ft.) Time (sec.) Rate (ft./sec.)                Distance (ft.)
+ I. Right                 1.60          .67            2.4                          1.60
+ 2. Left                  2.73         1.46            1.9                          1.13
+ 3. Right                 3.15         1.50            2.1                          1.92
+ 4. Left                  2.12         1.34            1.6                          0.20
+ 5. Right                 2.18         1.38            1.6                          1.98
+                         (ALSEPRTGpackage starts to fall.)
+ 6. Left                  2.18         1.36            1.6                         0.18
+ 7. Right                  .87         1.09            0.8                         0.69
+ 8. Left                   .80         1.17            0.7                         O.ll
+ 9. Right                 1.28         1.28            l.O                         1.17
+lO. Left (stop)           2.75         1.16            2.4                         1.58
+                         (ALSEPRTGpackage hits surface.)
+
+      Summaryof Segment3 data:
+                     Distance - 10.58 ft.     (based on left     foot)
+                     Time - 6.49 sec.
+
+                     Rate - 1.63 ft./sec.
+
+      LMP stops with      left foot on surface.
+
+      Right leg reacts,     does kicking    type motion    to about   a 35-40 ° angle
+
+  to front and side, and comes      back to surface     in about    one (1) sec.      LMP
+
+  continues   to react to RTG package      falling   at this point    with    the left
+
+  foot moving   out to his left, and by a bouncing         type motion.       LMP returned
+
+
+
+
+  IStride:    Distance   moved by one foot from one stopped        position    to the next.
+                                                                                                          58
+
+
+both feet to surface at about the sameposition                            they were in just before
+
+"stop" (#10) shownabove. This reaction took about 1.5 seconds. Another
+
+3.5 seconds were used by LMPto regain balance, makea 90° turn to his
+
+right        to face package, and prepare to approach it.
+    The last three or four steps (#7-I0 incl.)                          reflect    the effect     of the
+
+RTGpackage dropping off.                    The pace up to this point was averaging between
+
+1.6 and 2.0 ft./sec.,               but considerable bouncing, and kicking of soil,                   was
+
+evident.         The load of 41.5 pounds moonweight (ALSEPpackages of approxi-
+mately 21 Ibs. each) evidently                  reduced the velocity          and mobility       of the
+
+LMP. This event (package dropping), however, demonstrates the ability                                     of
+
+crewmento react promptly, and without disability,                            to anomalies in load.
+        EVA2 - CDRTraverse             Down Rim of Cinco          B Crater
+
+    At 2.25 hours into EVA 2 (start at 06:00:55:12                           GET) both crewmen
+
+were at Station           4, Cinco B, at a location              approximately      135 feet      south
+
+(at 7 o'clock)          of the LRV which         is inside of the crater.             The crewmen
+
+had just completed           sample        collection,     and started      for the LRV, when       this
+
+mobility        segment    began.      Detail    data are as follows:
+
+        ].    General     - CDR moves        toward    LRV (and camera)         from just     over ridge
+
+of crater,        making    a curving        path which       increased    the straight-line       dis-
+
+tance by an estimated               15%.     The path was down a slope of approximately
+
+lO ° with       the surface    also sloping           to the CDR's      left about    lO °.     The area
+
+was covered        with    rocks of various           sizes    up to   3 feet     across.
+
+        2.     Location    - Station        4, Cinco     B Crater,     traverse    from a point
+
+approximately           135 feet      to the south        (7 o'clock)      of the LRV to the LRV,
+
+sloping        downhill,    lO °.
+                                                                                                        59
+
+
+
+       3.    Mode- Walk, generally even steps, with characteristic                           widespread
+stance and a bouncing motion.               Carrying rake and gnomon, one in each hand.
+
+These tools,       about 32 and 38 inches long respectively,                      had to be held by
+
+the CDRwith his arms extended almost horizontally                       in front of him.
+       4.     Rate - Distance traveled was 16g feet in 76 seconds at 2.22 ft./sec.
+
+Took 81 steps for an average distance of 2.09 ft./step,                           or an average
+stride      of 4.18 feet.
+
+       5.     Conmaent - The average        rate is consistent        with other       traverses       of
+
+longer distances.           CDR used a more conventional             walk    pace, rather       than
+
+the hopping-type          pace used by most astronauts.              The fact      that the CDR had
+
+to carry the rake and gnomon,               both fairly     long,    held out in front          ef him,
+
+probably       slowed    the rate of traverse.          It is apparent        that this and the
+
+rocky downhill          slopes   caused    the CDR to exercise        a greater       degree of cau-
+
+tion in this traverse            than over a nominal,        level,    uncluttered       area,    while
+
+not carrying       anything.       Under    the latter     conditions,       a 15% to 20% increase
+
+might       be attained.     The LMP came toward          the camera     at the same time          (both
+
+were     in the picture),        and used a distinct        hop or canter-type          motion,       with
+
+one foot always          in front.    The latter kicked        up more       soil than the CDR,
+
+who used the I/6-g to advantage               by using a "bounce"           with many of his steps.
+
+It is apparent          that both modes      of traverse     may be used effectively,
+
+depending       on the individual         crewmember.
+
+       EVA 3 - CDR on Traverse            to House   Rock at Station         II
+
+       At 2 hours and 20 minutes            into EVA 3, while        at Station       II, the crew-
+
+men traversed       from the site of sample             collection    #388 to a large          rock
+
+known as House Rock.             The GET was 06:23:41:00        at start          of traverse.        The
+
+distance       traveled    was 258 feet in a northeast          direction,          across    relatively
+                                                                                                  60
+
+
+smooth, level terrain,          which contained scattered large rocks.                 There was
+
+a gradual downwardslope near the rock.                 The CDRfollowed a "wandering"
+
+route which added about 15%to the straight-line                     distance.       The nature of
+
+this terrain       presented no mobility       difficulty      and the CDRwas able to move
+
+in a walking-type gait at about 3.0 ft./sec.
+
+    1.     Location    - Station    11, approaching         House   Rock,    located   about
+
+475-500    feet to the northeast         of the LRV.        The path followed        by the CDR
+
+(and LMP) was from the site of sample              #388,     located     about    220 feet north-
+
+east of the I_RV.
+
+    2.     Mod___ee
+                 - CDR used walk,        with generally       even steps,        widespread    stance,
+
+and bouncing       motion.     This mode    resulted    in a minimum        of soil kicking      and
+
+breaking    of stride.       The CDR also was not carrying              any tools    or other
+
+equipment.
+
+    3.     Rate - Distance       traveled   was 297 feet in 99 seconds              for an average
+
+rate of 3.0 ft./sec.           Average   length of step was 2.28 feet.               The average
+
+length of stride was 4.56 feet.             Metabolic       rate for CDR during        this trav-
+
+erse was 1112 BTU.           The LMP accomplished       essentially       the same traverse
+
+(distance,       rate, etc.),    but used more of the "hop" or "canter"                type of
+
+motion,    which    resulted    in more dirt    kicking.        His metabolic       rate for this
+
+segment    was    1185 BTU/hr.
+
+    4.     Comment    - This traverse       represented       the highest     mobility    rate yet
+
+maintained       for any significant       distance.        Here the conditions        were favor-
+
+able to such a traverse,          and the incentive          to reach    one of the most sig-
+
+nificant     geological      sites of any EVA, also influenced              the successful
+
+accomplishment.        It is noteworthy       that the BTU rates          are just about       nor-
+
+mal for walking       activity.
+                             61
+
+
+
+
+       APPENDIX
+              C
+
+
+
+
+TIME COMPARISONS
+              OF SUB-TASKS
+                                                                                                                   62
+
+
+                                              TIME   COMPARISON& OF SUB-TASKS
+
+
+
+                                                                  I-G Training              EVA 1     Ratio          EVA
+Sub-task       (Commander)                                      2/24   3/29    4/II         4/21                     Data
+                                                                 (A)     (B)        (C)       (D)      (D/C)         Source
+
+Checkout       LRV
+          Mount      and     test     driveLRV                 N/D     3.37      3.20       6.541          2.04         V
+
+
+
+Offload      Far     U.V.     Camera
+
+  I.       Remove camera from                LM and
+           carry to deployment                site              3.90   3.20      2.60       4.80           l .85
+
+  2.       Deploy     camera         & battery       on
+           surface                                              1.75   1.40      1.90                      1.41         V
+
+   3.      Level     and aim         camera                    4.15    3.80      4.25                      2.30         V
+
+
+
+Flag      Deploy
+
+   I.      Unstow     and assemble            flag              2.10   2.00      1.80        3.58          1.99       TV
+
+   2.      Deploy     flag      on surface                       .55     .35        .55       .92          1.67         V
+
+   3.      Photography          at    flag                      1.36   1.55         .85      l .12         1.32       TV
+
+
+
+Connect       RTG
+
+   I.      Connect     RTG cable to central
+           station     (C/S).                                   2.90   2.20      2.30        5.933         2.58         V
+
+   2.      Remove subpallet and PSE
+           stool from Package 2.                                3.70   4.95      3.60        5.21          1.45      VTV
+
+
+
+        ZCDR did considerably                 more driving       inflight    than during      training.
+
+        21nflight aiming procedures were different                          and more      time-consuming      than
+         the aiming procedures used in training.
+
+        3CDR commented that                  he had considerable       difficulty      connecting    the RTG
+         cable to the C/S.
+
+N/D - No Data
+
+V - Voice
+
+TV - Television
+
+NOTE:        All times         are in decimal             minutes.
+                                                                                                               63
+
+
+
+                                 TIME COMPARISONS OF SUB-TASKS                 (continued)
+
+
+
+                                                             I-G    Training                 EVA 1     Ratio    EVA
+Sub-task       (Commander)                                2/24       3/29         4/I 1      4/21               Data
+                                                            (A)        (B)          (C)        (D)     (D/C)    Source
+
+
+Deploy      PSE
+
+  I.       Deploy     and    level     PSE                6.40       4.45         4. O0                 2.12
+
+  2.       Remove & deploy           thumper
+           geophone (T/G)                                 1.90       1.45          .90                  2.48        VTV
+
+
+
+Offload      Mortar      Fackage
+
+           Remove and deploy             mortar
+           package  (M/P)                                 2.40       2.45         2. O0      2.38       1.19         TV
+
+
+
+Assemble       and Ali9n       Antenna
+           Activate      C/S                                .50      N/D            .45        .98      2.18
+
+
+
+Deploy      LSM
+   I,      Carry      LSM to    deploy       site         N/D        1.85         1.55       1.80       1.16         TV
+
+   2.      Deploy     and align        LSM                N/D        3.55         2.50       4.72       1.89        VTV
+
+
+
+Active      Seismic      Experiment
+
+           T/G firing                                     N/D       II.I0        12.00       14.95 s    1.24        VTV
+
+
+
+Set      Up Mortar      Package
+   I.      Carry M/P to deploy               site   &
+           set on surface                                  N/D       1.40         I.I0        6.27 6    5.70        VTV
+
+   2.      Deploy      M/P                                 N/D        1.60          .95       1.76      1.85        VTV
+
+   3.      Place      M/P in    base                       N/D        1.05        1.75        3.75      2.14        VTV
+
+
+
+         4CDR had difficulty with the T/G cable reel tension.  (The tension was so
+          great that it caused the C/S to move when the CDR pulled on the T/G.)
+
+         Slnflight the CDR had to wait for the LMP to stop moving before every
+          thumper firing.  During training this procedure was not rigorously followed.
+
+         6CDR had considerable               problems   deploying     the M/P base legs.
+                                                                                                   64
+
+
+                             TIME COMPARISONS
+                                           OF SUB-TASKS
+                                                      (continued)
+
+
+                                                  l-G Training            EVA l         Ratio      EVA
+Sub-task (Lunar Module Pilot)                   2/24   3/29    4/I l      4/21                     Data
+                                                 (A)        (B)     (C)      (D)        (D/C)      Source
+
+
+LM Inspection       & Pans
+         Photo LM                                5.52      5.15   3.15    I0.021         3.24
+
+
+
+Load LRV
+
+  I.     Load LCRU & HGA on LRV                 9.83    II.93     13.10   12.832             •98
+
+  2.     Load & configure      TV camera
+         on LRV                                  N/D       4.52   4.55     5.623         1.24
+
+
+
+Deploy    HFE
+         Obtain    & configure   ALSD            3.65      N/D     3.68    5.27          l .43         TV
+
+
+
+Bore Hole       1 Drilling
+  I.     Assemble    bore stems onto
+         drill                                   N/D       N/D      .g5    3.444         3.63          TV
+
+  2.     Drill Ist bore stem       into
+         surface                                 N/D       3.88    2.34    l .20s            .51       TV
+
+  3.     Assemble 2nd bore stem
+         onto drill                              N/D       N/D     1.37      3.204,.
+                                                                                   '     2.34          TV
+
+
+
+       ILMP was required to take many more         photographs     than was planned      and
+        practiced in training.
+
+       2LMP   had difficulty     locking   the HGA dish.
+
+       31n training the TV camera was on a tripod            at 12:00/50'.        Inflight    the TV
+        camera was obtained from the MESA.
+
+       WLMP had considerable       difficulty   inserting    the bore stem into the drill
+        chuck.
+
+       SThe differences  in soil characteristics           between the training        site and
+        the lunar surface make these activities            nencomparable.
+

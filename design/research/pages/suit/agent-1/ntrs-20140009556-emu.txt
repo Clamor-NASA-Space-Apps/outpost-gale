@@ -1,0 +1,1287 @@
+                   Extravehicular Activity (EVA)
+                  Hardware & Operations Overview
+
+
+
+
+                                                  UTMB - Galveston
+                                                    01 July 2014
+
+                                                   Sandra Moore
+                                                  Jose Marmolejo
+
+
+
+
+Copyright © 2014 by United Space Alliance, LLC.
+                   Objectives and Overview
+
+• Define Extravehicular Activity (EVA), identify the reasons for conducting an
+  EVA, and review the role that EVA has played in the space program
+• Identify the types of EVAs that may be performed
+• Describe some of the U.S. Space Station equipment and tools that are used during
+  an EVA
+    • Extravehicular Mobility Unit (EMU)
+    • Simplified Aid For EVA Rescue (SAFER)
+    • International Space Station (ISS) Joint Airlock and Russian Docking
+      Compartment 1 (DC-1)
+    • EVA Tools & Equipment
+• Outline the methods and procedures of EVA Preparation, EVA, and Post-EVA
+  operations
+• Describe the Russian spacesuit used to perform an EVA
+• Provide a comparison between U.S. and Russian spacesuit hardware and EVA
+  support
+• Define the roles that different training facilities play in EVA training
+• Real Life EVA Emergency – EVA 23
+                                                                                     2
+                          Definition of EVA
+• Extravehicular Activity (EVA)
+ – Definition: Crewmember leaves
+   the protective environment of a
+   pressurized spacecraft cabin and
+   ventures out into vacuum of space
+   wearing an extravehicular
+   spacesuit.
+
+ – Purpose
+    • Contingency or Mission
+      Success Repairs
+    • Experiments or Testing
+    • Spacecraft Servicing
+    • Space Structure Construction
+      [e.g., International Space
+      Station (ISS)]
+                                              3
+                        Definition of Spacesuits
+• Spacesuits
+   • Typically, 2 types of pressurized “spacesuits’ have been constructed to support our
+     space programs
+
+
+      • Launch, entry, and abort (LEA) spacesuit
+        – Used to protect crewmembers from launch,
+          ascent, abort, landing and other dynamic loading.
+        – Capable of providing protection from loss of
+          cabin pressure and crew rescue following
+          landing.
+
+
+                                                          Launch/Entry Suit
+      • Extravehicular Activity (EVA) spacesuit
+        – Used to allow crewmembers to work effectively
+          in the harsh external space environment
+          (provides protection from vacuum, thermal,
+          mircrometeoroids, radiation, etc.).
+                                                                                  EVA Suit
+
+                                                                                             4
+                             Historical Overview
+
+• First EVA was conducted by USSR/Alexi Leonov on March 18, 1965.
+ – Many EVAs have since been accomplished by the Soviet Union & Russia continuing into
+   the International Space Station era.
+
+U.S. EVA Experience
+• Gemini EVA Experience -
+ – Astronaut Edward White II performed first U.S. EVA during Gemini IV June 3, 1965 (22 min).
+ – Term “Spacewalk” coined
+ – Start of EVA program was excursion to perform a special set of procedures in a new and hostile
+   environment.
+ – Proved EVA to be a viable technique for operations outside the spacecraft crew compartment.
+ – Problems encountered: helmet fogging, overheating due to high metabolic activity (primarily due to
+   suit constraints and lack of training).
+ – Gemini Extravehicular Spacesuit and Life Support
+    • 5-layer Gemini spacesuit was intended primarily for Intravehicular Activity (IVA).
+    • 2 additional layers were added for EVA (making 7 layers total).
+    • An umbilical was used to tether the EVA crewmember to the spacecraft and to supply breathing
+       oxygen.
+ – 5 Gemini missions involved nine EVAs for a total of 12 hours and 22 minutes of EVA.
+
+                                                                                                        5
+Ed White First Spacewalk
+                            Historical Overview
+
+• Apollo EVA Experience
+  – Spacesuit was redesigned to
+    allow greater mobility.
+  – Suit used for lunar and in-space
+    EVAs.
+  – Suit was configured with its own
+    portable life support system
+    providing:
+     • Pressurization & Atmosphere
+     • Communication
+     • Ventilation
+     • Cooling
+     • Waste management system
+  – 7 EVA missions totaling 170
+    hours of EVA (15 on lunar
+    surface, 5 outside Crew Module).
+  – Last 3 Apollo missions (15, 16,
+    & 17) utilized the lunar rover
+    vehicle for greater range in lunar
+    exploration.
+                                                  7
+                        Historical Overview
+
+• Skylab EVA Experience
+ – Apollo-style suit used.
+ – Umbilical replaced portable life support system and provided breathing oxygen,
+   cooling, and served as a tethering device.
+ – 10 EVAs were performed during the 3 Skylab missions totaling 82.5 hours.
+
+
+• Space Shuttle EVA Experience
+ – New space suit design for additional mobility and modularity.
+ – Portable life support system designed for microgravity operation.
+ – Increased operational capability from orbiter.
+ – Accumulated 1000s of hours of EVA experience over 200+ EVAs.
+
+
+• Space Station EVA Experience
+ – EMU certified for extended duration on-orbit operations (25 EVAs).
+ – Orbital Replacement Unit (ORU) capability added.
+ – Accumulated 1000s of hours of EVA experience over 150+ EVAs.
+                                                                                    8
+                                    EVA Categories
+                                   ISS & Shuttle Terminology
+
+
+• Three basic categories of EVA:
+   1. Scheduled EVA:
+
+        EVA planned and trained prior to launch and
+        included in the mission timeline.
+
+        - Both ‘skills-’ and ‘task-based’ training used
+
+   2. Unscheduled EVA:
+
+        EVA, although trained, not included in the
+        scheduled mission activities, but which may be
+        required to achieve mission or operational
+        success.
+
+        - Both ‘skills-’ and ‘task-based’ training used
+   3. Contingency EVA:
+        EVA required to effect the safety of the crew
+        and vehicle.
+        -‘Skills-based’ training used
+                                                               9
+                      US EVA Systems
+
+
+
+• Extravehicular Mobility Unit
+  (EMU)
+• ISS Joint Airlock
+• Equipment & Tools (including
+  Simplified Aid For EVA Rescue
+  (SAFER))
+
+
+
+
+                                       10
+                        EVA Systems - EMU
+
+• The EMU is an independent system that
+provides the crewmember with
+environmental protection, mobility, life
+support, and communications during
+EVA.
+• EMU provides consumables to support
+an EVA of 7 hours maximum duration.
+    • 15 minutes for egress
+    • 6 hours for useful work
+    • 15 minutes for ingress
+    • 30 minutes for reserve
+
+• EMU is an integrated system consisting
+of two subassemblies:
+    • Space Suit Assembly (SSA)             •orbiterchspacenews.blogspot.com
+
+    • Portable Life Support System (PLSS)
+
+
+
+
+                                                                               11
+             EVA Systems – Space Suit Assembly
+
+• Space Suit Assembly Components:                           Portable Life
+                                                  Helmet
+                                                           Support System
+   • Hard Upper Torso (HUT)/arms                  Lights
+                                                              (PLSS)
+                                                             Mini-
+   • Lower Torso Assembly (LTA)                 Helmet
+                                                           Workstation
+
+   • Extravehicular (EV) gloves
+                                                                  Cuff
+   • Helmet/Extravehicular Visor Assembly Hard Upper            Checklist
+     (EVVA)                                 Torso
+                                             (HUT)
+   • Communications Carrier Assembly (CCA;
+     Comm Cap)                           Gloves
+
+   • Liquid Cooling and Ventilation Garment                  Lower
+     (LCVG) / Thermal Cooling Under-Garment       Tether     Torso
+     (TCU)
+   • Operational Bioinstrumentation System
+     (EKG)
+   • Disposable In-Suit Drink Bag (DIDB)
+   • Maximum Absorption Garment (MAGs)
+                                                                            12
+EVA Systems – Space Suit Assembly
+
+
+                                         • Extravehicular (EV)
+                                                 gloves
+
+
+
+
+           • Extravehicular (EV) boots
+                   (and insert)
+
+
+
+
+                                                             13
+                 EVA Systems – Life Support
+
+• Life Support System Components:
+   • Display and Control Module (DCM)
+      - Provides Caution & Warning System
+        (CWS) messages, EMU parameters, and
+        EMU controls to crewmember
+
+
+
+
+                                              14
+•http://en.wikipedia.org/wiki/File:Emu_spacesuit_control_module.jpg
+                   EVA Systems – Life Support
+
+• Life Support System Components:
+   • Portable Life Support Subsystem
+     (PLSS)
+      - Provides breathing O2, electrical
+        power, communications, cooling
+      - Responsible for suit pressure
+        control
+      - Circulates O2 and removes CO2,
+        humidity and trace contaminants
+      - Controls thermal environment
+   • Secondary Oxygen Package (SOP)
+      - Provides a minimum of 30 minutes
+        of emergency O2 in open-loop
+        purge mode
+      - Activated automatically during
+        EVA, if necessary
+
+
+
+
+                                                16
+                   EVA Systems – Life Support
+
+• Life Support System Components (Cont’d):
+   • Space-to-Space EMU Radio (SSER)
+   • Caution and Warning System (CWS)
+   • Early Caution and Warning System
+     (ECWS)
+      - Provides EMU status parameters and
+        biomedical data for transmission to
+        Mission Control
+   • Battery
+       – Primary
+       – Rechargeable EVA Battery Assembly
+         (REBA)
+   • Contaminant Control Cartridge (CCC;
+     LiOH Cartridge or Metal Oxide (METOX)
+     Cartridge)
+      - Removes CO2 and trace contaminants
+                                              •METOX Cartridge   17
+                   EMU Quantity & Consumables
+• Space Shuttle
+   • Two (2) EMUs are baselined on each Shuttle flight with enough consumables to support three (3),
+     two-crewmember EVAs. Of these 3 EVAs,
+      – One 7-hour EVA may be supported.
+      – Two EVAs of 3-hours and 4-hours respectively may be supported for Orbiter contingency EVA
+         operations.
+   • Consumables provided include:
+      • CO2 cartridge (non-regenerable LiOH)
+      • Oxygen
+      • Potable water (for drink bags)
+      • Feedwater (or sublimator water)
+      • Power
+      • Battery chargers
+
+• International Space Station (ISS)
+   • 4 - EMUs are, typically, kept on board to support EVAs (sizes available: M, L, XL)
+   • Sufficient consumables allow a large number of EVAs to be performed
+   • Consumables provided include:
+      • CO2 cartridge (metal oxide) and regenerator
+      • Oxygen
+      • Potable water (for drink bags)
+      • Feedwater (or sublimator water)
+      • Power
+      • Battery chargers
+                                                                                                  18
+                EVA Systems - ISS Joint Airlock
+• ISS Joint Airlock:
+  • Primary for U.S. ISS EVAs
+    (both Orbiter and Station-
+    based)
+  • Compatible for use with
+    Russian Orlans                                   U.S. Lab
+  • Made up of two parts:
+  Crew Lock and Equipment Lock Equipment Lock
+                                         Crew Lock
+     – Equipment Lock is used for
+      stowage, recharge and
+      servicing of EMUs and to
+      don/doff the EMUs
+     – Crewlock is the volume
+      nominally depressed to
+      vacuum for crew to go EVA
+
+
+
+
+                                                                19
+              •International Space Station (ISS)
+                         Joint Airlock
+
+               •Trunion Pin
+                                                       •Gas Tank
+ •Equipment Lock                                     •(2 O2 & 2 N2)
+
+
+•Transition
+ •Element                                                 •Handrail
+
+•Crew Lock
+
+
+
+
+     •Tool Box &
+   •Foot Restraint
+       •(1 of 2)                              •Grapple
+                                               •Fixture
+    •International Space Station (ISS) Joint Airlock
+
+   •EMU Don/Doff                   •Power Supply
+  Assembly (EDDA)   •E/L           •Assembly (PSA)
+
+                                             •Fluid Pumping Unit
+•Battery Charger
+•Assembly (BCA)
+                                           •Payload Water Reservoir
+
+
+
+
+                                                                      •C/L
+
+•Node
+ hatch
+                                                         •EV hatch
+                               •Umbilical Interface
+•Battery Stowage                •Assembly (UIA)
+                                                 •Not shown:
+•Assembly (BSA)
+                           •IV hatch             - Metox regenerators (2) in Cabin Air Rack
+                                                 - Metox canisters within EMUs or Metox
+                                                 • regenerators
+                                                 - Oxygen Recharge Compressor Assembly
+                                                 • (ORCA) in overhead platform
+                                                 - Russian Depressurization Pump
+EVA Systems - ISS Joint Airlock
+
+
+
+
+              STS-104 / Flight 7A
+                   (Summer 2001)
+                                    22
+EVA Systems - ISS Joint Airlock
+
+                    •UIA
+
+
+
+
+            •ATU                   PSA
+
+                                  •Battery
+                                  Charger
+           Doning                 •EMU
+           Stand                  Battery
+
+
+                                       23
+                  EVA Equipment & Tools
+
+•EMU-mounted tools & equipment
+   – TV Camera
+   – Lights
+   – Mini-workstation
+   – Waist tethers
+   – EVA Cuff Checklist
+   – Wrist mirror
+   – Body Restraint Tether
+   – Pistol Grip Tool (PGT)
+   – ISS Small Trash Bag
+
+
+
+
+                                          24
+                        EVA Equipment & Tools
+• Mini Work Station
+  (MWS)                  Bayonet Receptacle                                   Tether Loop
+   - Attaches to front
+     of the EMU
+   - Used to carry
+     small tools
+   - Tools are secured
+     via tether rings or
+     via bayonet
+     receptacles
+   - MWS end-effector
+     with retractable
+     tether provides
+     restraint to EVA
+     Crewmember at
+     worksite
+
+
+                                                                             Socket Caddy
+
+
+ • Note: “Drop-proof tether” PIP pins are used to secure certain items such as a socket
+   onto a tool caddy.                                                                       25
+                              EVA Equipment & Tools
+• Commonly Used Tethers
+    - Safety Tether (55’ and 85’)
+           - Used to secure the EVA crewmember to
+             the vehicle
+    - Suit tethers (Waist, Wrist)
+           - Used to secure small items to the suit,
+             usually for transfer
+    - Retractable EVA Tether (RET)
+           - Used to secure small items, usually while
+             item is in use
+    - Body Restraint Tether (BRT)
+           - Attaches to the Mini-Work Station
+             (MWS)
+           - End-effector provides semi-rigid restraint
+             to EVA crewmember at worksite via
+             handrail (also used for translating small
+             objects)
+           - Requires less time than setting up a
+             Portable Foot Restraint and is more stable
+             than a MWS end effector
+    - Note: EVA tether protocol is that
+      crewmembers and equipment must be tethered
+      at all times
+       - Always make a connection before you
+         break a connection.                              26
+                     EVA Systems -
+           SAFER (Simplified Aid for EVA Rescue)
+• SAFER is a self-contained, propulsive backpack self-rescue system that
+provides the EV crewmember with self-rescue capability when the orbiter is not
+present or cannot immediately perform EVA rescue.
+   • Propellant: Pressurized nitrogen gas
+   • Controlled by a single hand controller
+   • Stowed in ISS Airlock, used on ISS
+     EVAs
+   • Sufficient propellant and power for
+     one self-rescue (~13 min)
+   • Test flight on mission STS-64; self-
+     rescue capability on STS-76
+   • Power up of production model SAFER
+     on STS-86
+   • Tethered test flight of production
+     model SAFER on Flights 2A and 3A
+
+
+                                                                                 27
+               EVA Systems -
+     SAFER (Simplified Aid for EVA Rescue)
+
+
+
+
+SAFER Deployment
+
+
+
+
+                                             28
+                         EVA Equipment & Tools
+• Pistol Grip Tool (PGT)
+ • EVA torque wrench (i.e., a bolt turner)
+    • Has a programmable torque limiter and
+     turn limiter
+    • Crewmember needs to be secured
+     depending on amount of torque required
+    • 2ft-lbs to 25ft-lbs of torque available
+    • Generally used for ISS assembly missions
+     and maintenance EVAs
+
+
+
+
+                                              1-G Testing
+                                              of the PGT
+
+
+
+
+                                                             29
+                          EVA Equipment & Tools
+• Foot Restraints
+     • Attach to structure via a socket
+     • Provides EVA crewmember rigid
+       restraint at a worksite (Newton’s
+       3rd Law)
+   • Different types:
+        • Portable foot restraint (PFR)
+          (Shuttle)
+        • Articulating PFR (APFR)
+          (U.S. ISS)
+        • Interoperable APFR (IAPFR)
+          (U.S. & Russian ISS)
+
+
+
+
+                                                  30
+                        EVA Equipment & Tools
+• Crew and Equipment
+Translation Aid (CETA)
+Cart
+  • Essentially an EVA
+    equipment cart
+  • Translates by CM
+    manually pulling it along
+    truss
+  • Use brakes to stop and stay
+    parked
+  • Typical use: small ORU
+    replacement on front truss
+    face
+
+
+
+
+                                                31
+          EVA Operations Overview
+
+    EVA operations can be divided into three phases:
+
+
+
+
+Pre-EVA                  EVA                    Post-EVA   32
+           Pre-EVA: Preparation & Checkouts
+
+• Equipment Prep
+     – Prepares the airlock and the EMUs to be checked out before EVA.
+        • This is normally performed a few days before the EVA or before the
+          Orbiter docks to the Station.
+• EMU Checkout
+    – Checks all EMU systems.
+       • Performed a few days before the EVA or before the Orbiter docks to
+         the Station.
+• EVA Prep
+    – All steps performed the day of the EVA prior to going EVA, including:
+       • EMU Donning
+       • Prebreathe with 100% oxygen
+
+
+
+                                                                               33
+                           Pre-EVA: Prebreathe
+
+              O2 Prebreathe reduces the risk of Decompression Sickness (DCS)
+Protocol                             In-Suit          In Suit Light               Campout                   Exercise
+                                                      Exercise (ISLE)           ~ 8 hours 40 min @
+                                                                                     10.2 PSI
+
+Mask prebreathe time             None                 1 hour                 1 hour (1st day)          80 minutes
+
+In-suit prebreathe time          4 hours              100 min                50 min (2nd day)          1 hour
+
+Ops Overview                     Breathe              In Suit                Breathe 100%              Exercise on
+(Details of EVA Prebreathe       100% O2              prebreathe             O2 on mask                ergometer (i.e.,
+protocols are in the             in-suit for 4        light exercise         while                     bike) for 10
+Aeromed Flight Rule #B13-        hours while          totals 90 min;         depressing                minutes at
+107)                             cabin is at          50 min light           cabin to 10.2,            beginning of mask
+                                 14.7, go out         exercise, 40           wait approx. 9            prebreathe (100%
+                                 the door.            min Metox              hours before              O2), depress
+                                                      change out             in-suit                   airlock to 10.2,
+                                                                             prebreathe, go            breathe in-suit for
+                                                                             out the door.             1 hour, go out the
+                                                                                                       door.
+
+Total EVA prep & P/B time:          5:42 hrs              3:12 hrs                13:12 hrs                 4:02 hrs
+
+                   • Note: Long-duration exploration vehicles plan to utilize 8 psia / 32% O2 atmosphere.
+                                                                                                                             34
+20-Foot Chamber
+Validation
+ 8 psi 32% protocols
+                                                       Overhead of an EVA
+                                                    (EVA Campout – Times Approximate)
+
+•Night Before EVA
+   •PRE SLEEP 3 hours                                                •   Time @ 10.2 psi = 8 hours 40 mins (includes sleep)
+                                        •60 min mask PB
+                                                 •10.2 Dep
+                                       • 45 min before 11.8
+                 •:35                                         •1:4                                       •3:15       •3:27                  •4:17               •4:47
+ •EVA Day               • HYGIENE BRK 70 min                  5
+                                                                • EVA PREP 90 min                             • Purge •EMU Prebreathe (50 min)** •C/L Dep (30 min)
+                                •* 70 min mask P/B                                  •EMU Donning 55 min •Ck      •Rep
+                      •Rep                     •10.2 Depress
+• POST SLEEP 35 min          • POST SLEEP 40 min                                                                                                                •12:37
+                                                                                                                                •11:1
+                                                         •EVA PET = 6:30                                                        7
+                                                                                                                                  • Rep •POST EVA w/o H2O
+
+NIGHT BEFORE EVA SUMMARY                                                        •       EVA DAY SUMMARY (continued)
+•  Pre Sleep (3 hours total)                                                    •       EVA Prep (~1 hour 30 mins)
+•  Mask Prebreathe (1 hour)                                                               – EVA Prep for Donning (30 mins)
+     – 10.2 psi Airlock Depress (20 mins)                                                 – Suit Donning at 10.2 (1 hour)
+•  10.2 psi Overnight Campout (8 hours 40 mins minimum)                         •       Suit Purge (12 mins)
+                                                                                          – Airlock Repress to 14.7
+EVA DAY SUMMARY                                                                 •       In-suit Prebreathe (50 mins)
+•   Post Sleep (1 hour 15 mins total)                                           •       Crewlock Depress to vacuum (30 mins)
+•   Mask Prebreathe (1 hour 10 mins)                                            •       EVA tasks (6 hours 30 mins)
+     – Airlock Repress                                                          •       Airlock Repress (20 mins)
+     – Hygiene Break/Post Sleep activities                                      •       Post EVA without EMU H2O Recharge or
+     – 10.2 psi Airlock Depress                                                         METOX Regeneration (1 hour)
+•   Mask Prebreathe Termination                                                 •       Pre Sleep (2 hours)
+ EVA Operations: Overview of
+       Typical EVA
+30 min    Airlock depress
+15 min    Airlock egress
+          Worksite operations: Shuttle and ISS-based
+           – All Shuttle EVA crewmembers are trained to perform the
+             following Orbiter contingency tasks (if necessary) for each
+             flight:
+              • Failed airlock hatch latches or actuator tasks
+              • Failed Remote Manipulator System (RMS) tasks
+6 hours
+              • Manual stowage of radiators or Ku-band antenna
+              • Manual closure of payload bay doors
+              • Installation of payload bay door latch tools
+              • Manual separation of Shuttle from ISS (96 bolt task)
+
+           – EVA crewmembers assigned to a flight are also trained for
+             scheduled, unscheduled, or contingency tasks.
+15 min    Airlock ingress
+30 min    Airlock repress
+                                                                           38
+                  Post-EVA Operations
+
+• EMU Doffing
+• EMU Maintenance and Recharge
+   – O2 tank recharge
+   – Battery recharge
+   – H2O tank refill
+   – METOX regeneration/ LiOH swap
+   – Suit cleaning
+   – Suit resize (if required)
+
+
+
+
+                                        39
+           Comparison of Russian & U.S. EVAs
+
+• Russian Orlan-M Spacesuit
+• U.S. Extravehicular Mobility Unit (EMU)
+
+
+
+
+                                               40
+               •Orlan-M Spacesuit
+                   • Helmet Lights          • Backpack   • LCG
+   • Visors
+                      • Suit Pressure
+                      Gauge (УДСК)
+
+                          • Backpack
+• Electrical
+                            Closure
+  Control
+                             Strap
+   Panel
+(ПО-4МТ)                   • Pneumo-
+                           Hydraulic
+   • Fluid                Control Panel
+  Umbilical               (ПГПУ-1М)
+  Connector
+  (ОРК-19)            • Emergency O2 Hose
+
+    • Orlan        • Electrical Umbilical
+                                                  Back-Entry
+     Safety                                        Orlan-M
+    Tether
+                                                                 41
+                           •Suit Enclosure
+  • Helmet Assembly                          • Hard Upper Torso
+
+
+         • Upper Arms                         • Backpack Closure
+                                                    Strap
+
+         • Lower Arms
+
+
+   • Umbilical Interface                       • Suit Probe
+
+
+
+              • Gloves                       • Leg Assembly
+
+
+• Оrlan Safety Tethers
+                                              • Boots
+
+
+
+
+                                                                  42
+                                • Arm Assembly
+                  (Thermal Micrometeoroid Garment “TMG” Removed)
+
+
+                                 • Elbow Bearing       • Shoulder Bearing
+
+                      • Lower Arm
+                   • Adjusting Cable
+• Wrist Bearing
+
+
+
+
+                                • Upper Arm
+                             • Adjusting Strap
+                                                   • Shoulder Joint
+
+
+                                                                            43
+                           • Leg Assembly
+                                   (TMG Removed)
+
+      • Crotch
+        Sizing
+       •Strap    • Thigh Joint      • Knee Joint   • Rotation Limiters
+
+    • Waist
+     Flange                                           • Ankle Bearings
+
+
+
+
+• Waist Sizing      • Upper Leg                      • Lower Leg
+    Strap           Sizing Strap                     Sizing Strap
+                                                                         44
+Orlan-M Glove
+
+
+
+
+                45
+                 Electrical Control Panel (ПО-4МТ)
+     • Battery Voltage/Oxygen
+       Tank Pressure Display
+
+                                • Liquid Crystal Display
+
+
+
+
+                                                                 • Primary Pump Switch
+
+                                                                • Primary Fan Switch
+
+                                                            • Reserve Fan Switch
+
+• Reserve Pump                   • Volts/Tone Mute Button
+    Switch
+                          Orlan-M Electrical Control Panel (ПО-4МТ)
+       • Power Switch
+                                                                                         46
+Electrical Control Panel (ПО-4МТ)
+
+
+
+
+                                              • Helmet Light Switch
+
+
+
+
+                                             • Reserve Radio Switch
+
+                                             • Primary Radio Switch
+
+                                              • Push-to-Talk Switch
+
+
+
+
+•Orlan-M Electrical Control Panel (ПО-4МТ) (side view)
+
+                                                                      47
+                 Radio Telemetry Apparatus Unit
+                          (БРТА-1M)
+•Contains the following electrical assemblies:
+   –Korona-M Communications Radio
+   –Tranzit-A Telemetry Radio (2 parts)
+     • Data Gathering Unit (TA-237)
+     • Transmitter (ША-347)
+   –Battery (autonomous power supply)
+   –Current and Power Measurement Unit (БКНТЗ)
+   –High-Frequency Filter (ФР (ТК))
+   –Annunciation Unit (БС-1М)
+   –Relay Module (MP)
+
+
+•БРТА-1M attaches to bottom of backpack               • Life Support
+                                                     System Backpack
+   enclosure (not pressurized)
+
+•Easily attached to and removed from suit         • БРТА-1M
+
+                                                                 48
+                 Radio Telemetry Apparatus Unit
+                          (БРТА-1M)
+    • Tranzit-A
+ Transmitter (ША-
+       347)
+                                                            • Tranzit-A Data
+  • Electrical                                             Gathering Unit (TA-
+ Connectors to                                                    237)
+ Orlan (X107
+   (upper)),
+(X109 (lower))
+                                                              • Korona-M
+                                                          Communications Radio
+  • Support Strut w/
+  Coupling Nut (left                                      • High-Frequency
+      and right)                                           Filter (ФР (TК))
+ • Battery Connector (X21)
+                                                          • Current and Power
+      • Battery (not                                        Measuring Unit
+                         Radio Telemetry Apparatus Unit        (БКНТЭ)
+        installed)        (БРТА-1M) (Shown without
+                         Primary Oxygen Tank installed)                       49
+                       Safety Tethers
+
+•Two Safety Tethers attached on the right
+ HUT/Leg Assembly flange
+  –Not designed for EVA removal
+  –One Tether is fixed length              •Variable Length Safety Tether
+  –One Tether is variable length
+  –Both tethers share an attaching strap
+  –Tether hooks
+    • One fault tolerant
+    • Titanium construction
+                                                • Variable Length
+    •Certified for 600 kg (1320 lbs)               Safety Tether
+
+
+                                                                       50
+            EVA Tools and Crew Aids
+• Orlan Tether Adapter (OTA)
+   – Provides interface points for U.S. tools
+   – Provides various equipment tether loops
+
+• OTA Interface Block
+   – Permanently mounted to the waist flange of
+     the Orlan suit
+                                                  • Orlan Tether
+   – Provides load support to the OTA
+                                                  Adapter (OTA)
+   – Provides one crew safety tether loop
+
+• Standard U.S. Tool Configuration
+   – OTA
+   – Right Swing Arm
+   – Retractable Equipment Tethers (RET)
+   – EVA Camera (Digital or F5)
+                                                                   51
+            Comparison with Russian EVAs
+            EMU vs. Orlan - Manufacturers
+
+
+• EMU
+  United Technologies, Hamilton-Sundstrand, Windsor Locks, CT
+
+
+
+• Orlan
+  Zvezda Research, Development, and Production Enterprise,
+  Tomilino (Moscow Region), Russia
+
+
+
+
+                                                                52
+            Comparison with Russian EVAs
+             EMU vs. Orlan - Applications
+
+• EMU – Space Shuttle and International Space Station (ISS)
+   – In operation since 1981 to present
+      • Several upgrades have been made
+
+
+
+• Orlan-M – Mir Space Station and ISS
+   – In operation since 1997 (replaced Orlan-DMA)
+      • Upgraded Orlan-MK to be delivered to the ISS in 2008
+
+
+
+
+                                                               53
+       Comparison with Russian EVAs
+    EMU vs. Orlan – General Characteristics
+• EMU
+  – Suit operating pressure: 4.3 psi
+  – Mission duration: 6.5 hours + 30-minute contingency
+  – Weight: ~280 lbs
+  – On-Orbit Service life: 25 uses/2 years (with maintenance)
+     • Returned for refurbishment
+
+• Orlan-M
+  – Suit operating pressure: 5.8 psi
+  – Mission duration: 6.5 hours + 30-minute contingency
+  – Weight: ~230 lbs
+  – On-orbit Service life: 12 uses/4 years (with maintenance)
+     • Not returned for refurbishment
+
+                                                                54
+             Comparison with Russian EVAs
+            EMU vs. Orlan – Spacesuit Assembly
+•   EMU Construction
+     – Semi-rigid construction; aluminum hard upper torso
+     – Urethane-coated nylon pressure bladder
+     – Orthofabric and aluminized mylar thermal/meteoroid garment
+     – Ball-bearing joints
+     – Liquid-cooling and ventilation undergarment
+     – Display & Controls Module (DCM)
+     – Polycarbonate helmet and polysulfone visors; helmet lights
+     – Location for attachment of mini-work station, etc.
+•   Orlan-M Construction
+     – Semi-rigid construction; aluminum hard upper torso
+     – Urethane-coated nylon pressure bladder
+     – Orthofabric and aluminized mylar thermal/meteoroid garment
+     – Liquid-cooling undergarment
+     – Electrical Control Panel / Pneumo-Hydraulic Control Panel
+     – Polycarbonate helmet and visors; helmet lights
+     – Probe provided for attachment of mini-work station, etc.
+
+                                                                    55
+                   Comparison with Russian EVAs
+            EMU vs. Orlan – Spacesuit Assembly Differences
+
+•   EMU
+     – Sizing: Medium, large, and extra large size modular components and the use of
+        sizing inserts (legs and arms) allow a fairly large population range to be
+        accommodated
+          – Multiple glove sizes including some custom-sized gloves
+     – Gloves are heated to provide protection from cold environment; wrist disconnect is
+        on suit side
+     – Suit Donning: Bottom entry
+     – Helmet is removable
+     – Waist tether(s) removable
+     – Includes provisions for TV camera
+•   Orlan-M
+     – Sizing: One size with adjustable sizing axial restraint cable in arms/legs
+          – 2 glove sizes
+     – Glove wrist disconnect is on glove side
+     – Suit Donning: Back entry
+     – Helmet integrated into suit
+     – 2 Waist tethers (fixed and variable length); not removable
+     – Orlan-MK includes provisions for U.S. TV camera                                    56
+                 Comparison with Russian EVAs
+          EMU vs. Orlan – Portable Life Support Assembly
+
+•   EMU
+     – Closed-loop, 100% oxygen
+     – Expendables replaced or recharged on-orbit
+     – Primary & secondary oxygen tanks
+     – Liquid cooling via garment and use of sublimator
+     – Carbon Dioxide and trace gas scrubber
+     – Average/Max metabolic rates: 1000 BTUs (290 W) / 2000 BTUs (580 W)
+     – Primary battery Li-ion
+     – Radio for voice, data, and medical information; use of headset
+•   Orlan-M
+     – Closed-loop, 100% oxygen
+     – Expendables replaced or recharged on-orbit
+     – Primary & secondary oxygen tanks
+     – Liquid cooling via garment and use of sublimator
+     – Carbon Dioxide and trace gas scrubber
+     – Average/Max metabolic rates: 1025 BTUs (300 W) / 2050 BTUs (600 W)
+     – Primary battery is zinc-silver-oxide (rechargeable)
+     – Radio for voice, data, and medical information; use of headset
+                                                                            57
+                            Comparison with Russian EVAs
+               EMU vs. Orlan – Portable Life Support Assembly Differences
+
+•   EMU
+     – Primary O2 pressure: 2 tanks @ 900 psi (rechargeable); Secondary O2 pressure: 2 tanks @
+        6000 psi (non-rechargeable)
+     – Most electronics located in life support backpack @ vacuum
+     – Crewmembers communicate between each other
+     – Single fan-pump-water separator
+     – Liquid cooling and ventilation garment; biocide: iodine
+     – CO2 scrubber: silver oxide or lithium hydroxide
+     – Additional rechargeable battery used for glove heating (nickel-metal-oxide)
+     – Prebreathe: 4-hour in-suit, 10.2 psi, and 14.7/10.2 psi & ergometer protocols available
+•   Orlan-M
+     – Primary and Secondary O2 pressure: 6000 psi; both removable and non-rechargeable
+     – Electronics (except for БPTA) located in life support backpack @ 100% O2
+     – Crewmembers communicate via the vehicle (signal is relayed)
+     – Redundant fans and pumps
+     – Liquid cooling garment; biocide: silver ions
+     – CO2 scrubber: lithium hydroxide
+     – Prebreathe: 1-hour @ 550 torr
+                                                                                                 58
+                   Comparison with Russian EVAs
+                    EMU vs. Orlan – Work Aids
+
+• EMU
+   – Compatible with:
+      • Mini-work station
+      • Numerous EVA tools including foots restraints, etc.
+      • Simplified Aid For EVA Rescue (SAFER)
+      • Donning stations
+
+• Orlan-M
+   – Compatible with:
+       • Mini-work station
+       • EVA tools including foots restraints, etc.
+       • REBA – helmet lights
+       • Donning stations (however, rarely used on orbit)
+
+                                                              59
+                  Comparison with Russian EVAs
+                EMU vs. Orlan – Crew Preference Items
+
+•   EMU
+     – Comfort gloves
+     – Eyeglass holder
+     – Fresnel lens (various strengths)
+     – In-suit drink bag
+     – Maximum absorbent garment (MAG)
+     – Socks
+     – Valsalva device
+     – Wristlets
+     – Miscellaneous: Lint free wipes, Anti-fog wipes, Comfort pads, Moleskin tape,
+        Stericide sanitizer
+•   Orlan-M
+     – Comfort gloves
+     – Dosimeter (passive)
+     – Socks
+
+                                                                                      60
+                Comparison with Russian EVAs
+              EMU vs. Orlan – Operations Differences
+
+• Russian EVA crewmembers talk directly to engineers on ground
+• U.S. EVA crewmembers talk through Capcom
+
+• Russian EVA training is more skills based
+• U.S. EVA training is more task based
+
+• Russian EVA crewmembers have little or no Intravehicular (IV) interaction
+• U.S. EVA crewmembers work with an IV crewmembers before, during, and
+  after an EVA
+
+• Russian EVA crewmembers use a hand-over-hand tether protocol
+• U.S. EVA crewmembers use a safety tether (ISS & shuttle) and a slidewire
+  (Shuttle)
+
+
+                                                                              61
+         Leonov Inflatable Airlock
+
+
+
+
+•http://images.search.yahoo.com/search/images;_ylt=A2KJkPo2y.xPWkgAsWOJz
+bkF?p=voskhod+airlock&fr=yfp-t-701&ei=utf-8&n=30&x=wrt
+              EVA Training Facilities
+
+• Shuttle Full-size Mockup Trainers (historical)
+   - Crew Cabin Trainer (CCT) and CCTII
+   - Full Fuselage Trainer (FFT)
+
+
+
+
+                                                   63
+               EVA Training Facilities
+
+
+• Space Station Mockup Training
+  Facility (SSMTF) Airlock Mockup
+
+
+
+
+                                         64
+            EVA Training Facilities
+
+• EMU Caution and Warning System (ECWS) Trainer
+
+
+
+
+                                                  65
+            EVA Training Facilities
+
+• Vacuum chambers
+   - 11-foot chamber
+   - Environmental Test Article (ETA) chamber
+   - Space Environment Simulation Lab (SESL) chamber
+   - Space Station Airlock Test Article (SSATA)
+
+
+
+
+                                                       66
+              EVA Training Facilities
+
+• Virtual Reality Lab
+
+
+
+
+                                        67
+          EVA Training Facilities
+    Charlotte for Low Gravity Mass Ops
+
+
+
+
+Source : Osterlund, J. & Lawrence, B. 2012
+             EVA Training Facilities
+
+• Precision Air-Bearing Floor (PABF)
+
+
+
+
+                                       69
+               EVA Training Facilities
+
+• Neutral
+  Buoyancy
+  Laboratory
+  (NBL)
+
+
+
+
+                                         70
+         EVA Training Facilities
+
+• Micro-gravity via DC-9 (KC-135 below retired)
+
+
+
+
+                                                  71
+                   EVA Training Facilities
+           The Active Response Gravity Offload System (ARGOS)
+
+
+
+
+•ARGOS uses an inline load cell to continuously offload of a portion of a human or
+             robotic subject’s weight during all dynamic motions
+Backup Material
+
+
+
+
+                  73
+                                  Pressures
+ Altitude      Atmospheric         Oxygen Concentration               Comments
+    (ft)       Pressure (psi)              (%)
+Sea Level           14.7                    20            Nitrogen Concentration is 80%. 1
+                                                          atmosphere (1 atm). 101.325 kPa.
+  10,000            10.11            70% of Sea Level     Early signs of hypoxia (shortage of
+                                                          oxygen in the body)
+  15,672             8.3             56% of Sea Level     Exploration Atmosphere
+                                                          recommended pressure
+  18,000           7.34 or           51% of Sea Level     ½ atm
+                  (14.7 / 2)
+  23,500             5.8             40% of Sea Level     Russian Orlan operating pressure
+
+  30,250             4.3             30% of Sea Level     U.S. EMU operating pressure
+
+  34,000           3.62 or           25% of Sea Level     ¼ atm
+                  (7.34 / 2)
+  101,381          0.147 or          ≈1% of Sea Level     1/100 atm
+(19.2 miles)     (14.7 / 100)
+
+
+ 283,076         0.000147 or          0% of Sea Level     ISS (220 miles or 1,161,600 ft)
+               (14.7 / 100,000)
+                                                                                            74
+              Comparison with Russian EVAs
+                    EMU vs. Orlans
+ Suit Feature         Orlan - M                     EMU
+Entry Method Rear Entry:                 Waist Entry:
+              Self-donning typical       Self-donning possible
+              Easy suit ingress/egress   More difficult in/egress
+Pressure      5.7 psid nominal           4.3 psid nominal
+Pre-breathe   30-minute nominal          40 min. nominal from
+                                         10.2 psi cabin
+                                         4 hour nom from 14.7 psi
+Sizing          One size                 Modular
+                Adjust lengths of arms   137 measurements made
+                and legs
+Useful Life     4 years or 12 EVAs       2 years or 25 EVAs
+                Burns on re-entry in     Refurbished and
+                Progress vehicle         recertified on ground
+Displays        C&W lights on front of CWS, DCM display: msg
+                suit and in helmet; can and status; can send suit
+                send suit data to ground data to ground
+                                                                    75
+               Comparison with Russian EVAs
+                     EMU vs. Orlans
+• Resupplying/Recharging
+   – Orlan H2O tank refilled and O2 tanks replaced after each EVA
+   – EMU H2O and O2 tanks resupplied via umbilical
+• Orlan and EMU coolant operation similar
+   – Both Orlans and EMUs use sublimators
+   – Liquid Cooling (and Ventilation) Garments [LC(V)Gs] are similar
+• Umbilicals
+   – Orlan umbilical provides power, comm, and pre-breathe O2
+   – EMU umbilical provides power, comm, O2, recharge H2O and cooling H2O
+• Gloves
+   – Orlan gloves used for two EVAs
+   – EMU gloves used multiple times, electrically powered glove heaters
+• Emergency procedures
+   – Orlan: Few simple messages, gloves have reference tables on them
+   – EMUs have Caution and Warning System, combined with a cuff checklist
+• Both Orlans and EMUs have duplex comm
+                                                                        76
+

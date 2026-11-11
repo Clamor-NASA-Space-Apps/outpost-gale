@@ -1,0 +1,229 @@
+ National Aeronautics and Space Administration
+
+
+
+
+Considerations for range of motion testing during
+spacesuit mobility characterization
+
+
+
+             Linh Vu, CPE                                Aegis Aerospace Inc., Houston, TX
+             Christine Jerome                            Jacobs Technology Inc., Houston, TX
+             Han Kim, PhD                                Leidos Innovations, Houston, TX
+             Sudhakar Rajulu, PhD                        Retired NASA, Houston, TX
+             Nathaniel Newby                             NASA Johnson Space Center, Houston, TX
+
+
+
+             This work was in part supported by NASA Human Health and Performance Contract (NNJ15HK11B)
+Introduction – Range of Motion Assessments
+• Range of motion (ROM) evaluations are often performed to characterize the voluntary mobility of a subject
+• ROM measurements are often taken with respect to human joints of the body
+• There are a variety of applications for ROM measurements:
+    o Inform the design of workspaces to maximize comfort and efficiency
+    o Screen for abnormalities and limitations before and after medical treatment
+
+
+
+
+            Examples of joint range of motion                            Hand grasp reach limits for workstation design
+ROM for spacesuit applications
+• On EVA, astronauts will be expected to move and perform various
+  tasks while in a pressurized spacesuit
+• Due to the mass and mechanical joint configurations of the
+  spacesuit, suited movement may be unique or dissimilar to
+  unencumbered human movement
+• There have been several studies that have characterized the EMU
+  spacesuit ROM for microgravity ExtraVehicular Activities (EVA)
+• With the upcoming NASA Artemis program, planetary spacesuit
+  mobility characteristics will also be important to inform the
+  design of:
+    o Spacesuits
+    o Vehicles
+    o Lunar EVA tasks
+    o Payload dimensions
+    o Science and geology hardware                                  Examples of microgravity EVAs tasks (top) and Apollo lunar
+                                                                             EVA tasks (bottom). Video credit: NASA
+ Suited ROM measurement collection
+• Historically, suited ROM data has been collected using videography, goniometry, and motion capture
+  technologies
+• Suited test subjects are asked to perform tasks that maximize their reach in various directions
+• The motion path of suited joints are tracked and suited mobility is interpolated from the data
+• For individual tasks, the data can be combined to create a graph showing the achieved ROM for fixed postures
+
+
+
+
+           Optical motion capture
+                                                                        Photogrammetry using gridboard
+Purpose
+• Traditionally, suited range of motion has been defined from movements in the cardinal planes of the body
+  (sagittal, frontal, and transverse) to characterize suited mobility
+• However, suited range of motion interpretation has a myriad of factors that need to be considered for human
+  factors applications
+• The purpose of this presentation is to describe these considerations in collecting ROM measurements and
+  characterizing spacesuit mobility capabilities
+• Motion capture data from the xEMU spacesuit testing will be used to illustrate different examples cases
+Methods – Motion capture data collection
+• In the xEMU Design Verification Testing (DVT), retro-reflective markers were
+  placed on the suited subject to quantify full-body kinematics
+• Vicon optical motion capture data was collected at 100 Hz for the following tasks:
+     o Planar shoulder range of motion movements
+     o Planar hip range of motion movements
+     o In-place and side-step squats
+     o Step-up onto surface
+     o Treadmill walk (0°, 20 °, -10° incline) at preferred speed
+     o 1-knee kneeling object pickup
+     o Camera photograph task
+     o Open toolbelt
+     o Overhead object reach
+     o Hatch lever turning
+     o Trenching
+     o Scooping with hand scoop
+     o Helmet visor reach
+Methods – Joint trajectory processing
+• 3D models of suit hardware were aligned to the motion capture data via landmark correspondence
+• The elbow and knee joint trajectories were aligned with respect to the suited HUT (Hard Upper Torso) or hip
+  (Brief) orientation
+    o A 2nd order low-pass Butterworth filter was applied to the joint trajectory data
+
+
+
+
+                 3D Suit component model alignment                         HUT-aligned elbow joint trajectories across subjects
+Methods – joint trajectory analyses by task
+• To illustrate how joint mobility can differ across tasks, upper body
+  (elbow) and lower body (knee) joint trajectories were evaluated across 9
+  suited subjects (N = 9)
+     o Only right-hand side joint trajectories were evaluated for symmetric
+        motions and full body data were evaluated for complex motions
+• For each task, the relative joint position was projected onto a semi-
+  sphere that was centered in the HUT or brief opening (e.g., elbow joint
+  position for upper body motion, knee joint for lower body motion)
+• The joint position data was converted to normalized spherical
+  coordinates
+• A gaussian kernel density estimation was used to estimate the probability
+  density of the joint center of distribution
+• The 90th percentile contour line was visualized to represent the joint
+  ROM
+    o Caveat: this data may not necessarily reflect the required mobility to
+       accomplish the task, but the overall movement variation across test Aggregate contours across select upper body
+       subjects                                                                (top) and lower body (bottom) tasks
+Results – suited movement occurs out of plane
+• When subjects are instructed to perform planar, cardinal movements (e.g., shoulder flexion/extension), the data
+  indicates that the spacesuit motion is not perfectly aligned with the anatomical planes
+• The elbow joint center is consistently in front of the body during these movements
+• The joint movement seems to follow the contours of the hardware configuration of the suit rather than cardinal
+  planes
+
+
+
+
+             Shoulder flexion/extension                                      Shoulder abduction/adduction
+Results – ROM is affected by task demands
+• Joint ROM can vary greatly based on task demands as illustrated by comparisons of knee joint center trajectories
+  for isolated hip flexion/extension movements and squat tasks
+• During the squatting task, the subject can leverage the weight of the suit to achieve greater hip mobility
+  compared to the hip flexion/extension task
+• In-depth joint mobility differences across different tasks are going to be shown in the subsequent slides
+
+
+
+
+                                                                           Hip flexion/extension (red) and squat (purple)
+   Hip flexion/extension                Squat                            knee joint center trajectories for subject right knee
+Results – Knee ROM variations
+• The lower body ROM requires much greater joint excursions for in-place squat and 1-knee kneeling pickup tasks
+    o Note: Only the leading right leg motion during side-step squat, step up, and 1-knee kneeling tasks was
+       analyzed
+
+
+
+
+   In-place squat                 Side-step squat               Step-up onto surface               Treadmill walk (0°)
+
+
+
+
+                                                                                                 Kernal density of points (%)
+
+
+
+                                                                                            0%                                  100%
+Treadmill walk (-10°)           Treadmill walk (20°)        1-knee kneeling object pickup
+Results – Elbow ROM variations
+• There are differences between elbow and knee ROM, with some upper body tasks having bimodal patterns
+
+
+
+
+ Camera photograph                Open toolbelt            Overhead object reach           Hatch lever turning
+
+
+
+
+                                                                                         Kernal density of points (%)
+
+
+
+                                                                                   0%                                   100%
+     Trenching               Scooping with hand scoop       Helmet visor reach
+Additional suited data collection considerations
+• There are several additional factors that should be considered when
+  suited ROM data is collected:
+    o Test environment
+          • Water drag in the Neutral Buoyancy Laboratory (NBL)
+          • Non-offloaded arms and legs in Active Response Gravity
+            Offload System (ARGOS)
+    o Spacesuit fit                                                         ARGOS
+    o Overall body posture
+    o Experience level with the suit
+    o Physical strength
+    o Anthropometry
+• All these variables can influence the mobility capabilities of the test
+  subjects during ROM data collection
+
+
+
+                                                                            NBL
+  Discussion
+• There can be specific challenges in using traditional planar ROM tasks to
+  define suited mobility
+    o It can be difficult to interpret joint angles in the cardinal anatomical
+       reference frame when the suited movements occurs out of plane
+    o Joint ROM can differ between traditional cardinal plane movements
+       and functional tasks, where functional tasks may even induce
+       greater joint excursion distances
+• Given that suit ROM results can vary across task, environmental analogs,
+  suit fit, and subject attributes, it is important to extensively document
+  the test conditions to provide appropriate context
+• As suited reach is also dependent on joint elevation and distance from
+  the body, reach envelope testing and visualizations can provide more
+  comprehensive insight into suited mobility
+• The use context of suited ROM also needs to be considered when being
+  used for designing interfaces and workspaces. Especially with enhanced         1st and 99th Percentile Reach Envelopes
+  mobility suits, suited ROM should not only be limited to a single arm or
+  single joint motion. Other suit joints can work in conjunction to achieve
+  an enhanced ROM.
+Conclusion
+• Suited ROM evaluations are important for human factors assessments of the spacesuit and various
+  spaceflight hardware
+• Case studies using motion capture data from the xEMU spacesuit testing were provided to demonstrate
+  the nuances of suited ROM data collection
+    o Future work will evaluate off-limb joint trajectories
+• Thus, these factors should be accounted for when designing suited ROM studies, analyses, and
+  interpretations
+• Proper consideration of suited mobility in the mission and hardware design will better enable the
+  astronauts to perform EVAs safely and effectively
+Contact Information
+
+
+
+
+                                Linh Vu
+                         linh.q.vu@nasa.gov
+
+                          Nathaniel Newby
+                      nathaniel.newby@nasa.gov
+

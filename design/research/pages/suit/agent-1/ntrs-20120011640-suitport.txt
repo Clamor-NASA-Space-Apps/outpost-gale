@@ -1,0 +1,331 @@
+   Suitport Feasibility - Development and Test of a Suitport
+ and Space Suit for Human Pressurized Space Suit Donning
+                             Tests
+                         Robert M. Boyle1, Kathryn Mitchell2, Charles Allton3, Hsing Ju4
+                                       Lyndon B. Johnson Space Center
+                                National Aeronautics and Space Administration
+                                            Houston, Texas 77058
+                           E-Mail: Robert.m.boyle@nasa.gov; Phone: 281.483.5349
+
+
+            The suitport concept has been recently implemented as part of the small pressurized
+       lunar rover (Currently the Space Exploration vehicle, or SEV) and the Multi-Mission Space
+       Exploration Vehicle (MMSEV) concept demonstrator vehicle. Suitport replaces or augments
+       the traditional airlock function of a spacecraft by providing a bulkhead opening, capture
+       mechanism, and sealing system to allow ingress and egress of a space suit while the space suit
+       remains outside of the pressurized volume of the spacecraft. This presents significant new
+       opportunities to EVA exploration in both microgravity and surface environments. The
+       suitport concept will enable three main improvements in EVA by providing reductions in:
+       pre-EVA time from hours to less than thirty minutes; airlock consumables; contamination
+       returned to the cabin with the EVA crewmember. To date, the first generation suitport has
+       been tested with mockup suits on the rover cabins and pressurized on a bench top
+       engineering unit. The work on the rover cabin has helped define the operational concepts
+       and timelines, and has demonstrated the potential of suitport to save significant amounts of
+       crew time before and after EVAs. The work with the engineering unit has successfully
+       demonstrated the pressurizable seal concept including the ability to seal after the
+       introduction and removal of contamination to the sealing surfaces. Using this experience, a
+       second generation suitport was designed. This second generation suitport has been tested
+       with a space suit prototype on the second generation MMSEV cabin, and testing is planned
+       using the pressure differentials of the spacecraft. Pressurized testing will be performed
+       using the JSC B32 Chamber B, a human rated vacuum chamber. This test will include
+       human rated suitports, a suitport compatible prototype suit, and chamber modifications.
+       This test will bring these three elements together in the first ever pressurized donning of a
+       rear entry suit through a suitport. This paper presents the design of a human rated second
+       generation suitport, the design of a suit capable of supporting pressurized human donning
+       through a suitport, ambient pressure testing of the suit with the suitport, and modifications
+       to the JSC human rated chamber B to accept a suitport. Design challenges and solutions, as
+       well as compromises required to develop the system, are presented. Initial human testing
+       results are presented.
+
+
+
+
+   1
+     Crew and Thermal Systems Division, NASA Johnson Space Center, Mail Code: EC5, 2101 NASA Parkway,
+Houston, TX, 77058
+   2
+     Crew and Thermal Systems Division, NASA Johnson Space Center, Mail Code: EC5, 2101 NASA Parkway,
+Houston, TX, 77058
+   3
+     Crew and Thermal Systems Division, NASA Johnson Space Center, Mail Code: EC2, 2101 NASA Parkway,
+Houston, TX, 77058
+   4
+     Jacobs Technology, 2224 Bay Area Boulevard, Houston, TX 77058
+                                                         I. Introduction
+
+
+     Suitport replaces or augments the traditional airlock function of a spacecraft by providing a bulkhead opening,
+capture mechanism, and sealing system to allow ingress and egress of a spacesuit while the spacesuit remains
+outside of the pressurized volume of the spacecraft. This presents significant new opportunities to EVA exploration
+in both microgravity and surface environments.
+    The suitport concept will enable three main improvements in EVA by providing reductions in: pre-EVA time
+from hours to less than thirty minutes; airlock consumables; contamination returned to the cabin with the EVA
+crewmember.
+     Suitport capitalizes on the atmospheres working group recommendation of an 8 psi and 32% cabin environment
+for exploration spacecraft. The reduced cabin pressure allows the suitport and the suit to be exposed to full cabin
+pressure while maintaining a lightweight, EVA friendly design. Suitport was originally patented in 1989 by M.
+Cohen. Subsequent development focused on a vehicle and suits designed for hazardous materials work.
+
+    The suitport has recently been tested on three variants of the lunar rover and microgravity exploration concept
+demonstration vehicles at JSC and as part of Desert RATS5. This testing has shown true potential to change the way
+NASA as an agency utilizes Extra-Vehicular Activity (EVA). A suitport bench top demonstrator built at Ames
+Research Center has also demonstrated the functionality of the suitport pressurizable seal6. The next step is a true
+human in the loop feasibility test.
+
+     To enable a human in the loop feasibility test, the suitport design was updated based on lessons from the first
+generation suitports, and the goals of the second generation Space Exploration Vehicle (SEV). The intent was to
+design an integrated vehicle and suitport that would be pressurizable. Both the aft bulkhead of the Multi-Mission
+Space Exploration Vehicle, MMSEV, and the suitport were designed to accommodate a pressurized vehicle. For
+cost savings, the bulkhead was not manufactured as a pressure vessel, but the suitports were. Three outer suitport
+frames and two inner suitport frames were then manufactured with two planned to outfit the MMSEV second
+generation cabin, referenced as cabin 2A, and one outer frame dedicated to chamber testing.
+
+                                                                 II.
+
+                                       III. Second Generation Suitport Design
+     The first generation suitport utilized 4 v-guide clamp bars in a rectangular layout to clamp a Suitport Interface
+Plate, SIP to a flange on the aft bulkhead of the vehicle. This was meant to emulate the Marman clamps used on
+circular interfaces, and is thus called a Marman clamp suitport. See figure 1.
+
+     The second generation suitport endeavored to reduce the complexity of the
+suitport mechanism and mechanical overrides. This was done by using two
+angled Marmon clamp bars instead of the four used on the first generation. A
+Portable Life Support System and SIP shape were negotiated with the NASA
+PLSS and suit teams that would allow the Marman clamp to wrap around the
+now angled corners of the SIP. It was known at the outset that this would leave
+a short top section and a longer bottom section of the SIP unsupported, but was
+desirable since it reduced part count significantly.
+
+     Prior to detailed design of the suitport, alignment of the suited crewmember
+to the suitport was investigated. This allowed replacement of the existing
+alignment guides with a combination of a tapered PLSS, a small nose alignment                       Figure 1.             Generation 1
+                                                                                                    SEV Suitport.
+     5 Romig, B., Kosmo, J., Gernhardt, M., and Abercromby, A., "Desert Research and Technology Studies 2008 Report," SAE Technical
+
+Paper 2009-01-2563, 2009, doi:10.4271/2009-01-2563.
+
+
+     6
+       Chartres, J., Koss, B., Brivkalns, C., Webbon, B. et al., "Preliminary Development of a Suit Port for Planetary Surface EVA — Design
+Studies," SAE Technical Paper 2009-01-2586, 2009, doi:10.4271/2009-01-2586
+guide on the suitport, and a saddle on the SIP. These features were deemed less obtrusive than the original
+alignment guides, although they require a little more training of the
+crewmember for proper use.
+
+     To further simplify the suitport design, the linkages and cam
+rollers from the first generation design were replaced with lead
+screws and bevel gears. This design change allowed us to maintain
+tight coupling of the two marman clamps with fewer parts and less
+adjustment than the linkages and cam rollers. The motor and gear
+drive were replaced with a custom motor using the design of the
+JSC Robonaut actuator, similar in size to an elbow. The stator,
+rotor, bearings, and a harmonic drive were purchased, with the
+remaining parts custom machined. This allowed deletion of the pip
+pin decoupler for the manual override, as the Robonaut actuator can
+be back driven.                                                       Figure 2.         Generation 2A Suitport
+
+
+
+
+                                  IV. Suit Compatibility with Suitport
+   The use of suitports creates several unique challenges for space suit design. Those design challenges, along with
+work that has been completed to address them, are discussed in the following paragraphs.
+
+Z-1 Suit Overview
+   The Z-1 prototype space suit assembly (SSA) was developed as part of an effort to begin tackling suitport related
+design challenges and to demonstrate suitport feasibility during the manned delta pressure suitport test. A
+description of the Z-1 SSA is provided below. Features of the suit that are unique to suitport operations are
+described in the following sections.
+
+   The Z-1 suit (Figure X) is commonly described as a “soft” rear-entry planetary exploration suit. The ‘soft’ is a
+                                 bit of a misnomer because the suit actually contains several hard mobility
+                                 elements; the term ‘soft’ is intended to convey the idea that the primary structures
+                                 of the suit are pliable fabrics when unpressurized. The Z-1 suit has bearings in
+                                 the following locations: 3-bearing shoulder (scye, mid-shoulder, upper arm),
+                                 wrist, waist, hip, thigh, and ankle, and also employs several soft mobility
+                                 elements to allow for pressurized mobility.
+
+                                  Suit Port Interface Plate
+                                      Perhaps the most obvious impact to the space suit assembly for suitport
+                                  compatibility is the addition of a suitport interface plate (SIP), shown in Figure
+                                  X. The SIP acts as the mating and sealing surface between the suit and the
+                                  suitport. While the SIP concept has been demonstrated in the past on mock-up
+                                  space suits, the Z-1 suit development was the first attempt at a SIP capable of
+                                  handling the pressure loads experienced during suitport operations. The final Z-1
+                                  SIP is a 0.75 in thick aluminum plate with a 1 in thick stainless steel stiffener
+                                  across the top and a stainless steel saddle, which is used for alignment but
+                                  doubles as a stiffener, across the bottom. The stiffeners are required to keep the
+                                  deflection of the SIP within an acceptable range to ensure proper SIP-to-suitport
+                                  sealing. The Z-1 SIP assembly weighs 28 lbs, which is a significant mass increase
+                                  above the suit’s 126 lb base weight. Future
+                                  work is targeted at SIP mass reduction.
+
+                                  Self Adjustable Gloves and Boots
+                                      Another suit impact brought on by
+                                  suitport operations is the ability of
+
+
+
+
+Figure X.       Z-1 space suit                                                     Figure X.       Self
+assembly with suitport                                                             Adjustable Rear Entry I-Suit
+crewmembers to perform nominal suit adjustments, such as tightening their
+glove palm bar and boot instep. In an airlock, these operations would nominally
+be performed prior to suit pressurization; however, during suitport operations,
+the suit will be pressurized during donning, and crewmembers will be required
+to perform any necessary adjustments at pressure. Without the ability to
+effectively tighten the palm bar on the gloves, mobility and glove fit during the
+EVA may be negatively impacted, and hand fatigue may increase. Similarly
+with the boots, lack of proper instep sizing may cause difficultly when walking
+in a gravity environment.
+    In order to address these potential issues, ILC Dover developed the Self Figure X.              Self
+Adjustable Phase VI gloves and Self Adjustable Rear Entry I-Suit (REI) boots. Adjustable Phase VI glove with
+The gloves and boots are modified pairs of Phase VI gloves and REI suit boots, t-handle mechanism.
+which allow the crewmember to make glove and boot adjustments at pressure.
+The Self Adjustable REI boot has a Boa™ device mounted its tongue (Figure X), which provides instep sizing. The
+Boa™ Device consists of a commercial-off-the-shelf (COTS) dial-based closure system, which is a ratcheting
+mechanism with a 3 to 1 gear advantage. It provides continuous adjustments in one direction and can be released by
+                                      pulling the knob to the out position. Four different adjustment mechanisms
+                                      were developed and delivered with the Self Adjustable Phase VI Gloves: a
+                                      COTS BoaTM device similar to the one on the boots, two custom ratcheting
+                                      devices, and a spring device. All four mechanisms are self adjustable by the
+                                      crewmember at pressure and are meant to provide the same indexing as the
+                                      existing Phase VI glove palm bar strap. The custom t-handle adjustment
+                                      device is pictured in Figure X. Preliminary evaluations with the self adjustable
+                                      gloves and boots have shown promising results, and the adjustment
+                                      mechanisms will be further tested during the manned delta pressure suitport
+                                      test.
+
+                                     Self Donning and Doffing
+                                           A third impact of the suitport concept on suit design is the requirement for
+                                       a crewmember to be able to self don and doff his or her suit. Traditionally,
+ Figure X.         Z-1 hatch           EVA crewmembers have assistance from intravehicular activity (IVA)
+ latch/lock mechanism.                 crewmembers while donning and doffing their space suit; however, that
+                                       assistance would not be available when using the suitport paradigm.
+Crewmembers would need to be able to perform all suit donning and doffing activities without assistance.
+Challenges associated with self don and doff of a suit include opening and closing the suit hatch, latching and
+locking the suit hatch while pressurized to 8.3 psid., and donning and doffing a shoulder and/or waist belt harness.
+    The development of the Z-1 suit began to look at addressing these items, particularly the ability to latch and lock
+the suit hatch while at 8.3 psid. The Z-1 suit lock/latch mechanism is located along the hatch ring with its pivot
+point 30 degrees off of vertical (Figure X). Preliminary testing in the Z-1 suit has shown that the latch/lock
+mechanism is accessible by the test subject while the suit is pressurized to 8.3 psid. The manned delta pressure
+suitport test will further evaluate subject’s ability to reach and operate the latch/lock mechanism in its current
+location. Results of the testing will help to drive the latch/lock mechanism design for the next Z-suit iteration, the
+Z-2 suit.
+    Some effort was also spent during the development of the Z-1 suit to address opening and closing the suit hatch.
+The hatch closing capability was demonstrated during initial Z-1 testing through the use of a Teflon coated cable
+closure system; however, durability of the closure cable coating proved to be an issue, and the cable was removed
+from the suit.
+    An additional challenge comes into play with the hatch open/close mechanism because the thickness of the
+suitport frame and vehicle aft bulkhead, combined with the potential for suitport vestibule interference create the
+need for a non-traditional suit hatch hinge mechanism. This mechanism must allow the suit hatch to translate
+backwards by four inches prior to pivoting open. Some preliminary prototypes have been developed with this type
+of hinge, and forward work is planned to develop additional concepts for opening and closing the suit hatch,
+including concepts which use the suitport vestibule door to assist with these operations.
+    Further work is also required to incorporate a self donnable shoulder/waist belt harness.
+
+Human Factors Considerations
+    In addition to suit hardware considerations, there are also several human factors considerations which must be
+taken into account in developing a suitport compatible suit. One of the major considerations is that of suitport
+alignment. Multiple tests have been performed over the past four years to evaluate suitport alignment in a 1-g
+environment. The most recent test series, carried out in 2010, led to the selection of a slightly tapered PLSS, as well
+as the current nose alignment guide (Figure X), to aid in suitport alignment. This alignment system will be tested
+for the first time in 1-g with a pressurized suit during the manned delta suitport test. Additional testing is planned in
+the summer of 2012 to evaluate suitport alignment in reduced gravity environments.
+    A second human factors consideration has to do with the placement of suit don/doff aids within the vehicle. The
+current don/doff aids available to the crewmember in the Generation 2A suitport design include an overhead pull-up
+bar and a dip bar. Testing was performed in 2010 to determine an acceptable ADD PHOTO OF NAG AND
+location for the pull-up and dip bars. Data from this testing was based off of SADDLE
+donning and doffing an unpressurized suit. The location and functionality of
+these don/doff aids will be further evaluated with the suit at an 8.3 psid delta
+pressure during the manned delta pressure suitport test.
+    A third consideration dealing with human factors is the donning angle of
+the suit. The Generation 1 suitports put the suits at a 0 degree (vertical)
+donning angle. Experience with these suitports at Desert Research and
+Technology Studies (RATS), as well as with existing rear-entry space suit
+prototypes indicated that this positioning could be improved by increasing
+the donning angle. Testing performed in 2010 concluded that from a human
+factors perspective, the optimal donning angle is approximately 18 degrees?
+(canted forward from the vertical position). While optimal for suit donning,
+an 18 degree aft bulkhead angle was not optimal for vehicle designs. A Figure X.                      Nose alignment
+compromise was made between the suitport and MMSEV projects, and the guide (NAG) and saddle used
+Generation 2A suitports are canted 10 degrees? forward.                            for suitport alignment.
+Additional Considerations
+    While the paragraphs above have discussed several of the suit challenges associated with the implementation of
+suitports, it has mainly focused on areas where work has been or is currently being carried out, and is by no means
+all-encompassing. Several other suitport related design challenges which were not discussed include the
+implementation of thermal protection on the SIP, routing of necessary PLSS pass-thrus (i.e. vacuum vent lines)
+through the SIP, the design and operation of the suitport manual override, and the implementation of the
+infrastructure for buddy rescue scenarios on suitport.
+
+
+
+
+                                 V. Testing of the Generation 2A Suitport
+
+
+     In order to test pressurized suit donning through a suitport, a vehicle or facility is required. It was determined
+the best facility to allow thorough testing of the suitport would be to add modifications to the JSC B32 Chamber B.
+This chamber was selected as the suitport could be installed into an adapter in one manlock door, and people or
+rescue technicians could still access the inside of the chamber through a second manlock. The test protocol will start
+simple, with a simple delta pressure test. The chamber will be evacuated to 6.4 psia, with the manlock at ambient,
+so that a delta of ~ 8.3 will exist for suit donning and suitport operations.
+
+   The second point for selecting chamber B, is that it is extensible to subsequent vacuum testing, and then later
+human thermal vacuum testing with a suitport.
+    The test objective of the Gen 2A unmanned test is to verify that the Gen 2A suitport would operate at a delta
+pressure of 8.3 psid.
+
+    The test objective of the Gen 2A manned is to demonstrate suitport docking and undock from a Gen 2A suitport
+and donning and doffing from the space suit.
+
+     The test is planned for Chamber B located at Lyndon B Johnson Space Center, Houston Texas. Chamber B is a
+circular chamber 25 feet in diameter and 26 ft in height used for manned space suit testing. There are two manlocks
+connected to the main chamber. Manlock B1 has a weight relief system for traditional space suit testing. Manlock
+B2 allows nominal access and acts as a staging area for emergency technician. Multiple doors can be opened and
+closed to seal each section of Chamber B from each other. The main chamber and the two manlocks can deliver
+pressures of 1 X 10-4 Torr to 14.7 psia. The main chamber can deliver temperatures of -300 to 250+ degrees
+Fahrenheit.
+
+
+
+
+    Chamber B
+
+     For the Gen 2A suitport test, the test facility is fabricating a bulkhead that bolts to the doorway between the
+main chamber and manlock B2. For manned testing, the emergency rescue technicians are located in manlock B1.
+The bulkhead consists of four major subassemblies the bulkhead, the vestibule door, the tunnel assembly, and the
+universal adapter plate. The bulkhead not only bolts to the doorway between the main chamber and manlock B2 but
+also acts as a seal between the two volumes. The vestibule door seals the tunnel assembly from the manlock B2 to
+allow pressure equalization between the main chamber and the tunnel assembly. The pressure between the tunnel
+assembly and the main chamber needs to be the same to allow the space suit to undock. In addition, the vestibule
+door provides a penetration for the utilities that are needed for manned testing. The tunnel assembly extends the
+entry and exit area for the suitport due to the cylindrical shape of the test facility. To facilitate testing of future
+concepts of suitport, a universal adapter plate bolts to the tunnel. The suitport mates to the universal adapter plate
+and is the only piece of test hardware that needs to be rebuilt to accommodate changes in suitport shape or design.
+
+
+
+
+     For the unmanned test, the Gen 2A suitport is bolted to the universal plate. The hole, used for entering and
+exiting the space suit, in the middle of the suitport is sealed with a blanking plate. The clamps on the suitport that
+normally secure the suitport interface plate secure the blanking plate for testing. As part of the unmanned test, the
+clamps will be cycled to verify the mechanisms for the suitport. A brace developed by the test facility supports the
+blanking plate to prevent the plate from falling to the ground when the clamps are in the open position. The
+vestibule door is sealed and the test facility begins the process of lowering the pressure within the chamber. A series
+of leak checks are performed on the both the Chamber B hardware and the suitport hardware prior to actual testing.
+After confirmation that both the Chamber B hardware and the suitport hardware pass leak check, the chamber
+operators start the pumps that lowers the main chamber pressure from 14.7 psia to 6.3 psia. The 8.3 psid between
+14.7 and 6.3 psia provides the pressure that stresses the suitport. The strain gauge records the strain levels at
+predefined locations on the suitport with the 8.3 psid. The test personnel equalize the pressure between the main
+chamber and the vestibule after which the suitport clamp mechanism cycles four times for hardware verification.
+
+     For the manned test, the Z1 suit is docked to the Gen 2A suitport at ambient atmosphere. The test personnel
+seals the main chamber and depresses the main chamber down to 6.3 psia. The vestibule remains at 14.7 psia. The
+suit test subject dons the suit at 8.3 psid. Both the suit and the vestibule are sealed. The test personnel equalize the
+pressure between the main chamber and the vestibule. The suitport clamps release the space suit and the manned Z1
+suit undocks from the suitport and performs a series of mobility tasks. After completion of the mobility tasks, the
+Z1 suit docks to the suitport. The vestibule pressure rises to 14.7 psi. The test personnel open the vestibule door.
+The suit test subject opens the Z1 suit hatch and doffs the suit. The test is repeated four times for both human
+factors data and hardware verification.
+

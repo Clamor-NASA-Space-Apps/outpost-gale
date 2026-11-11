@@ -1,0 +1,358 @@
+                                               55th International Conference on Environmental Systems
+                                                               12-16 July 2026, Rio Grande, Puerto Rico
+                                                                                         ICES-2026-127
+
+
+
+
+       Mars Spacesuit Mass Requirements
+                          Ryan Ogilvie and Ben Swartout
+                                  NASA Johnson Space Center, Houston, Texas
+
+                                        Bradley Hoffmann
+                                                  KBR, Houston, TX
+
+                    Shane Mcfarland and Lauren Hickox
+                                          Aegis Aerospace, Houston, TX
+
+    Trade names and trademarks and company names are used in this report for identification only. Their usage does
+not constitute an official endorsement, either expressed or implied, by the National Aeronautics and Space Administration.
+      Historical Suit Numbers
+• Mars Exploration Extravehicular Mobility Unity (MxEMU) is being developed
+   – Mars gravity is 2.3 times Lunar gravity (3/8th vs 1/6th Earth gravity)
+• Mass centric design will be critical to support a crewmember on Mars
+• Table shows historical comparison of relative suit weights across gravity fields
+   – Historically, 40% of mass has been PGS and 60% has been PLSS (+/- 5%)
+   – Human weight assumes an average male at 180lbm (82kg)
+• Regeneration, modularity, and fault tolerance have increased the weight of the xEMU in
+  comparison to previous suits
+                                                      Suit Relative Weight Comparison
+
+                               Apollo, lbf (N)           EMU, lbf (N)             Orlan, lbf (N)           xEMU, lbf (N)   Avg., lbf (N)
+            Earth PGS*            60 (266)                110 (489)                 88 (391)                167 (742)      106 (472)
+            Earth PLSS           110 (489)                141 (627)                143 (636)                209 (929)      150 (670)
+            Earth Total          170 (756)                251 (1116)               231 (1027)               376 (1672)     257 (1143)
+         Luna equivalent          28 (126)                 41 (186)                 38 (171)                 62 (278)       42 (190)
+         Mars equivalent          63 (283)                 94 (418)                 86 (385)                141 (627)       96 (428)
+       Luna equivalent (with
+                                  58 (259)                 71 (319)                  68 (304)                92 (412)        72 (323)
+             human)
+         Mars equivalent
+                                 131 (583)                161 (718)                 154 (685)               208 (927)       163 (728)
+          (with human)
+
+                                         International Conference on Environmental Systems ICES-2026-127                                   2
+            PLSS and PGS Mass Breakdown
+• PLSS components were bucketed below, and a packaging factor (structure, cover,
+  manifolds, fasteners, tubing, and harnesses) is added
+     – xEMU PLSS mass – 209lbm dry + 16.3lbm consumables + DCU 7.6lbm
+• For PGS – increased mobility is a large weight driver
+     – Apollo used the suits for crew survival as well, necessitating minimal mass, but sacrificed
+       mobility
+     – EMU was optimized for microgravity – minimal/no lower body mobility
+     – xEMU PGS designed for both upper and lower body mobility
+                           PLSS Suit Mass Breakdown                                                                             xPGS Suit Mass Breakdown
+                           Apollo (lbm) [5]   EMU (lbm) [5]     xEMU (lbm)    Average (lbm)                                          Component                       Mass (lbm)
+ Oxygen Loop                 37.1 (58%)        33.6 (51%)       47.7 (46%)     39.5 (51%)                      Waist brief hip (long)                                  36.0
+                                                                                                               Hard Upper Torso Assembly                               29.0
+ Thermal Loop                 9.6 (15%)         6.5 (9%)        14.3 (13%)     10.1 (13%)
+                                                                                                               Hatch Assembly (regular, dry)                           29.0
+ Avionics                     6.7 (10%)         15 (23%)        21.6 (21%)     14.5 (18%)                      Environmental Protection Garment (all components)       22.0
+ Power Supply                 9.5 (15%)         10 (15%)        19.2 (18%)     12.9 (16%)                      Shoulders (small)                                       11.5
+ Components                     63.1              65.2            103.0           77.1                         Boots                                                    9.4
+                                                                                                               Legs                                                     7.3
+ Packaging                      47.3              75.8            105.7           76.2                         Liquid Cooling and Ventilation Garment (LCVG) (wet)      6.5
+ Total                          110.3            141.0            208.7          153.3                         Helmet                                                   6.3
+ Packaging Factor                                                                                              Arms                                                     4.4
+                                 1.7               2.2             2.0             2.0                         Extra Vehicular Visor Assembly (EVVA)                    4.0
+ (Total / Components)
+                                                                                                               Gloves                                                   4.3
+ Volume Packaging Factor         3.0               2.0             2.6             2.5
+                                                                                                               Total                                                   169.7
+
+
+                                                            International Conference on Environmental Systems ICES-2026-127                                                       3
+     Metabolic Profiles
+• Maximum mass drivers may include traverse, peak task exertion, and fall
+  recovery
+• Metabolic rate of the crewmember is estimated based on the below profiles
+   – ISS/EMU requirements at 1000 BTU/hr average
+   – EVAs have been increasing beyond 1000 BTU/hr avg. on ISS and future missions will be
+     in a planetary gravity field (either Lunar or Mars) leading to an expected 1200 BTU/hr
+     for future mission sizing
+
+
+
+
+          ISS EVA Metabolic Load Profile                                                xEMU Max Transient Metabolic Profile
+
+
+                                     International Conference on Environmental Systems ICES-2026-127                           4
+         Existing Studies
+• There are limited suit studies for Mars gravity testing, though they help give an idea of the challenges
+  expected on Mars
+• 10-km Walkback Study
+      – This NASA study tested suited performance for a 10km walkback at both lunar and Mars gravity offloads for a
+        fixed suit mass
+      – Did not vary weights
+      – Did not test at lower walking speeds (2.2mph was considered maximum nominal speed for Apollo)
+      – Demonstrated a significant effort in operating in Mars gravity
+• Fall Recovery Testing
+      – University of Maryland tested fall recovery with a weighted PLSS in their buoyancy lab
+      – Demonstrated significant mobility challenges with PLSS weights tested (both 70 and 100 kg)
+                                                                                                                      10-km Walkback Study
+      – Was not suited/pressurized (wetsuit only)
+
+
+
+
+Hits VO2max at
+3.5mph on Mars
+
+
+
+
+                                Martian Offloading                                   Lunar Offloading
+                                                                                                                      Fall Recovery Testing
+                                                      10-km Walkback Study Data
+                                               International Conference on Environmental Systems ICES-2026-127                                5
+      Aerobic Modeling for Maximum Suit Mass
+                                                                                                                   VO2max Ranges (ml/min/kg)
+• To model a maximum suit mass with existing data,
+  aerobic maximums are used as a limiting factor for                                    VO2max            1%          5%         25%         50%           75%           95%     99%
+
+                                                                                    Male age 30–39         27         31          37             42        48             54      58
+  walk backs                                                                       Female age 30–39        23         26          31             35        40             47      52
+• Metabolic rate can be correlated to mass and VO2
+  rates assuming an average respiratory rate                                                                       Human Mass Percentile Chart
+    – Note VO2 is sometimes reported in L/min and other                             Mass Percentile       1%          5%         25%         50%           75%           95%     99%
+
+      times ml/min/kg and must be converted depending on                             Male, lbm (kg)     120 (55)    138 (63)    164 (74)    181 (82)    199 (90)    225 (102) 243 (110)
+
+      the application                                                               Female, lbm (kg)     94 (43)    108 (49)    128 (58)    142 (65)    156 (71)     176 (80)   191 (87)
+
+• VO2max (ml/min/kg) has a minimum flight rule set at
+  36 ml/min/kg for EVA                                                                                 Metabolic Rate vs. VO2 (ml/min/kg) and Mass
+    – Nominal VO2 should not exceed 35% VO2max for an 8-hour                        BTU/HR (RER=.85)                                     VO2 (ml/kg/min)
+
+      workday, or 50% if trained for aerobic, and ~35% for                            Mass lbm (kg)         10          15         20             25        30            35      40
+
+      anerobic (lifting)                                                                120 (55)            652        978        1304           1630      1955          2281    2607
+
+    – Crewmembers may be expected to handle ~43% VO2max                                 140 (64)            760       1141        1521           1901      2281          2662    3042
+
+      for an EVA due to training and mix of aerobic and                                 160 (73)            869       1304        1738           2173      2607          3042    3476
+
+      anerobic work                                                                     180 (82)            978       1467        1955           2444      2933          3422    3911
+
+    – For a 5th percentile female, this would be 760 – 1100                             200 (91)           1086       1630        2173           2716      3259          3802    4345
+      BTU/hr (35-50% VO2max )                                                           220 (100)          1195       1793        2390           2988      3585          4183    4780
+
+    – Future missions may consider heightened requirements
+      (weight and VO2max minimum) to meet higher exploration                     𝑴𝒆𝒕𝑹𝒂𝒕𝒆(
+                                                                                             𝒌𝒄𝒂𝒍
+                                                                                                  ) = 𝟒. 𝟎𝟑𝟗
+                                                                                                                    𝒌𝒄𝒂𝒍
+                                                                                                                               ∗ 𝑽𝑶𝟐
+                                                                                                                                            𝑳
+                                                                                                                                                  + 𝟏. 𝟏𝟓𝟕
+                                                                                                                                                                  𝒌𝒄𝒂𝒍
+                                                                                                                                                                          ∗ 𝑽𝑪𝑶𝟐 (
+                                                                                                                                                                                    𝑳
+                                                                                                                                                                                       )
+                                                                                             𝐦𝐢𝐧                     𝑳                     𝒎𝒊𝒏                     𝑳               𝐦𝐢𝐧
+      requirements (1200 BTU/hr average)
+                                                                                             𝑩𝑻𝑼                                                             𝒎𝒍
+                                                                                 𝑴𝒆𝒕𝑹𝒂𝒕𝒆(        )=      𝟎. 𝟗𝟔𝟏 + (𝟎. 𝟐𝟕𝟓 ∗ 𝑹𝑬𝑹) ∗ 𝑽𝑶𝟐                                   ∗ 𝒎𝒂𝒔𝒔(𝒌𝒈)
+                                                                                              𝒉𝒓                                                           𝐦𝐢𝐧∗𝒌𝒈
+
+
+                                   International Conference on Environmental Systems ICES-2026-127                                                                                         6
+      Considerations
+• Crew Physical Characteristics
+    – For current mission profiles, missions must consider 1st to 99th percentiles in potential crew masses
+    – Mars may consider more limitations such as 5th – 95th percentile to be in line with previous requirements/Apollo
+      including custom sizing suits
+• NIOSH Carry Limit
+    – NIOSH max carry weight limit is 51 lbf for lifting loads
+• Suit Restricted Mobility
+    – Based on the 10km walkback study, it is estimated approximately 14 VO2 (ml/min/kg) is added against baseline
+      unsuited walking due to the pressurized suit restrictions
+• Deconditioning
+    – Deconditioning is expected to decrease VO2max by approx. 15-25% based on historical evidence
+    – At the time of EVA, a crewmember is expected to have 36ml/min/kg VO2max. Therefore, at time of launch,
+      a crewmember should have 15-25% higher VO2max (43-49 ml/min/kg)
+• Pressure Offload
+    – The pressurized column of the suit provides a net force to offload some of the mass off the shoulder of the
+      astronaut
+    – During walking this is approximately 48lbf based on testing
+• Tool/Sample Carry Mass
+    – A 50 lbm of tool/sample weight is assumed in estimations
+
+
+                                      International Conference on Environmental Systems ICES-2026-127                    7
+        Initial Estimates
+• System Mass is a combination of suit, crew, and carry
+  mass
+    –   𝑺𝒚𝒔𝒕𝒆𝒎𝒎𝒂𝒔𝒔 = 𝑺𝒖𝒊𝒕𝒎𝒂𝒔𝒔 + 𝑪𝒓𝒆𝒘𝒎𝒂𝒔𝒔 + 𝑪𝒂𝒓𝒓𝒚𝒎𝒂𝒔𝒔
+• The perceived force the crewmember feels is a
+  combination of system force on Mars minus the pressure
+  offload
+    –   𝑪𝒓𝒆𝒘 𝑷𝒆𝒓𝒄𝒊𝒆𝒗𝒆𝒅 𝑴𝒂𝒓𝒔𝒇𝒐𝒓𝒄𝒆 𝒇 = 𝑺𝒚𝒔𝒕𝒆𝒎𝒎𝒂𝒔𝒔 ∗ 𝑨𝒄𝒄𝒆𝒍.𝑴𝒂𝒓𝒔 − 𝑷𝒓𝒆𝒔𝒔𝒖𝒓𝒆 𝑶𝒇𝒇𝒍𝒐𝒂𝒅𝒇
+• The crew capability is a combination of the crew mass on
+  Earth, and the NIOSH carry load reduced by the restricted
+  mobility factor
+    –   𝑪𝒓𝒆𝒘 𝑪𝒂𝒑𝒂𝒃𝒊𝒍𝒊𝒕𝒚𝒇 = 𝑪𝒓𝒆𝒘𝒇,𝒆𝒂𝒓𝒕𝒉 + 𝑵𝑰𝑶𝑺𝑯𝒇,𝒆𝒂𝒓𝒕𝒉 ∗ 𝑹𝒆𝒔𝒕𝒓𝒊𝒄𝒕𝒆𝒅 𝑴𝒐𝒃𝒊𝒍𝒊𝒕𝒚%
+• The max suit mass is determined by setting the crew
+  perceived force equal to the crew capability and solving
+  for suit mass                                                                                               Max Suit Mass vs Crewmember Earth Weight (lbm) and
+                                                                                                                         Fitness (VO2 Max, mL/min/kg)
+                         𝑪𝒓𝒆𝒘𝒇 +𝑵𝑰𝑶𝑺𝑯𝒇 ∗𝑹𝒆𝒔𝒕𝒓𝒊𝒄𝒕𝒆𝒅 𝑴𝒐𝒃𝒊𝒍𝒊𝒕𝒚% +𝑷𝒓𝒆𝒔𝒔𝒖𝒓𝒆 𝑶𝒇𝒇𝒍𝒐𝒂𝒅𝒍𝒃𝒇
+    –   𝑴𝒂𝒙 𝑺𝒖𝒊𝒕𝒎𝒂𝒔𝒔 =                                                              − 𝑪𝒓𝒆𝒘𝒎𝒂𝒔𝒔 −
+                                               𝑨𝒄𝒄𝒆𝒍.𝑴𝒂𝒓𝒔
+        𝑪𝒂𝒓𝒓𝒚𝒎𝒂𝒔𝒔
+• For a 5th percentile female (108lbm) with the 36 ml/min/kg
+  VO2max requirement – results in a total suit mass of 229lbm                                                     Significant suit mass reduction
+  (104kg)                                                                                                            for Mars will be required
+    – This will be 40% less than the xEMU (376lbm – 170kg)
+
+                                                     International Conference on Environmental Systems ICES-2026-127                                               8
+      Walking Speed and Walkback
+• Average walking speed on earth is 3.1 mph
+• Apollo EVA average walking speed
+    – Failed rover walkback assumption: 2.2 mph <1hour (1.7mph for >1hour)
+    – Apollo 15: 0.7-1 mph (first EVA), 1-1.4mph (second EVA)
+• Walkback after failure
+    – Walkback from a failure is assumed as limiting case for most EVA backup sizing and maximum distance away
+      from the craft
+    – Assuming either 30 minute or 1-hour walkback and 2.2mph walkback this is a maximum radius away from the
+      craft of 1.1 miles (30 minute) or 2.2 miles (1 hour)
+    – With mass constraints, the 30-minute walkback may be preferred so the design will close
+• Metabolic rates during walkback – assuming RER at 0.85
+    – Average crewmember would have 1700 BTU/hr
+    – Large (95th percentile mass) crewmember would be 2300 BTU/hr
+    – While higher than average of 1200 BTU/hr, traverse tasks are considered above average effort tasks, though the
+      backup systems must be sized with this in mind
+• Comparison to walkback study
+    – Assuming a 50% maximum exertion of VO2max for walkback (18ml/min/kg (36ml/min/kg *50%)), at 2.2mph this
+      would be 19ml/min/kg based on the walkback study
+    – A slightly lighter weight suit compared to the walkback suit (265lbm) could be tenable – though more testing is
+      required.
+
+                                     International Conference on Environmental Systems ICES-2026-127                    9
+     Validation of Model – Argos Testing
+• To validate and/or refine the prior model, a suited test
+  using Active Response Gravity Offload System (ARGOS)
+  will be required
+   – The PLSS mass will be varied for a parameterized test
+   – The above model will help bound the upper and lower
+     limits of the PLSS mass
+   – Test will include a pressurized PGS
+   – Subjects will be varied to cover a wide range of
+     crewmembers
+• Test will gather gait, task kinematics, metabolic rate,
+  heart rate, workload, and subjective workload ratings
+• Data from this effort will continue to aid in MxEMU
+  suited requirements by generating crew physiology
+  modeling states based on EVA workload                                                         Prior 10-km Walkback Study
+
+                              International Conference on Environmental Systems ICES-2026-127                                10
+     Packaging Factors
+• Packaging factor is the ratio of total system
+  mass/volume to combined component mass/volume
+• There is a tradeoff between volume and mass                                                                  PLSS Suit Mass Breakdown
+  packaging factors                                                                                             Apollo (lbm)
+                                                                                                                    [5]
+                                                                                                                               EMU (lbm)
+                                                                                                                                 [5]
+                                                                                                                                            xEMU (lbm)
+                                                                                                                                                          Average
+                                                                                                                                                           (lbm)
+   – Apollo had a high low packaging factor, and high volume,                           Oxygen Loop             37.1 (58%)     33.6 (51%)   47.7 (46%)   39.5 (51%)
+     while EMU was opposite                                                             Thermal Loop             9.6 (15%)      6.5 (9%)    14.3 (13%)   10.1 (13%)
+
+   – Smaller volume suits - mass will increase                                          Avionics                 6.7 (10%)     15 (23%)     21.6 (21%)   14.5 (18%)
+
+   – Larger volume provide more flexibility on structural design                        Power Supply             9.5 (15%)     10 (15%)     19.2 (18%)   12.9 (16%)
+
+     allowing for mass savings                                                          Components                 63.1          65.2         103.0        77.1
+
+
+• EMU was limited in depth/volume to fit in between
+                                                                                        Packaging                  47.3          75.8         105.7        76.2
+                                                                                        Total                      110.3         141.0        208.7        153.3
+  inter deck hatchways                                                                  Mass Packaging
+
+• Apollo used components as structure to save weight                                    Factor
+                                                                                        (Total / Components)
+                                                                                                                    1.7           2.2          2.0          2.0
+
+
+  rather than a monolithic structure system like the                                    Volume Packaging
+                                                                                        Factor
+                                                                                                                    3.0           2.0          2.6          2.5
+  backplate on the xEMU
+   – This creates a more integrated, less modular suit
+• A larger volume Mars PLSS with integrated components
+  may be considered to reduce mass
+
+                                 International Conference on Environmental Systems ICES-2026-127                                                                    11
+      Suit Mass Budget Strategy Proposed
+• Based on historical data, the PLSS is typically 60% of the suit mass,
+  and the PGS is 40% of the suit mass                                                                               Mars Suit Mass Allocation
+    – This is applied here for the 229 lbm (104kg) limit                                                Subsystem             Mass                    %
+• PLSS Mass Budget Strategy                                                                             PLSS Mass             137 lbm (62kg)          60%
+    – Larger volume factor to provide flexibility for lower system mass                                 PGS Mass              92lbm (42kg)            40%
+    – Return to single fault tolerant such as EMU/Apollo                                                Overall Suit Mass             229lbm (104kg)
+    – Reduce modularity, while favoring integration and using components for
+      structure
+    – Reduce regeneration options
+    – Reduced EVA time                                                                                        Mars PLSS Subsystem Mass Allocation
+• PGS Mass Budget Strategy                                                                                                  Average
+                                                                                                                                         Mars PLSS lbm (kg)
+    – Emphasis on improved mobility, while balancing mass                                                                   Percent
+                                                                                                        Oxygen Supply        51%            41.1 (18.6)
+    – Lighter, waist entry design                                                                       Thermal Loop         13%            10.4 (4.7)
+    – Reduced cycle life                                                                                   Avionics          18%            14.5 (6.5)
+    – Custom suit sizing                                                                                Power Supply         16%            12.8 (5.8)
+                                                                                                          Packaging            -            56.4 (25.6)
+• Both                                                                                                   Components            -            80.5 (36.6)
+    – Implement lightweight advanced materials                                                               Total             -            137 (62.2)
+    – Increased crew fitness, tightened crew sizing requirements, and exercise                            Packaging
+                                                                                                                               -                1.7
+                                                                                                            Factor
+      countermeasures
+
+
+                                      International Conference on Environmental Systems ICES-2026-127                                                       12
+     Conclusion
+• The current government reference design (xEMU) is 376lbm (170kg)
+   – Mars suits are estimated to have a maximum of 229lbm (104kg)
+   – Mars suits will require a 40% mass savings compared to xEMU
+• ARGOS testing will be required to verify and validate this estimate
+• Walkback and maximum radius from craft will need to be limited in distance
+  to allow return to cabin in case of failure
+• Split between PGS (40%) and PLSS (60%) historically
+   – 137 lbm (62kg) for the PLSS and 92lbm (42kg) for the PGS
+• Mars suit will need to be designed with a mass centered focus to operate
+   – Lean on Apollo principles to save mass: integrated, custom design, single fault tolerant
+   – Reduced EVA time
+   – Implement advanced materials
+   – Increased crew fitness, tightened crew sizing, and exercise countermeasures
+                             International Conference on Environmental Systems ICES-2026-127    13
+           Thank you!
+
+
+Questions?
+
+
+
+
+For references, please see associated paper
+
+Contact:     Ryan Ogilvie
+             Mars PLSS Project Lead
+             NASA JSC - Space Suit PLSS Team - EC5
+             ryan.e.ogilvie@nasa.gov
+                                                     International Conference on Environmental Systems ICES-2026-127   14
+

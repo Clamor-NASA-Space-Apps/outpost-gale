@@ -1,0 +1,21 @@
+                              Z‐1 Prototype Space Suit Testing Summary
+
+
+
+The Advanced Space Suit team of the NASA‐Johnson Space Center performed a series of test with the Z‐
+1 prototype space suit in 2012. This paper discusses, at a summary level, the tests performed and
+results from those tests. The purpose of the tests were two‐fold: 1) characterize the suit performance
+so that the data could be used in the downselection of components for the Z‐2 Space Suit and 2)
+develop interfaces with the suitport and exploration vehicles through pressurized suit evaluations. Tests
+performed included isolated and functional range of motion data capture, Z‐1 waist and hip testing, joint
+torque testing, CO2 washout testing, fit checks and subject familiarizations, an exploration vehicle aft
+deck and suitport controls interface evaluation, delta pressure suitport tests including pressurized suit
+don and doff, and gross mobility and suitport ingress and egress demonstrations in reduced gravity.
+Lessons learned specific to the Z‐1 prototype and to suit testing techniques will be presented.
+
+
+
+Authored by: Amy Ross/EC5
+
+Abstract for submission to the 43rd International Conference on Environmental Systems
+

@@ -1,0 +1,665 @@
+            Integrated Suit Test 1 - A Study to Evaluate Effects of Suit
+            Weight, Pressure, and Kinematics on Human Performance
+                                              During Lunar Ambulation
+                                                     Michael L. Gernhardt1, Jason Norcross2, Jessica R. Vos1-
+                                                                    1
+                                                                     NASA Johnson Space Center, Houston TX
+                                                                               2
+                                                                                Wyle Laboratories, Houston TX
+
+Copyright © SAE International
+
+
+ABSTRACT                                                     the specific metabolic costs and biomechanics of
+                                                             the suit can be understood. The results of entire
+In an effort to design the next generation Lunar suit,
+                                                             test    series   will   provide   evidence-based
+NASA has initiated a series of tests aimed at
+                                                             recommendations for suit design parameters to
+understanding the human physiological and
+                                                             optimize human performance in partial gravity
+biomechanical affects of space suits under a variety
+                                                             environments.
+of conditions. The first of these tests was the EVA
+Walkback Test (ICES 2007-01-3133). NASA-JSC
+                                                             The first of these studies, the EVA Walkback Test
+assembled a multi-disciplinary team to conduct the
+                                                             was conducted using the Partial Gravity Simulator
+second test of the series, titled Integrated Suit Test
+                                                             (Pogo) in the Space Vehicle Mock-Up Facility
+1 (IST-1), from March 6 through July 24, 2007.
+                                                             (SVMF, Building 9) and the Mark III (MKIII) EVA
+Similar to the Walkback Test, this study was
+                                                             Technology Demonstrator suit. Results from the
+performed with the Mark III (MKIII) EVA Technology
+                                                             Walkback Test quantified the total metabolic cost
+Demonstrator suit, a treadmill, and the Partial
+                                                             and biomechanics of suited locomotion for a 10
+Gravity Simulator in the Space Vehicle Mock-Up
+                                                             kilometer “walkback” scenario on the Moon (1/6-g).
+Facility at Johnson Space Center.           The data
+                                                             For IST-1, the center of gravity location was held
+collected for IST-1 included metabolic rates, ground
+                                                             constant while the weight, pressure, and suit
+reaction forces, biomechanics, and subjective
+                                                             kinematic constraints (waist locked out) were varied
+workload and controllability feedback on both suited
+                                                             to determine their individual effects on Lunar
+and unsuited (shirt-sleeve) astronaut subjects. For
+                                                             ambulation.
+IST-1 the center of gravity was controlled to a
+nearly perfect position while the weight, pressure
+                                                             This is a preliminary report providing a high-level
+and biomechanics (waist locked vs. unlocked) were
+                                                             overview of some of the key findings of IST-1 based
+varied individually to evaluate the effects of each on
+                                                             on the data that has been analyzed to date. Further
+the ability to perform level (0 degree incline)
+                                                             results with respect to the effects of suit inertial
+ambulation in simulated Lunar gravity. The detailed
+                                                             mass, kinematics, and transports costs of the MK III
+test methodology and preliminary key findings of
+                                                             suit during Lunar translation, will be published at a
+IST-1 are summarized in this report
+                                                             later date.
+
+INTRODUCTION
+                                                             TEST OBJECTIVES
+Current     understanding    of   suited    human
+                                                             The objectives of IST-1 discussed in this paper
+performance in reduced gravity environments
+                                                             include quantifying the effects of varied weight,
+includes limited observations from Apollo Lunar
+                                                             varied pressure, and suit kinematic constraints
+surface EVAs and from a few previous studies
+                                                             (waist locked vs. unlocked) on human performance
+conducted      in    partial  gravity    simulation
+                                                             (measured via metabolic rate, joint mobility, and
+environments. NASA is in the process of enhancing
+                                                             subjective assessments) during suited translation in
+the design of the next generation space suit and
+                                                             a simulated Lunar environment (1/6g).
+have initiated a series of tests aimed at
+understanding suited human performance under a
+variety of simulated Lunar EVA conditions. These
+studies include matched unsuited controls, so that
+
+
+
+                                                         1
+METHODS                                                     volumetric mockup, and gimbal support structure
+                                                            were offset to the appropriate gravity level. The
+Subjects were recruited from a pool of personnel            combined 59 kg weight of the PLSS backpack
+who typically perform EVA suited studies for the            mock-up (18 kg) and the gimbal support system (41
+Engineering Directorate and from a group of                 kg) very closely simulates the current 61 kg EMU
+astronauts selected to support exploration EVA              PLSS weight. These configurations were designed
+studies. Only those subjects who had good suit fit          to create realistic configurations for the respective
+were considered for inclusion in this study due to          unsuited and suited conditions.
+potential medical safety issues. From this pool, 6
+male astronaut subjects (Table 1) participated in the       Mark III Advanced Space Suit Technology
+data collection phases of the study. At time of test,       Demonstrator EVA suit
+no available female astronauts properly fit in the MK       The MK III suit is a prototype suit that provides
+III suit.   All subjects successfully passed the            dynamic ranges of motion considered necessary for
+modified Air Force Class III Physical or equivalent         a wide variety of planetary EVA tasks and is a valid
+examination.                                                test bed from which design requirements for future
+                                                            suit development can be derived. The MKIII is a
+           Table 1: Subject Characteristics                 hybrid space suit configuration composed of hard
+                                                            elements, such as a hard upper torso and brief
+                      Body     Age
+                                                            section, and of soft components such as fabric
+ n=6       Height     Mass     (year    VO2pk
+                                                            elbows and knees that are designed to handle
+           (cm)       (kg)     s)       (ml/min/kg)
+                                                            operating pressures of up to 55.0 kPa (8.0 psi).
+ Avg       179.1      80.7     44.8     50.8                Another feature of the suit is the use of bearings in
+ St.                                                        multi-axial mobility joint systems including the
+ Dev.      4.8        8.5      6.9      6.7                 shoulder, upper arm, waist, upper hip, mid hip,
+                                                            upper leg (3 bearing hip), and ankle joints. The suit
+ Max       185.9      86.4     52.0     60.7
+                                                            is entered through a hatch on the backside of the
+ Min       174.6      68.2     37.0     42.6                hard upper torso (rear entry suit) that also
+                                                            accommodates integration of a backpack. Suit
+                                                            subjects are integrated to and supported in the suit
+TEST HARDWARE                                               by a waist belt weight relief system and shoulder
+                                                            straps. The boots are modified commercial work
+Partial Gravity Simulator (Pogo)                            boots with flexible soles for walking and a
+All IST-1 data collection sessions were performed           convoluted ankle joint for mobility. The 54.5 kg
+using the Space Vehicle Mock-up Facility (SVMF)             MKIII has modular leg, arm, and boot soft goods
+Pogo system to provide simulated partial-gravity            components that allow individualized sizing
+conditions. The Pogo uses a pneumatic cylinder              adjustments with sizing rings. Foam padding also
+servo controlled to a strain gauge to result in a           is used to improve fit and to avoid pressure or
+constant gravitational offloading throughout the            rubbing spots.
+subject’s range of motion. The vertical servo
+system consists of the vertical servo assembly,
+strain gauge, pneumatic cylinder assembly and the
+piston rod assembly (ref. drawing JSC-26802-4). A
+gimbal support structure attached to the end of the
+lifting actuator supports a suited subject and allows
+for the pitch, roll, and yaw rotational degrees-of-
+freedom during movement. During unsuited testing,
+a separate spreader bar and harness assembly
+provided support to the suspended subjects.
+
+For the unsuited trials the Pogo system was
+adjusted to completely offset the weight of the
+harness and spreader bar, while the subject’s
+weight was offset to the appropriate level. For
+suited trials, the combined weight of the subject,
+liquid cooling garment (LCG), pressure garment                Figure 1: Mark III Advanced Space Suit Technology
+(MKIII) and portable life support system (PLSS)                            Demonstrator EVA Suit
+
+
+
+                                                        2
+During testing sessions certified breathing air was          VO2pk, measured levels of energy expenditure
+provided by a compressed air source (a tube trailer)         during subsequent test sessions can be evaluated
+at an approximate flow rate of 4.2 l/s (9.0 cubic feet       as percentages of VO2pk to ensure subject safety
+per minute) Internal suit cooling was provided via a         and allow valid relative comparisons among
+closed water loop that circulates through an                 subjects.
+ice/water chiller to cool the test subject’s Liquid
+Cooling Garment (LCG). The system is powered by              Establishment of Individualized Preferred
+an external pump (~109 kg/hr) and can deliver a              Transition Speed (PTS)
+minimum suit inlet temperature of 4º C or a                  Similar to the Walkback Test, an accurate range of
+maximum of 28º C when the chiller bypass valve is            walking and running speeds for individuals of
+activated. Communication with the suited test                different size and stride length was established by
+subject was available via a system comprised of 9            determining the PTS for each subject at Lunar
+wireless head sets and 2 hardwire head sets.                 gravity (1/6-g). Refer to ICES paper 2007-01-3133
+                                                             for details on the PTS determination protocol.
+For the purposes of this report, “suit” refers to the
+pressure garment, combined mockup backpack,                            Table 2 - Speeds Used for Data Collection
+and gimbal support structure.
+                                                                 Stage       Speed                    Comments
+VacuMed Oversized Treadmill
+The treadmill used for testing was a customized              1
+                                                                          PTS minus
+VacuMed model #13610 large research treadmill                             2.4 km/h      Subtract 0.8 km/h per stage; need
+owned by the EVA & Spacesuit Systems Branch                               PTS minus     smaller increments for walking
+                                                             2
+(Figure 2). With a walking surface 1.5 meters wide                        1.6 km/h
+and 2.4 meters in length, it allows speeds from 0.16         3
+                                                                          PTS minus     Subtract 0.8 km/h to assure walking out
+to 45 km/h with speed resolutions of 0.16 km/h and                        0.8 km/h      of transition zone
+grades from 10% decline to 30% incline. The                      Preferred Transition
+treadmill was instrumented with four force plates                                       No data collected in transition zone
+                                                                        Speed
+(AMTI Model #OR6-5-2000) placed under the deck
+                                                                          PTS plus      Add 0.8 km/h to assure running out of
+and belt of the treadmill.                                   4
+                                                                          0.8 km/h      transition zone
+                                                                          PTS plus
+                                                             5                          Add 1.6 km/h to distinguish
+                                                                          2.4 km/h
+                                                                                        metabolic/biomechanical differences at
+                                                                          PTS plus      running speeds
+                                                             6
+                                                                          4.0 km/h
+
+
+                                                             Once the PTS was determined, three walking and
+                                                             three running velocities were assigned such that the
+                                                             PTS and immediate range above and below it were
+                                                             avoided during data collection (Table 2). This was
+                                                             to maintain a steady gait and to avoid confounding
+                                                             influences on metabolic rate derivation. Three
+                                                             speeds were selected for data collection to allow
+                                                             investigators to understand the shape of the
+                                                             metabolic curve in both the walking and running
+        Figure 2 - VacuMed Research Treadmill                ranges.
+
+                                                             Pogo Off-loading
+TESTING PROTOCOLS                                            Prior to the beginning of any trial, the target weight
+                                                             for the subject was verified with the integrated force
+Peak Oxygen Consumption (VO2pk) Test                         plates in the treadmill to ± 0.5 kg (1 lb). Due to
+To compare energy expenditure across the different           subject discomfort during unsuited testing, the
+conditions planned for this test, subjects performed         target weight was adjusted to ± 1.4 kg (3 lb).
+a graded treadmill exercise test to determine their
+aerobic capacity/peak oxygen consumption, or
+VO2pk. Refer to ICES paper 2007-01-3133 for
+details on the VO2pk test protocol. From the
+
+
+                                                         3
+                                                               Varied Weight Test (Unsuited and Suited)
+                                                               Ambulation at the same 6 speeds used in the
+                                                               Varied Pressure condition was repeated in both
+                                                               suited and unsuited conditions at a range of
+                                                               simulated suit weights while holding mass (121 kg)
+                                                               and suit pressure (29.6 kPa (4.3 psi)) constant.
+                                                               Pogo off-loading force was adjusted for suit weights
+                                                               of approximately 63, 121, 186, 247 and 308 kg.
+                                                               These varied weight conditions can also be
+                                                               interpreted as varied gravity levels of 0.12-g, 0.167-
+                                                               g, 0.22-g, 0.27-g and 0.32-g.
+
+
+                                                               DATA COLLECTION AND ANALYSIS
+
+                                                               Metabolic Rate
+                                                               During the VO2pk and unsuited tests, metabolic
+                                                               rate was determined from the continuous
+    Figure 3 - Instrumented unsuited subject performs          measurement of VO2, carbon dioxide (CO2)
+treadmill locomotion while partially suspended from Pogo       production, and expiratory volume (VE) using a
+                        overhead                               headset/mouthpiece connected to a True One 2400
+                                                               metabolic cart (Parvo Medics, Provo, UT). Heart
+Varied Pressure Test (Suited)                                  rate during the VO2pk test was monitored from 12-
+Each subject donned the MKIII suit and was initially           lead electrocardiogram (ECG) recordings, and
+pressurized to 29.6 kPa (4.3 psi) Each subject then            during sub-maximal tests from a Polar Heart Rate
+translated on a level treadmill (0% grade) for three           Monitor.
+minutes at each of the six prescribed velocities
+(three walking, three running) while the Pogo                  During exercise in the MKIII suit, metabolic rate was
+system provided partial weight relief to simulate              based on measured suit ventilation rate, expired
+Lunar gravity (Figure 4). Subjects completed the               CO2 concentration in the exhaust umbilical (CD-3A
+ambulation trials at each of 5 different suit                  Infrared    Carbon     Dioxide      Analyzer,     AEI
+pressures: 6.9, 20.7, 29.6, 34.5, and 44.8 kPa (1.0,           Technologies, Pittsburgh, PA) and the regression
+3.0, 4.3, 5.0 and 6.5 psi). Suit weight and mass               between VCO2 and VO2 as measured during the
+were held constant at 121 kg in these trials.                  VO2 peak test. This technique and hardware were
+                                                               also used for the Walkback Test and are identical to
+                                                               those currently used during suited NBL tests at
+                                                               JSC.
+
+                                                               The metabolic rates represent the highest one-
+                                                               minute average during each of the 3-minute walking
+                                                               or running stages. Metabolic rate was defined as
+                                                               ml of O2 consumed per kg of the subject’s body
+                                                               mass, per minute (ml·kg-1·min-1). Transport cost
+                                                               was defined as ml of O2 consumed per kg of the
+                                                               subject’s body mass per km traveled (ml·kg-1·km-
+                                                               1).   Second order polynomials were used to
+                                                               represent metabolic rate variation with respect to
+                                                               speed.
+
+                                                               Significant Metabolic Differences
+                                                               Due to the limited sample size (n=6), inferential
+                                                               statistics were not used, therefore statistical
+                                                               significance was not calculated. For these analyses
+ Figure 4 - Suited subject performs treadmill locomotion
+     while partially suspended from Pogo overhead              a metabolic rate of 3.5 ml·kg-1·min-1 was chosen
+                                                               for practical significance. This is equivalent to
+                                                               resting metabolic rate and 10% of the VO2pk in a
+
+
+                                                           4
+subject with a VO2pk 35 ml·kg-1·min-1 who would                • The Corlett & Bishop Body Part Discomfort
+be representative of a slightly deconditioned                    Scale was used to characterize discomfort at
+crewmember. The average ISS crewmember has a                     different body locations (Corlett & Bishop,
+pre-flight VO2pk of 43.7 ± 6.1 ml·kg-1·min-1 (NASA               1976).
+Exercise Physiology Lab Database).                             • Thermal comfort was assessed for two reasons:
+                                                                 to determine the subjective thermal comfort of
+Biomechanical Data Collection and Analysis                       the subject and to determine whether any
+Three-dimensional forces and moments under feet                  changes were necessary to improve the
+were recorded during walking and running on a                    thermal comfort of the subject during testing.
+VacuMed treadmill instrumented with four 46.2 x                  Thermal comfort was assessed using the
+50.8 cm strain gauge force-plates (AMTI,                         Bedford scale (Bedford, 1936).
+Watertown, MA USA). The signal was collected at
+1000 Hz over thirty gait cycles at varying speeds,           Imaging
+pressures, and simulated suit weights and then               During all suited tests a digital video camera
+stored for subsequent analysis.           The vertical       captured video of the subject in the sagittal plane as
+components of each of the four force-plates were             well as auditory comments of the subject and test
+resolved into one vertical component for each of the         team. During all unsuited tests video was captured
+thirty gait cycles. For all trials, in each of the           without the audio
+conditions, an ensemble average was calculated
+over the thirty gait cycles after which the peak
+vertical force was determined using customized               PRELIMINARY RESULTS AND DISCUSSION
+computer code (MATLAB, Natick, MA, USA). A
+second order polynomial fit was generated                    Varied Pressure - Metabolic Rate Findings
+examining       the     relationship    between    the       Variation in suit pressure at simulated Lunar gravity
+independent and dependent variables using basic              did not significantly affect metabolic rate (see
+curve fitting capabilities available in MATLAB.              Figures 5 and 6). The largest difference was
+                                                             between 6.9 kPa (1.0 psi) and 34.5 kPa (5.0 psi)
+Three-dimensional trajectories of retro-reflective           with the difference ranging from 0 to 3.0 ml·kg-
+markers placed at approximate anatomical                     1·min-1 across the range of speeds.
+landmarks on the MKIII suit were collected at 100
+Hz (Vicon, Oxford, UK) to determine the
+displacement of the segments of the suit. These
+trajectories were then filtered, processed, and
+reduced to the three-dimensional angular
+displacement of the three lower extremity joints
+during locomotion using customized computer
+code. This information was used for subsequent
+analysis to describe the kinematics of the MKIII suit
+during treadmill ambulation at varying suit
+pressures and suit weights.
+
+Subjective Data Collection and Analysis
+The following subjective ratings were recorded at
+                                                              Figure 5: Metabolic rate versus speed at different suit
+the end of each testing condition:
+                                                               pressures during suited locomotion at Lunar gravity.
+  • Ratings of Perceived Exertion (RPE; Borg,
+    1982) were used to gauge how much effort
+    subjects felt they must exert to complete each
+    condition.
+  • A modified version of the Cooper-Harper rating
+    (Cooper, 1957; Cooper & Harper, 1969) on a
+    scale of 1 to 10 was used to determine the level
+    of compensation a person feels is necessary to
+    maintain body control. The original Cooper-
+    Harper scale was developed for pilot
+    controllability of an aircraft, but was later
+    modified to apply to control of the human body.
+
+
+                                                         5
+Figure 6: Metabolic rates within speeds at different suit
+pressures for suited locomotion at the 121 kg suit weight          Figure 8: Modified Cooper-Harper ratings at varied
+                    at Lunar gravity.                           pressures for suited locomotion at the 121 kg suit weight
+                                                                                     in Lunar gravity.
+Figure 6 shows there is very little variation in the
+metabolic cost as a function of pressure for five
+                                                                Varied Pressure - Biomechanics Findings
+different ambulation speeds, suggesting that
+                                                                Similar to metabolic rate, most of the biomechanics
+metabolic costs not directly effected by changes in
+                                                                variables showed little variation with changes in suit
+suit pressure.
+                                                                pressure. The ground reaction force (GRF) is a
+                                                                result of the human interacting with the ground.
+In summary, suit pressure has a minimal influence
+                                                                During locomotion, the individual is acted upon by
+on the metabolic rate for the group as a whole. It is
+                                                                the GRF at the same time the individual pushes
+important to note that this test was limited to
+                                                                against the ground. The magnitude of the GRF
+ambulation and does not imply that suit pressure
+                                                                varies as a function of locomotion speed, increasing
+would not have a significant effect on crewmembers
+                                                                with increasing speed. In earth walking, the vertical
+performing upper body and hand intensive
+                                                                component of the GRF has a maximum value of 1
+exploration tasks.
+                                                                to 1.2 "times body weight" (BW) and in earth
+                                                                running, the maximum or peak can be as high as 3
+Varied Pressure - Subjective Findings
+                                                                to 5 BW. Mean peak GRF did not change with suit
+Subjective findings showed similar trends to the
+                                                                pressure. Gait parameters including stance time,
+metabolic rate. There was very little variation in
+                                                                stride length and cadence also did not vary. Suit
+either RPE or the modified Cooper-Harper ratings
+                                                                joint motion indices including waist, hip and knee
+between different suit pressures as shown in Figure
+                                                                average angular velocity showed a trend to
+7 and Figure 8, respectively. RPE increased with
+                                                                decrease with increased pressure as shown in
+speed as expected.         Modified Cooper-Harper
+                                                                Figures 9-11.
+ratings had a trend towards increasing with speed,
+but were generally in the acceptable range of ~ 3 in
+the expected nominal ambulation speeds of < 5
+km/hr.
+
+
+
+
+                                                                  Figure 9: Waist average angular velocity versus suit
+                                                                pressure for suited locomotion at the 121 kg suit weight in
+ Figure 7: Figure 7 - RPE at varied pressures for suited                               Lunar gravity
+  locomotion at the 121 kg suit weight in Lunar gravity
+
+
+
+                                                            6
+                                                                  Figure 12: Metabolic rate versus speed for different
+  Figure 10: Knee average angular velocity versus suit            1-g equivalent suit weights during suited locomotion
+pressure for suited locomotion at the 121 kg suit weight in         at Lunar gravity with constant suit pressure (29.6
+                       Lunar gravity                                                       kPa)
+
+                                                                  To better understand the suit related factors that
+                                                                  cause an increase in metabolic rate with increasing
+                                                                  suit weight, we compared the suited metabolic rates
+                                                                  to the metabolic rates of weight matched unsuited
+                                                                  subjects. To calculate the metabolic cost of the suit
+                                                                  independent of weight, the metabolic rates of the
+                                                                  unsuited weight-matched controls were subtracted
+                                                                  from the metabolic rates of the suited trials. Figure
+                                                                  13 is a plot of the difference in metabolic rate
+                                                                  between suited and unsuited subjects, as a function
+                                                                  of earth suit weight. This delta metabolic cost was
+                                                                  not significant for suit weights between 63 and 186
+                                                                  kg, but began to increase significantly at suit
+   Figure 11: Hip average angular velocity versus suit            weights greater than 186 kg. This increase in
+pressure for suited locomotion at the 121 kg suit weight in       metabolic rate at suit weights greater than 186 kg
+                       Lunar gravity                              might be related to an increase in the average joint
+                                                                  rotational velocities as shown in Figures 17-19.
+Varied Weight (Suited and Unsuited) - Metabolic
+Findings
+Figure 12 shows the relationship between metabolic
+rate and ambulation speeds for earth suit weights
+ranging from 63 kg to 308 kg. At speeds less than
+4.0 km/h, the difference in average metabolic rate
+between the lightest and the heaviest suit weight
+was 2.85 ml·kg-1·min-1, which is not significant (≤
+3.5 ml·kg-1·min-1). At speeds above 4 km/hr the
+differences in suit weight became significant. The
+difference between the lowest and the highest suit
+weight varies from ~ 6 ml·kg-1·min-1 at speeds
+between 4.0-5.0 km/h up to ~ 15 ml·kg-1·min-1 at
+speeds between 6.1-8.0 km/h.
+
+                                                                     Figure 13: - Metabolic cost of the suit not related to
+                                                                      weight versus 1-g equivalent suit weight for suited
+                                                                  locomotion at Lunar gravity at a suit pressure of 29.6 kPa
+
+
+
+
+                                                              7
+Varied Weight (Suited and Unsuited) -                             Varied Weight (Suited and Unsuited) -
+Subjective Findings                                               Biomechanics Findings
+Subjective findings showed similar trends to the                  The mean vertical peak GRF data showed a trend
+metabolic rate. The general trend as seen in Figure               unlike varying the suit pressure. In this case, there
+14 was that RPE increased as suit weight                          appeared to be a general trend of increasing
+increased. The difference in RPE between suit                     vertical peak GRF with increasing suit weight
+weights also increased as speed increased. Figure                 (Figure 16). For suit weights less than 186 kg there
+15 shows that modified Cooper-Harper ratings were                 was a minimal difference in vertical peak GRF in at
+very similar for suit weights of 186 kg and below.                nominal ambulation speeds of ≤ 5 km/hr. This
+The two heavier weights averaged a modified                       finding could be due to the fact that all subjects
+Cooper-Harper rating that was higher by 1-2 levels.               exhibited less of a "bounding or loping" type gait
+For all subjects at all speeds, suit weights of 186 kg            and instead adopted more of a terrestrial earth type
+or less had modified Cooper-Harper ratings ≤ 5,                   gait as suit weight increased.
+with most in the acceptable range of ≤ 4. In many
+cases, the heavier suit weights were also
+acceptable, but there were several ratings ≥ 6,
+especially at higher speeds.
+
+
+
+
+                                                                    Figure 16: Peak GRF rate versus 1-g equivalent suit
+                                                                   weight during suited locomotion at Lunar gravity with a
+Figure 14: RPE versus speed for different 1-g equivalent                       constant pressure (29.6 kPa)
+suit weights during suited locomotion at Lunar gravity with
+             constant suit pressure (29.6 kPa)                    Figures 17-19 show that with increased suit weight
+                                                                  there was a general trend of increased average
+                                                                  angular velocity of the waist, hip and knee joints.
+
+
+
+
+  Figure 15: Modified Cooper-Harper versus speed for
+    different 1-g equivalent suit weights during suited
+ locomotion at Lunar gravity with constant suit pressure
+                        (29.6 kPa)
+                                                                    Figure 17: Waist average angular velocity versus 1-g
+                                                                   equivalent suit weight during suited locomotion at Lunar
+                                                                         gravity with a constant pressure (29.6 kPa)
+
+
+
+
+                                                              8
+                                                               Figure 20: Locomotion with the waist locked compared to
+                                                               nominal suit configuration at Lunar gravity with suit weight
+ Figure 18: Knee average angular velocity versus 1-g
+                                                                    of 121 kg and suit pressure of 29.6 kPa (4.3 psi)
+equivalent suit weight during suited locomotion at Lunar
+      gravity with a constant pressure (29.6 kPa)
+
+                                                               STUDY LIMITATIONS
+
+                                                                 1. Because this test was a continuation of the
+                                                                    Walkback Test, a comparison of data from
+                                                                    this test and the Walkback test was done.
+                                                                    IST-1 had 3 subjects who had also
+                                                                    participated in the Walkback Test (3 subjects
+                                                                    were new to this test). To look at the test-to-
+                                                                    test variability, only the 3 returning subjects
+                                                                    were compared. The only two carry-over
+                                                                    conditions were suited at Lunar gravity and
+                                                                    29.6 kPa (4.3 psi) and the unsuited weight-
+                                                                    matched control trial. Figure 21 shows the
+                                                                    comparison of these two test conditions.
+                                                                    When comparing the results, the metabolic
+  Figure 19: Hip average angular velocity versus 1-g                rates from IST-1 were consistently lower than
+equivalent suit weight during suited locomotion at Lunar            the Walkback Test. Proposed reasons for
+      gravity with a constant pressure (29.6 kPa)
+                                                                    this variation include increased subject
+                                                                    familiarization with partial gravity ambulation,
+                                                                    a larger treadmill walking surface, and
+Varied Suit Kinematics - Waist-Locked vs
+                                                                    improved weigh-out procedures which
+Unlocked Locomotion
+                                                                    required that each subject’s weight on the
+To evaluate the effect of the mobility provided by
+                                                                    ground be measured to within 1.4 kg of the
+the waist bearing during Lunar ambulation, the
+                                                                    target    weight.        Previous     weight-out
+waist joint of the MK III was locked out at the
+                                                                    procedures relied only on a load cell
+nominal configuration of 121 kg, 29.6 kPa (4.3 psi)
+                                                                    measuring Pogo off-loading force.
+and 1/6-g. The data indicates that locking the waist
+joint does not affect the metabolic cost of level
+ground ambulation (Figure 20).
+
+While the metabolic rate was not different between
+nominal and waist-locked conditions, the subjective
+ratings did differ. The average RPE and modified
+Cooper-Harper values were approximately one
+rating higher than nominal (waist-unlocked)
+operations.
+
+
+
+
+                                                           9
+                                                           on metabolic rate or on subjective assessments of
+                                                           exertion and operator compensation for the group
+                                                           as a whole.
+
+                                                           Interestingly, biomechanical analysis revealed
+                                                           decreases in average angular velocities of the
+                                                           waist, hip and knee with increased pressure, which
+                                                           other data suggests would normally lower the
+                                                           metabolic rate. The observation that metabolic rate
+                                                           was essentially unchanged by suit pressure
+                                                           suggests a more complex relationship involving
+                                                           both energy consuming and energy recovery
+                                                           elements that balance each other to result in little
+   Figure 21: Lunar locomotion comparison of repeat        net effect in the MKIII suit. Different suit designs
+    subjects from both the Walkback Test and IST-1.        with different joint designs and sequencing might be
+                                                           affected differently by suit pressure.        These
+ 2. Although weight was varied, inertial mass              observations are limited to ambulation and do not
+    was not varied. All varied weights occurred            imply that suit pressure would not have a significant
+    at a suit mass of 121 kg. Without mass                 effect on subjects performing upper body and hand
+    matching these conditions or characterizing            intensive exploration tasks.
+    the effects of varied mass, the results of the
+    varied weight section have to be viewed as             Suit weight (63kg – 308 kg) did not affect average
+    preliminary.                                           metabolic rate at locomotion speeds below 4.0
+                                                           km/h. At speeds above 4 km/hr the differences
+ 3. Due to limited time and resources, the subject         became significant, reaching up to ~15 ml·kg-1·min-
+    pool was limited to six male astronauts with           1 at speeds between 6.1 and 8.0 km/h.
+    limited anthropometric variability. Also, at
+    time of test there were no available female            The metabolic cost of the suit unrelated to weight
+    astronauts available who properly fit in the           was not significant for suit weights between 63 and
+    MK III suit. Ideally, future tests will include        186 kg, but began to increase significantly at suit
+    female subjects and male subjects with                 weights greater than 186 kg, probably because
+    different anthropometrics.                             there is more energy expended in the rotation of the
+                                                           torso at higher suit weights. These observations
+ 4. Another consideration is that during the               suggest a compound relationship between mass
+    reduced-gravity trials the subjects’ arms and          and weight, and that a reduction in the mass of the
+    legs still operated in a 1-g field. Because the        rotating components on the suit might result in a
+    weight of the limbs was not reduced, it is             reduction in suited metabolic rates.
+    possible      that     the     metabolic    and
+    biomechanical data may not accurately                  Perceived exertion increased as suit weight
+    simulate that which would occur in true                increased and the increase in exertion with speed
+    reduced gravity environments. However it is            was greater in heavier suits. For all subjects at all
+    not felt that these effects were substantial           speeds, suit weights of 186 kg or less had operator
+    given the relatively small amount of total body        compensation ratings (modified Cooper-Harper) ≤
+    weight comprised in the limbs, and in a                5, with most in the acceptable range of ≤ 4. In
+    constant gravity field the energetics of the           many cases, the heavier suit weights were also
+    pendular upswing and downswing would                   acceptable, but there were several ratings ≥ 6,
+    generally be offsetting. Additionally a limited        especially at higher speeds.
+    cross over test on C-9 parabolic flights
+    showed close agreement with the results of             Metabolic data indicates that locking the waist-joint
+    the Pogo based tests.                                  does not affect the metabolic cost of level
+                                                           ambulation. However, subjective ratings did differ
+                                                           between conditions, with the average exertion and
+CONCLUSIONS                                                modified     Cooper-Harper        ratings     being
+                                                           approximately one rating higher in the waist-locked
+Initial findings suggest that – for level ground           condition than in nominal (waist unlocked)
+ambulation – suit pressure has a minimal influence         operations.
+
+
+                                                      10
+                                                             Requirements, Standards, and Operating Bands for
+Futher analysis and future tests will be conducted to        Exploration Missions, p.13. Houston, Texas.
+evaluate the individual contributions of the inertial
+mass, suit kinematics and stability as well as               Watenpaugh DE., Ballard RE., Schneider SM., Lee
+examine the various inter-relationships and                  SM., Ertl AC., William JM., Boda WL., Hutchinson
+coupling factors present in untested combinations            KJ., and Hargens AR. (2000). Supine lower body
+of these variables.      By understanding these              negative pressure exercise during bed rest
+individual factors, NASA will be able to enhance             maintains upright exercise capacity. Journal of
+EVA space suit designs, and improve upon EVA                 Applied Physiology, 89(7):218-27.
+mission planning and overall consumables
+packaging.
+
+
+REFERENCES
+
+Bedford T. (1936). The warmth factor in comfort at
+work. MRC Industrial Health Board Report, HMSO,
+London, No. 76
+
+Borg GA.       (1982) Psychophysical bases of
+perceived exertion. Medicine and Science in Sports
+and Exercise, 14(5), 377-381.
+
+Cooper GE. (March 1957). Understanding and
+Interpreting Pilot Opinion. Aeronautical Engineering
+Review, 16(3): 47-51.
+
+Cooper GE., Harper RP., Jr. (1969). The Use of
+Pilot Rating in the Evaluation of Aircraft Handling
+Qualities. NASA TN D-5153.
+
+Corlett EN., Bishop RPA. (1976). A technique for
+assessing postural discomfort. Ergonomics, 19(2),
+175-182.
+
+Gernhardt, ML., Lee, L., Vos, JR. “The Walkback
+Test: A Study to Evaluate Suit and Life Support
+System Performance Requirements for a 10
+Kilometer Lunar Traverse in a Planetary Suit”,
+2007-01-3133;    International  Conference   on
+Environmental Systems, July 2007.
+
+Heyward,   VH.    (2006).   Advanced   Fitness
+Assessment and Exercise Prescription, 5th Ed.
+Champaign, IL: Human Kinetics
+
+Lee SM., Bennett BS., Hargens AR., Watenpaugh
+DE., Ballard RE., Murthy G., Ford SR., and Fortney
+SM. (1997). Upright exercise or supine lower body
+negative pressure exercise maintains exercise
+responses after bed rest. Medicine and Science in
+Sports and Exercise, 29(7): 892-900.
+
+National Aeronautics and Space Administration-
+Johnson Space Center.       2005.   Nutrition
+
+
+
+
+                                                        11
+

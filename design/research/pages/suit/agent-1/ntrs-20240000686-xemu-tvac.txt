@@ -1,0 +1,722 @@
+53rd International Conference on Environmental Systems                                                                     ICES-2024-75
+21-25 July 2024, Louisville, Kentucky
+
+
+
+
+                          xEMU Thermal Vacuum Testing Overview
+
+                                             David Westheimer1 and Liana Rodriggs2
+                                          NASA Johnson Space Center, Houston, TX, 77058
+
+                                                                  and
+
+                                   Eric A. Falconi,3 Ben J. Swartout,4 and Michael Lewandowski5
+                                              Jacobs Technology, Houston, TX, 77058
+
+            The Exploration Extravehicular Mobility Unit (xEMU) project was the culmination of over a decade of
+        spacesuit development that was performed in-house at the NASA Johnson Space Center. This project reached
+        a level where almost fully completed development fidelity spacesuits had been designed, assembled, and tested
+        in an integrated configuration. The xEMU Design-Verification-Test (DVT) hardware was assembled into two
+        different xEMU test articles and underwent a series of thermal-vacuum tests at the Johnson Space Center’s
+        Chamber B. These tests not only gathered data on thermal performance, but also exercised the life support
+        system, communication system, suit information systems, and suit avionics. This complex test has and will
+        continue to produce many meaningful reports ranging from component level test results (for example on
+        spacesuit boots), test design of heater cages to simulate thermal environments for a spacesuit test article, and
+        higher level thermal performance of subsystems (such as the Portable Life Support System) or the entire
+        assembly. This paper provides an overview of the test configuration and also top-level results from this highly
+        successful integrated test of the xEMU.
+
+                                                         I. Introduction
+
+        T    HE Exploration Extravehicular Mobility Unit (xEMU) project brought over a decade of internal government
+             spacesuit development to a climax. Technologies and architectures that were initially selected in the mid-2000’s
+        have undergone component and subsystem level development to enable fully integrated spacesuit level tests. The
+        xEMU project performed a test series from 2021 to 2023 named Design-Verification-Test (DVT) which was
+        envisioned as a dry run of qualification testing using the final set of hardware built prior to producing flight hardware
+        fidelity systems. This DVT series included tests at the Exploration Portable Life Support Subsystem (xPLSS),
+        Exploration Pressure Garment Subsystem (xPGS), and Exploration Informatics Subsystem (xINFO) levels prior to
+        integration. The full xEMU was assembled for the first time in the summer of 2022, and a series of laboratory tests
+        was performed at ambient pressures. Some upgrades to the xPLSS were needed following that test series and the
+        xEMU test article was reassembled as a Short xEMU (SxEMU) after these changes were made. By the summer of
+        2023 another series of lab ambient tests was performed with this SxEMU to demonstrate that it was ready for thermal-
+        vacuum testing which was conducted in the fall.
+            This paper provides an overview of these xEMU thermal-vacuum tests. Two xEMU test articles were used. The
+        SxEMU, pictured in Figure 2, used this SxEMU configuration which included a full xPLSS, aluminum Hard Upper
+        Torso (HUT), helmet assembly, xINFO lighting band and camera, and test equipment to simulate human metabolic
+        products. A second test article, Suit 2, which is pictured in Figure 1, did not have an xPLSS but instead included a
+        full xPGS to better capture the total heat exchange between the suit and the environment. Many additional papers,
+        references 1 through 11, provide lower level details of specific aspects of xEMU performance. These include details
+        on boot thermal performance, audio subsystem performance, or heat rejection performance. This paper provides an
+
+
+
+        1
+          Engineering, Spacesuit and Crew Survival System Branch, 2101 NASA Parkway, Mail Code EC5.
+        2
+          Project Manager, EVA and Human Surface Systems Program, 2101 NASA Parkway, Mail Code DI.
+        3
+          Portable Life Support System Test Engineer, Jacobs Technology, 2101 NASA Parkway, Mail Code EC5.
+        4
+          Pressure Garment Test Engineer, Jacobs Technology, and 2101 NASA Parkway, Mail Code EC5.
+        5
+          Thermal Analyst, Jacobs Technology, 2224 Bay Area Blvd.
+
+        Trade names are used in this presentation for identification only. Their usage does not constitute an official
+        endorsement, either expressed or implied, by the National Aeronautics and Space Administration.
+overview of the test and test articles to give additional context for these more detailed papers and to present a top level
+assessment of the xEMU performance in this high fidelity space-like testing environment.
+
+
+                     II. Test Objectives
+    The primary objective of this test series was to test xEMU
+hardware in a high-fidelity simulated space environment. This
+included both space-like vacuum and a wide range of temperature
+extremes that were expected for either Extra-Vehicular Activities
+(EVAs) at the International Space Station or on the surface of the
+Moon. Objectives can be grouped into three categories. The first
+set of objectives focused on simulating EVAs with the hardware
+exposed to a wide range of thermal environments. Next, running the
+xEMU in vacuum conditions enabled sub-ambient pressure
+operation of the suit and its internal hardware. Finally, operating at
+the integrated spacesuit assembly level was an excellent opportunity
+to demonstrate the design and functionality of the xEMU.
+    The xEMU had thermal environment requirements that ranged
+from 93K (-292°F) for a cold location on the lunar South Pole to
+378K (+220°F) for a hot lunar crater. The vacuum chamber,
+Chamber B at the Johnson Space Center, used liquid nitrogen cooled
+cold walls to provide cold environments. It was understood prior to
+the test that the 93K test point could not be achieved in the facility
+                                         and the test would simply get
+                                         the minimum temperature Figure 2. SxEMU Test Article.
+                                         that the chamber could
+                                         provide. Heater cages were constructed around the two spacesuits to simulate
+                                         the hot environments3. ISS thermal environments fell within that very extreme
+                                         range of lunar temperatures.
+                                             Figure 3 shows an infrared image of Suit 2 during testing. This test series
+                                         consisted of mapping the performance of the xEMU across as wide of a
+                                         temperature range as possible. This included mapping performance of the life
+                                         support system components in different thermal environments, evaluating
+                                         consumables usage, abort capabilities with the Auxiliary Thermal Control
+                                         Loop (ATCL) and Secondary Oxygen Assembly (SOA), demonstrating
+                                         Caution and Warning System (CWS) operation, and demonstrating the xINFO
+                                         system (lights, camera, and telemetry transmission over Wi-Fi). Performing
+                                         these simulated EVAs also enabled verification of numerous thermal models
+                                         and performance of the Environmental Protection Garment (EPG). Heat
+                                         transfer from the suit to the environment was estimated for different thermal
+Figure 1. Suit 2 Test Article.           environments and internal suit temperatures were checked against safe touch
+                                         temperature limits for crew. The Suit 2 boots were in contact with the floor of
+                                         the chamber, which was also cooled with liquid nitrogen and provided a unique
+                                         and challenging boot thermal test.
+                                             Operating the xEMU inside the vacuum chamber enabled evaluating suit
+                                         performance at sub-ambient pressures. Most spacesuit tests are performed in
+                                         lab ambient conditions with the suit pressurized positively above 14.7 psia
+                                         (101.3 kPa). This test put the xPGS components in vacuum conditions and then
+                                         allowed for internal suit pressures around 4.3 psia (29.6 kPa) nominally.
+                                         Running sub-ambient pressures allowed demonstration of both xPLSS oxygen
+                                         regulators to operate at sub-ambient operating pressures. Also, it demonstrated
+                                         pressure control across the xPLSS, xPGS HUT, and xPGS hatch through a wide
+Figure 3. Suit 2 Thermal Image.          range of pressure transients as the xEMU hardware was operated through
+different chamber pressure changes. Sub-ambient suit pressures were also a high fidelity test environment for testing
+
+                                                          2
+                                 International Conference on Environmental Systems
+the xEMU integrated communication system. Performance of speakers and microphones are dependent on the density
+of the gas carrying the sound waves within the suit. Audio processing, including acoustic echo cancellation, also
+benefitted from testing at sub-ambient pressures. Finally, running the suit at vacuum conditions enabled different
+states and controls within the avionics that could not be exercised during lab environment tests. These include inhibits
+for turning off the oxygen regulators when the ambient pressure is at vacuum.
+    Testing at a high level of spacesuit integration was an excellent opportunity to evaluate the integrated performance
+of a complex system. Numerous component and sub-system tests were performed as part of the xEMU project
+utilizing hardware of various levels of fidelity and complexity. The SxEMU test article used for this thermal-vacuum
+test had the highest level of physical, electrical, and software integration of any xEMU test article used in DVT testing.
+For example, many life support components are located within the xPGS HUT and hatch and were only simulated
+during xPLSS level tests, whereas for this test series, the hardware was part of the SxEMU assembly. Successful
+assembly and checkout of the integrated SxEMU test article prior to thermal-vacuum testing was a significant
+accomplishment. The thermal-vacuum test setup also included high fidelity prototype vehicle interfaces including the
+Exploration Service and Cooling Umbilical (ESCU), a Fluid Pumping Unit Interface Requirements Demonstrator
+(FPU-IRD) for water recharge, and the Exploration Battery Management System (xBMS) for battery recharge. This
+was the highest fidelity and most flight-like test of the xEMU, including a high fidelity operational concept with
+airlock operations.
+
+
+                                            III. Test Configuration
+    Two xEMU test articles were tested in Chamber B at the Johnson Space Center (JSC). This chamber is the second
+largest thermal-vacuum chamber at JSC and is certified for manned spacesuit testing. However, due to the
+development fidelity of the xEMU hardware, testing was performed in an unmanned configuration. Gaseous nitrogen
+was used as the SxEMU pressure source instead of oxygen to reduce the risk of fire. Suit 2 used air as the
+pressurization gas.
+    Both xEMUs were located in Chamber B inside of heater cages, as seen in Figure 4. A large mylar curtain was
+placed in between the two suits to minimize thermal interactions between the two test articles. The SxEMU is on the
+left and the Suit 2 test article is on the right.
+    Figure          5
+provides           an
+overview of how
+these             two
+spacesuits were set
+up in the chamber
+and the test support
+equipment needed
+to test each of
+them. Suit 2 was
+located inside the
+main portion of the
+chamber and was at
+EVA conditions for
+the duration of the
+test series, which
+was approximately
+a week. It had test
+interfaces for audio
+equipment, power
+and data, suit
+ventilation,      and
+two water loops to
+set temperatures in Figure 4. xEMUs in Chamber B.
+key portions of the
+test article that would represent thermal boundaries of the suit during a real EVA. The SxEMU passed between the
+
+                                                          3
+                                 International Conference on Environmental Systems
+                                  SxEMU DAQ
+  (EC4)                          Rack Assembly
+ DARAC
+                Ethernet/OPC
+
+
+
+
+                                                                                         Audio Interface
+                                                                                             Rack
+                                            (EC4) Chilled
+                                             Water (50F)
+
+                                                                                         (EC4) Manlock                        6 Environment
+                                                                                            Vacuum                               Coupons
+                                                                                                                              4 IR Cameras                                                       Audio Interface
+                                           SxEMU Vehicle Interfaces                                                             2 Cameras
+                                                                                                                                                                     Suit 2
+                   xEMU Power                     Vehicle HX                                                                                            100 TCs                                  Power and Data
+                    Simulator                                                                    Suit Purge/
+                                                                                                     Met
+                                                                                                                                                     6 Environment
+                    BATT-690                                                                    Consumption                                             Coupons
+                                                      FPU-IRD
+                                                                                                                                                                                                   Ventilation
+                      PF-1                                                                                                                           4 IR Cameras
+                                                 Fluid Pumping Unit                                                                                                                                  (Air)
+                                                      Interface                                                                                        2 Cameras
+                    BATT-590                        Requirements
+                                                                                                                                                                                                  Chilled Water
+                                                    Demonstrator
+                    PF-2, Ch 1                                                                                                                                                                       Loop 1
+                                                                                                               In
+                                                 3000 +/- 50 psia
+                   ESCU Power                         GN2                                                                                                                                         Chilled Water
+                    PF-2, Ch 2                                                                                                                                                                       Loop 2
+
+
+
+                                                                                         SxEMU
+
+
+                                                                                                         TCs
+
+                                                                                                    TCs              xINFO
+                                                                        ESCU-801                                      Wi-Fi
+                                    HMS CO2                                                                         Antenna
+                                     & GN2                                           HMS     Internal
+                                                                                               Inst.
+                                                                                     TCs Package
+                                                                                     Batt. Simulators
+
+
+DCU Simulator
+                                                 In-situ Battery Recharge
+                                                     (at sea level only)
+
+
+                                                CHRG-840
+                                             xBMS DVT Battery
+                                                 Charger
+
+                                                                                                                                              Functional Test Overview – xEMU Thermal-Vacuum
+                                                                                                                                                               Test, Chamber B
+                                                                            xINFO Test
+                                                                              Station                                                                         (Not a floor plan, Not to scale)
+
+
+
+Figure 5. Test Layout.
+Chamber B manlock and main portion of the chamber to perform discrete EVAs. Depressurizing the manlock, sending
+the SxEMU into the main chamber at vacuum and thermal conditions, returning to the manlock as suit consumables
+were expended, and repressurizing the manlock for suit recharge provided a very high fidelity operational concept for
+the SxEMU test points. In addition to these simulated vehicle interfaces, test equipment for the SxEMU provided
+simulated human metabolic input, a Wi-Fi interface for the xINFO, audio test
+interfaces, and test instrumentation. The following sections provide more details
+about these test configurations for both test articles.
+
+A. SxEMU
+    Figure 6 shows the SxEMU traversing between the chamber manlock and the
+main vacuum chamber. Chamber B has a crew transport system that has
+previously been used to help crew members wearing heavy spacesuits to travel in
+and out of the chamber. For this test, the same overhead rail system and chain
+drive were used, but the test article support stand, and test umbilical were modified
+to support this unmanned test. The test umbilical provided power, data, and gas
+supplies to a human metabolic simulator (HMS) located under the SxEMU test
+article and also to an internal instrumentation package inside of the SxEMU test
+article. The HMS consisted of flow controllers for CO2 and water, an evaporator,
+and flow controllers to pull gas from the SxEMU to simulate oxygen consumption
+by a crew member or simulated suit purge valve operation. Inside of the HUT, the
+internal instrumentation included an audio manikin, three measurement
+microphones, two accelerometers, and a set of instrumentation to monitor xPLSS Figure 6. SxEMU Translation.
+performance. Figure 7 shows how the data collection system, CO2 sensor, NH3
+sensor, humidity sensors, pressure sensors, flow sensors, and temperature sensors were packaged to fit inside of the
+SxEMU. This internal instrumentation package closed the Primary Thermal Control Loop (PTCL) and ATCL where
+
+                                                                                                        4
+                                                                               International Conference on Environmental Systems
+a Liquid Cooling and Ventilation Garment
+(LCVG) would normally be placed. Fluid,
+power, and data connections for internal
+instrumentation were routed out of the suit
+through a custom waist close out plug, shown in
+Figure 8, and then routed through the test
+umbilical to test support equipment outside of
+the chamber. CO2 and humidity from the HMS
+were injected into the HUT through this waist
+plug and then routed to the crew right arm
+through internal tubing.        A real xEMU
+ventilation tree was used inside of the SxEMU
+with the lines that would normally go to the legs
+of the suit routed to the arms instead. Figure 7. Internal
+Coldplates with electrical heaters were part of Instrumentation Package.
+the HMS under the SxEMU and injected heat
+into the thermal control loops of the suit in place of heat produced by a crew
+member wearing an LCVG. 32 thermocouples were placed at key locations on the Figure 8. SxEMU Waist Plug.
+inside of the SxEMU and routed through the internal instrumentation package. 96
+additional thermocouples were placed on the outer portions of
+the SxEMU.
+    The SxEMU itself was an almost complete xEMU. It was
+missing the waist brief, lower torso, and boots. The LCVG was
+replaced with the internal instrumentation, the Wired Heart
+Rate Monitor was not used, and there were not any gloves. The
+xPLSS was missing the Active Radiation Dosimeter and the
+radio was terminated with 50 Ohm resistive loads but was
+otherwise consistent with the xEMU design.
+
+B. Suit 2
+    Suit 2 provided a full xPGS test article and an improved
+opportunity to assess the full suit heat exchange with
+environments of different temperatures. Figure 9 shows Suit 2
+in a partially assembled state. It included a weight relief plate,
+where the xPLSS would normally be installed, to suspend the
+xEMU from an overhead I-beam inside of the chamber. Inside
+of the suit was a manikin wearing an LCVG. This provided a
+high fidelity thermal boundary on the inside of the suit to assess
+the heat transfer through the suit to the environment. Figure 9. Suit 2.
+Modifications were made to the LCVG to better represent a
+crew member’s hands and feet.           These are shown in Figure 10.
+Normally the LCVG does not cover hands and feet, but in order to
+provide some thermal interface inside of the gloves and boots of the
+suit, extra tubing was added to the fluid loop and sewn into comfort
+gloves and around socks to simulate the temperature of a crew members
+hands and feet.
+    The Wired Heart Rate Monitor was not included in Suit 2, a high
+fidelity lighting band was included, and the camera was simulated Figure 10. Suit 2 LCVG Modifications.
+thermally by placing a properly sized resistor inside of a spare camera
+body to produce a representative amount of electrically produced heat. The Display and Control Unit (DCU) was a
+stand in unit with a body constructed from Ultem instead of aluminum. This was previously explored as a mass
+savings idea but was not chosen due to thermal concerns discovered via modeling. Since there were two DCUs in this
+test (one on Suit 2 and one on the SxEMU), one of each base material was used and compared back to those previous
+analyses. The Liquid Crystal Display (LCD) and internal electronics on the Suit 2 DCU were high fidelity and
+identical to the one on the SxEMU. A test box was designed to send different messages across the display throughout
+                                                             5
+                                  International Conference on Environmental Systems
+                                               the test and the pan-tilt-zoom video cameras inside of Chamber B
+                                               enabled observing the LCD on both suits at different temperature
+                                               extremes. A lower fidelity Service and Cooling Connection (SCC) was
+                                               used in the Suit 2 DCU. It was made of stainless steel and provided ports
+                                               to attach fittings and a small piece of tubing to close the PTCL at the
+                                               DCU, as opposed to the quick disconnects and electrical connector
+                                               needed for a real suit application. This was an important aspect of the
+                                               DCU because the water lines flowing through provided a boundary
+                                               temperature for the heat transfer through the component and also to the
+                                               environment.
+                                                   Test support equipment was needed for Suit 2 in order to collect data
+                                               and also to simulate the appropriate conditions inside of the suit for the
+                                               test. Like the SxEMU, it also had an internal instrumentation package
+                                               that consisted of a data collection system that monitored temperatures in
+                                               two independent water loops that flowed inside of the suit, temperatures
+                                               in the ventilation gas that circulated through the suit, audio equipment,
+                                               and 48 internal thermocouples. 121 thermocouples were placed outside
+                                               of the pressurized portion of the suit and care was taken to try and capture
+                                               temperature changes through the multi-layered layup of the suit to
+Figure 11. Thermocouple Layout for             evaluate thermal performance. Figure 11 is an example of this multi-
+Suit 2 Boot.                                   layer approach as was applied to one of the boots9. Internal audio
+                                               equipment consisted of the xEMU Integrated Communication System
+                                               (ICS) speakers and microphones, an audio manikin, and a single
+measurement microphone. To pressurize the suit and simulate a 6 acfm (170 ALPM) flow rate, a ventilation cart was
+built and placed outside of the chamber. The cart contained two small scroll vacuum pumps that pulled air from the
+building through a test umbilical to the suit and then back out. A flow controller and metering valve were used to set
+the target flow rate and suit pressure, which was 4.3 psia (29.6 kPa).
+    Two independently controlled fluid thermal loops were used to set temperatures within Suit 2. Each was a pumped
+water loop with a chiller that also had some heating capability and could control to a set temperature. One water loop
+simulated the crew inside of the suit. This loop was set between 75 and 85°F (24 – 29°C) to simulate the thermal
+condition a crew member wearing an LCVG would generate inside of the suit. Temperature and flow direction were
+varied during the test matrix as the thermal environments transitioned from cold to hot. The second water loop was
+set to 50°F (10°C) and simulated the xPLSS. The xPLSS controls to a 50°F (10°C) outlet temperature at the Suit
+Water Membrane Evaporator (SWME) and this becomes a key temperature boundary for the xEMU in several
+locations. First, the xPLSS itself is a temperature boundary to the back portion of the xEMU HUT. Therefore, this
+50°F, or xPLSS, water loop was pumped through coldplate heat exchangers that were attached to the weight relief
+plate on the back of Suit 2 (shown in Figure 9). In addition, the xPLSS loop flowed through water lines that were
+located inside of the HUT to connect the xPLSS to the DCU. The 50°F (10°C) water provided some thermal boundary
+inside of the HUT through this line and it set the temperature of the DCU.
+
+C. Audio
+    This xEMU thermal-vacuum test provided an opportunity for possibly the highest fidelity spacesuit audio test ever
+performed. It contained two suits, both at sub-ambient pressures, that could talk to each other. Both suits had high
+fidelity ICS speakers and microphones, ventilation ducts, and proper gas flow. SxEMU also included the xPLSS,
+which has been determined to be a significant noise source due to fan and pump operations. Unfortunately, the
+communication performance of the xEMU radio was not refined enough at this point in time to use as part of the test,
+so the radio functionality was incorporated into the test setup.
+    The audio test system design spanned both suits and is shown in Figure 12. Both suits used test boxes immediately
+outside of the chamber to interface with the ICS speakers and microphones. These are labeled 701 and AEC Dev
+Board in Figure 12 (green boxes). They also incorporated the Acoustic Echo Cancellation (AEC) algorithm and
+processing needed to pull the in-bound communication signals (coming from the speakers) from being sent back out
+of the outbound signals (going through the microphones). These test boxes connected to an audio test system that
+consisted of multiple computers, mixing and recording software, and racks full of signal processing hardware. Multi-
+track recordings were made during testing that were later analyzed to better evaluate the acoustic performance of the
+xEMU. Both suits used the head portion of a Bruel & Kjaer head and torso simulator. These audio manikins had a
+                                                            6
+                                 International Conference on Environmental Systems
+Figure 12. Audio Test Setup.
+speaker located in the mouth that could speak and microphones in the ears that could listen. Two accelerometers were
+used inside of the SxEMU to provide insight into vibrations that might be related to structural borne noises in the suit.
+Additional description and results on the audio testing can be found in Reference 11.
+
+
+                                            IV. Results Summary
+    Thermal-vacuum testing was performed from September 28th through October 3rd, 2023. Once the chamber was
+pumped down, all testing operations proceeded smoothly. Separate test points were performed between the two test
+articles during the week of around-the-clock test operations. In general, it took approximately a day for the chamber
+to get cold once at vacuum. From that point forward, test points on both suits were organized so that the cold thermal
+environments were tested first and then the heater cages were used to increase the radiation environment temperatures
+at testing progressed with the suits experiencing the hottest environments at the end of testing. The following section
+summarizes the top level results, with several additional papers (References 1 through 11) exploring more details of
+the performance of the xEMUs.
+
+A. SxEMU
+    The SxEMU performed 5 EVAs throughout the week of testing. These began with simulated airlock operations
+in the chamber manlock. During this period the xPLSS oxygen tanks, water bladders, and batteries were all charged.
+Gaseous nitrogen was used to pressurize the suit in this test instead of oxygen. The ESCU was demated from the
+DCU and the suit was prepared to perform an EVA. After the manlock was depressed, the crew transport system
+would transfer the SxEMU into the heater cage inside of the chamber. Heaters were pre-set to specified environment
+conditions prior to each EVA. A simulated EVA was performed with specific test objectives while the SxEMU
+consumables were monitored. Once the test team determined each EVA was completed, the crew transport system
+returned the SxEMU to the manlock, the manlock was repressurized and the team was allowed to re-enter and then
+recharge the system in preparation for the following test. Table 1 summarizes the 5 EVAs and different test points
+performed for each.
+    EVA duration is typically measured from the time that a spacesuit transitions from hardline power to batteries.
+Normally this is one of the steps a crew member completes before demating the umbilical and going “out the door.”
+For this unmanned test, the umbilical had to be demated prior to pumping down the manlock and ended up being
+performed towards the beginning of the simulated airlock operations. Test personnel had no physical access to the
+
+
+                                                          7
+                                 International Conference on Environmental Systems
+                                                 Table 1. SxEMU Test Points.
+
+         Test Point             1                    2                3                4                    5
+       EVA Duration -          13.7                 11.8             11.1             12.6                 8.8
+         BATT (hr)
+      Time at Vacuum           8.8                  10.6              9.1             11.4                 6.3
+            (hr)
+         GN2 Used              0.70                 1.76             1.81             1.63                0.74
+           (lbm)
+        Water Used             4.60                 6.45             10.70            9.48                4.73
+          (lbm)
+      Metabolic Profile    RCA Mapping,          RCA mapping,    SWME mapping      RCA mapping,   4.3, 5.0, 6.2, and 8.2
+                          SWME mapping          SWME mapping                      SWME mapping           psid ops
+        Environment            Cold                 Cold             Hot               Hot                 Hot
+       Visor/Shades       Shade Deployed           Stowed          Deployed          Stowed            Deployed
+
+
+      POR/SOR Inhibit                                x
+
+       POV Depletion                                 x                x                x
+         POR Purge                                   x                x                x
+
+         SOR Purge                                                    x
+      ATCL Operations         Airlock                                                Mapping
+
+
+
+SxEMU after the manlock door was closed and pump down had begun. Therefore, test point “EVA duration” and
+“Time at Vacuum” are both useful parameters to assess how long the EVA lasted.
+    Consumables were also tracked for each EVA. Battery capacity was never a limiting consumable with voltages
+not dropping below 25 VDC on any of the EVAs except the first one where there was an extended period of non-
+vacuum battery operations due to the test team working through the testing sequences for the first time. GN2 and
+water use was tracked for each EVA also. It should be noted that nitrogen is less dense than oxygen so those usage
+numbers may appear slightly lower than expected for a normal EVA. EVAs 2 through 4 all included fully depleting
+the primary oxygen tank and watching the Secondary Oxygen Assembly (SOA) automatically take control of
+pressurizing the suit.
+    Additional test objectives for each EVA include metabolic performance assessments, thermal environment, helmet
+assembly configuration, Primary Oxygen Vessel (POV) depletion, Primary Oxygen Regulator (POR) purge testing,
+Secondary Oxygen Regulator (SOR) purge testing, and ATCL operations.
+    The xPLSS Rapid Cycle Amine (RCA) swing bed CO2 scrubber demonstrated poor performance during the first
+EVA and the planned metabolic profiles were abandoned. The half-cycle time of the beds approached the 15 second
+minimum duration at metabolic rates in the 1200 BTU/hr range which was unexpected and made continuing metabolic
+profiles with rates up to 3000 BTU/hr an undesired test activity. More discussion on the RCA performance is included
+in the following Issues and Anomalies section. From that point forward, performance mapping activities were used as
+test points for the RCA and the SWME. Test points were set up where the CO2 injection rate or heat input rate were
+stepped up methodically and the system could be monitored for steady state performance.
+    EVAs 1 and 2 were performed in cold thermal environments with EVAs 3, 4, and 5 in hot environments. Some
+precautions were made with the SxEMU test article with respect to thermal environments because this was an
+unmanned test. Because there was not a crew member or an LCVG inside the xPGS portion of the test article, it was
+unknown how closely the xPGS components would track with the external thermal environments. The crew member
+and LCVG provide a significant thermal mass and temperature sink in a real EVA scenario. Therefore, the SxEMU
+was divided into two different thermal zones and the xPGS was controlled to more neutral environments than the
+xPLSS. References 1 and 3 provide additional details. After some experimental trial and error, the outer xPGS EPG
+layer (which approximated the environment temperature) hit low temperatures of 40°F (278 K) and a high temperature
+
+                                                                 8
+                                        International Conference on Environmental Systems
+of 180°F (355 K). The xPLSS EPG got as cold as -108ׄ°F (195 K) during cold environment testing and up to 230°F
+                                                                (383 K) during hot test points. The sun visor and shade
+                                                                positions were typically alternated in between test
+                                                                points so that their impact on the overall system heat
+                                                                transfer could be assessed in hot and cold
+                                                                environments.
+                                                                    EVAs 2, 3, and 4 all had periods where the
+                                                                simulated purge valve was opened, and the POR tried
+                                                                to maintain the suit pressure as the primary oxygen
+                                                                tank was depleted. These tests provide data on
+                                                                regulator performance vs. flow rate, provide
+                                                                interesting thermal data as the tanks cool off due to the
+                                                                gas expansion during high flow operations, and
+                                                                enabled demonstration of the SOR taking control of
+                                                                maintaining the suit pressure as the primary system
+                                                                finally ran out of gas. Figure 13 shows the POA and
+Figure 13. EVA 3 POA/SOA Performance                            SOA pressures and temperatures during a test where
+                                                                both regulators experienced purge flow operations.
+Shortly after EVA hour 7, the simulated purge valve was opened, and the tank pressure (PT-112) and tank temperature
+(TS-110) decrease rapidly. As PT-112 approaches 0 psia (0 kPa) at EVA hour 8.5, the secondary tank begins to
+respond. PT-215 (secondary tank pressure) and TS-211 (secondary tank temperature) both start to decrease rapidly
+as the SOR continues to feed the purge valve based flow rate. The SOA was never fully drained during testing to
+ensure that there was enough gas to repressurize the suit after each EVA when the manlock was repressurized. This
+repress can be seen as the two-step decrease in tank pressure (PT-215) at EVA time of approximately 9.5 hours.
+    Smaller one-time tests were also spread across this set of simulated EVAs. RCA CO2 scrubber operations were
+tested during airlock operations using an upgraded facility manlock vacuum system during EVA 1. Regulator inhibits
+                                Table 2. Suit 2 Test Points.                                      were tested during
+                                                                                                  EVA 2 to demonstrate
+ Number             Profile Name               xINFO          Floor LN2         Duration          that     the     system
+                                                                                                  prohibits     a    crew
+      1            Chamber Cooling                On              On           4 Hr 40 Min        member from turning
+                                                                                                  off either of the
+      2                  Cold                     On              On          14 Hr 25 Min        oxygen        regulators
+      3     Cold (Warming Front of Suit)          On              On           5 Hr 38 Min        while   the  suit  is at
+                                                                                                  vacuum conditions.
+      4     Cold (Warming Front of Suit)          Off             On           5 Hr 52 Min        Performance of the
+                                                                                                  ATCL                 was
+      5               Max Cold                    On              On          11 Hr 46 Min        functionally checked
+      6               Max Cold                    Off             On           8 Hr 20 Min        at the beginning of
+                                                                                                  EVA 1 and then
+      7            Heating Top Half               On              On          14 Hr 25 Min        mapped during EVA
+                                                                                                  4. The POR was used
+      8             Heating Front                 Off             Off         11 Hr 56 Min        to operate at all of the
+      9        Max Hot (Bubble 220F)              On              Off          9 Hr 45 Min        available            suit
+                                                                                                  pressures during EVA
+     10         Max Hot (Even 200F)               On              Off          9 Hr 36 Min        5. This included 4.3
+                                                                                                  psid (30 kPa), 5.0 psia,
+     11      Chamber Warming/Repress              Off             Off         12 Hr 16 Min        6.2 psia, and 8.2 psia.
+
+
+B. Suit 2
+    Suit 2 performed a single EVA that lasted 116 hours. It went to EVA conditions as soon as the main chamber was
+pumped down, cooled down along with the chamber for approximately a day, went through 11 test points that utilized
+a variety of heater cage settings, and then repressed with the chamber at the end of the week. Table 2 outlines these
+test points, including test duration. Test points were held until thermal analysts could determine that the suit had
+                                                           9
+                                  International Conference on Environmental Systems
+reached close to a steady state temperature. In some cases, this meant holding at test condition for much longer than
+what a person could have comfortably done inside of a suit. Several of these test points exceeded a nominal 8 hour
+
+
+                                                                                                             Suit 2 EPG &
+                                                                                                             Coupon TCs
+                                                             Suit 2 Internal
+                                                                   TCs
+
+
+
+
+     Suit 2 EPG &
+     Coupon TCs
+
+
+
+
+                    TP1   TP2     TP3   TP4   TP5      TP6            TP7      TP8   TP9    TP10      TP11
+
+
+
+Figure 14. Suit 2 Test Point Summary
+EVA duration. Test points started with cold environments and then progressed warmer by increasing heater power
+settings and eventually turning off the liquid nitrogen flow to the floor underneath the suit. The xINFO lighting band
+and camera simulator were turned on and off for different test points to assess the impact of their heat generation at
+the top of the suit. Floor temperatures under the boots ranged from -250°F (116 K) to 165°F (347 K) from the coldest
+to hottest test cases. General suit temperatures on the outside of the EPG ranged from -190°F (150 K) to 230°F (383
+K) during testing. Figure 14 shows Suit 2 temperature throughout the entire test profile. The test points (TP) are
+noted on the bar at the bottom. There are likely too many thermocouples represented to pull out specific data, but the
+groupings show that the EPG worked well across the range of environments. Through the first 6 test points the EPG
+and environment coupon temperatures indicated very cold values, but the internal thermocouples remained between
+approximately 30°F (272 K) to 70°F (294 K). Similarly in the hottest cases, TP 9 and later, the EPG and environment
+coupons were quite hot but most of the internal thermocouples still read between 50°F (283 K) and 100°F (311 K).
+Additional detailed analysis is performed in more focused reports on specific locations or components of the xEMU.
+
+
+C. Issues and Anomalies
+    Overall, the xEMU hardware worked extremely well. This was the highest fidelity test performed through the
+whole history of NASA’s current spacesuit development effort. Some items did not perform as expected and are
+notable. These may be good areas of future technology development, indicate risks with future spacesuit development,
+or be short comings in the xEMU design.
+    The LCD used in both DCUs did not perform well during cold temperatures. This was not a surprise due to
+previous performance of LCDs in similar environments. As the temperatures got colder, the display updated more
+and more slowly. Once cold enough, the characters were no longer visible. However, once the hardware warmed up
+again, it appeared to work properly.
+    An issue was experienced when recharging the oxygen tanks in which gas (in this case nitrogen) would not flow
+into the tanks when the supply pressure was set to 3000 psia (20,680 kPa). Gas would flow if the pressure was
+gradually stepped up in smaller increments and the SxEMU tanks could be charged in between EVAs using this work
+around procedure. The issue was isolated to the ESCU or DCU where there are some complex and tightly toleranced
+assemblies that seal the oxygen recharge lines when demated but allow them to flow when mated. Additional
+investigation into this issue was underway at the writing of this paper.
+
+                                                        10
+                                International Conference on Environmental Systems
+    The xINFO avionics box, EV-702, experienced several lock ups during testing. This was also not a surprise due
+to previous behavior in other tests and was always recoverable through a power cycle either through sending
+commands over the Wi-Fi interface or a power cycle through the DCU menus. No root cause has been identified at
+the time of this paper.
+    The xINFO camera also had intermittent issues where it shut off in hot thermal environments. This occurs from
+time to time with the ISS EMU high-definition camera that this design was based on and was expected. Once the unit
+began to overheat, it was shut off until it reached an acceptable operating temperature and then was restarted.
+    Several issues were present with the xEMU audio and communication system. As previously noted, the radio had
+not been matured to a level for it to be included as part of the communication system chain. Noise inside both suits
+was an issue, although the SxEMU with the xPLSS had more noise due to the fans and pumps in the life support
+system, which was a higher fidelity test case. One of the speakers in Suit 2 appeared to fail at some point during
+testing. Reference 11 addresses audio issues in more detail. This is an area where continued development is needed.
+    Humidity injection from the human metabolic simulator into the SxEMU test article did not work well. Water was
+evaporated and then flowed through the upper torso and into the right arm of the suit. Based on humidity sensor
+readings from the internal instrumentation package, it appeared that a high percentage of the water was condensing in
+the line before it got to the suit free volume. In addition to not wanting to collect a puddle of water inside of the suit,
+the arm bladder near the gas line exhaust began to heat up toward the temperature limit. At that point, humidity
+injection was stopped to reduce the risk of damaging the test article. Carbon dioxide injection was still used in
+subsequent RCA performance assessments.
+    The RCA performance showed significantly less capacity than expected. This issue had not been resolved at the
+writing of this paper and is forward work. The unit reached minimum half cycle times of 15 seconds (as controlled
+by the ventilation loop controller) at simulated metabolic rates of approximately 1200 BTU/hr. This is an average
+metabolic rate and significantly less than the 3000 BTU/hr maximum that the xPLSS should be able to support. Some
+trouble shooting was done during test operations to verify that injection rates and CO2 sensor readings seemed
+appropriate. Additional potential issues could be related to the lower humidity (due to the test issues with humidity
+injection), poor vacuum quality, or some aspect of the RCA itself. This unit had previously demonstrated poor
+performance and was refurbished prior to this test. Potential issues in the RCA itself could be channeling in the packed
+beds so that the ventilation gas does not flow uniformly across the amine or general degradation of the amine itself.
+A subsequent test is planned at JSC in a separate test facility where the humidity and vacuum pressures can be
+evaluated. The forward plan on this piece of hardware will be reassessed after those tests are completed. It should be
+noted that a different unit (SN 002) had been used for the past year and had shown good performance, so this issue it
+likely not a general issue with the technology.
+    ATCL operations demonstrated two minor issues. First, the ATCL switch on the DCU simultaneously turns on
+the pump that circulates water through the system and opens the backpressure control valve on the HX-540 Mini-
+SWME (or MiniME) to let water begin to evaporate and provide cooling. When the ATCL switch is turned off, the
+pump shuts down and then the valve is closed. The issue is that after the pump is shut down, the water in the MiniME
+becomes stagnant and continues to evaporate, rapidly cooling the membrane fiber bundle in the HX-540. A software
+change is recommended to change the order of actions when the switch is set to the off position so that the back
+pressure valve closes first, stopping water evaporation and cooling, and then the pump is shut off afterwards. In
+addition to this minor operational sequence issue, the actuator on the HX-540 back pressure valve may have
+experienced sticking during closing operations. The potentiometer on the valve did not always read fully closed when
+the valve was set to the closed position. The offset was small enough that additional evaluation is required. Linear
+actuators that drive the xPLSS valves and regulators have had a history of issues with sticking, although a lubricant
+modification in 2022 has dramatically improved performance so much that none of the actuators have required
+“unsticking” since the change was made. In this instance, the valve was cycled several times and returned to what
+should have been the fully closed position as measured by the potentiometer on the valve.
+    PT-112 is the pressure transducer that measures the pressure of the primary oxygen tank. It demonstrated spurious
+behavior during testing where it did not reach the same pressure as PT-215 on the secondary tank during charging, but
+once the ESCU was disconnected and the SxEMU reached vacuum conditions, the PT-112 reading rose by a few
+hundred psia. This can be seen in Figure 13 as the rise in PT-112 pressure shortly after hour 2 of the EVA. After
+reviewing tank charging data from the test system, which included additional pressure, temperature, and flow rate
+data, it was determined that this must be erroneous readings from that specific sensor. It will be removed from the
+xPLSS, recalibrated, and replaced.
+    Infrared cameras were used to monitor temperatures of both xEMU test articles during testing. These were
+unmodified commercial-off-the-shelf units that were relatively low cost. They worked very well during cold tests,
+                                                             11
+                                    International Conference on Environmental Systems
+but all of the cameras eventually shut off due to over temperature conditions during the hot test points. Minimal effort
+was made to isolate the cameras thermally from the heater cages so they may have been exposed to very hot
+temperatures. They appeared to be a good instrument for use in future tests, but additional thought should be put into
+keeping them from getting overheated in hot test points.
+
+
+                                                    V. Conclusion
+    Thermal-vacuum testing of the xEMU, through the SxEMU and Suit 2 test articles, was incredibly successful and
+provided an excellent demonstration of the design of this spacesuit that NASA has developed. Not only did this test
+series demonstrate the maturity and functionality of the xEMU, but it provided many data sets that can be studied as
+part of future spacesuit development efforts. Areas of needed improvement were identified that can serve as risks for
+future spacesuit vendors to navigate or future areas that would benefit from continued technology development. It
+provided the NASA team with valuable experience in the testing environment with respect to interfacing new
+spacesuits to legacy facilities that have primarily been testing the ISS EMU for over 40 years. This test was a
+successful capstone activity to this current generation of NASA spacesuit development.
+
+                                                   Acknowledgments
+   This work was funded by the EVA and Human Surface Mobility Program. It is the culmination of over a decade
+of work developing what has become the NASA government reference design for future spacesuits. Hundreds of
+dedicated people have worked on this spacesuit design over this period and are worthy of recognition for their hard
+work and expertise. Demonstrating this new spacesuit in a high fidelity space-like environment is a very significant
+accomplishment and could not have happened without their contributions over the years.
+
+                                                        References
+    1Westheimer, D., Sladek, C., Swartout, B., and Lewandowski, M., “Short xEMU Pressure Garment Thermal Vacuum Test
+
+Results,” International Conference on Environmental Systems, ICES, Louisville, KY, 2024.
+    2Sladek, C., Andersen, N., Goodman, E., Lewandowski, M., and Westheimer, D., “Comparison of Exploration Portable Life
+
+Support Subsystem (PLSS) Thermal Modeling to Thermal Vacuum Testing,” International Conference on Environmental Systems,
+ICES, Louisville, KY, 2024.
+    3Sladek, C., Lewandowski, M., Andersen, N., and Westheimer, D., “Planning and Implementation of Extreme Thermal
+
+Environments in NASA JSC’s Chamber B,” International Conference on Environmental Systems, ICES, Louisville, KY, 2024
+    4Marsch, R., Westheimer, D., Gazzara, S., Sladek, C., and Lewandowski, M., “Analytical Review of Exploration Extravehicular
+
+Mobility Unit Heat Rejection Performance,” International Conference on Environmental Systems, ICES, Louisville, KY, 2024.
+    5Swartout, B., and Westheimer, D., “Exploration Extravehicular Mobility Unit (xEMU) Chamber B Thermal Vacuum “Suit 2”
+
+Pressure Garment System Hardware and Test Design,” International Conference on Environmental Systems, ICES, Louisville, KY,
+2024.
+    6Swartout, B., Davis, K., and Westheimer, D., “Exploration Extravehicular Mobility Unit (xEMU) Chamber B Thermal
+
+Vacuum Helmet and Extravehicular Visor Assembly (EVVA) Testing Results,” International Conference on Environmental
+Systems, ICES, Louisville, KY, 2024.
+    7Whalen, P., Gazzara, S., Marsch, R., Nasser, M., and Moore, A., “Short Exploration Extravehicular Mobility Unit Testing
+
+Setup: Evaluation Under Realistic Pressure and Thermal Conditions,” International Conference on Environmental Systems, ICES,
+Louisville, KY, 2024.
+    8Swartout, B., Meginnis, I., and Westheimer, D., “Exploration Extravehicular Mobility Unit (xEMU) Hard Upper Torso (HUT)
+
+Chamber B Thermal Vacuum Testing Results,” International Conference on Environmental Systems, ICES, Louisville, KY, 2024
+    9Swartout, B., Fester, Z., and Westheimer, D., “Exploration Extravehicular Mobility Unit (xEMU) Lunar Boot Chamber B
+
+Thermal Vacuum Testing Results,” International Conference on Environmental Systems, ICES, Louisville, KY, 2024.
+    10Swartout, B., Lewandowski, M., and Westheimer, D., “Exploration Extravehicular Mobility Unit (xEMU) Chamber B
+
+Thermal Vacuum “Suit 2” Pressure Garment System Test Article Results,” International Conference on Environmental Systems,
+ICES, Louisville, KY, 2024.
+    11Smith, S., and Turner, A., “xEMU Suit Integrated Audio Communications System: Ambient and EVA Pressure Testing
+
+System Performance,” International Conference on Environmental Systems, ICES, Louisville, KY, 2024.
+
+
+
+
+                                                           12
+                                   International Conference on Environmental Systems
+

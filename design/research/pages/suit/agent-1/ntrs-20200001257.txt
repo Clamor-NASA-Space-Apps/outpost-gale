@@ -1,0 +1,981 @@
+           Vision and Objectives
+
+    Chris Hansen, EVA Office Manager
+EVA Office on behalf of the Gateway Program
+
+
+
+
+                                              1
+         NASA’S Vision and Objectives
+
+
+
+Space Policy Directive 1 : To the Moon, then Mars
+
+                      "Lead an innovative and sustainable
+                      program of exploration with commercial
+                      and international partners to enable
+                      human expansion across the solar
+                      system and to bring back to Earth new
+                      knowledge and opportunities.
+                      Beginning with missions beyond low-
+                      Earth orbit, the United States will lead
+                      the return of humans to the Moon for
+                      long-term exploration and utilization,
+                      followed by human missions to Mars
+                      and other destinations ... "
+
+                                                             2
+                                           NASA’s Missions to the Moon
+
+
+Artemis Phase 1:
+
+
+
+
+                                                                         Humanson the Moon--' 21st Century
+ - First robotic landing on eventual human lunar return and ISRU site    First crew leverages infrastructure
+ - First ground truth of polar crater volatiles                          left behind by previous missions
+
+
+
+
+                                                                                                               3
+                                      NASA’s Continued Presence
+
+
+ Artemis Phase 2: Building Capabilities for Mars Missions
+                                                  Reusable human lander
+                                                  elements refueled
+
+
+
+
+                                                                                 Artemis.Support Mission 1
+                                                                                 Lunar surlace asset deployment for
+                                                                                 longer surface expeditions
+
+
+
+
+               SUSTAINABLE LUNAR ORBIT STAGING CAPABILITY AND SURFACE EXPLORATION
+MULTIPLE SCIENCE ANO CARGO PAYLOADS     INTERNATIONAL PARTNERSHIP OPPORTUNITES     TECHNOLOGY AND OPERATIONS DEMONSTRATIONS FOR MARS
+
+
+
+
+                                                                                                                              4
+          Notional xEVA Integrated Program Strategy
+
+
+HLS
+
+
+
+
+Gateway
+
+
+
+
+xEMU
+
+
+
+
+            The Exploration EVA suit architecture will support a sustainable Lunar
+                          campaign and fulfill multi-programs/roles
+                                                                                     5
+                        EVA Office Vision/ Objectives
+
+
+• NASA with an immense amount of industry assistance is embarking on the
+ first flight certification of a new EVA suit in almost 40 years
+• To support extension of ISS and missions to Cis-lunar space and the Lunar
+ Surface we are looking for a vendor to take lead for production and servicing
+ of a suite of exploration EVA hardware
+  – xEMUs
+  – Vehicle Integration Equipment
+  – Exploration Tools
+• We are looking for vendors who:
+  – Can lead the transition of the in-house development into an efficient production
+    environment
+  – Is open to reducing the barriers to entry for component suppliers while maintaining a
+    healthy and reliable supply chain
+  – Can partner with NASA to maintain open communication and data sharing
+  – Is prepared to make improvements to the design to improve production schedule,
+    suit reliability & performance while reducing overall life cycle cost
+
+                                                                                            6
+   Technical Overview
+   Proposed Contract
+
+Stephanie Flint, PDT Chair
+
+
+
+
+                             7
+                       Starting with the Basics…
+
+• xEMU is NASA’s next generation spacesuit for the
+  2024 Lunar Surface mission
+
+
+• xEMU is deep space / micro-gravity compatible and
+  is intended to support missions on ISS, HLS, and
+  Gateway
+                                                       NEWS: Our #Artemis astronauts
+                                                       will #SuitUp in a high-tech
+• We are leveraging industry capabilities to produce   spacesuit called xEMU. @NASA
+  the required fleet of lunar suits and provide the    will build the 2024 suit for the
+  necessary services to maintain the xEVA System       first woman and next man on the
+                                                       Moon. We'll ask U.S. companies
+                                                       to manage production for 2025 &
+                                                       beyond . More: https://t.co/
+  When the first woman and next man step foot on       5g2KDcHdHs
+
+   the Moon in 2024, they will be wearing the next     -   Ji~ Bridenstine
+      generation of spacesuits designed to give
+                                                           twitter.com
+
+
+  astronauts enhanced mobility to accomplish their
+       exploration tasks on the lunar surface!
+
+                                                                                     8
+                          Exploration Extravehicular Mobility Unit (xEMU)
+
+
+                                         EXPLORATION EXTRAVEHICULAR     National Aeronautics and
+                                                                           Space Administration
+
+                                             MOBILITY UNIT (xEMU)
+
+
+    High Speed Data Comm .                                                1 Hr. Emergency Return
+
+          HD Video and Lights                                         4.3 - 8 .2 psi Variable Pressure
+
+                                                                        Vacuum Regenerative CO2
+ Informatics Display and Control
+                                                                            Removal System
+  Integrated Communications
+                                                                        Modular/ORU PLSS Design
+       (No Snoopy Cap)
+
+   Automated Suit Checkout                                            Membrane Evaporation Cooling
+
+
+                                                                         Rear Entry Ingress/Egress
+    Enhanced Upper Mobility
+
+    Environment Protection
+                                                                        The Exploration EMU wi ll be the
+Garment (EPG) w/Dust M1t1gat1on
+  -   _:,,,.,,,,;;.   -
+                                    --
+                                                                      next generation EVA suit to be worn
+                                                                      by t he first woman and next man to
+                                                                           walk on t he Moon. The new
+                                                                          technologies and capab ilities
+                                                                      incorporated into this spacesuit wi ll
+                                                                      support future exploration miss ions
+               Planetary Mobility                                       to deep space, the lunar surface,
+                                                                               and eventua lly Mars.
+
+
+
+
+                                                                                                               9
+                                        xEMU Subsystems
+                                                                                                               •
+                                                                         Pressure Garment Subsystem
+                                                               •   The pressure garment prototype has been
+                                                                   assembled and tested with flight crew, including
+                                                                   small-stature females that have historically not
+                                                                   been fit by prior EVA Suit designs
+                                                               •   The pressure garment components for the pre-
+                                                                   qual test unit (DVT) are in production and
+                                                                   assembly
+     PLSS 2.0 Test Unit                Final xEMU PLSS
+       (~May 2014)                   Packaging (Aug 2019)
+
+
+
+
+            Portable Life Support Subsystem
+•   NASA has invested in exploration EVA Life Support over
+    the last ~10 years, developing a design with inputs from
+    across the aerospace/human spaceflight community
+•   Several generations of components have been acquired
+    leading up to present day, raising the Technology
+    Readiness Level (TRL) with the aim of increasing the
+    industry base.
+•   A majority of critical components are sourced from
+    Commercial and Industrial suppliers
+                                                                                                          10
+                    xEVA System is More than a Suit
+
+• The xEVA System will be capable of operating in micro and partial gravity and
+  interfacing with multiple vehicles depending on the mission concept of
+  operations.
+
+       M ICRO-GRAVITY EVA O N A SPACECRAFT                               xEMU
+                                                       Vehicle
+              (ENGIN EERED SU RFACE}                 Integration
+                                                     Equipment
+
+
+                                                                   xEVA           EVA Tools
+                                                                                   & Crew
+
+                                                   Ground
+                                                                   System           Aids
+
+                                                   Support
+                                                  Equipment
+                                                                        Flight
+                                                                       Support
+                                                                      Equipment
+
+
+     PARTIAL-GRAVITY EVA ON LU NAR SURFACE
+                 (IN A VACUUM)
+
+
+
+
+                                                                                          11
+                          Development Status
+
+
+• The Exploration EVA team is at the mid-point of flight design, development,
+  and certification of the exploration suit, VIE, FSE, and Tools for Lunar Surface
+  and Deep Space.
+
+
+• Initial flight copies of this suit and system hardware will be produced by NASA
+  to support initial Lunar sortie mission in 2024 and an ISS demonstration in
+  2023
+
+
+• NASA is aiming to increase the competitive industry base for EVA by
+  commercializing fleet production
+
+
+   Assume that the xEMU will evolve from the ISS 2023 Demonstration
+     and 2024 Lunar configurations into a sustained ISS and Lunar
+                         presence spacesuit.
+
+                                                                            12
+                                      Scope of Work
+                                              (CLINS 1 - 3)
+
+•   In-source remaining DDT&E, assembly, and           •   Out-source follow-on production, sustaining,
+    certification of initial test hardware and first       operations, and DDT&E for xEVA
+    three Exploration EVA (xEVA) shipsets to                   Goal to bring on production Contractors
+    support ISS demo and Artemis III                            prior to xEMU CDR to ensure seamless
+         NASA led DDT&E to enable design                       transition
+         flexibility as vehicle contracts awarded              To receive valuable independent
+         and con ops matures                                    assessments of the current design
+         Utilize existing NASA facilities,                    To begin and conduct an efficient
+         equipment, and experienced team for                    transition towards independent
+         parallel test series to accelerate                     capability to provision and maintain a
+         schedule                                               fleet of xEVA System hardware
+
+         After certifying and validating xEMU                 Maintain a sustained pace of flight and
+         design, NASA can effectively move                      training production and support
+         fleet production and sustaining back to                services
+         industry
+
+
+       Scope is ultimately driven by our need to support Artemis III by 2024
+         and our desire to engage the best of Industry to support future
+                                     missions.
+
+                                                                                                          13
+    What is a Collaborative Data Environment
+                     (CDE)?
+       The CDE is the data system the xEVA Community will use to collect,
+      disposition, verify, store, search, retrieve, and report all types of xEVA
+                            Systems information and data
+
+•   All xEVAPS contractors will interface with each other and NASA through the CDE
+•   CDE Functions:
+           Stores and manages all xEVAPS contractor data (i.e. all data development under this contract)
+           Interfaces to many of the existing NASA repositories of xEVA System Data, such as the xEVA
+            Project/Program Specifications, engineering, safety, and technical data
+           Supports the necessary business functions for the contract
+           Provides intuitive, quick, and easy access all xEVA System data
+•   CDE Infrastructure:
+           Leverages existing NASA, Contract partner, and COTS applications
+           COTS application customization and custom application development
+•   CDE Support Services:
+           Operations Management
+           Maintenance
+           End-user Support
+           Enhancement
+
+                                                                                                            14
+What is a Collaborative Data Environment?
+                                                                                                                                  Jonathan Miller
+                     Collaborative Data Environment (CDE)                                                           NASA Repositories for Engineering
+                                                                                                                             28 April 2020
+                   Customers                                                           Applications                              Data
+
+
+                     Program            Program                                                             Wiki
+NT – SR&QA
+                      Safety         Boards & Panels
+                                                                                                                      xCOSMIC
+
+
+
+
+                                                                                                                        - ·
+                                                                                                                       IRD (SP)
+   EC5              EVA Office             EC4                                                                          ALEXE
+                                                                                                                         JEDII
+
+
+
+
+                                                                                                                       ®- -
+                                                                                                                                   Certification Data
+                                                                                                                                   System (CDS)
+
+
+    CX                   EC7                                       • COTS apps provided by IRD
+                                                                                                                                   Electronic Document   Quality Assurance
+                                                                   • Custom developed apps by xEVAPS or others                     System (EDS)          Record Center (QARC)
+
+
+                                                   xEVAPS Data
+    CLIN 1 Core                  CLIN 1 IDIQ         CLIN 2 IDIQ               CLIN 3 IDIQ              CLIN 4      • GFE Data Stored in legacy locations
+
+
+                         I
+                                                                          '
+    Program                       Hardware                                         -
+
+                                                                               Design
+                                                                                             -
+
+
+
+
+   Management                     Processing         Hardware               Development                   CDE
+                                                     Production                Test &                 Development        CDE Desired Features:
+ Safety Reliability &                                                     I
+                                                                             Evaluation
+                                   Sustaining
+ Quality Assurance                                                        I
+                                                                                                                      • An interactive query service that
+                                  Engineering
+                                                                                                                        makes it easy to analyze data
+      Logistics                                                                                                         directly
+                                                                              Special Studies                         • Can be rescaled on the fly for
+                                                                                                                        additional storage
+      Facilities
+                                                                                                                      • A hot failover, if the hardware is
+                                                                                                                        down, another server from
+  Mission Support                                                                                                       another location can take over
+                                                                                                                      • Can quickly stand up and dedicate
+                    Contractors                                               Services (platform)                       servers
+                                                                                                                      • Can use open source software
+ xEVAPS              xEVAPS            xEVAPS                                                                         • Can be accessed remotely on the
+Contractor          Contractor        Contractor                   • Multi‐Source Searching                             internet from any NASA device
+    A                   B                C…                        • Dashboard & Analytics                            • The data adheres to U.S.
+                                                                                                                        International Traffic in Arms
+         xEVAPS Sub‐            xEVAPS                             • Intelligence                                       Regulations (ITAR) requirements
+         Contractor(s)         Vendor(s)
+
+                                                                                                                                                                  15
+                               Scope of Work
+                                        (CLIN 4)
+
+The CLIN 4 provider will be responsible for establishing the CDE platform and processes
+needed to administer the xEVAPS Data
+ •   Interim Data Management (Day 1 Plan)
+       •   Use existing NASA or COTS tools and processes to perform the data management and
+           business analysis functions (DRDs financials, configuration management, etc.) until the
+           CDE is developed and ready for implementation
+
+ •   Development of CDE
+       •   Establish requirements for workflows needed based on the requirements of the other
+           CLINs Statement of Work
+       •   Develop technical requirements for the CDE based on existing applications and user
+           inputs
+       •   Begin development of the CDE to perform all the functions listed in the Performance
+           Work Statement (PWS)
+       •   Migrate data from the interim data management solution to the CDE
+
+ •   Administration of CDE
+       •   Ensure the environment is operating at the required performance and quality levels
+       •   Perform routine maintenance of the CDE based on the PWS
+
+                                                                                                     16
+                 Notional Timeline for xEVAPS Scope
+                               2020   2021        2022       2023         2024           2025          2026          2027                2028                2029       2030
+
+Program Timeline                                                             ISS Demo                 ISS Replacement
+                                                                                                                                        Airlock 1st Flight
+                                                                                                                                                                Gateway
+                                                                                                                                                              HLS
+                                                                           Artemis 3                      Artemis4        Artemis 5          Artemis6            Artemis 7
+
+
+xEVA System Initial                          xEMU
+Development, Certification &
+Delivery (NASA)                           FSE + VIE
+
+                                             Tools
+
+CLIN 1:                                                                                Integration Management
+Integration                                                                                    SR&QA
+                                                                                                      Logistics
+                                               --------'-------~---~
+                                               With____    ,___
+                                                    In-house     .,Support
+                                                             Mission            I
+                                                                                               Mission Support
+                                               ------------~-----J
+                                                  I    Processing                        Processing            Processing      Processing               Processing
+
+                                                                                                           Sustaining
+
+
+CLIN 2:                                                                                   Training Hardware
+Production
+                                                                       ISS & Artemis 4                      ISS & Artemis 6
+
+                                                                                             Artemis 5                                Artemis 7
+
+
+CLIN 3:                                               Ancillary Hardware DDT&E
+                                                                                                                        TBD DDT&E Efforts
+DDTE & Special Studies                                                                                        Special Studies for Sustained Lunar Presence,
+                                                                                                                   Optimization, Mars Extensibility, etc
+                                                                    Sustained Lunar Presence DDT&E
+
+CLIN 4:                                 Development
+Collaborative Data                                                                         Administration
+Environment                            Day 1: Interim Data
+                                          Management
+                                                                                                                                                                             17
+                    Collaboration
+
+• In order to accomplish this scope of work, need
+  collaboration among all the xEVAPS partners and NASA
+• NASA’s intent is to establish a cooperative working
+  environment among the Contractors to provide the best
+  capabilities of each partner toward xEVA System
+  implementation
+• NASA values open access of all xEVAPS partners to
+  xEVA System data and expects limitations on access to
+  data only where necessary
+• Given the challenges of a multi-partner effort, the
+  following slides provide examples of how data will flow
+  through the CDE and be used by the partners
+
+                                                            18
+          Data Management for the xEVAPS Contract
+
+
+
+ ,.... ·I
+                   ......_
+           . CLIN IV CDE
+                                     ..
+                                                  NASA
+                                                                                CLIN I
+                                                                             Integration,
+                                                                             Sustaining &
+                                                                              Processing
+                                                                                                 r       -·-
+                                                                                                          CLIN II
+                                                                                                        Production
+                                                                                                                                 CLIN III
+                                                                                                                                DDT&E +
+                                                                                                                              Special Studies
+
+
+i.   i
+               Prod Environment
+               CDE Plan
+               User Authentication
+               User Training/Docs
+                                     !!
+                                     I!
+                                          GFE Design
+                                          SE&I
+                                          Program Directives
+                                          Contract Directives
+                                                                        Program Mgmt Plan
+                                                                        Int Master Sched (IMS)
+                                                                        Mgmt./Prog. Review
+                                                                        Mission Integration
+                                                                                                     Acceptance Data
+                                                                                                     Work Auth. Docs
+                                                                                                     GSE Design & Cert.
+                                                                                                     Test Data & Reports
+                                                                                                                            Design
+                                                                                                                            SE&I
+                                                                                                                            Milestone Reviews
+                                                                                                                            Certification Data
+               Production Updates         Change Directives             Financial                    TRR/ORR                Work Auth. Docs
+
+
+~cc: i         Change Requests
+
+                                     !!   Program Schedules             Risk Management              Change Requests        GSE Design & Cert.
+
+
+
+
+                                                                                                                                                               User Authentication
+               Financial                  Program Integration           S&MA Products                Financial              Test Data & Reports
+               Schedule                   Mission Definition            Reliability                  Schedule               Study Data &
+               Mgmt./Prog. Review         Services (Chambers,
+
+I i                !!                     RITF)
+                                                                        Logistics
+                                                                        Export Control
+                                                                                                     Mgmt./Prog. Review
+                                                                                                     User Auth. Data
+                                                                                                                            Reports
+                                                                                                                            TRR/ORR
+
+     [Q) '-·-·-·--' l                                               J
+                                          User Auth. Req’ts             Change Requests                                     Change Requests
+                                          IT Assets                     Work Auth. Docs                                     Financial
+                                          ·-•-•-                •
+                                                                        GSE Design               '--·-·-·......,,,,,,·      Schedule
+                                                                        Test Data & Reports                                 Mgmt./Prog. Review
+
+
+-~                                                                      TRR/ORR
+                                                                        User Auth. Data
+                                                                                                                            User Auth. Data
+
+                                                                                                                           '--·-·-·---'
+
+
+                                                                                                                                                      •
+
+     -   - • •--      '•   -     •   -        -      •   _ ,_ _ __ _ _                  •        __ _      _ _ ,_ _,_ _     _ _ _      •   -      •   )
+
+
+                                                                                                                                                          19
+                               CDE Interface Diagram Example:
+                                                         Movement of Design Data
+
+
+
+ ,.... ·I
+                   ......_
+           . CLIN IV CDE
+                                     ..
+                                                  NASA
+                                                                            CLIN I
+                                                                         Integration,
+                                                                         Sustaining &
+                                                                          Processing
+                                                                                          r       -·-
+                                                                                                   CLIN II
+                                                                                                 Production
+                                                                                                                           CLIN III
+                                                                                                                          DDT&E +
+                                                                                                                        Special Studies
+
+
+i.   i
+               Prod. Environment
+               CDE Plan
+               User Authentication
+               User Training/Docs
+                                     !!
+                                     I!
+                                          GFE Design
+                                          SE&I
+                                          Program Directives
+                                          Contract Directives
+                                                                    Program Mgmt Plan
+                                                                    IMS
+                                                                    Mgmt./Prog. Review
+                                                                    Mission Integration
+                                                                                              Acceptance Data
+                                                                                              Work Auth. Docs
+                                                                                              GSE Design & Cert.
+                                                                                              Test Data & Reports
+                                                                                                                      Design
+                                                                                                                      SE&I
+                                                                                                                      Milestone Reviews
+                                                                                                                      Certification Data
+               Production Updates         Change Directives         Financial                 TRR/ORR                 Work Auth. Docs
+
+
+~cc: i         Change Requests
+
+                                     !!   Program Schedules         Risk Management           Change Requests         GSE Design & Cert.
+
+
+
+
+                                                                                                                                                             User Authentication
+               Financial                  Program Integration       S&MA Products             Financial               Test Data & Reports
+               Schedule                   Mission Definition        Reliability               Schedule                Study Data &
+               Mgmt./Prog. Review         Services (Chambers,
+
+I i                !!                     RITF)
+                                                                    Logistics
+                                                                    Export Control
+                                                                                              Mgmt./Prog. Review
+                                                                                              User Auth. Data
+                                                                                                                      Reports
+                                                                                                                      TRR/ORR
+
+     [Q) '-·-·-·--' l                                           J
+                                          User Auth. Req’ts         Change Requests                                   Change Requests
+                                          IT Assets                 Work Auth. Docs                                   Financial
+                                          ·-•-•          - I
+                                                                    GSE Design            '--·-·-·......,,,,,,·       Schedule
+                                                                    Test Data & Reports                               Mgmt./Prog. Review
+
+
+-~                                                                  TRR/ORR
+                                                                    User Auth. Data
+                                                                                                                      User Auth. Data
+
+                                                                                                                    '-- .   - . ·- . .....,,,
+
+                                                                                                                                                    •
+
+     -   - • •--      '•   -     •   -        -      •   _ ,_ _ _ __ _             •      __ _      _ _ ,_ _,_ _     _ _ _         •   -        •   )
+
+
+                                                                                                                                                        20
+                                  CDE Interface Diagram Example:
+                                                        Movement of Financial Data (1/2)
+
+
+
+ ,.... ·I
+                   ......_
+           . CLIN IV CDE
+                                           ..
+                                                        NASA
+                                                                                      CLIN I
+                                                                                   Integration,
+                                                                                   Sustaining &
+                                                                                    Processing
+                                                                                                    r       -·-
+                                                                                                             CLIN II
+                                                                                                           Production
+                                                                                                                                    CLIN III
+                                                                                                                                   DDT&E +
+                                                                                                                                 Special Studies
+
+
+i.   i
+               Production
+               Environment
+               CDE Plan
+               User Authentication
+                                           !!
+                                           I!
+                                                GFE Design
+                                                SE&I
+                                                Program Directives
+                                                Contract Directives
+                                                                              Program Mgmt Plan
+                                                                              IMS
+                                                                              Mgmt./Prog. Review
+                                                                              Mission Integration
+                                                                                                        Acceptance Data
+                                                                                                        Work Auth. Docs
+                                                                                                        GSE Design & Cert.
+                                                                                                        Test Data & Reports
+                                                                                                                               Design
+                                                                                                                               SE&I
+                                                                                                                               Milestone Reviews
+                                                                                                                               Certification Data
+               User Training/Docs               Change Directives             Financial                 TRR/ORR                Work Auth. Docs
+
+
+~cc: i         Production Updates
+
+                                           !!   Program Schedules             Risk Management           Change Requests        GSE Design & Cert.
+
+
+
+
+                                                                                                                                                                  User Authentication
+               Change Requests                  Program Integration           S&MA Products             Financial              Test Data & Reports
+               Financial                        Mission Definition            Reliability               Schedule               Study Data &
+               Schedule                         Services (Chambers,
+
+I i                !
+     [Q) '-·-·- __, l
+                     !
+               Mgmt./Prog. Review               RITF)
+                                                User Auth. Req’ts
+                                                IT Assets                 J
+                                                                              Logistics
+                                                                              Export Control
+                                                                              Change Requests
+                                                                                                        Mgmt./Prog. Review
+                                                                                                        User Auth. Data
+                                                                                                                               Reports
+                                                                                                                               TRR/ORR
+                                                                                                                               Change Requests
+                                                                              Work Auth. Docs                                  Financial
+                                                                              GSE Design            '--•-•-,......,,,,,,·      Schedule
+                                                ·-•-•-                •
+                                                                              Test Data & Reports                              Mgmt./Prog. Review
+
+
+-~                                                                            TRR/ORR
+                                                                              User Auth. Data
+                                                                                                                               User Auth. Data
+
+                                                                                                                              '--·-·-·---'
+
+              Competition Sensitive Data
+                                                                                                                                                         •
+               General Contract Data
+     -   - • •--        '•   -         •   -        -      •   _ ,_ _ __ _ _                 •      __ _      _ _ ,_ _,_ _     _ _ _      •   -      •   )
+
+
+                                                                                                                                                             21
+                                  CDE Interface Diagram Example:
+                                                        Movement of Financial Data (2/2)
+
+
+
+ ,.... ·I
+                   ......_
+           . CLIN IV CDE
+                                           ..
+                                                        NASA
+                                                                                  CLIN I
+                                                                               Integration,
+                                                                               Sustaining &
+                                                                                Processing
+                                                                                                r       -·-
+                                                                                                         CLIN II
+                                                                                                       Production
+                                                                                                                                CLIN III
+                                                                                                                               DDT&E +
+                                                                                                                             Special Studies
+
+
+i.     i
+               Production
+               Environment
+               CDE Plan
+               User Authentication
+                                           !!
+                                           I!
+                                                GFE Design
+                                                SE&I
+                                                Program Directives
+                                                Contract Directives
+                                                                          Program Mgmt Plan
+                                                                          IMS
+                                                                          Mgmt./Prog. Review
+                                                                          Mission Integration
+                                                                                                    Acceptance Data
+                                                                                                    Work Auth. Docs
+                                                                                                    GSE Design & Cert.
+                                                                                                    Test Data & Reports
+                                                                                                                           Design
+                                                                                                                           SE&I
+                                                                                                                           Milestone Reviews
+                                                                                                                           Certification Data
+               User Training/Docs               Change Directives         Financial                 TRR/ORR                Work Auth. Docs
+
+
+~cc: i          !!
+               Production Updates               Program Schedules         Risk Management           Change Requests        GSE Design & Cert.
+
+
+
+
+                                                                                                                                                              User Authentication
+               Change Requests                  Program Integration       S&MA Products             Financial              Test Data & Reports
+               Financial                        Mission Definition        Reliability               Schedule               Study Data &
+               Schedule                         Services (Chambers,
+
+I [Q) i'-·-·- _,! !l
+               Mgmt./Prog. Review               RITF)
+                                                User Auth. Req’ts
+                                                IT Assets
+                                                                      .
+                                                                          Logistics
+                                                                          Export Control
+                                                                          Change Requests
+                                                                                                    Mgmt./Prog. Review
+                                                                                                    User Auth. Data
+                                                                                                                           Reports
+                                                                                                                           TRR/ORR
+                                                                                                                           Change Requests
+                                                                          Work Auth. Docs                                  Financial
+                                                                      )   GSE Design            '--•-•-,......,,,,,,·      Schedule
+
+
+
+
+                                                                                                                                                     v--
+                                                                          Test Data & Reports                              Mgmt./Prog. Review
+
+
+-~                                                                        TRR/ORR
+                                                                          User Auth. Data
+                                                                                                                           User Auth. Data
+
+                                                                                                                          '-·---·...J
+
+              Competition Sensitive Data
+                                                                                                                                                     •
+               General Contract Data
+     -   - • •--        '•   -         •   -        -      •   _ ,_ _ __ _ _             •      __ _      _ _ ,_ _,_ _     _ _ _      •   -      •   )
+
+
+                                                                                                                                                         22
+                               CDE Interface Diagram Example:
+                                                    Movement of Schedule Data
+
+
+
+ ,.... ·I
+                   ......_
+           . CLIN IV CDE
+                                     ..
+                                                  NASA
+                                                                                CLIN I
+                                                                             Integration,
+                                                                             Sustaining &
+                                                                              Processing
+                                                                                              r       -·-
+                                                                                                       CLIN II
+                                                                                                     Production
+                                                                                                                               CLIN III
+                                                                                                                              DDT&E +
+                                                                                                                            Special Studies
+
+
+i.   i
+               Production
+               Environment
+               CDE Plan
+               User Authentication
+                                     !!
+                                     I!
+                                          GFE Design
+                                          SE&I
+                                          Program Directives
+                                          Contract Directives
+                                                                        Program Mgmt Plan
+                                                                        IMS
+                                                                        Mgmt./Prog. Review
+                                                                        Mission Integration
+                                                                                                  Acceptance Data
+                                                                                                  Work Auth. Docs
+                                                                                                  GSE Design & Cert.
+                                                                                                  Test Data & Reports
+                                                                                                                          Design
+                                                                                                                          SE&I
+                                                                                                                          Milestone Reviews
+                                                                                                                          Certification Data
+               User Training/Docs         Change Directives             Financial                 TRR/ORR                 Work Auth. Docs
+
+
+~cc: i         Production Updates
+
+                                     !!   Program Schedules             Risk Management           Change Requests         GSE Design & Cert.
+
+
+
+
+                                                                                                                                                                 User Authentication
+               Change Requests            Program Integration           S&MA Products             Financial               Test Data & Reports
+               Financial                  Mission Definition            Reliability               Schedule                Study Data &
+               Schedule                   Services (Chambers,
+
+I i                !!
+               Mgmt./Prog. Review         RITF)
+                                                                        Logistics
+                                                                        Export Control
+                                                                                                  Mgmt./Prog. Review
+                                                                                                  User Auth. Data
+                                                                                                                          Reports
+                                                                                                                          TRR/ORR
+
+     [Q) '-·-·-·--' l                                               J
+                                          User Auth. Req’ts             Change Requests                                   Change Requests
+                                          IT Assets                     Work Auth. Docs                                   Financial
+                                          ·-•-•-                •
+                                                                        GSE Design            '--·-·-·......,,,,,,·       Schedule
+                                                                        Test Data & Reports                               Mgmt./Prog. Review
+
+
+-~                                                                      TRR/ORR
+                                                                        User Auth. Data
+                                                                                                                          User Auth. Data
+
+                                                                                                                        '-- .   - . -- . .....,,,
+
+                                                                                                                                                        •
+
+     -   - • •--      '•   -     •   -        -      •   _ ,_ _ __ _ _                 •      __ _      _ _ ,_ _,_ _     _ _ _         •   -        •   )
+
+
+                                                                                                                                                            23
+                      Goals for the Contract
+
+Provide a flexible mechanism to assemble, test and provision flight and
+training of xEVA System hardware for ISS and Exploration Missions to
+                        Gateway and the Moon.
+
+1. Meet the Agency’s schedule to support the Artemis missions and ISS Demo
+2. Promote commercialization
+    •   Lower barriers to entry
+    •   Increase design flexibility
+    •   Improve Industry expertise in space suit technology
+
+3. Effective Data Management
+    •   Use proprietary solutions where technically valuable
+    •   Deliver an established design baseline to industry
+    •   Collaborative Data Exchange
+
+4. Lower the cost of the system over time
+
+
+                                                                          24
+                               Industry Perspective
+•   The intent of the Request for Information process is to seek industry feedback on a draft set of
+    requirements prior to releasing the RFP.
+•   We welcome Industry’s input for any elements of the SOW, and there are a few topics in particular
+    that we would like to gain industry’s perspective on for implementation and/or feasibility:
+      1.   Collaborative Data Environment
+            •   How would Industry approach developing and working in a collaborative environment to
+                execute the requirements in the statement of work?
+      2.   Earned Value Management
+            •   Provide recommendations and/or potential drawbacks related to the use of EVM on the
+                xEVAPS contract.
+            •   Provide recommendations for tailored EVM based on xEVAPS requirements.
+      3.   Program Requirements
+            •   Given that new Programs are being stood up and many requirements currently do not
+                exist, how can the government reduce the uncertainty associated with proposed costs?
+      4.   Contemplated Contract/Incentive Structure
+            •   Provide recommendation and/or potential drawbacks related to the contemplated
+                contract/incentive structure.
+            •   Provide advantages and disadvantages to dividing CLIN II and CLIN III into separate
+                multiple-award vendor pools
+
+                                                                                                        25
+

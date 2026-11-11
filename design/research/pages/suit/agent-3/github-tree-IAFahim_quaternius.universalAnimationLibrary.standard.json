@@ -1,0 +1,31 @@
+{
+  "sha": "8456155dbae7eb861f553a2341871ccae633c857",
+  "url": "https://api.github.com/repos/IAFahim/quaternius.universalAnimationLibrary.standard/git/trees/8456155dbae7eb861f553a2341871ccae633c857",
+  "tree": [
+    {
+      "path": "LICENSE",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0e259d42c996742e9e3cba14c677129b2c1b6311",
+      "size": 7048,
+      "url": "https://api.github.com/repos/IAFahim/quaternius.universalAnimationLibrary.standard/git/blobs/0e259d42c996742e9e3cba14c677129b2c1b6311"
+    },
+    {
+      "path": "README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fe4c7b1343f335154af426f6916752dbdee651e7",
+      "size": 108,
+      "url": "https://api.github.com/repos/IAFahim/quaternius.universalAnimationLibrary.standard/git/blobs/fe4c7b1343f335154af426f6916752dbdee651e7"
+    },
+    {
+      "path": "UAL1_Standard.fbx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4ed79c26672ef595d7a11a99eb4742843692b7ec",
+      "size": 24908124,
+      "url": "https://api.github.com/repos/IAFahim/quaternius.universalAnimationLibrary.standard/git/blobs/4ed79c26672ef595d7a11a99eb4742843692b7ec"
+    }
+  ],
+  "truncated": false
+}
