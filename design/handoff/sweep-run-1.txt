@@ -1,0 +1,97 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+WARNING: house-style: textured material "wheels" kept as is; map it in DESIGN.md kit or retexture it
+WARNING: house-style: textured material "parts_AO" kept as is; map it in DESIGN.md kit or retexture it
+WARNING: house-style: material "internals" is not in DESIGN.md kit; using nearest role "body"
+WARNING: house-style: textured material "wheels" kept as is; map it in DESIGN.md kit or retexture it
+WARNING: house-style: textured material "parts_AO" kept as is; map it in DESIGN.md kit or retexture it
+WARNING: house-style: textured material "wheels" kept as is; map it in DESIGN.md kit or retexture it
+WARNING: house-style: textured material "parts_AO" kept as is; map it in DESIGN.md kit or retexture it
+FAIL  hab1, walking at 45 deg from (-4.5, 4.8): drawn body inside the drawn faces of lamp1/merged on 25 frames, first at (-4.1, 0.13, 4.43)
+FAIL  hab1, walking at 90 deg from (-6.3, 0.4): drawn body inside the drawn faces of hab1/merged on 291 frames, first at (-2.96, -0.02, 0.39)
+FAIL  hab1: walked into from 8 headings
+ok    oxygen: walked into from 8 headings
+ok    water: walked into from 8 headings
+ok    battery: walked into from 8 headings
+FAIL  solar1, walking at 0 deg from (24.2, 1.8): feet under a floor it stood on (top -0.14) on 29 frames, first at (24.22, -0.33, -2.72)
+FAIL  solar1, walking at 45 deg from (20.2, 0.2): feet under a floor it stood on (top -0.14) on 41 frames, first at (23.11, -0.26, -2.71)
+FAIL  solar1, walking at 45 deg from (20.2, 0.2): drawn body inside the solid solar1 on 3 frames, first at (23.25, -0.24, -2.67)
+FAIL  solar1, walking at 315 deg from (28.3, 0.2): feet under a floor it stood on (top -0.14) on 37 frames, first at (25.36, -0.25, -2.71)
+FAIL  solar1, walking at 315 deg from (28.3, 0.2): drawn body inside the solid solar1 on 5 frames, first at (25.05, -0.24, -2.68)
+FAIL  solar1: walked into from 8 headings
+FAIL  solar2, walking at 0 deg from (24.2, 9.8): feet under a floor it stood on (top -0.31) on 27 frames, first at (24.22, -0.48, 5.3)
+FAIL  solar2, walking at 45 deg from (20.2, 8.2): feet under a floor it stood on (top -0.31) on 44 frames, first at (23.11, -0.43, 5.3)
+FAIL  solar2, walking at 315 deg from (28.3, 8.2): feet under a floor it stood on (top -0.31) on 41 frames, first at (25.36, -0.43, 5.29)
+FAIL  solar2: walked into from 8 headings
+ok    greenhouse: walked into from 8 headings
+FAIL  shelter, walking at 0 deg from (-6.0, 13.9): feet under the ground on 3 frames, first at (-6.0, -0.33, 13.92), 0.29 m deep at most
+FAIL  shelter, walking at 180 deg from (-6.0, 6.0): feet under the ground on 174 frames, first at (-6.0, -0.17, 6.05), 0.29 m deep at most
+FAIL  shelter, walking at 225 deg from (-3.2, 7.2): drawn body inside the drawn faces of shelter/merged on 21 frames, first at (-5.05, 0.04, 8.349999)
+FAIL  shelter, walking at 225 deg from (-3.2, 7.2): drawn body inside the solid shelter on 73 frames, first at (-5.89, 0.03, 8.389999)
+FAIL  shelter: walked into from 8 headings
+FAIL  dish, walking at 0 deg from (6.0, -12.1): feet under the ground on 1 frames, first at (6.0, -0.98, -12.13), 0.27 m deep at most
+FAIL  dish, walking at 180 deg from (6.0, -20.5): feet under the ground on 1 frames, first at (6.0, -0.46, -20.51), 0.26 m deep at most
+FAIL  dish: walked into from 8 headings
+FAIL  pad1, walking at 0 deg from (-14.0, 12.2): feet under the ground on 1 frames, first at (-14.0, -0.98, 12.16), 0.23 m deep at most
+FAIL  pad1, walking at 45 deg from (-18.4, 10.4): feet under the ground on 10 frames, first at (-18.36, -1.27, 10.36), 0.26 m deep at most
+FAIL  pad1, walking at 90 deg from (-20.2, 6.0): feet under the ground on 1 frames, first at (-20.16, -1.2, 6.0), 0.26 m deep at most
+FAIL  pad1, walking at 180 deg from (-14.0, -0.2): feet under the ground on 1 frames, first at (-14.0, -0.45, -0.16), 0.29 m deep at most
+FAIL  pad1, walking at 270 deg from (-7.8, 6.0): feet under the ground on 2 frames, first at (-7.84, -0.22, 6.0), 0.29 m deep at most
+FAIL  pad1: walked into from 8 headings
+FAIL  pad2, walking at 0 deg from (12.0, 20.2): feet under the ground on 50 frames, first at (12.0, -0.64, 20.16), 0.28 m deep at most
+FAIL  pad2, walking at 45 deg from (7.6, 18.4): feet under the ground on 3 frames, first at (7.64, -0.56, 18.36), 0.28 m deep at most
+FAIL  pad2, walking at 90 deg from (5.8, 14.0): feet under the ground on 1 frames, first at (5.84, -0.57, 14.0), 0.26 m deep at most
+FAIL  pad2, walking at 180 deg from (12.0, 7.8): feet under the ground on 1 frames, first at (12.0, -0.58, 7.84), 0.28 m deep at most
+FAIL  pad2, walking at 225 deg from (16.4, 9.6): feet under the ground on 1 frames, first at (16.36, -0.72, 9.639999), 0.29 m deep at most
+FAIL  pad2, walking at 270 deg from (18.2, 14.0): feet under the ground on 1 frames, first at (18.16, -0.7, 14.0), 0.29 m deep at most
+FAIL  pad2: walked into from 8 headings
+FAIL  lamp1, walking at 0 deg from (-4.0, 6.6): feet under the ground on 34 frames, first at (-4.0, -0.2, 6.58), 0.29 m deep at most
+FAIL  lamp1, walking at 0 deg from (-4.0, 6.6): drawn body inside the drawn faces of lamp1/merged on 141 frames, first at (-4.0, 0.13, 4.4)
+FAIL  lamp1, walking at 45 deg from (-5.8, 5.8): feet under the ground on 166 frames, first at (-5.82, -0.16, 5.82), 0.29 m deep at most
+FAIL  lamp1, walking at 45 deg from (-5.8, 5.8): drawn body inside the drawn faces of lamp1/merged on 153 frames, first at (-4.43, -0.16, 4.43)
+FAIL  lamp1, walking at 90 deg from (-6.6, 4.0): feet under the ground on 162 frames, first at (-6.58, -0.15, 4.0), 0.30 m deep at most
+FAIL  lamp1, walking at 90 deg from (-6.6, 4.0): drawn body inside the drawn faces of lamp1/merged on 151 frames, first at (-4.57, -0.15, 4.0)
+FAIL  lamp1, walking at 135 deg from (-5.8, 2.2): drawn body inside the drawn faces of lamp1/merged on 154 frames, first at (-4.44, 0.12, 3.56)
+FAIL  lamp1, walking at 180 deg from (-4.0, 1.4): feet under the ground on 2 frames, first at (-4.0, -0.26, 1.42), 0.27 m deep at most
+FAIL  lamp1, walking at 225 deg from (-2.2, 2.2): feet under the ground on 1 frames, first at (-2.18, -0.21, 2.18), 0.28 m deep at most
+FAIL  lamp1, walking at 225 deg from (-2.2, 2.2): drawn body inside the drawn faces of lamp1/merged on 154 frames, first at (-3.56, 0.12, 3.56)
+FAIL  lamp1, walking at 270 deg from (-1.4, 4.0): feet under the ground on 162 frames, first at (-1.42, -0.16, 4.0), 0.30 m deep at most
+FAIL  lamp1, walking at 270 deg from (-1.4, 4.0): drawn body inside the drawn faces of lamp1/merged on 151 frames, first at (-3.43, -0.16, 4.0)
+FAIL  lamp1: walked into from 8 headings
+FAIL  lamp2, walking at 0 deg from (8.0, -3.4): feet under the ground on 1 frames, first at (8.0, -0.66, -3.42), 0.29 m deep at most
+FAIL  lamp2, walking at 0 deg from (8.0, -3.4): drawn body inside the drawn faces of lamp2/merged on 139 frames, first at (8.0, -0.45, -5.63)
+FAIL  lamp2, walking at 45 deg from (6.2, -4.2): feet under the ground on 1 frames, first at (6.18, -0.72, -4.18), 0.27 m deep at most
+FAIL  lamp2, walking at 90 deg from (5.4, -6.0): feet under the ground on 1 frames, first at (5.42, -0.85, -6.0), 0.26 m deep at most
+FAIL  lamp2, walking at 90 deg from (5.4, -6.0): drawn body inside the drawn faces of lamp2/merged on 146 frames, first at (7.51, -0.49, -6.0)
+FAIL  lamp2, walking at 135 deg from (6.2, -7.8): drawn body inside the drawn faces of lamp2/merged on 154 frames, first at (7.56, -0.5, -6.44)
+FAIL  lamp2, walking at 180 deg from (8.0, -8.6): feet under the ground on 1 frames, first at (8.0, -0.81, -8.58), 0.27 m deep at most
+FAIL  lamp2, walking at 225 deg from (9.8, -7.8): feet under the ground on 71 frames, first at (9.82, -0.77, -7.82), 0.29 m deep at most
+FAIL  lamp2, walking at 225 deg from (9.8, -7.8): drawn body inside the drawn faces of lamp2/merged on 152 frames, first at (8.41, -0.47, -6.41)
+FAIL  lamp2, walking at 270 deg from (10.6, -6.0): feet under the ground on 2 frames, first at (10.58, -0.76, -6.0), 0.27 m deep at most
+FAIL  lamp2, walking at 270 deg from (10.6, -6.0): drawn body inside the drawn faces of lamp2/merged on 145 frames, first at (8.47, -0.47, -6.0)
+FAIL  lamp2: walked into from 8 headings
+FAIL  beacon1, walking at 0 deg from (30.0, 2.2): feet under the ground on 1 frames, first at (30.0, -0.8, 2.16), 0.28 m deep at most
+FAIL  beacon1, walking at 45 deg from (28.5, 1.5): feet under the ground on 6 frames, first at (28.47, -0.78, 1.53), 0.27 m deep at most
+FAIL  beacon1, walking at 90 deg from (27.8, 0.0): feet under the ground on 1 frames, first at (27.84, -0.71, 0.0), 0.28 m deep at most
+FAIL  beacon1, walking at 180 deg from (30.0, -2.2): feet under the ground on 45 frames, first at (30.0, -0.61, -2.16), 0.29 m deep at most
+FAIL  beacon1, walking at 225 deg from (31.5, -1.5): feet under the ground on 4 frames, first at (30.98, -0.65, -0.98), 0.30 m deep at most
+FAIL  beacon1, walking at 270 deg from (32.2, 0.0): feet under the ground on 47 frames, first at (32.16, -0.65, 0.0), 0.30 m deep at most
+FAIL  beacon1: walked into from 8 headings
+FAIL  lander, walking at 0 deg from (90.0, -63.9): feet under the ground on 2 frames, first at (90.0, -1.86, -63.93), 0.27 m deep at most
+FAIL  lander, walking at 180 deg from (90.0, -76.6): feet under the ground on 2 frames, first at (90.0, -1.97, -76.61), 0.26 m deep at most
+FAIL  lander, walking at 180 deg from (90.0, -76.6): drawn body inside the drawn faces of lander/merged on 321 frames, first at (90.0, -1.71, -73.68)
+FAIL  lander: walked into from 8 headings
+ok    curiosity: walked into from 8 headings
+FAIL  open ground, 0 deg from spawn: feet under the ground on 1 frames, first at (0.0, -0.26, 9.0), 0.29 m deep at most
+FAIL  open ground, 180 deg from spawn: feet under the ground on 1 frames, first at (0.0, -0.26, 9.0), 0.29 m deep at most
+FAIL  open ground: 8 headings from spawn
+ok    self-check: with battery's collision freed the sweep fails it (1 findings, first: battery, walking at 0 deg from (14.0, 4.8): drawn body inside the drawn faces of battery/merged on 137 frames, first at (13.99, -0.41, 3.09))
+info  oxygen: headings 90, 135, 180 skipped, the start was in a solid or off the patch
+info  water: headings 0, 45, 90 skipped, the start was in a solid or off the patch
+info  pad1: headings 225 skipped, the start was in a solid or off the patch
+info  open ground, 0 deg from spawn: stopped by hab1 at (0.0, 0.1, 3.1) after 5.9 m
+info  open ground, 270 deg from spawn: stopped by shelter at (-4.1, 0.0, 9.0) after 4.1 m
+info  open ground, 315 deg from spawn: stopped by rover at (-7.5, 0.0, 1.5) after 10.6 m
+info  battery, walking at 0 deg from (14.0, 4.8): never touched it
+sweep took 45 s
+61 failed
