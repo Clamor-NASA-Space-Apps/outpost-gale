@@ -15,7 +15,7 @@ colors:
   trim: "#4f4744"
   accent: "#2ed3c0"
   metal: "#9c948c"
-  glass: "#1d2a3a"
+  glass: "#5b7182"
   rock: "#86716a"
   dust: "#c98a5a"
   hazard: "#e7b440"
@@ -98,13 +98,13 @@ lighting:
   ambientColor: "{colors.shade}"
   sunColor: "#ffd9a0"
   sun: 2.6
-  ambient: 0.9
+  ambient: 1.25
   elevation: 12
   azimuth: 145
   exposure: 1.0
   sunDisc: 1.2
   toneMapping: aces
-  fog: { color: "{colors.horizon}", near: 25, far: 5200, sky: 0.25, curve: 0.8 }
+  fog: { color: "{colors.horizon}", near: 25, far: 5200, sky: 0.25, curve: 1.6, density: 0.7, sun: 0.4 }
 quality:
   low: { msaa: 0, scale: 0.75, shadows: 1, shadowMap: 1024, glow: 0, detail: off }
   medium: { msaa: 2, scale: 1, shadows: 2, shadowMap: 2048, glow: 0.4, detail: code }
@@ -114,9 +114,12 @@ kit:
   "metalRed": hazard
   "^metal$|_defaultMat": body
   "dark|grey|gray|trim": trim
-  "rockDark": rock
-  "rock|stone|dirt|sand": dust
+  "^rock|stone|cliff": rock
+  "dust|dirt|sand": dust
   "glass|window|screen|visor": glass
+  "SciFi_Light_Accent": accent
+  "SciFi_MainDark|Grey": trim
+  "SciFi_Main|SciFi_Light": body
   "light|lamp|emissive|glow|crystal": light
   "orange|red|stripe|yellow": hazard
   "teal|cyan|blue|accent": accent

@@ -3,9 +3,11 @@ shader_type spatial;
 // in place of the marker below, so a role pays only for what it shows:
 //   FLAT      geometry.shading: flat. One normal per triangle, taken from the surface itself,
 //             so kit models and built-in meshes facet without re-importing them.
-//   DETAIL    the role's `detail`, laid on by world position, so it only suits meshes that hold still.
+//   DETAIL    the role's `detail`, laid on by world position on meshes that hold still, and by the mesh's
+//             own position (LOCAL) on meshes that move, so it travels with them.
 //             With it, one of PATTERN_GRAIN, PATTERN_BRICKS, PATTERN_TILES, PATTERN_PLANKS (drawn here)
 //             or TEXTURE (a photo). Detail only ever shades the role's colour, it never replaces it.
+//             NORMALMAP and ROUGHMAP add the photo set's normal (OpenGL) and roughness maps.
 //   LIT       the role's `lit`: panes that light up one by one. COLOR.r is a pane's own number.
 // VARIANT
 uniform vec4 albedo : source_color = vec4(1.0);
@@ -19,6 +21,15 @@ varying vec3 world_pos;
 #endif
 #ifdef TEXTURE
 uniform sampler2D detail_texture : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
+#endif
+#ifdef NORMALMAP
+uniform sampler2D detail_normal : hint_normal, repeat_enable, filter_linear_mipmap_anisotropic;
+#endif
+#ifdef ROUGHMAP
+uniform sampler2D detail_roughness : hint_default_white, repeat_enable, filter_linear_mipmap_anisotropic;
+#endif
+#ifdef DETAIL
+varying vec3 surf_nrm;
 #endif
 #ifdef LIT
 uniform vec3 lit_color : source_color = vec3(1.0);
@@ -51,7 +62,13 @@ float joint(vec2 f, vec2 w, float metres) {
 
 void vertex() {
 #ifdef DETAIL
+#ifdef LOCAL
+	world_pos = VERTEX;
+	surf_nrm = NORMAL;
+#else
 	world_pos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+	surf_nrm = (MODEL_MATRIX * vec4(NORMAL, 0.0)).xyz;
+#endif
 #endif
 #ifdef LIT
 	pane = COLOR.r;
@@ -65,8 +82,17 @@ void fragment() {
 	vec3 shade = vec3(1.0);
 #ifdef DETAIL
 	// each face takes the detail from the side it mostly looks at, so walls get rows and floors get slabs
-	vec3 n = abs((INV_VIEW_MATRIX * vec4(NORMAL, 0.0)).xyz);
-	vec2 uv = (n.y >= n.x && n.y >= n.z ? world_pos.xz : (n.x >= n.z ? world_pos.zy : world_pos.xy)) / detail_size;
+#if defined(FLAT) && defined(LOCAL)
+	vec3 g = normalize((inverse(MODELVIEW_MATRIX) * vec4(NORMAL, 0.0)).xyz);  // flat rebuilt NORMAL just now
+#elif defined(FLAT)
+	vec3 g = normalize((INV_VIEW_MATRIX * vec4(NORMAL, 0.0)).xyz);
+#else
+	vec3 g = normalize(surf_nrm);
+#endif
+	vec3 n = abs(g);
+	bool top = n.y >= n.x && n.y >= n.z;
+	bool side_x = !top && n.x >= n.z;
+	vec2 uv = (top ? world_pos.xz : (side_x ? world_pos.zy : world_pos.xy)) / detail_size;
 	vec2 w = fwidth(uv);
 	float far = clamp(max(w.x, w.y) * 2.0, 0.0, 1.0);  // 1 where a repeat is smaller than two pixels
 #ifdef TEXTURE
@@ -90,6 +116,26 @@ void fragment() {
 #endif
 	ALBEDO = albedo.rgb * shade;
 	ROUGHNESS = roughness;
+#ifdef ROUGHMAP
+	// the map's own average stays the role's roughness, so a set never makes a role glossier overall
+	float rough_avg = max(textureLod(detail_roughness, uv, 16.0).r, 0.02);
+	ROUGHNESS = clamp(roughness * mix(1.0, texture(detail_roughness, uv).r / rough_avg, detail_strength), 0.02, 1.0);
+#endif
+#ifdef NORMALMAP
+	// the photo's right and up on the side it was laid on, then bent by its normal map
+	vec3 tu = top ? vec3(1.0, 0.0, 0.0) : (side_x ? vec3(0.0, 0.0, 1.0) : vec3(1.0, 0.0, 0.0));
+	vec3 tv = top ? vec3(0.0, 0.0, 1.0) : vec3(0.0, 1.0, 0.0);
+	tu = normalize(tu - g * dot(g, tu));
+	tv = normalize(tv - g * dot(g, tv) - tu * dot(tu, tv));
+	vec3 tn = texture(detail_normal, uv).xyz * 2.0 - 1.0;
+	tn.xy *= detail_strength * (1.0 - far);
+	vec3 bent = normalize(tu * tn.x + tv * tn.y + g * tn.z);
+#ifdef LOCAL
+	NORMAL = normalize((MODELVIEW_MATRIX * vec4(bent, 0.0)).xyz);
+#else
+	NORMAL = normalize((VIEW_MATRIX * vec4(bent, 0.0)).xyz);
+#endif
+#endif
 	METALLIC = metallic;
 	EMISSION = emission;
 #ifdef LIT

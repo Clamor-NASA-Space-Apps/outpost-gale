@@ -1,0 +1,441 @@
+      Design Considerations for a Crewed Mars Ascent Vehicle
+
+                                               Michelle A. Rucker1
+       National Aeronautics and Space Administration, Lyndon B. Johnson Space Center, Houston, Texas, 77058
+
+
+                                                          Abstract
+               Exploration architecture studies identified the Mars Ascent Vehicle (MAV) as one of the
+           largest “gear ratio” items in a crewed Mars mission. Because every kilogram of mass
+           ascended from the Martian surface requires seven kilograms or more of ascent propellant, it
+           is desirable for the MAV to be as small and lightweight as possible. Analysis identified four
+           key factors that drive MAV sizing:
+           1) Number of crew: more crew members require more equipment—and a larger cabin
+              diameter to hold that equipment—with direct implications to structural, thermal,
+              propulsion, and power subsystem mass.
+           2) Which suit is worn during ascent: Extravehicular Activity (EVA) type suits are
+              physically larger and heavier than Intravehicular Activity (IVA) type suits and because
+              they are less flexible, EVA suits require more elbow-room to maneuver in and out of. An
+              empty EVA suit takes up about as much cabin volume as a crew member.
+           3) How much time crew spends in the MAV: less than about 12 hours and the MAV can be
+              considered a “taxi” with few provisions for crew comfort. However, if the crew spends
+              more than 12 consecutive hours in the MAV, it begins to look like a Habitat requiring
+              more crew comfort items.
+           4) How crew get into/out of the MAV: ingress/egress method drives structural mass (for
+              example, EVA hatch vs. pressurized tunnel vs. suit port) as well as consumables mass
+              for lost cabin atmosphere, and has profound impacts on surface element architecture.
+               To minimize MAV cabin mass, the following is recommended: Limit MAV usage to 24
+           consecutive hours or less; discard EVA suits on the surface and ascend wearing IVA suits;
+           Limit MAV functionality to ascent only, rather than dual-use ascent/habitat functions; and
+           ingress/egress the MAV via a detachable tunnel to another pressurized surface asset.
+
+                                                       Nomenclature
+g            =   Earth standard gravitational force
+kg           =   kilogram
+kN           =   kilo Newton
+m            =   meter
+m3           =   cubic meters
+
+                                                      I. Introduction
+   Crewed Mars Ascent Vehicle (MAV) designs fall into one of two broad categories: 1) a relatively large habitable
+variant that serves as both ascent vehicle and habitat, either on the surface or in orbit; or 2) a much smaller taxi
+variant used only for a few hours during the actual ascent. The taxi variant requires another Mars surface asset for
+habitation. Note that in some architectures, the Mars ascent vehicle might also be used as the crew’s descent vehicle.
+   Ascent vehicles are generally regarded as the largest “gear ratio” item in a given architecture; in other words,
+every kilogram of an ascent vehicle needs more Earth-launched mass to do its job than most other architecture
+elements need. Even if ascent propellant can be manufactured on Mars, current technologies still require the ascent
+vehicle—and the propellant manufacturing plant—be launched from Earth, transported to and then descended onto
+
+1
+    Engineer, Exploration Integration and Science Directorate, Mail Stop XM.
+                                                           1
+                                   American Institute of Aeronautics and Astronautics
+Mars, all of which entails a considerable amount of transit and descent propulsion mass. The overall gear ratio
+depends on end-to-end mission architecture. Analysis performed by the National Aeronautics and Space
+Administration (NASA) estimates that the amount of propellant needed to boost a single kilogram of ascent vehicle
+to a 1-sol Mars orbit ranges between 3.5 kg (for an ideal rocket) to as much as 15 kg for a stage mass fraction of
+0.73. For the purpose of this exercise, the ascent gear ratio was assumed to be at the lower end of the range, or 7:1
+(seven kilograms of ascent propellant to boost every one kilogram of MAV inert mass).
+
+                                     II. Factors That Drive Cabin Size
+   Clearly, the smaller the ascent vehicle, the lower the overall Earth-launched mass will be, which often means
+lower mission cost. Although many factors will affect a final MAV design, there are at least four key drivers for
+MAV cabin size: number of crew, what the crew is wearing during ascent, how much time crew spends in the MAV,
+and how crew get into or out of the MAV
+
+A. Number of Crew
+    The number of crew drives MAV size both directly (more crew require a larger cabin volume) and indirectly (a
+larger cabin requires more thermal protection and longer avionics cables, which in turn requires more power mass,
+all of which drives ascent propellant load). For the purpose of this exercise, it was assumed that at least two crew
+members would land on Mars in even the most minimalist scenario, and the maximum crew complement would be
+limited by the Orion return vehicle, which is sized for up to six.
+    More crew members simply require more physical elbow room. Work done as part of the Constellation
+Program’s Altair Lunar Lander project1 concluded that four standing crew members packed quite close together
+only need about a 1.8 m diameter cabin for a short duration ascent. Six crew obviously require more (Figure 1),
+probably at least a 2.2 m diameter cabin. Two crew members would require less volume, possibly as low as a 1.58 m
+diameter cabin. Note that many factors could increase taxi cabin diameter. For example, if crew ascend in recumbent
+seats (rather than standing up) or will be performing active piloting, then a larger cabin will be required. In any case,
+the structural mass difference between 1.58 m and 2.2 m diameter crew cabins could be quite significant.
+    At 82.2 kg for a 50th percentile male crew member2, a six-crew MAV has to carry at least 328.8 kg more load
+than a two-crew MAV. With 95th percentile male crew, the difference grows to 394 kg. If each kilogram of MAV
+mass requires just seven kilograms of ascent propellant to reach a
+one-sol orbit, that extra 328 to 394 kg of crew will require as much
+as 2,758 kg more ascent propellant, which in turn requires larger
+propellant tanks and more structural support.
+    In addition to the crew, the MAV cabin must also accommodate
+crew equipment, even for short ascent durations. At a minimum,
+each crew member will need either a Portable Life Support System
+(PLSS) or an oxygen umbilical for cabin depressurization
+contingencies. At as much as 0.75 m x 0.56 m x 0.254 m for a
+                                                                         Figure 1. Top view of Cabin: four vs. six
+PLSS, or 0.127 m diameter x 4.58 m long for even a short
+                                                                         crew.
+Intravehicular (IVA) oxygen umbilical, equipment volume quickly
+adds up, especially for six crew members. If the crew must remain
+inside the MAV for more than a few hours, additional equipment
+will be required (discussed below).
+    One obvious way to reduce MAV mass is to remove the
+pressure cabin altogether, such as the concept shown in Figure 2.
+Although this can reduce structural, thermal, and power mass,
+there are a number of disadvantages. An unpressurized MAV
+would require crew to remain in their Extravehicular Activity
+(EVA) suits, which is currently untenable for a lengthy (more than
+24 hour) ascent. Ascending in EVA suits contaminated with
+surface dust also poses the problem of planetary protection, which
+will require suit decontamination before the crew transfers into
+their transit vehicle (and further extends the time crew must remain
+in their suits). With no shell between the crew and the MAV’s
+reaction control system thrusters, EVA suit contamination is Figure 2. Unpressurized ascent vehicle
+another concern because thruster plumes may damage the suits or concept.
+
+                                                         2
+                                 American Institute of Aeronautics and Astronautics
+deposit toxic contaminants that can then be transferred into the destination vehicle. Although eliminating the
+pressure cabin eliminates the mass of a pressurized docking system, this requires an EVA transfer into the orbiting
+transit habitat, which could be risky in the event of an incapacitated crew member. This concept precludes dual use
+of the MAV for surface habitation, forcing the architecture to carry a separate pressurized surface element. What’s
+more, an unpressurized MAV cannot be used as a temporary safe-haven in a surface contingency. All of these issues
+can be mitigated, but the mass penalties may outweigh the benefits.
+
+B. IVA vs. EVA Suits
+    Due to the possibility of a sudden cabin depressurization
+it is generally assumed that crew members will ascend in
+either EVA or IVA suits. The choice of ascent suit can impact
+MAV cabin size not only because the EVA suits are
+physically larger than the IVA suits (Figure 3), but also
+because EVA suits will likely be contaminated with surface
+dust which will require additional equipment to control.
+    Cabin mockup testing1 identified the EVA suit’s bulky
+design as a potential cabin configuration driver. For example,
+even with their PLSS’s removed, pilots were unable to stand
+side by side in a 2.35 m diameter cylindrical vehicle without Figure 3. Size comparison of IVA (orange) and
+contact between their suit’s PLSS plates (Figure 4). This EVA (white) space suit Concepts
+potentially drives the placement or size of piloting controls,
+windows, and other equipment.
+    Simulated microgravity testing performed during the
+Constellation Program also identified problems passing a
+large, pressurized EVA suit through the docking system hatch
+tunnel3. The workaround would have required EVA transfer
+between the Altair lunar lander and Orion in the event of an
+ascent vehicle depressurization. Since testing found no issues
+with the IVA suits, this contingency EVA—as well as the
+need for even longer EVA umbilical hoses stowed in the
+MAV— can be avoided on a Mars ascent simply by
+switching the crew into their IVA suits prior to ascent.
+    EVA suits also pose a significant ascent mass penalty
+over the IVA suits. At roughly 75 kg difference between an
+IVA and EVA suit (not including the PLSS), the mass penalty Figure 4. EVA suit contact in curved cabin
+for six crew members is about 450 kg; with the 7:1 propellant ratio, that difference adds another 3,150 kg of
+propellant (plus larger propellant tanks, more tank structure, etc.) simply to accommodate the larger suits.
+    The downside to acending in IVA suits is that it requires the crew to discard their EVA suits on the surface. This
+poses an immediate problem of how to switch from EVA to IVA suits in a small cabin, and then get the EVA suits
+out of the MAV before ascent. Leaving the suits behind also means that at least two fresh EVA suits would have to
+be available on the in-space return vehicle for EVA contingencies, adding to the overall mission cost. On the other
+hand, planetary protection is simplified if surface EVA suits can be kept out of the MAV altogether, as this
+eliminates the need to scrub Mars regolith from the suits or MAV cabin atmosphere, which would require additional
+MAV equipment mass.
+    Ascending in IVA suits poses one significant risk: in the event of a MAV-to-transfer vehicle docking failure, the
+crew cannot simply exit a side hatch and translate externally because the IVA suits do not provide sufficient thermal
+protection for EVA excursions. Several workarounds have been proposed, including a thermal “overcoat” that could
+be used for brief, emergency EVA exposure. Another approach is to break the contingency down into more
+manageable parts, and look at the three failure possibilities: 1) the MAV docks, but the docking hatch becomes
+jammed; 2) the MAV can soft-dock, but not hard-dock; or 3) the MAV cannot even soft-dock. In the event the MAV
+fails to soft-dock, the MAV may be too far from the transit vehicle for an EVA transfer anyway, regardless of which
+suits the crew is wearing. The program will have to either accept the potential crew safety risk, or explore grapple
+fixtures, jet-packs, or other means to mitigate this risk before the suit decision comes into play. In the event the
+MAV can soft-dock, but not hard-dock, crew will still be able to translate through the unpressurized docking tunnel
+in their IVA suits as long as their umbilical hoses are long enough. Finally, the jammed docking hatch contingency
+
+                                                        3
+                                American Institute of Aeronautics and Astronautics
+was addressed in previous studies by assuming the MAV carried a jammed hatch tool kit, estimated at about five
+kilograms mass penalty.
+
+C. MAV Mission Duration
+    Preliminary ascent timelines to a one-sol orbit estimate that crew must remain in the MAV for up to 43 hours,
+assuming a single missed launch opportunity. Crew time inside the MAV could be minimized by ascending to a
+lower orbit, or eliminating the missed launch contingency assumption altogether. Including pre-ascent vehicle
+preparations though, crew is likely to be inside the MAV for at least 24 hours. If the MAV ascends to a higher orbit,
+or serves double-duty as a short surface stay habitat, the crew may be living/working in the MAV for up to a week.
+    How long the crew must remain in the MAV greatly impacts MAV mass. If the crew only has to be inside for a
+few hours, they can remain in their spacesuits, with the limiting factor likely the Maximum Absorbency Garment
+(MAG), currently rated for eight hours. Materials and design modification may be able to extend operational use a
+few more hours but current designs require spacesuit doffing to replace a soiled MAG. Because the Constellation
+Program required4 Orion to sustain suited crew in an unpressurized cabin for several days in a worst-case
+contingency, extended in-suit waste management is a NASA technology goal5. Until then, a practical limit of 12 to
+24 hours for nominal (planned) operations is a reasonable assumption.
+    If crew are inside the MAV long enough that they need to replace soiled MAGs, MAV cabin diameter will grow
+dramatically. First, there is the problem of doffing suits. NASA’s Human Integration Design Handbook6
+recommends 6.35 cubic meters (m3) for Space Shuttle-style EVA suit don/doff in micro-gravity. Cabin mockup
+testing performed as part of the Altair project7 confirmed that suit don/doff was a significant cabin volume driver
+(and may be more pronounced in a surface gravity field than in micro-gravity). Note that new rear-entry EVA suit
+concepts require a crew member to pull him/herself up and out of the suit, which drives cabin ceiling height. IVA
+type suits require a bit less volume to don/doff.
+    Once the suits are removed, the immediate problem of suit
+stowage must be addressed. As noted, EVA suits are bulkier
+than IVA suits, but a suit takes up about as much cabin volume
+as a crew member. In the worst-case, if all six crew members
+have to remove their EVA suits, the MAV must essentially be
+sized as a 12-crew pressure cabin (Figure 5). MAV volume
+could be optimized for ascent if crew stagger suit don/doff, so
+that only one crew member is out of their suit at any given
+time, but this workaround isn’t practical if the MAV is used for
+surface habitability as well as for ascent, unless the MAV is
+mated to another pressurized element on the surface such as an
+airlock or habitat.
+    To prevent damage to the suits, it is preferable to place
+them in stowage bags. The working assumption for early
+Constellation Program studies was 1.04 m3 volume per EVA
+suit, with each stowage bag estimated to be 14.55 kg. Once
+suits have been doffed and stowed, the next concern is waste
+and hygiene. Privacy for removing soiled MAGs could be
+                                                                      Figure 5. Cabin Model with six crew and EVA
+provided with a simple curtain at relatively small volume
+                                                                      suits
+penalty. Volume needed to dispose of soiled MAGs will
+depend on how long the crew must remain inside the MAV—a
+trash bag is probably sufficient for a single day, but longer durations will require more elaborate disposal methods to
+minimize cabin odor and contamination. Per NASA-STD-30018 a six-crew cabin would accumulate about 54 liters
+of urine after just three days. At that point, a rudimentary toilet may trade well for mass and stowage volume.
+    Using the MAV for surface habitability will dramatically increase MAV size, with sleeping expected to be a key
+driver. NASA’s Human Integration Design Handbook6 recommends 2.69 m3 per crew member for activities such as
+sleeping and sheltering. Although sleep bunks can be stacked vertically to save floor space, the cabin has to be at
+least as wide as the tallest crew member to avoid forcing the Table 1. Crew mass and stature comparison
+crew to sleep in a fetal position or on an incline.                                    Stature per NASA SSP 50005
+    One option for reducing MAV diameter may be to limit                Percentile       Female            Male
+surface crew stature. For example, the difference between 50th              5th         148.9 cm         169.7 cm
+and 95th percentile male crew statures is about 10.2 cm (Table             50th         157.0 cm         179.9 cm
+1). Accounting for cabin curvature, this change would drop the             95th         165.1 cm         190.1 cm
+                                                             4
+                                   American Institute of Aeronautics and Astronautics
+internal cabin diameter from at least 2.06 m to about 1.885 m diameter. Although that may seem insignificant,
+extended over a 3 m cabin height this simple change translates to an internal cabin volume reduction of more than
+1.6 m3, and a cabin barrel section surface area savings of about 1.65 m2, both of which offer flow-down savings to
+structures, power, thermal protection, and life support subsystems—all multiplied by the 7:1 propellant gear ratio.
+Although limiting crew stature would prompt lively debate, to put things into perspective it should be noted that the
+Apollo 11 surface crew fall just under the 50th percentile stature definition by current NASA standards.
+    Although sleep bunks can be folded up during waking hours to
+extend working volume, there is still the problem of where to stow
+equipment at night. Food, clothing, hygiene supplies, a first aid kit,
+science equipment, and EVA consumables (MAGs, spare gloves, etc.)
+must all be stowed inside the habitable volume, along with vehicle
+equipment such as piloting controls and displays, power interface panels,
+or crew umbilical hoses. Figure 6 gives an idea of how much equipment
+is required to support six crew members for a week on the surface, in a
+Habitable MAV.
+    Another factor that could affect MAV sizing is whether the crew also
+descends to the surface inside the MAV. If descending in the MAV, the
+crew will almost certainly need recumbent seats (Figure 7) for
+protection. Cabin volume for seats themselves must be accounted for in
+cabin sizing, as well as descent and ascent propellant loads needed for
+seat mass. MAV engineering analysis typically assumes the crew can Figure 6. Equipment for six crew for
+stand during ascent (a hold-over from Constellation Program concepts),            a week
+but the decision will ultimately hinge on crew safety. Preliminary
+estimates for a 3,623 kg crew cabin, with 0.80 stage mass fraction, and
+100 kN thrust engines is about 1.5 g at the end of the first stage—
+relatively gentle compared to the Space Shuttle’s lift-off, but potentially
+dangerous for a crew that’s spent more than 500 days at reduced Martian
+gravity following a six month transit in microgravity.
+    Orion-type recumbent seats, sized for Earth re-entry, are estimated at
+up to 27 kg each, but lower mass seats may be adequate for Mars ascent
+or descent. Note that seats may be removed from the MAV after landing
+(unless they are needed during ascent), but this may drive MAV cabin
+hatch design. To reduce overall landed mass, common seating might be
+shared between the MAV and surface rovers, though again that may
+drive either seat or hatch design to allow seat relocation between the two Figure 7. Six crew in recumbent seats
+vehicles.
+    Finally, some consideration must be given to return cargo, which may be as much9 as 250 kg. Conventional
+wisdom says there’s no reason to ascend more return cargo than what Orion can accommodate (which may be as
+low as 100 kg), but it’s possible that Mars return science samples could be diverted to another destination (an
+orbiting outpost, for example), or designed for a separate Earth re-entry. To protect science sample integrity, as well
+as to protect both the crew and Earth from forward contamination, science sample containers must be sealed and
+decontaminated before entering either the MAV or the orbiting transit vehicle. Returning science samples could be
+stowed outside the MAV pressure cabin, which eliminates the landed mass penalty for sealing/decontamination
+equipment. On the other hand, this will require an EVA transfer from the MAV to the Earth transit vehicle, which
+may result in a net mass increase.
+
+D. MAV Ingress/Egress
+    How the crew gets into or out of the MAV has profound implications on mission element architecture. There are
+at least five possible ingress/egress operations in a crewed Mars surface mission:
+    1) Transferring from Orion or an Earth transit vehicle into the MAV in microgravity (if descending in the
+           MAV).
+    2) Egressing the MAV to perform a surface EVA or transit to another surface asset (such as a habitat) in Mars
+           gravity.
+    3) Ingressing/egressing the MAV in Mars gravity to retrieve logistics supplies or stow return cargo.
+    4) Ingressing the MAV in Mars gravity to ascend to Mars orbit.
+    5) Egressing the MAV in microgravity to return to Orion or the Earth transit vehicle.
+                                                         5
+                                 American Institute of Aeronautics and Astronautics
+Current ingress/egress methods include EVA hatches, IVA tunnels (Figure 8), and Suit Ports (Figure 9).
+    There are three key considerations for MAV ingress/egress design.
+First, which suits will the crew be wearing during ingress/egress? As
+noted above, a pressurized IVA suit can pass through a standard
+exploration docking hatch, but a pressurized EVA suit requires a larger
+hatch. On the other hand, IVA suits are unsuitable for surface
+operations, and cannot be used with EVA hatches alone. Second,
+where will crew be changing from IVA to EVA suits, or vice versa? If
+the MAV is large enough for all crew members to change into their
+EVA suits, then an EVA hatch is acceptable. But if the MAV isn’t
+large enough to get out of their IVA suits, the crew can’t explore the
+surface or get to another vehicle without a tunnel, suit port, or attached
+airlock. Finally, how much dust can be tolerated inside the MAV?
+Apollo experience10warns that opening an EVA hatch directly to the Figure 8. IVA Tunnel
+surface will bring surface dust into the ascent vehicle. This will drive
+MAV cabin design and equipment mass to prevent Martian dust from
+migrating back into Orion and eventually to Earth, in violation of
+planetary protection protocols11.
+
+1. EVA Hatch
+    EVA hatches have the benefit of relatively low mass and high
+Technology Readiness Level (TRL). But because an EVA hatch would
+require MAV depressurization for every ingress/egress, everything in
+the cabin would have to be rated for extended Mars surface atmosphere
+exposure, and all crew members would have to suit up even if only one
+was actually leaving the cabin—which means the MAV would still
+have to be big enough for all crew members to ingress/egress their Figure 9. Suit port concept
+suits together. Altair project mockup testing found that even three
+EVA suited crew could stand together in a relatively small 1.8 m
+diameter cabin (Figure 10). However, getting into and out of their
+EVA suits was hampered by a rear-entry suit design that requires the
+PLSS hatch to swing open laterally for suit doffing (Figure 11). In
+practice, this either forces the cabin diameter to grow to accommodate
+PLSS hatch swing, or it will drive a fundamental design change to the
+EVA suits. These issues aside, the biggest drawback to an EVA hatch
+is that it will be more difficult to keep dust out of the MAV or prevent
+Martian dust from migrating back to Orion, and eventually to Earth.
+
+2. Suit Port
+    Suit ports offer the promise of dust mitigation by keeping dusty Figure 10. Three crew in 1.8 m
+suits outside the cabin, but current protocol still requires an EVA diameter cabin
+hatch to get the suits outside for the first EVA, and back inside after
+the final EVA. This is primarily because current designs don’t provide
+enough structural support to protect the suits from ascent/descent
+loads or potential thruster plume impingement. Concepts to address
+these problems have been proposed, but add even more mass to each
+suit port (which are already about 100 kg each). Even if the structural
+problem is resolved, an EVA hatch is still required for an
+incapacitated crew member contingency, since it may not be possible
+to pull an unconscious person up through the suit’s rear-entry hatch to
+safety.
+    At nearly one meter centerline-to-centerline spacing between suit Figure 11. PLSS management issues
+ports, a small MAV cabin diameter is unlikely to provide sufficient
+real estate for more than two suit ports. This poses operational timeline impacts in getting four or six member crews
+in or out of the vehicle. Crews could ingress two at a time, but once the first two are inside, their suits would have to
+be removed from the suit ports before the next two crew members could ingress. Once detached from the suit port,
+                                                           6
+                                 American Institute of Aeronautics and Astronautics
+an empty suit can be damaged if the water inside freezes, which means additional thermal conditioning mass will be
+needed outside the vehicle for suit stowage—exacerbating what is already a poor mass trade for the suit ports.
+Worse, to protect against a contingency where the MAV engines fail to ignite and crew need to retreat back to a
+habitable element, the MAV may have to keep one or two EVA suits attached to its suit ports until lift-off, further
+adding complexity and mass.
+    Although suit ports make sense for frequent excursions from a relatively large surface asset (such as a rover or
+habitat), suit ports do not seem to be a good fit for the MAV.
+
+3. Tunnel
+    For architectures where another element provides
+habitability function (such as a rover or habitat), or
+where an airlock module is paired with the MAV,
+retractable tunnels (Figure 12) are an attractive option.
+By pushing the suit don/doff and EVA operations to an
+element that remains on the surface, MAV ascent mass
+and dust can be minimized. Although a tunnel is likely to
+pose a significant descended mass impact, the 7:1
+propellant penalty does not apply if the tunnel remains on
+the surface. What’s more, retractable tunnels allow
+surface assets to be re-configured, built up over time, or
+reconfigured as needed.
+    Ideally, pressurized tunnels would provide a shirt-
+sleeve crew transfer path between elements. The tunnel Figure 12. Retractable tunnel from MAV to rover
+concept may work unpressurized as well, but would
+require umbilical hoses at least as long as the tunnel. A tunnel would also allow MAV crews to discard their EVA
+suits in a thermally-conditioned, secure element for later mission re-use or scavenge, rather than discarding them on
+the surface. This protects the crew in a contingency scenario where the MAV engines fail to ignite; crew can simply
+retreat back through the tunnel to the habitable element for troubleshooting. Strictly speaking, a tunnel does not have
+to be retractable but one-time use options such as pyrotechnic detachment may not make sense for a long-duration
+mission where surface elements will be re-used or reconfigured over time.
+    One downside to tunnels is that they may be awkward when moving between elements at different elevations, as
+depicted in Figure 12, though it may still be safer than EVA crews climbing down an exposed ladder. Another
+disadvantage is that pressurized tunnels—or unpressurized tunnels with long umbilical hoses—will require a robust
+environmental control and life support system feeding the tunnel from at one or both of the two mated elements.
+
+                                                    III. Conclusion
+   Based on the observations noted above, the following steps are recommended to minimize MAV cabin mass,
+thus reducing overall mission mass:
+
+       1) Limit MAV usage to 24 consecutive hours or less.
+       2) Abandon EVA suits in a surface asset and ascend in the MAV wearing IVA suits.
+       3) Limit MAV functionality to ascent only, rather than dual-use ascent/habitat functions.
+       4) Ingress/egress the MAV via a retractable tunnel to another pressurized surface asset.
+
+
+                                                    Acknowledgments
+Graphics provided courtesy of John Teter, Victor Dang, Tim Collins, Dan Miller, and David Paddock. EVA
+information provided courtesy of Natalie Mary. Gear ratio estimates courtesy of Walter Stephens and Ryan Whitley.
+
+
+                                                         References
+
+1
+    Thompson, S. and Rucker, M., “Surface Vehicle Task 516: Two and Three Crew Mockup Configuration and Comparison
+      Evaluation Final Report,” National Aeronautics and Space Administration, Lyndon B. Johnson Space Center, Houston, 2011.
+
+                                                             7
+                                     American Institute of Aeronautics and Astronautics
+2
+  SSP 50005/NASA–STD–3000, “International Space Station Flight Crew Integration Standard,” Revision C, International Space
+    Station Program, National Aeronautics and Space Administration, Houston, 1999.
+3
+  JSC-47223, “ESPO Test 6: C-9 Facility Space Suit Interface Evaluation Test Report,” EVA Systems Project Office, National
+    Aeronautics and Space Administration, Lyndon B. Johnson Space Center, Houston, 2009.
+4
+  CxP 7000, “Constellation Architecture Requirements Document (CARD),” National Aeronautics and Space Administration,
+    Washington, 2010.
+5
+  NASA, “Technology Roadmaps, TA6: Human Health, Life Support, and Habitation Systems,” National Aeronautics and Space
+    Administration, Washington, 2015. http://www.nasa.gov/offices/oct/home/roadmaps/index.html [cited 18 May 2015]
+6
+  SP-2010-3407, “Human Integration Design Handbook (HIDH),” National Aeronautics and Space Administration, Washington,
+    2010.
+7
+  Thompson, S., Litaker, H., Szabo, R., Howard, R., and North, D.,“Evaluation of the Altair Lunar Lander DAC-3 Interior
+    Volume Configuration,” National Aeronautics and Space Administration. Lyndon B. Johnson Space Center, Houston, 2010.
+8
+  NASA-STD-3001, Volume 2, “NASA Space Flight Human-System Standard, Human Factors, Habitability, and Environmental
+    Health,” Revision A, National Aeronautics and Space Administration, Washington, 2015.
+9
+  SP-2009-566, “Human Exploration of Mars Design Reference Architecture 5.0,” National Aeronautics and Space
+    Administration, Mars Architecture Steering Group, Washington, 2009.
+10
+   TP-2006-213726, “The Apollo Experience Lessons Learned for Constellation Lunar Dust Management,” National Aeronautics
+    and Space Administration, Lyndon B. Johnson Space Center, Houston, 2006.
+11
+   NASA NPI 8020.7/NPD 8020.7G, “NASA Policy on Planetary Protection Requirements for Human Extraterrestrial Missions,”
+    National Aeronautics and Space Administration, Washington, 2014.
+
+
+
+
+                                                          8
+                                  American Institute of Aeronautics and Astronautics
+

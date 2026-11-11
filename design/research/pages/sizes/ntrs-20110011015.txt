@@ -1,0 +1,633 @@
+                                           - - - - - - - - - - - - - - - - - - - - - --------------
+
+
+
+
+          International Conference on Environmental Systems, Portland, Oregon, July 2011
+                                AIM abstract CONTROL 10: 1021891
+
+         HDU Pressurized Excursion Module (PEM) Prototype
+                        Systems Integration
+                                            Tracy R. Gill 1
+                                  NASA HDU Project Management Team 2
+
+                                                  ABSTRACT
+The Habitat Demonstration Unit (HDU) project team constructed an analog prototype lunar surface
+laboratory called the Pressurized Excursion Module (PEM). The prototype unit subsystems were
+integrated in a short amount of time, utilizing a skunk-works approach that brought together over
+20 habitation-related technologies from a variety of NASA centers. This paper describes the
+system integration strategies and lessons learned, that allowed the PEM to be brought from paper
+design to working field prototype using a multi-center team.
+        The system integration process included establishment of design standards, negotiation of
+interfaces between subsystems, and scheduling fit checks and installation activities. A major tool
+used in integration was a coordinated effort to accurately model all the subsystems using CAD, so
+that conflicts were identified before physical components came together.
+        Some of the major conclusions showed that up-front modularity that emerged as an artifact
+of construction, such as the eight 45 degree "pie slices" making up the module whose steel rib
+edges defined structural mounting and loading points, dictated much of the configurational
+interfaces between the major subsystems and workstations. Therefore, 'one of the lessons learned
+included the need to use modularity as a tool for organization in advance, and to work harder to
+prevent non-critical aspects of the platform from dictating the modularity that may eventually inform
+the fight system.
+
+Key words: Habitat Demonstration Unit, analog, design standard, interfaces, modularity
+
+
+
+
+1 NASA Kennedy Space Center, MIS LX-M, Florida 32899; +1,321 :867.5824; tracy,r.gill@nasa,gov
+
+2 NASA Habitat Demonstration Unit (HDU) Project Management Team consists of Kriss Kennedy (Project Manager,
+JSC), Larry Toups (HEFT Mission Architecture Lead, and X-Hab Lead, JSC), Tracy Gill (Systems Integration Lead,
+KSC), Terry Tri (Demo Unit Integration Lead, JSC), and Scott Howe (Design Integration Lead, JPL)
+                           International Conference on Environmental Systems
+                                       July 2011, Portland, Oregon
+
+
+ Habitat Demonstration Unit Pressurized Excursion Module
+              Systems Integration Strategy
+                                           T.R.Gill i ,1. C. Merbiti
+                                   NASA Kennedy Space Center, KSC, FL 32899
+
+                                      K. J. Kennedy3, L. Toups4, T. O. Tri5
+                                 NASA Johnson Space Center, Houston, TX 77058
+
+                                                  A. S. Howe 6
+                               NASA Jet Propulsion Laboratory, Pasadena CA 91109
+
+
+                                                      I.    Abstract
+     The Habitat Demonstration Unit (HDU) project team constructed an analog prototype lunar surface laboratory
+called the Pressurized Excursion Module (PEM). The prototype unit subsystems were integrated in a short amount
+of time, utilizing a rapid prototyping approach that brought together over 20 habitation-related technologies from a
+variety of NASA centers. This paper describes the system integration strategies and lessons learned, that allowed the
+PEM to be brought from paper design to working field prototype using a multi-center team.
+     The system integration process was based on a rapid prototyping approach. Tailored design review and test and
+integration processes facilitated that approach . The use of collaboration tools including electronic tools as well as
+documentation enabled a geographically distributed team take a paper concept to an operational prototype in
+approximately one year. One of the major tools used in the integration strategy was a coordinated effort to
+accurately model all the subsystems using computer aided design (CAD), so conflicts were identified before
+physical components came together.
+     A deliberate effort was made following the deployment of the HDU PEM for field operations to collect lessons
+learned to facilitate process improvement and inform the design of future flight or analog versions of habitat
+systems. Significant items within those lessons learned were limitations with the CAD integration approach and the
+impact of shell design on flexibility of placing systems within the HDU shell.
+
+                                                II.        Background
+
+    A technique being utilized in NASA 's exploration architecture analysis is analog testing in relevant
+environments such as desert locales. Running through potential "day in the life" scenarios at an outpost with
+prototype equipment allows designers insight into the utilization of the proposed systems and refines architecture
+and operations concepts. A series of Desert Research and Technology Studies (RaTS) have been held in locations
+such as Moses Lake, Washington, Black Point Lava Flow, and SP Crater, Arizona, where the most recent tests in
+September 2010 were performed simulating a 14-21 day lunar mission. An example of a lunar architecture being
+evaluated in the Desert RaTS 2010 campaign is depicted in Figure I.
+
+
+
+
+1 Engineer, Lunar Systems Division, Mail Code LX-M,
+2 Engineer, Lunar Systems Division, Mail Code LX-M,
+3 Architect, Systems Architecture and Integration Office, Mail Code EA3
+4 Engineer, Exploration Missions and Systems Office, Mail Code ZS
+5 Engineer, Systems Architecture and Integration Office, Mail Code EA3
+6 Architect, Mission Systems Concepts, Mail Code 312E
+· AIAA Space 20 I 0                                                                                          Gill, et al
+
+
+
+
+                 Figure 1 - Example of a lunar architecture analyzed through Desert RaTS campaigns.
+
+       The NASA hardware demonstrated by Desert RATS 2010 included: Space Exploration Vehicles - a pair of
+  rovers that astronauts lived in for 14 days at a time; Habitat Demonstration UnitlPressurized Excursion Module - a
+  simulated habitat where the rovers docked to allow the crew room to perform experiments or deal with medical
+  issues; Tri-ATHLETEs, or All-Terrain Hex-Legged Extra-Terrestrial Explorer - two heavy-lift rover platforms that
+  allowed transportation of large items; a Portable Communication Terminal Concept (PCT) to facilitate
+  communication with mobile assets ; Centaur 2 - a four-wheeled transportation option for NASA Robonaut 2;
+  Portable Utility Pallets (PUPs) for short - mobile charging stations for equipment; and a suite of new geology
+  sample collection tools, including a self-contained GeoLab glove box for conducting in-field analysis of various
+  collected rock samples.
+       The HDU PEM went from a Constellation Lunar architecture concept in June 2009 to an operational prototype
+  in August 2010. When evaluating design considerations for the Habitat Demonstration Unit, the two primary areas
+  of discussion are the integration strategy, which covers the processes and approach to enable rapid prototype
+  development, and lessons learned, which can be applied to future prototypes and habitats.
+
+                                            m.      Integration Strategy
+       The HDU project has required integrating a variety of contributions from NASA centers and has posed a
+  challenge in integrating these disparate efforts into a cohesive architecture. The HDU began its work as an
+  emulation of a Pressurized Excursion Module (PEM) for 2010 field testing. The PEM concept is a mobile lunar
+  laboratory that works in concert with crews in SEV rovers for science sample analysis and maintenance tasks rather
+  than a traditional habitat. Preliminary plans were to evolve the HDU to a Pressurized Core Module (PCM), which is
+  more of a traditional habitat with crew accommodations, for 2011 and later field tests. However, the changing of
+  priorities in NASA direction has influenced the future HDU configuration to a more flexible version of a habitat and
+  laboratory. The HDU PEM deployment was not the same configuration as either the PCM or the PEM as conceived
+  in Constellation lunar architecture plans. There were some developmental hardware and software items that were
+  not available due to cost and technology availability and some items that were only functional simulations.
+  Conversely, there were additional items available for the HDU that were opportunities for demonstration, which
+  were originally unanticipated systems that were plugged into the HDU architecture because they had common goals
+  and objectives. Results of the HDU field tests will influence future designs of exploration habitats.
+       Successfully deploying the HDU PEM, from paper concepts to actual demonstration hardware in just over one
+  calendar year, required the HDU project team to utilize a rapid prototyping approach at the core of the integration
+  strategy. The team focused energy on shell design initially as that design paved the way for the manufacturing and
+  guided operations. The design review and integration processes and collaborative tools utilized were also critical to
+  the rapid prototyping approach .
+
+  A. Shell Design
+      Early in the design process, it was recognized that the HDU PEM shell would be a very large structure with its
+  Sm diameter and 3.5m height. Because of the size, the overall design and the transportation of the shell influenced
+  one another. To ensure that the HDU shell would meet the project expectations and requirements, which directly
+'0   A'IAA Space 20 I 0                                                                                           Gill, et al
+
+
+     affected how the shell would be shipped, a shell design and manufacturing requirements document was developed.
+     At this point in the project, the team needed to determine the best method for shipping the HDU PEM. To do so, the
+     project team performed a trade analysis to determine the best configuration for shipping the HDU PEM and the best
+     means of transportation for the shipment. When the trade analysis was complete, the transportability trade assessed
+     the following 3 options: (1) to transport the HDU fully assembled as a supersize load, (2) to transport the HDU in a
+     single-split configuration as a standard load, and (3) to transport the HDU in a dual-split unit as a standard load.
+          A complete assessment of the three options concluded shipping an integrated HDU as a super-size load even
+     though the super-size load is about 10 times more costly than a standard tractor-trailer load. The split configurations
+     added costs for manufacturing a more complex split configuration shell; requiring in-field assembly; special
+     transport support equipment and coverings, and additional ground support equipment. Additionally, the additional
+     field assembly work required at the deployment would have added additional risk. Thus the benefits of transporting
+     as a supersize load, out-weighed all the additional costs and operations if shipped as a standard load.
+          The decision to transport the HDU as one integrated super sized load required a transportation cradle to be
+     designed to support the three purposes of (1) integration and testing at Johnson Space Center, (2) transportation to
+     field locations, to other centers, or to outreach activities, and (3) to support field operations in the desert analog
+     locations. In addition, for field operations the cradle acted as an analog substitute for the All-Terrain Hex Legged
+     Extra-Terrestrial Explorer (ATHLETE) rover. Lastly, the cradle was fitted with heavy-duty jack stands for
+     adjustment of the height and leveling to be able to configure for docking with the Space Exploration Rovers (SEYs)
+     in the Desert RaTS and dry run trials. Figure 2 below displays the CAD and fabricated version of the HDU Cradle.
+
+
+
+
+                                                    Figure 2 - HDU Cradle
+
+          Key factors in designing the shell of the HDU were cost, simplicity, and functionality. The team wanted a shell
+     that would provide strength and stability but at the same time be made out of something light weight. Also, the shell
+     needed to be constructed under a limited budget, and using a fiberglass composite shell enabled a cost effective
+     manufacturing approach . With influence from the transportation assessment, the team decided on an "orange slice"
+     design, which basically sectioned the shell of the HDU like orange slices so when it all came together, it created one
+     cohesive shell. The HDU shell slices were created with a composite material that had steel ribs at either end to
+     provide a boIting surface to attach each slice together, which ultimately created a double steel rib at each joint.
+     Because each shell piece was created from one common mold, creating each piece of the shell was fairly simple,
+     even when small modifications to the mold were required to compensate for a window or doors. Examples of the
+     HDU rib and the mold for the shell slices are seen below in Figure 3.
+A'IAA Space 2010                                                                                          Gill, et al
+
+
+
+
+ Figure 3 - An HDU Rib being removed from the water-jet machine (left) and the HDU shell slice mold during its
+                                            fabrication (right)
+
+     When shell fabrication was complete at Langley Research Center in Virginia, the individual slices were shipped
+to JSC where they were integrated to create the HDU shell. Originally the concept was to potentially begin
+integration of subsystem components into the individual shell sections before all 8 shells were connected, but since
+fabrication of the shells went so smoothly, the shell was assembled and ready for integration in late February 2010
+ahead of the planned beginning of subsystem integration in March 2010.
+
+
+B. Tailored Review Process
+     A total of six NASA centers participated on the HDU-PEM deployment. When six different centers collaborate
+on a project, problems can occur due to poor communication between geographically distributed team members. The
+HDU Project Management conducted a series of reviews, in addition to weekly tag up meetings, to ensure the
+project ran with minimal complications. There were seven key reviews held during the campaign to deploy the HDU
+PEM between the summer of2009 and the summer of2010. These reviews are a tailored version ofa typical NASA
+System Engineering design process.
+     The first review was the System Definition Review (SDR). The purpose of the SDR was to collaborate as a
+team to define the basic concepts for the systems that would constitute the HDU Pressurized Excursion Module.
+This included the systems, the workstations, and the technology demonstrations. This early definition meeting laid
+out the basic system concepts and set the stage for the teams to mature those concepts and begin envisioning
+integrating those systems together into an operational system.
+     The second review was the System Implementation Review (SIR). Here each subsystem identified the hardware
+being designed or selected and defmed a preliminary plan for integration into or on the HDU-PEM. For example,
+some systems required minimal labor with no electrical power where others required a week of labor, electrical,
+mechanical, and crane support. Because each subsystem was unique, it was important for the team to come up with a
+preliminary integration plan and discuss it in an integrated team forum. In instances when two subsystems may
+interfere or perhaps have common work that could be combined, this review would bring to light opportunities to
+resolve problems or conversely to maximize efficiency.
+      The third review was the Computer Aided Design (CAD) Integration Review (CIR). Before this review, each
+system either developed a CAD model of their contribution or worked with the CAD integrator to develop models
+representative of their system. In some cases, these models were high fidelity models used to manufacture
+hardware. In other cases, they were simple shapes modeled to represent commercial-off-the-shelf hardware. This
+review was one of the most important reviews because the visual representation allowed the team to look at the fit,
+form , and function of the hardware in an integrated CAD model. So not only did the team discuss how the hardware
+systems would be populated within the HDU PEM but, by importing the model into a simulation tool, the team
+could manipulate and move elements to show their operations and use operability as a design consideration. In
+many cases, the overall CAD model pointed out some significant issues such as hardware interferences, cable
+routing problems, and human factors and sizing issues, which could be corrected before "cutting metal" . Figure 4
+AIAA Space 2010                                                                                              Gill, et al
+
+
+below shows representative samples from the integrated CAD model of the HDU PEM, while Figure 5 shows
+photos of the final results of the integration activities within the HDU shell.
+
+
+
+
+             Figure 4 - Integrated CAD model snapshots of opposing sides of the HDU-PEM configuration
+
+
+
+
+               Figure 5 - Interior views of the HDU PEM as seen during the Desert RaTS 2010 campaign
+
+      Fourth in the series of reviews was the Preliminary Integration Review (PIR). This review is fairly close in
+function to a Preliminary Design Review (PDR). At this review, each subsystem began to fmalize their system
+designs and delivered their contribution to the PEM Master Equipment Lists (MEL) and the integrated electrical
+schematic. Additionally, the system integration scheme was further matured within the integrated CAD model.
+      The fifth review, the final review regarding integration, was the Final Integration Review (FIR). Tills review is
+fairl y close in function to a Critical Design Review (CDR) and included a final general system overview, hardware
+deliverables, and test objectives for each subsystem. It also included summaries of the electrical schematics, master
+equipment list, and CAD model snapshots for each system. Finally, a preliminary integration work plan for each
+system was defined to plan the integration tasks to occur in the next few months. .
+      The sixth review was the Test Configuration Review (TCR). The TCR defmed the fmal configuration of the
+HDU PEM that would be tested during field test operations. This review gave a brief review of previously covered
+areas, identified any changes that occurred during the integration process, and provided a brief description of the
+materials to be used to develop training and operations material.
+      Last was the Test Readiness Review (TRR). There were actually two TRRs held. The first was the Integrated
+Systems Test TRR and the second was held for operational field testing. The Integrated Systems Testing was the
+first time when all the systems were integrated and considered operational together. It consisted of test sequences
+with multiple systems operating at the same time to evaluate potential interferences and to collect performance
+information. The Integrated Systems Test was intended to be performed indoors at JSC Building 220 in June 2010,
+but it actually occurred outside at the JSC Rock Yard in July 2010 because of schedule concerns. The second of the
+, ' AIAA Space 2010                                                                                         Gill, et al
+
+
+  two reviews was the Field Testing TRR, which involved the operations to deploy and operate the HDU systems in
+  an operational environment.
+      In each of these reviews, the team addressed actions from previous reviews, the risks, and forward work, and
+  new actions were identified as the team progressed on the design and deployment of the HDU PEM.
+
+
+  C. Tailored Test Operations
+       Because of the complexity of deploying an operational prototype for the fIrst time, a series of tailored test
+  operations for the HDU-PEM were designed to prepare the team, the hardware and software, and procedures for the
+  eventual Desert RaTS activities. With the large number of systems being integrated and tested for the HDU-PEM it
+  was important to have a common document that had descriptions, testing procedures, and operational procedures for
+  each system. In an attempt minimize documentation development, an HDU-PEM Operations Manual was created.
+  The Operations Manual consisted of backgrounds on every subsystem, procedures required for each subsystem, and
+  scripted scenarios required for field activities. This Operations Manual was also used for the training and
+  certification ofHDU PEM operators.
+       The fIrSt phase of the testing involved the Habitat Testbed (HaT) where key subsystems and simulation tools of
+  the HDU PEM were laid out on a bench top test bed. This HaT capability allowed the team to perform tests on each
+  PEMsystem prior to integration in the HDU shell. That allowed the HDU team to test and debug systems prior to
+  integration in the HDU PEM to minimize troubleshooting on post installation test operations. These tests were done
+  throughout the integration phase from March 2010 through July 2010 as hardware was delivered to be integrated
+  into the HDU PEM. The next phase included the individual system tests that verified each independent system was
+  performing as expected following integration activities, again between March and July 20 I O. The Integrated
+  System Test, mentioned earlier, was a test to evaluate and measure performance of systems operating together for
+  the fIrst time. This test occurred in early July 2010. Additionally, some scripted test activities to support field-
+  testing were practiced such as the activation and deactivation sequences, the emergency shutdown sequence, and the
+  transitions between active and quiescent modes. The next phase between mid July and early August 2010 was a
+  period of dry run tests performed at the Johnson Space Center Rock Yard where Lunar and Martian surface
+  simulations exist. These Rock Yard tests allowed the team to exercise procedures not only for system testing but
+  also for loading, transportation, unloading, and setup. These tests also engaged the Space Exploration Vehicle
+  rovers, and all procedures run at the Desert RATS 2010 campaign were fIrst executed at the Rock Yard. Finally, the
+  culmination of all the test and integration activities was the utilization of the HDU PEM in Arizona to support the
+  Desert RaTS 2010 field test operations from late August through mid-September of 2010. For additional detail on
+  the field test operations, see Reference #2. At each of these phases of testing, the same Operations Manual was
+  utilized and updated, again, to minimize required documentation development. A high level overview showing the
+  timeline of these activities can be seen in the HDU PEM project schedule summary chart seen in Figure 6.
+. AIAA Space 20 I 0                                                                                                                                                                                         Gill, et al
+
+
+
+
+                                    HDUl FY10 Project Schedule
+                                   FY09                                                                                        FYl0
+
+
+             ~:;: . . MgmtTeam
+             (l)
+            'S;
+             (l)
+                  ~-------------~----------~--~------~~~~~~--~~----~~~~--
+                   ,..
+                         K/O Mtg
+                                HDU
+                                     A
+
+                               Project
+                                           5
+
+                                       PP Deliv
+                                                  0
+
+
+                                             Review
+                                                           N
+                                                Quarterly Review
+
+                                                                V
+                                                                    0
+                                                                 Quarterly Review
+
+                                                                        IO
+                                                                                          F
+                                                                                  Quarterly Relliew
+                                                                                                ~
+                                                                                                       M       A
+                                                                                                    Quarterly Review
+                                                                                                                         M
+
+
+                                                                                                                                      ~
+                                                                                                                                                 A        5
+
+                                                                                                                                                                      ,
+                                                                                                                                                                      0           N
+
+                                                                                                                                                                                                            ...
+            0::                 Project                             Prelim Integr                    ~ ...,!lnallntegratlon
+                          ~ Kickoff Mig                          ~-Revl.w                               ...    Review
+            u.. CDDF call
+
+            ~u
+            '-'
+                                     Submittals Due
+
+                          •.[. .- -""f
+                                   i==j- Project Selections
+                                                                                                                                                     CDDF Call
+                                                                                                                                                                      C=! I           Submittals Due
+                                                                                                                                                                                       8        0Ject Se 1ectlCns
+                                                                                                                                                                                                1'            "
+
+
+
+                          SRR
+             (l)
+            .J::
+            V')
+                    rT              PDR
+
+                                    •                                              Shell Assembly Complete
+
+
+            6"
+            :::c
+                                      I                I
+                                                       I
+                                                                        Manufacture                      ..
+
+                                                                                                        V Finallntegr Review
+                                                           Ship, Delivery & Setup
+
+           ~
+
+      :::> E       ~                                       Center Hdwr                           ====___
+                                                                             De~li.:.:ve::..:ry-=1                                    ...:~~-----,
+      :::c >- ~§
+      Cl   (l)
+           .....
+           ~                                                             HabitatTestbed Checkout                     r   Z
+                                                                                                                             .....            J. .                I                   Integrated Systems
+
+            ..... ~
+           V')
+                                                                                                                                                                              ]       Checkout
+                                                                                                                   Systems Integration                        [
+             ~                                                                                                                                                            I
+            ~                                                                                                                         Transportation     ----tn
+                                                                                                                                          Dry Run                         1 ::t:::::J~ Pa ck/Ship/Setup
+                                                                                                                                                                  ~
+            "0
+            .!!!                                                                                                                     Rock Yard Dry Runsw/
+            u..                                                                                                                           LER & Mods             I                                 HDU Testing &
+                                                                                                                                                                 I                    ,--------"       Evals
+                                                                                                                                                     DRaTS 14-Da~ Test                "-------'IL_ _ _---'
+                                                                                                                                                                          I
+
+                                                      Figure 6 - Overview ofHDU PEM project schedule
+
+
+  D. Collaborative Tools
+       During all of these reviews, the team utilized meeting tools that allowed for file and information sharing to
+  provide an accommodating means of communication. Before each meeting, each subsystem would upload their
+  presentation files to a data repository using Windchill collaboration software. After acquiring access to this system,
+  each HDU team member would have access to all meeting documents and presentations posted, which provided a
+  valuable means of reference. The HDU project management team managed a wild to act as a home page for meeting
+  agendas and announcements and used it as portal by providing convenient links to the appropriate areas of the
+  Windchill repository for schedule, review material, and other documentation. As many geographically distributed
+  teams operate, team members would call into a common teleconference number and use desktop sharing software to
+  conduct the meetings for online meeting collaboration. Having team meetings and reviews in this fashion proved to
+  be beneficial for a relatively large group of people spread across the United States.
+       The HDU Project team utilized several key documents to record key information during the HDU integration
+  and testing process. These documents were the Integration Plan, Work Plans, and the aforementioned Operations
+  Manual. The Integration Plan was a summary document with excerpts pulled from the design reviews where the
+  system overviews and internal and external interfaces were documented for current and future versions of the HDU.
+  For example, the various types of power to be provided for HDU systems and the bolt patterns of the ribs for
+  secondary structure attach points were all defined for the benefit of other systems. The Work Plans for each system
+  were general outlines of the physical integration work to be performed for each system including shell protrusions
+  and special tooling, materials, or personnel requirements. All of these plans and manuals were products of the
+  reviews held during the project.
+       The General Maintenance Work Station (GMWS) was one system that required several configuration steps to
+  become operational for test activities. After writing the integration plan and work plan and performing the
+  integration work, the Operations Manual became an enhanced version of the other documents pointing out the
+  necessary steps for use, as well as safety and potential risks . As seen in many engineering applications, actual
+· AIAA Space 20 I 0                                                                                          Gill, et al
+
+
+  system operations reflect more than what is learned through simulated operations using software tools. Lessons
+  learned are reflected in the procedures so that when the time comes to use a system during planned field operations,
+  the activities can be performed nominally. Again on the General Maintenance Work Station, the Operations Manual
+  provided descriptions on deploying and stowing the work table, operating the computer mounts, and safely operating
+  the hoist for lifting large items onto the GMWS table surface for repair or maintenance. Figure 7 shows the CAD
+  and an image of the GMWS and points out the functions the station provided as seen in the Operations Manual.
+
+
+
+
+                                Figure 7 - General Maintenance Work Station (GMWS)
+
+       Ultimately, the final documentation product, the Operations Manual, became a valuable training tool and
+  reference manual for the subsystem teams during dry-run testing at the JSC Rock Yard and for the crew
+  participating in Desert RaTS activities at Black Point Lava Flow, just outside of Flagstaff, Arizona.
+
+
+                                              IV.      Lessons Learned
+
+
+        Many projects in the aerospace industry take months, years, and sometimes even decades from concept to
+  actuality. The reason for this is due to all the factors that playa role into making a project successful. Budget,
+  schedule delays, missed milestones, problems with design, problems with fabrication, and problems with testing are
+  some common areas where issues occur during a project life. As with most aerospace projects, it is a rare case that
+  one rendition of a spacecraft, for example, would be built and tested. With each additional year a program is
+  extended, modifications to previous or completely new pieces of hardware are built for use during the next
+  generation. To ensure that mistakes aren 't repeated and that problems are identified from all previous years of a
+  project, teams must take into account the lessons learned and apply them.
+       The purpose of lessons learned is to compile insights and observations a team may have documented during a
+  project so they can be applied to future projects. At the conclusion of the FY2010 effort with HDU including design,
+  integration, testing, and the field campaign, the multi-center HDU team collected its own lessons learned and
+  synthesized them as part of the overall Desert RaTS team lessons learned capture process.
+       There are three significant areas of impact revealed by the HDU PEM lessons learned solicitation: (l) computer
+  aided design, (2) integration, and testing and (3) thermal system selection. During the HDU project, the project team
+  utilized simulation tools to assist in the design layout of the HDU subsystems. Computer Aided Design (CAD)
+  representations of the various HDU systems were used during the Integration Review process to determine where
+  systems would be located internal and external to the HDU shell prior to beginning the touch-labor integration
+  effort. The CAD model was used for layout of subsystems and evaluation of sizing, cable lengths, and operational
+  issues prior to physical integration. After coordinating with each system for initial recommendations on placing
+  systems most effectively and conveniently, two integration reviews were held to include the entire team where the
+  virtual model of the HDU was utilized. Additionally, once the integrated model of the HDU-PEM was available, it
+  was utilized in a simulation tool where operations including unloading and setup of systems in the field and docking
+  with the SEV Rovers were evaluated. The direction of docking of the SEV Rovers with respect to the HDU-PEM to
+  avoid several potential mechanical interferences is an example of resulted from the simulation. Continuing into the
+  physical integration phase, the model was continually updated to reflect the changes performed in the field to
+AIAA Space 2010                                                                                               Gill, et al
+
+
+provide a starting point for future planning activities. Despite the efforts to identify where all the individual
+subsystems would be installed, the team came away with some beneficial lessons learned.
+     An example of the lessons learned in the area of CAD was with the internal lighting system for the HDU. The
+internal lighting system of the HDU consisted of 8 solid-state lighting modules (SSLMs), which were to be powered
+by a power distribution unit (PDU), and controlled through a controller. In order to power and control the lights,
+cabling had to be run throughout the HDU to each individual light. By using CAD, the team was able to not only
+identify the best locations for the light installation, but also identify cable lengths, and where the power and control
+boxes could be installed without interfering with any other subsystems. But when the team arrived to begin
+integrating the lighting subsystem, the HDU was not in the configuration the team shown in the CAD model. For
+example, the terminal box and the controller, where the power and control cables from the lights were supposed to
+terminate, were not installed in the positions shown in the CAD models at the time the lights were to be installed as
+seen in Figure 8. The installation of the internal lighting system involved the first team to travel from offsite to JSC
+to perform integration, and the HDU team had not yet come up to speed on meeting expectations for visiting teams.
+
+
+
+
+                  Figure 8 - At left, long red box was proposed terminal box location. At right, the
+                          absence of the terminal box at the planned installation timeframe
+
+     Although not having the terminal box and controller installed seemed to be a setback, the team actually
+benefitted because they were able to designate a better location for routing cable into the terminal box. The location
+originally identified for the controller installation was judged to be very difficult for field maintenance access.
+Because the potential to have to work on the controller was very high, the team decided the best course of action
+was to install the controller on the opposite side of the beam selected for installation. Later, that engineering change
+in the field was relayed to the CAD integrator to update the CAD model with the field implementation. So the
+lesson learned was though CAD integration is an excellent approach to plan work, there is still significant value in
+field evaluation.
+     Additionally, an integrated set of schematics was developed using AutoCAD to both plan the wiring of the
+systems and to reflect wiring updates made during installation operations. The schematic displayed all the
+subsystems that required power, control, or both and included wire routing and labeling. Although the team had a
+good understanding to how and where the cable routing would occur, when installation of the interior lights and
+respective cabling was being performed, the schematic labeling was not referenced. As a result, different labeling
+had been created and shrunk wrapped onto the power and control cables for each light. Because the labeling on the
+schematic and cables were now different, the schematic required an update. Although this didn 't create a
+tremendous amount of extra work, the lesson learned was for future subsystem teams to reference the schematic
+during integration to ensure the hardware and schematic reflect the same labeling.
+     The next area to discuss applicable lessons learned is integration and testing. When it came to the physical
+integration, some of the lessons learned were in the areas of procurement, testing, and scheduled labor for
+integration. Issues in these areas resulted in changes to the overall integration schedule, which led to difficulty
+meeting deadlines to perform testing at the JSC Rock Yard and Desert RaTS testing.
+     Due to the number of subsystems contributed by various NASA centers, integration efforts posed a challenge.
+Despite organized integration efforts using a detailed schedule, many subsystem teams experienced slips in schedule
+due to such things like long lead times on items. One common problem for many teams was the availability of
+technician labor and the space in which to do the work because of parallel operations. The tendency for many
+system teams was to perform their integration late in the schedule, which tied up resources. Space and labor must be
+  .
+  ·, ,
+., 'AIAA Space 2010                                                                                                Gill, et al
+
+
+   taken into account during both integration and testing. On another scheduling note, as integration progressed, last
+   minute procurements became common practice. Late procurements affected labor scheduling problems as well
+   because the late procurements required teams to move dates scheduled for integration, which usually meant labor
+   was already being used to integrate another team.
+        As the integration time for each system approached, some teams weren't fully prepared for integration because
+   of limited resources or late funding disbursements. As milestones to support the field test activities approached,
+   testing of several subsystems was delayed to the field test phase. As a result, many of the unexpected issues that
+   came up in the field had to be dealt with then instead of in a much more suitable work environment in JSC Building
+   220 where the initial assembly and integration work occurred. Subsystem teams can increase chances of success by
+   following schedules to the best of their ability to ensure proper procurement, testing, labor scheduling, and
+   integration take place. Additionally, the forward recommendation from the HDU-PEM deployment is to maintain
+   discipline adhering to the original integration plans and eliminating requirements creep during integration.
+        Each team needs to hold themselves accountable to meeting procurement, testing and integration schedules
+   because when one team slips and misses procurement, testing, or integration dates, the adjustment in schedule
+   creates a domino effect throughout the project which results in the overall project partially or completely missing
+   important deadlines and milestones.
+        In the thermal area, one important area of lessons learned was in the selection of the heat pump utilized for the
+   HDU-PEM for field operations. The HDU utilized a standard commercial, residential heat pump for the thermal
+   conditioning of both avionics and crew. The heat pump was mounted on a cradle to facilitate connections and
+   transportation. The thermal system provided air flow into the sub-floor of the HDU where the avionjcs and power
+   systems were located, and that sub-floor area was used as a plenum where the flow continued from a set of vents
+   into the crew compartment. From there, two sets of return vents cycled air back to the heat pump. Figure 9 depicts
+   the thermal systems air flow scheme for the HDU PEM. The heat pump procured by the HDU team was utilized
+   successfully both at Johnson Space Center Building 220 where all integration activities occurred, and it was also
+   transported about one mile and used outside at the JSC Rock Yard as well. However, after transportation from
+   Houston to Arizona and a 3 mile trip on dirt roads to the test site, the heat pump condenser manifold did not survive
+   and was fatigued is so many places that the freon leaks could not be repaired. A replacement was borrowed from
+   other Desert RaTS participants to continue operations. And the lesson captured from this episode was to procure a
+   ruggedized unit that was made for transportation and field use.
+
+                                                   Zone I: Air Returnlfilter
+                                                 mounted above work stations
+
+
+
+
+                                      Figure 9 - HDU-PEM Thermal Systems Air Flow
+
+        A final lesson learned concerns modularity. After integration of the HDU, the team came away with a
+   conclusion about the modular construction of the HDU. Initially, the steel ribs that were built into the design of the
+   shell to provide a means for bolting each section together and for providing attach points for subsystem integration.
+   Although the ribs served their dual purpose of shell assembly and secondary structure attach points, the team was
+   limited in their ability to flexibly move workstations or utilities because of the rib protrusions. The lesson learned for
+· AIAA Space 2010                                                                                             Gill, et al
+
+
+  future habitats is to strive for a modular configuration where the design of attach points minimally interferes with
+  subsystem integration and cable or utility routing. Another possible solution is to design ribs that have pass through
+  points for cabling and other hardware but to restrain the size of the holes so they don 't compromise the structural
+  integrity of the ribs. The orange slice construction of the HDU shell would not be recommended for flight systems
+  design, but this concern with the ribs may be relevant for other analog habitats that are built to be functional at
+  minimal cost.
+
+                                                   v.      Conclusion
+
+       The Habitat Demonstration Unit project constructed a habitat shell to act as a test bed for instances of a
+  habitation architecture. For 2010, the HDU acted as a Pressurized Excursion Module of the lunar architecture, and
+  was tested during the 2010 NASA Desert Research and Technology Studies (RaTS) campaign as depicted in CAD
+  in Figure 10 and in photos in Figure 11 . Significant challenges to accelerate from a project start to a field
+  deployment in just over a year were addressed with an HDU PEM integration strategy. Efforts were made to defme
+  and document standards for system integration, which are valuable not only for the PEM but future versions of the
+  HDU. Additionally, the HDU project utilized a rapid prototyping approach which included the use of computer
+  aided design in the layout of systems, collaboration tools, tailored design review and test processes. And the entire
+  concept of operations from the planning ofthe manufacturing, shipment, and integration to the field operations were
+  all factored into the design of the HDU to streamline the integration activities allowing the project team to meet the
+  ambitious timeline for deployment ofa PEM for Desert RaTS 2010.
+       An organized effort to evaluate lessons learned from the activities in designing and deploying the HDU PEM
+  have informed and will continue to influence future work for the HDU team,
+       Looking forward, during fiscal year 2011 , the HDU will evolve as a Habitat-Laboratory combination featuring
+  an inflatable loft provided through the X-Hab Challenge. This version of the HDU is called the Deep Space Habitat
+  (DSH). The DSH is an element of a flexible architecture that may enable exploration of Near Earth Objects, and
+  that architecture will be evaluated at Desert RaTS 2011. For additional detail on the HDU Deep Space Habitat
+  configuration, see Reference # 1.              For more details on the X-Hab challenge, reference
+  http://www.spacegrant.orglxhab/. The same integration strategies discussed in this paper will be applied during
+  FYII to enable the utilization of the HDU DSH as a platform for the exploration architecture validation.
+
+
+
+
+           Figure 10 - CAD of Assembled HDU Mounted on Cradle in Configuration for Desert RaTS 20 I 0
+    ·~
+".' .. AIAA Space 2010                                                                                       Gill, et al
+
+
+
+
+                     Figure 11 - Space Exploration Vehicle Rovers docked with HDU at Desert RaTS 2010.
+
+
+                                                   VI.    References
+
+         1.   KJ Kennedy; TR Gill; LO Toups; TO Tri; DV Smitherman; AS Howe (2011). Habitat Demonstration Unit
+              Project - Deep Space Habitat Overview. Proceedings of the 41 st International Conference on Environmental
+              Systems (ICES 2011); Portland, Oregon, 18-21 July 2011. Reston, Virginia, USA: American Institute of
+              Aeronautics and Astronautics.
+         2.   TO Tri; KJ Kennedy; TR Gill; AS Howe (2011), The Habitat Demonstration Unit (lIDU) Pressurized
+              Excursion Module (PEM) In-Field Demonstration at Desert RATS 2010. Proceedings of the 41st
+              International Conference on Environmental Systems (ICES 2011); Portland, Oregon, 18-21 July 2011.
+              Reston, Virginia, USA: American Institute of Aeronautics and Astronautics.
+

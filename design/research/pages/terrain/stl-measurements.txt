@@ -1,0 +1,8 @@
+# STL measurements, 2026-11-12 (our arithmetic; scripts/stl-grid.py)
+grid (141, 192) nan 856 zmin 0.1288829743862152 zmax 34.181175231933594
+header b'Exported from Blender-2.69 (sub 0)' triangles 55134 bytes 2756784
+Gale Crater.stl (repo '3D Printing/Gale Crater', 26,317,184 bytes, not stored):
+grid (509, 511) nan 0 zmin 1.5517377853393555 zmax 10.544783592224121
+Rim crest picked from W-E and S-N height profiles through the central peak:
+ curiosity-landing-site.stl: rim to rim 84 to 86 cells x 3.986 = 335 to 343 units; central peak 32.9 units; lowest moat cell about 0 to 1 unit
+ Gale Crater.stl: rim to rim 84 to 86 mm; page scale 1 cm = 19 km gives 160 to 163 km (NASA: 154 km), so this rim pick runs about 5% wide

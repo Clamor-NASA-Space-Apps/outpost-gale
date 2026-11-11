@@ -1,0 +1,39 @@
+  Government Reference Concept for a 10 kW Lunar South Pole Solar Array
+
+  Richard Pappa, Chuck Taylor, Jay Warren, Matt Chamberlain, Scott Belbin
+                      NASA Langley Research Center
+                               Hampton, VA
+
+                                     Martin Mikulas
+                              National Institute of Aerospace
+                                     Hampton, VA
+
+                                       Joe Blandino
+                                Virginia Military Academy
+                                      Lexington, VA
+
+                   Jeremiah McNatt, Anna Pal, James Fincannon
+                          NASA Glenn Research Center
+                                Cleveland, VA
+
+Deployable and relocatable free-standing, solar arrays will be required for future lunar
+South Pole missions. Major design requirements for these arrays will be low mass,
+compact launch stowage, and highly reliable deployment and retraction performance. A
+novel conceptual design referred to as the Relocatable Solar Array (RSA) is presented for
+a 10 kW solar array to address these requirements. Simply stated, the concept is a pair of
+solar cell blankets freely hanging from a horizontal cross arm that is supported by a
+vertical slender telescoping mast, all of which, rests on a deployable tripod base. A major
+factor in simplifying this array is that the force exerted by lunar gravity is used to deploy
+and maintain the extension of the hanging array blankets. The other major factor in
+achieving the desired low mass and high volumetric efficiency is that the resulting array
+system operates in the vacuum, low-gravity, lunar environment with no deployed
+vibration frequency requirement. Such an environment enables the use of extraordinarily
+slender and low mass structural members to support the hanging array blankets. This
+concept was developed, in part, to serve as a NASA reference solar array concept against
+which other proposed arrays can be compared.
+
+Technical Point of Contact:
+Richard S. Pappa, NASA Langley Research Center
+757-864-4321
+Richard.S.Pappa@nasa.gov
+

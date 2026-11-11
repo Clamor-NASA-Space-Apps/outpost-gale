@@ -1,0 +1,433 @@
+        Government Reference Design of the Vertical Solar Array Technology
+                                 Demonstrator
+
+                                 Scott Belbin*, Carl Mills* and Ryan Chan*
+
+
+                                                Abstract
+
+NASA Langley Research Center (LaRC) is developing and constructing a Government Reference Design
+(GRD) version of the Vertical Solar Array Technology (VSAT) Demonstrator for lunar surface applications.
+This paper provides an overview of the conceptual design effort and discusses the planned demonstrations
+of its associated mechanisms.
+
+                                               Introduction
+
+With the upcoming robotic and human lunar surface exploration efforts, NASA seeks to provide a means
+of powering and recharging various assets on the lunar surface at the southern polar region. The VSAT
+Program is developing a system by which an array of photovoltaic cells can be elevated above shadowing
+caused by boulders, hills, mountains, and crater walls to provide near-continuous electrical power to those
+assets. The Program has awarded initial development contracts to three awardees to develop their
+concepts to at least TRL-6. Langley is simultaneously designing and building a GRD Concept Demonstrator
+to assist in mechanical deployment and stowing issue mitigations and to inform the various reviewers of
+the awardees’ efforts in the upcoming down-selection of awardees for the next phase of the Program.
+
+                                          VSAT GRD Overview
+
+Original Concept
+VSAT Program advisor and AIAA Fellow Martin Mikulas provided the original concept of a deployable array
+system on a deployable mast to elevate the arrays (originally named Retractable Surface Array).
+Parameters included a minimum power capability of 10 kW and a minimum elevation of 10 m from the lunar
+surface to the bottom of the arrays. This yielded an estimated array size of 6 m x 6 m divided into two
+separate arrays on either side of a mast.
+
+
+
+
+                Figure 1. Original concept from Stowed State to Fully Deployed State
+
+
+
+
+* NASA Langley Research Center
+
+
+
+                                                    1
+GDR Design
+From this, preliminary designs of the various subsystems were developed, eventually evolving to a four-
+array package system to optimize volumetric packaging when stowed. Subsystems included a tripod base
+structure, gimbal for rotating the mast and making it plumb, deployable array housings, and deployable
+mock-arrays. This paper will discuss the decisions made in reaching this configuration along with the sizing
+of materials, mechanisms, and drivetrains, as well as lessons learned during the design and analysis phase,
+such as sizing gearmotors well in advance of final design and purchasing those gearmotors due to long
+lead times.
+
+
+
+
+                                    Figure 2. 4-Array Package GRD
+
+
+
+
+                                                     2
+Concept and Requirements
+As originally presented by Martin Mikulas, a tall mast with two arrays on either side of the mast were
+shown with a series of images depicting deployment. To clear the shadowing of the local rims of craters
+and other lunar surface features, the arrays need to be elevated to a minimum of 10 m at their lowest
+extreme. The sizes of the arrays were determined by setting the goal of reaching 10 kilowatts of power
+available to end users.
+
+Lunar Mission Requirements included:
+
+    •   36 m2 solar array area
+    •   10 m from the lunar surface to the bottom of the arrays
+    •   The ability to be off-loaded from the landing vehicle
+    •   Accommodate local slope of no more than 15° at initial placement (pre-deployment)
+    •   Autonomous mast verticality (plumbness)
+    •   Autonomous deployment and retraction of the mast and arrays
+    •   Transportability for relocation to other sites
+    •   Survivability during the lunar night
+
+This design of the GRD was to be flight-like, with all the features required to proceed to TRL-6 in parallel
+with the awardees. However, due to cost constraints COTS item were used whenever possible and the
+decision was made to focus on the deployment and stowage of the arrays, and not pursue actual solar
+panels or the surface interaction components. A truncated set of requirements was generated:
+
+    •   36 m2 mock solar array area
+    •   Minimal necessary clearance from the bottom of the arrays to the test cell floor (test cell ceiling
+        height limits mast height)
+    •   Accommodate local slope of no more than 15° at initial placement (pre-deployment)
+    •   Autonomous mast verticality (plumbness)
+    •   Autonomous deployment and retraction
+
+
+
+
+                                                      3
+Preliminary Design Iteration (Flight-like)
+Referring to Mikulas’ concept, major subassemblies were identified and include:
+
+    •   Three axis gimbal
+    •   Extendable/retractable mast with and array support structure and lifting point.
+    •   Two array packages
+    •   Base with deployable legs and launch constraint features.
+
+From the original concept, the estimated sizes of the array packages drove the retracted (stowed) mast
+height. With an array net width of 6 m, two 3 m width arrays would need to be housed with drives, with
+the housing needing to be slightly larger than 3 m.
+
+Gimbal Design
+The requirement of accommodating up to 15° of local terrain slope dictated the need for some means of
+making the mast plumb, that is, making the mast parallel to the gravity vector. Given the overall scale of
+the demonstrator, compactness of the gimbal was not a primary concern. Instead, control authority and
+stability of the demonstrator once fully deployed was of utmost importance. A concept for a 2-axis gimbal
+for use on a conceptual lunar crane had been initiated and was used as the basis for a larger version
+sized for the VSAT concept. As this early concept used high-force self-braking linear actuators to provide
+the needed stability for a tall structure in a gravity environment, larger COTS linear actuators of the same
+type were sized and selected. This larger version used ball screw linear actuators with worm drives and
+recirculating ball nuts driven via worm and worm gears using DC brushed motors, with the two linear
+actuators providing independent X axis and Y axis motion. To that, a rotating feature for Z axis motion
+was incorporated.
+
+The gimbal consisted of three subassemblies; the base which had the X axis and the end pivot point for
+the X axis linear actuator, a cruciform middle subassembly which had the location for the trunnion for the
+ball-nut for the X axis linear actuator as well as the location for the trunnion for the ball-nut for the Y axis
+linear actuator. The third subassembly mounts to the Y axis of the cruciform subassembly and the
+location for the end pivot point of the Y axis linear actuator.
+
+The new rotator feature for z-axis motion consisted of a central high-strength steel axle, two tapered roller
+bearings in a spool-shaped hub, and a lower and upper plate to which the mast is attached. It is driven
+by a right-angle drive work and worm gear driven by a COTS gearmotor. The drive has a helical pinion
+gear driving a ring gear attached to the bottom of the rotator. This right-angle drive is attached to the
+upper subassembly of the gimbal. A slip ring assembly at the top of the gimbal below the rotator
+facilitates motor power and signal conductors such that continuous rotation would be allowable. This is in
+lieu of using a service loop, or an Omega shaped flat cable and rotating the mast +180° through zero to -
+180°. The slip ring has decks with each deck comprised of a rotor and stator. The rotor has concentric
+copper traces that align with spring loaded pins on the stator. The rotor is driven by the bottom of the
+rotating portion of the gimbal, with conductors passing through the rotator’s bottom and top plates and out
+to the mast’s side wall.
+
+
+
+
+                                                        4
+Figure 3. Gimbal Features, Rear
+
+
+
+
+Figure 4. Gimbal Features, Front
+
+
+
+               5
+                                 Figure 5. ROTATOR DRIVE ASSEMBLY
+
+Mast Design
+Being in a gravity environment, the mast requirements deviated from the typical booms used for
+spacecraft for their solar arrays. In addition to being stiff enough to prevent buckling in gravity, it must be
+retractable, which is a feature that few spaceborne booms have. It could also use gravity to retract
+instead of relying on a driving mechanism. The inspiration for the design came from terrestrial
+telescoping masts for light-towers and other portable industrial equipment. Those masts are driven by a
+winch mounted on the lowest segment (segment 1) which pulls segment 2 up. Segment 3 and the
+subsequent segments are each attached to the previous one via wire rope over a pulley at the top of each
+segment, bootstrapping all the segments up simultaneously.
+
+For the telescopic mast segments, bespoke nesting box section extrusions were implemented in the CAD
+model, with the intent of procuring aluminum extrusions with the cross-sectional dimensions needed.
+These extrusions would receive lightening features and wall-thinning to minimize mass. With two 3-meter
+arrays astride the mast and the gimbal at the bottom of the mast, initial sizing determined that the mast
+segments were limited to about 3 m in height. With a net deployed height of 16 m (6 m array height and
+10 m clearance to the surface), it was determined that 6 segments would be needed.
+The mast drive was designed using a worm and worm gear arrangement driven by a gearmotor, driving a
+wire rope drum. The mast drive is attached through the bottom of the first mast segment to the gimbal’s
+rotator structure at the rotator assembly’s base and upper plates.
+
+
+
+
+                                                      6
+                                  Figure 6. Six Segment Mast Details
+
+A support structure was added to incorporate hinge points at the top of the mast for mounting array
+housings. This structure carried the two pulleys for the wire ropes that become taught when the mast is
+fully deployed, causing the array housings to fold upward to their deployed positions. It also incorporated
+the lifting point for the VSAT for off-loading from the landing vehicle and for relocating to alternate
+locations.
+
+
+
+
+                                   Figure 7. Array Support Assembly
+
+
+Array and Array Housing Design
+Array panels were sized at 3 m wide by .75 m high, with 8 panels per package. Being flat panels, they
+were arranged in a folding pattern with links at the top and bottom to attach to the housing and the
+housing closing panel, respectively.
+
+Sheet metal housings were designed to keep regolith off the panels during landing and transport.
+Lightening cutouts were added to reduce mass, and Mylar film was to be used to cover the lightening
+cutouts. Hinged at their inboard ends and attached to the Array Support Assembly, the housing motion
+came from a single wire rope up through the mast that wyes into two ropes and becomes taught, pulling
+
+
+
+                                                     7
+the housings to their positions normal to the mast. Relying on gravity, the array panels would then deploy
+via a dual drum winch atop the housings. The closing panels add weight to the arrays to assist
+deployment in lunar gravity.
+
+
+
+
+                     Figure 8. 3 m Array Package with Double Drum Rope Drive
+
+
+The array panels are deployed via a drive with a double-wound drum for wire ropes that pass through the
+folded panels to the closing panels. The weight of the array panels and the closing panel cause the
+panels to descend as the ropes pay out. Unlike the CAD images, the panels do not unfold
+simultaneously, but rather, they stay folded near the bottom of the set with the uppermost panels
+unfolding first. Once the ropes deploy fully, the last of the panels move into their desired positions. The
+wire ropes are woven through in a manner that the panels cannot fold in the incorrect direction when
+retracting.
+
+
+
+
+                                                     8
+                                    Figure 9. Array Panels Folding
+
+
+
+Base Design
+The base consists of a triangular platform with mounting points for the three legs with the gimbal mounted
+in the center. The legs retract upward and are stowed parallel to the mast. They are driven commonly
+via a single motor driving a triangular pivot with connecting rods to each leg.
+Launch constraint components were designed and incorporated. These included a central pin with a ball-
+end that would be captured by an over-center hook latching mechanism and three cup-cones for
+constraining the VSAT. These same components could be incorporated into a transport vehicle for
+relocating the VSAT.
+
+
+
+
+                                                    9
+                                Figure 10. VSAT Base with 3 Leg Drive
+
+
+Second Design Iteration
+For the second pass at the overall design, it was decided to not proceed with the base and leg design
+since project management decided to not build a demonstrator of it. This allowed increased focus on the
+mast and array packages and their various drive mechanisms.
+
+To reduce the overall volume and improve packaging of the stowed VSAT, the arrays were divided into
+two array sets per side yielding four 1.5 m wide arrays. With the array housing sizes reduced in stowed
+height, the mast’s stowed height needed to be shortened as well, so the mast went from having six
+segments to twelve segments. While the added housings increased the stowed width of the stowed
+VSAT package, the net width did not exceed the base footprint and overall formed a better package
+volumetrically.
+
+
+
+
+                           Figure 11. VSAT Iterations, Stowed Dimensions
+
+
+
+
+                                                   10
+Mast Second Iteration
+Going from six to twelve mast segments wasn’t necessarily difficult as the added segments were shorter
+versions of the original segments, with six additional smaller cross-section segments added. Efforts to
+purchase bespoke square telescopic extrusions proved to be excessively expensive for a concept
+demonstrator, so the design switched to formed sheet metal components riveted together to form the
+individual segments. Sealed bearings at the corners of each segment controlled the nesting of the
+segments and would provide smooth motion during extension and retraction. These bearings were
+placed in the corner of frames on each end of the nesting segments, with eight bearings per frame.
+These frames also provided locations for the wire rope pulleys at the segment tops and the rope anchor
+points at the segment bottoms. The thin walls of the segment sections were reinforced in the corners with
+doublers.
+For the GRD build, a shorter seven segment version of the mast was built due to the constraints of the
+test chamber.
+
+
+
+
+                       Figure 12. Revised 7 Segment Mast (GRD Build Version)
+
+Wire ropes, drums, pulleys, and their terminations were designed and chosen per MIL-DTL-83420P,
+General Specification for Flexible Wire Rope for Aircraft Control. This document dictates safety factors,
+minimum radii, and breaking strengths of mil-spec wire rope. Drum winding management was handled
+via helical grooves in the drums, and the drums were designed for single wrap in their diameter and
+width. This eliminated the need for an active rope guiding fairlead.
+
+
+
+
+                                                    11
+The Array Support assembly was redesigned in conjunction with the array packages to provide anchor
+points for new array housing drive ropes instead of the original taught rope pulleys. The estimate to build
+the sheet metal structure with machined fittings was deemed high, so a brief design study was performed
+exploring the use of bonded sandwich panels with machined fittings. The cost analysis was comparable
+to the sheet metal design, so the sheet metal design continued forward.
+
+
+
+
+                             Figure 13. Revised Array Support Assembly
+
+
+
+
+                                                    12
+Array Packages Design, Second Iteration
+Going from two array packages to four proved to be challenging. While the means of deploying the
+inboard housings via the single rope through the mast’s core would work, unfolding the new outboard
+housing out and having them return to their stowed positions would require a separate method. Instead,
+a common drivetrain for the inboard and outboard housings was developed that incorporated a drum for
+the inboard housing and two drums for the outboard housing. The driveline is operated via a right-angle
+worm drive powered by a COTS gearmotor, with the outboard housing drums attached to it. It in turn
+drives the inboard array housing through a planetary gear set with a ratio of 5:1. That reduction, along
+with the two different drum diameters, provide the 2:1 folding motion of the outboard array housing vs. the
+inboard array housing. That is, the inboard array must fold upward 90 degrees, and the outboard array
+housing must fold downward 180 degrees relative to the inboard array housing.
+
+The inboard wire ropes are anchored to the Array Support Assembly and the outboard wire ropes are
+anchored at the outboard array housings distal ends. To prevent the wire rope crossing the
+inboard/outboard hinge-line, two “kickers” were added to the outboard housing to prevent a zero-angle-
+crossing rope geometry case. The heights of the kickers were set such that the wire rope tension did not
+exceed its working load capability.
+
+
+
+
+             Figure 14. Four Array Configuration at “Kicker” Contact Deployment Stage
+
+
+
+
+                                                    13
+                                  Figure 15. Array Housing Drivetrain
+
+
+
+The array panel deployment method was changed to individual drivelines per package. This consisted of
+two array strap reels that unwind and wind nylon straps that lower and raise the arrays. These reels are
+on a common driveshaft driven by a right-angle gearbox and gearmotor. An adjustable clutch was added
+between the drive and the driveshaft to prevent stalling of the drive when the arrays are retracted. Strap
+length adjustment is provided by adjustable anchors on the bottom housing panels.
+
+The mock array panel material was changed from thin aluminum to corrugated plastic panels to reduce
+mass, and instead of piano hinges, flexible tape was used for hinges. Only the first and last panels have
+bent aluminum sheet stiffeners to which the linkage pivot points are added.
+
+
+
+
+                                                    14
+Figure 16. Inboard Array Package with Housing Drive
+
+
+
+
+         Figure 17. Array Panel Drivetrain
+
+
+
+                        15
+Control System
+A SpeedGoat target machine serves as the main controller, taking both user and sensor input and
+generating analog control signals from this input. A motor driver takes these control signals and
+generates 24-volt PWM signals for the motors.
+
+For the gimbal control, the SpeedGoat reads pitch and roll angle values from an inertial measurement unit
+(IMU) on the gimbal and feeds these angles into a proportional-integral-derivative (PID) loop. It then
+generates the control signals for the gimbal motors that will drive the mast to a desired angle. For the
+mast deployment control, the SpeedGoat reads sensor data from potentiometers and limit switches
+located at key points throughout the structure and uses this data to determine when to stop the mast,
+array housing and array panel deployment motors.
+
+The user interacts with the control system by using a graphical user interface (GUI) running on a host
+machine connected to the SpeedGoat via an Ethernet connection. The user can set the desired gimbal
+angles and can start or stop the mast deployment. The user can also manually control each motor
+individually.
+
+
+
+
+                            Figure 18. Diagram of the VSAT Control Setup
+
+
+
+
+                                         Figure 19. VSAT GUI
+
+
+                                                   16
+Conclusion
+At the time of this writing, the VSAT GRD is undergoing assembly in a test cell in B1293B at Langley
+Research Center. All major components are complete or are near complete with revisions being made as
+assembly progresses. Wiring for the control system is partially complete and testing of the gimbal has
+been conducted successfully using a dummy mast with deadweight at the top to simulate the inertial
+properties of the VSAT in the stowed condition. The completed mast has been installed and the off-
+loader system is being installed.
+Assembly and operational testing will be incremental with the assembly progress. As major components
+are installed, their operation will be tested. These steps include the following:
+     • IMU zeroing ensuring the mast is plumb
+     • Gimbal operation with the mast stowed to simulate mast up-righting
+     • Mast deployment and retraction/stowing
+     • Inboard array housings installations; deployment with the mast stowed (lower risk and allows for
+         easier observation)
+     • Mast deployment with inboard arrays stowed
+     • Inboard array deployment and stowing
+     • Inboard array panel deployment and stowing
+     • Installation of the outboard arrays; deployment of inboard and outboard arrays with mast stowed
+     • Deployment of the mast with array housing deployment and stowing
+     • Deployment of outboard array panels
+
+                                              References
+
+1. Mikulas, Martin M., et al., “Telescoping Solar Array Concept for Achieving High Packaging Efficiency.”
+    AIAA SciTech Forum, January 2015,
+    https://ntrs.nasa.gov/archive/nasa/casi.ntrs.nasa.gov/20150006022.pdf
+2. Pappa, Richard, et al., " Relocatable 10 kW Solar Array for Lunar South Pole Missions." NASA/TM-
+    20210011743, March 2021.
+
+
+
+
+                                                   17
+

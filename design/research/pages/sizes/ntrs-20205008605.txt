@@ -1,0 +1,795 @@
+            Integration of Advanced Structures and Materials
+                Technologies for a Robust Lunar Habitat
+                Lauren Bowling                                      Bryce Horvath                                      Christopher Wohl
+               NASA NIFS Intern                                   Aerospace Engineer                               Senior Research Materials
+         NASA Langley Research Center                        NASA Langley Research Center                                   Engineer
+           6 West Taylor St., MS 226                          1 North Dryden St., MS 451                         NASA Langley Research Center
+              Hampton, VA 23681                                   Hampton, VA 23681                                6 West Taylor St., MS 226
+             laursbowl@gmail.com                               bryce.l.horvath@nasa.gov                               Hampton, VA 23681
+                                                                                                                       c.j.wohl@nasa.gov
+
+
+
+Abstract— NASA’s Artemis program plans to have a
+sustainable lunar base deployed on the Moon by 2028. The
+base calls for a foundation surface habitat that can support a
+crew of four members for a minimum mission duration of 28-
+days. The lack of a magnetic field and significant lunar
+atmosphere extends the lifetime of secondary radiation emitted
+from metallic structures, which is a health hazard for exposed
+astronauts. Integration of non-metallic structural materials
+into surface habitat design may alleviate some of these
+concerns. Additionally, it is favorable for the structure to be
+collapsible for transportation to optimize payload volume,
+mass efficiency, and monetary constraints. As a result,
+inflatable structures are being investigated due to their
+improved packing efficiency at launch, optimal mass-to-
+volume ratio, and large surface area that can efficiently
+disperse structural loads and heat. Currently, only two
+inflatable airlocks have been deployed in space. Thus, there is
+a significant need to advance technologies associated with
+inflatable structures to provide greater options for future
+missions, i.e., Artemis and beyond. This study focused on the
+inflatable lunar habitat applications of emerging NASA
+Langley Research Center (LaRC) technologies and their
+required development steps to become space qualified. The
+Bowling Habitat architecture was generated from 13 of these
+NASA LaRC technologies, five of which were deemed critical,
+five determined as enhancing technologies, and three were
+classified as transformational technologies for the Artemis
+program. To address the payload constraints, the study also
+considered a tentative timeline that aligned with the current
+Artemis schedule for transporting the Bowling Habitat to the
+Moon. Ultimately, the Bowling Habitat mainly addressed the
+structural needs of an inflatable lunar habitat, meaning that
+major areas pertaining to the life-style aspects of the habitat
+must be improved. Areas include, but are not limited to, hard
+connection points, the monitoring of human health, and extra
+radiation protection for solar proton events.
+
+
+                         TABLE OF CONTENTS
+2. BACKGROUND......................................................................................................................................................2
+3. TIMELINE.............................................................................................................................................................3
+4. BOWLING HABITAT ARCHITECTURE..................................................................................................................5
+5. GAP ANALYSIS.....................................................................................................................................................6
+6. CONCLUSIONS....................................................................................................................................................11
+REFERENCES..........................................................................................................................................................11
+Long duration lunar exploration, such as that defined in                               environment. Although accessing the International Space
+NASA’s Artemis program [1], will require emerging                                      Station is costly and requires extensive planning, access to
+technologies to overcome the lunar surface extreme                                     the lunar surface will present significantly greater costs,
+
+U.S. Government work not protected by U.S. copyright
+planning activities, and transit time.         Beyond these            inflatable fabric that can monitor both the MMOD impacts
+challenges, an extended lunar presence will require much               to the structure as well as radiation exposure of the
+more consideration regarding habitat and infrastructure.               astronauts and other health aspects. There are three types of
+Launch vehicle payload volume and mass constraints                     natural radiation that astronauts could be exposed to on the
+significantly impact the type of habitat that can be                   Moon, galactic cosmic rays (GCR), solar proton events
+transported to the Moon, making it extremely unlikely that a           (SPE), which are known as solar flares, and neutron
+rigid habitat with sufficient volume for crew and mission              radiation. The best way to protect against GCR and SPE are
+duration will be able to fit within a nominal payload                  materials with a high concentration of hydrogen as
+capacity [2]. Therefore, alternative structures are being              hydrogen’s low electron density significantly decreases the
+investigated for a lunar habitat. Inflatable habitats are of           chance of a scattering event [6]. Finally, lunar dust, which is
+interest because of their optimal mass to volume ratio.                classified as the fine lunar regolith particles, is extremely
+Inflatable structures offer a significant packing advantage            abrasive, toxic, and electrostatically charged [7]. Materials
+compared to rigid structures because they can be folded                used for lunar dust protection must have some degree of
+during transportation and can be used multiple times,                  abrasion resistance, be inert and corrosion resistant, and
+meaning that they theoretically could be located at multiple           exhibit an intrinsic resistance to lunar dust adhesion to
+spots throughout their life-cycle on the Moon [2].                     minimize lunar dust entering the habitat. Lunar dust
+Additionally, inflatables are inherently strong due to their           entering mechanical systems, embedding in relatively soft
+large surface area that can be used to disperse structural             materials, or entering the astronaut’s respiratory system
+loads and have favorable dynamic loading because motion                could cause catastrophic failures and significant health
+is not harmonic under constant internal pressures; with this           problems [2].
+reasoning, inflatable habitats also offer thermal advantages
+due to their large surface areas, relative to smaller, rigid           An inflatable lunar habitat will require many subsystems to
+concepts [2]. Lastly, inflatables can be constructed to inflate        support sustainable human life on the Moon; at a minimum
+into numerous shapes, however, it is important to consider             there must be an inflation system, a form of thermal control
+the net habitable volume (NHV) of the shapes; typically,               for the habitat, an environmental life control and support
+cylinders offer the best NHV ratio [3].                                system (ECLSS) that can revitalize water and air, an airlock
+                                                                       to support extravehicular activities (EVAs), and a reliable
+This presentation will provide a further evaluation of                 power source [5]. Although the south pole of the Moon, the
+emerging technologies integrated into inflatable structure             purposed landing site for the Artemis missions, receives a
+applications for lunar habitats; specifically, how on-going            constant stream of sunlight, there are some areas, such as
+research at NASA Langley Research Center (LaRC) can be                 the interior of craters that have extended periods without
+applied to and improve these inflatable structures. Gap                illumination. Interiors of craters do offer some radiation
+analysis was then utilized to explain the current status of            protection for the habitat, making them a possible habitation
+those emerging technologies and the gaps they close. Lastly,           site. However, these craters would require heavy batteries
+the Bowling Habitat was designed, to include the new                   to store energy during shadowed periods, if a solar array is
+technologies and to accommodate the Artemis                            used as the power generation method [2].
+transportation schedule.
+                                                                       Current Inflatable Architectures
+                    2. BACKGROUND                                      Currently, only two inflatable structures have been deployed
+Lunar Environment                                                      in space; the first being the Russian Volga airlock on the
+                                                                       Voskhod 2. Using an inflatable here was out of necessity
+Since the Moon lacks a significant atmosphere and strong               because the Voskhod spacecraft was unable to properly
+magnetic field, it cannot protect the astronauts from hazards          function in vacuum [8]. The Volga airlock was designed
+in the same manner the Earth does. Specifically, it exposes            and deployed within a nine-month period in the mid-1960s.
+astronauts to the space vacuum, micrometeoroid and orbital             In the 1990s, the NASA TransHab program’s purpose was
+debris (MMOD), radiation, and lunar dust [2]. The vacuum               to design an inflatable transit habitat to Mars; which
+of space results in essentially no pressure on the lunar               ultimately contributed to the second inflatable structure in
+surface, therefore the habitat must be able to maintain an             space [9]. In 2016, the Bigelow expandable activity module
+internal maximum pressure up to 14.7 psi. The easiest way              (BEAM) was deployed and is still on-board the
+to accomplish this is by including a gas retention layer,              International Space Station (ISS) today. The main purpose
+known as the bladder, within the inflatable fabric, that limits        of the BEAM was to confirm that inflatables can withstand
+the diffusion and effusion of gases [4]. With no MMOD                  the harsh space environment through testing and monitoring
+protection for the inflatable habitat, there is a risk of losing       its internal conditions a few times throughout a year [10].
+structural integrity and pressure if the bladder is penetrated.
+Therefore, materials chosen for the MMOD protection must               Current inflatable concepts are either entirely inflatable or
+be tough enough to break the MMOD apart and be                         have a rigid core with inflatable extremities and include an
+accompanied by a material that can absorb the particles’               inflatable fabric that offers MMOD protection, thermal
+vapors [5]. Moreover, sensors can be included within the               insulation, a bladder, and minimal radiation and lunar dust
+                                                                   2
+protection. Some concepts offer radiation protection by               Materials that provide superior radiation shielding have a
+being located in natural lava tubes or having thick layers of         large hydrogen content, which is the reason that
+regolith placed on top of the habitat [2]. Although lava tubes        polyethylene and water were chosen as shielding materials
+are natural formations on the Moon as a result of the                 [6]. Nonetheless, polyethylene has a greater hydrogen
+Moon’s initial formation and difference in cooling rates,             content than water and does not require the extra
+there exists little knowledge on their structural integrity and       maintenance equipment, meaning that the polyethylene
+logistics as to how the habitats will be sustainable there.           water wall can be replaced by a simple polyethylene, or
+Additionally, having regolith covers around the habitats is           comparable material wall. As mentioned, using a thick layer
+extremely labor intensive and a high heath risk for the               of lunar regolith on the habitat is a strenuous and health-
+astronauts during the initial lunar settlements. Both of these        hazardous job for astronauts, so using polyethylene or
+natural radiation protection options potentially become               comparable material with high hydrogen content may
+viable once there is enough infrastructure on the Moon.               provide superior lunar radiation protection [2]. Additionally,
+Moreover, current habitat architectures offer radiation               in the MFH’s MEL, there were many smaller mass-bearing
+protection within the inflatable fabric scheme, special               aspects that could potentially be sent up separately to the
+protective clothing for astronauts to wear, and smaller,              Moon or be assembled on the Moon by recycling and
+heavily protected shelters within the habitat for SPE.                repurposing of components of expended descent modules.
+Likewise, many architectures utilize air-tight zippers to             These areas include the flooring elements in both the airlock
+combine multiple inflatable structures. However, lunar dust           and habitable areas and basic furniture such as ladders,
+can inhibit the zippers and prevent their air-tight seal from         tables, and stools.
+functioning properly, which could be catastrophic [11].
+Lastly, many architectures assume solar arrays, with
+batteries, as the primary power source.                                                      3. TIMELINE
+NASA plans to utilize the commercial lunar payload service            Artemis Base Camp
+(CLPS) program and the human landing systems (HLS) for
+                                                                      The Artemis program architecture calls for a foundational
+delivering cargo, experiments, and astronauts to the lunar
+                                                                      surface habitat (FSH) on the Moon by 2028, amplifying the
+surface; this means that the habitat size is restricted to fit
+                                                                      need for lunar habitat technology development. Beyond the
+within these payloads [12]. As an example, Blue Origin’s
+                                                                      FSH, Artemis also describes landing a lunar terrain vehicle
+Blue Moon lander has a soft-land payload of 3,600 kg and a
+                                                                      (LTV) and a habitable mobility platform that encourages
+top deck cargo bay of 7 m [13]. Blue Origin is also working
+                                                                      long-duration EVAs in the same timeframe [15]. In one
+on developing a Blue Moon stretched tank cargo lander that
+                                                                      iteration, the FSH was specified to support a crew of up to
+will be able to soft-land 6,500 kg [13]. In 2009, NASA
+                                                                      four astronauts with the ability for expansion as the Artemis
+completed a concept design of a minimum functionality
+                                                                      program grows [15]. The LTV will encourage EVAs,
+habitation (MFH) element to send to the lunar surface; it
+                                                                      whereas the habitable mobility platform will be used for
+was comprised mainly of a rigid structure but had an
+                                                                      long-duration EVAs. In February 2020, NASA issued a
+inflatable thermal control chimney [14]. Based on its master
+                                                                      request-for-information for an LTV less than 500 kg that
+equipment list (MEL), the habitat was estimated to be
+                                                                      can support two donned astronauts and withstand the lunar
+approximately 5,649 kg [14]. Therefore, the original MFH
+                                                                      environment and its surface [16]. The annual college level
+would fit on the Blue Moon stretched tank lander, but not
+                                                                      design challenge, RASC-AL, used the same LTV
+the current version, and it is unknown when the larger
+                                                                      constraints as the request-for-information for their LTV
+version will become space certified, making it important to
+                                                                      category of the competition; the University of Puerto Rico,
+design a habitat that will fit on the 3,600 kg payload lander.
+                                                                      Mayagúez proposed the exploration multi-purpose rover for
+More inflatable structures can be incorporated into the MFH
+                                                                      expanding surface science (EMPRESS) and placed first
+architecture along with emerging technologies to reduce
+                                                                      overall [17]. There is an additional exploration rover
+mass. There are two major areas in which the mass can be
+                                                                      planned to go to the lunar surface named VIPER, the
+reduced, the first being the rigid habitat structure, more
+                                                                      Volatiles Investigating Polar Exploration Rover, with plans
+specifically, it’s gas retention structure, MMOD protection,
+                                                                      to further investigate the water and ice on the Moon’s
+and thermal control, which in total account for
+                                                                      surface [18]. Other than the LTV, limited advances have
+approximately 21% of the MFH’s wet mass. As mentioned,
+                                                                      been made with the habitable mobility platform or the
+a majority of these elements were assumed to be rigid and
+                                                                      foundation surface habitat.
+replacing them with an inflatable element could drastically
+reduce their mass contributions, while maintaining the                Artemis Transportation Schedule
+structural integrity. The second area that contributes a
+significant amount of mass is the SPE shelter that was                As mentioned, the CLPS and HLS programs will deliver
+comprised of a polyethylene water wall, which required an             cargo, experiments, and astronauts to the Moon in the
+extra 2,000 kg of water and additional pumps within the               current Artemis plans. At the time this paper was written,
+habitat continuously circulating water throughout the walls.          there were 13 CLPS providers that have landers with a
+Altogether, the SPE shelter was 40% of the wet mass.                  range of payload capacities (Table 1) [12]. There have been
+
+                                                                  3
+two CLPS missions scheduled to take place in July 2021 in                                   MX-2               30
+                                                                                            MX-9              500
+                                                                     Sierra Nevada          TBA               TBA
+                                                                      Corporation
+                                                                         SpaceX            Starship         90,700+
+                                                                      Tyval Nano-           TBA              TBA
+                                                                    Satellite Systems
+
+
+
+
+      Figure 1: The notional un-loading (a) and deployment process of the Bowling Habitat, demonstrating the
+  deployable friction barrier (b), inflatable arms (c-d), multichambered inflatable airlock (d), and guy line supports
+                                                           (f).
+
+                                                Image Credit: NASA LaRC
+which the United Launch Alliance’s Vulcan Centaur rocket
+along with the Peregrine lander will take 11 payloads, and
+the SpaceX Falcon 9 Rocket coupled with the Nova-C
+lander will take five payloads to the Lacus Mortis crater and
+Oceanus Procellarum dark spot on the Moon, respectively
+[12]. A third mission will be in 2022, sending Masten Space
+Systems to the south pole of the Moon with eight payloads
+and nine instruments [12].
+
+
+
+Table 1: The 13 CLPS providers and their lander(s) with
+           expected payload capacity [20-32].
+
+      Company           Lander                Payload
+                                              (kg)
+     Astrobotic              Peregrine             264
+     Technology               Griffin              475
+     Blue Origin            Blue Moon            3,600
+    Ceres Robotics        Minikhod Rover            10
+                            Marsokhod               30
+      Deep Space           Small Lunar
+                                                   120
+        Systems               Lander
+         Draper             Artemis-7               14
+  Firefly Aerospace           Genesis               85
+  Intuitive Machines          Nova-C               100
+   Lockheed Martin
+                            McCandless            1000
+         Space
+     Masten Space
+                           Masten’s Xl-1          100+
+        Systems
+    Moon Express               MX-1                 30
+
+                                                                4
+Based on the NASA explorations planned for calendar years           will be located somewhere external from the habitat. For the
+2021 through 2030, there will be at least two CLPS                  Bowling Habitat, a nuclear power source will be used
+opportunities per year, except for 2027 and 2028 where              because an object model is in the Artemis plans and it does
+there will be one and three respectively [33]. Additionally,        not require connection to the habitat until the habitat is
+as mentioned, the VIPER rover will be sent to the south pole        ready to be deployed. This saves mass and volume in the
+of the Moon in late 2023 via the Griffin lander [18].               habitat’s payload and can provide energy regardless of solar
+Additionally, a surface power object model, which could be          radiation intensity and duration,
+a nuclear reactor, will be sent to the lunar surface in 2027.
+Finally, in 2028, the mobility habitat and foundation surface
+habitat will be sent to the Moon. Throughout the missions           Internal Configurations
+in-situ resource utilization (ISRU) opportunities are to be
+explored.                                                           Similar to the landing site, numerous technologies will be in
+                                                                    the interior of the Bowling Habitat as well. Although the
+                                                                    layers of the inflatable fabric are not directly seen by the
+                                                                    astronauts, it is important to note that there are multiple
+                                                                    layers of various fabrics within the InFLEX scheme, not
+                                                                    only the two layers as shown in Figure 3. As previously
+                                                                    mentioned, metallic floorboards and CFRP joists will be
+                                                                    generated via repurposing of the descent module. Two
+                                                                    additional LaRC technologies were integrated into the
+                                                                    interior of the Bowling Habitat, the first being habitat health
+                                                                    sensors incorporated into the inflatable fabric (Figure 3).
+
+Figure 3: Conceptual image of an inflatable structure demonstrating multiple layers of fabric (a), floorboards and
+   joists generated from repurposed materials (b-c), habitat health sensors within the inflatable fabric (d), and
+                                     ceramic coatings on rigid elements (e).
+
+                                              Image Credit: NASA LaRC
+
+                                                                    When coupled with software, these sensors can alert the
+                                                                    astronauts that an impact or penetration event occurred and
+                                                                    provide a general location of the potentially compromised
+
+
+
+
+     Figure 2: A conceptual image of the Bowling Habitat landing site, demonstrating repurposing of the descent
+                  module (a-b), additive manufacturing technologies (c), and a nuclear reactor (d).
+
+                                                Image Credit: NASA LaRC
+
+                                                                5
+area. The last technology featured in the interior of the
+Bowling Habitat is a ceramic lunar dust coating (Figure 3).
+These coatings can be applied to rigid components of the                               5. GAP ANALYSIS
+habitat to protect the component from the abrasive and
+charged characteristics of lunar dust, beyond protection            Technology Readiness Levels
+from every-day wear from the astronauts. The coating                For technologies to be space flight certified, a requirement
+would be most effective on the airlock and habitat floors, as       for their incorporation into a lunar habitat’s architecture,
+well as any external rigid connections between inflatable           they must have a technology readiness level (TRL) of at
+arms. One technology not addressed in this work is the              least eight. NASA has pre-determined qualifications for
+mechanism by which the inflatable arms will connect with            each of the nine TRL levels and in order to increase in TRL,
+the deployed friction barrier. These mechanisms will not            the technology must have completed the requirements of the
+need to be utilized for multiple connection-disconnection           level completely [36]. The definition for TRL 8 is that the
+cycles which suggests that mechanisms utilized for similar          “actual system is ‘flight qualified’ through test and
+connections that have space flight heritage could be readily        demonstration [in its operational environment and
+adapted for this use.                                               platform]”; therefore, for a technology to be classified as
+                                                                    TRL 8 it must have completed and passed in its service
+                                                                    environment and platform testing [36]. Many of the current
+                                                                    technologies integrated into the Bowling Habitat are in
+                                                                    levels 2-4. A TRL 2 can be assigned to a technology when a
+                                                                    general idea of how the technology will function has been
+                                                                    developed [36]. The technology progresses to TRL 3 when
+                                                                    the critical function of the technology has been
+                                                                    demonstrated, a “proof of concept” activity [36]. Lastly, a
+                                                                    TRL 4 means that the technology was validated in a
+                                                                    laboratory environment in which it demonstrated basic
+                                                                    functionality [36].
+
+
+
+
+                                                                6
+Improvement Steps                                                      structural testing. The InFLEX material provides basic
+
+
+
+
+                                                                       protection for the astronauts from the lunar atmosphere; it
+The improvement steps for an inflatable lunar habitat have
+                                                                       has atmospheric retention, structural integrity, MMOD,
+been ranked into three categories to identify the habitat
+                                                                       thermal and minimal radiation protection. To maintain
+elements that are the most crucial to a sustainable
+      Figure 4: The proposed layering scheme of the InFLEX fabric, comprising of a structural (innermost) and
+                                         attenuation (outermost) layer [34].
+
+                                                                       pressure, a fire-resistant urethane coated Vectran fabric was
+deployment of the habitat. The first ranking is “critical
+                                                                       integrated as the bladder layer; the urethane coating
+technologies”; these are necessary for the completion of
+                                                                       provides the bladder with impact and abrasion resistance,
+mission goals. Critical technologies offer a significant risk-
+                                                                       while maintaining the diffusion properties of the Vectran
+reduction and can often contribute heavily to multiple
+                                                                       [34]. Double coating the fabric can increase durability and
+mission architectures. The second tier for ranking is the
+                                                                       enhance diffusion properties. Additionally, InFLEX enables
+“enhancing technologies” category in which these
+                                                                       multiple redundancies of bladder layers and is the innermost
+technologies significantly improve mission performance,
+                                                                       layer to the habitat (Figure 4). The next layer within the
+but the mission does not depend on them to operate. Often,
+                                                                       InFLEX layering scheme is the restraint layer, which carries
+enhancing technologies are improvements to existing
+                                                                       a majority of the structural load and hoop stresses of a
+technology, whether it be via safety, reliability, or cost, and
+                                                                       cylindrical habitat. InFLEX has an open-net webbing and a
+can contribute to multiple areas within the mission
+                                                                       coated fabric, the bladder, which then also works as
+architecture. The last category is “transformational
+                                                                       distributing the pressure stresses among the webbing.
+technologies”.      Transformational        technologies     are
+                                                                       Vectran 12K and 24K were used for both the webbing and
+revolutionary technologies that give future related missions
+                                                                       coated layer because of their high strength-to-weight ratio.
+new capabilities that would further improve the mission
+                                                                       The combination of the bladder and restraint layer make up
+performance. These technologies may offer solutions to
+                                                                       the structural layers of the InFLEX scheme (Figure 4).
+complex problems that require multiple technological
+iterations and a significant time to successfully develop.             The next layer within InFLEX is the thermal
+These technologies also have the greatest risk of not being            micrometeoroid cover (TMC) layer, labeled as the
+fully advanced through the TRL scale. If implemented                   attenuation layer in Figure 4, which serves as thermal
+successfully,      transformational       technologies      will       insulation, MMOD and radiation protection, and puncture
+significantly and beneficially impact the mission in terms of          resistance. Additionally, this layer is removable from the X-
+cost, safety, and technological reliability.                           HAB. The outermost layer, the TM shell, serves as one of
+                                                                       the many radiation protection layers and MMOD resistance.
+Critical Technologies
+                                                                       MMOD layers break apart high velocity particles and then
+Intelligent Flexible Material Fabric—The intelligent                   allow foam to absorb the vapors released [34]. The TMC
+flexible material (InFLEX) program was a collaborative                 layer also has multi-layer film insulation (MLI) with spacers
+effort between ILC Dover and NASA Langley from 2006 to                 in between the layers to decrease the thermal conductivity of
+2010, with the main purpose being to develop improved                  the layers. The materials that would make-up the TMC were
+capabilities for inflatable structures for exploration missions        never chosen, but a mock-up was made for demonstration
+[7]. From this program, two Engineering Design Units                   purposes. Based on current status, InFLEX is at a TRL of
+(EDU) were prototyped with a significant amount of
+
+                                                                   7
+three since there was a proof-of-concept, but the materials           BNNT yarn is in early development stages, it was assigned
+were not entirely validated in a laboratory environment.              a TRL of two.
+
+Habitat Health Accelerometers—One of the InFLEX                       Lightweight External Inflatable Airlock (LEIA)—Originally
+program’s main goals was to find an effective and efficient           designed to be the airlock for the Lunar Gateway, a
+way to incorporate sensors into the fabric. A majority of             proposed lunar orbiting space station that will serve as base
+these sensors were used to monitor human health. Extending            for astronauts when doing lunar expeditions [3]. A
+this approach, monitoring the status of the habitat can be            traditional space station airlock has two chambers, the first
+done using accelerometers set to detect high frequencies              being the equipment lock, the larger of the two chambers
+from MMOD impacts or penetrations [37]. Limiting the                  which is where the astronauts don and doff. The other
+accelerometers to higher frequencies will help mitigate the           chamber, the crew lock, is just big enough to fit two donned
+interference of human voices or other electronics with the            astronauts and is where they exit to begin their EVAs.
+impacts. Coupling the accelerometers with software that can           LEIA was designed to be an inflatable crew lock [3]. The
+model the structure of the habitat, the area of the habitat in        basis of the design is to have a pre-built truss covered by
+which the frequency came from can be identified and help              fabric that can be compressed for transport and expanded
+determine if there was damage to the inflatable, if it needs to       for EVAs. However, as this airlock was designed for lunar
+be repaired, or if the habitat needs to be evacuated [37].            orbit, the LEIA design must be modified to address lunar
+Technology similar to this have been in use on the ISS, the           gravity and dust before it can be used for a lunar habitat.
+accelerometers’ service environment, which gives it the               Multiple chambers can be introduced within the airlock,
+maximum TRL of nine.                                                  with each chamber being another opportunity to mitigate
+                                                                      lunar dust intrusion into the livable space of the habitat.
+Deployable Friction Barrier—If the habitat deployment                 The LEIA provides the basis of the airlock design for a
+sequence requires the inflatable material to be in direct             lunar habitat; however, considering the original application
+contact with the lunar surface, a friction barrier is required        space was in lunar orbit requiring significant modification
+in order to further protect the material from the abrasive            for use on the lunar surface, this technology was assigned a
+lunar dust. Utilizing deployable materials that utilize stored        TRL of two.
+elastic energy to deploy, rather than a power source, offers a
+friction barrier that is low in mass and power consumption.           Enhancing Technologies
+Candidate material systems are bis-maleimides (BMI) and
+                                                                      Trusselator—The trusselator is a technology developed
+epoxies which are a space-grade thermosetting polymer
+                                                                      through collaboration between Tethers Unlimited and
+[38]. Its current testing focuses on the response to long-term
+                                                                      NASA Langley. It was designed as an on-orbit,
+effects of constant stress, known as creep. In addition to the
+                                                                      autonomous, continuous-forming, additive manufacturing
+stress of the habitat residing on top of the BMI barrier, the
+                                                                      tool that would generate CFRP trusses [42]. The trusselator
+packaging of the barrier can also induce creep. The main
+                                                                      fabricates trusses on-demand using CFRP material provided
+space application that this material is being considered for is
+                                                                      in standard industry roll packaging. When prototyped and
+composite booms to support solar arrays, resulting in the
+                                                                      tested, the trusselator prototype produced a 10 m long truss
+deployable BMI material being classified at a TRL of three.
+                                                                      in 1 g that was able to maintain its structural integrity when
+Boron-Nitride Nanotube Guy Lines—Boron-nitride                        supporting both its own weight, and a scientist standing on
+nanotubes (BNNT) are particularly interesting because they            it [42]. Based on this analysis, it is anticipated that these
+are 100 times stronger than steel, yet 1/6th the weight, as           structures could be used as lunar habitat floor joists.
+well as inert and resistant to corrosion [39]. Due to these           Multiple      trusselator-generated   trusses     would    lay
+properties, they would be optimal for structural support in           horizontally across the inflatable portions of the habitat,
+the habitat. Current research is being conducted through a            supporting all of the floorboards, humans, and furniture
+collaboration between NASA LaRC and Rice University to                placed on top. This would save mass and volume in the
+develop a way to turn BNNT into yarn, which can then be               habitat’s payload, so long as the CFRP and trusselator have
+used to make BNNT fabric [40]. There are two ways that                been delivered to the Moon prior. Since the trusselator is
+BNNT can add a support structure to the habitat, the first            aimed to be used either in a micro- or partial gravity
+being guy lines, similar to a camping tent, which externally          environment, the testing done is qualified as a laboratory
+supports the structure. BNNT could also be integrated into a          environment, yielding a TRL of four.
+composite and used as internal ribbing of the habitat. An
+                                                                      Electron Beam Gun—Researchers at NASA Langley are
+additional use of the BNNT could be neutron radiation
+                                                                      working on utilizing an electron beam in two ways; as a
+shielding [41]. The current architectures are attempting to
+                                                                      wire additive manufacturing instrument that would be used
+protect against both GCR and SPE radiation, meaning that
+                                                                      to fix minor things in-space, or as a device that can cut and
+the material selection process seldom considers the third
+                                                                      then weld pieces of metal together in-space [43]. Typically,
+type of radiation, neutron radiation. BNNT is an optimal
+                                                                      this technology requires a high vacuum level environment to
+material for this because boron is one of the best neutron
+                                                                      operate. The vacuum of space will be utilized on the lunar
+shielding elements due to its low electron density. Since
+                                                                      surface providing an optimal service environment for the
+
+                                                                  8
+electron beam gun [43]. An electron beam instrument has               beneficial in that the nuclear reactor must be safely installed
+already been fabricated at NASA Langley, which allows the             before astronauts arrive so that they are not exposed to
+technology to be tested in a laboratory environment;                  another source of radiation. It is possible that additional
+however, it has not been tested in hand-held form, which is           technology may be needed to act as radiation protection if
+how it would be used in the initial lunar habitat, resulting in       KRUSTY cannot logistically be placed a sufficient,
+a TRL of four.                                                        protective distance away or depth. KRUSTY is currently
+                                                                      being tested on Earth, giving it a TRL of five because the
+Lunar Dust Ceramic Coatings—In addition to a deployable               testing has not been completed yet.
+friction barrier and the LEIA to help mitigate the effects of
+lunar dust on the habitat, ceramic coatings can be                    Transformational Technologies
+implemented along the rigid aspects of the habitat, such as
+                                                                      Cassegrain reflectors—A Cassegrain reflector can be used
+on the floors throughout the habitat and on connections
+                                                                      toward enabling lunar habitation through its ability to sinter
+between the inflatable portions and rigid components.
+                                                                      lunar regolith [46]. The main element of its design is a
+Ceramic materials are ideal for this purpose because they
+                                                                      parabolic dish that collects solar energy and focuses it on an
+exhibit high strength, durability, and erosion resistance. The
+                                                                      area of regolith. Regolith sintering can be utilized to prepare
+ceramic currently being investigated for this application is
+                                                                      landing pads for descent modules potentially reducing the
+metal aluminum-boride (MAB), which is produced as a
+                                                                      dust plume generated by landing vehicles. Cassegrain
+powder, therefore not keen for any sort of in-space
+                                                                      reflectors could also be used to secure regolith on top of
+manufacturing [44]. However, little research has been done
+                                                                      habitats to act as additional radiation protection. The
+on this material as a coating, meaning that there has been no
+                                                                      Cassegrain reflector system is not required for the basic
+proof-of-concept yet, only a formulated concept.
+                                                                      establishment of a lunar habitat and has a TRL of three.
+Additionally, since MAB is planned to be used on the
+floorboards that will be manufactured on the Moon, a                  ASSEMBLERS—The ASSEMBLERS is an on-going project
+method to apply it in-situ is required, which results in a TRL        at NASA LaRC focused on designing autonomous Stewart
+assignment of two.                                                    platforms (hexapods) that can do both long and short reach
+                                                                      manipulations [47]. The Stewart platforms can be stacked
+Re-purposable Composites—ISRU is the concept that
+                                                                      on top of one another so that they can accommodate a wide
+NASA will use resources and materials found on the Moon
+                                                                      range of jobs on the Moon [47]. Currently, the hexapods
+to generate items necessary for mission success such as
+                                                                      require a foundation beneath them to function and have an
+water, silicon solar panels, regolith cement, and more [2].
+                                                                      estimated payload of 182 kg [47]. Nonetheless, these
+After multiple Artemis missions and cargo deliveries to the
+                                                                      manipulators could be used for moving habitats and
+Moon, the Moon’s surface will have numerous, descent
+                                                                      configuring lunar cities in the future. Basic prototyping of
+modules that have fulfilled their mission requirements.
+                                                                      the hexapods was postponed due to COVID-19, resulting in
+Therefore, to embrace ISRU, the re-purposeful composite
+                                                                      a TRL of three.
+study aims to construct parts, specifically the legs, of the
+descent module with a re-purposable composite that can be             Robot Swarms—Since it is anticipated that these habitats
+utilized to benefit the habitat once the descent module has           may go long durations without a human occupant, it would
+landed [32]. Possible secondary uses for this material that           be ideal to have a technology in place for habitat
+do not require re-shaping of the legs include ladders, solar          maintenance and monitoring. One approach is use of robot
+array supports, stools, benches, or simple tables [32].               swarms on the lunar surface and within the habitat. Software
+Materials for this composite are still being researched. The          is being developed for the communication methods between
+composite system must be able to meet the performance                 these swarms of robots and humans; specifically, the
+requirements for the lander as well as their intended                 benchmarks for when robots should convey important
+secondary use.        Ideally, a composite system will be             information to humans, when robots should converse with
+identified with material properties comparable to state-of-           other robots, or when they do not have to report information
+the-art composites generated with Hexcel® IM7 carbon                  to humans, are being developed [48]. Once these
+fiber, whether they be discontinuous, continuous, or woven            communication methods are developed, robots will be
+fibers [32]. Since a material has not been chosen yet, re-            partially self-sufficient on the Moon and will be able to keep
+purposable composites were assigned a TRL of two.                     humans informed on the status of the structures and
+                                                                      technologies on the Moon. Since this technology is not
+Kilopower Reactor Using Stirling Technology—The
+                                                                      being tested on robot swarms yet, it was assigned a TRL of
+Kilopower reactor using Stirling technology (KRUSTY) is
+                                                                      three.
+an alternate option for a lunar power source and is being
+developed at NASA Glenn Research Center. It is a nuclear              Implementations and Revisions
+reactor with a 235U core that uses a Stirling engine to
+convert the heat to electricity [45]. The Artemis program             With so many technologies involved in the lunar habitat,
+has already planned to send a large power system to the               there is a large chance that some of the technologies will not
+Moon’s surface before the habitat, meaning that KRUSTY                have a TRL of eight by the time the habitat needs to be
+already fits into the transportation schedule. This is also           transported to the surface of the Moon. The major penalties
+                                                                  9
+of technologies not being ready would be mass and volume,               alternatives all range in volume, making the volume penalty
+which can range from minimal, mild, or substantial                      range from minimal to substantial as well.
+penalties. The rank of the penalty was qualitatively
+determined based on the possible alternatives’ relative mass            Boron-Nitride Nanotube Guy Lines—Not choosing BNNT
+and volume to the original intended technology. For                     as the support structure for the inflatable habitat would have
+example, if the original technology had a large mass and                either mild or substantial penalties for both mass and
+volume and its alternative also has a large mass and volume,            volume. An alternative use for BNNT could be utilization
+the penalties would be minimal because a minimal amount                 for inflatable ribs that many of the current inflatable
+of mass and volume would have to be reassigned to                       architectures use. Another option would be having rigid
+accommodate the alternative technology.                                 ribbing throughout the inflatable, but this would cause both
+                                                                        substantial mass and volume penalties because rigid
+Critical Technologies                                                   materials cannot be folded up to transport, which
+                                                                        significantly increases the amount of volume required
+Intelligent Flexible Material Fabric—If the InFLEX fabric
+                                                                        within the payload.
+cannot be used in the inflatable lunar habitat, there will be a
+substantial mass penalty because the InFLEX fabric                      Lightweight External Inflatable Airlock (LEIA)—There are
+incorporates many of the required protections against the               two ways to consider the mass and volume penalties for the
+lunar environment. If an alternative inflatable fabric                  multichambered inflatable airlock. First, if the number of
+consisting of only the structural layer is used, additional             chambers within the airlock were decreased, there would be
+mass and volume will be required to transport the thermal               no mass or volume penalty; this would actually save mass
+control, MMOD and radiation protection to the lunar                     and volume. However, similar to the habitat health
+surface. Additionally, if the ability to have an inflatable             accelerometers, failure to incorporate this technology could
+structure is lost, the habitat would have to become a rigid             be catastrophic due to the increased risk of potentially toxic
+structure, which will require a significant redesign of the             lunar dust inhalation. Second, failure to make the airlock
+habitat and could substantially increase the mass and reduce            inflatable would have mild to substantial mass and volume
+the volume.                                                             penalties as the airlock would require at least some portions
+                                                                        to be rigid.
+Habitat Health Accelerometers—Since habitat health
+monitoring accelerometers are being used on the ISS, there              Enhancing Technologies
+is a low risk that they will not be incorporated within the
+inflatable fabric used for the lunar habitat. Nonetheless,              Trusselator—If the trusselator cannot be transported to the
+mass and volume penalties are both minimal, but the                     Moon, there could be both mild mass and volume penalties.
+exclusion of these sensors could be catastrophic if an                  Not using trusselator generated floor joists would require
+alternative technology is not used [39]. The mass and                   floor joists to be included in the habitat’s payload; however,
+volume penalties are minimal for similar reasons; sensors               there exist lightweight, strong materials alternatives, such as
+themselves have minimal mass and volume, so their                       aluminum, that could be fabricated into floor joists. The
+exclusion in the payload will not significantly change the              volume penalty would also be mild because the floor joists,
+available mass or volume. An alternative to these sensors is            consisting of rectangular prisms, can be tailored to fit the
+weaving BNNT fabric into the inflatable layer scheme                    payload vehicle.
+because BNNT is piezoelectric, meaning that it would
+release a charge when penetrated, which could then be                   Electron Beam Gun—Although the electron beam gun and
+tracked with complimentary software [41]. BNNT are                      trusselator are technologies being used to construct the
+extremely light, and would therefore not significantly                  floor, the mass and volume penalties for not implementing
+impact the payload mass or volume.                                      the electron beam gun are both substantial. Again, it is
+                                                                        planned to repurpose elements of the descent modules,
+Deployable Friction Barrier—If the deployable friction                  meaning that no mass or volume in the initial payload is
+barrier does not have the TRL required for space travel, the            dedicated toward transporting the floor. Floorboards are
+mass penalty ranges from minimal to substantial. Many                   similar to the floor joists in that the floorboards can be
+alternative friction barriers exist, or there could simply be           constructed to fit inside of a specific payload, but the
+no friction barrier in the habitat design; however, this poses          floorboards require a substantially greater amount of
+a threat for the habitat to become significantly damaged                material in terms of thickness, width, and height, yielding a
+during deployment. Another option would be to include an                greater mass and volume penalty than the trusselator.
+exterior layer on the inflatable fabric to specifically mitigate
+lunar dust abrasion, which would cause a mild mass penalty.             Lunar Dust Ceramic Coatings—The impact on mass and
+Alternatively, the habitat could be equipped with a rigid               volume of not integrating ceramic coatings ranges from
+platform that extends for inflatable portions to inflate onto.          negligible to substantial depending on related technologies
+However, this option introduces a substantial mass penalty              and other materials considerations. If the multi-chambered
+and uncertainties to the habitat, such as the mechanical                airlock is deemed suitable for prevention of lunar dust
+system and connections to the habitat. These three                      habitat infiltration, the ceramic coating on the floor could be
+
+                                                                   10
+unnecessary, at least with respect to protection from lunar           resistance or redundancies for lunar dust removal. A nuclear
+dust-instigated wear. If floor and connection protections are         reactor will be able to provide constant, reliable power to
+desired, but the ceramic coating technology is not space              the habitat compared to alternative options such as solar
+qualified yet, the only alternative would be to provide a             arrays. Additionally, through ISRU more mass can be saved
+floor and connection protective cover that would also have            by using descent modules already on the lunar surface to
+to be inert and abrasion resistant. This coating could be             construct basic furniture, floorboards, and floor joists. Once
+relatively heavy and require a larger payload volume than             NASA is ready to begin building a community on the lunar
+the ceramic coating, potentially yielding substantial                 surface, Cassegrain reflectors, ASSEMBLERS, and robot
+penalties for both mass and volume.                                   swarms can be used to help build and maintain them.
+                                                                      Nonetheless, there are many more gaps that must be
+Re-Purposable Composites—If re-purposable composites                  addressed before 2028 and the foundation surface habitat
+are not available for ISRU on the lunar surface the volume            reaches the lunar surface; these gaps include, but are not
+penalty would be substantial. The mass penalty could range            limited to, hardware, fluid ventilation and pumping, power
+from mild to substantial based on the amount of furniture             connections, life-style needs, and extra radiation protection.
+chosen for the mission. The furniture could purposely be
+made out of a lighter material, but nonetheless, there would
+be a substantial volume penalty, even if the furniture could
+be efficiently stowed for launch, simply due to the amount                                  REFERENCES
+of furniture that would be needed.
+                                                                      [1] “NASA’s Lunar Exploration Program Overview,”
+Kilopower Reactor Using Stirling Technology—Although it                      NASA,      15-Sep-2020.      [Online].      Available:
+is not planned for KRUSTY to be sent up with the habitat, if                 https://www.nasa.gov/sites/default/files/atoms/files/a
+KRUSTY is not space qualified by the time that it would                      rtemis_plan-20200921.pdf.     [Accessed:      08-Oct-
+need to be sent to the Moon, mass penalties would range                      2020].
+from minimal to substantial. Alternatives to KRUSTY
+would be another power source that does not require                   [2] H. Benaroya, “Lunar habitats: A brief overview of
+integration with the habitat, or a source that would require                 issues and concepts,” Reach, vol. 7-8, pp. 14–33,
+connection to the habitat and batteries. If the power source                 2017.
+was installed before the habitat arrives, there would be no
+mass penalty. However, there would be a substantial                   [3] D. Litteken, D. Calderon, C. Gaytan, M. O'Donnell, K.
+penalty if the power source must be transported with the                     Shariff, and M. Sico, “Design of a Microgravity
+habitat. A similar argument can be made for volume                           Hybrid Inflatable Airlock,” NTRS NASA, Mar. 2020.
+penalties.
+                                                                      [4] J. Hinkle, A. Dixit, J. Lin, K. Whitley, J. Watson, and G.
+Transformational Technologies                                                 Valle, “Design Development and Testing for an
+As mentioned, all of the transformational technologies are                    Expandable Lunar Habitat,” AIAA SPACE 2008
+not required for an initial sustainable lunar habitat; rather,                Conference & Exposition, Spetember 9-11, 2008,
+they are technologies that can improve the living qualities of                San Diego, CA.
+the Moon once a secure lunar presence is made. Therefore,
+there exist no penalties if these technologies are not at TRL         [5] K. J. Kennedy and S. D. Capps, “Designing Space
+8 by the time an inflatable lunar habitat is launched.                      Habitation,” AIAA SPACE 2000 Conference &
+                                                                            Exposition, September 19-21, 2000, Long Beach,
+                    6. CONCLUSIONS                                          CA.
+
+Both a concept design for an inflatable lunar habitat and a           [6] D. Cadogan, C. Scheir, A. Dixit, J. Ware, J. Ferl, E.
+gap analysis of developing-applicable LaRC technologies                      Cooper, and P. Kopf, “Intelligent Flexible Materials
+were produced. The habitat was able to incorporate 13                        for Deployable Space Structures (InFlex),” SAE
+technologies to address current lunar environment                            Technical Paper Series, 2006.
+protection needs, habitat requirements put in place by
+NASA, and the structural requirements needed for a                    [7] D. Eberhard Grun, Mihaly Horanyi, Zoltan Sternovsky,
+sustainable lunar habitat. Through utilizing InFLEX fabric                   “The Lunar Dust Environment.” Planetary and Space
+and habitat health accelerometers, the habitat provides                      Science, 2011, 59, 1672-1680.
+thermal and atmospheric control as well as MMOD and
+radiation protection, while monitoring the status of the              [8] Inflatable technology: using flexible materials to make
+habitat itself. The InFLEX material coupled with BNNT guy                   large structures," Proc. SPIE 10966, Electroactive
+lines provide the structural integrity of the habitat.                      Polymer Actuators and Devices (EAPAD) XXI,
+Deployable friction barriers, ceramic coatings, and a multi-                1096603 (13 March 2019)
+chambered airlock mitigate the effects of lunar dust on both
+the structure and the human health, through either abrasion
+                                                                 11
+[9] Kriss J. Kennedy, “Lessons from TransHab: An                           of 2020 NASA Moon-Landing Deal,” Space.com,
+     Architect’s Experience.” AIAA Space Architecture                      30-Jul-2019.          [Online].          Available:
+     Symposium, October 10-11, 2002, Houston, Texas,                       https://www.space.com/nasa-drops-orbit-beyond-
+     6105.                                                                 moon-landing-contract.html. [Accessed: 05-Aug-
+                                                                           2020].
+[10] Y. Kim, C. Choi, K. Kumar, C. Kim, “Hypervelocity
+      impact on flexible curable composites and pure                [20] “ASTROBOTIC,” Astrobotic. [Online]. Available:
+      fabric layer bumpers for inflatable space structures.”              https://www.astrobotic.com/. [Accessed: 22-Jun-
+      Composite Structures, 2017, 176, 1061-1072.                         2020].
+
+[11] D. Cadogan and C. Scheir, “Expandable Habitat                  [21] “Blue Moon,” Blue Origin. [Online]. Available: https://
+      Technology Demonstration for Lunar and Antarctic                     www.blueorigin.com/blue-moon/. [Accessed: 22-
+      Applications,” SAE Technical Paper Series, 2008.                     Jun-2020].
+
+[12] G. Daines, “Commercial Lunar Payload Services,”                [22] “Rovers,” Mars And Moon. [Online]. Available: https://
+      NASA,     14-Mar-2019.       [Online].   Available:                  www.ceresrobotics.com/rovers. [Accessed: 22-Jun-
+      https://www.nasa.gov/content/commercial-lunar-                       2020].
+      payload-services. [Accessed: 22-Jun-2020].
+                                                                    [23] “Commercial Lunar Payload Services,” Deep Space
+[13] T. Malik, “Jeff Bezos Unveils Blue Origin's Dream                    Systems.           [Online].            Available:
+      Team to Land NASA Astronauts on the Moon,”                          https://www.deepspacesystems.com/clps. [Accessed:
+      Space.com, 22-Oct-2019. [Online]. Available:                        22-Jun-2020].
+      https://www.space.com/jeff-bezos-blue-origin-
+      artemis-moon-lander-team.html. [Accessed: 22-Jul-             [24] “Commercial Lunar Payload Services (CLPS),”
+      2020].                                                              Draper.             [Online].            Available:
+                                                                          https://www.draper.com/business-areas/space/clps.
+[14] J. Lin, C. Knoll, J. Hinkle, B. Bishop, B. Murach, L.                [Accessed: 22-Jun-2020].
+       Bell, O. Bannova, and H. Everett, “Lunar Surface
+       Systems Concept Study: Minimum Functionality                 [25] LordFirefly, “Genesis,” Firefly Aerospace. [Online].
+       Habitation Element,” AIAA SPACE 2009 Conference                    Available: https://firefly.com/genesis/. [Accessed:
+       & Exposition, September 14-17, 2009, Pasadena,                     22-Jun-2020].
+       California.
+                                                                    [26] “Nova-C,” Intuitive Machines. [Online]. Available:
+[15]   C. Warner, “NASA Outlines Lunar Surface                            https://www.intuitivemachines.com/lunarlander.
+       Sustainability Concept,” NASA, 25-Mar-2020.                        [Accessed: 22-Jun-2020].
+       [Online].                                 Available:
+       https://www.nasa.gov/feature/nasa-outlines-lunar-            [27] “McCandles Lunar Lander,” Lockheed Martin.
+       surface-sustainability-concept. [Accessed: 07-Jul-                [Online].                               Available:
+       2020].                                                            https://www.lockheedmartin.com/en-us/products/mc
+                                                                         candless-lunar-lander.html.  [Accessed:   22-Jun-
+[16]   “Lunar Terrain Vehicle (LTV) Request for                          2020].
+       Information,” beta.SAM.gov, 2020. [Online].
+       Available:                                                   [28] “XL-1,” Masten Space Systems. [Online]. Available:
+       https://beta.sam.gov/opp/46cd587dcba34a8e96792f2                   https://www.masten.aero/xl1. [Accessed: 22-Jun-
+       6d3c7a8d8/view. [Accessed: 25-Jun-2020].                           2020].
+
+[17] D. Hill, “Winners of NASA's 2020 RASC-AL                       [29]   “REDEFINE POSSIBLE,” Moon Express Inc.
+      Competition,” NASA, 18-Jun-2020. [Online].                           [Online].   Available:   https://moonexpress.com/.
+      Available:    https://www.nasa.gov/feature/students-                 [Accessed: 22-Jun-2020].
+      develop-innovative-lunar-exploration-concepts-in-
+      nasas-artemis-competition/. [Accessed: 25-Jun-                [30] “Space Exploration: Gateway, Moon & Mars: Sierra
+      2020].                                                               Nevada Corporation,” SNC. [Online]. Available:
+                                                                           https://www.sncorp.com/what-we-do/space-
+[18] R. Chen, “VIPER,” NASA, 09-Jan-2020. [Online].                        exploration-gateway-moon-mars/. [Accessed: 22-
+      Available: https://www.nasa.gov/viper. [Accessed:                    Jun-2020].
+      25-Jun-2020].
+                                                                    [31] B. Dunbar, “Starship User’s Guide,” SpaceX, 01-Mar-
+[19] M. Wall, “Private Company Orbit Beyond Drops Out                      2020. [Online]. Available: https://www.spacex.com/
+                                                               12
+      media/starship_users_guide_v1.pdf. [Accessed: 08-                   Research Center.
+      Oct-2020].
+                                                                   [43] R. Hafley et al., “Electron Beam Freeform Fabrication
+[32] B. Dunbar, “Tyvak Nano-Satellite Systems Lander                      in the Space Environment,” 45th AIAA AeroSpace
+      Concept,” NASA, 18-Nov-2019. [Online]. Available:                   Science Meeting, January 8-11, 2007, Reno, Nevada,
+      https://www.nasa.gov/image-feature/tyvak-nano-                      5152.
+      satellite-systems-lander-concept. [Accessed: 22-Jun-
+      2020].                                                       [44] S. Gupta and M. Dey, “Novel MAB Phase-based
+                                                                         Nanolaminates       Suit     High      Performance
+[33] H. Weitering, “NASA has a plan for yearly Artemis                   Applications,” Adv. Mater. Processes. 2019, 177 (2),
+      moon flights through 2030. The first one could fly in              22-26.
+      2021.,”    Space.com,     12-Feb-2020.     [Online].
+      Available:      https://www.space.com/nasa-artemis-          [45] M. A. Gibson, D. I. Poston, P. Mcclure, T. Godfroy, J.
+      moon-landing-timeline-2021-budget.html.                            Sanzi, and M. H. Briggs, “The Kilopower Reactor
+      [Accessed: 23-Jul-2020].                                           Using Stirling TechnologY (KRUSTY) Nuclear
+                                                                         Ground Test Results and Lessons Learned,” 2018
+ [34] M. Garcia, “International Space Station Facts and                  International Energy Conversion Engineering
+      Figures,” NASA, 28-Apr-2016. [Online]. Available:                  Conference, July 9-11, Cincinnati, Ohio, 2018.
+      https://www.nasa.gov/feature/facts-and-figures.
+      [Accessed: 10-Jul-2020].                                     [46] A. Colozza, et al. “Cassegrain Solar Concentrator
+                                                                         System for ISRU Material Processing.” 50 th AIAA
+ [35] Internal discussion with E. Siochi, NASA Langley                   Aerospace Sciences Meeting, January 9-12, 2012,
+       Research Center.                                                  Nashville, Tennessee, 4046.
+
+[36] B. Dunbar, “Technology Readiness Level,” NASA, 06-            [47]   J. Cooper, et al. “Assemblers: A Modular,
+      May-2015.            [Online].            Available:                Reconfigurable Manipulator for Autonomous in-
+      https://www.nasa.gov/directorates/heo/scan/engineeri                Space Assembly,” AIAA Ascend, November 16-18,
+      ng/technology/txt_accordion1.html. [Accessed: 22-                   2020, Virtual, 4132.
+      Jul-2020].
+                                                                   [48] J. Thangavelautham. “Autonomous Robot Swarms for
+[37] Internal discussion with E. Madaras, NASA Langley                    Off-World Construction and Resource Mining,”
+       Research Center.                                                   AIAA Scitech 2020 Forum, January 6-10, 2020,
+                                                                          Orlando, FL, 0795.
+[38] Jin Ho Kang, Keith L. Gordon, Robert G. Bryant, W.
+       Keats Wilkie, Sheila A. Thibeault, Jeffrey A.
+       Hinkley, Juan Fernandez, Charlotte Brandenburg,
+       Evin Hill, Nina Arcot, and Ray Peterson,
+       “Viscoelastic characteristics of polymers for
+       deployable composite booms,” paper submitted to
+       special issue of Advances in Space Research at the
+       5th ISSS (International Symposium on Solar Sailing)
+       February 2020.
+
+[39] “Lightweight, Ultra-Strong Nanotubes to Transform
+      Industry,” Nasa.gov, 27-May-2016            [Online].
+      Available:
+      https://spinoff.nasa.gov/Spinoff2016/t_3.html
+      [Accessed 05-Oct-2020].
+
+[40] D. Marincel et al., “Scalable Purification of Boron
+      Nitride Nanotubes via Wet Thermal Etching.” Chem.
+      Mater. 2019, 31, 1520-1527.
+
+[41] S. Thibeault et al., “Nanomaterials for Radiation
+      Shielding.” MRS Bulletin, 2015, 40, 836-841.[42]
+      Internal discussion.
+
+[42] Internal discussion with B. Grimsley, NASA Langley
+                                                              13
+

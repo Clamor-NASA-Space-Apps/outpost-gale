@@ -1,0 +1,593 @@
+    NASA’s Habitat Demonstration Unit (HDU) Pressurized
+     Excursion Module (PEM) In-Field Demonstration at
+                     Desert RATS 2010
+                                Terry O. Tri 1, Kriss J. Kennedy 2, and Larry Toups 3
+                               NASA – Johnson Space Center, Houston, Texas 77058
+
+                                                Tracy R. Gill 4
+                                NASA – Kennedy Space Center, KSC, Florida 32899
+
+                                                         and
+
+                                                  A. Scott Howe 5
+                         NASA – Jet Propulsion Laboratory, Pasadena, California 91109
+
+
+                                                      Abstract
+              This paper describes the construction, assembly, subsystem integration, transportation, and
+         field testing operations associated with the Habitat Demonstration Unit (HDU) Pressurized
+         Excursion Module (PEM) and discusses lessons learned. In a one-year period beginning summer
+         2009, a tightly scheduled design-develop-build process was utilized by a small NASA “tiger
+         team” to produce the functional HDU-PEM prototype in time to participate in the 2010 Desert
+         Research and Technology Studies (Desert RATS) field campaign. The process required the
+         coordination of multiple teams, subcontractors, facility management and safety staff. It also
+         required a well-choreographed material handling and transportation process to deliver the finished
+         product from the NASA-Johnson Space Center facilities to the remote Arizona desert locations of
+         the field test. Significant findings of this paper include the team’s greater understanding of the
+         HDU-PEM’s many integration issues and the in-field training the team acquired which will enable
+         the implementation of the next-generation of improvements and development of high-fidelity field
+         operations in a harsh environment. The Desert RATS analog environment is being promoted by
+         NASA as an efficient means to design, build, and integrate multiple technologies in a mission
+         architecture context, with the eventual goal of evolving the technologies into robust flight
+         hardware systems. The HDU-PEM in-field demonstration at Desert RATS 2010 provided a
+         validation process for the integration team, which has already begun to retool for the 2011 field
+         tests that require an adapted architecture.
+
+                                                  I. Background
+
+T   HE Habitat Demonstration Unit (HDU) Project was conceived in the spring of 2009 as a means to develop
+    medium-fidelity, functional habitat modules via a rapid-prototyping process for the purpose of supporting
+planetary surface and deep space analog testing scenarios. It was envisioned that these habitat modules could be
+used to assess not only habitability aspects of future space exploration habitats but operational aspects as well. The
+first architectural configuration chosen to be represented by the HDU Project was the Pressurized Excursion Module
+(PEM), which was one of the habitable elements of NASA’s Lunar Architecture Team (LAT) scenario known as
+LAT 12.11 (see Fig. 1). The PEM had been conceived by the LAT as a 5-meter diameter vertical axis cylinder with
+docking hatches and a deployable airlock (see Fig. 2). Driven by these basic requirements, the conceptual design for
+
+1
+  Engineer, Systems Architecture and Integration Office, Mail Code EA3
+2
+  Architect, Systems Architecture and Integration Office, Mail Code EA3
+3
+  Architect, Exploration Missions and Systems Office, Mail Code ZS
+4
+  Engineer, Lunar Systems Division, Mail Code LX-M
+5
+  Architect, Mission Systems concepts, Mail Code 312E
+                                                          1
+                                American Institute of Aeronautics and Astronautics
+the HDU Project’s first-generation shell consisted of a 5-meter diameter vertical axis cylinder with a domed top and
+bottom constructed of eight wedge sections. The shell had four rectangular hatches spaced at 90 degree intervals
+along the cylindrical outer wall of the shell (corresponding to the LAT 12.1 architectural concept for the Pressurized
+Core Module) and a circular hatch at the center of the upper dome for access to a future upper deck loft. Flooring
+was included in the design both inside the shell and on top of it, forming an upper deck for the anticipated loft
+addition. The entire HDU shell sat on a square support cradle which had four leveling legs and associated foot pads.
+An attached Airlock module was included in the conceptual design.
+
+
+
+
+            Figure 1. Artist’s concept of LAT 12.1 mission architecture.
+
+
+
+
+          Figure 2. Plan view of HDU-PEM with attached Airlock module.
+                                                        2
+                                American Institute of Aeronautics and Astronautics
+                                      II. Construction and Assembly
+     The eight sections of the HDU shell, which were constructed by a team at NASA’s Langley Research Center
+(LaRC), each consisted of a pair of steel ribs molded into a shell of resin impregnated fiberglass. The eight sections
+were shipped to JSC via flatbed truck in two separate shipments of four sections each—the first in December of
+2009 and the second in January of 2010. The first four segments—each approximately 45 degree wedges—were
+joined together upon their
+arrival at JSC to assess the
+general alignment of the
+multi-segment        assembly
+(see Fig. 3).            Upon
+measurement         of      the
+resulting assembly, it was
+decided to construct one of
+the remaining four segments
+in two separate halves, with
+an overlapping joint. This
+joint    could absorb any
+angular variances in the
+final         wedged-shaped
+opening that might result
+from                   additive
+manufacturing       variances.
+The cradle was then
+assembled in place around
+the shell and attached to it.
+Inside,       the         floor
+                                 Figure 3. HDU shell buildup with four wedge segments (photo by author,
+substructure was installed,
+                                 2010).
+and the floor panels were
+laid in place. Similarly, the upper deck flooring substructure and floor panels were also installed. Finally, doors
+were installed in each of the hatchways. In addition to the HDU assembly activities, the acquisition of an airlock
+was also critical to the development of the PEM configuration. After weighing several options and driven primarily
+by budget concerns, the HDU Team chose to re-use a large polyethylene tank which had previously been used as a
+simple airlock mockup as part of a previous Desert RATS field test. At this point, the basic HDU shell and Airlock
+were complete and ready for subsystem installation and integration.
+
+
+                                        III. Subsystem Integration
+     Prior to assembly of the shell, a significant effort had been undertaken to define the various infrastructure
+subsystems, workstations, and test articles which would be integrated into the HDU shell to configure it as the
+PEM2. From February 2010 through mid-July 2010, all of this hardware was installed, integrated together, and
+checked out—taking about six weeks longer than originally planned. Part of this delay was caused by the
+application of the foam insulation to the exterior surfaces of the HDU shell and the Airlock, which prevented all
+work inside either of the two subelements from occurring for almost three weeks, due to safety and contamination
+concerns associated with the insulating process. Additionally, one of the most critical integrating subsystems—the
+avionics subsystem—was suffering significant delays in finalizing the buildup of its two main avionics “boxes.” By
+the time the decision was made to move the HDU from its assembly facility in JSC’s Building 220 to the JSC Rock
+Yard facility in preparations for integrated dry run testing, not all subsystem integration activities had yet been
+completed.
+
+                                            IV. Dry Run Testing
+    The dry run testing scheduled for the Rock Yard was planned for one week in July and one week in August
+2010 (see Fig. 4). The purpose of the dry runs was to evaluate the “field readiness” of the elements which were
+                                                       3
+                               American Institute of Aeronautics and Astronautics
+  Figure 4. HDU-PEM participating in dry run evaluations at the JSC Rock Yard facility (photo by
+  author, 2010).
+participating in the Desert RATS 2010 field campaign to be conducted over a twenty-six day period from late
+August through mid-September 2010. The dry runs were also a chance to test various elements and systems in an
+integrated fashion and to give the crews a chance to familiarize themselves with the operations of the hardware and
+software systems. For the HDU, one of the crucial operations to be evaluated during the dry run period were the
+loading and unloading operations associated with the HDU, the Airlock, and all of the ancillary field support
+equipment. Due to the size and weight of the HDU (over 5 meters in diameter and nearly 12,000 kilograms), a large
+crane was required to load the HDU with its cradle onto a flatbed trailer at the Building 220 facility and, in turn,
+unload it at the Rock Yard facility. Fortunately, most of the other ancillary equipment could be loaded onto a
+separate flat bed truck using only a forklift. After the HDU and Airlock were transported to the Rock Yard, the two
+were placed onto the simulated terrain, positioned, leveled, and joined together. Once the HDU, Airlock, and all
+supporting equipment were configured, a portable diesel generator was interfaced to the HDU power subsystem and
+to the HDU heat pump, providing both power and cooling to the interior of the HDU and Airlock. This was
+important, due to the fact that several integration items were still unfinished inside the HDU, and it was late July in
+the hot Houston, Texas, climate. Also integrated with the HDU avionics and communications subsystems was the
+HDU Command Bus, a reconfigured recreational vehicle formerly used by the U. S. Secret Service as a mobile
+command post. The Command Bus now served as a portable mission control center for the HDU, housing control
+and monitoring consoles for key subsystem support personnel. Despite the ongoing testing of its subsystems, the
+HDU was able to support integrated element testing in the Rock Yard with the two rovers, which repeatedly
+performed docking and undocking maneuvers with the HDU hatch interfaces—both with and without the Active-
+Active Mating Adapter (AAMA). Upon successful completion of the Rock Yard dry run testing, the HDU, Airlock,
+and supporting field equipment were deemed ready for shipment to the analog field test site.
+
+
+
+                                                         4
+                                 American Institute of Aeronautics and Astronautics
+                                              V. Transportation
+     The HDU—when loaded onto a flat bed trailer—extends well over a meter on either side of the trailer, thus it is
+classified as a “super wide-load” for transportation across the U. S. highway system (see Fig. 5). Due to various
+state-to-state travel restrictions on super wide-loads, the HDU’s journey from JSC to the test site in the desert north
+of Flagstaff, Arizona, takes approximately a week to complete. However, a standard width load, such as the trailer
+                                                                                     used to ship the ancillary
+                                                                                     equipment, can make the same
+                                                                                     trip in less than forty-eight
+                                                                                     hours. All in all, there were
+                                                                                     three vehicles involved in
+                                                                                     transporting HDU assets to the
+                                                                                     D-RATS test site—two flat
+                                                                                     bed tractor-trailers and the
+                                                                                     Command Bus.            The first
+                                                                                     vehicle to depart from JSC was
+                                                                                     the super wide-load tractor-
+                                                                                     trailer, which carried the HDU,
+                                                                                     the Airlock, and the heat
+                                                                                     pump. All three payloads were
+                                                                                     securely chained to the trailer,
+                                                                                     and the HDU and Airlock were
+                                                                                     additionally tarped to protect
+
+                                                                                  them from the elements and
+  Figure 5. The HDU-PEM, classified as a super wide-load payload, arrives
+                                                                                  road debris during the week-
+  by tractor-trailer at SP Mountain, Arizona (photo by author, 2010).
+                                                                                  long trip. Second to depart
+                                                                                  was the Command Bus, which
+                                                                                  was loaded with equipment
+and supplies for the field test operations and which was driven by two of the HDU field team members. Last to
+leave—a week later than the first vehicle—was the standard width tractor-trailer, which carried a small shipping
+container filled with equipment and supplies, the Airlock porch and ramp, a staircase, and two crated power
+subsystem modules. On the same day the last vehicle departed from JSC, several advance HDU field team members
+departed from their respective NASA Centers to rendezvous in Arizona.
+
+                                         VI. Field Test Operations
+     The culmination of all of the HDU Project’s efforts thus far in its relatively short existence was to be the field
+test operations of the unit at the Desert RATS 2010 field campaign in the Gray Mountain area approximately forty-
+five minutes north of Flagstaff, Arizona. The first HDU team members arrived at the test site on August 23, 2010,
+and some of them would not be leaving Arizona until after the last day of the field campaign—September 18,
+2010—as the trucks departed the test site with all of the HDU assets loaded aboard.
+
+A. Desert RATS Background
+     The Desert RATS field test activities have been conducted in various desert locales in the western U. S. for well
+over a decade. These efforts began humbly as evaluations of space suit mobility systems and gradually grew to
+support such areas as robotics, unpressurized rovers, pressurized rovers, integrated communications systems, and
+finally habitat elements. The field team size, which started as a handful of researchers, had grown by the 2010 field
+campaign to nearly 200 individuals over the course of the three and a half week campaign. Over the past several
+seasons, the Black Point Lava Flow (BPLF) area near Gray Mountain had become popular because of the abundant
+presence of interesting geological features with which test crews could conduct actual geological field science
+operations which were representative of those which would be conducted by future planetary explorers.
+
+B.   PEM Testing Objectives
+    The primary testing objectives for the PEM configuration of the HDU were categorized into three major
+categories—architectural objectives, hardware objectives, and operational objectives. These objectives flowed
+down from higher level Desert RATS field campaign objectives, primarily the objective to assess the LAT 12.1
+                                                         5
+                                 American Institute of Aeronautics and Astronautics
+architecture involving the PEM with two rovers on an expeditionary traverse. In turn, lower level objectives relating
+to the PEM’s workstations, test articles, and infrastructure subsystems flowed down from the PEM’s primary testing
+objectives. The primary testing objectives are listed in Table I. Likely the most important of these objectives were
+the collection of the PEM’s general habitability and human factors data, which was primarily gathered from video
+analysis, support crew observations, and test crew surveys.
+
+      Table I. Top-Level Objectives.
+
+      Architctural Objective:       Validate the use of the PEM as described in the LAT 12.1 architecture
+
+
+                                    Evaluate the use of the PEM geosciences laboratory in conjuction with
+      Hardware Objectives:
+                                    sample collection by the rover crews
+
+                                    Evaluate the use of the EVA maintenance area in the PEM
+
+                                    Perform a "shake-down" assessment of the integrity of the HDU after the
+                                    long-haul transportation of the unit to the field site
+
+                                    Evaluate logistics and waste management in conjunction with dual rover
+      Operational Objectives:
+                                    operations
+
+                                    Evaluate the PEM human factors associated with a crew of four while
+                                    docked to the rovers
+
+                                    Evaluate the effectiveness of dust mitigation procedures
+
+                                    Determine the PEM power duty cycle profile
+
+
+C. Timetable
+    The timetable of PEM activities at Desert RATS 2010 closely matched that of the overall integrated timeline
+involving all of the field elements. Figure 6 shows a comparison of the PEM activities with the integrated timeline.
+
+
+
+
+  Figure 6. The top-level timeline of activities at the Desert RATS 2010 field campaign.
+                                                        6
+                                American Institute of Aeronautics and Astronautics
+Both timelines include the field team and hardware shipment arrival, hardware setup, system checkout, and dry run
+activities which preceded the two-week testing period. Also, both timelines include the media and VIP day, student
+day, camp tear-down activities, hardware shipment departure, and field team departure. Additionally both include a
+dedicated day off both pre- and post-testing period. Where the two timelined diverge is primarily in the two-week
+testing period. Whereas the two rovers and other assets were actively involved in the integrated two-week test, the
+PEM was only involved at discrete times. As originally planned, the two-week test simulated a traverse from a lunar
+outpost to a geological site of interest and return, with the rovers conducting geological studies along the way. This
+translated to seven days outbound and seven days inbound. At day six outbound and at day thirteen inbound, the
+two rovers were to each dock with the PEM, and the crew was to spend the following day working inside the PEM
+at the discrete workstations, providing input to the PEM team on the various operations they were performing.
+Thus, only two of the fourteen integrated test days involved the PEM; the remaining days were available for
+independent PEM testing and for translation of the PEM from the SP Mountain site to Base Camp at the Black Point
+Lava Flow site.
+
+D. Deployment
+     The initial site for placement of the PEM was near SP
+Mountain, which is located approximately twenty kilometers from
+Base Camp. The two tractor-trailers were positioned near the
+predetermined spot for the PEM to be placed, which had been
+previously selected and marked by an advance team in late April
+of 2010. A large crane unloaded all of the assets from the trailers
+and placed them according to the site plan (see Fig. 7). Other
+assets were delivered and placed by local companies; these
+included portable toilets and a hand wash station, a diesel
+generator, a diesel fuel tank, and a portable office constructed
+from a shipping container. This last asset was required because
+the Command Bus had developed mechanical problems during its
+journey, and a substitute portable mission control center was
+needed from which to base the operation at the SP Mountain site.
+The PEM and its heat pump were connected to generator power,
+as was the portable office. All systems were activated and run
+through a series of checks. It was at this point that a problem was
+discovered with the heat pump—a critical item for conducting the
+testing operations in the PEM. En route, the main refrigerant
+manifold in the heat pump had become damaged, and after
+extensive assessment was deemed to be unrepairable.
+Fortunately, a suitable portable air conditioning cart was found at
+Base Camp which was being used to cool a large portable office.
+After discussions were held among the affected Desert RATS
+teams, it was decided that the portable air conditioning cart would
+be transported to the SP Mountain site for integration with the         Figure 7. Unloading the PEM (photo by
+PEM and that a standard room air conditioner would be purchased         author, 2010).
+locally to provide cooling to the large portable office at Base
+Camp.
+
+E.   Independent Test Operations
+     Once all of the assets were made ready to support testing, the independent test operations could begin. Eleven
+days of the fourteen-day test period were available for independent testing operations. The main objective of the
+independent testing was to gain experience with the four main PEM workstations—the GeoLab, the Suit
+Maintenance Workstation, the General Maintenance Workstation, and the Medical Operations Workstation. This
+experience was to be gained by running various exercises within the PEM with volunteer crewmembers at each of
+the workstations during the independent testing days. Because of the previous delays associated with integrating all
+of the subsystems and conducting adequate performance testing during the summer, very little time had been
+available to gain experience on the workstations prior to going to the field. As a result, there were significant start-
+up challenges early on with the independent testing activities. Nonetheless, after diligent efforts by the HDU
+                                                         7
+                                 American Institute of Aeronautics and Astronautics
+habitability and human factors team members, these testing procedures were smoothed out, and soon usable data
+began to be collected on the individual and joint testing of the workstations in the PEM3. In addition to the
+evaluations of the four workstations, the test articles were also evaluated during the independent test days. Cursory
+dust mitigation experiments were conducted using electrostatic dust shield and lotus coating technologies.
+Additionally, the HDU Impact Monitoring System (HIMS) was evaluated by firing pellets at discrete, instrumented
+regions of the PEM outer shell, simulating micrometeoroid strikes for the purposes of determining the precise
+locations of the strikes on the PEM’s outer hull.
+
+F.   Integrated Test Operation
+     The PEM integrated test operations were conducted similarly to the PEM independent test operations, with the
+exceptions that the test operations were run more like missions from the MMCC by actual JSC Missions Operations
+Directorate personnel and that the crews were composed of the integrated crewmembers who spent most of their
+seven day missions inside the rovers or performing simulated EVAs. The first scheduled integrated test day was
+Day 7. The two rover crews of two each had docked previously with the PEM on Day 6 and had spent the night
+sleeping in their respective rovers (see Fig. 8). During Day 7, the crew was devoted to performing operations within
+
+
+
+
+     Figure 8. HDU-PEM with dual rover docking at SP Mountain, Arizona (NASA photo, 2010).
+
+the PEM that would help to assess functionality of the four workstations, similar to the evaluations made by the
+volunteer crews during the independent testing operations (see Fig. 9) The crews rotated from workstation to
+workstation throughout the day, each receiving a chance to interact with each workstation by performing a
+representative activity. Since the PEM is primarily a work area and has no galley or hygiene facilities, the
+crewmembers ate their breakfast and lunch in their respective rovers and performed hygiene functions in the rovers
+as well. After Day 7, the first set of rover crews were to be changed out with the second set of rover crews for the
+traverse back to Base Camp on Days 8 through 13, with Day 14 to be the “PEM Day.” However, these plans
+changed slightly when inclement weather rolled through on Day 8, negating rover operations. It was at this point
+that the Desert RATS Mission Management Team decided to keep the rovers docked to the PEM and have the new
+set of crewmembers perform a half-day of PEM activities on Day 8, traverse back to Base Camp on Days 9 through
+14, and perform a final half-day of PEM activities on the afternoon of Day 14.
+
+
+
+
+                                                        8
+                                American Institute of Aeronautics and Astronautics
+  Figure 9. Crewmembers performing tasks at workstations in the HDU-PEM (NASA photo, 2010).
+
+
+G. Moving the HDU-PEM
+     Due to the fact that the HDU-PEM was required for rendezvous with the rovers at both the SP Mountain
+destination of the rover traverse and at the return to the Base Camp “lunar outpost,” it needed to be moved at
+sometime between Day 9 and Day 13. Day 10 was selected as the HDU PEM moving day. On Day 9, the second
+half of the day was spent disassembling the field camp at the SP Mountain site and packing up all equipment and
+supplies. On the morning of Day 10, two flat-bed tractor-trailers and the large crane used previously for unloading
+arrived at the field camp site. The crane, aided by a rented forklift, loaded all NASA assets aboard the two trucks,
+and then left the site en route to the unloading site. The two tractor-trailers then drove the short distance up the road
+to the Black Point Lava Flow Base Camp where the awaiting crane unloaded all the NASA assets a short distance
+south of the main Base Camp tent. In parallel, the rented toilets, handwash stations, portable office, and generator
+were moved to Base Camp by their respective rental companies. Coincidentally, the Command Bus had finally been
+repaired and had arrived the night before, now joining the rest of the HDU Team’s field assets.
+
+H. Post-Test Activities
+     After completion of the two-week test period, the HDU field team enjoyed a day off, and then supported two
+days of outreach activities which included interaction with various media outlets, NASA international partners, other
+NASA VIPs, and a range of students and educators. Then the HDU assets at Base Camp were deactivated, packed
+up, prepared for shipment, loaded onto trucks via crane, and shipped back to JSC. The remaining HDU field team
+members who had flown to Arizona returned to their home NASA Centers. Unfortunately, the Command Bus once
+again suffered a malfunction shortly after departing the Base Camp area, and its contents had to be reloaded onto a
+moving truck and driven back to JSC by two of the HDU field team members.
+
+
+                                                         9
+                                 American Institute of Aeronautics and Astronautics
+                                                    VII. Lessons Learned
+     During the testing activities at Desert RATS 2010, a running list of “lessons learned” were collected by the
+HDU field team members, and after completion of the field campaign, these lessons learned were compiled into a
+database to serve as a guide for the next phase of HDU development and testing. A summary of these HDU lessons
+learned was presented to a gathering of Desert RATS participants in early December 2010 as part of an effort to
+allow all of the field campaign teams to learn from the experiences of others and improve the planning and
+execution of future Desert RATS efforts. This summary is shown in Table II.
+ Table II. HDU PEM Lessons Learned from Desert RATS 2010.
+    Category                 What went well?                    What didn't go well?                    Suggestions for Improvement
+                   Split team lodging approach (part                                        Other teams may want to consider the split team
+                   staying at Cameron, part staying at                                      lodging approach to reduce driving time to field
+    HDU/PEM
+                   Flagstaff) offered proximity to both                                     camps (only 12 minutes from Cameron Trading
+                   field camps and logistics providers                                      Post to Base Camp
+
+                                                                                          Separate the HDU "Test Integration Operations"
+                                                        Dry-run operations at JSC were
+                   In-field interaction with Mission                                      responsibility into two distinct functions: "Demo
+                                                        severely compromised due to
+    HDU/PEM        Operations personnel on Test Days 7,                                   Unit Integration" and "Test Operations" and
+                                                        delays in systems integration and
+                   8, and 14 went very well                                               consider having the latter responsibility staffed by
+                                                        checkout testing
+                                                                                          Mission Operations personnel
+
+                   Command Bus served well as a
+                                                          Command Bus broke down several Use locally rented shipping container office for
+                   command center for the HDU, along
+    HDU/PEM                                               times en route to Arizona and in command center instead of vehicle that needs to
+                   with the 20-foot converted shipping
+                                                          returning to JSC                 be driven across country
+                   container office
+                                                     Moving the HDU during the
+                   HDU move from SP Mountain to Base                                   Design the field test with a single location for the
+    HDU/PEM                                          campaign takes away valuable test
+                   Camp went very well                                                 HDU, if possible
+                                                     time and resources
+                                                     Running two camps takes
+                   SP Mountain "outpost" camp worked                                   Design the field test with a single camp, if
+    HDU/PEM                                          additional resources and
+                   well as a satellite to Base Camp                                    possible
+                                                     complicates coordination
+                                                                                       Provide agenda/rotation scheme for both VIP and
+    HDU/PEM                                                                            media days so appropriate time can be spent with
+                                                                                       equal numbers of people
+
+                                                                                            Request more capability for test communication
+                                                          Communications that were
+                                                                                            than lunar communication simulation. Anticipate
+    HDU/PEM                                               limited to that which simulated
+                                                                                            new communications software next year and want
+                                                          lunar communications
+                                                                                            to do dry run on its use before field ops.
+
+                 As a rapid prototype geological
+                 laboratory (design,build, integrate
+                 and test in under a year), GeoLab
+HDU/PEM - Geolab                                                                            Continue
+                 performed successfully. GeoLab
+                 success was dependent on
+                 collaboration with HDU PEM team
+
+                   The goal to be ready for deployment
+                   and participation in Desert RATS
+HDU/PEM - Geolab                                                                            Continue.
+                   provided the focus and drive for a
+                   successful test
+                 Mission Operations involvement
+                 contributed to GeoLab success; they
+                 provided guidelines and commonality
+                 for our operations that allowed for a
+HDU/PEM - Geolab ready extension from Rover Traverse
+                 Operations to HDU GeoLab
+                 operations. They also provided a
+                 critical review of GeoLab operational
+                 procedures
+
+
+                                                                10
+                                        American Institute of Aeronautics and Astronautics
+ Table II (continued). HDU PEM Lessons Learned from Desert RATS 2010.
+
+    Category                What went well?                    What didn't go well?                     Suggestions for Improvement
+
+                                                                                              To fully utilize the analog environment and let
+                                                                                              science objectives and science operational
+                 Having GeoLab operations flow from                                           constraints drive instrument requirements, we
+                 Science team operations was critical                                         need to devise future tests with strategic science
+HDU/PEM - Geolab
+                 to successful testing of the science                                         goals in mind, better define operational
+                 operation concepts.                                                          hypotheses; and contribute to the definition of
+                                                                                              mission rules for the tests. Additionally, expand
+                                                                                              the potential field applications.
+
+                                                        Details of critical subsystems (e.g   Better understanding between all parties about
+                                                        ., communications) were not           the capabilities and constraints of subsytems, with
+HDU/PEM - Geolab
+                                                        understood and developed until        the goal of developing a working solution before
+                                                        on-site arrival in Arizona.           deployment
+                                                        The communications team was
+                                                        always working on the edge -
+                                                        they need more support. We
+                                                        recognize the extreme difficulty
+                                                        of establishing the
+                                                        communications subsytem, and
+                                                        the endless efforts by the comm
+HDU/PEM - Geolab                                                                         Better support for Communications team.
+                                                        team. We note that if we had
+                                                        suffered total comm outage, we
+                                                        would have recovered no
+                                                        GeoLab data, as the crew were
+                                                        untrained and required
+                                                        interactions with supporting
+                                                        science team.
+                                                        Insufficient number of personnel
+                                                        in field led to inefficiencies in   Depending on objectives, need minimum of 1
+ Human Factors -                                        data collection requiring more      dedicated Human Factors evaluator per habitat
+   HDU/PEM                                              post-DRATS time to prepare          module plus 1 dedicated Human Factors data
+                                                        results and schedule conflicts with analyst (not including student intern support)
+                                                        other Cx customers
+                                                        Medical workstation only allocates
+                                                        one half height drawer to non-
+ Human Factors -                                        medical life science and has not   Life science community must be convinced of
+   HDU/PEM                                              tested any life science activities importance of participating in DRATS testing
+                                                        due to lack of input from life
+                                                        science community
+                                                        Scenario 12.1 PEM layout failed to
+                                                        account for need to resupply the
+                                                                                           Future layouts must better account for full
+ Human Factors -                                        two rovers, resulting in
+                                                                                           stowage needs, including those imposed by other
+   HDU/PEM                                              inadequate stowage volume
+                                                                                           projects/vehicles
+                                                        which forced stowage to occupy
+                                                        undesirable locations
+
+                                                        PEM diameter "appears" large but
+ Human Factors -
+                                                        in reality created conflicts     Larger diameter may be needed for flight vehicles
+   HDU/PEM
+                                                        between adjacent work envelopes
+
+
+
+
+                                   VIII. Post-Desert RATS HDU-PEM Testing
+     Upon returning to JSC in late September, testing of the HDU-PEM continued in the Building 220 facility.
+ These evaluations included endurance testing of the software and avionics system, a detailed instrumentation
+                                                       11
+                               American Institute of Aeronautics and Astronautics
+assessment, and don/doff testing of mockup space suits in the Airlock using the newly installed suit donning
+stations. Additionally, an evaluation known as the “incapacitated crewmember scenario” was performed, in which a
+stuffed mockup space suit was translated from the bottom of the Airlock access ramp, up the ramp, over the porch,
+and into the Airlock using the Airlock winch, which was operated by a suited test subject After completion of these
+final PEM test points in late January 2011, reconfiguration activities began in earnest with the HDU to convert it
+
+
+
+
+                       Figure 10. A computer model of the HDU in the Deep Space
+                       Habitat configuration.
+from the PEM configuration to the Deep Space Habitat configuration in support of the Desert RATS 2011 field
+campaign (see Figure 10)4.
+
+                                                    IX. Summary
+     The development of the HDU-PEM—executed at a rapid pace—was completed in time to participate in the
+Desert RATS 2010 field campaign, which permitted the LAT 12.1 architecture to be more fully evaluated with all
+major lunar surface elements represented. The HDU Team demonstrated how the HDU-PEM could be efficiently
+delivered to two separate remote analog sites and be made functional within a very short time. The independent
+testing conducted in the HDU-PEM paved the way for successful integrated testing activities. Many lessons were
+learned at multiple stages of the development and testing of the HDU-PEM, and these lessons can be carried forward
+not only to future configurations of the HDU, but likely to any future analog habitat development effort.
+
+                                                    Acknowledgments
+     The authors wish to acknowledge the tireless efforts of the HDU Integration Team in preparing the HDU-PEM
+for its maiden voyage to Desert RATS 2010, in supporting the field testing activities in the Arizona desert, and in
+documenting the test results during the test and compiling the integrated results afterwards. This team was lead by
+Edward Walsh and included Ronny Gambrell, Chris Chapman, Mike Anderson, Virginia Yancy, and Thomas
+Smith—all of Jacobs Engineering Group, Inc.
+
+                                                        References
+   1
+     Howe, A., Spexarth, G., Toups, L., Howard, R., Rudisill, M., Dorsey, J., et al, “Constellation Architecture Team: Lunar
+Outpost Scenario 12.1 Habitation Concept,” Proceedings of the Twelfth Biennial ASCE Aerospace Division International
+Conference on Engineering, Science, Construction, and Operations in Challenging Environments (Earth & Space 2008),
+Honolulu, Hawaii, 14-17 March 2010; Reston, Virginia, USA, American Society of Civil Engineers.
+    2
+      Gill, T., Merbitz, J., Kennedy, K., Toups, L., Tri, T., and Howe, A. S., “Habitat Demonstration Unit Pressurized Excursion
+Module Design Considerations,” International Conference on Environmental Systems, American Institute of Aeronautics and
+Astronautics (submitted for publication, 2011).
+   3
+     Litaker, Jr., H., Archer, R., Szabo, R., Twyford, E., Conlee, C., and Howard, Jr., R., “Human Habitation Field
+Study of the Habitat Demonstration Unit (HDU),” Acta Astronautica (submitted for publication 2011).
+
+
+                                                           12
+                                   American Institute of Aeronautics and Astronautics
+    4
+      Kennedy, K., Toups, L., Gill, T., Tri, T., and Howe, A. S., “Habitat Demonstration Unit – Deep Space Habitat Overview,”
+International Conference on Environmental Systems, American Institute of Aeronautics and Astronautics (submitted for
+publication, 2011).
+
+
+
+
+                                                          13
+                                  American Institute of Aeronautics and Astronautics
+

@@ -1,0 +1,284 @@
+                  Human Habitation in a Lunar Electric Rover During a 14-Day Field Trial
+                                 Harry Litaker, Jr.1, Shelby Thompson1 , and Robert Howard, Jr.2
+                                                   1
+                                                       Lockheed Martin, JSC, Houston, TX
+                                                         2
+                                                           Johnson Space Center, NASA
+
+           Various military and commercial entities, as well as the National Aeronautics and Space Administration
+           (NASA), have conducted space cabin confinement studies. However, after an extensive literature search, only
+           one study was found using a simulated lunar rover (LUNEX II), under laboratory conditions, with a crew of two
+           for an eighteen day lunar mission. Forty-three years later, NASA human factors engineers conducted a similar
+           study using the Lunar Electric Rover (LER) in a dynamic real-world lunar simulation at the Black Point Lava
+           Flow in Arizona. The objective of the study was to obtain human-in-the-loop performance data on the vehicle’s
+           interior volume with respect to human-system interfaces, crew accommodations, and habitation over a 14-day
+           mission. Though part of a larger study including 212 overall operational elements, this paper will discuss only
+           the performance of fifty different daily habitational elements within the confines of the vehicle carried out by
+           two male subjects. Objective timing data and subjective questionnaire data were collected. Results indicate,
+           much like the LUNEX II study, the LER field study suggest that a crew of two was able to maintain a
+           satisfactory performance of tasks throughout the 14-day field trail within a relative small vehicle volume.
+
+                     INTRODUCTION
+                                                                             Environment
+Habitation is the space which determines the overall living
+and operational environment for an individual within a space                 The test environment for the trial occurred at the Black Point
+vehicle which affects the quality of daily life and                          Lava Flow; approximately 40 miles north of Flagstaff,
+productivity onboard the vehicle (Celentano et al., 1963;                    Arizona. Having a wide variety of geologically relevant
+Bond & Campbell, 1995). NASA’s Gemini VII study was                          surface features, the test site presents many opportunities to
+the first real-world 14-day habitation study in space. NASA                  evaluate human performance with both the Intravehicular
+(1966) concluded “with a well-prepared crew within the                       Activities (IVA) and Extravehicular Activities (EVA)
+confines of the spacecraft” a crew of two could live and work                capabilities of the LER. Surface characteristics included
+efficiently in space. The only lunar rover habitat study was                 slopes with an approximate 6° of vertical from top to bottom,
+conducted under the Apollo Logistics Support System                          soil mechanics ranging from lose grain to hard-packed,
+(ALSS) in 1966, under laboratory conditions, inside a lunar                  surface properties ranging from flat/smooth to rocky, and
+rover simulator designated the LUNEX II for 18-days                          some minimal vegetation.
+(Haaland et al., 1966). By measuring human performance
+with the cabin’s volume, investigators conclude the crew was                 Equipment
+able to maintain satisfactory performance throughout the 18-
+day simulation. Forty-three years later, NASA human factor                   The LER is a high fidelity functional vehicle which provides
+engineers examined human performance within the Lunar                        the crew a safe haven from the hazardous environment of the
+Electric Rover (LER) over a 14-day simulated lunar mission                   lunar surface, a living area for multiple day missions away
+in a dynamic real-world environment. As with Gemini VII                      from the lunar outpost, and a rapid EVA deployment system
+and LUNEX II, the purpose of the field trail was to obtain                   for scientific exploration of the surface (see Figure 1). Total
+human performance data on the volume of the vehicle’s                        interior volume of the vehicle was calculated at 10.8 cubic
+configuration with a crew of two.                                            meters with a net habitable volume (NHV) of approximately
+                                                                             8.6 cubic meters, resulting in about 79% functional volume.
+                        METHODS                                              Net habitable volume is defined as the total remaining
+                                                                             volume available to crew after accounting for the loss of
+Subjects                                                                     volume due to equipment, stowage, and any other structural
+                                                                             inefficiencies which decrease functional volume.
+Two male participants, one being a flight experienced
+astronaut and one being a professional geologist, operated                   Procedures
+and interfaced with all the internal and external systems
+onboard LER while on a 14-day simulated lunar mission. In                    A traverse plan was developed to identify and prioritize
+preparation of the desert trials, they took part in several dry              specific sites of scientific interest using remote sensing data
+run tests at the Johnson Space Center’s (JSC) Rock Yard to                   that is of equivalent resolution to that expected of a crewed
+become familiar with all the vehicle’s internal and external                 lunar mission without preceding robotic or crewed missions
+systems.                                                                     to that site. Other operational tasks were developed to
+
+                                                                      1
+exercise all the vehicle’s human-machine interfaces. Target             Table 1.
+sites along the fourteen day traverse path were added or                Field Times for the LER 14-Day Mission
+removed on-the-fly to reprioritized and optimize crew                             Elements                  Time (hh:mm:ss)
+efficiency, thus providing a more realistic mission testing                      LER Driving                   23:27:00
+environment.                                                                         EVA                        7:18:00
+                                                                                   On-Duty                     137:56:00
+                                                                                  Off-Duty                     178:59:00
+                                                                                    Rescue                     23:26:00
+                                                                                 Total Habitat                 285:36:30
+
+                                                                        Daily Food Prep, Hygiene, and WCS Operations
+
+                                                                        This first section discusses fourteen habitation elements. Of
+                                                                        the fourteen studied, the crew rated volume to limit cross-
+                                                                        contamination, WCS privacy, frequency of trash/waste
+                                                                        removal using the Suit Port Transfer Module (SPTM),
+                                                                        accessibility to the water dispenser, housecleaning, and
+                                                                        volume for preparing and eating a meal within the vehicle as
+                                                                        acceptable (see Table 2). As per the LER Concept of
+                Figure 1. LER Cabin 1B at field trail.                  Operations (ConOps), trash was to be taken out every third
+                                                                        day. The crew reported this worked well noting that trash
+A combination of human factors metrics and customized                   tended to build up quickly over 3-day period and the odor
+post-questionnaires were used to evaluate the LER and                   started to become unpleasant.
+human performance. Some metrics were recorded by the
+subjects on specific days. Detailed field notes of all planned          Seven elements were considered as borderline by the crew
+and unplanned traverse activities for that day were collected           while one was considered totally unacceptable. Access to
+daily as well. Each scale represents a different human aspect;          food stowage did become an issue with the crew due to
+thus, when taken in combination, it could assist in                     reconfiguring the aft cabin especially when it was a single
+developing a complete human performance assessment for a                person EVA. It became difficult for the IVA crewmember to
+particular task or set of tasks. By pre-test definition, a rating       access anything within the benches or floor panels. WCS
+of ≤ 4 indicates the habitation element was acceptable                  operations had some issues, especially with deploying the
+(Kosmo et al., 2009). Though the field trial examined the               unit when both benches were down. The crew reported there
+LER vehicle in 212 operational elements, this paper will only           was not enough room with both benches down which made it
+discuss the habitation of two crew within the rover over the            uncomfortable. This also held true when both sleep stations
+14-day mission.                                                         are deployed with the aisle being approximately 0.55 m in
+                                                                        width. As for the LER hygiene mist sprayer hose, the crew
+                           RESULTS                                      stated it was not needed in the vehicle. Their preference for
+                                                                        personal hygiene was using a wet towel or sponge to take a
+During the 14-day field trial, the crew recorded 316 hours              bath.
+and 55 minutes in total mission time. Mission time officially
+started at 9:59:00 on 31 August 2009 and ended at 15:00:00              Table 2.
+on 13 September 2009. This time includes operation of the                Ratings for Food Prep, Hygiene, and WCS Operations
+vehicle, EVA time, translation time, maintenance time, and                                 Elements                       GM
+contextual observation time. A breakdown of time data by                 Food Stowage                                          4.4
+elements was conducted to understand crew productivity (see              Meal Prep/Eating                                      2.8
+Table 1).                                                                Water Dispenser                                       3.4
+                                                                         Deploy/Stow WCS                                       5.0
+For the 14-day LER mission, human factor engineers                       Hygiene Shower                                        5.0
+examined a total of fifty different habitational elements                WCU Use                                               5.8
+within the vehicle which the crew performed on a daily basis.            WCS Privacy                                           3.9
+For ease of the reader, authors decided to separate the                  Waste/Trash Stowage                                   5.9
+                                                                         Odor of Waste/Trash                                   8.5
+subjective habitation data into four different sections. Due to          Vacuum for Trash                                      4.9
+the small sample size (N = 2), descriptive statistics using the          Effectiveness of Space Bags                           4.9
+Grand Mean (GM) will be used across the 14 days.                         Frequency of Trash Removal                            3.8
+                                                                         Cross-Contamination                                   4.4
+                                                                         House Cleaning                                        3.1
+
+
+                                                                    2
+Much like the 2008 field trial (Litaker et al., 2008), having a       equipment within the LER, setup and stowage of the
+dedicated stowage area, trash management system, an odor              equipment, stability/adjustability of the seat, design of the
+control became the issues with odor control being rated               ergometer for aerobic exercise in the LER and volume to
+totally unacceptable (GM = 8.5). Like other systems in the            perform both resistive and aerobic exercise in the LER (see
+LER, the trash management system was redesigned to help               Table 4).
+correct these issues. The new system was to take the daily
+trash, put it into a medium sized Space Bag, and vacuum seal
+the bag at the end of each day. After collecting 3 days worth
+of trash, the crew would transfer the three medium Space
+Bags into one large Space Bag and vacuum seal the bag and
+transfer it out using the SPTM. First issue was the crew
+ended up putting three days of trash in one medium Space
+Bag. This caused one bag to break which the crew fixed by
+using 2-inch duct tape. They also noted the Space Bag did
+not control odor well and was heavy when it contained 3
+days of trash.
+
+Internal Volume and Stowage
+                                                                               Figure 2. LER cabin after a reconfiguration for EVA.
+For internal volume and stowage, seven elements were
+studied. Volume, accessibility, clearance, and overall design         Table 4.
+of the personal soft lockers were rated by the crew as totally          Ratings for Exercise Activities and Ergometer Design
+acceptable. The crew reported the soft locker volume was                                       Elements                               GM
+great for a 14-day mission as well as the accessibility to the          Access to Equipment                                           3.3
+lockers (see Table 3). They liked the flipped down front flaps          Setup of Equipment                                            3.6
+and locker depth to hold personal items. The crew liked the             Comfort of Seat                                               5.3
+overall design and concept of the soft locker system;                   Stability of Seat                                             3.4
+however, reconfiguration of the system became a major                   Adjustability of Seat                                         3.5
+issue. Reconfiguration time was a factor with the crew                  Volume for Resistive Exercise                                 2.8
+                                                                        Accessibility to other LER Stations during Resistive          4.4
+observing approximately 5 minutes per reconfigure per EVA               Resistive Exercise while LER is Moving                        5.5
+with 4 EVAs per day for 14 days times 4 crewmembers                     Ergometer Design for Resistive Exercise                       4.9
+would equal 18 hours and 40 minutes per mission. With the               Volume for Aerobic Exercise                                   3.3
+crew having to relocate the lockers, space within the vehicle           Accessibility to other LER Stations during Aerobic            4.9
+started to become cramped and crowded (see Figure 2).                   Aerobic Exercise while LER is Moving                          6.1
+                                                                        Ergometer Design for Aerobic Exercise                         3.4
+Access to stowage items was rated as borderline by the crew             Ability to Stow Equipment                                     3.5
+(GM = 4.8). Comments on vehicle stowage stemmed from                    Stowage for Equipment                                         3.6
+the reconfiguration issues previously discussed. The crew,              Overall Exercise in LER                                       2.9
+however, did express bench stowage was the best use of
+available space within the vehicle.                                   The crew also reported the overall ability to exercise in the
+                                                                      LER was acceptable. They came up with several ways to
+Table 3.                                                              exercise within the vehicle in conjunction with using the
+ Ratings for Internal Volume and Stowage                              ergometer. The LER provided plenty of space for doing such
+                       Elements                          GM           exercises as leg lunges, pushups, bench press with bands, and
+ Volume of Soft Locker                                   2.8          tricep dips. The interior volume was able to give the crew the
+ Access to Lower Hard Locker                             3.0          ability to use a variety of exercise elements during their hour
+ Access to Upper Soft Locker                             2.6          long session.
+ Clearance Seated at Soft Locker                         2.6
+ Overall Design of Soft Locker                           2.9          However, the crew did express some issues with the system.
+ Location of Stowage                                     4.4          The ability of a crew to perform aerobic exercise while the
+ Access to Stowage                                       4.8          vehicle was moving was the highest rated concern among the
+                                                                      crewmembers (GM = 6.1). The crew reported it depended on
+Exercise                                                              the terrain in which the LER was traveling. If the terrain was
+The crew was able to use the exercise ergometer for twelve            flat and smooth, they did not have an issue with exercising;
+out of fourteen days for an hour per crewmember per day. Of           however, if the terrain was bumpy and rough, exercise was
+the sixteen elements, ten were rated as acceptable. These             not possible. Just walking from the aft cabin to the cockpit of
+acceptable elements included access to the exercise
+
+                                                                  3
+the LER while on rough terrain was difficult according to the               They noted with the two soft lockers hanging in the side
+crew. This also held true for resistive exercise as well (see               hatch and the high ceiling height, it gave them the perception
+Figure 3).                                                                  of a spacious volume within the station (see Figure 4).
+
+
+
+
+ Figure 3. Crewmember doing aerobic exercise with ergometer. Note the                 Figure 4. Fully deployed sleep station inside LER.
+              spacing between the pedals and the aisle way.
+                                                                            Egressing out of the station when the curtains were deployed
+Accessibility of the non-exercising crewmember to other                     was considered somewhat acceptable. The crew noted with
+stations within the vehicle while a crewmember was                          the curtains down, there was limited access to the WCS and
+performing either aerobic or resistive exercise was also rated              the noise from the Velcro was a concern for the other
+high. The crew indicated they tried to make sure certain                    sleeping crewmember. As for the sleep quality, the crew
+items were stationed up in the cockpit area. With the                       stated they like the large side curtain for its sound and light
+ergometer in the aft section aisle way of the LER, the pedals               dampening qualities which made sleeping a lot quieter.
+of the device do not allow for any space to pass for the non-               However, they reported the bench cushions by the front seats
+exercising crewmember. The crew also observed this limited                  were awkward to lay on and some time was spent adjusting
+aisle space as well during setup.                                           the pads for the right comfort. The LER’s lighting controls
+                                                                            were outside the sleep station which causes an issue. The
+Seat comfort was reported at borderline by the crew. They                   crew reported there was no easy access to the controls.
+reported the absence of any type of back support and would
+add several bench cushions to get comfy. As for the design                  Table 5.
+of the ergometer itself, the crew reported several concerns.                 Ratings for Sleep Station
+Ratings for the device’s design were high with the crew                                              Elements                              GM
+complaining about the weight, pedals, and displays. The                      Curtain Deployment by 1 crew                                  3.6
+crew noted, several times during the trail, the weight.                      Ease of Seat Reconfigure                                      4.8
+Noticing that for such a heavy piece of gear, the ergometer                  Volume of Sleep Station                                       1.9
+seemed fragile when it was being used. Pedals also became                    Sleep Station Layout                                          2.1
+an annoyance to the crew. They reported the pedal                            Volume of Personal Privacy                                    2.3
+attach/detach design was way too difficult to remove. The                    Sleep Quality                                                 3.8
+biggest observation on the pedal design was the fact the                     Light Quality in Sleep Station                                2.6
+pedals, once locked on the device, was so tight the crew                     Lighting Control                                              4.4
+                                                                             Access to Personal Items                                      2.9
+almost injured themselves taking them off. In fact, the crew                 Ease of Ingress into Station                                  4.6
+stated they would leave one on just so they would not have to                Ease of Egress into Station                                   4.1
+take the pedals on and off.                                                  Curtain Stowage by 1 crew                                     4.6
+                                                                             Overall Design of Station                                     3.3
+Sleep Stations
+                                                                            Ease of ingress, single crew curtain stowage, and seat
+Generally, the crew reported the LER sleep stations as                      reconfiguration were rated by the crew as borderline. They
+acceptable (see Table 5). Of the thirteen elements, the crew                noted there was too much Velcro in the new design. Getting
+rated five—volume of station, layout, privacy, within station               in and out of the station was not that easy without having to
+light quality, and personal item access—as totally acceptable.              take most of the curtains apart. Curtain stowage by a single
+
+                                                                        4
+crewmember still remains an issue, especially with the large                          ACKNOWLEDGEMENTS
+main curtain. Though the crew stated it was possible to
+accomplish; however, the weight and curtain support straps             We would like to recognize Dr. Michael Gernhardt for
+did not make it an easy task. Finally, the front seat                  obtaining the funding for the project, Dr. Andrew
+reconfiguration reported the highest rating by the crew (GM            Abercomby for his work on the engineering test plan, the
+= 4.8). This was due to having to adjust the seat with two             Habitability Design Center at NASA/JSC: Rich Szabo, Carl
+hands. Access to the adjusting tabs was difficult and getting          Conlee, and Evan Twyford, for their illustrative and design
+the seats in the correct lateral placement was not optimal. As         work. Regan Geeseman at NASA/JSC Information Resources
+for the overall design, the crew rated the station as                  Directorate (IA) for his photographic work of the vehicle
+acceptable. Though needing some minor tweaking, the crew               used throughout this paper. Thanks also to Dr. Robert
+stated it was a huge part of the successful habitability of the        Ambrose and his team at the NASA/JSC Automation,
+LER for the two week mission.                                          Robotics, and Simulation Division (ER), Extravehicular
+                                                                       Activity Office (XA), and Joe Kosmo and Barbara Roming’s
+                      CONCLUSIONS                                      team with the NASA/JSC Space Suit and Crew Survival
+                                                                       System Branch (EC5) for all their hard work in designing,
+The purpose of the desert trial was to obtain human                    building, and testing this amazing vehicle.
+performance data on the lunar electric rover with respect to
+crew accommodations and habitation to support a 14-day                 REFERENCES
+exploration lunar mission. Though with human factors data
+collected on only a crew of two, the following conclusions             Bond, R. & Campbell, P. (1995). Operational monitoring of
+drawn are still valid concerns to future designs.                      MIR habitability. PIPS Database #810530. Internal NASA
+                                                                       Document.
+A dedicated trash area that was easily accessible for daily use
+and helps to control odor until disposal in needed. The aisle          Celentano, J.T., Amorelli, D., & Freeman, G.G. (1963).
+width of 0.55 m made WCS operations an issue with crew                 Establishing a habitability index for space stations and
+comfort. The soft locker system was deemed good by the                 planetary bases. American Institued of Aeronautics and
+crew. In fact, they indicated it was too much volume and               Astronautics Manned Space Laboratory Conference, 2 May
+suggested decreasing the volume by 50% for a 2-week                    1963, Los Angeles, CA, pp. 63-139.
+mission. Reconfiguration with this system became extremely
+time consuming for the crew and cabin volume started to                Haaland, J.E., Grubbs, H.Y., Vaccaro, M. J., Graf, C.P.,
+decrease rapidly. The ergometer design showed several                  Kuechenmeister, T.J., Beigie, J.W., Kindead, R.D., Tuk,
+issues including the absence of back support for the seat,             A.C., Stackhouse, S.P., & Macek, F. (1966). Man system
+weight, pedal design and display design. A redesign of the             criteria for extraterrestrial roving vehicles phase 1B—The
+seat to include back support; better attach/detach method of           LUNEX II simulation. Honeywell Interim Technical Report
+the pedals; improved readability for the display; and use oft          12504-ITR2, MSFC NAS8-20006, Marshall Space Flight
+with lighter weight materials and easier assembly are needed.          Center, Huntsville, AL.
+With the general acceptance of the sleep station, improving
+the design consist of conformal custom curtains to block out           Kosmo, J., Ambrose, R., & Roming, B. (2009). Desert
+more light on the sides, incorporate a small zippered section          research and technology studies (D-RATS) September 2009
+in the large curtain for easy egress and ingress, and using less       integrated field campaign test plan, 28 April 2009, National
+ridged forward and aft curtains. The crew reported there               Aeronautics and Space Administration Lyndon B. Johnson
+would be no issues with a crew of two doing a 14-day                   Space Center, Houston, TX.
+mission without ever getting out of the LER. The crew noted
+a LER lunar mission would be more like a hiking trip where             Litaker, Jr. H.L., Thompson, S., Howard, R., Szabo, R.,
+simple, lightweight, reusable items would be required for              Conlee, C. & Twyford, E. (2008b). Small Pressurized Rover
+quick, easy access and consolidation.                                  (SPR) three day desert trial: A human factors assessment.
+                                                                       NASA/Johnson Space Center. Internal NASA Document,
+Much like the LUNEX II study, the LER field studies are                December 2008.
+indicating the same results in performance of tasks for a crew
+of two in a relative small volume. By continuing a human-              NASA (1966). Gemini program mission report of Gemini
+centered design approach and collaborating with designers to           VII.    NASA-TM-X-628892,       N79-76319.   National
+capture information in their design, the aim is to enhance             Aeronautics and Space Administration Manned Spacecraft
+human performance and comfort, while lending confidence                Center, Houston, TX.
+to both future lunar habitation design, as well as planetary
+vehicle design.
+
+
+                                                                   5
+

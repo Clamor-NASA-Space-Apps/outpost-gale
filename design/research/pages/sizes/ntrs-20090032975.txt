@@ -1,0 +1,399 @@
+                                                                                                                                          09ICES-0029
+
+                                                                                        Creating a Lunar EVA Work Envelope
+
+                                                                                                                           Brand Norman Griffin
+                                                                                                                                           Gray Research
+
+                                                                                                         Robert Howard, Sudhakar Rajulu
+                                                                                                                        NASA, Johnson Space Center
+
+                                                                                                                                David Smitherman
+                                                                                                                NASA, Marshall Space Flight Center
+
+
+
+
+    ABSTRACT                                                                          motion, must be taken into account. This paper presents
+                                                                                      the analysis leading to a concept for a planetary EVA
+    A work envelope has been defined for weightless                                   work envelope with emphasis on lunar operations.
+    Extravehicular Activity (EVA) based on the Space                                  There is some urgency in creating this concept because
+    Shuttle Extravehicular Mobility Unit (EMU), but there is                          NASA has begun building and testing development
+    no equivalent for planetary operations. The weightless                            hardware for the lunar surface, including rovers, habitats
+    work envelope is essential for planning all EVA tasks                             a n d c a r g o o f f-loading equipment.   Just as with
+    because it determines the location of removable parts,                            microgravity operations, a lunar EVA work envelope is
+    making sure they are within reach and visibility of the                           needed to guide designers in the formative stages of the
+    suited crew member. In addition, using the envelope                               program with the objective of avoiding difficult and costly
+    positions the structural hard points for foot restraints that                     rework.
+    allow placing both hands on the job and provides a load
+    path for reacting forces.                                                         INTRODUCTION
+
+    EVA operations are always constrained by time. Tasks                              A former mayor of Boston said, “There go my people. I
+    are carefully planned to ensure the crew has enough                               am their leader. I must catch up.” Likewise, for NASA’s
+    breathing oxygen, cooling water, and battery power.                               planned lunar outpost, there go the designers. They’re
+    Planning first involves computers using a virtual work                            supposed to have requirements. We must catch up.
+    envelope to model tasks, next suited crew members in a                            Lunar surface systems are being designed but this work
+    simulated environment refine the tasks. For weightless                            proceeds without an EVA work envelope. This paper
+    operations, this process is well developed, but planetary                         presents a concept that allows engineers to begin
+    EVA is different and no work envelope has been defined.                           designing surface systems for efficient assembly, access
+                                                                                      and servicing. Fig. 1 shows the weightless EVA
+    The primary difference between weightless and                                     envelope and section 14.4.2.1 of NASA Standard 3000
+    planetary work envelopes is gravity. It influences                                states the following envelope design considerations:
+    anthropometry, horizontal and vertical mobility, and                               The work envelope, mobility range, and visual field-
+    reaction load paths and introduces effort into doing                                  of-view of the suited crew member should be
+    “overhead” work. Additionally, the use of spacesuits                                  considered in workstation design.
+    other than the EMU, and their impacts on range of
+
+The Engineering Meetings Board has approved this paper for publication. It has successfully completed SAE’s peer review process under the supervision of the
+session organizer. This process requires a minimum of three (3) reviews by industry experts.
+
+ISSN 0148-7191
+
+Positions and opinions advanced in this paper are those of the author(s) and not necessarily those of SAE. The author is solely responsible for the content of
+the paper.
+SAE Customer Service: Tel:         877-606-7323 (inside USA and Canada)
+                          Tel:     724-776-4970 (outside USA)
+                          Fax:     724-776-0790
+                          Email: CustomerService@sae.org
+SAE Web Address:          http://www.sae.org
+Printed in USA
+   E V A w o r k s tations should be designed to
+    accommodate the characteristics of the suited
+    female and the suited male user population.
+   The effects of neutral body position on the EVA crew
+    member' s l i n e-of-sight should be taken into
+    consideration in workstation design.
+
+
+
+
+                                                                   Figure 2 Postures in Response to Acceleration
+
+Figure 1 Weightless EVA Work Envelope                              EVA, because the fit of the pressure suit directly affects
+                                                                   the ability to do any task. A proper fit is accomplished by
+The Apollo missions ended in 1972, providing                       assembling and adjusting parts to match body
+photographs, video and first-person accounts of lunar              measurements and then “tuning” these dimensions to
+EVA. No work envelope was produced and since then                  accommodate individual preferences. Using this
+all EVA has been weightless. In fact, with the planned             approach, suits are configured for individual crew
+2020 lunar landing, over 50 years will separate the first          members and used in neutral buoyancy training of
+Apollo landing from the next set of lunar boot prints.             mission tasks. Neutral buoyancy approximates
+This is significant, because a gravity-based EVA                   weightless operations but is still under the influence of
+philosophy will have to overtake a culture of weightless           earth’s gravity, meaning that suits are sized for 1-g.
+o p e r a t i o n s . W h a t i s n ow a highly orchestrated       Because the weightless vertebral extension is
+infrequent event will become routine, driven by the                understood, technicians are able to determine and apply
+opportunities of exploration as well as outpost assembly,          adjustments to the suits before launch. Apollo surface
+repair and the operations of In-situ Resource Utilization.         stay times were no more than 3 days and the Lunar
+                                                                   Module cabin was too confined to observe any
+In zero-g, astronauts “walk” with their arms and lock              anthropometric changes. However future lunar missions
+boot s i nto foot restraints to provide a stable work              are planned for up to 180 days, allowing enough time for
+position. On the Moon, astronauts walk upright, which              crew members to adapt to lunar gravity. For this
+significantly changes the approach to EVA. In                      analysis, it is assumed the vertebrae will partially un-load
+weightless operations, the foot restraint brings the               resulting in a change in the vertebral column thereby
+astronaut within reach of the task. However, on the                affecting height and head position.
+Moon, the challenge is bringing the task within reach of
+an astronaut standing on the surface.                              It is difficult to get actual measurements on Earth of the
+                                                                   effects of partial gravity. Bed rest studies and
+ANTHROPOMETRY                                                      underwater compensations do not adequately reflect
+                                                                   prolonged exposure to 1/6 g. So, it was assumed that
+LUNAR GRAVITY – Gravity plays an important role in                 there would be some extension to a partially unloaded
+human physiology and anthropometry. See Fig 2. [2]                 vertebral column, although less than in 0-g, resulting in
+For example, on the Earth while sitting, standing or               2.5 cm (I in.) added to the 1-g stature of all crew. See
+walking, our vertebrae are compressed under the force              Fig. 3. Accordingly, a reshaped vertebral column would
+of gravity. However, in zero-g, the vertebrae unload,              slightly change head position and field of view, resulting
+resulting in as much as 5.1 cm (2 in.) elongation of the           in 5 degrees down from horizontal vs. 10 degrees down
+spinal column. This elongation is significant for                  in 1-g.
+
+
+
+
+                                                               2
+                                                                  Extremes in Population
+
+                                                                  The design population is the basis for sizing crew
+                                                                  elements within the lunar surface systems. A hatch
+                                                                  sized for the largest crew member can accommodate the
+                                                                  smallest and a mechanism designed for weakest can be
+                                                                  operated by all. On the other hand, the work envelope is
+                                                                  defined by the common area accessible by both
+                                                                  extremes.
+
+                                                                  PRESSURE SUIT ASSUMPTIONS
+
+                                                                  The design of the space suit influences the work
+                                                                  envelope and even though it will be some time before a
+                                                                  new lunar suit is built, there are methods to approximate
+                                                                  the performance. Fig. 4 shows the Apollo suit, the
+                                                                  only
+
+Figure 3 Lunar Gravity Height Adjustment
+
+Without gravity, not only do vertebrae unload, but
+astronauts adopt a position known as neutral body
+posture. In this position, the muscles are essentially in a
+balanced state. Consequently, this posture is used in
+designing the null position for weightless space suits.
+Based on observations of Apollo EVAs and 1/6g tests
+performed in Russia’s Zvezda facility, there is
+speculation that a lunar neutral suited posture exists.[3]
+A particular neutral position was not used in this study,
+but there is no evidence to suggest that it is incompatible
+with the proposed work envelope.
+
+DESIGN POPULATION
+
+The current anthropometric requirements for pilot and             Figure 4 Lunar and Weightless Space Suits
+mission specialists were used for this study because it
+allows for a comparison with the weightless work
+envelope. As data becomes available, results will be              suit that has been used on the Moon, and two versions
+updated to reflect the Constellation Program design               of suits used for microgravity EVA used on the
+population.                                                       International Space Station.
+
+PRESSURE SUIT ACCOMMODATIONS                                      A new lunar suit will be designed for walking and will
+                                                                  likely have a rear entry feature for donning and doffing.
+All Go EVA                                                        To aid in mobility and dexterity, the suit is assumed to be
+                                                                  a low pressure 29.6 kPa (4.3 psi), constant volume,
+Not all astronauts that travel to the International Space         single-gas (oxygen) system. Furthermore, it is assumed
+Station go outside and of the three men on each of the            that the suit has no chest-mounted equipment. There
+six Apollo missions, only two walked on the Moon.                 are many other suit characteristics, but these have the
+Plans for returning to the Moon include four crew                 greatest influence on the envelope geometry and
+members, all of whom will go to the surface and go EVA.           dimensions. The Mark III suit shown in Fig. 5 was
+This means that all crew members will be designated as            chosen as a reference design, because it is a rear-entry
+EVA crew so pressure suits will need to accommodate
+the entire lunar astronaut population. This also means
+that the lunar EVA work envelope must be designed for
+all crew members rather than for a specified portion of
+the astronaut population.
+
+
+
+
+                                                              3
+walking suit and its performance is well understood.
+
+
+
+
+                                                                 Figure 6 Lean Compensating for PLSS Mass
+
+                                                                 inclined 23 degrees (+/- 3 degrees) off of local vertical.
+                                                                 Walking (or loping) accounts for most of the forward cg,
+                                                                 but managing the weight of the PLSS adds to the lean.
+
+                                                                 Initially, i t w a s t h o u g h t t h a t leaning forward to
+                                                                 compensate for the weight of the PLSS would affect the
+                                                                 reach envelope. But, the analysis revealed a static lean
+                                                                 between 4 and 5 degrees which did not significantly
+Figure 5 Reference Rear-entry Suit- Mark III                     affect reach.
+
+EVA WORK ENVELOPE                                                Parametric analysis was used to estimate the range of
+                                                                 angles. The PLSS mass for the enhanced EMU is 69.4
+IMPLICATIONS OF SUIT DESIGN                                      kg (153 lb) for the Shuttle and it is 85 kg (187 lb) for the
+                                                                 International Space Station version. This means the
+The work envelope for weightless operations relies               range for PLSS mass is between the Apollo 60.8 kg (134
+heavily on suit reach and visibility from a fixed site. On       lb) and 85 kg (187 lb). The Apollo pressure garment is
+the Moon, crew members can move around the task.                 35.4 kg (78 lb), the enhanced EMU 55.3 kg (122 lb) and
+This means that different foot locations may offer               an assumed crew member is 77.1 kg (170 lb). Thirty cm
+improved operations and tasks can be planned using               (12 in) was used as the distance between the crew
+multiple locations.                                              member cg and the PLSS cg. This means that the
+                                                                 shoulder would move between 10.6 cm (4.2 in.) and 14.7
+The rear-entry suit configuration implies geometrical            cm (5.8 in.)., which translates into static lean angles of 4
+relationships that affect reach. First, the opening must         and      5       degrees.             See        Fig.     7.
+be wide enough to accommodate the largest crew
+member and should be planar to provide a good sealing
+interface with the backpack. The result is that the
+shoulder joints are rotated forward ahead of the planar
+opening. Next, the helmet needs to be in front of the
+planar opening mounted at a downward angle to provide
+good visibility. Both joint location and helmet angle work
+to provide excellent forward reach with good visibility of
+both gloved hands.
+
+EFFECTS OF GRAVITY
+
+Like carrying a backpack on the Earth, astronauts on the
+Moon shift their center of gravity (cg) to compensate for
+the weight of the Portable Life Support System (PLSS).
+The Apollo PLSS had a mass of 60.8 kg (134 lb) [4]. In
+Fig. 6, astronauts from two Apollo missions are shown            Figure 7 Static Lean and Reach Envelope
+
+                                                                 More importantly, this does not significantly affect the
+                                                                 work envelope, because the critical dimension is
+                                                                 between the initial contact point (visor) and the shoulder.
+
+
+                                                             4
+So, regardless of lean angle, when the visor contacts the
+edge of the work envelope, the reach is established.
+
+DEFINING THE LUNAR EVA WORK ENVELOPE
+
+Reach analysis of suited subjects results in complex
+shapes that are difficult to apply as a standard for
+design. Therefore, the challenge for creating an EVA
+work envelope is to simplify the geometry without
+compromising the utility.
+
+The objective was to create a large work envelope, but
+because of the extremes in the design population, this
+had to be differentiated into prime and secondary
+envelopes. The prime EVA work envelope (Fig. 8) is the
+simplified geometry described when both hands are in a
+fixed field-of-view for the entire design population. The         Figure 9 Surface Difficult to Reach in Apollo Suit
+secondary envelope provides extended reach with the
+upper portion spanning from the shoulder height of the            The work envelope is slightly different than the reach
+                                                                  envelope. At maximum reach, little work can be done
+                                                                  with the hands, so the work envelope measures to the
+                                                                  grasp area of the glove. Also, because it is assumed
+                                                                  that there is no chest mounted equipment, the inner limit
+                                                                  of the envelope is at the helmet contact point. Fig 10
+                                                                  shows the work envelope incorporating the static lean for
+                                                                  the backpack weight. The key features are vision cutout,
+                                                                  primary and secondary envelopes and two-dimensional
+                                                                  translation in front of the work area. A vision cutout is
+                                                                  incorporated because equipment or vehicle structure
+                                                                  may interfere with seeing the prime work area. In its
+                                                                  minimum form, the prime work area is represented as
+
+
+Figure 8 Primary and Secondary Reach Envelopes
+
+tallest crew member to shoulder height of the shortest
+and the lower portion extends from wrist to wrist of the
+population extremes.
+
+While some suits are better than others, it is difficult to
+reach objects on or near the surface. On the Earth, the
+weight of the upper torso and PLSS helps bending, but
+as is shown in Fig. 9, in order to reach down, Apollo suit
+positions used to reach the surface astronauts assumed
+awkward positions to compensate for suit stiffness and
+center of gravity. This is why the work envelope is
+shown for the standing astronaut even though advances
+in suit design should allow the crew to better reach the          Figure 10 Lunar EVA Work Envelope
+surface.
+                                                                  a cylinder 36 cm (14 in.) in diameter centered 1.1 m (43
+                                                                  in.) above the surface. Equipment that requires visibility
+                                                                  and both gloves on the job should be located within this
+                                                                  zone. Two secondary work areas are above and below
+                                                                  the prime work area. Equipment or controls that require
+                                                                  one hand operation can be located in this zone and are
+                                                                  accessible to the entire design population. Unlike the
+                                                                  fixed weightless work envelope, the lunar envelopes
+                                                                  should be perceived as horizontal bands above the
+                                                                  surface.
+
+                                                              5
+Fig. 11 shows a dual and single plane version of the
+wo r k e n v e l o p e . T h e d u a l p l a n e i s s h a p e d t o
+accommodate the prime envelope while the single plane
+option truncates the geometry offering visibility
+perpendicular to the work plane.
+
+
+
+
+Figure 11 Work Envelope Options
+
+It is possible to assume that the lunar EVA envelope is                    Figure 13 Horizontal Translation Corridor
+merely the weightless envelope placed on the surface of
+the Moon. However, when placed side-by-side there are                      Climbing ladders in a pressure suit represents a serious
+significant differences. Fig. 12 compares the two                          safety concern. A fall can damage the suit, leading to
+envelopes showing a 0.3 m (12 in.) difference in height                    death, or there can be injury due to the body hitting the
+and, without foot restraints, the lunar envelope is not                    inside of the suit. Suit bulk and joint mobility inhibit the
+constrained to a circle, but extends horizontally over the                 typical climbing motion and grasping the ladder requires
+surface.                                                                   repetitive glove operation. While the lunar suit has not
+                                                                           been designed, weight is still a concern. For each trip
+                                                                           up and down the ladder, astronauts are essentially
+                                                                           carrying their suits, backpacks and possibly tools.
+                                                                           Adjusted for lunar gravity excluding the weight of the
+                                                                           astronaut, an Apollo suit and PLSS weighed
+                                                                           approximately 16 kg (35 lb) and the equivalent weight for
+                                                                           an ISS EMU is 23.4 kg (51 lb).
+
+                                                                           Fig. 14 shows a vertical translation corridor sized for the
+                                                                           largest suited crew member. There is 0.04 m (1.5 in.) on
+                                                                           either side with 0.18 m (7 in.) boot space and 0.12 m
+                                                                           (4.75 in.) for climbing motion. Another 0.03 m (1.2 in) is
+                                                                           provided from the climbing motion to the back edge of
+                                                                           the corridor.
+
+Figure 12 Lunar and Weightless Envelopes
+
+TRANSLATION CORRIDORS
+
+Corridors have been defined for weightless EVA
+translation and the same thinking applies to the Moon.
+However, with gravity, the translation is more Earth-like
+and divided into horizontal and vertical. Horizontal
+corridors allow the crew to move between objects, while
+the vertical corridor provides adequate room for moving
+up and down ladders. The 1 m (39 in) dimension for the
+horizontal corridor (Fig. 13) is derived from the breadth
+of the 99th percentile suited crew member without tools.
+This dimension also works well as the “back wall” for
+crew members facing the work envelope.                                     Figure 14 Vertical Translation Corridor
+
+
+
+
+                                                                       6
+Climbing ladders becomes an issue because current                   CONCLUSION
+plans call for EVAs from the deck of a lander that is over
+6.3 m (21 ft.) off the surface. Without a mechanical lift,          Plans for returning to the Moon rely heavily on EVA for
+each astronaut will climb up and down the ladder for                many tasks including exploration, outpost assembly,
+every EVA from the crew lander and will likely climb                lander offloading, ISRU, as well as equipment servicing
+ladders to assist in off-loading the cargo landers. On the          and repair. The Lunar EVA Work Envelope presented in
+Earth, OSHA requires ladders over 6.1 m (20 ft.) to have            this paper begins the process of defining the interface
+a cage, well, or ladder safety device [5}.                          between crew and equipment. It is important because
+                                                                    E V A i s t i m e-sensitive benefiting from the efficient
+Another factor affecting the translation corridor is                integration of hardware design and astronaut operations.
+visibility. For horizontal translation, crew visibility is in       Without the EVA envelope, systems are likely not to be
+the direction of translation. In contrast, for vertical             serviceable, take too much time or represent an
+translation, the crew member’s vision is perpendicular to           unnecessary safety risk. To avoid these problems, the
+the direction of movement (see Fig. 15).                            Lunar EVA envelope provides guidance to engineers for
+                                                                    shaping the designs of lunar surface systems.
+
+
+
+
+                                                                    ACKNOWLEDGMENTS
+
+                                                                    The authors are grateful for the expert technical reviews
+                                                                    and comments provided by Dean Eppler, SAIC, Peggy
+                                                                    Guirgis, NASA, Johnson Space Center and Marianne
+                                                                    Rudisill, NASA, Langley Research Center.
+
+                                                                    REFERENCES
+
+                                                                    1. “Space Shuttle System Payload Accommodations,”
+                                                                       NSTS 07700. Volume XIV, Revision K, Appendix 7:
+                                                                       Extra Vehicular Activities,” NASA 2000.
+                                                                    2. “The Influence of Zero-g and Acceleration on the
+Figure 15 Visibility for Vertical Translation
+                                                                       Human Factors of Spacecraft Design,” B. Griffin,
+                                                                       NASA Design Guide, JSC 14581, 1978
+Ladder climbing is much like weightless EVA and, to
+                                                                    3. “Concept of Space Suit Enclosure for Planetary
+provide translation path visibility without changing the
+                       body position, the Russian Orlan                Exploration,” I. Abramov, N. Moiseyev and A.
+                       space suit is equipped with an                  Stoklitsky, SAE 2001-01-2168
+                       overhead viewing port. (See Fig.             4. U.S Spacesuits, K. S. Thomas and H. J. McMann,
+                       16) For the Moon, this feature                  Springer-Praxis, 2006, ISBN 10: 0-387-27919-9
+                       would help climbing a ladder;                5. Occupational Safety Health Administration (OSHA),
+                       however, downward visibility is                 Fixed Ladders. - 1917.118, Protection Against Falls
+                       still obscured. Although the                 6. “I-Suit Advanced Spacesuit Design Improvements
+                       crew member may not have                        and Performance Testing,” D. Graziosi and Ryan
+                       downward visibility, markings on                Lee, SAE 2003-01-2443
+                       the ladder as well as room to
+                       lean back or swing out, could
+                       provide better sight lines both up
+                       and down the ladder.
+
+Figure 16 Visor Opening
+for Overhead Viewing
+
+
+
+
+                                                                7
+

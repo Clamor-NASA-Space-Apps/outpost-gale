@@ -18,5 +18,6 @@ void sky() {
 		c = mix(c, sun, exp(-a / halo) * 0.7);
 		c = mix(c, sun * 4.0, smoothstep(disc * 1.15, disc, a));
 	}
-	COLOR = c;
+	// Compatibility draws into 8 bits with no debanding, and a hazy gradient bands: a 1/255 dither hides it
+	COLOR = c + (fract(sin(dot(SCREEN_UV, vec2(12.9898, 78.233))) * 43758.5453) - 0.5) / 255.0;
 }

@@ -1,0 +1,12 @@
+bigtiff True levels 6
+ size 7075 x 15040 tile (512,) (512,) compr (8,) pred (2,) fmt (3,) bits (32,) ntiles 420
+ size 3537 x 7520 tile (512,) (512,) compr (8,) pred (2,) fmt (3,) bits (32,) ntiles 105
+ size 1768 x 3760 tile (512,) (512,) compr (8,) pred (2,) fmt (3,) bits (32,) ntiles 32
+ size 884 x 1880 tile (512,) (512,) compr (8,) pred (2,) fmt (3,) bits (32,) ntiles 8
+ size 442 x 940 tile (512,) (512,) compr (8,) pred (2,) fmt (3,) bits (32,) ntiles 2
+ size 221 x 470 tile (512,) (512,) compr (8,) pred (2,) fmt (3,) bits (32,) ntiles 1
+33550 (1.0117630165416043, 1.0117630165416043, 0.0)
+33922 (0.0, 0.0, 0.0, 8140560.457783425, -264237.0882150971, 0.0)
+42113 -3.40282265508890445e+38
+pixel of point 5982.8 7713.4
+fetched bytes 911966 window (396, 395) nan 0 min -4495.483 max -4489.432 centre -4490.734

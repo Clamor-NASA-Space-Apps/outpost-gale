@@ -1,0 +1,491 @@
+54th International Conference on Environmental Systems                                                           ICES-2025-294
+13-17 July 2025, Prague, Czech Republic
+
+
+
+
+            Considerations of Spacesuit Stepping Mobility for Lunar
+                         EVA Crew Interface Design
+
+                                                    Seyed Pouyan Sabahi1
+                                                 KBR, Inc., Houston, TX, 77058
+
+                                                           Linh Vu2
+                                              Aegis Aerospace, Houston, TX 77058
+
+                                                      Yaritza Hernandez1
+                                                 KBR, Inc., Houston, TX, 77058
+
+                                                           Han Kim3
+                                                Leidos, Inc., Houston, TX 77058
+
+                                                      Christine Jerome4
+                                        NASA Johnson Space Center, Houston, TX, 77058
+
+                                                             and
+
+                                                     Nathaniel Newby5
+                                                 KBR Inc, Houston, TX, 77058
+
+
+                     As NASA aims to return humans back to the lunar surface through the Artemis Campaign,
+                 careful considerations regarding suited human factors in partial gravity are required during
+                 crew interface design to reduce overall NASA program risks. The unique environment of the
+                 lunar surface presents significant challenges for human mobility, particularly while wearing
+                 a spacesuit. Given the altered spacesuit kinematics, defining proper step or platform heights
+                 that are safe and accessible for suited crewmembers across the anthropometric range is an
+                 important aspect of human factors in spacecraft design. In this work, an analysis was
+                 performed using a 3D spacesuit model scaled appropriately to specific anthropometric
+                 properties, then combined kinematics data gathered during previous spacesuit data collection
+                 events using a motion capture system. The kinematics data previously collected included tasks
+                 such as suited test subjects performing forward steps up onto a surface and sidesteps over an
+                 obstruction on the floor. The collected data were then projected onto a virtual wearer, whose
+                 anthropometry corresponded to a 1st percentile female and a 99th percentile male in stature
+                 and vertical trunk diameter (VTD) to assess different what-if scenarios for extreme
+                 anthropometric ranges. The influences from other crew interface configurations, such as
+                 handle placement, were also investigated. This paper demonstrates how suited test data
+                 integrated with human-suit modeling can effectively be used to develop recommendations for
+                 EVA systems requirements. These recommendations are expected to reduce biomechanical
+                 stresses and risk of injury for the crewmembers while improving EVA mobility and
+                 performance.
+
+
+
+        1
+          Human Factors Design Engineer, KBR Inc., 2101 NASA Parkway, Houston, TX 77058
+        2
+          Human Factors Design Engineer, Aegis Aerospace Inc., 2101 NASA Parkway, Houston, TX 77058
+        3
+          Human Factors Design Engineer, Leidos Technology Corp., 2101 NASA Parkway, Houston, TX 77058
+        4
+          Spacesuit Engineer, NASA Johnson Space Center, 2101 NASA Parkway, Houston, TX 77058
+        5
+          Technical Monitor, NASA Johnson Space Center, 2101 NASA Parkway, Houston, TX 77058
+                                            Acronyms and Nomenclature
+ARGOS      =   Active Response Gravity Offload System
+HITL       =   Human-in-the-Loop
+DVT        =   Design Verification Testing
+EPG        =   Environmental Protection Garment
+EVA        =   Extravehicular Activity
+HLS        =   Human Landing System
+PLSS       =   Portable Life Support System
+VTD        =   Vertical Trunk Diameter
+xEMU       =   Exploration Extravehicular Mobility Unit
+1/6th-g    =   1/6th gravity
+
+                                                   I. Introduction
+
+N     ASA’s Artemis Program involves taking a wide range of humans to the surface of the Moon. The program
+      requires the systems to be designed to accommodate the maximum proportion of the crew population,
+heuristically represented by 1st percentile female to 99th percentile male critical measurements. This requirement
+creates unique challenges in designing interfaces for human systems. Similarly, to ensure the crew’s safety while in
+space, a set of additional requirements need to be made regarding human interfaces to reduce the risk of injury and
+fatigue while performing EVAs on the surface. Specifically, defining an appropriate step height requirement is critical
+for human systems design. The requirement should allow crewmembers to ingress/egress systems, without adjusting
+their body or spacesuit, in a way that may cause excessive biomechanical stress. This can be especially challenging
+with additional overhead restrictions above the step, such as translating through a hatch; specifically, for 99 th percentile
+stature male crewmembers, having to bend down or duck. Conversely, the step must also accommodate a female with
+the 1st percentile measurements leg length and knee height, allowing them to safely lift and place their foot on the
+step. Additionally, the step depth and hatch width strongly influence crewmember’s
+technique when performing a hatch ingress/egress or step up. Stability aids, such as
+handles, should also be considered to reduce the risk of physical fatigue and increase
+stability during step/hatch translation.
+    To gather appropriate data for assessing step and hatch designs, a set of human-
+in-the-loop (HITL) tests and modeling efforts were performed at NASA Johnson
+Space Center. Testing was performed in both a 1-g laboratory environment and an
+offloaded 1/6th-g environment at NASA’s Active Response Gravity Offload System
+(ARGOS). Subjects wore NASA’s government reference design spacesuit, the
+exploration Extravehicular Mobility Unit (xEMU) suit, and motion capture data was
+collected during each test event. The data was then used to further analyze the full
+range of anthropometry through digital human-suit modeling, to drive
+recommendations for safe step requirements. Additional analysis was performed
+using the anthropometrically extrapolated xEMU human-suit models to develop
+handle placement and hatch corner radius requirements.
+
+                                   II. Methods
+
+A. Human-in-the-Loop Tests
+    During NASA’s xEMU Design Verification Testing (DVT)1, a group of subjects
+across varying anthropometric ranges performed a set of mobility tasks. The subjects
+ranged from 34th to 96th percentile in VTD, and 38th to 99th percentile in stature. The
+focus of these tests was to assess the suit’s mobility and cycle life. As a part of the Figure 1. Optical Motion
+data collection, optical motion capture data was gathered from the subjects while Capture markers Placed
+performing tasks by placing retro-reflective markers across the spacesuit as shown in Across the xEMU Spacesuit.
+Figure 1. One of the tasks performed during the DVT testing was stepping up. For
+this task, the subjects were asked to step onto stackable exercise steps (Figure 2B). The subjects repeated the task
+increasing the step height by 2.75-inch (7 cm) increments until they could no longer perform a controlled step up
+without any handles or stability aids.
+
+                                                           2
+                                  International Conference on Environmental Systems
+Figure 2. Subjects Performing the Side-squat-step Task (A), Front-Step-Up (B), and Hatch Translation (C).
+Side-squat-step and front-step-up were performed at ARGOS with a 1/6th-g offload, while hatch translation was
+performed in a lab setting with no offload.
+
+    Additional data was gathered during the DVT testing1 for a side-step-squat over an object (Figure 2A). During this
+task, the subjects side-stepped over a cylindrical exercise bag with a diameter of 10.5 inches (26.67 cm), while holding
+onto simulated handholds.
+    From a separate test series, an additional set of suited data was collected to assess step height with an overhead
+restriction, similar to a spacecraft hatch. This test was performed in a 1-g laboratory setting without offloading using
+
+
+
+
+Figure 3. Hatch dimensions shown, with a 60-inch height, 40-inch width, 6-inch depth, and a 12-inch step
+threshold. Step threshold heights of 12, 9, and 6 inches were evaluated during the HITL suited tests. Note that the
+mockup used during testing did not have curved corners.
+                                                          3
+                                 International Conference on Environmental Systems
+the xEMU spacesuit, as seen in Figure 2C. To understand the most volumetrically challenging scenario in translating
+through a hatch, this series involved four subjects with 4th quartile stature and VTD as the critical anthropometric
+dimensions. An adjustable hatch mockup was developed using foam and aluminum frames to allow for testing of
+various step heights and hatch overhead height combinations. The depth of the step was set to 6 inches (0.15 m) using
+high-density foam cutouts, based on NASA’s hatch depth requirements in NASA’s EHP-10028 document. The hatch
+width was constrained to 40 inches (1.02 m), as presented in Figure 3. These values were adapted from legacy NASA
+hatch design requirements from previous missions. For this test, the subjects were allowed to practice translating
+through the hatch two times prior to recording data to familiarize themselves with the possible techniques. The subjects
+were allowed to hold anywhere along the hatch frame to simulate a handle, and the hand placement was later used to
+understand the preferred stability aid locations for the subjects based on the hand markers.
+
+B. Human-Suit Modeling
+    To assess the full range of anthropometry, the HITL data was extrapolated to perform a worst-case analysis based
+on VTD and stature as the critical anthropometric dimensions. Therefore, human-suit models were created using CAD
+of xEMU spacesuit components2. The proper spacesuit component sizes were used to match a 1st percentile female
+and a 99th percentile male in VTD and stature. The waist sizing ring was adjusted to match 1 st and 99th percentile VTD.
+The arm and leg softgoods were also adjusted to match a 1 st and 99th percentile in stature, while assuming proper suit
+indexing. Motion capture data was used to reproduce the test subjects’ technique and kinematics for each task. The
+motion capture data was first labeled and gap filled in the Vicon software. The kinematics were modeled by aligning
+the spacesuit hard components CAD with motion capture data and calculating joint centers. The extracted values were
+used to adjust the joints and suit components of the extrapolated 99th percentile model to simulate the motion of a
+hypothetical subject with large body dimensions.
+    3D models of a simulated step and a simulated hatch were added to the suited model to help assess clearances
+between the suit and the step hardware. To understand the limitation of front step-up onto a threshold without any
+overhead restriction, the 1st percentile resized model was examined as the anthropometric worst-case using the front-
+step-up motion capture data. A similar approach was taken to assess side-stepping over a threshold with an overhead
+restriction, like translating
+through a hatch. To ensure
+that crew with higher
+stature and VTD would be
+capable        of       safely
+transitioning         through
+while       clearing       the
+overhead restriction of a
+hatch, motion capture data
+was used with the 99th
+percentile model as the
+anthropometric worst-case
+(Figure 4). The model was
+then used to analyze
+clearance from suit to the
+hatch and the threshold at
+varying heights.
+    Additional       analyses
+were performed using the
+models to further assess
+details of an ideal hatch
+design, such as handle
+                               Figure 4. Example of xEMU Spacesuit HITL Data Extrapolated to a 99th Percentile
+placement and corner fillet
+                               Human-Suit Model Using Motion Capture Kinematics Data. The suited subject is
+radius. Table 1 provides an
+                               performing a side-squat-step technique to translate through a simulated hatch.
+overview          of       the
+anthropometric worst-case
+identified and assessed for each design criteria, along with the specific HITL task used to adjust the human-suit model.
+
+
+                                                          4
+                                 International Conference on Environmental Systems
+     Table 1. Overview of partial gravity design criteria and their associated data source and
+     anthropometric worst case considered in the analysis.
+                   Design Criteria               HITL Task        Anthropometric Worst-
+                                                  Analyzed       Case Percentile Stature and
+                                                                      VTD Evaluated
+                 Step Platform Height           Front-step-up                1st
+                                               Hatch translation            99th
+             Hatch Step Threshold Height
+                                               Side-step-squat               1st
+             Hatch Step Threshold Depth        Side-step-squat               1st
+                                               Hatch translation            99th
+             Hatch Stability Aid (Handles)
+                                               Side-step-squat               1st
+
+
+
+                                                  III. Results
+
+A. Step Platform Height with no Overhead Restriction
+    During the xEMU DVT series, which took place in the ARGOS
+1/6th-g offloaded environment, the subjects performed a front-step-
+up onto a set of stacked exercise steps. The subjects repeated the
+task while increasing the number of steps stacked until they felt
+they had maximized their controlled and comfortable step height.
+The motion capture data from the two subjects with the smallest
+stature and VTD across the subject group were then used with the
+resized 1st percentile human-suit model. The 1st percentile human-
+suit modeling allowed for observing the worst-case step height
+needed, assuming that taller subjects could step as high. Since the
+subjects were limited by the increments based on the height of each
+exercise step added, the data provided a conservative estimate of
+the suited person’s capability, which was deemed appropriate to
+analyze for requirement development.
+    During the DVT testing4, the subjects achieved a front step
+height range of 17.1 inches to 30.1 inches (43.4 to 76.5 cm). These
+measurements were from the floor to the tip of the boot marker
+which is not the lowest point of the boot. Therefore, it is important
+to account for the thickness of the boot sole, estimated to be 2
+                                                                                st
+inches (5 cm). Since the smallest subject was of 38th percentile Figure 5. 1 Percentile resized xEMU Human-
+stature and 33 percentile VTD, the step height was parametrically suit model Performing a Step Up. Kinematic
+               rd
+
+scaled down for a hypothetical 1st percentile suited crewmember. data captured from xEMU DVT series used to
+The joint angles from the motion capture data were extracted and create a static step-up posture.
+projected to the 1st percentile model. The 1st percentile human-suit
+model achieved a 12.5-inch step height, as shown in Figure 5. It is assumed that the crewmembers would have a
+stability aid available for balance when performing a step-up task, which could increase achievable step heights. The
+subjects may have also been limited in the amount of torso roll since the ARGOS offload gimbal has a roll limit.
+
+B. Step Threshold with an Overhead Restriction
+    A hatch opening on the lunar surface needs to be properly sized to allow a 99th percentile suited crewmember to
+translate through while wearing a spacesuit. The bottom threshold needs to allow the shortest crew members to transfer
+through without needing to hop or jump over the threshold. A set of HITL tests was performed using a simulated hatch
+and the xEMU suit without offloading to understand the kinematics of a suited human ingressing/egressing through a
+hatch with a fixed dimension of 60-inch height and 40-inch width. Previous HITL tests and preliminary modeling
+showed that a side-step-squat technique would work best for translating through a hatch while clearing the overhead
+obstacle3, with a step-forward technique not allowing taller subjects to clear the overhead restriction. It is expected
+that this may be dependent on waist and hip flexion in the suit while stepping across. The preliminary modeling of 1 st
+
+                                                         5
+                                International Conference on Environmental Systems
+percentile subjects showed that they can clear the 60-inch overhead restriction
+without an issue while side-stepping over a 12-inch threshold, as seen in Figure
+6. However, the 99th percentile model showed uncertainty in the top clearance
+based on the assumed technique due to limited reference data, considering the
+modeled clearance analysis was done in static postures, potentially leading to
+overly conservative estimates. Thus, the focus of the suited testing was to
+understand whether a 99th percentile crewmember could translate through
+without excessive bending or stress on their body by updating the model with
+dynamic data using appropriate suit and hatch volumetric mockup hardware.
+    Using the motion capture data gathered throughout the tests, all four subject
+kinematics were extrapolated to a 99th percentile hypothetical subject in the
+model. The subjects transitioned through the hatch by lifting their left leg across
+the hatch in a side-step motion, then lowering their torso below the overhead
+restriction, and tilting outwards while pulling their right leg over the threshold,
+as shown in Figure 7. Although all subjects generally used a similar approach,
+minor changes in techniques were seen across the attempts, such as more
+splayed hips and knees with a deeper squat.
+Table 2. Subjective feedback gathered from subjects performing
+hatch translation.
+ Threshold  Hatch  Subject                     Difficulty Rating
+                                                                                       Figure 6. 1st Percentile resized
+  Height   Opening   ID                           (scale 1 -5,                         xEMU        Human-suit    model
+   (in.)     (in.)                                   1-easy                            Transitioning through a 60x40
+                                                5-cannot do it                         inch hatch, with a 12-inch step
+      12             60           A                    2                               threshold.      Kinematic   data
+                                                                                       captured from xEMU DVT series
+                                  B                      2                             used to create a dynamic side-
+                                  C                      2                             squat-step through model.
+
+                                  D                      1                            The results from the HITL test applied
+                                                                                  to the 99th percentile model showed the
+                                                                                  modeled kinematics from three of the four
+subjects cleared a 60-inch overhead restriction while stepping over a 12-inch step. The modeled case that did not clear
+the hatch had a 2.2-inch overlap between the PLSS and overhead restriction. The subjective feedback and difficulty
+ratings gathered across all subjects, presented in Table 2, indicated that clearing the step threshold required minimum
+effort. It is also expected that lifting the leg across the threshold in lunar gravity will be easier than in 1-g. Additional
+test cases were performed by the subjects by adjusting the hatch mockup, using a 9-inch (0.23 meters) threshold,
+bringing the overhead restriction height to 69 inches (1.75 meters) from the floor, and a 6-inch (0.15 meters) high
+
+
+
+
+Figure 7. 99th Percentile resized xEMU Human-suit model transitioning through a 60x40-inch Hatch, with a
+12-inch step threshold. Kinematic data captured from xEMU spacesuit hatch evaluation test series were used to
+create a dynamic human-suit model.
+
+
+                                                           6
+                                  International Conference on Environmental Systems
+threshold with 66-inch (1.68 meters) high overhead height from the floor. Although the subjective feedback from the
+test subjects showed these cases to be more challenging, subjects successfully completed the hatch translation. Positive
+clearance was observed with the 99th percentile model in the 9-inch threshold, 69-inch overhead height as well. When
+analyzing the 99th percentile model with a 6-inch threshold and a 66-inch overhead height, large negative clearance
+values were seen. Therefore, requirement recommendations include a 12-inch (0.3 m) maximum step threshold for a
+60x40 inch (1.52x1.02 meters) hatch to reduce excessive effort by crew across the anthropometric range while
+transitioning through a hatch. Similarly, a minimum 69-inch overhead restriction height from the floor was
+recommended to reduce risk of overhead contact for tall crew members, with the assumption that astronauts will be
+trained to perform the successful technique.
+
+
+C. Step Threshold Depth.
+    Although the hatch suited testing verified that large male subjects could clear a step threshold with a 6-inch depth,
+a modeling analysis was performed using a resized 1st percentile human-suit model to verify their capability in clearing
+the 6-inch depth step at a 12-inch height. Kinematic data from the xEMU DVT5 side-step-squat task done by a small
+female were used in the resized xEMU
+model for a 1st percentile female in VTD
+and stature. Once the motion was
+reproduced in the model, CAD of the
+hatch was overlayed onto the model.
+    The result showed slight interference
+(0.6 inches) when bringing the trail leg
+through the hatch, as presented in Figure
+8. However, considering the overhead
+restriction does not limit a 1st percentile
+crewmember’s motion, there is likely
+flexibility for smaller subjects to adjust
+their technique and clear the threshold by
+allowing them to stay more upright.
+Therefore, it was deemed acceptable to
+recommend a 6-inch depth at the 12-
+inches threshold height. Due to the
+                                                                                                                        st
+limited HITL data regarding the Figure 8. Side-step-squat motion kinematics extrapolated to 1
+                     st
+performance of a 1 percentile subject,       percentile  model,  with  a 12-inch  threshold   hatch.  Slight interference
+no conclusions could be made regarding (0.6 inches) was observed between the suit and the hatch within the model.
+a step depth greater than 6 inches.
+
+D. Hatch Corner Radius
+
+    An additional analysis was performed using a beveled hatch to understand the maximum possible radius a hatch
+can have while providing sufficient space for the suited crew to transfer through without occlusion. 9.8 and 19.7 inch
+(25 and 50 cm) bevel radii were assessed using both the 1st percentile and 99th percentile models. An initial review of
+the 1st percentile model showed no issues, considering they would be closer to the front of the hatch to hold onto the
+stability aids while transiting through the hatch. The 99th percentile model showed possible interference with the
+hardware with a 9.8-inch (25 cm) inside corner radius hatch, depending on the technique used. Therefore, based on
+the modeled results, the 99th percentile suited crewmember may be very close to the edge of the hatch, although no
+restrictions were apparent, as shown in Figure 9.
+
+
+
+
+                                                          7
+                                 International Conference on Environmental Systems
+  Figure 9. 99th Percentile xEMU model transitioning through a 60x40 in. hatch with a radius of 9.8 inches
+                                                 (25 cm).
+
+E. Stability Aid Handle Considerations
+    Providing handles in an accessible location has been proven to be a key aspect of safely stepping onto or over a
+threshold. An analysis was performed using
+the motion capture kinematic data with the
+1st percentile and 99th percentile
+extrapolated human-suit models to estimate
+a proper handle location range accessible
+across the anthropometric range on the
+hatch structure.
+    The kinematic data from the hatch
+evaluation test with large male subjects was
+used with the 99th percentile model. The
+result showed the highest hand position to
+be 56 inches from the floor to the center of
+the hand. Similarly, the kinematic data from
+the xEMU DVT side-squat-step task was
+used to assess the 1st percentile female
+model.
+    The result showed that a 1st percentile
+female is likely to hold the handle 40 inches
+above the ground to the center of the hand,
+as shown in Figure 10. Therefore, an initial
+range of 40 to 56 inches from the floor with
+                                                          st                           th
+a potential buffer was recommended as the Figure 10. 1 Percentile (Right) and 99 Percentile (Left) Modeled
+appropriate stability aid placement for Hand Placements.
+hatch transfer.
+
+
+                                     IV. Discussion and Assumptions
+    The results from the HITL tests with the xEMU spacesuit and the human-suit modeling analyses were used as
+inputs to NASA’s partial gravity EVA requirements regarding hatch and step design. Due to the limited number of
+HITL runs, data from various tests were used with a focus on tasks with similar techniques, such as the use of side-
+step-squat for hatch evaluation modeling. These requirements are levied across various programs under the Artemis
+campaign, including Human Landing System (HLS) and habitats, to ensure the safety of suited crewmembers when
+performing EVAs on the lunar surface without the need for excessive physical stress or hard postures. Differences in
+suit architecture, joint mobility, size, and boot thickness across other spacesuits can lead to differences in clearance
+ability across the discussed cases. The addition of tools and the complete Environmental Protection Garment (EPG)
+
+                                                          8
+                                 International Conference on Environmental Systems
+over the suit are not expected to change the results. This is considering other subjects have performed a similar motion
+in other xEMU test series with the EPG and toolbelt on. The EPG is designed to minimally impact hip mobility. The
+toolbelt has shown minimal interference with a leg lifting motion and does not have a significant impact on the CG of
+the suit-human system. However, the addition of tool holsters to legs may have negative impacts to the translation.
+Additionally, given that the tests performed did not use 1st percentile or 99th percentile subjects and the subjects were
+not specifically instructed to maximize their clearance for extrapolation purposes, there may be discrepancies in body
+adjustments and technique when performed by actual 1st and 99th percentile subjects.
+    Based on the analysis done for step platform height, kinematic data gathered using motion capture markers during
+xEMU DVT series in the ARGOS 1/6th-g offloaded environment were used with an extrapolated 1st percentile human-
+suit model. The analysis showed a maximum step height of 12 inches is acceptable for both front-step-up and side-
+step-up onto a step in a controlled motion, with the 1st percentile human-suit model showing a 16-inch clearance from
+the overhead restriction. Since the test setup used to assess the front-step-up did not involve any stability aids for the
+subjects, it is assumed that subjects will achieve a 12-inch step height safely, especially if stability aids are provided
+on the side of the hardware.
+    When creating hardware for step threshold height with an overhead restriction, a hatch width of 40 inches and step
+depth of 6 inches were assumed during testing. This test series used the xEMU spacesuit in a 1-g non-offloaded
+environment, and other gravitational environments may yield different techniques and perceived difficulties.
+Handholds were not provided, however subjects were able to hold onto the hardware to simulate a stability aid. It is
+also assumed that the surface height is the same on both sides of the hatch, considering differences in the surface
+elevation can introduce variance in technique and stability. The analyses done regarding hatch design indicated that a
+fixed hatch with a 60-inch height, 40-inch width, and up to a 6-inch depth is sufficient to allow for crew across the
+NASA required anthropometric range to transfer through on the lunar surface, with a 72-inch overhead clearance from
+the ground. The HITL testing highlighted the importance of crew training to utilize a side-squat-step technique similar
+to what was observed to ensure successful hatch ingress/egress on the lunar surface. Additional analysis concerning
+curved hatch corners was done using the modeled data. This assessment showed that having a hatch corner radius of
+9.8 inches (25 cm) is acceptable across the anthropometric range and does not introduce additional restrictions.
+    All subjects used the stability aid to maintain balance during this task. Based on the test results, stability aids on
+both sides of the hatch opening were additionally included in the requirement and placed at least 40 to 56 inches from
+the ground. These values were gathered from evaluating the hand placements during testing, with the data extrapolated
+to 1st and 99th percentile subjects using the human-suit model.
+
+                                               V. Forward Work
+    Additional analysis and testing are beneficial to understanding how the subjects can perform step-up and hatch
+transfer while carrying tools or payloads. Specifically, HITL testing can be performed with more mature hardware
+mockups to provide greater confidence to the extrapolated values. It is expected that operational concepts need to be
+assessed when training for the ingress/egress of large hardware from the various rovers and landers within the Artemis
+campaign. Similarly, the performance of other partial gravity EVA tasks, such as pulling another suited crewmember
+into the vehicle cabin through a hatch in an incapacitated crew rescue (ICR) case, requires further testing to understand
+potential unique kinematic challenges. All the tests analyzed were performed with the xEMU suit with a 4.3 psi
+pressure. Performing the tasks in other spacesuits and at higher pressures may require further testing to ensure no
+excessive stress or technique challenges are introduced to the crew across the anthropometric range. It could be
+beneficial to gather metabolic rate data, along with a more detailed questionnaire, in future testing to better understand
+human performance and the physiological effort associated during the different types of hatch types and translation
+tasks.
+
+                                                 VI. Conclusion
+    With the high cost of pressurized suit testing, human-suit modeling has shown to be useful for providing valuable
+data to programs across the Artemis campaign. Motion capture data from various HITL tests using the xEMU spacesuit
+were gathered and applied to a human-suit model created from xEMU components in a 3D computer graphics
+software. The application of kinematic data from motion capture onto the resized suit model allowed for analysis of
+step height and hatch dimension requirements across the complete anthropometric range, as required by NASA. The
+resized 1st percentile model reposed using the motion capture data showed that a step height of 12 inches is accessible
+to all crewmembers, especially when stability aids are provided. The combination of this data with a reposed 99 th
+percentile human-suit model helped assure that taller crewmembers can clear a 12-inch threshold while transitioning
+                                                          9
+                                 International Conference on Environmental Systems
+through a hatch with an overhead restriction of 72 inches above the ground. Additional quick review analyses using
+the model helped reduce the need for further HITL testing while providing further insight into ideal stability aid
+placements for ingress/egress of crew members through a hatch on the lunar surface.
+
+                                                        References
+   1
+     McFarland, S., Campbell, D., and Rhodes, R., "NASA Advanced Space Suit Pressure Garment System Status and
+Development Priorities 2023." In: 52nd International Conference on Environmental Systems. 2023.
+   2
+     Jarvis, S., Vu, L., Benson, E., and Rajulu, S., "Development of Human-Spacesuit Interaction Models." In: 48th International
+Conference on Environmental Systems. 2019.
+   3
+     Hernandez, Y., Sabahi, S. P., Kim, H., Vu, L., Newby, N., (2024, August 25-29). “Defining Work Limit and Capabilities for
+Spacesuit Wearers in Lunar Exploration Tasks”. In: 22 nd International Ergonomics Association. 2024.
+   4
+     Rhodes, R., Flaspohler, C., and McFarland, S., "Testing Fit, Mobility, and Comfort of the Exploration Pressure Garment
+Subsystem (xPGS)." In: 52nd International Conference on Environmental Systems. 2023.
+   5
+     Flaspohler, C., and Rhodes, R., "Exploration Extravehicular Mobility Unit Pressure Garment System (xPGS) Cycle Testing
+Overview and Results." In: 52nd International Conference on Environmental Systems. 2023.
+
+
+
+
+                                                           10
+                                   International Conference on Environmental Systems
+

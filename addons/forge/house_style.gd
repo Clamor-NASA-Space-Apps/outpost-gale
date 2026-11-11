@@ -36,12 +36,13 @@ static func role(design: Dictionary, name: String, still := false) -> Material:
 	var t: Dictionary = design.materials[name]
 	still = still and (t.has("detail") or t.has("lit"))
 	var key := name + ("+still" if still else "")
+	var moving_detail := not still and t.has("detail")
 	if cache.has(key):
 		return cache[key]
 	var color := Color.html(t.color)
 	var glow := float(t.get("emissive", 0))
 	var m: Material
-	if still or _flat(design):
+	if still or moving_detail or _flat(design):
 		# forge models bake their normals, but kit models and built-in meshes only facet here
 		var s := ShaderMaterial.new()
 		s.set_shader_parameter("albedo", color)
@@ -76,7 +77,8 @@ static func _flat(design: Dictionary) -> bool:
 static func _dress(design: Dictionary, t: Dictionary, s: ShaderMaterial) -> void:
 	var defines := PackedStringArray(["FLAT"] if _flat(design) else [])
 	var still: bool = s.get_meta("still")
-	var d: Dictionary = t.get("detail", {}) if still else {}
+	# a moving mesh takes its detail in its own space, so the surface travels with it
+	var d: Dictionary = t.get("detail", {})
 	var level: String = design.get("_quality", {}).get("detail", "off")
 	var photo: Texture2D = null
 	if d.size() and level != "off":
@@ -87,6 +89,14 @@ static func _dress(design: Dictionary, t: Dictionary, s: ShaderMaterial) -> void
 			else:
 				push_warning("house-style: no texture at %s, the pattern is drawn instead" % file)
 		defines.append_array(["DETAIL", "TEXTURE" if photo else "PATTERN_" + str(d.get("pattern", "grain")).to_upper()])
+		if not still:
+			defines.append("LOCAL")
+		for map: String in ["normal", "roughness"]:
+			var tex: Texture2D = null
+			if photo and d.has(map) and ResourceLoader.exists("res://" + str(d[map])):
+				tex = load("res://" + str(d[map]))
+				defines.append({"normal": "NORMALMAP", "roughness": "ROUGHMAP"}[map])
+			s.set_shader_parameter("detail_" + map, tex)
 		var size: Variant = d.get("textureSize", 2.0) if photo else d.get("size", 1.0)
 		s.set_shader_parameter("detail_size", Vector2(size[0], size[1]) if size is Array else Vector2.ONE * float(size))
 		s.set_shader_parameter("detail_strength", float(d.get("strength", 0.4)))
@@ -240,6 +250,11 @@ static func apply_lighting(parent: Node, design: Dictionary) -> Dictionary:
 		# 1 paints the whole sky in the fog colour, which flattens a sky gradient; haze wants it low
 		env.fog_sky_affect = float(L.fog.get("sky", 1))
 		env.fog_depth_curve = float(L.fog.get("curve", 1))
+		# in depth mode density is the most fog anything gets: the engine's 0.01 left the far end 1% fogged
+		# (measured on 4.7.2), so `far` meant nothing until this was set. `density` 0.4 to 0.7 keeps a far hill
+		env.fog_density = float(L.fog.get("density", 1))
+		# `sun`: fog lit by the sun when you look toward it, the haze bleaching around a low sun
+		env.fog_sun_scatter = float(L.fog.get("sun", 0))
 	var world := WorldEnvironment.new()
 	world.environment = env
 	var sun := DirectionalLight3D.new()
