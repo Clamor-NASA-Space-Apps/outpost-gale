@@ -328,6 +328,16 @@
    "value": 20,
    "unit": "deg/s",
    "source": "estimate: the SEV's wheels \"pivot 360 degrees\", so it can turn on the spot (https://www.nasa.gov/wp-content/uploads/2015/08/464826main_sev_factsheet_508.pdf); a slow pivot of 10 to 30 degrees a second, no measured rate found"
+  },
+  {
+   "id": "lettuce.width",
+   "real": [
+    0.2,
+    0.35
+   ],
+   "value": 0.3,
+   "unit": "m",
+   "source": "estimate: a leaf or romaine lettuce head at harvest is commonly 20 to 35 cm across; the saved NASA Veggie paper (NTRS 20190028955) gives days to harvest, not size"
   }
  ],
  "pairs": []

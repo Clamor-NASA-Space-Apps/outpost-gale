@@ -46,6 +46,7 @@ func build(design: Dictionary) -> void:
 	terrain.build(design)
 	for it: Dictionary in data.items:
 		items[it.id] = _item(it, design)
+	_plant(design, sheet)
 	_merge_cells()
 	rocks = Rocks.new()
 	rocks.name = "Rocks"
@@ -364,3 +365,35 @@ func _lamps(design: Dictionary) -> void:
 			lamp.position = at
 			lamp.add_to_group("world_lamp")
 			n.add_child(lamp)
+
+
+## Lettuce in the greenhouse's grow-bed slots (data/world.json `plants`), sized so a full head is the sheet's
+## lettuce.width. They join the greenhouse, so the merge draws them with it.
+func _plant(design: Dictionary, sheet: Dictionary) -> void:
+	var width := 0.3
+	for r: Dictionary in sheet.rows:
+		if r.id == "lettuce.width":
+			width = r.value
+	for id: String in data.get("plants", {}):
+		if id.begins_with("_") or not items.has(id):
+			continue
+		var stages: Array = data.plants[id]
+		var slots: Array[Node] = (items[id] as Node3D).find_children("slot_*", "Node3D", true, false)
+		slots.sort_custom(func(a: Node, b: Node) -> bool: return str(a.name).naturalnocasecmp_to(str(b.name)) < 0)
+		var scale_by := 0.0
+		for i in mini(slots.size(), stages.size()):
+			var plant := _model("lettuce_%d" % int(stages[i]), design)
+			slots[i].add_child(plant)
+			if scale_by == 0.0:
+				# measured in place, so a scale the slot carries from its model counts too
+				var full := drawn(_model_in(slots[i], "lettuce_4", design)).size
+				scale_by = width / maxf(full.x, full.z)
+			plant.scale = Vector3.ONE * scale_by
+
+
+## A throwaway copy of a prefab under `parent`, measured and freed by the caller's next line.
+func _model_in(parent: Node3D, id: String, design: Dictionary) -> Node3D:
+	var m := _model(id, design)
+	parent.add_child(m)
+	m.queue_free()
+	return m

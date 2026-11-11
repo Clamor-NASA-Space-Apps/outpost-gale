@@ -14,6 +14,7 @@ const VIEWS := {
 	"horizon": [Vector3(-14, 1.7, -14), Vector3(30, 3, 22)],
 	"airlock": [Vector3(-2.5, 1.7, 7.5), Vector3(0, 1.2, 2.5)],
 	"rover": [Vector3(-16, 3.0, 8), Vector3(-10, 1.2, 0)],
+	"greenhouse": [Vector3(-9.5, 5.5, -1.5), Vector3(-14, 0.4, -6)],
 }
 
 @onready var world: Node3D = $World
