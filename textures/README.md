@@ -5,7 +5,9 @@ CC0 photo sets, resized for the web build (2K for the ground, 1K for the rest). 
 
 | Files | Set |
 |---|---|
-| dust_* | Poly Haven `gravelly_sand` |
+| dust_* | Poly Haven `moon_02` (fine dust, 3.1 m tile) |
+| gravel_* | Poly Haven `gravelly_sand` (patches) |
+| ripple_normal | Poly Haven `aerial_beach_01` (wind ripples, normal only) |
 | rock_* | Poly Haven `cliff_side` |
 | body_* | ambientCG `MetalPlates009` |
 | metal_* | ambientCG `Metal011` |
