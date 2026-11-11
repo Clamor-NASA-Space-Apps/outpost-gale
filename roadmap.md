@@ -25,21 +25,21 @@ No story, no `sim/` rules, no meters, no sol clock, no win or lose before 14 Nov
 - [ ] lessons
 
 ## S2: lanes in parallel (12 Nov day)
-- [ ] A `player/`: controller (walk 1.0, hurry 1.6, stop 1.5, hop 0.18, step 0.3), camera, touch, Quaternius clips
-- [ ] B `models/` structures: habitat with airlock door, solar array with tilting panels, machines, greenhouse + lettuce, shelter, dish, pad, lander
+- [x] A `player/`: controller (walk 1.0, hurry 1.6, stop 1.5, hop 0.18, step 0.3), camera, touch, Quaternius clips
+- [x] B `models/` structures: habitat with airlock door, solar array with tilting panels, machines, greenhouse + lettuce, shelter, dish, pad, lander
 - [x] C `models/` vehicles and props: pressurised rover, Curiosity (no insignia), PIP, cargo bags, rocks, lamps, beacons
 - [x] D `ui/`: theme from `design.json`, fonts, every BRIEF §5 component in `hud_gallery.tscn` at phone and laptop sizes
-- [ ] E `world/`: prefab loader with collision from meshes, sunset/night/storm states, rock scatter, dust effects, reflection probe
-- [ ] user playtest (desktop, five minutes)
+- [x] E `world/`: prefab loader with collision from meshes, sunset/night/storm states, rock scatter, dust effects, reflection probe
+- [x] user playtest (desktop, five minutes)
 - [ ] checks pass
 - [ ] /code-review medium
 - [ ] lessons
 
 ## S3: interactions and the phone (13 Nov)
-- [ ] Airlock door opens; walk in and out; camera indoors
-- [ ] Tilt a solar panel; pick up and put down a cargo bag
-- [ ] Get in, drive and get out of the rover; camera behind it
-- [ ] Dust under feet and wheels; debug sky, teleport, quality keys; fps counter
+- [x] Airlock door opens (walking in waits on the 2.2 m doorway); camera indoors not yet checked
+- [x] Tilt a solar panel; pick up and put down a cargo bag
+- [x] Get in, drive and get out of the rover; camera behind it
+- [x] Dust under feet and wheels; debug sky, teleport, quality keys; fps counter
 - [ ] First web build on Ravindu's iPhone (`serve-web.mjs`)
 - [ ] user playtest (iPhone, five minutes)
 - [ ] checks pass
