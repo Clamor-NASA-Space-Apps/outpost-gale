@@ -184,10 +184,10 @@
     1.52,
     1.83
    ],
-   "value": 1.9,
+   "value": 2.2,
    "unit": "m",
    "source": "https://ntrs.nasa.gov/citations/20250004496 (60 x 40 in hatch, about 72 in overhead clearance)",
-   "why": "the game has no crouch and the hero model is 1.89 m: the airlock doorway clears it standing"
+   "why": "a kids' game: the suited hero (hero.height 1.89 m plus a 3.5 cm collision skin) walks through upright with clear headroom; real crews stoop through a 1.52 m hatch (Ravindu, 12 Nov: the hero could not enter)"
   },
   {
    "id": "hatch.width",
@@ -195,9 +195,10 @@
     1.0,
     1.02
    ],
-   "value": 1.02,
+   "value": 1.2,
    "unit": "m",
-   "source": "https://ntrs.nasa.gov/citations/20250004496"
+   "source": "https://ntrs.nasa.gov/citations/20250004496",
+   "why": "the suited hero is 0.95 m wide (hero.width); 1.02 m left no clearance for a kid steering by touch"
   },
   {
    "id": "rover.length",
