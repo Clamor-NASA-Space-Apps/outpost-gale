@@ -19,11 +19,22 @@
   "beacon": "res://models/prop_beacon.glb"
  },
  "standin": {
-  "habitat": [5.0, 3.5, 5.0], "solar_array": [6.0, 2.5, 2.0], "battery_bank": [1.6, 1.2, 0.8],
-  "oxygen_maker": [1.2, 1.6, 1.0], "water_recycler": [1.2, 1.6, 1.0], "greenhouse": [7.0, 3.5, 7.0],
-  "storm_shelter": [3.0, 2.2, 2.5], "dish": [3.0, 3.5, 3.0], "build_pad": [6.0, 0.15, 6.0],
-  "lander": [6.0, 9.0, 6.0], "rover": [2.6, 3.05, 4.48], "curiosity": [2.8, 2.1, 3.0],
-  "cargo_bag": [0.5, 0.25, 0.42], "pip": [0.6, 0.5, 0.8], "lamp": [0.2, 3.0, 0.2], "beacon": [0.3, 1.2, 0.3]
+  "habitat": [5.0, 3.5, 5.0],
+  "solar_array": [6.0, 2.5, 2.0],
+  "battery_bank": [1.6, 1.2, 0.8],
+  "oxygen_maker": [1.2, 1.6, 1.0],
+  "water_recycler": [1.2, 1.6, 1.0],
+  "greenhouse": [7.0, 3.5, 7.0],
+  "storm_shelter": [3.0, 2.2, 2.5],
+  "dish": [3.0, 3.5, 3.0],
+  "build_pad": [6.0, 0.15, 6.0],
+  "lander": [6.0, 9.0, 6.0],
+  "rover": [2.6, 3.05, 4.48],
+  "curiosity": [2.8, 2.1, 3.0],
+  "cargo_bag": [0.5, 0.25, 0.42],
+  "pip": [0.6, 0.5, 0.8],
+  "lamp": [0.2, 3.0, 0.2],
+  "beacon": [0.3, 1.2, 0.3]
  },
  "items": [
   {"id": "hab1", "prefab": "habitat", "pos": [0, 0], "yaw": 180},
@@ -32,7 +43,7 @@
   {"id": "battery", "prefab": "battery_bank", "pos": [14, 2], "yaw": 270},
   {"id": "solar1", "prefab": "solar_array", "pos": [24, -4], "yaw": 0},
   {"id": "solar2", "prefab": "solar_array", "pos": [24, 4], "yaw": 0},
-  {"id": "greenhouse", "prefab": "greenhouse", "pos": [-12, -10], "yaw": 135},
+  {"id": "greenhouse", "prefab": "greenhouse", "pos": [-14, -6], "yaw": 135},
   {"id": "shelter", "prefab": "storm_shelter", "pos": [-6, 10], "yaw": 0},
   {"id": "dish", "prefab": "dish", "pos": [6, -16], "yaw": 0},
   {"id": "pad1", "prefab": "build_pad", "pos": [-14, 6], "yaw": 0},
@@ -49,8 +60,51 @@
   {"id": "curiosity", "prefab": "curiosity", "pos": [80, 95], "yaw": 320}
  ],
  "landmarks": {
-  "spawn": [0, 9, 0], "base": [0, 9, 0], "airlock": [0, 4.5, 0], "solar": [20, 0, 270], "greenhouse": [-8, -6, 315],
-  "rover": [-10, 4, 180], "lander": [80, -60, 320], "curiosity": [72, 86, 140], "edge": [140, 0, 90]
+  "spawn": [0, 9, 0],
+  "base": [0, 9, 0],
+  "airlock": [0, 4.5, 0],
+  "solar": [20, 0, 270],
+  "greenhouse": [-7, -6, 270],
+  "rover": [-10, 4, 180],
+  "lander": [80, -60, 320],
+  "curiosity": [72, 86, 140],
+  "edge": [140, 0, 90]
  },
- "play_half": 150
+ "play_half": 150,
+ "kinds": {
+  "_note": "how an item collides; anything not named here is a static (layer 2, or 3 when narrower than the hero)",
+  "rover": "vehicle",
+  "pip": "vehicle",
+  "cargo_bag": "carriable"
+ },
+ "shadow_min": 0.6,
+ "moving": "^(door|dish)$|^(panel|wheel)_[0-9]+$",
+ "lamps": ["lamp", "beacon"],
+ "paths": {
+  "_note": "walkways kept clear of rocks: polylines of [x, z], width in metres",
+  "width": 2.5,
+  "lines": [[[0, 3], [0, 14]], [[3, 0], [22, 0]], [[-3, 0], [-8, 0]], [[2, -3], [6, -14]], [[-3, -2], [-10, -6]], [[22, 0], [30, 0]], [[25, -6], [86, -66]], [[-2, 5], [-12, 8]]]
+ },
+ "scatter": {"_note": "rocks over the patch: none on items, pads or paths, densest just outside the base clearing. Sizes in metres; rocks in big_size are solid, pebbles are not", "seed": 20261112, "centre": [6, 0], "clear": 30, "edge": 22, "outside": 0.25, "inside": 0.06, "radius": 150, "pebbles": 2500, "pebble_size": [0.05, 0.3], "big": 45, "big_size": [0.5, 2.2], "margin": 1.0},
+ "wind": {
+  "_note": "toward_deg: where the wind blows to, degrees clockwise from north (a design choice: no measured Gale direction found). Speeds per sky state in weather: Ingenuity's dust drifted downwind at 4 to 6 m/s (research/godot-build/movement-and-look.md section 4)",
+  "toward_deg": 60
+ },
+ "weather": {
+  "_note": "dust effects per sky state, keyed by the DESIGN.<state>.md name. streaks: share of the wind streaks shown; devil: the far dust devil (summer afternoons, NASA 2017); front: the storm's close dust clouds",
+  "Outpost Gale": {"wind": 4.0, "streaks": 0.35, "devil": true, "front": false},
+  "Outpost Gale sunset": {"wind": 4.0, "streaks": 0.25, "devil": false, "front": false},
+  "Outpost Gale night": {"wind": 4.0, "streaks": 0.2, "devil": false, "front": false},
+  "Outpost Gale storm": {"wind": 6.0, "streaks": 1.0, "devil": false, "front": true}
+ },
+ "devil": {
+  "_note": "the dust devil wanders a circle this far from the base centre, at this speed in m/s. Both are design choices (no measured Gale speed in our sources): slow enough to watch, far enough never to reach the base",
+  "radius": 160,
+  "speed": 3.0
+ },
+ "probe": {
+  "_note": "one reflection probe over the base: centre [x, z], size [x, y, z]",
+  "pos": [6, 0],
+  "size": [80, 30, 80]
+ }
 }
