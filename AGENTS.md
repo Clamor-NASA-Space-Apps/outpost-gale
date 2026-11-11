@@ -8,8 +8,8 @@
 ## What it is
 A third-person Godot 4.7 web game for kids aged 7 to 12, for NASA Space Apps 2026 (Colombo, 14 and 15 Nov 2026). You are the commander of a small base in Gale crater on Mars for 30 sols. Three meters (Power, Life support, Crew health), and every choice costs something. Working title: **Outpost Gale**. The full proposal is in `plan.md`, "The game", at the workspace root. The Docmost page "Game design and story" holds the team's decisions. Where they differ, Docmost wins.
 
-## Phase now: look and assets only (12 and 13 Nov)
-The organisers allowed the art direction and every asset to be prepared before the event: models, the world, the map and the HUD look. **The story, the `sim/` rules, events, the player controller, the follow camera and game flow wait until 14 Nov.** A scene before then may show assets, play clips in place and fly a fixed camera. It must not be playable. The brief for this phase is `design/BRIEF.md`.
+## Phase now: look, assets and sandbox (12 and 13 Nov)
+The organisers allowed the art direction and every asset to be prepared before the event: models, the world, the map and the HUD look. We also build a **sandbox**: the assets in a small world where a third-person astronaut walks, drives and interacts, so the physics and control problems are solved at home. **The story, the `sim/` rules (meters, resources), events, the sol clock, game flow and win or lose wait until 14 Nov.** In the sandbox an interaction does one physical thing and changes no game state. The brief for this phase is `design/BRIEF.md`.
 
 ## Files
 | Path | What |
@@ -20,8 +20,9 @@ The organisers allowed the art direction and every asset to be prepared before t
 | `design/research.md` | The style study, every claim with a status |
 | `DESIGN.md` | The approved look. The only file with colour values (with any `DESIGN.<state>.md`) |
 | `models/` | Every GLB the game uses, class-prefixed, passing style-check |
-| `data/` | Terrain heights, `reality.json` (sizes now, speeds on 14 Nov), `world.json` later |
-| `lookdev/` | The look-dev scene: assets on the terrain under each sky preset |
+| `data/` | Terrain heights, `reality.json` (sizes, walking, hop, rover), `world.json` later |
+| `sandbox/` | The walkable test world: every asset on the terrain, the controller, camera, interactions, debug keys |
+| `player/` | Third-person controller and camera, free of Mars content |
 | `ui/` | HUD theme, icons, fonts, the gallery scene |
 | `forge/` | This game's Blender recipes |
 | `ASSETS.md` | Manifest: every asset's file, source, licence, triangles, status |

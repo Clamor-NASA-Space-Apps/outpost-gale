@@ -12,10 +12,10 @@ The organisers told the team that the art direction and the assets may be prepar
 4. Every model in `models/`, passing `style-check`.
 5. The world: terrain, far backdrop, sky and fog presets.
 6. The HUD kit: theme, icons, fonts, components.
-7. A look-dev scene and a HUD gallery scene, checked on a phone.
+7. **The sandbox:** every asset placed in one small world that a third-person astronaut walks through and interacts with (section 7b), so the physics and control problems are solved at home, not at the hackathon. Plus a HUD gallery scene. Both are checked on a phone.
 8. `ASSETS.md`, the manifest, and the credits.
 
-**Out of scope until 14 Nov:** the story and script, `sim/` rules, events, the player controller and follow camera, game flow, and win or lose logic. A scene may show assets, play animation clips in place and run a fixed camera path. It must not play the game.
+**Out of scope until 14 Nov:** the story and script, `sim/` rules (meters, resources, power), events, the sol clock, game flow, and win or lose logic. The sandbox is a test harness, not the game. An interaction there does one physical thing (a door opens, a panel tilts, a crate lifts, the rover drives) and changes no game state. Keep the controller, camera and interaction code free of Mars content so they read as generic tooling.
 
 Time: what is left of 12 Nov, plus 13 Nov. Work in priority order (section 7) so that a cut lands on P3, never on P1.
 
@@ -120,6 +120,27 @@ Every model goes through `Forge.HouseStyle.apply()`. File names start with their
 | 3 | Cinematic pieces: Earth, Mars, cruise ship | `assets-cache/nasa-3d/*.jpg`, Kenney rocket parts | intro is hackathon work, these are only parts |
 | 3 | Sounds: wind, rover, UI, alarm | Kenney sound packs (on disk); NASA Mars recordings (download, credit NASA/JPL-Caltech) | |
 
+## 7b. The sandbox: a small world to walk through
+The factory workflow applies in full from here: `reality.json` first, then the plan and a roadmap with checks. Load the skills the factory's Skills table names for these rows: `reality-sheet`, `character-body`, `character-life`, `third-person-camera`, `world-collision`, `contextual-traversal`, `game-feel-gate`, plus their Godot skills. Never copy code from `tooling/projects/one-night-stray/` (workspace rule 2). The skills already hold its lessons.
+
+**The world:** the real-terrain patch (section 4), with the base laid out on build pads, the rocks, the rover, the lander and the backdrop. Every sky preset can be switched with a debug key.
+
+**What the player can do, and what each one tests:**
+| Action | Tests |
+|---|---|
+| Walk, run and hop on real terrain, slopes and rock steps, on keyboard and on phone touch | the reality rows (walk about 1 m/s, a suited hop about 0.18 m in Mars gravity: `research/godot-build/movement-and-look.md`), slope limits, feet on uneven ground |
+| Bump into every building, panel, rock and crate | the collision shape of every model. Nothing walks through anything, and nothing snags on an invisible edge |
+| Follow camera through the base | camera collision with walls and domes, no clipping into the hab, framing on a phone screen |
+| Go through the habitat airlock (door opens, walk in, walk out) | doors, tight spaces, the camera indoors |
+| Tilt or wipe a solar panel | the interaction prompt (reach distance, facing, a touch button of at least 48 px), part-by-part animation of a kit model |
+| Pick up and put down a cargo crate | carrying, and putting things back down on uneven ground |
+| Get in, drive and get out of the crewed rover | vehicle physics on the terrain (Jolt in the web build), enter and exit, the camera behind a vehicle |
+| Kick up dust while walking and driving | the effects in motion, and their cost on a phone |
+
+**Debug only:** a key to cycle sky presets, a key to teleport to each landmark, and `render_game_to_text()` with position, speed, ground contact and the current interaction, so `feel-probe` and `capture-view` can measure it.
+
+**Not in the sandbox:** meters, resources, the sol clock, events, fact cards, story text, PIP's behaviour, a win or lose screen. Those are the game, on 14 Nov.
+
 **NASA models:** five of six are Draco-compressed. Re-save each one with `gltf-transform optimize ... --compress false --texture-compress webp`. Check every NASA texture for insignia: no NASA logos (workspace rule 5).
 
 ## 8. Done means
@@ -127,9 +148,11 @@ Every model goes through `Forge.HouseStyle.apply()`. File names start with their
 - [ ] `research.md` written, every claim with a status.
 - [ ] Three variants shown in `godot/preview`. Ravindu picked or mixed. `DESIGN.md` lints with `style-check` and is committed.
 - [ ] Every P1 and P2 model is in `models/`. `node ../../tools/style-check.mjs DESIGN.md models/*.glb` passes. One lineup render is compared with the chosen variant.
-- [ ] `lookdev/lookdev.tscn`: the base laid out on the real terrain under each sky preset, the astronaut playing its clips in place, a fixed camera path, and capture-view presets (`default`, `base`, `hero`, `horizon`, `storm`).
+- [ ] `data/reality.json` covers walking, running, the hop, the rover, reach and every size, and `node ../../tools/feel-probe.mjs data/reality.json .` passes.
+- [ ] `sandbox/sandbox.tscn` (section 7b): every action in its table works, on keyboard and touch. The `game-feel-gate` rows that apply pass. capture-view presets: `default`, `base`, `hero`, `horizon`, `storm`, `airlock`, `rover`.
 - [ ] `ui/hud_gallery.tscn`: every HUD component, at phone and laptop sizes.
-- [ ] `node ../../tools/web-check.mjs .` passes within budget. Ravindu opens the look-dev scene on the weakest team phone through `serve-web` on the `low` preset, and the style still holds.
+- [ ] `node ../../tools/web-check.mjs .` passes within budget. **Ravindu plays the sandbox for five minutes on the weakest team phone** (`serve-web`, `low` preset): the style holds, the frame rate is acceptable, and nothing snags.
+- [ ] Generic fixes found on the way (controller, camera, collision lessons) go back into `tooling/` skills and gotchas, with no Mars content.
 - [ ] `ASSETS.md` lists every asset: file, source, licence, triangles, status. `assets-cache/CREDITS.md` has every download with its credit line.
 - [ ] Commits in this repo, signed off, with the workspace's co-author trailer.
 
