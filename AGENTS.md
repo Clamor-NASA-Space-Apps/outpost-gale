@@ -44,7 +44,7 @@ The organisers allowed the art direction and every asset to be prepared before t
 - `data/terrain*`: one height source for the mesh, the collision and later the game's height queries.
 
 ## Git
-Its own repo. Commits signed off (`git commit -s`), prefixed by area, ending with the workspace's `Co-Authored-By` trailer (AI use must be disclosed). No remote yet: Ravindu decides where it goes, Gitea first.
+Its own repo. Commits signed off (`git commit -s`), prefixed by area, ending with the workspace's `Co-Authored-By` trailer (AI use must be disclosed). Remote `origin`: `git@100.108.184.127:ravindu644/junior-astronaut-mission-trainer.git` (Gitea), branch `main`. **Push after every commit** (Ravindu, 12 Nov 2026).
 
 ## Gotchas
 (Add one line per thing that took more than two tries, with its why.)
