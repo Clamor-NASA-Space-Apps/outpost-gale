@@ -308,6 +308,26 @@
    "value": 25,
    "unit": "deg",
    "source": "estimate: no NASA number for a suited walking slope was found; the patch itself (HiRISE at 1 m) is never steeper than 25 degrees, so 25 keeps every real slope walkable and steeper rock faces climbable only by the step row"
+  },
+  {
+   "id": "rover.accel",
+   "real": [
+    0.3,
+    1.0
+   ],
+   "value": 0.6,
+   "unit": "m/s2",
+   "source": "estimate: no NASA number found; a heavy electric vehicle on loose ground reaching the SEV's ~2.8 m/s (10 km/h, https://www.nasa.gov/wp-content/uploads/2015/08/464826main_sev_factsheet_508.pdf) in 3 to 9 s"
+  },
+  {
+   "id": "rover.turn",
+   "real": [
+    10,
+    30
+   ],
+   "value": 20,
+   "unit": "deg/s",
+   "source": "estimate: the SEV's wheels \"pivot 360 degrees\", so it can turn on the spot (https://www.nasa.gov/wp-content/uploads/2015/08/464826main_sev_factsheet_508.pdf); a slow pivot of 10 to 30 degrees a second, no measured rate found"
   }
  ],
  "pairs": []

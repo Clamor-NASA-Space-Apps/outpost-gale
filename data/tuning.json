@@ -1,16 +1,57 @@
 {
  "note": "Feel numbers that are not physical (physical ones live in reality.json). Camera rows sized against hero.height 1.89 m.",
  "camera": {
-  "distance": 4.2, "distance_up": 3.2, "distance_down": 5.0, "pivot_height": 1.55,
-  "pitch_default": -14, "pitch_min": -60, "pitch_max": 35,
-  "hold_time": 0.3, "ease_rate": 4.0, "follow_rate": 8.0, "follow_limit": 0.6,
-  "recentre_after": 2.0, "recentre_rate": 1.2, "fade_near": 0.5, "fade_far": 0.9,
-  "mouse_deg_per_px": 0.15, "touch_deg_per_half_window": 120, "stick_deg_per_s": 140,
-  "vehicle_distance": 9.0, "vehicle_pivot_height": 2.4
+  "distance": 4.2,
+  "distance_up": 3.2,
+  "distance_down": 5.0,
+  "pivot_height": 1.55,
+  "pitch_default": -14,
+  "pitch_min": -60,
+  "pitch_max": 35,
+  "hold_time": 0.3,
+  "ease_rate": 4.0,
+  "follow_rate": 8.0,
+  "follow_limit": 0.6,
+  "recentre_after": 2.0,
+  "recentre_rate": 1.2,
+  "fade_near": 0.5,
+  "fade_far": 0.9,
+  "mouse_deg_per_px": 0.15,
+  "touch_deg_per_half_window": 120,
+  "stick_deg_per_s": 140,
+  "vehicle_distance": 9.0,
+  "vehicle_pivot_height": 2.4
  },
- "input": { "coyote": 0.1, "jump_buffer": 0.12, "stick_deadzone": 0.15 },
- "interact": { "reach": 1.6, "cone_deg": 70 },
- "touch": { "target_px": 96, "stick_px": 260 },
- "hop": { "xfade": 0.2, "anticipation": 0.12, "crouch": 0.12, "tuck": 0.06, "squash": 0.06, "fold_rate": 18.0,
-  "note": "code-posed hop over the idle clip: s of blend, s of crouch before take-off, m the hips drop, m the feet tuck on the way down, m of landing crouch per m/s of impact, 1/s the legs follow" }
+ "input": {
+  "coyote": 0.1,
+  "jump_buffer": 0.12,
+  "stick_deadzone": 0.15
+ },
+ "interact": {
+  "reach": 1.6,
+  "cone_deg": 70,
+  "carry_ahead": 0.45,
+  "track_every": 0.12,
+  "door_open_deg": 100,
+  "panel_tilts": [
+   -30,
+   -45,
+   -60,
+   -15
+  ],
+  "move_s": 0.6
+ },
+ "touch": {
+  "target_px": 96,
+  "stick_px": 260
+ },
+ "hop": {
+  "xfade": 0.2,
+  "anticipation": 0.12,
+  "crouch": 0.12,
+  "tuck": 0.06,
+  "squash": 0.06,
+  "fold_rate": 18.0,
+  "note": "code-posed hop over the idle clip: s of blend, s of crouch before take-off, m the hips drop, m the feet tuck on the way down, m of landing crouch per m/s of impact, 1/s the legs follow"
+ }
 }

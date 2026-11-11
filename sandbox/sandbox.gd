@@ -4,6 +4,7 @@ extends Node3D
 ## thing and nothing here counts, drains or scores (hard rule 1 until 14 Nov).
 
 const Controls := preload("res://player/controls.gd")
+const Interactions := preload("res://sandbox/interactions.gd")
 # sky states: DESIGN.md and its DESIGN.<state>.md siblings, as token files
 const SKIES := ["design", "design.sunset", "design.night", "design.storm"]
 const QUALITIES := ["low", "medium", "high"]
@@ -17,6 +18,7 @@ const VIEWS := {
 
 @onready var world: Node3D = $World
 @onready var player: Node3D = $Player
+var interactions: Node3D
 var tuning: Dictionary
 var design: Dictionary
 var sky := 0
@@ -35,6 +37,10 @@ func _ready() -> void:
 	world.build(design)
 	var s: Dictionary = world.landmark("spawn")
 	player.place(s.pos, s.yaw)
+	interactions = Interactions.new()
+	interactions.name = "Interactions"
+	add_child(interactions)
+	interactions.setup(world, player, tuning, JSON.parse_string(FileAccess.get_file_as_string("res://data/reality.json")))
 	# a boot pressed into soft dust leaves a print and lifts a little cloud
 	player.footstep.connect(func(pos: Vector3, yaw: float, foot: String) -> void:
 		world.mark(pos, yaw, foot)
@@ -43,8 +49,8 @@ func _ready() -> void:
 
 
 func _unhandled_input(e: InputEvent) -> void:
-	if e.is_action_pressed("interact") and player.vehicle:
-		player.exit()  # CONTRACTS.md: the root gets the hero out; getting in is the rover's interaction
+	if e.is_action_pressed("interact"):
+		interactions.interact()  # out of the rover, put down the bag, or use what is in reach
 	elif e.is_action_pressed("debug_sky"):
 		_sky(sky + 1)
 	elif e.is_action_pressed("debug_quality"):
@@ -78,6 +84,7 @@ func _restyle() -> void:
 
 func render_game_to_text() -> Dictionary:
 	var s: Dictionary = player.state()
+	s.merge(interactions.state(), true)
 	s.merge({"sky": SKIES[sky], "quality": quality, "fps": Engine.get_frames_per_second(), "view": view})
 	return s
 
