@@ -15,14 +15,14 @@ var view := "horizon"
 
 
 func _ready() -> void:
-	design = Forge.HouseStyle.load_design("res://design.json")
-	Forge.HouseStyle.apply_lighting(self, design)
-	Forge.HouseStyle.set_quality(self, design, Forge.HouseStyle.default_quality())
-	$Terrain.build(design)
 	var opt := {}
 	for a in OS.get_cmdline_user_args():
 		var kv := a.trim_prefix("--").split("=", true, 1)
 		opt[kv[0]] = kv[1] if kv.size() > 1 else ""
+	design = Forge.HouseStyle.load_design(str(opt.get("design", "res://design.json")))
+	Forge.HouseStyle.apply_lighting(self, design)
+	Forge.HouseStyle.set_quality(self, design, Forge.HouseStyle.default_quality())
+	$Terrain.build(design)
 	var along := 0.0
 	for f: String in str(opt.get("glb", "")).split(",", false):
 		var m := Forge.load_glb(f)
