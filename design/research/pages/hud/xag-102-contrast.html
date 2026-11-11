@@ -1,0 +1,1834 @@
+ <!DOCTYPE html>
+		<html
+			class="layout layout-holy-grail   show-table-of-contents conceptual show-breadcrumb default-focus"
+			lang="en-us"
+			dir="ltr"
+			data-authenticated="false"
+			data-auth-status-determined="false"
+			data-target="docs"
+			x-ms-format-detection="none"
+		>
+			
+		<head>
+			<title>Xbox Accessibility Guideline 102 - Microsoft Game Dev | Microsoft Learn</title>
+			<meta charset="utf-8" />
+			<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+			<meta name="color-scheme" content="light dark" />
+
+			<meta name="description" content="Xbox Accessibility Guideline 102" />
+			<link rel="canonical" href="https://learn.microsoft.com/en-us/xbox/accessibility/xbox-accessibility-guidelines/102" /> 
+
+			<!-- Non-customizable open graph and sharing-related metadata -->
+			<meta name="twitter:card" content="summary_large_image" />
+			<meta name="twitter:site" content="@MicrosoftLearn" />
+			<meta property="og:type" content="website" />
+			<meta property="og:image:alt" content="Microsoft Learn" />
+			<meta property="og:image" content="https://learn.microsoft.com/en-us/media/open-graph-image.png" />
+			<!-- Page specific open graph and sharing-related metadata -->
+			<meta property="og:title" content="Xbox Accessibility Guideline 102 - Microsoft Game Dev" />
+			<meta property="og:url" content="https://learn.microsoft.com/en-us/xbox/accessibility/xbox-accessibility-guidelines/102" />
+			<meta property="og:description" content="Xbox Accessibility Guideline 102" />
+			<meta name="platform_id" content="feeb0323-a784-219d-09ee-c4f0769ea105" /> <meta name="scope" content="Microsoft Game Development Kit,Microsoft Game Development Kit NDA,PlayFab,Game Publishing Guide,Gaming" />
+			<meta name="locale" content="en-us" />
+			 
+			<meta name="uhfHeaderId" content="MSDocsHeader-Gaming" />
+
+			<meta name="page_type" content="conceptual" />
+
+			<!--page specific meta tags-->
+			
+
+			<!-- custom meta tags -->
+			
+		<meta name="breadcrumb_path" content="/gaming/breadcrumb/toc.json" />
+	
+		<meta name="feedback_system" content="Standard" />
+	
+		<meta name="ms.service" content="microsoft-game-development-kit" />
+	
+		<meta name="author" content="edigonzales" />
+	
+		<meta name="ms.author" content="edigonzales" />
+	
+		<meta name="ms.topic" content="article" />
+	
+		<meta name="ms.date" content="2023-06-08T00:00:00Z" />
+	
+		<meta name="document_id" content="12e7252e-7ee1-28eb-d81b-c1554a1cb913" />
+	
+		<meta name="document_version_independent_id" content="12e7252e-7ee1-28eb-d81b-c1554a1cb913" />
+	
+		<meta name="updated_at" content="2026-06-17T19:14:00Z" />
+	
+		<meta name="original_content_git_url" content="https://github.com/MicrosoftDocs/gaming-docs-pr/blob/live/gaming/accessibility/xbox-accessibility-guidelines/102.md" />
+	
+		<meta name="gitcommit" content="https://github.com/MicrosoftDocs/gaming-docs-pr/blob/fcf89d7c7ec0976ca008b7a9dfc232cfc44e2f68/gaming/accessibility/xbox-accessibility-guidelines/102.md" />
+	
+		<meta name="git_commit_id" content="fcf89d7c7ec0976ca008b7a9dfc232cfc44e2f68" />
+	
+		<meta name="site_name" content="Docs" />
+	
+		<meta name="depot_name" content="Learn.gamingdocs" />
+	
+		<meta name="schema" content="Conceptual" />
+	
+		<meta name="toc_rel" content="../../toc.json" />
+	
+		<meta name="feedback_product_url" content="" />
+	
+		<meta name="feedback_help_link_type" content="" />
+	
+		<meta name="feedback_help_link_url" content="" />
+	
+		<meta name="word_count" content="2710" />
+	
+		<meta name="asset_id" content="accessibility/xbox-accessibility-guidelines/102" />
+	
+		<meta name="moniker_range_name" content="" />
+	
+		<meta name="item_type" content="Content" />
+	
+		<meta name="source_path" content="gaming/accessibility/xbox-accessibility-guidelines/102.md" />
+	
+		<meta name="previous_tlsh_hash" content="092E2B72B70CE512FFC35F5AA25E97525EF0804CB1F03F540479AE6284A47DA22A69D4F7DB17A38B337644960097200FB2E9D37CE238B256D6A1649CE3BD224EE3697F39D4" />
+	
+		<meta name="github_feedback_content_git_url" content="https://github.com/MicrosoftDocs/gaming-docs-pr/blob/live/gaming/accessibility/xbox-accessibility-guidelines/102.md" />
+	
+		<meta name="markdown_url" content="https://learn.microsoft.com/en-us/xbox/accessibility/xbox-accessibility-guidelines/102?accept=text/markdown" />
+	 
+		<meta name="cmProducts" content="https://microsoft-devrel.poolparty.biz/DevRelOfferingOntology/d7f8710e-fbb0-4d09-b930-11c1b544a877" data-source="generated" />
+	
+		<meta name="cmProducts" content="https://authoring-docs-microsoft.poolparty.biz/devrel/7fb84634-1717-41ef-acf8-015766493b4a" data-source="generated" />
+	
+		<meta name="spProducts" content="https://microsoft-devrel.poolparty.biz/DevRelOfferingOntology/deb137bf-5bfd-48db-9740-aeec6d9667dd" data-source="generated" />
+	
+		<meta name="spProducts" content="https://authoring-docs-microsoft.poolparty.biz/devrel/108d8c44-ddc8-4ac8-9e15-4998cc9acea7" data-source="generated" />
+	
+
+			<!-- Apply persisted/system theme before first paint to prevent wrong-theme flash when scripts are deferred. -->
+			<script id="theme-preference">
+				(function () {
+			try {
+				var stored = localStorage.getItem('theme');
+				var theme = /^(light|dark|high-contrast)$/.test(stored)
+					? stored
+					: matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+				document.documentElement.classList.add('theme-' + theme);
+			} catch (e) {}
+		})();;
+			</script>
+
+			<script id="atlas-layout-preferences">
+				(function () {
+			try {
+				var state = JSON.parse(localStorage.getItem('atlas-layout-preferences') || '{}');
+				var view = state["docs-layout-persistence"] || {};
+				var excludesKey = "";
+				var blocked = {};
+				if (excludesKey) {
+					var exclusions = JSON.parse(localStorage.getItem('atlas-layout-exclusions') || '{}');
+					if (Object.prototype.hasOwnProperty.call(exclusions, excludesKey)) {
+						var scoped = exclusions[excludesKey];
+						if (scoped) {
+							if (typeof scoped === 'object') blocked = scoped;
+						}
+					}
+				}
+				var html = document.documentElement;
+				for (var c in view) {
+					if (Object.prototype.hasOwnProperty.call(blocked, c)) continue;
+					if (view[c]) html.classList.add(c);
+					else html.classList.remove(c);
+				}
+			} catch (e) {}
+		})();;
+			</script>
+
+			<!-- assets and js globals -->
+			
+			<link rel="stylesheet" href="/static/assets/0.4.03599.8368-c2fd945c/styles/site.css" />
+			
+			<script src="https://wcpstatic.microsoft.com/mscc/lib/v2/wcp-consent.js"></script>
+			<!-- Keep this URL in sync with oneDSScriptSelector in instrumentation/one-ds.ts. -->
+			<script async src="https://js.monitor.azure.com/scripts/c/ms.jsll-4.min.js"></script>
+			
+
+			<!-- msdocs global object -->
+			<script id="msdocs-script">
+		var msDocs = {
+  "environment": {
+    "accessLevel": "online",
+    "azurePortalHostname": "portal.azure.com",
+    "reviewFeatures": false,
+    "supportLevel": "production",
+    "systemContent": true,
+    "siteName": "learn",
+    "legacyHosting": false
+  },
+  "data": {
+    "contentLocale": "en-us",
+    "contentDir": "ltr",
+    "userLocale": "en-us",
+    "userDir": "ltr",
+    "pageTemplate": "Conceptual",
+    "layoutStateStorageKey": "docs-layout-persistence",
+    "brand": "",
+    "context": {},
+    "standardFeedback": true,
+    "showFeedbackReport": false,
+    "feedbackHelpLinkType": "",
+    "feedbackHelpLinkUrl": "",
+    "feedbackSystem": "Standard",
+    "feedbackGitHubRepo": "",
+    "feedbackProductUrl": "",
+    "extendBreadcrumb": true,
+    "isEditDisplayable": false,
+    "isPrivateUnauthorized": false,
+    "hideViewSource": false,
+    "isPermissioned": false,
+    "hasRecommendations": true
+  },
+  "functions": {}
+};;
+	</script>
+
+			<!-- base scripts, msdocs global should be before this -->
+			<script
+				src="/static/assets/0.4.03599.8368-c2fd945c/scripts/en-us/index-docs.js"
+				async
+			></script>
+			
+
+			<!-- json-ld -->
+			
+		</head>
+	
+			<body
+				id="body"
+				data-bi-name="body"
+				class="layout-body "
+				lang="en-us"
+				dir="ltr"
+			>
+				<header class="layout-body-header background-color-body-medium">
+		<div class="header-holder has-default-focus">
+			
+		<a
+			href="#main"
+			
+			style="z-index: 1070"
+			class="outline-color-text visually-hidden-until-focused position-fixed inner-focus focus-visible top-0 left-0 right-0 padding-xs text-align-center background-color-body"
+			
+		>
+			Skip to main content
+		</a>
+	
+		<a
+			href="#"
+			data-skip-to-ask-learn
+			style="z-index: 1070"
+			class="outline-color-text visually-hidden-until-focused position-fixed inner-focus focus-visible top-0 left-0 right-0 padding-xs text-align-center background-color-body"
+			hidden
+		>
+			Skip to Ask Learn chat experience
+		</a>
+	
+
+			<div hidden id="cookie-consent-holder" data-test-id="cookie-consent-container"></div>
+			<!-- Unsupported browser warning -->
+			<div
+				id="unsupported-browser"
+				style="background-color: white; color: black; padding: 16px; border-bottom: 1px solid grey;"
+				hidden
+			>
+				<div style="max-width: 800px; margin: 0 auto;">
+					<p style="font-size: 24px">This browser is no longer supported.</p>
+					<p style="font-size: 16px; margin-top: 16px;">
+						Upgrade to Microsoft Edge to take advantage of the latest features, security updates, and technical support.
+					</p>
+					<div style="margin-top: 12px;">
+						<a
+							href="https://go.microsoft.com/fwlink/p/?LinkID=2092881 "
+							style="background-color: #0078d4; border: 1px solid #0078d4; color: white; padding: 6px 12px; border-radius: 2px; display: inline-block;"
+						>
+							Download Microsoft Edge
+						</a>
+						<a
+							href="https://learn.microsoft.com/en-us/lifecycle/faq/internet-explorer-microsoft-edge"
+							style="background-color: white; padding: 6px 12px; border: 1px solid #505050; color: #171717; border-radius: 2px; display: inline-block;"
+						>
+							More info about Internet Explorer and Microsoft Edge
+						</a>
+					</div>
+				</div>
+			</div>
+			<!-- site header -->
+			<div
+				id="ms--site-header"
+				data-test-id="site-header-wrapper"
+				itemscope="itemscope"
+				itemtype="http://schema.org/Organization"
+			>
+				<div
+					id="ms--mobile-nav"
+					class="site-header display-none-tablet padding-inline-none gap-none"
+					data-bi-name="mobile-header"
+					data-test-id="mobile-header"
+				></div>
+				<div
+					id="ms--primary-nav"
+					class="site-header display-none display-flex-tablet"
+					data-bi-name="L1-header"
+					data-test-id="primary-header"
+				></div>
+				<div
+					id="ms--secondary-nav"
+					class="site-header display-none display-flex-tablet"
+					data-bi-name="L2-header"
+					data-test-id="secondary-header"
+					
+				></div>
+			</div>
+			
+		<!-- banner -->
+		<div data-banner>
+			<div id="disclaimer-holder"></div>
+			
+		</div>
+		<!-- banner end -->
+	
+		</div>
+	</header>
+				 <section
+					id="layout-body-menu"
+					class="layout-body-menu border-right display-flex background-color-body-medium"
+					data-bi-name="menu"
+			  >
+					
+		<div
+			id="left-container"
+			class="left-container display-none padding-none display-block-tablet width-full display-none-until-layout-restored"
+			data-toc-container="true"
+		>
+			<div
+				id="ms--toc-content"
+				class="padding-left-sm padding-right-none padding-bottom-sm height-full"
+			>
+				<nav
+					id="affixed-left-container"
+					class="margin-top-xxs-tablet position-sticky display-flex flex-direction-column width-full"
+					aria-label="Primary"
+					data-bi-name="left-toc"
+					role="navigation"
+				>
+					<div
+						id="ms--collapsible-toc-header"
+						class="display-flex flex-direction-row-reverse justify-content-center align-items-center margin-bottom-xxs margin-right-xxs"
+					>
+						<button
+							type="button"
+							class="button button-clear button-sm inner-focus"
+							data-collapsible-toc-toggle
+							aria-expanded="true"
+							hidden
+							aria-controls="ms--toc-content"
+							aria-label="Table of contents"
+						>
+							<span class="icon icon-mirrored-rtl" aria-hidden="true">
+								<span
+									class="docon docon-panel-left-contract display-none-layout-menu-collapsed"
+								></span>
+								<span
+									class="docon docon-panel-left-expand display-none display-inline-layout-menu-collapsed"
+								></span>
+							</span>
+						</button>
+						<div
+							id="ms--collapsible-toc-moniker-slot"
+							class="flex-grow-1 display-none-layout-menu-collapsed"
+						></div>
+					</div>
+				</nav>
+			</div>
+		</div>
+	
+			  </section>
+
+				<main
+					id="main"
+					role="main"
+					class="layout-body-main "
+					data-bi-name="content"
+					lang="en-us"
+					dir="ltr"
+				>
+					
+			<div
+		id="ms--content-header"
+		class="content-header default-focus border-bottom-none"
+		data-bi-name="content-header"
+	>
+		<div class="content-header-controls margin-xxs margin-inline-sm-tablet">
+			<button
+				type="button"
+				class="contents-button button button-sm margin-right-xxs"
+				data-bi-name="contents-expand"
+				aria-haspopup="true"
+				data-contents-button
+			>
+				<span class="icon" aria-hidden="true"><span class="docon docon-menu"></span></span>
+				<span class="contents-expand-title"> Table of contents </span>
+			</button>
+			<button
+				type="button"
+				class="ap-collapse-behavior ap-expanded button button-sm"
+				data-bi-name="ap-collapse"
+				aria-controls="action-panel"
+			>
+				<span class="icon" aria-hidden="true"><span class="docon docon-exit-mode"></span></span>
+				<span>Exit editor mode</span>
+			</button>
+		</div>
+	</div> 
+		<div
+			id="action-panel"
+			role="region"
+			aria-label="Action Panel"
+			class="action-panel"
+			tabindex="-1"
+		></div>
+	
+			<div
+				data-main-column
+				class="reading-width margin-inline-auto layout-padding padding-top-none padding-top-sm-tablet padding-bottom-sm"
+			>
+				<div>
+					
+		<div id="article-header" class="background-color-body margin-bottom-xs display-none-print">
+			<div class="display-flex align-items-center justify-content-space-between">
+				
+		<details
+			id="article-header-breadcrumbs-overflow-popover"
+			class="popover popover-left"
+			data-for="article-header-breadcrumbs"
+		>
+			<summary
+				class="button button-clear button-primary button-sm inner-focus"
+				aria-label="All breadcrumbs"
+			>
+				<span class="icon" aria-hidden="true">
+					<span class="docon docon-more"></span>
+				</span>
+			</summary>
+			<div id="article-header-breadcrumbs-overflow" class="popover-content"></div>
+		</details>
+
+		<bread-crumbs
+			id="article-header-breadcrumbs"
+			role="group"
+			aria-label="Breadcrumbs"
+			data-test-id="article-header-breadcrumbs"
+			class="overflow-hidden flex-grow-1 margin-right-sm margin-right-md-tablet margin-right-lg-desktop margin-left-negative-xxs padding-left-xxs"
+		></bread-crumbs>
+	 
+		<div
+			id="article-header-page-actions"
+			class="opacity-none margin-left-auto display-flex flex-wrap-no-wrap align-items-stretch"
+		>
+			
+		<button
+			class="button button-sm border-none inner-focus display-none-tablet flex-shrink-0 "
+			data-bi-name="ask-learn-assistant-entry"
+			data-test-id="ask-learn-assistant-modal-entry-mobile"
+			data-ask-learn-modal-entry
+			
+			type="button"
+			style="min-width: max-content;"
+			aria-expanded="false"
+			aria-label="Ask Learn"
+			hidden
+		>
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+		</button>
+		<button
+			class="button button-sm display-none display-inline-flex-tablet display-none-desktop flex-shrink-0 margin-right-xxs border-color-ask-learn "
+			data-bi-name="ask-learn-assistant-entry"
+			
+			data-test-id="ask-learn-assistant-modal-entry-tablet"
+			data-ask-learn-modal-entry
+			type="button"
+			style="min-width: max-content;"
+			aria-expanded="false"
+			hidden
+		>
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+			<span>Ask Learn</span>
+		</button>
+		<button
+			class="button button-sm display-none flex-shrink-0 display-inline-flex-desktop margin-right-xxs border-color-ask-learn "
+			data-bi-name="ask-learn-assistant-entry"
+			
+			data-test-id="ask-learn-assistant-flyout-entry"
+			data-ask-learn-flyout-entry
+			data-flyout-button="toggle"
+			type="button"
+			style="min-width: max-content;"
+			aria-expanded="false"
+			aria-controls="ask-learn-flyout"
+			hidden
+		>
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+			<span>Ask Learn</span>
+		</button>
+	 
+
+			<details class="popover popover-right" id="article-header-page-actions-overflow">
+				<summary
+					class="justify-content-flex-start button button-clear button-sm button-primary inner-focus"
+					aria-label="More actions"
+					aria-expanded="false"
+					title="More actions"
+				>
+					<span class="icon" aria-hidden="true">
+						<span class="docon docon-more-vertical"></span>
+					</span>
+				</summary>
+				<div class="popover-content">
+					
+		<button
+			type="button"
+			id="ms--focus-mode-button"
+			data-focus-mode
+			data-bi-name="focus-mode-entry"
+			data-page-action-item="overflow-all"
+			data-popover-close
+			class="button button-clear button-sm button-block justify-content-flex-start text-align-left inner-focus display-none display-inline-flex-tablet"
+		>
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-glasses"></span>
+			</span>
+			<span>Reading mode</span>
+		</button>
+	 
+		<button
+			data-page-action-item="overflow-mobile"
+			type="button"
+			class="display-block-layout-menu-collapsed button-block button-sm inner-focus button button-clear display-none-tablet justify-content-flex-start text-align-left"
+			data-bi-name="contents-expand"
+			data-contents-button
+			data-popover-close
+		>
+			<span class="icon" aria-hidden="true"
+				><span class="docon docon-editor-list-bullet"></span
+			></span>
+			<span class="contents-expand-title">Table of contents</span>
+		</button>
+	 
+		<a
+			id="lang-link-overflow"
+			class="button-sm inner-focus button button-clear button-block justify-content-flex-start text-align-left"
+			data-bi-name="language-toggle"
+			data-page-action-item="overflow-all"
+			data-check-hidden="true"
+			data-read-in-link
+			href="#"
+			hidden
+		>
+			<span class="icon" aria-hidden="true" data-read-in-link-icon>
+				<span class="docon docon-locale-globe"></span>
+			</span>
+			<span data-read-in-link-text>Read in English</span>
+		</a>
+	
+					
+		<button
+			type="button"
+			class="collection button button-clear button-sm button-block justify-content-flex-start text-align-left inner-focus"
+			data-list-type="collection"
+			data-bi-name="collection"
+			data-page-action-item="overflow-all"
+			data-check-hidden="true"
+			data-popover-close
+		>
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-circle-addition"></span>
+			</span>
+			<span class="collection-status">Add</span>
+		</button>
+	 
+		<button
+			type="button"
+			class="collection button button-block button-clear button-sm justify-content-flex-start text-align-left inner-focus"
+			data-list-type="plan"
+			data-bi-name="plan"
+			data-page-action-item="overflow-all"
+			data-check-hidden="true"
+			data-popover-close
+			hidden
+		>
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-circle-addition"></span>
+			</span>
+			<span class="plan-status">Add to Plans</span>
+		</button>
+	 
+					
+		<a
+			data-contenteditbtn
+			class="button button-clear button-block button-sm inner-focus justify-content-flex-start text-align-left text-decoration-none"
+			data-bi-name="edit"
+			data-page-action-item="overflow-all"
+			data-check-hidden="true"
+			hidden
+			href=""
+			data-original_content_git_url="https://github.com/MicrosoftDocs/gaming-docs-pr/blob/live/gaming/accessibility/xbox-accessibility-guidelines/102.md"
+			data-original_content_git_url_template="{repo}/blob/{branch}/gaming/accessibility/xbox-accessibility-guidelines/102.md"
+			data-pr_repo=""
+			data-pr_branch=""
+		>
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-edit-outline"></span>
+			</span>
+			<span>Edit</span>
+		</a>
+	  
+		<hr class="margin-block-xxs" />
+		
+				<button
+					class="button button-block button-clear button-sm justify-content-flex-start text-align-left inner-focus"
+					type="button"
+					data-bi-name="copy-markdown"
+					data-page-action-item="overflow-all"
+					data-copy-markdown
+					data-copy-state="idle"
+					data-check-hidden="true"
+				>
+					<span class="icon color-primary" aria-hidden="true">
+						<span data-show-when="idle" class="docon docon-code-lang"></span>
+						<span data-show-when="loading" class="loader" hidden></span>
+						<span data-show-when="success" class="docon docon-check-mark" hidden></span>
+					</span>
+					<span>Copy Markdown</span>
+				</button>
+		   
+				<button
+					class="button button-block button-clear button-sm justify-content-flex-start text-align-left inner-focus"
+					type="button"
+					data-bi-name="print"
+					data-page-action-item="overflow-all"
+					data-popover-close
+					data-print-page
+					data-check-hidden="true"
+				>
+					<span class="icon color-primary" aria-hidden="true">
+						<span class="docon docon-print"></span>
+					</span>
+					<span>Print</span>
+				</button>
+		  
+	
+				</div>
+			</details>
+		</div>
+	
+			</div>
+		</div>
+	  
+		<!-- privateUnauthorizedTemplate is hidden by default -->
+		<div unauthorized-private-section data-bi-name="permission-content-unauthorized-private" hidden>
+			<hr class="hr margin-top-xs margin-bottom-sm" />
+			<div class="notification notification-info">
+				<div class="notification-content">
+					<p class="margin-top-none notification-title">
+						<span class="icon" aria-hidden="true"
+							><span class="docon docon-exclamation-circle-solid"></span
+						></span>
+						<span>Note</span>
+					</p>
+					<p class="margin-top-none authentication-determined not-authenticated">
+						Access to this page requires authorization. You can try <a class="docs-sign-in" href="#" data-bi-name="permission-content-sign-in">signing in</a> or <a  class="docs-change-directory" data-bi-name="permisson-content-change-directory">changing directories</a>.
+					</p>
+					<p class="margin-top-none authentication-determined authenticated">
+						Access to this page requires authorization. You can try <a class="docs-change-directory" data-bi-name="permisson-content-change-directory">changing directories</a>.
+					</p>
+				</div>
+			</div>
+		</div>
+	
+					<div class="content"><h1 id="xbox-accessibility-guideline-102-contrast">Xbox Accessibility Guideline 102: Contrast</h1></div>
+					
+		<div
+			id="article-metadata"
+			data-bi-name="article-metadata"
+			data-test-id="article-metadata"
+			class="page-metadata-container display-flex gap-xxs justify-content-space-between align-items-center flex-wrap-wrap"
+		>
+			 
+				<div
+					id="user-feedback"
+					class="margin-block-xxs display-none display-none-print"
+					hidden
+					data-hide-on-archived
+				>
+					
+		<button
+			id="user-feedback-button"
+			data-test-id="conceptual-feedback-button"
+			class="button button-sm button-clear button-primary display-none"
+			type="button"
+			data-bi-name="user-feedback-button"
+			data-user-feedback-button
+			hidden
+		>
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-like"></span>
+			</span>
+			<span>Feedback</span>
+		</button>
+	
+				</div>
+		  
+		</div>
+	 
+		<div data-id="ai-summary" class="display-none-print">
+			<div id="ms--ai-summary-cta" class="margin-top-xs display-flex align-items-center">
+				<span class="icon" aria-hidden="true">
+					<span class="docon docon-sparkle-fill gradient-text-vivid"></span>
+				</span>
+				<button
+					id="ms--ai-summary"
+					type="button"
+					class="tag tag-sm tag-suggestion margin-left-xxs"
+					data-test-id="ai-summary-cta"
+					data-bi-name="ai-summary-cta"
+					data-an="ai-summary"
+				>
+					<span class="ai-summary-cta-text">
+						Summarize this article for me
+					</span>
+				</button>
+			</div>
+			<!-- Slot where the client will render the summary card after the user clicks the CTA -->
+			<div id="ms--ai-summary-header" class="margin-top-xs"></div>
+		</div>
+	 
+		<nav
+			id="center-doc-outline"
+			class="doc-outline display-none-desktop display-none-print margin-bottom-sm"
+			data-bi-name="intopic toc"
+			aria-label="In this article"
+		>
+			<h2 id="ms--in-this-article" class="title is-6 margin-block-xs">
+				In this article
+			</h2>
+		</nav>
+	 <div class="content"><h2 id="goal">Goal</h2>
+<p>The goal of this Xbox Accessibility Guideline (XAG) is to provide enough contrast between visual elements and their backgrounds so that these elements can be interpreted by gamers with low vision.</p>
+<h2 id="overview">Overview</h2>
+<p>There are approximately 2.9 billion people in the world with low vision. Default settings in a game can often result in UI elements that don't have strong contrasts against their background, making it difficult for players with low vision, or players with color vision deficiencies, to perceive and use these elements.</p>
+<p>A contrast ratio is the difference in luminance values between the foreground and background of an element. Support for contrast configurability can be used as a tool by gamers with disabilities to help increase the visibility of elements on screen against their background. Typically, the "stronger" the contrast ratio, the greater the visibility of an element. If a player is unable to perceive a visual element because of low contrast and visibility, they might be excluded from aspects of gameplay that require the ability to understand or use that element. This can ultimately result in exclusion from gameplay altogether. For example, consider a mini-map on screen that provides information critical to gameplay but doesn't have strong enough contrast between its elements and their backgrounds to be visible to a player. They might now be unable to navigate to their next objective, identify where enemies or checkpoints are present, or perform other critical tasks that are informed by the mini-map.</p>
+<h2 id="scoping-questions">Scoping questions</h2>
+<p>Are important visual elements in your game visible against their background?</p>
+<ul>
+<li><p>Text and its background color in menu UIs?</p>
+</li>
+<li><p>The color of heads up display (HUD) elements against their background (like health meters, text, and mini-map elements)?</p>
+</li>
+<li><p>Key gameplay elements against their background (for example, targeting icons are gray and should be discerned against a generally dark game environment background)?</p>
+</li>
+</ul>
+<h2 id="background-and-foundational-information">Background and foundational information</h2>
+<h3 id="contrast-and-vision">Contrast and vision</h3>
+<p>Maintaining strong contrast ratios between visual elements and their background increases the visibility of these elements for players with low vision. Here are some examples of contrast ratios between text colors and their backgrounds for context. Additionally, this example provides a simulation of how text with low contrast ratios can be more difficult to read if a player has a type of low vision that affects clarity or is in a situational impairment such as playing in direct sunlight or at a distance. Note that with decreased sharpness, text with a strong contrast ratio is much more visible than text with a weak contrast ratio.</p>
+<p><img src="../../images/gaming-accessibility/contrast-ratio-demo.png" alt="Two column text contrast ratio example. The left column is labeled Example Text Contrast Ratios. Under it are different colored boxes with text inside that describes the contrast ratio of the text from the box it's in. The contrast ratios go from 1.2:1 to 21:1. The right column is labeled Example Text with 74% decreased sharpness. Below the label are the same boxes from the left column but are more blurry to show that higher contrast text is more legible, even when blurry." data-linktype="relative-path"></p>
+<p>It's also important to note that players with cognitive disabilities, such as difficulty reading, might find text in high contrast user interfaces difficult to perceive. While high-contrast experiences should at a minimum be supported, options for configurable contrast helps ensure that the needs of more gamers can be met.</p>
+<h3 id="key-areas-where-accessible-contrast-ratios-are-important">Key areas where accessible contrast ratios are important</h3>
+<p>It's important to ensure that text and visual elements maintain strong contrast ratios against their background throughout all contexts of the game experience. Here are suggestions for key areas to assess.</p>
+<h4 id="text-elements">Text elements</h4>
+<p>For a more detailed overview of where important text elements are frequently found in games, see <a href="101" data-linktype="relative-path">XAG 101: Text display</a>.</p>
+<ul>
+<li><p>Text in menu UIs</p>
+</li>
+<li><p>Text that appears on screen during active game play</p>
+</li>
+<li><p>Text in party chat windows (input field text, placeholder text, sent and received messages text)</p>
+</li>
+<li><p>Text for subtitles and captions</p>
+</li>
+<li><p>Text on loading screens that provide valuable information</p>
+</li>
+<li><p>Text on error messages, toast messages, or other title-specific notifications</p>
+</li>
+</ul>
+<h4 id="non-text-visual-elements">Non-text visual elements</h4>
+<ul>
+<li><p>Visual cues:</p>
+<details>
+<summary>Example (expandable)</summary>
+<p>Non-text visual elements in gameplay like targeting icons, or "halo" effects that relay directional information to the player regarding where they're being shot from, are also areas that are commonly difficult to see without strong contrast.</p>
+<p><img src="../../images/gaming-accessibility/fenyx_hc_arrow.png" alt="Screenshot of Immortals Fenyx Rising showing a white arrow with black outline pointing left from the playable character towards an enemy readying an attack." data-linktype="relative-path"></p>
+<blockquote>
+<p>Fenyx Immortals Rising uses a white directional arrow with a black outline to visually notify players of an incoming attack and the direction the attack is coming from.</p>
+</blockquote>
+<div class="NOTE">
+<p>Note</p>
+<p>The use of red and green for targeting icons or other important elements can cause difficulty for players with certain types of colorblindness. For more guidance about colorblind accessibility best practices, see <a href="103" data-linktype="relative-path">XAG 103: Additional channels for visual and audio cues</a>.</p>
+</div>
+</details>
+</li>
+<li><p>On screen HUD elements such as health meters, directional cues, and map elements:</p>
+<details>
+<summary>Example (expandable)</summary>
+Health meters, bonus meters, and on screen objectives also provide important information to players. These elements should also be explored when assessing contrast.
+<p><img src="../../images/gaming-accessibility/tow-gameplay.png" alt="Player exploring an island in the game The Outer Worlds. The health bar, navigation bar, quest objective, and subtitles all have strong contrast against the dark background, making them more visible for the player." data-linktype="relative-path"></p>
+<blockquote>
+<p>In The Outer Worlds, the white outline around the bright red and purple meters, as well as the bright yellow text against the opaque backgrounds of HUD elements, increase visibility.</p>
+</blockquote>
+</details>
+</li>
+<li><p>Buttons, sliders, and other controls:</p>
+<details>
+<summary>Example (expandable)</summary>
+Many games have mini-maps on the peripherals of a screen to assist players. Elements of these maps are often difficult to distinguish visually and would benefit from strong contrast ratios between the elements and their background. Similarly, regardless of size, all maps that provide key information for gameplay, text symbols, and other elements that appear on the map screen should also have strong contrast.
+<p><img src="../../images/gaming-accessibility/forza-map.png" alt="A map of the Forza Horizon 4 gameplay area. Small icons with the word &quot;new&quot; underneath are scattered throughout the map to signify new races a player can complete. " data-linktype="relative-path"></p>
+<blockquote>
+<p>In Forza Horizon 4, map elements have a solid yellow fill underneath a black outline and black text to enhance contrast and visibility of these elements against the rest of the map.</p>
+</blockquote>
+</details>
+</li>
+<li><p>Symbols or glyphs:</p>
+<details>
+<summary>Example (expandable)</summary>
+It's important for a player to clearly distinguish a slider or button from its background. Slider-type elements are frequently used in accessibility settings menus such as adjusting volumes or text scales.
+<p><img src="../../images/gaming-accessibility/minecraft-chat-option-zoom.png" alt="Chat text opacity setting slider from Minecraft. The slider is set to 79%." data-linktype="relative-path"></p>
+<blockquote>
+<p>In Minecraft, the slider tabs are light gray with a black outline, which is visible against the dark gray background. The white "Chat Text Opacity: 79%" text also maintains high contrast ratios against both the overall background of the slider, as well as the slider itself.</p>
+</blockquote>
+<p><img src="../../images/gaming-accessibility/gears-tactics-general-settings.png" alt="Gears Tactics Audio Settings. There are four sliders for different volume controls. The tab for controlling the slider is bright white against a dark blue background." data-linktype="relative-path"></p>
+<blockquote>
+<p>In Gears Tactics, the circular slider tab is a bright glowing white circle that maintains high contrast against the dark blue to black gradient of the background.</p>
+</blockquote>
+<p>If symbols, glyphs, or images convey important information to a player, it's important that these elements are easily distinguished against their background.</p>
+<p><img src="../../images/gaming-accessibility/for-honor-hud.png" alt="A player is being approached by an enemy in the game For Honor. The player has a symbol of a castle above their head. The symbol has a black outline that's also outlined in white. The enemy has a red symbol above their head with crossed swords. That symbol is also outlined in black and then in white." data-linktype="relative-path"></p>
+<blockquote>
+<p>In this example from For Honor, the symbols inside the team shields are presented against a solid background. The white outline ensures that the symbols remain visible against dark backgrounds (like the orange swords symbol against the dark wall) while the black outline ensures that the symbols remain visible against light backgrounds (like the blue castle symbol against the light castle background).</p>
+</blockquote>
+</details>
+</li>
+<li><p>Characters and platforms:</p>
+<details>
+<summary>Example (expandable)</summary>
+Outlining characters or other key gameplay elements is helpful for increasing the contrast ratio of the elements against their background. The color used for the outline should also be configurable or provide a strong contrast against all backgrounds they appear against by default.
+<p><img src="../../images/gaming-accessibility/eagle-island-contrast.png" alt="A level in the game Eagle Island, a 2D platformer. The character stands on a ledge. There are several enemies that look like birds floating in the middle of an empty room. The player, the floor, the ceiling, and the enemies are all outlined in white so they stand out against the black background." data-linktype="relative-path"></p>
+<blockquote>
+<p>In Eagle Island, players can choose to dim their backdrop in the settings menu. When dimmed to 100 percent, the backdrop goes from a forest setting to a solid black backdrop. Additionally, players can "outline characters" and "outline platforms." This adds a white outline around these elements, further increasing contrast and visibility.</p>
+</blockquote>
+<p><img src="../../images/gaming-accessibility/eagle-island.jpg" alt="An active gameplay capture from the game Eagle Island. The character is moving against a colorful background with trees, flowers, and a yellowing, glowing lamp. " data-linktype="relative-path"></p>
+<blockquote>
+<p>This example shows what the backdrop of the game Eagle Island looks like when it's not dimmed, and "outline characters" and "outline platforms" aren't enabled for comparison.</p>
+</blockquote>
+</details> 
+</li>
+<li><p>Images that contain key information.</p>
+</li>
+</ul>
+<h3 id="how-to-measure-contrast">How to measure contrast</h3>
+<p>There are many tools that can be used to measure contrast of an element and its background to ensure contrast ratios are met.</p>
+<p>Contrast measurement tools:</p>
+<ol>
+<li><p>Accessibility Insights for Windows</p>
+</li>
+<li><p>Color Contrast Analyzer by the Paciello Group</p>
+</li>
+</ol>
+<p><a href="https://youtu.be/PhiKPyAFOSM" title="Click to open the video example in this window." data-linktype="external"><img src="../../images/gaming-accessibility/for-honor-measure-contrast.png" alt="A user checking the color contrast ratio in For Honor by using Accessibility Insights for Windows." data-linktype="relative-path"></a></p>
+<p><a href="https://youtu.be/PhiKPyAFOSM" title="Click to open the video example in this window." data-linktype="external">Accessibility Insights for Windows: measuring contrast video</a></p>
+<h3 id="general-approaches-to-improving-contrast">General approaches to improving contrast</h3>
+<p>The best approach to ensuring text is accessible for as many players as possible is by providing players with choices to configure the UI to best address their needs.</p>
+<p>Often, the gameplay environment is in constant visual flux, and on screen elements like text, symbols, or visual cues don’t meet contrast ratios at all times in all gameplay scenarios.</p>
+<p>Here are some general approaches that can help increase contrast.</p>
+<ul>
+<li><p>Provide players the option to put a solid background behind any on screen text or give players the option to adjust the opacity of that background.</p>
+</li>
+<li><p>Provide players color options for on screen text and elements so that they can choose what colors are most visible to them.</p>
+</li>
+<li><p>Support a high contrast mode across different aspects of your game.</p>
+</li>
+<li><p>Add borders around text or elements.</p>
+</li>
+</ul>
+<p><a href="https://youtu.be/3S2nn4kNKzk" title="Click to open the video example in this window." data-linktype="external"><img src="../../images/gaming-accessibility/minecraft-acc-menu2.png" alt="Minecraft Accessibility Settings menu. The slider for Text Background Opacity is set to 100%. The Text Background option is set to chat. The Chat Text Opacity slider is set to 79%." data-linktype="relative-path"></a></p>
+<p><a href="https://youtu.be/3S2nn4kNKzk" title="Click to open the video example in this window." data-linktype="external">Text chat background opacity video</a></p>
+<blockquote>
+<p>In Minecraft, players can adjust the opacity of text chat background.</p>
+</blockquote>
+<p><img src="../../images/gaming-accessibility/fallout.jpg" alt="Three screenshots from Fallout: New Vegas with different colored HUDs. In one, the HUD is yellow; in the second, it's green; and the third, it's light blue." data-linktype="relative-path"></p>
+<blockquote>
+<p>In Fallout: New Vegas, HUD color can be changed by the player.</p>
+</blockquote>
+<h2 id="implementation-guidelines">Implementation guidelines</h2>
+<p>Here are some guidelines to ensure that your game provides the minimum amount of configurability for contrast settings to meet the accessibility needs of more players.</p>
+<div class="NOTE">
+<p>Note</p>
+<p>Tools to measure contrast ratios are in the "How to measure contrast" section earlier this topic.</p>
+</div>
+<ul>
+<li><p>Large-scale text and large-scale visual elements should meet a minimum contrast of <strong>3:1</strong> against their background.</p>
+<ul>
+<li><p>On console, large text is defined as:</p>
+<ul>
+<li><p>52 px at 1080p</p>
+</li>
+<li><p>104 px at 4K</p>
+</li>
+</ul>
+</li>
+<li><p>On PC/VR, large text is defined as:</p>
+<ul>
+<li><p>36 px at 1080p</p>
+</li>
+<li><p>72 px at 4K</p>
+</li>
+</ul>
+</li>
+<li><p>On mobile/Xbox Game Streaming, large text is defined as:</p>
+<ul>
+<li><p>36 px at 100 DPI</p>
+</li>
+<li><p>72 px at 200 DPI</p>
+</li>
+<li><p>144 px at 400 DPI</p>
+</li>
+<li><p>Scale linearly as DPI increases</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Standard-sized text and visual elements (those that aren't considered large-scale) that provide important information or context for gameplay should have a contrast ratio of at least <strong>4.5:1</strong> against their background.</p>
+</li>
+<li><p>Text on inactive elements should meet a minimum contrast ratio of <strong>3:1</strong> against its background.</p>
+<ul>
+<li>Inactive elements can include text within symbols, glyphs, or other visual elements that appear within the UI, but cannot be interacted with due to scenarios like:
+<ul>
+<li>The player has not yet unlocked the game area, item, or option associated with the inactive element</li>
+<li>The option or visual element is disabled due to a lack of compatibility between the player’s software or hardware technical specifications and the requirements of the inactive option</li>
+<li>Any other scenario in which a visual element present within the UI cannot be interacted with due to circumstances specific to that player</li>
+</ul>
+</li>
+</ul>
+<details>
+<summary>Example (Expandable)</summary>
+<p><img src="../../images/gaming-accessibility/fenyx_inactive_element.png" alt="Fenyx Immortals Rising screenshot showing 4 bright red see-through torches each with a bright red lock icon above them. The red torches contrast well with the surrounding dark blues in a dimly lit snow covered landscape." data-linktype="relative-path"></p>
+<blockquote>
+<p>Though this is not an example of inactive text, in Fenyx Immortals Rising, in-game elements that have not been unlocked yet appear bright red with a lock icon above them, making them visually stand out within the game environment.</p>
+</blockquote>
+<p><a href="https://youtu.be/tgjbJ-mEdPY" title="Click to open the video example." data-linktype="external"><img src="../../images/gaming-accessibility/sot_inactive_still.png" alt="Sea of Thieves screenshot of in-game store where the current selection is greyed out with white text reading &quot;Bundle Only.&quot;" data-linktype="relative-path"></a></p>
+<p><a href="https://youtu.be/tgjbJ-mEdPY" title="Click to open the video example." data-linktype="external">Video link: Inactive element depiction</a></p>
+<blockquote>
+<p>In the Sea of Thieves store, when a player moves focus over an item that cannot be purchased individually, the words “bundle only” are overlaid on top of the item. The “bundle only” text meets the 3:1 contrast ratio minimum.</p>
+</blockquote>
+</details></li>
+</ul>
+ 
+<ul>
+<li><p>Placeholder text, or text entered in an input field should meet a minimum contrast ratio of <strong>4.5:1</strong> (3:1 for large scale text) against the input field’s background.</p>
+<details>
+<summary>Example (Expandable)</summary>
+<p><img src="../../images/gaming-accessibility/dq-xag-102-placeholder-text-contrast.png" alt="Dragon Quest XI S: Echoes of an Elusive Age screen shot of character naming screen with asterisk placeholders for each letter space allowed for the name. Copyright on the bottom says &quot;2017, 2020 Armor Project / Bird Studio / Square Enix All Rights Reserved." data-linktype="relative-path"></p>
+<blockquote>
+<p>In Dragon Quest XI S: Echoes of an Elusive Age, placeholder star icons that inform the player of how many letters long their character name can be meets the <strong>4.5:1</strong> contrast ratio.</p>
+</blockquote>
+</details></li>
+<li><p>A high contrast mode (either light, dark, or both) should be provided. When enabled, the contrast ratios should equal or exceed <strong>7:1</strong> for all UI elements against their background.</p>
+<details>
+<summary>Example (Expandable)</summary>
+<p><img src="../../images/gaming-accessibility/hyperdot2.png" alt="High contrast mode in Hyperdot Drifter. The arena is a black circle with a cross section of red squares in the middle. The player is represented by a blue dot that's moving around the arena to avoid the red squares." data-linktype="relative-path"></p>
+<blockquote>
+<p>The game Hyperdot features both a dark and a light high contrast mode. When this mode is enabled, all visual elements presented have a <strong>7:1</strong> contrast ratio against their background.</p>
+</blockquote>
+</details>
+</li>
+</ul>
+<div class="NOTE">
+<p>Note</p>
+<p>Despite common misconceptions that high contrast modes are intended to increase the separation between light and dark elements, the true intent of high contrast modes include the following:</p>
+<ul>
+<li>Increase the visibility of important elements</li>
+<li>Increase the visual separation between different types of important elements</li>
+<li>Increase the visual separation between important elements and unimportant elements</li>
+</ul>
+</div>
+<p><strong>Contrast ratio summary chart</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Text size</th>
+<th style="text-align: left;">Contrast ratio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Standard-size text or visual elements</td>
+<td style="text-align: left;">4.5:1</td>
+</tr>
+<tr>
+<td style="text-align: left;">Large-scale text and visual elements</td>
+<td style="text-align: left;">3:1</td>
+</tr>
+<tr>
+<td style="text-align: left;">Inactive-element text</td>
+<td style="text-align: left;">3:1</td>
+</tr>
+<tr>
+<td style="text-align: left;">High contrast mode elements</td>
+<td style="text-align: left;">7:1</td>
+</tr>
+<tr>
+<td style="text-align: left;">Placeholder or input field text</td>
+<td style="text-align: left;">4.5:1 (standard size) 3:1 (large scale)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p>When text is displayed over a non-solid color background, the text contrast ratio should be measured between the text and the lowest contrasting area of the background.</p>
+<details>
+<summary>Example (expandable)</summary>
+<p><img src="../../images/gaming-accessibility/sot-acc-background.png" alt="Sea of Thieves Accessibility Settings menu. The menu background is light turquoise with a dark turquoise fish pattern. The menu text is white with a darker background behind it so that it's distinguishable from the background." data-linktype="relative-path"></p>
+<blockquote>
+<p>In Sea of Thieves, there are patches of lighter and darker turquoise behind the text. When taking the contrast measurement, the lighter of the two turquoise colors should be used for the background color.</p>
+</blockquote>
+</details>
+</li>
+<li><p>Where available, read the platform-provided contrast settings to determine whether high contrast modes should be turned on/off at game launch by default, and then adjust the game UI accordingly.</p>
+<details>
+<summary>Example (expandable)</summary>
+<p>If a game can read the system's platform settings, they should automatically be applied at initial game launch. If a player has high contrast mode enabled at the system or platform level and a game also offers a high contrast mode, it should be enabled at the game launch until the player otherwise reconfigures the game settings. In this example, the player's system settings have high contrast mode enabled. When they open Microsoft Solitaire, the high contrast version of the game also opens.</p>
+<p>Standard game mode</p>
+<p><img src="../../images/gaming-accessibility/solitaire.png" alt="Standard solitaire game mode. White cards are laid out on a green table. The back of the cards show an intricate leafy green pattern." data-linktype="relative-path"></p>
+<p>High contrast mode</p>
+<p><img src="../../images/gaming-accessibility/solitaire-contrast.png" alt="High contrast solitaire game mode. Black cards outlined in bright green with white symbols to depict what card is laid out on a black table. The back of the cards show an intricate leafy green pattern." data-linktype="relative-path"></p>
+</details>
+</li>
+<li><p>Foreground and background text colors can be configured/set by the player.</p>
+</li>
+<li><p>Avoid relying on color alone to communicate information. When this isn't possible, provide players the option to choose the color of key game elements.</p>
+<details>
+<summary>Example (expandable)</summary>
+<p><img src="../../images/gaming-accessibility/battlefield_color_selection.png" alt="screenshot of battlefield 2042's Accessibility menu navigating the custom color blind option with color pickers. RGB values, color, and hue pickers are shown." data-linktype="relative-path"></p>
+<blockquote>
+<p>Battlefield 2042’s Accessibility menu has colorblind options to customize the HUD icon colors. The options are for Deuteranopia, Tritanopia, Protanopia, and custom. The custom option allows players to choose specific colors and hues to best meet their needs. A preview that shows the player’s selected colors in game in shadowy, midtone, and bright game environments is also provided.</p>
+</blockquote>
+</details>
+</li>
+<li><p>Images shouldn't contain text except for Logotypes.</p>
+<details>
+<summary>Example (expandable)</summary>
+An image file shouldn't contain text because that text and its background can't be adjusted to meet contrast ratios if it's within a static image file.
+<p><img src="../../images/gaming-accessibility/gears-versus.png" alt="Gears 5 Versus menu. The Versus tile is selected. It shows a picture of a player character and an enemy face to face with white text at the bottom in front of a black gradient. The text says, &quot;Versus: Competitive multiplayer with up to nine other players.&quot; Below the tile is an option to press A to select this option." data-linktype="relative-path"></p>
+<blockquote>
+<p>In this example from Gears 5, the "Versus" text and the sentence descriptor underneath are text elements, as opposed to being part of the background image. Text should be its own UI element that can be overlaid on top of images, ideally with the ability to place semi-opaque to opaque backgrounds behind text to increase contrast ratios. Text shouldn't be a part of the image itself. This can help ensure screen narration compatibility.</p>
+</blockquote>
+</details>
+</li>
+<li><p>Text or visual elements that are part of a logo or brand name have no minimum contrast requirement.</p>
+<details>
+<summary>Example (expandable)</summary>
+Logotypes, such as a game title's logo on a menu screen, don't have to be tested for contrast ratios.  
+<p><img src="../../images/gaming-accessibility/aoe-main.jpg" alt="Age of Empires 2 Definitive Edition main menu. At the top of the menu is the Age of Empires 2 logo with menu options below it." data-linktype="relative-path"></p>
+<blockquote>
+<p>In this example from Age of Empires II, the "Age of Empires II" text on the top of the menu wouldn't be subject to meeting contrast requirements, because the text is part of the game's logo.</p>
+</blockquote>
+</details>
+</li>
+<li><p>Text or visual elements that are pure decoration, that aren't visible to anyone, or that are part of a picture that contains significant other visual content, have no contrast requirement.</p>
+<details>
+<summary>Example (expandable)</summary>
+Images and elements that are purely decorative and don't provide important information to the player don't have to be tested for contrast ratios.
+<p><img src="../../images/gaming-accessibility/gears-versus-decorative.png" alt="Gears 5 Versus menu. At the top of this screen is a blue and gray decorative rectangle around the player's gamertag. There's a green rectangle around this decorative image to indicate that this is the decorative image that the example is referencing. There are also two green arrows pointing to both sides of an angular decorative graphic that's surrounding other menu options." data-linktype="relative-path"></p>
+<blockquote>
+<p>In this Gears 5 Versus menu screen, the highlighted elements are purely decorative. Their sole contribution to the page is purely aesthetic. Therefore, they aren't subject to contrast guidelines.</p>
+</blockquote>
+<div class="NOTE">
+<p>Note</p>
+<p>This image has been edited to include a green rectangular indicator on the top right of the screen and two arrows on the bottom middle of the screen to highlight the decorative images that this example is referring to. These green elements aren't part of the Gears 5 UI.</p>
+</div>
+</details>
+</li>
+</ul>
+<h2 id="potential-player-impact">Potential player impact</h2>
+<p>The guidelines in this XAG can help reduce barriers for the following players.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Player</th>
+<th style="text-align: center;">Impacted</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Players with low vision</td>
+<td style="text-align: center;"><strong>X</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">Players with little or no color perception</td>
+<td style="text-align: center;"><strong>X</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">Players without hearing</td>
+<td style="text-align: center;"><strong>X</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">Players with limited hearing</td>
+<td style="text-align: center;"><strong>X</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">Players with cognitive or learning disabilities</td>
+<td style="text-align: center;"><strong>X</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">Other: players who are reading text on a small screen, sitting far away from the screen, on a screen with glare, or on a low-contrast display</td>
+<td style="text-align: center;"><strong>X</strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="resources-and-tools">Resources and tools</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Resource type</th>
+<th>Link to source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Article</td>
+<td><a href="http://gameaccessibilityguidelines.com/provide-high-contrast-between-text-and-background/" data-linktype="external">Provide high contrast between text/UI and background (external)</a></td>
+</tr>
+<tr>
+<td style="text-align: left;">Article</td>
+<td><a href="http://gameaccessibilityguidelines.com/provide-an-option-to-adjust-contrast" data-linktype="external">Provide an option to adjust contrast (external)</a></td>
+</tr>
+<tr>
+<td style="text-align: left;">Article</td>
+<td><a href="http://gameaccessibilityguidelines.com/provide-a-choice-of-text-colour-lowhigh-contrast-choice-as-a-minimum" data-linktype="external">Provide a choice of text colour, low/high contrast choice as a minimum (external)</a></td>
+</tr>
+<tr>
+<td style="text-align: left;">Tool</td>
+<td><a href="https://accessibilityinsights.io/" data-linktype="external">Accessibility Insights For Windows (external)</a></td>
+</tr>
+<tr>
+<td style="text-align: left;">Tool</td>
+<td><a href="https://developer.paciellogroup.com/resources/contrastanalyser/" data-linktype="external">Colour Contrast Analyser (CCA) (External)</a></td>
+</tr>
+<tr>
+<td style="text-align: left;">Tool</td>
+<td><a href="https://colororacle.org/" data-linktype="external">Color Oracle (external)</a></td>
+</tr>
+<tr>
+<td style="text-align: left;">Tool</td>
+<td><a href="https://contrast-ratio.com/" data-linktype="external">Contrast ratio tool (external)</a></td>
+</tr>
+<tr>
+<td style="text-align: left;">Microsoft Game Development Kit API</td>
+<td><a href="https://developer.microsoft.com/games/xbox/docs/gdk/XHighContrastGetMode" data-linktype="external">XHighContrastGetMode</a> (This link might require sign-in credentials provided by an NDA Xbox program.)</td>
+</tr>
+</tbody>
+</table>
+</div>
+					
+		<div
+			id="ms--inline-notifications"
+			class="margin-block-xs"
+			data-bi-name="inline-notification"
+		></div>
+	 
+		<div
+			id="assertive-live-region"
+			role="alert"
+			aria-live="assertive"
+			class="visually-hidden"
+			aria-relevant="additions"
+			aria-atomic="true"
+		></div>
+		<div
+			id="polite-live-region"
+			role="status"
+			aria-live="polite"
+			class="visually-hidden"
+			aria-relevant="additions"
+			aria-atomic="true"
+		></div>
+	
+					
+		<!-- feedback section -->
+		<section
+			id="site-user-feedback-footer"
+			class="font-size-sm margin-top-md display-none-print display-none-desktop"
+			data-test-id="site-user-feedback-footer"
+			data-bi-name="site-feedback-section"
+		>
+			<hr class="hr" />
+			<h2 id="ms--feedback" class="title is-3">Feedback</h2>
+			<div class="display-flex flex-wrap-wrap align-items-center">
+				<p class="font-weight-semibold margin-xxs margin-left-none">
+					Was this page helpful?
+				</p>
+				<div class="buttons">
+					<button
+						class="thumb-rating-button like button button-primary button-sm"
+						data-test-id="footer-rating-yes"
+						data-binary-rating-response="rating-yes"
+						type="button"
+						title="This article is helpful"
+						data-bi-name="button-rating-yes"
+						aria-pressed="false"
+					>
+						<span class="icon" aria-hidden="true">
+							<span class="docon docon-like"></span>
+						</span>
+						<span>Yes</span>
+					</button>
+					<button
+						class="thumb-rating-button dislike button button-primary button-sm"
+						id="standard-rating-no-button"
+						hidden
+						data-test-id="footer-rating-no"
+						data-binary-rating-response="rating-no"
+						type="button"
+						title="This article is not helpful"
+						data-bi-name="button-rating-no"
+						aria-pressed="false"
+					>
+						<span class="icon" aria-hidden="true">
+							<span class="docon docon-dislike"></span>
+						</span>
+						<span>No</span>
+					</button>
+					<details
+						class="popover popover-top"
+						id="mobile-help-popover"
+						data-test-id="footer-feedback-popover"
+					>
+						<summary
+							class="thumb-rating-button dislike button button-primary button-sm"
+							data-test-id="details-footer-rating-no"
+							data-binary-rating-response="rating-no"
+							title="This article is not helpful"
+							data-bi-name="button-rating-no"
+							aria-pressed="false"
+							data-bi-an="feedback-unhelpful-popover"
+						>
+							<span class="icon" aria-hidden="true">
+								<span class="docon docon-dislike"></span>
+							</span>
+							<span>No</span>
+						</summary>
+						<div
+							class="popover-content width-200 width-300-tablet"
+							role="dialog"
+							aria-labelledby="popover-heading"
+							aria-describedby="popover-description"
+						>
+							<p id="popover-heading" class="font-size-lg margin-bottom-xxs font-weight-semibold">
+								Need help with this topic?
+							</p>
+							<p id="popover-description" class="font-size-sm margin-bottom-xs">
+								Want to try using Ask Learn to clarify or guide you through this topic?
+							</p>
+							
+		<div class="buttons flex-direction-row flex-wrap justify-content-center gap-xxs">
+			<div>
+		<button
+			class="button button-sm border inner-focus display-none margin-right-xxs"
+			data-bi-name="ask-learn-assistant-entry-troubleshoot"
+			data-test-id="ask-learn-assistant-modal-entry-mobile-feedback"
+			data-ask-learn-modal-entry-feedback
+			data-bi-an=feedback-unhelpful-popover
+			type="button"
+			style="min-width: max-content;"
+			aria-expanded="false"
+			aria-label="Ask Learn"
+			hidden
+		>
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+		</button>
+		<button
+			class="button button-sm display-inline-flex display-none-desktop flex-shrink-0 margin-right-xxs border-color-ask-learn margin-right-xxs"
+			data-bi-name="ask-learn-assistant-entry-troubleshoot"
+			data-bi-an=feedback-unhelpful-popover
+			data-test-id="ask-learn-assistant-modal-entry-tablet-feedback"
+			data-ask-learn-modal-entry-feedback
+			type="button"
+			style="min-width: max-content;"
+			aria-expanded="false"
+			hidden
+		>
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+			<span>Ask Learn</span>
+		</button>
+		<button
+			class="button button-sm display-none flex-shrink-0 display-inline-flex-desktop margin-right-xxs border-color-ask-learn margin-right-xxs"
+			data-bi-name="ask-learn-assistant-entry-troubleshoot"
+			data-bi-an=feedback-unhelpful-popover
+			data-test-id="ask-learn-assistant-flyout-entry-feedback"
+			data-ask-learn-flyout-entry-show-only
+			data-flyout-button="toggle"
+			type="button"
+			style="min-width: max-content;"
+			aria-expanded="false"
+			aria-controls="ask-learn-flyout"
+			hidden
+		>
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+			<span>Ask Learn</span>
+		</button>
+	</div>
+			<button
+				type="button"
+				class="button button-sm margin-right-xxs"
+				data-help-option="suggest-fix"
+				data-bi-name="feedback-suggest"
+				data-bi-an="feedback-unhelpful-popover"
+				data-test-id="suggest-fix"
+			>
+				<span class="icon" aria-hidden="true">
+					<span class="docon docon-feedback"></span>
+				</span>
+				<span> Suggest a fix? </span>
+			</button>
+		</div>
+	
+						</div>
+					</details>
+				</div>
+			</div>
+		</section>
+		<!-- end feedback section -->
+	
+				</div>
+				
+		<div id="ms--additional-resources-mobile" class="display-none-print">
+			<hr class="hr" hidden />
+			<h2 id="ms--additional-resources-mobile-heading" class="title is-3" hidden>
+				Additional resources
+			</h2>
+			
+		<section
+			id="right-rail-recommendations-mobile"
+			class=""
+			data-bi-name="recommendations"
+			hidden
+		></section>
+	 
+		<section
+			id="right-rail-training-mobile"
+			class=""
+			data-bi-name="learning-resource-card"
+			hidden
+		></section>
+	 
+		<section
+			id="right-rail-events-mobile"
+			class=""
+			data-bi-name="events-card"
+			hidden
+		></section>
+	
+		</div>
+	 
+		<div
+			id="article-metadata-footer"
+			data-bi-name="article-metadata-footer"
+			data-test-id="article-metadata-footer"
+			class="page-metadata-container"
+		>
+			<hr class="hr" />
+			<ul class="metadata page-metadata" data-bi-name="page info" lang="en-us" dir="ltr">
+				<li class="visibility-hidden-visual-diff">
+			<span class="badge badge-sm text-wrap-pretty">
+				<span>Last updated on <local-time format="twoDigitNumeric"
+		datetime="2026-03-04T06:57:00.000Z"
+		data-article-date-source="calculated"
+		class="is-invisible"
+	>
+		2026-03-04
+	</local-time></span>
+			</span>
+		</li>
+			</ul>
+		</div>
+	
+			</div>
+		
+				</main>
+				<aside
+					id="layout-body-aside"
+					class="layout-body-aside  "
+					data-bi-name="aside"
+					aria-label="Additional resources"
+			  >
+					
+		<div
+			id="ms--additional-resources"
+			class="right-container padding-sm display-none display-block-desktop height-full"
+			data-bi-name="pageactions"
+		>
+			<div id="affixed-right-container" data-bi-name="right-column">
+				
+		<nav
+			id="side-doc-outline"
+			class="doc-outline border-bottom padding-bottom-xs margin-bottom-xs scrollbar-width-thin"
+			data-bi-name="intopic toc"
+			aria-label="In this article"
+		>
+			<h3>In this article</h3>
+		</nav>
+	
+				<!-- Feedback -->
+				
+		<section
+			id="ms--site-user-feedback-right-rail"
+			class="font-size-sm display-none-print"
+			data-test-id="site-user-feedback-right-rail"
+			data-bi-name="site-feedback-right-rail"
+		>
+			<div class="display-flex flex-wrap-wrap align-items-center">
+				<p class="font-weight-semibold margin-xxs margin-left-none">
+					Was this page helpful?
+				</p>
+				<div class="display-flex flex-wrap-nowrap">
+					<button
+						class="thumb-rating-button like inner-focus"
+						data-test-id="right-rail-rating-yes"
+						data-binary-rating-response="rating-yes"
+						type="button"
+						title="This article is helpful"
+						aria-label="This article is helpful"
+						data-bi-name="button-rating-yes"
+						aria-pressed="false"
+					>
+						<span class="icon" aria-hidden="true">
+							<span class="docon docon-like"></span>
+						</span>
+					</button>
+					<button
+						class="thumb-rating-button dislike inner-focus"
+						id="right-rail-no-button"
+						hidden
+						data-test-id="right-rail-rating-no"
+						data-binary-rating-response="rating-no"
+						type="button"
+						title="This article is not helpful"
+						aria-label="This article is not helpful"
+						data-bi-name="button-rating-no"
+						aria-pressed="false"
+					>
+						<span class="icon" aria-hidden="true">
+							<span class="docon docon-dislike"></span>
+						</span>
+					</button>
+					<details class="popover popover-right" id="help-popover" data-test-id="feedback-popover">
+						<summary
+							tabindex="0"
+							class="thumb-rating-button dislike inner-focus"
+							data-test-id="details-right-rail-rating-no"
+							data-binary-rating-response="rating-no"
+							title="This article is not helpful"
+							aria-label="This article is not helpful"
+							data-bi-name="button-rating-no"
+							aria-pressed="false"
+							data-bi-an="feedback-unhelpful-popover"
+						>
+							<span class="icon" aria-hidden="true">
+								<span class="docon docon-dislike"></span>
+							</span>
+						</summary>
+						<div
+							class="popover-content width-200 width-300-tablet"
+							role="dialog"
+							aria-labelledby="popover-heading-right-rail"
+							aria-describedby="popover-description-right-rail"
+						>
+							<p
+								id="popover-heading-right-rail"
+								class="font-size-lg margin-bottom-xxs font-weight-semibold"
+							>
+								Need help with this topic?
+							</p>
+							<p id="popover-description-right-rail" class="font-size-sm margin-bottom-xs">
+								Want to try using Ask Learn to clarify or guide you through this topic?
+							</p>
+							
+		<div class="buttons flex-direction-row flex-wrap justify-content-center gap-xxs">
+			<div>
+		<button
+			class="button button-sm border inner-focus display-none margin-right-xxs"
+			data-bi-name="ask-learn-assistant-entry-troubleshoot"
+			data-test-id="ask-learn-assistant-modal-entry-mobile-feedback"
+			data-ask-learn-modal-entry-feedback
+			data-bi-an=feedback-unhelpful-popover
+			type="button"
+			style="min-width: max-content;"
+			aria-expanded="false"
+			aria-label="Ask Learn"
+			hidden
+		>
+			<span class="icon" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+		</button>
+		<button
+			class="button button-sm display-inline-flex display-none-desktop flex-shrink-0 margin-right-xxs border-color-ask-learn margin-right-xxs"
+			data-bi-name="ask-learn-assistant-entry-troubleshoot"
+			data-bi-an=feedback-unhelpful-popover
+			data-test-id="ask-learn-assistant-modal-entry-tablet-feedback"
+			data-ask-learn-modal-entry-feedback
+			type="button"
+			style="min-width: max-content;"
+			aria-expanded="false"
+			hidden
+		>
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+			<span>Ask Learn</span>
+		</button>
+		<button
+			class="button button-sm display-none flex-shrink-0 display-inline-flex-desktop margin-right-xxs border-color-ask-learn margin-right-xxs"
+			data-bi-name="ask-learn-assistant-entry-troubleshoot"
+			data-bi-an=feedback-unhelpful-popover
+			data-test-id="ask-learn-assistant-flyout-entry-feedback"
+			data-ask-learn-flyout-entry-show-only
+			data-flyout-button="toggle"
+			type="button"
+			style="min-width: max-content;"
+			aria-expanded="false"
+			aria-controls="ask-learn-flyout"
+			hidden
+		>
+			<span class="icon font-size-lg" aria-hidden="true">
+				<span class="docon docon-chat-sparkle-fill gradient-ask-learn-logo"></span>
+			</span>
+			<span>Ask Learn</span>
+		</button>
+	</div>
+			<button
+				type="button"
+				class="button button-sm margin-right-xxs"
+				data-help-option="suggest-fix"
+				data-bi-name="feedback-suggest"
+				data-bi-an="feedback-unhelpful-popover"
+				data-test-id="suggest-fix"
+			>
+				<span class="icon" aria-hidden="true">
+					<span class="docon docon-feedback"></span>
+				</span>
+				<span> Suggest a fix? </span>
+			</button>
+		</div>
+	
+						</div>
+					</details>
+				</div>
+			</div>
+		</section>
+	
+			</div>
+		</div>
+	
+			  </aside> <section
+					id="layout-body-flyout"
+					class="layout-body-flyout "
+					data-bi-name="flyout"
+			  >
+					 <div
+	class="height-full border-left background-color-body-medium"
+	id="ask-learn-flyout"
+></div>
+			  </section> <div class="layout-body-footer " data-bi-name="layout-footer">
+		<footer
+			id="footer"
+			data-test-id="footer"
+			data-bi-name="footer"
+			class="footer-layout padding-xs padding-sm-desktop has-default-focus border-top"
+			role="contentinfo"
+		>
+			<div class="display-flex gap-xs flex-wrap-wrap is-full-height padding-right-lg-desktop">
+				
+		<a
+			data-mscc-ic="false"
+			href="#"
+			data-bi-name="select-locale"
+			class="locale-selector-link flex-shrink-0 button button-sm button-clear external-link-indicator"
+			id=""
+			title=""
+			><span class="icon" aria-hidden="true"
+				><span class="docon docon-world"></span></span
+			><span class="local-selector-link-text">en-us</span></a
+		>
+	 <div class="ccpa-privacy-link" data-ccpa-privacy-link hidden>
+		
+		<a
+			data-mscc-ic="false"
+			href="https://aka.ms/yourcaliforniaprivacychoices"
+			data-bi-name="your-privacy-choices"
+			class="button button-sm button-clear flex-shrink-0 external-link-indicator"
+			id=""
+			title=""
+			>
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 30 14"
+			xml:space="preserve"
+			height="16"
+			width="43"
+			aria-hidden="true"
+			focusable="false"
+		>
+			<path
+				d="M7.4 12.8h6.8l3.1-11.6H7.4C4.2 1.2 1.6 3.8 1.6 7s2.6 5.8 5.8 5.8z"
+				style="fill-rule:evenodd;clip-rule:evenodd;fill:#fff"
+			></path>
+			<path
+				d="M22.6 0H7.4c-3.9 0-7 3.1-7 7s3.1 7 7 7h15.2c3.9 0 7-3.1 7-7s-3.2-7-7-7zm-21 7c0-3.2 2.6-5.8 5.8-5.8h9.9l-3.1 11.6H7.4c-3.2 0-5.8-2.6-5.8-5.8z"
+				style="fill-rule:evenodd;clip-rule:evenodd;fill:#06f"
+			></path>
+			<path
+				d="M24.6 4c.2.2.2.6 0 .8L22.5 7l2.2 2.2c.2.2.2.6 0 .8-.2.2-.6.2-.8 0l-2.2-2.2-2.2 2.2c-.2.2-.6.2-.8 0-.2-.2-.2-.6 0-.8L20.8 7l-2.2-2.2c-.2-.2-.2-.6 0-.8.2-.2.6-.2.8 0l2.2 2.2L23.8 4c.2-.2.6-.2.8 0z"
+				style="fill:#fff"
+			></path>
+			<path
+				d="M12.7 4.1c.2.2.3.6.1.8L8.6 9.8c-.1.1-.2.2-.3.2-.2.1-.5.1-.7-.1L5.4 7.7c-.2-.2-.2-.6 0-.8.2-.2.6-.2.8 0L8 8.6l3.8-4.5c.2-.2.6-.2.9 0z"
+				style="fill:#06f"
+			></path>
+		</svg>
+	
+			<span>Your Privacy Choices</span></a
+		>
+	
+	</div>
+				<div class="flex-shrink-0">
+		<div class="dropdown has-caret-up">
+			<button
+				data-test-id="theme-selector-button"
+				class="dropdown-trigger button button-clear button-sm inner-focus theme-dropdown-trigger"
+				aria-controls="{{ themeMenuId }}"
+				aria-haspopup="true"
+				aria-expanded="false"
+				data-bi-name="theme"
+			>
+				<span class="icon" aria-hidden="true"><span class="docon docon-sun"></span></span>
+				<span>Theme</span>
+				<span class="icon expanded-indicator" aria-hidden="true">
+					<span class="docon docon-chevron-down-light"></span>
+				</span>
+			</button>
+			<div class="dropdown-menu" id="{{ themeMenuId }}" role="menu">
+				<ul class="theme-selector padding-xxs" data-test-id="theme-dropdown-menu" role="none">
+					<li class="theme display-block" role="none">
+						<button
+							class="button button-clear button-sm theme-control button-block justify-content-flex-start text-align-left"
+							role="menuitemradio"
+							aria-checked="false"
+							data-theme-to="light"
+							tabindex="-1"
+						>
+							<span class="theme-light margin-right-xxs">
+								<span
+									class="theme-selector-icon border display-inline-block has-body-background"
+									aria-hidden="true"
+								>
+									<svg class="svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 14">
+										<rect width="22" height="14" class="has-fill-body-background" />
+										<rect x="5" y="5" width="12" height="4" class="has-fill-secondary" />
+										<rect x="5" y="2" width="2" height="1" class="has-fill-secondary" />
+										<rect x="8" y="2" width="2" height="1" class="has-fill-secondary" />
+										<rect x="11" y="2" width="3" height="1" class="has-fill-secondary" />
+										<rect x="1" y="1" width="2" height="2" class="has-fill-secondary" />
+										<rect x="5" y="10" width="7" height="2" rx="0.3" class="has-fill-primary" />
+										<rect x="19" y="1" width="2" height="2" rx="1" class="has-fill-secondary" />
+									</svg>
+								</span>
+							</span>
+							<span> Light </span>
+						</button>
+					</li>
+					<li class="theme display-block" role="none">
+						<button
+							class="button button-clear button-sm theme-control button-block justify-content-flex-start text-align-left"
+							role="menuitemradio"
+							aria-checked="false"
+							data-theme-to="dark"
+							tabindex="-1"
+						>
+							<span class="theme-dark margin-right-xxs">
+								<span
+									class="border theme-selector-icon display-inline-block has-body-background"
+									aria-hidden="true"
+								>
+									<svg class="svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 14">
+										<rect width="22" height="14" class="has-fill-body-background" />
+										<rect x="5" y="5" width="12" height="4" class="has-fill-secondary" />
+										<rect x="5" y="2" width="2" height="1" class="has-fill-secondary" />
+										<rect x="8" y="2" width="2" height="1" class="has-fill-secondary" />
+										<rect x="11" y="2" width="3" height="1" class="has-fill-secondary" />
+										<rect x="1" y="1" width="2" height="2" class="has-fill-secondary" />
+										<rect x="5" y="10" width="7" height="2" rx="0.3" class="has-fill-primary" />
+										<rect x="19" y="1" width="2" height="2" rx="1" class="has-fill-secondary" />
+									</svg>
+								</span>
+							</span>
+							<span> Dark </span>
+						</button>
+					</li>
+					<li class="theme display-block" role="none">
+						<button
+							class="button button-clear button-sm theme-control button-block justify-content-flex-start text-align-left"
+							role="menuitemradio"
+							aria-checked="false"
+							data-theme-to="high-contrast"
+							tabindex="-1"
+						>
+							<span class="theme-high-contrast margin-right-xxs">
+								<span
+									class="border theme-selector-icon display-inline-block has-body-background"
+									aria-hidden="true"
+								>
+									<svg class="svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 14">
+										<rect width="22" height="14" class="has-fill-body-background" />
+										<rect x="5" y="5" width="12" height="4" class="has-fill-secondary" />
+										<rect x="5" y="2" width="2" height="1" class="has-fill-secondary" />
+										<rect x="8" y="2" width="2" height="1" class="has-fill-secondary" />
+										<rect x="11" y="2" width="3" height="1" class="has-fill-secondary" />
+										<rect x="1" y="1" width="2" height="2" class="has-fill-secondary" />
+										<rect x="5" y="10" width="7" height="2" rx="0.3" class="has-fill-primary" />
+										<rect x="19" y="1" width="2" height="2" rx="1" class="has-fill-secondary" />
+									</svg>
+								</span>
+							</span>
+							<span> High contrast </span>
+						</button>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+			</div>
+			<ul class="links" data-bi-name="footerlinks">
+				<li class="manage-cookies-holder" hidden=""></li>
+				<li>
+		
+		<a
+			data-mscc-ic="false"
+			href="https://learn.microsoft.com/en-us/principles-for-ai-generated-content"
+			data-bi-name="aiDisclaimer"
+			class=" external-link-indicator"
+			id=""
+			title=""
+			>AI Disclaimer</a
+		>
+	
+	</li><li>
+		
+		<a
+			data-mscc-ic="false"
+			href="https://learn.microsoft.com/en-us/previous-versions/"
+			data-bi-name="archivelink"
+			class=" external-link-indicator"
+			id=""
+			title=""
+			>Previous Versions</a
+		>
+	
+	</li> <li>
+		
+		<a
+			data-mscc-ic="false"
+			href="https://techcommunity.microsoft.com/t5/microsoft-learn-blog/bg-p/MicrosoftLearnBlog"
+			data-bi-name="bloglink"
+			class=" external-link-indicator"
+			id=""
+			title=""
+			>Blog</a
+		>
+	
+	</li> <li>
+		
+		<a
+			data-mscc-ic="false"
+			href="https://learn.microsoft.com/en-us/contribute"
+			data-bi-name="contributorGuide"
+			class=" external-link-indicator"
+			id=""
+			title=""
+			>Contribute</a
+		>
+	
+	</li><li>
+		
+		<a
+			data-mscc-ic="false"
+			href="https://go.microsoft.com/fwlink/?LinkId=521839"
+			data-bi-name="privacy"
+			class=" external-link-indicator"
+			id=""
+			title=""
+			>Privacy</a
+		>
+	
+	</li><li>
+		
+		<a
+			data-mscc-ic="false"
+			href="https://go.microsoft.com/fwlink/?linkid=2259814"
+			data-bi-name="consumer-health-privacy"
+			class=" external-link-indicator"
+			id=""
+			title=""
+			>Consumer Health Privacy</a
+		>
+	
+	</li><li>
+		
+		<a
+			data-mscc-ic="false"
+			href="https://learn.microsoft.com/en-us/legal/termsofuse"
+			data-bi-name="termsofuse"
+			class=" external-link-indicator"
+			id=""
+			title=""
+			>Terms of Use</a
+		>
+	
+	</li><li>
+		
+		<a
+			data-mscc-ic="false"
+			href="https://www.microsoft.com/legal/intellectualproperty/Trademarks/"
+			data-bi-name="trademarks"
+			class=" external-link-indicator"
+			id=""
+			title=""
+			>Trademarks</a
+		>
+	
+	</li>
+				<li>&copy; Microsoft 2026</li>
+			</ul>
+		</footer>
+	</footer>
+			</body>
+		</html>

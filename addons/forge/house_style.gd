@@ -191,12 +191,27 @@ static func apply_lighting(parent: Node, design: Dictionary) -> Dictionary:
 			old.queue_free()
 	# a sky that is the sky colour above and the ground colour below gives metals something to reflect:
 	# without it they render black
-	var sky_mat := ProceduralSkyMaterial.new()
-	sky_mat.sky_top_color = Color.html(L.sky)
-	sky_mat.sky_horizon_color = Color.html(L.sky)
-	sky_mat.ground_horizon_color = Color.html(L.get("ground", L.sky))
-	sky_mat.ground_bottom_color = Color.html(L.get("ground", L.sky))
-	sky_mat.sun_angle_max = 0.0
+	# `sunDisc` is the sun's size in degrees, drawn with a haze around it about ten times wider; 0 draws no sun
+	var disc := float(L.get("sunDisc", 0))
+	var sky_mat: Material
+	if disc > 0.0:
+		var sm := ShaderMaterial.new()
+		sm.shader = preload("sky.gdshader")
+		sm.set_shader_parameter("top", Color.html(L.sky))
+		sm.set_shader_parameter("horizon", Color.html(L.get("horizon", L.sky)))
+		sm.set_shader_parameter("ground", Color.html(L.get("ground", L.sky)))
+		sm.set_shader_parameter("sun", Color.html(L.get("sunColor", "#ffffff")))
+		sm.set_shader_parameter("disc", deg_to_rad(disc) / 2.0)
+		sm.set_shader_parameter("halo", deg_to_rad(disc) * 10.0)
+		sky_mat = sm
+	else:
+		var ps := ProceduralSkyMaterial.new()
+		ps.sky_top_color = Color.html(L.sky)
+		ps.sky_horizon_color = Color.html(L.get("horizon", L.sky))
+		ps.ground_horizon_color = Color.html(L.get("ground", L.sky))
+		ps.ground_bottom_color = Color.html(L.get("ground", L.sky))
+		ps.sun_angle_max = 0.0
+		sky_mat = ps
 	var env := Environment.new()
 	env.background_mode = Environment.BG_SKY
 	env.sky = Sky.new()
@@ -204,7 +219,8 @@ static func apply_lighting(parent: Node, design: Dictionary) -> Dictionary:
 	# ambient is a colour and not the sky: measured on 4.7.2, sky ambient in the Compatibility renderer
 	# ignores ambient_light_energy and lights everything at full sky brightness
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	env.ambient_light_color = Color.html(L.sky)
+	# a cool shade under a warm sun is what keeps shadows from going muddy: `ambientColor`, else the sky
+	env.ambient_light_color = Color.html(L.get("ambientColor", L.sky))
 	env.ambient_light_energy = float(L.get("ambient", 1)) * UNIT
 	env.reflected_light_source = Environment.REFLECTION_SOURCE_SKY
 	env.tonemap_mode = {
@@ -221,12 +237,16 @@ static func apply_lighting(parent: Node, design: Dictionary) -> Dictionary:
 		env.fog_light_color = Color.html(L.fog.color)
 		env.fog_depth_begin = float(L.fog.near)
 		env.fog_depth_end = float(L.fog.far)
+		# 1 paints the whole sky in the fog colour, which flattens a sky gradient; haze wants it low
+		env.fog_sky_affect = float(L.fog.get("sky", 1))
+		env.fog_depth_curve = float(L.fog.get("curve", 1))
 	var world := WorldEnvironment.new()
 	world.environment = env
 	var sun := DirectionalLight3D.new()
 	sun.light_color = Color.html(L.get("sunColor", "#ffffff"))
 	sun.light_energy = float(L.get("sun", 2.5)) * UNIT
 	sun.shadow_enabled = true
+	sun.light_angular_distance = disc  # the sky draws the disc at the light's own angular size
 	# every shadow split draws each caster again, and a phone pays for it: two splits, no farther than the fog shows
 	sun.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS
 	sun.directional_shadow_max_distance = minf(float(L.get("fog", {}).get("far", 60)), 60.0)

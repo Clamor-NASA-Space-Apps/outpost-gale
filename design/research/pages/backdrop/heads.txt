@@ -1,0 +1,26 @@
+== https://planetarymaps.usgs.gov/mosaic/Mars/HRSC_MOLA_Blend/Mars_HRSC_MOLA_BlendDEM_Global_200mp_v2.tif
+HTTP/2 302 
+== https://planetarymaps.usgs.gov/mosaic/Mars_MGS_MOLA_DEM_mosaic_global_463m.tif
+HTTP/2 302 
+== https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/ESP_023957_1755_ESP_024023_1755/DTEEC_023957_1755_024023_1755_U01.tif
+HTTP/1.1 200 OK
+Last-Modified: Sat, 08 Jul 2023 01:15:55 GMT
+Accept-Ranges: bytes
+Content-Length: 179340715
+== https://astrogeo-ard.s3-us-west-2.amazonaws.com/mars/mro/hirise/controlled/dtm/ESP_018854_1755_ESP_018920_1755/DTEEC_018854_1755_018920_1755_U01.tif
+HTTP/1.1 200 OK
+Last-Modified: Sat, 08 Jul 2023 00:01:54 GMT
+Accept-Ranges: bytes
+Content-Length: 156211149
+== https://planetarymaps.usgs.gov/mosaic/Mars/HRSC_MOLA_Blend/Mars_HRSC_MOLA_BlendDEM_Global_200mp_v2.tif
+HTTP/2 302 
+location: https://asc-pds-services.s3.us-west-2.amazonaws.com/mosaic/Mars/HRSC_MOLA_Blend/Mars_HRSC_MOLA_BlendDEM_Global_200mp_v2.tif
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Content-Length: 11384463908
+== https://planetarymaps.usgs.gov/mosaic/Mars_MGS_MOLA_DEM_mosaic_global_463m.tif
+HTTP/2 302 
+location: https://asc-pds-services.s3.us-west-2.amazonaws.com/mosaic/Mars_MGS_MOLA_DEM_mosaic_global_463m.tif
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Content-Length: 2125771142

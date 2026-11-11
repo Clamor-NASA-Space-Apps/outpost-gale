@@ -1,0 +1,248 @@
+Toward Comparing the Touchscreen
+Interaction Patterns of Kids and Adults
+Quincy Brown
+
+Abstract
+
+Bowie State University
+
+Touchscreen interactions are increasingly more
+commonplace with the mainstream adoption of devices
+like the iPad and iPhone. Kids are using their parents’
+devices for entertainment, learning, and discovery, but
+the interactions have not always been designed with
+kids in mind. In this paper we discuss the results of our
+explorations of differences between children and adults
+on a dataset of touch- and gesture-based interactions.
+We find evidence for significant differences and discuss
+how these can be considered in design.
+
+14000 Jericho Park Road
+Bowie, MD 20715 USA
+qbrown@bowiestate.edu
+Lisa Anthony
+University of Maryland, Baltimore County (UMBC)
+1000 Hilltop Circle
+Baltimore, MD 21250 USA
+lanthony@umbc.edu
+
+Keywords
+Touch Interaction, Gesture Interaction, Mobile Devices
+
+ACM Classification Keywords
+H5.m. Information interfaces and presentation (e.g.,
+HCI): Miscellaneous.
+
+General Terms
+Human Factors, Design
+
+Introduction
+Copyright is held by the author/owner(s).
+CHI EIST 2012, May 5–6, 2012, Austin, TX, USA.
+ACM 978-1-4503-1016-1/12/05.
+
+The proliferation of mobile devices in the 21st Century
+has led educators and researchers to investigate
+methods of utilizing them to provide personalized
+learning environments, games, and entertainment. As
+
+2
+
+mobile devices have transitioned from single-purpose
+communication devices to multipurpose tools for
+creating, sharing, and discovering, their users have
+shifted downward in age from adults to children.
+Though many children use mobile applications to
+support their learning and entertainment, the devices
+and underlying interactions were not designed explicitly
+for children. Based on data comparing use of mobile
+touch interaction in children and in adults, we present
+evidence that there are key differences in how children
+acquire touch targets and make gestures. We believe
+these differences must be considered in order to design
+the most useful and usable touchscreen interactions for
+children, especially for learning-oriented systems.
+
+Prior research on children’s interactions with mobile
+applications has found that each interaction mode (e.g.,
+touch vs. gesture) posed different challenges for the
+young users. For example, gestures requiring a single
+down event followed by a move event in one
+coordinated movement were difficult, as the children
+tended to use multiple strokes to complete what is
+expected by recognizers to be a single stroke gesture,
+such as a square [2]. Second, the young users’ ability
+to accurately touch smaller targets varied, which
+resulted in the need for larger interface icons, thereby
+reducing the amount of information that could be
+displayed on an already small interface [2]. These
+findings form a good foundation but must be extended.
+
+Related Research
+
+Data Collection
+
+The usability of pen and finger input gestures has been
+studied on a variety of platforms, from PDAs and
+mobile devices [9], to Tablet PCs and tablet computers
+[7, 8], to tabletop and surface displays [3, 5, 6]. Most
+of this work has examined adult users only. While some
+of these works have included children as users,
+researchers did not focus on identifying differences
+between children and adult users of such devices [6].
+Other work has investigated children without also
+looking at adults, making it difficult if not impossible to
+compare adults’ and kids’ interaction patterns [3, 5].
+Read et al. have conducted a suite of experiments to
+understand the ways in which children use stylus and
+touch interaction for handwriting input and how that
+differs from adults (e.g., [4]). Other work with children
+and gesture or touch interaction has focused on
+tabletop surfaces or tangible user interfaces [3, 5], and
+it is unknown whether similar findings will transfer to
+finger input on smaller-screen mobile devices.
+
+We collected a dataset from eight children and six
+adults in order to identify differences in touch and
+gesture interactions between children and adults. The
+children, between 7 and 11 years old, and the adults
+completed touch and gesture tasks using mobile
+Android applications developed for this study. For touch
+tasks, the application displayed squares (targets) of
+100x100 pixels, 60x60 pixels, 40x40 and 20x20 pixels,
+and participants were told to touch the target. The
+targets presented varied between the four sizes and in
+position on the 320x480 pixels interface. The fusion of
+target size and its screen position classified touches as
+being easy, medium, hard or very hard (see Figure 1).
+For example, a 40x40 pixels target in the upper left
+corner was classified as hard, whereas a 100x100
+pixels target in the center of the interface was classified
+as easy. For gesture tasks, participants were asked to
+use their finger to draw gestures on the device screen.
+Gestures evaluated included letters (e.g., A or Q) and
+geometric shapes (e.g., squares or triangles).
+
+3
+
+Figure 1: Easy, medium, hard and very hard targets.
+
+Figure 2: Examples of differences in gesture
+generation for adults (left) and children (right).
+
+Data Analysis
+We have analyzed the dataset collected for
+characteristics of both touch and gesture interactions
+that differ between the children and the adults.
+Gesture Generation
+Figure 2 shows two typical example gestures from our
+study, one made by an adult (left) and one by a child
+(right). The child’s gesture consists of 4 independent
+strokes, whereas the adult made the gesture in one
+smooth stroke. Furthermore, we determined that both
+the popular $N multistroke recognition algorithm [1]
+and the Microsoft Tablet PC recognizer are more
+accurate on gestures made by adults than by children
+in our dataset. For $N, a two-tailed paired-samples ttest indicates that the average recognition accuracy for
+each level of number of training examples is
+significantly lower for children than for adults
+(t(9)=4.67, p<0.01). We also found that children
+tended to generate gestures with more individual
+strokes than adults do (t(128)=4.33, p<0.01), which
+may be part of the reason the recognition accuracy is
+so much lower for children. Children also generate
+taller gestures (t(128)=4.45, p<0.01), more slowly
+(t(128)=3.65, p<0.01), and with less pressure per
+gesture (t(128)=3.13, p<0.01) than adults do.
+
+Figure 3: Examples of differences in touch target
+acquisition for children (squares) and adults (triangles).
+Touch Target Acquisition
+Figure 3 shows an “easy” target from the study and the
+positions of touches; in this typical case, more children
+(squares) missed the target than did adults (triangles).
+Over 43 touch targets varying in location and size,
+children’s touches were not within the target 46% of
+the time, whereas adults only missed 32% of the time.
+Further analysis shows that both children and adults
+
+4
+
+had the most difficulty with “very hard” targets, and
+while adults were most exact with the “easy” targets,
+children still showed relatively high levels of inaccuracy.
+
+Discussion
+Our data shows that key differences between kids and
+adults are present in touch target acquisition accuracy
+and gesture recognition accuracy, with potentially
+others yet to be discovered. We found that children
+tend to miss targets more often than adults, indicating
+a need for greater tolerance in location of touch
+corresponding to an onscreen target. We also found
+that modern recognizers perform worse on gestures
+made by kids than by adults, which may be partly due
+to children making gestures with inconsistent or
+unexpected numbers of strokes. This finding evinces a
+need for recognizers tailored to gesture features
+expected from children users. Based on our findings,
+we suggest that child-computer interaction designers
+relying upon touch and gesture interactions should take
+into account the inherent differences between the
+characteristics of child and adult touches and gestures.
+We intend to collect more data to ensure our findings
+are robust. With an understanding of these differences,
+designers can plan for them by modifying the
+recognizers or embedding error recovery strategies that
+are consistent with children’s interaction patterns.
+
+Acknowledgements
+This paper is partly supported by the National Science
+Foundation under Grant #0937060 to the Computing
+Research Association for the CI Fellows Project.
+
+References
+
+[1] Anthony, L. and Wobbrock, J. O. A lightweight
+multistroke recognizer for user interface prototypes. In
+
+Proc. Graphics Interface 2010. Canadian Information
+Processing Society (2010), 245-252.
+[2] Brown, Q., Bonsignore, E., Hatley, L., Druin, A., Walsh,
+G., Foss, E., Brewer, R., Hammer, J. and Golub, E. Clear
+panels: a technique to design mobile application
+interactivity. In Proc. Design of Interactive Systems
+(2010).
+[3] Harris, A., Rick, J., Bonnett, V., Yuill, N., Fleck, R.,
+Marshall, P. and Rogers, Y. Around the table: are multipletouch surfaces better than single-touch for children's
+collaborative interactions? In Proc. 9th international
+conference on Computer supported collaborative learning Volume 1. International Society of the Learning Sciences
+(2009), 335-344.
+[4] Read, J. C., MacFarlane, S. and Casey, C. Pens
+behaving badly - usability of pens and graphics tablets for
+text entry with children. In Adj. Proc. ACM Symposium on
+User Interface Software and Technology. ACM Press
+(2002), 21-22.
+[5] Rick, J., Harris, A., Marshall, P., Fleck, R., Yuill, N. and
+Rogers, Y. Children designing together on a multi-touch
+tabletop: an analysis of spatial orientation and user
+interactions. In Proc. 8th International Conference on
+Interaction Design and Children. ACM (2009), 106-114.
+[6] Ryall, K., Morris, M. R., Everitt, K., Forlines, C. and
+Shen, C. Experiences with and observations of direct-touch
+tabletops. In Proc. Horizontal Interactive Human-Computer
+Systems, 2006. TableTop 2006. First IEEE International
+Workshop on (2006), 8 pp.
+[7] Vatavu, R.-D., Vogel, D., Casiez, G. R. and Grisoni, L.
+Estimating the perceived difficulty of pen gestures. In Proc.
+Human-Computer Interaction‚ INTERACT 2011. Springer
+Berlin / Heidelberg (2011), 89-106.
+[8] Vogel, D. and Balakrishnan, R. Direct pen interaction
+with a conventional graphical user interface. Human
+Computer Interaction, 25, 4 (2010), 324-388.
+[9] Wobbrock, J. O., Aung, H. H., Rothrock, B. and Myers,
+B. A. Maximizing the guessability of symbolic input. In
+Proc. CHI '05 Ext. Abstracts CHI 2005. ACM Press (2005),
+1869-1872.
+
+

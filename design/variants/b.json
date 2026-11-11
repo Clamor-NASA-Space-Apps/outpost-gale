@@ -1,0 +1,259 @@
+{
+ "version": "alpha",
+ "name": "Outpost Gale B: Toy outpost",
+ "description": "Chunky bevelled machines with big labels in clean afternoon light, lighter haze, a strong cyan for on and usable, yellow trim on the parts you touch. The easiest frame for a 7-year-old to read.",
+ "colors": {
+  "primary": "#f5a531",
+  "on-primary": "#1a0f05",
+  "surface": "#160f0c",
+  "surface-container": "#251914",
+  "on-surface": "#f6ecdc",
+  "on-surface-variant": "#c9b8a2",
+  "outline-variant": "#5a4234",
+  "danger": "#ff4d4d",
+  "body": "#f3f0ea",
+  "trim": "#353a42",
+  "accent": "#16c5ea",
+  "metal": "#a7adb4",
+  "glass": "#203447",
+  "rock": "#8c7064",
+  "dust": "#c7855a",
+  "hazard": "#f4be2e",
+  "light": "#7fe9ff",
+  "sky": "#d29a6a",
+  "horizon": "#ecc89e",
+  "ground": "#a5684a",
+  "shade": "#9aa2bf"
+ },
+ "typography": {
+  "headline": {
+   "fontFamily": "Lexend",
+   "fontSize": "28px",
+   "fontWeight": 700,
+   "lineHeight": "36px"
+  },
+  "body": {
+   "fontFamily": "Lexend",
+   "fontSize": "18px",
+   "fontWeight": 400,
+   "lineHeight": "26px"
+  },
+  "label": {
+   "fontFamily": "Lexend",
+   "fontSize": "16px",
+   "fontWeight": 600,
+   "lineHeight": "22px"
+  }
+ },
+ "rounded": {
+  "sm": "4px",
+  "md": "8px",
+  "full": "9999px"
+ },
+ "spacing": {
+  "1": "8px",
+  "2": "16px",
+  "3": "24px",
+  "4": "32px"
+ },
+ "components": {
+  "button": {
+   "backgroundColor": "#f5a531",
+   "textColor": "#1a0f05",
+   "typography": {
+    "fontFamily": "Lexend",
+    "fontSize": "16px",
+    "fontWeight": 600,
+    "lineHeight": "22px"
+   },
+   "rounded": "4px",
+   "height": "48px",
+   "padding": "0 24px"
+  },
+  "card": {
+   "backgroundColor": "#251914",
+   "textColor": "#f6ecdc",
+   "typography": {
+    "fontFamily": "Lexend",
+    "fontSize": "18px",
+    "fontWeight": 400,
+    "lineHeight": "26px"
+   },
+   "rounded": "8px",
+   "padding": "16px"
+  },
+  "alert": {
+   "backgroundColor": "#ff4d4d",
+   "textColor": "#1a0f05",
+   "typography": {
+    "fontFamily": "Lexend",
+    "fontSize": "16px",
+    "fontWeight": 600,
+    "lineHeight": "22px"
+   },
+   "rounded": "4px",
+   "padding": "8px 16px"
+  }
+ },
+ "materials": {
+  "body": {
+   "color": "#f3f0ea",
+   "roughness": 0.6,
+   "metalness": 0
+  },
+  "trim": {
+   "color": "#353a42",
+   "roughness": 0.65,
+   "metalness": 0
+  },
+  "accent": {
+   "color": "#16c5ea",
+   "roughness": 0.45,
+   "metalness": 0
+  },
+  "metal": {
+   "color": "#a7adb4",
+   "roughness": 0.4,
+   "metalness": 1
+  },
+  "glass": {
+   "color": "#203447",
+   "roughness": 0.08,
+   "metalness": 0
+  },
+  "rock": {
+   "color": "#8c7064",
+   "roughness": 0.95,
+   "metalness": 0,
+   "detail": {
+    "pattern": "grain",
+    "size": 0.6,
+    "strength": 0.35
+   }
+  },
+  "dust": {
+   "color": "#c7855a",
+   "roughness": 1,
+   "metalness": 0,
+   "detail": {
+    "pattern": "grain",
+    "size": 1.5,
+    "strength": 0.25
+   }
+  },
+  "hazard": {
+   "color": "#f4be2e",
+   "roughness": 0.5,
+   "metalness": 0
+  },
+  "light": {
+   "color": "#7fe9ff",
+   "roughness": 0.4,
+   "metalness": 0,
+   "emissive": 2.5
+  }
+ },
+ "geometry": {
+  "shading": "smooth",
+  "bevel": 0.08,
+  "bevelSegments": 2,
+  "human": 1.8,
+  "door": 2,
+  "budgets": {
+   "prop": {
+    "tris": 4000,
+    "height": [
+     0.1,
+     3
+    ]
+   },
+   "building": {
+    "tris": 15000,
+    "height": [
+     2,
+     12
+    ]
+   },
+   "vehicle": {
+    "tris": 10000,
+    "height": [
+     0.5,
+     5
+    ]
+   },
+   "rock": {
+    "tris": 2000,
+    "height": [
+     0.1,
+     8
+    ]
+   },
+   "terrain": {
+    "tris": 60000,
+    "height": [
+     0,
+     6000
+    ]
+   }
+  }
+ },
+ "lighting": {
+  "sky": "#d29a6a",
+  "horizon": "#ecc89e",
+  "ground": "#a5684a",
+  "ambientColor": "#9aa2bf",
+  "sunColor": "#fff1dc",
+  "sun": 2.6,
+  "ambient": 1.1,
+  "elevation": 38,
+  "azimuth": 35,
+  "exposure": 1,
+  "sunDisc": 0.8,
+  "toneMapping": "aces",
+  "fog": {
+   "color": "#ecc89e",
+   "near": 60,
+   "far": 8000,
+   "sky": 0.15,
+   "curve": 0.9
+  }
+ },
+ "quality": {
+  "low": {
+   "msaa": 0,
+   "scale": 0.75,
+   "shadows": 1,
+   "shadowMap": 1024,
+   "glow": 0,
+   "detail": "off"
+  },
+  "medium": {
+   "msaa": 2,
+   "scale": 1,
+   "shadows": 2,
+   "shadowMap": 2048,
+   "glow": 0.4,
+   "detail": "code"
+  },
+  "high": {
+   "msaa": 4,
+   "scale": 1,
+   "shadows": 2,
+   "shadowMap": 4096,
+   "glow": 0.5,
+   "detail": "code"
+  }
+ },
+ "kit": {
+  "metalDark": "metal",
+  "metalRed": "hazard",
+  "^metal$|_defaultMat": "body",
+  "dark|grey|gray|trim": "trim",
+  "rockDark": "rock",
+  "rock|stone|dirt|sand": "dust",
+  "glass|window|screen|visor": "glass",
+  "light|lamp|emissive|glow|crystal": "light",
+  "orange|red|stripe|yellow": "hazard",
+  "teal|cyan|blue|accent": "accent"
+ }
+}
