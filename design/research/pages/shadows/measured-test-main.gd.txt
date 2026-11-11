@@ -1,0 +1,73 @@
+extends Node3D
+# Renders the same low-sun shot under several shadow configs, two frames each with the hero 3 cm apart.
+var sun: DirectionalLight3D
+var cam: Camera3D
+var hero: Node3D
+const CONFIGS := {
+	"Q_medium_nb5": {"atlas": 2048, "mode": 2, "s1": 0.25, "dist": 60.0, "blend": false, "q": 4, "nb": 5.0},
+	"Q_medium_nb6": {"atlas": 2048, "mode": 2, "s1": 0.25, "dist": 60.0, "blend": false, "q": 4, "nb": 6.0},
+	"Q_medium_nb4_b02": {"atlas": 2048, "mode": 2, "s1": 0.25, "dist": 60.0, "blend": false, "q": 4, "nb": 4.0, "bias": 0.2},
+}
+
+func _ready() -> void:
+	var env := Environment.new()
+	env.background_mode = Environment.BG_COLOR
+	env.background_color = Color(0.8, 0.7, 0.55)
+	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
+	env.ambient_light_color = Color(0.35, 0.38, 0.45)
+	env.tonemap_mode = Environment.TONE_MAPPER_ACES
+	var we := WorldEnvironment.new(); we.environment = env; add_child(we)
+	var ground := MeshInstance3D.new()
+	var pm := PlaneMesh.new(); pm.size = Vector2(300, 300); pm.subdivide_width = 150; pm.subdivide_depth = 150
+	ground.mesh = pm
+	var gm := StandardMaterial3D.new(); gm.albedo_color = Color(0.72, 0.45, 0.3); ground.material_override = gm
+	ground.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	add_child(ground)
+	hero = Node3D.new(); add_child(hero)
+	var body := MeshInstance3D.new(); var cap := CapsuleMesh.new(); cap.radius = 0.28; cap.height = 1.6
+	body.mesh = cap; body.position.y = 1.07; hero.add_child(body)
+	for x in [-0.12, 0.12]:
+		var leg := MeshInstance3D.new(); var bm := BoxMesh.new(); bm.size = Vector3(0.14, 0.4, 0.28)
+		leg.mesh = bm; leg.position = Vector3(x, 0.2, 0.0); hero.add_child(leg)
+	var hm := StandardMaterial3D.new(); hm.albedo_color = Color(0.35, 0.34, 0.32)
+	for c in hero.get_children(): c.material_override = hm
+	# a static post and a box 8 m out, to see if still shadows crawl
+	for p in [Vector3(2.5, 0, -3), Vector3(-3, 0, -9)]:
+		var post := MeshInstance3D.new(); var b := BoxMesh.new(); b.size = Vector3(0.3, 2.0, 0.3)
+		post.mesh = b; post.position = p + Vector3(0, 1, 0); post.material_override = hm; add_child(post)
+	for p in [Vector3(-1.5, 0, -7), Vector3(1.5, 0, -14), Vector3(-2, 0, -24)]:
+		var crate := MeshInstance3D.new(); var cb := BoxMesh.new(); cb.size = Vector3(2.0, 1.2, 2.0)
+		crate.mesh = cb; crate.position = p + Vector3(0, 0.6, 0); crate.rotation.y = 0.4; crate.material_override = hm; add_child(crate)
+	sun = DirectionalLight3D.new(); sun.shadow_enabled = true; sun.shadow_normal_bias = 4.0
+	var phi := deg_to_rad(90.0 - 12.0); var theta := deg_to_rad(25.0)
+	sun.position = Vector3(sin(phi) * sin(theta), cos(phi), sin(phi) * cos(theta)) * 50.0
+	add_child(sun); sun.look_at(Vector3.ZERO)
+	sun.light_energy = 1.2
+	cam = Camera3D.new(); cam.fov = 75.0; add_child(cam); cam.make_current()
+	_run.call_deferred()
+
+func _place(z: float) -> void:
+	hero.position = Vector3(0, 0, z)
+	var pivot := hero.position + Vector3.UP * 1.55
+	var back := Vector3(0, sin(deg_to_rad(14.0)), cos(deg_to_rad(14.0))) * 4.2
+	cam.position = pivot + back
+	cam.look_at(pivot)
+
+func _run() -> void:
+	for name: String in CONFIGS:
+		var c: Dictionary = CONFIGS[name]
+		RenderingServer.directional_shadow_atlas_set_size(c.atlas, true)
+		RenderingServer.directional_soft_shadow_filter_set_quality(c.q)
+		sun.directional_shadow_mode = {1: DirectionalLight3D.SHADOW_ORTHOGONAL, 2: DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS}[c.mode]
+		sun.directional_shadow_split_1 = c.s1
+		sun.directional_shadow_max_distance = c.dist
+		sun.directional_shadow_blend_splits = c.blend
+		sun.shadow_normal_bias = c.nb
+		sun.shadow_bias = c.get("bias", 0.1)
+		sun.look_at(Vector3.ZERO)
+		if c.get("roll", false): sun.rotate_object_local(Vector3.FORWARD, PI / 2)
+		for i in 1:
+			_place(-0.013 * i)
+			for f in 4: await RenderingServer.frame_post_draw
+			get_viewport().get_texture().get_image().save_png("res://out/%s_%d.png" % [name, i])
+	get_tree().quit()

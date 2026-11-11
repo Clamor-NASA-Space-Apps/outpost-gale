@@ -1,0 +1,24 @@
+# Texel size of a directional shadow split, following renderer_scene_cull.cpp: a sphere around the 8 frustum
+# corners of [near, far], radius padded by S/(S-2), texel = 2r/S; with 2 splits each split is S wide and S/2 tall.
+import math
+def r(n, f, fov=75, aspect=16/9):
+    t = math.tan(math.radians(fov) / 2)
+    pts = [(sx*z*t*aspect, sy*z*t, z) for z in (n, f) for sx in (-1, 1) for sy in (-1, 1)]
+    c = [sum(p[i] for p in pts) / 8 for i in range(3)]
+    return max(math.dist(p, c) for p in pts)
+def row(label, n, f, S, splits, elev=12, aspect=16/9):
+    rad = r(n, f, aspect=aspect) * S / (S - 2)
+    tall = S / 2 if splits == 2 else S
+    t = 2 * rad / tall
+    print(f"{label:28s} r {rad:5.1f} m  texel {100*2*rad/S:5.1f} x {100*t:5.1f} cm  on ground along sun {100*t/math.sin(math.radians(elev)):5.1f} cm")
+for a, tag in ((16/9, "16:9"), (20/9, "20:9")):
+    print(tag)
+    row("now high split1 0-6", 0.05, 6, 4096, 2, aspect=a)
+    row("now high split2 6-60", 6, 60, 4096, 2, aspect=a)
+    row("now medium split1 0-6", 0.05, 6, 2048, 2, aspect=a)
+    row("now low ortho 0-60 1024", 0.05, 60, 1024, 1, aspect=a)
+    row("new high split1 0-15", 0.05, 15, 4096, 2, aspect=a)
+    row("new high split2 15-60", 15, 60, 4096, 2, aspect=a)
+    row("new medium split1 0-15", 0.05, 15, 2048, 2, aspect=a)
+    row("new low ortho 0-25 2048", 0.05, 25, 2048, 1, aspect=a)
+    row("new low ortho 0-25 1024", 0.05, 25, 1024, 1, aspect=a)

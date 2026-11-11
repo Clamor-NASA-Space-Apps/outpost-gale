@@ -273,7 +273,7 @@ static func apply_lighting(parent: Node, design: Dictionary) -> Dictionary:
 	sun.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS
 	sun.directional_shadow_max_distance = minf(float(L.get("fog", {}).get("far", 60)), 60.0)
 	sun.shadow_normal_bias = 4.0  # a split now covers more ground per texel; the default of 2 left ripples on flat tops
-	sun.shadow_blur = 2.5  # and its edge showed the texels as a saw; a wider filter costs no more samples
+	# shadow_blur is not read by the Compatibility renderer (4.7.2 source): the filter is set_quality's `shadowFilter`
 	# same angles as the forge previews; Godot is Y-up, so azimuth turns around Y
 	var phi := deg_to_rad(90.0 - float(L.get("elevation", 40)))
 	var theta := deg_to_rad(float(L.get("azimuth", 35)))
@@ -385,6 +385,17 @@ static func set_quality(root: Node, design: Dictionary, level: String) -> void:
 				splits, DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS)
 			rig.light_energy = rig.get_meta("energy")[rig.shadow_enabled]
 			rig.set_meta("shadow_map", map)  # the engine keeps no getter for it; this is for checks
+			# skills/shadows-and-grounding: a low sun throws a hero's shadow far past the near split's default
+			# 10%, and the seam cuts it like scissors; size the near split to hold the whole shadow, sun angle
+			# by sun angle. `shadowPad` is about the follow camera's distance plus a metre
+			var L: Dictionary = design.lighting
+			var reach := minf(float(q.get("shadowRange", 60)), float(L.get("fog", {}).get("far", 60)))
+			rig.directional_shadow_max_distance = reach
+			rig.shadow_normal_bias = float(q.get("normalBias", 4.0))
+			var human: float = design.get("geometry", {}).get("human", 1.8)
+			var near := human / tan(deg_to_rad(maxf(float(L.get("elevation", 40)), 2.0))) + float(L.get("shadowPad", 6.0))
+			rig.directional_shadow_split_1 = clampf(near / reach, 0.1, 0.6)
+			RenderingServer.directional_soft_shadow_filter_set_quality(int(q.get("shadowFilter", 2)) as RenderingServer.ShadowQuality)
 	for m: Material in design.get("_roles", {}).values():
 		if m is ShaderMaterial:
 			_dress(design, design.materials[m.resource_name], m)
