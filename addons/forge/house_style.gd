@@ -163,6 +163,8 @@ static func _pick(design: Dictionary, m: Material, still := false) -> Material:
 		if pattern.begins_with("#"):
 			continue # colour anchors belong to tools/kit-roles.mjs, not name matching
 		if RegEx.create_from_string("(?i)" + pattern).search(n):
+			if design.kit[pattern] == "keep":
+				return m  # an official model's own photo textures, kept on purpose (style-check allows only textured ones)
 			return role(design, design.kit[pattern], still)
 	var std := m as BaseMaterial3D
 	if std and std.albedo_texture:
@@ -208,18 +210,30 @@ static func apply_lighting(parent: Node, design: Dictionary) -> Dictionary:
 			old.queue_free()
 	# a sky that is the sky colour above and the ground colour below gives metals something to reflect:
 	# without it they render black
-	# `sunDisc` is the sun's size in degrees, drawn with a haze around it about ten times wider; 0 draws no sun
+	# `sunDisc` is the sun's size in degrees, drawn with a haze around it (`halo`: colour, size in degrees, strength;
+	# by default the sun's colour, ten discs wide); 0 draws no sun. `twilight` (colour, azimuth, height in degrees,
+	# strength) is a glow along the horizon toward an azimuth, the sun's by default, and needs no disc
 	var disc := float(L.get("sunDisc", 0))
 	var sky_mat: Material
-	if disc > 0.0:
+	if disc > 0.0 or L.has("twilight"):
 		var sm := ShaderMaterial.new()
 		sm.shader = preload("sky.gdshader")
+		var sun_color := Color.html(L.get("sunColor", "#ffffff"))
+		var halo: Dictionary = L.get("halo", {})
+		var dusk: Dictionary = L.get("twilight", {})
+		var az := deg_to_rad(float(dusk.get("azimuth", L.get("azimuth", 0))))
 		sm.set_shader_parameter("top", Color.html(L.sky))
 		sm.set_shader_parameter("horizon", Color.html(L.get("horizon", L.sky)))
 		sm.set_shader_parameter("ground", Color.html(L.get("ground", L.sky)))
-		sm.set_shader_parameter("sun", Color.html(L.get("sunColor", "#ffffff")))
+		sm.set_shader_parameter("sun", sun_color)
 		sm.set_shader_parameter("disc", deg_to_rad(disc) / 2.0)
-		sm.set_shader_parameter("halo", deg_to_rad(disc) * 10.0)
+		sm.set_shader_parameter("halo_color", Color.html(halo.color) if halo.has("color") else sun_color)
+		sm.set_shader_parameter("halo", deg_to_rad(float(halo.get("size", disc * 10.0))))
+		sm.set_shader_parameter("halo_strength", float(halo.get("strength", 0.7)))
+		sm.set_shader_parameter("twilight_color", Color.html(dusk.get("color", "#ffffff")))
+		sm.set_shader_parameter("twilight_dir", Vector3(sin(az), 0.0, cos(az)))  # azimuth as the sun's, below
+		sm.set_shader_parameter("twilight_height", deg_to_rad(float(dusk.get("height", 10))))
+		sm.set_shader_parameter("twilight_strength", float(dusk.get("strength", 0.0)))
 		sky_mat = sm
 	else:
 		var ps := ProceduralSkyMaterial.new()

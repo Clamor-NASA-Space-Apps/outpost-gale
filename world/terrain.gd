@@ -149,6 +149,35 @@ func _collision() -> void:
 	add_child(body)
 
 
+## The ground's answer under everything resting on it: each foot (x, z) darkens a soft disc `radius` wide into a map
+## over the play area, which the shader turns into ambient occlusion, a little darker dust and a faint rim of dust
+## pushed up (data/world.json `grounding`). Feet within one pixel are drawn once. Redrawn whole when a bag moves.
+func contacts(feet: PackedVector2Array, g: Dictionary, half: float) -> void:
+	var px := int(g.px)
+	var m := 2.0 * half / px
+	var r := float(g.radius)
+	var reach := int(ceil(r / m))
+	var map := PackedByteArray()
+	map.resize(px * px)
+	var seen: Dictionary = {}
+	for f in feet:
+		var c := Vector2i(int((f.x + half) / m), int((f.y + half) / m))
+		if seen.has(c):
+			continue
+		seen[c] = true
+		for y in range(maxi(c.y - reach, 0), mini(c.y + reach + 1, px)):
+			for x in range(maxi(c.x - reach, 0), mini(c.x + reach + 1, px)):
+				var d := Vector2(x - c.x, y - c.y).length() * m / r
+				if d < 1.0:
+					map[y * px + x] = maxi(map[y * px + x], int(255.0 * (1.0 - d) * (1.0 - d)))
+	var img := Image.create_from_data(px, px, false, Image.FORMAT_R8, map)
+	material.set_shader_parameter("contact_map", ImageTexture.create_from_image(img))
+	material.set_shader_parameter("contact_rect", Vector4(-half, -half, 2.0 * half, 2.0 * half))
+	material.set_shader_parameter("contact_ao", float(g.ao))
+	material.set_shader_parameter("contact_albedo", float(g.albedo))
+	material.set_shader_parameter("contact_pile", float(g.pile))
+
+
 ## A print pressed into the dust: `foot_l` / `foot_r` (a boot with tread) or `wheel` (`width` wide, along `yaw`).
 ## Prints stay where they are made; they only fade when the square moves away from them.
 func mark(pos: Vector3, yaw_deg: float, kind: String, width := 0.3) -> void:

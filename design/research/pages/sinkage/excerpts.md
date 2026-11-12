@@ -16,3 +16,8 @@ usgs.gov answers curl with a 919-byte block page, so these were read through a f
 4. Rocks partly buried: no measured buried share found. Viking 1 imaging describes a block "partly buried by
    sediment" (NASA SP-425 ch. 21, https://solarviews.com/history/SP-425/ch21.htm, ⚠️ search summary only), so
    rock.embed is an estimate.
+5. Apollo Lunar Surface Journal, Apollo 11 "One Small Step", 109:24:48 Armstrong (for reality.json hero.sink).
+   https://www.nasa.gov/wp-content/uploads/static/history/alsj/a11/a11.step.html, saved as `alsj_a11_step.html`
+   - "Yes, the surface is fine and powdery. I can kick it up loosely with my toe. It does adhere in fine layers, like
+     powdered charcoal, to the sole and sides of my boots. I only go in a small fraction of an inch, maybe an eighth of
+     an inch, but I can see the footprints of my boots and the treads in the fine, sandy particles." (seen, kwic)

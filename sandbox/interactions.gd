@@ -108,6 +108,7 @@ func _physics_process(_delta: float) -> void:
 				target = it
 		if target:
 			text = target.prompt()
+	player.attention = target  # the helmet turns toward what can be used
 	# the key on a keyboard; on a phone the lit interact button says the same
 	prompt_label.text = "" if text == "" else ("[E]  " + text if not DisplayServer.is_touchscreen_available() else text)
 
@@ -123,6 +124,7 @@ func interact() -> void:
 
 
 func use(it: Interactable) -> void:
+	player.act()  # the reach clip, only when something is really used
 	var s: float = tuning.interact.move_s
 	match it.kind:
 		"door":

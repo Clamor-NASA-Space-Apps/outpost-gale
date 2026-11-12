@@ -25,6 +25,8 @@ var idle := 0.0  # seconds since the player last looked
 var floor_y := 0.0
 var vel := Vector3.ZERO  # the pivot's own speed across the ground, for its spring
 var ahead := Vector3.ZERO  # where the lens aims past the pivot, along the travel
+var steady := Vector3.ZERO  # the travel, slowly averaged: what the spring may lead by
+var slope := 0.0  # rad of extra pitch for the ground ahead
 
 
 func setup(tuning: Dictionary) -> void:
@@ -62,6 +64,8 @@ func snap(heading: float) -> void:
 	idle = 0.0
 	vel = Vector3.ZERO
 	ahead = Vector3.ZERO
+	steady = Vector3.ZERO
+	slope = 0.0
 	floor_y = target.global_position.y
 	global_position = target.global_position + Vector3.UP * height
 	dist = _wanted()
@@ -92,16 +96,22 @@ func follow(delta: float, travel: Vector3, facing: float, on_floor: bool) -> voi
 	var speed := travel.length()
 	# a phone player has no thumb free to look: left alone, the view drifts behind the real travel like a towed
 	# leash, by distance covered, so it never turns while the target stands or pushes into a wall (Nesky #23)
-	if idle > t.recentre_after and speed > 0.0:
+	# Never while the travel comes toward the lens: swinging round behind a hero walking at the camera turns
+	# "back" with it, and the hero walks in circles (found by the doors test, walking out of a building)
+	var away := travel.dot(Vector3(-sin(yaw), 0, -cos(yaw))) > 0.0
+	if idle > t.recentre_after and speed > 0.0 and away:
 		var heading := facing if travel.dot(Vector3(-sin(facing), 0, -cos(facing))) < 0.0 else atan2(-travel.x, -travel.z)
 		yaw = lerp_angle(yaw, heading, 1.0 - exp(-t.recentre_per_m * speed * delta))
 	var at := target.global_position
 	if on_floor:
 		floor_y = at.y
 	# across: a critically damped spring with a limit, so the hero pulls ahead at a start and the camera
-	# arrives late at a stop, never overshooting; up: slower, toward the floor under the hero, not the hop
-	var want := Vector3(at.x, global_position.y, at.z)
+	# arrives late at a stop, never overshooting. It trails a steady pace by 2 v / w; leading by that much once
+	# the pace has held (`steady` builds slowly) puts a steady walk back on the frame (Solar Ash: no horizontal
+	# lag at speed). Up: slower, toward the floor under the hero, not the hop.
 	var w: float = t.follow_rate
+	steady = steady.lerp(travel, 1.0 - exp(-t.lead_rate * delta))
+	var want := Vector3(at.x, global_position.y, at.z) + steady * (2.0 / w)
 	var off := global_position - want
 	var push := (vel + w * off) * delta
 	var decay := exp(-w * delta)
@@ -124,7 +134,16 @@ func follow(delta: float, travel: Vector3, facing: float, on_floor: bool) -> voi
 	var free: float = get_world_3d().direct_space_state.cast_motion(q)[0] * wanted
 	var squeeze := clampf(inverse_lerp(wanted, t.fade_far, free), 0.0, 1.0)
 	lift = lerpf(lift, (deg_to_rad(t.pitch_min) - pitch) * squeeze, 1.0 - exp(-t.ease_rate * delta))
-	rotation = Vector3(pitch + lift, yaw, 0)
+	# the ground some way ahead pitches the view: up a dune shows the crest, down one the floor (Nesky #26)
+	var fwd: Vector3 = Vector3(-sin(yaw), 0.0, -cos(yaw)) * t.slope_ahead
+	var ray := PhysicsRayQueryParameters3D.create(at + fwd + Vector3.UP * t.slope_ahead, at + fwd + Vector3.DOWN * t.slope_ahead, 1, excluded)
+	var hit := get_world_3d().direct_space_state.intersect_ray(ray)
+	var rise: float = atan2(hit.position.y - floor_y, t.slope_ahead) * t.slope_share if hit else 0.0
+	slope = lerpf(slope, clampf(rise, -deg_to_rad(t.slope_max_deg), deg_to_rad(t.slope_max_deg)), 1.0 - exp(-t.rise_rate * delta))
+	rotation = Vector3(pitch + lift + slope, yaw, 0)
+	# the hero on the lower third looking level, centred looking straight down (Kaufmann): the lens shifts the
+	# picture, it does not turn, so verticals stay upright
+	lens.shift = t.frame_low * clampf(inverse_lerp(deg_to_rad(t.pitch_min), 0.0, rotation.x), 0.0, 1.0)
 	(arm.shape as SphereShape3D).radius = _near_radius()
 	arm.spring_length = wanted
 
@@ -142,7 +161,8 @@ func _wanted() -> float:
 func _near_radius() -> float:
 	var size := get_viewport().get_visible_rect().size
 	var aspect := size.x / maxf(size.y, 1.0)
-	return lens.near * tan(deg_to_rad(lens.fov) / 2.0) * sqrt(1.0 + aspect * aspect) + arm.margin
+	var half := lens.near * tan(deg_to_rad(lens.fov) / 2.0)
+	return Vector2(half * aspect, half * (1.0 + 2.0 * lens.shift)).length() + arm.margin  # the shifted top corner
 
 
 ## Is the lens inside or behind a solid? Not the arm's own cast: a ray from the pivot to the lens, and a
@@ -179,6 +199,8 @@ func _unhandled_input(e: InputEvent) -> void:
 
 ## Sits beside the arm, not under it: the arm would snap a child both ways, and the lens must ease out.
 class Lens extends Camera3D:
+	var shift := 0.0  # share of the frame height the picture moves up, so the pivot sits that far below centre
+
 	func _physics_process(delta: float) -> void:
 		var rig: Node3D = get_parent()
 		var safe: float = rig.arm.get_hit_length()
@@ -193,5 +215,8 @@ class Lens extends Camera3D:
 		rotation = Vector3.ZERO
 		if rig.ahead.length() > 0.01:
 			look_at(rig.global_position + rig.ahead)  # aim only: the lens stays where the arm put it
+		# an off-axis frustum the size the fov would give: the same lens, its picture moved up
+		var h := 2.0 * near * tan(deg_to_rad(fov) / 2.0)
+		set_frustum(h, Vector2(0.0, shift * h), near, far)
 		for m: MeshInstance3D in rig.faded:
 			m.visible = rig.dist > rig.t.fade_near  # never show the inside of the hero's head

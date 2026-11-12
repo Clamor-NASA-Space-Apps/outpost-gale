@@ -105,7 +105,7 @@ COL = ("-col", "-convcol", "-colonly", "-convcolonly")
 
 def moves(o):
     """Parts the game moves get their own bodies in the engine, so they carry no collision suffix."""
-    return o.name in ("door", "dish") or o.name.startswith("panel_")
+    return o.name in ("door", "dish", "tell") or o.name.startswith("panel_")
 
 
 def done(name, solid=True):

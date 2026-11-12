@@ -92,6 +92,11 @@ func _ghost(id: String) -> void:
 
 ## Walks at the item's middle from each heading in `headings` (index of 8) and returns what went wrong.
 func walk_into(id: String, headings: Array) -> Array[String]:
+	# machines turn on their own while the hero is away (world/machines.gd), and hold still once it is near:
+	# draw this item's faces as they are now
+	ghosts[id].free()
+	_ghost(id)
+	await frames(1)
 	var n: Node3D = world.items[id]
 	var box: AABB = world.drawn(n)
 	var c := box.get_center()

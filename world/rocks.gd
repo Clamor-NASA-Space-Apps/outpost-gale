@@ -12,6 +12,7 @@ var solids: Array[StaticBody3D] = []
 var pebbles: Array[MultiMeshInstance3D] = []
 var big: MeshInstance3D  # every solid rock in one mesh, a surface per role
 var spots: Array[Transform3D] = []  # every rock placed, pebbles and solid ones
+var feet := PackedVector2Array()  # where solid rocks meet the ground, for the contact shading (world._contacts)
 var _world: Node3D
 var _keep_out: Array[AABB] = []  # item footprints, grown by the margin
 
@@ -58,7 +59,10 @@ func build(world: Node3D) -> void:
 			var basis := Basis.from_euler(Vector3(rng.randf_range(-0.3, 0.3), rng.randf() * TAU, rng.randf_range(-0.3, 0.3)))
 			basis = basis.scaled(Vector3(1.0, rng.randf_range(squash[0], squash[1]), rng.randf_range(0.7, 1.1)) * s)
 			var k := rng.randi() % meshes.size()
-			placed.append([k, Transform3D(basis, Vector3(x, _bury(corners[meshes[k]], basis, x, z, embed), z))])
+			var y := _bury(corners[meshes[k]], basis, x, z, embed)
+			placed.append([k, Transform3D(basis, Vector3(x, y, z))])
+			if is_big:
+				_ring(corners[meshes[k]], basis, Vector3(x, y, z))
 	for r: Array in small + large:
 		spots.append(r[1])
 	pebbles = _multi(small_shapes, small)
@@ -95,6 +99,19 @@ func _bury(points: PackedVector3Array, basis: Basis, x: float, z: float, embed: 
 		if q.y < low + SUPPORT * (high - low):
 			lift = minf(lift, _world.height_at(x + q.x, z + q.z) - q.y)
 	return lift - embed * (high - low)
+
+
+## Where a buried rock comes out of the ground: its points within a tenth of its height of the ground under them.
+func _ring(points: PackedVector3Array, basis: Basis, at: Vector3) -> void:
+	var low := INF
+	var high := -INF
+	for p in points:
+		low = minf(low, (basis * p).y)
+		high = maxf(high, (basis * p).y)
+	for p in points:
+		var q := at + basis * p
+		if absf(q.y - _world.height_at(q.x, q.z)) < SUPPORT * (high - low):
+			feet.append(Vector2(q.x, q.z))
 
 
 ## How likely a rock is this far from the clearing's centre: few inside, most at its edge, thinning outward.

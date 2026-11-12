@@ -75,6 +75,14 @@ func _run(job_path: String) -> void:
 	var f := FileAccess.open(out.path_join("result.json"), FileAccess.WRITE)
 	f.store_string(JSON.stringify(result))
 	f.close()
+	# a close request first, as a closing window sends: a game that stops its sounds on it lets the audio server
+	# free them before the engine quits (a stream still playing at quit is "resources still in use at exit", which
+	# the tools count as an error). The mixer runs in real time, and --fixed-fps frames take next to none: wait
+	# real time for it to finish the stopped streams, then a frame or two for the server to drop them
+	get_tree().root.propagate_notification(NOTIFICATION_WM_CLOSE_REQUEST)
+	OS.delay_msec(100)
+	for i in 2:
+		await get_tree().process_frame
 	get_tree().quit(1 if result.errors.size() else 0)
 
 

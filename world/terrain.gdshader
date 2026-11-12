@@ -36,6 +36,12 @@ uniform float gravel_share = 0.3;  // about this much of the open ground is grav
 
 uniform sampler2D trail_map : filter_linear, repeat_disable, hint_default_black;
 uniform vec4 trail_rect = vec4(-32.0, -32.0, 64.0, 64.0);
+// where things rest on the ground (terrain.gd contacts()): 1 under a foot, falling to 0 a little way out
+uniform sampler2D contact_map : filter_linear, repeat_disable, hint_default_black;
+uniform vec4 contact_rect = vec4(-150.0, -150.0, 300.0, 300.0);
+uniform float contact_ao = 0.0;
+uniform float contact_albedo = 0.0;
+uniform float contact_pile = 0.0;
 
 varying vec3 wpos;
 varying vec3 wnrm;
@@ -114,6 +120,19 @@ void fragment() {
 		tn.xy += vec2(dx, dz) * 2.5 * soft;
 	}
 
+	// where something rests: the sky is blocked (AO, which Compatibility applies to the ambient light only,
+	// skills/shadows-and-grounding), the dust a little darker, and a faint rim of dust pushed up round it
+	float contact = 0.0;
+	vec2 cu = (wpos.xz - contact_rect.xy) / contact_rect.zw;
+	if (cu.x > 0.0 && cu.y > 0.0 && cu.x < 1.0 && cu.y < 1.0) {
+		vec2 e = vec2(1.0 / float(textureSize(contact_map, 0).x), 0.0);
+		contact = texture(contact_map, cu).r;
+		float cx = texture(contact_map, cu + e.xy).r - texture(contact_map, cu - e.xy).r;
+		float cz = texture(contact_map, cu + e.yx).r - texture(contact_map, cu - e.yx).r;
+		albedo *= 1.0 - contact_albedo * contact;
+		tn.xy -= vec2(cx, cz) * contact_pile * (1.0 - rock);
+	}
+
 	tn = normalize(mix(vec3(0.0, 0.0, 1.0), tn, near));
 	// the photos are laid flat on x and z: their right is +X, their up (+v) is +Z
 	vec3 tx = normalize(vec3(1.0, 0.0, 0.0) - n * n.x);
@@ -125,4 +144,5 @@ void fragment() {
 	ROUGHNESS = mix(mix(dust_roughness, rock_roughness, rock), r, near);
 	METALLIC = 0.0;
 	SPECULAR = 0.3;
+	AO = 1.0 - contact_ao * contact;
 }

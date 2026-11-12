@@ -16,7 +16,7 @@ var started := false
 var inside := 0.0  # where the crossfade is: 0 outside, 1 inside (the habitat or the rover's cab)
 var breath_rate: float  # breaths a minute, easing toward what the hero's speed asks
 var breath_phase := 0.0  # 0 to 1 through one breath; the clock a chest motion should share
-var gust := 1.0  # the wind's slow swell on top of the sky state's speed
+var gust := 1.0  # the wind's swell on top of the sky state's speed: world.gust(), the one every wind listener reads
 var steps := 0
 var last_step := {}
 var _time := 0.0
@@ -28,7 +28,6 @@ var _driving := false
 var _listener := AudioListener3D.new()
 var _wind: AudioStreamPlayer
 var _rover_loops: Dictionary = {}  # "motor" or "wheels" -> its players
-var _noise := FastNoiseLite.new()
 var _streams: Dictionary = {}
 
 
@@ -42,7 +41,6 @@ func setup(w: Node3D, p: Node3D, tuning: Dictionary) -> void:
 			AudioServer.set_bus_name(AudioServer.bus_count - 1, b)
 	breath_rate = t.breath.rest
 	_hurry = world.sheet_values["hero.speed.hurry"]
-	_noise.frequency = t.wind.gust_hz
 	add_child(_listener)
 	_hab = world.items[t.habitat]
 	_hab_box = _enclosure(_hab)
@@ -51,6 +49,15 @@ func setup(w: Node3D, p: Node3D, tuning: Dictionary) -> void:
 	# a browser starts no sound before the player's first press (exporting_for_web.rst); elsewhere start now
 	if not OS.has_feature("web"):
 		start()
+
+
+## Every player stops on a close request (a window closing, or the tools before they quit): a stream still playing
+## when the engine quits stays "in use at exit", and the audio server only lets go of a stopped one a frame later.
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_CLOSE_REQUEST and is_inside_tree():
+		started = false  # nothing starts again: _process returns early
+		for q: Node in get_tree().get_nodes_in_group("sound"):
+			q.stop()
 
 
 func _input(e: InputEvent) -> void:
@@ -95,7 +102,7 @@ func _process(delta: float) -> void:
 	if not _listener.is_current():
 		_listener.make_current()
 	_breathe(delta)
-	gust = 1.0 + t.wind.gust * _noise.get_noise_1d(_time)
+	gust = 1.0 + t.wind.gust * (2.0 * world.gust() - 1.0)
 	var wind: float = world.dust.wind.length() / t.wind.ref_speed * gust
 	_wind.volume_db = t.wind.db + linear_to_db(clampf(wind, 0.05, 2.0))
 	if _rover:
@@ -238,6 +245,7 @@ func _stream(sound: String) -> AudioStream:
 
 func _flat(sound: String, bus: String, db: float) -> AudioStreamPlayer:
 	var q := AudioStreamPlayer.new()
+	q.add_to_group("sound")
 	q.stream = _stream(sound)
 	q.bus = bus
 	q.volume_db = db
@@ -247,6 +255,7 @@ func _flat(sound: String, bus: String, db: float) -> AudioStreamPlayer:
 
 func _at(sound: String, bus: String, pos: Vector3, db: float, parent: Node) -> AudioStreamPlayer3D:
 	var q := AudioStreamPlayer3D.new()
+	q.add_to_group("sound")
 	q.stream = _stream(sound)
 	q.bus = bus
 	q.volume_db = db

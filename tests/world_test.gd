@@ -67,6 +67,20 @@ func play() -> bool:
 				top = maxf(top, u.y - world.height_at(u.x, u.z))
 		check(absf(top + want) < 0.02, "%s floats or sinks: its highest foot is %.3f m off the ground under it, not %.3f" % [it.id, top, -want])
 
+	# the base works on its own (world/machines.gd): panels turn, the dish nods, the telltale leans, lights flash
+	# no faster than WCAG 2.3.1 allows, and every wind listener reads one gust between 0 and 1
+	var m: Node = world.machines
+	var was: Dictionary = m.state()
+	game._sky(game.SKIES.find("design.night"))  # no sun: the trackers turn to lie flat
+	for i in 400:
+		m._process(0.05)
+	var now: Dictionary = m.state()
+	game._sky(0)
+	check(now.panels != was.panels and now.dish != was.dish, "the panels and the dish move on their own (%s, %s)" % [now.panels.slice(0, 2), now.dish])
+	check(now.tell.size() == 1 and now.tell[0] >= 0.0, "the telltale leans downwind (%s deg)" % [now.tell])
+	check(float(world.data.blink.hz) * maxf(float(world.data.blink.duty), 1.0) <= 3.0, "status lights flash at most 3 times a second")
+	check(world.gust() >= 0.0 and world.gust() <= 1.0, "gust() is between 0 and 1 (%.2f)" % world.gust())
+
 	for b: StaticBody3D in world.rocks.solids:
 		check(b.collision_layer in [world.STATICS, world.THIN], "a solid rock off layers 2 and 3 at %s" % b.position)
 	check(world.rocks.solids.size() > 0 and world.rocks.pebbles.size() > 0, "the scatter placed rocks and pebbles")

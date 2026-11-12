@@ -24,7 +24,12 @@
   "lead_time": 0.45,
   "lead_rate": 1.2,
   "recentre_per_m": 0.9,
-  "note_follow": "follow_rate: 1/s, the pivot's critically damped spring (it trails a steady walk by 2 v / rate); follow_limit: m it may trail; rise_rate: 1/s, the pivot's height toward the floor, slower than across; lead_time: s of velocity the aim looks ahead in a steady run; lead_rate: 1/s, how slowly that lead builds and goes; recentre_after: s of no look input before the yaw drifts behind the real travel; recentre_per_m: rad of drift per rad of error per metre travelled (a leash, so it never turns while the hero stands or pushes a wall)"
+  "note_follow": "follow_rate: 1/s, the pivot's critically damped spring (it trails a steady walk by 2 v / rate); follow_limit: m it may trail; rise_rate: 1/s, the pivot's height toward the floor, slower than across; lead_time: s of velocity the aim looks ahead in a steady run; lead_rate: 1/s, how slowly that lead builds and goes; recentre_after: s of no look input before the yaw drifts behind the real travel; recentre_per_m: rad of drift per rad of error per metre travelled (a leash, so it never turns while the hero stands or pushes a wall)",
+  "frame_low": 0.1667,
+  "slope_ahead": 3.0,
+  "slope_share": 0.5,
+  "slope_max_deg": 12,
+  "note_frame": "frame_low: share of the frame height the pivot sits below centre when looking level (1/6 is the lower-third line), easing to centred at pitch_min; slope_ahead: m ahead along the view where a ray reads the ground; slope_share: share of that slope the view pitches by; slope_max_deg: the most it pitches. follow_rate and lead_rate also set the lead that cancels the spring's lag in a steady walk (2 v / follow_rate, built at lead_rate)"
  },
  "input": {
   "coyote": 0.1,
@@ -56,8 +61,7 @@
   "xfade_hop": 0.06
  },
  "hero": {
-  "note": "sink: m the drawn boots sit in the dust below the collider (move to reality.json once sourced: suggested row hero.sink); dust_height: m up the boots the dust tint reaches (grit lands within about 7 cm, design/research/dust.md, plus what a step scuffs on); dust_share: how far toward the dust colour at the sole; gait_hysteresis: Froude the hurry-to-walk change sits below hero.froude.walk_run",
-  "sink": 0.02,
+  "note": "dust_height: m up the boots the dust tint reaches (grit lands within about 7 cm, design/research/dust.md, plus what a step scuffs on); dust_share: how far toward the dust colour at the sole; gait_hysteresis: Froude the hurry-to-walk change sits below hero.froude.walk_run. The boots' sink is reality.json hero.sink",
   "dust_height": 0.2,
   "dust_share": 0.6,
   "gait_hysteresis": 0.05
@@ -65,22 +69,73 @@
  "audio": {
   "note": "The mix (audio/audio.gd). dB on top of the files, which are normalised (loops -20 LUFS, one-shots -3 dBFS peak). range: m, a 3D sound's cut-off, Mars sound 'falters at just 26 feet (8 meters)' (NASA/JPL 2022); unit_size: m where a 3D sound starts to fall away. fade_s: s of the inside/outside crossfade. breath: rest in breaths a minute, a resting adult takes 12 to 18 (MedlinePlus, Vital signs); hard (at the sheet's hurry speed), rise_s and fall_s (time constants: up fast, settling back slowly) and inhale_share (where in a breath the exhale starts) are art direction, never shown to players. wind: ref_speed m/s that plays at wind.db (sky states blow 4 to 6, world.json weather); gust: the swell's share; gust_hz: its slow noise frequency. habitat and machines: world.json item ids. pitch: random spread on one-shots",
   "fade_s": 1.0,
-  "bus_db": {"Suit": 0, "Outside": 0, "Habitat": 0, "UI": 0},
+  "bus_db": {
+   "Suit": 0,
+   "Outside": 0,
+   "Habitat": 0,
+   "UI": 0
+  },
   "suit_inside_db": -6,
   "range": 8,
   "unit_size": 1.5,
   "ear_height": 1.6,
   "pitch": 0.05,
   "fan_db": -8,
-  "breath": {"rest": 15, "hard": 30, "rise_s": 3, "fall_s": 15, "inhale_share": 0.4, "db_rest": -10, "db_hard": -3},
-  "step": {"db_soft": -10, "db_loud": -4, "pitch": 0.08},
-  "wind": {"db": -12, "ref_speed": 4, "gust": 0.35, "gust_hz": 0.05},
+  "breath": {
+   "rest": 15,
+   "hard": 30,
+   "rise_s": 3,
+   "fall_s": 15,
+   "inhale_share": 0.4,
+   "db_rest": -10,
+   "db_hard": -3
+  },
+  "step": {
+   "db_soft": -10,
+   "db_loud": -4,
+   "pitch": 0.08
+  },
+  "wind": {
+   "db": -12,
+   "ref_speed": 4,
+   "gust": 0.35,
+   "gust_hz": 0.05
+  },
   "habitat": "hab1",
-  "machines": ["oxygen", "water"],
+  "machines": [
+   "oxygen",
+   "water"
+  ],
   "hum_db": -6,
-  "rover": {"motor_db": -8, "wheels_db": -10, "pitch_min": 0.7, "pitch_max": 1.3},
-  "sounds": {"door_open": 0, "door_close": 0, "hiss": -6, "servo": -4, "bag_lift": -6, "bag_drop": 0},
+  "rover": {
+   "motor_db": -8,
+   "wheels_db": -10,
+   "pitch_min": 0.7,
+   "pitch_max": 1.3
+  },
+  "sounds": {
+   "door_open": 0,
+   "door_close": 0,
+   "hiss": -6,
+   "servo": -4,
+   "bag_lift": -6,
+   "bag_drop": 0
+  },
   "hiss_after": 0.6,
   "chirp_db": -12
+ },
+ "life": {
+  "note": "The hero's layers on top of its clips (player/hero_life.gd), art direction judged on film; the limits that are physical come from the sheet (hero.lean.max). lean_share: share of the free-body angle atan(a / g) the upper body leans into a push; lean_hz and lean_damping: its spring (under 1 swings a little past upright at a stop); carry_lean_deg: extra forward lean over a carried bag; breath_chest_deg and breath_shoulder_deg: how far the chest tips back and the shoulders rise at a full breath (the clock and rate are audio.breath's); look_waist_deg, look_head_deg, look_pitch_deg: each side, the waist takes most of a turn because a helmet turns with the torso (no sheet row: suited neck and waist ranges were not found); look_rate: 1/s the gaze eases to a new point; look_far: m ahead along the camera's view the gaze rests when nothing is near",
+  "lean_share": 0.5,
+  "lean_hz": 1.2,
+  "lean_damping": 0.45,
+  "carry_lean_deg": 6,
+  "breath_chest_deg": 1.5,
+  "breath_shoulder_deg": 2.0,
+  "look_waist_deg": 20,
+  "look_head_deg": 15,
+  "look_pitch_deg": 12,
+  "look_rate": 3.0,
+  "look_far": 10.0
  }
 }

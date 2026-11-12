@@ -4,7 +4,8 @@ extends Node3D
 ## - puff(): a boot or a wheel on the dust (skills/ground-contact-fx, design/research/dust.md). Grit: many
 ##   small grains in short ballistic arcs under Mars gravity, gone when they land. Haze: a few wide, faint
 ##   quads at ankle height that spread, slow, drift downwind and fade in 2 to 3 s. The print is terrain.mark().
-## - streaks: faint lines low over the ground around the camera, at the wind's speed.
+## - streaks: faint lines low over the ground around the camera, at the wind's speed, more of them in a gust
+##   (world.gust(): "dust blowing across the ground appears as pale horizontal streak", NASA, Gale sol 1597).
 ## - a dust devil wandering far off (seen crossing the crater floor on summer afternoons), day only.
 ## - the storm front: big slow clouds close around the camera, the storm state only.
 ## What shows in which sky is data/world.json `weather`; the wind's direction is `wind`.
@@ -21,6 +22,7 @@ var devil: GPUParticles3D
 var front: GPUParticles3D
 var _world: Node3D
 var _soft: StandardMaterial3D  # one billboard material for every cloud, so one restyle reaches them all
+var _column: StandardMaterial3D  # the dust devil's: ground-coloured, so it shows against the pale sky
 var _line: StandardMaterial3D
 var _dir: Vector3  # where the wind blows to, flat
 var _devil_angle := 0.0
@@ -31,6 +33,7 @@ var _g: float  # gravity, from the reality sheet
 var _live: Dictionary = {}  # emitter -> {kind, age, life, top}: what is in flight, for checks and for hiding
 var _next_grit := 0  # the oldest of each pool, reused next
 var _next_haze := 0
+var _streak_share := 0.0  # the sky state's share of streaks; a gust shows all of it, a lull a quarter
 
 
 func build(world: Node3D) -> void:
@@ -100,9 +103,17 @@ func build(world: Node3D) -> void:
 	fp.emission_ring_inner_radius = 14.0
 	fp.emission_ring_height = 6.0
 	fp.spread = 20.0
+	front.preprocess = front.lifetime
 
-	devil = _emitter("Devil", 110, 7.0, Vector2(3.0, 3.0), _soft, [0.0, 0.5, 0.0], [0.6, 3.2])
+	# a devil the colour of the haze vanished against the sky from the base (measured, 160 m off): the column is
+	# the ground's own dust, denser
+	_column = _material(dot, BaseMaterial3D.BILLBOARD_PARTICLES)
+	# unshaded: lit as a solid, its billboards went black seen toward the sun, like smoke, where real dust
+	# glows (it scatters light forward). It only shows in the day sky, so one flat colour holds
+	_column.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	devil = _emitter("Devil", 200, 7.0, Vector2(4.0, 4.0), _column, [0.0, 0.75, 0.0], [0.6, 3.2])
 	devil.local_coords = true  # the node spins, so the column swirls
+	devil.preprocess = devil.lifetime  # a whole column at once, not a puff growing for 7 s after a sky switch
 	devil.visibility_aabb = AABB(Vector3(-20, -2, -20), Vector3(40, 50, 40))
 	var dp: ParticleProcessMaterial = devil.process_material
 	dp.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_RING
@@ -123,6 +134,7 @@ func restyle(design: Dictionary, weather: Dictionary) -> void:
 	# grit is the ground itself, lit like it; the colour is the dust role's, a fixed preset per surface
 	_grit_mat.set_shader_parameter("albedo", Color.html(design.materials.dust.color))
 	_haze_mat.set_shader_parameter("albedo", Color.html(design.materials.dust.color).lerp(Color.html(design.lighting.horizon), 0.5))
+	_column.albedo_color = Color.html(design.materials.dust.color).lerp(Color.html(design.lighting.horizon), 0.15)
 	for m: StandardMaterial3D in [_soft, _line]:
 		# fine dust in the air is paler than the ground it rose from: it takes on the haze, and a cloud the
 		# colour of the ground vanished against it (measured: the first puffs did not show)
@@ -141,8 +153,9 @@ func restyle(design: Dictionary, weather: Dictionary) -> void:
 	hp.gravity = _dir * push
 	hp.damping_min = 20.0 * push / (push * push)
 	hp.damping_max = hp.damping_min
-	streaks.amount_ratio = float(weather.streaks)
-	streaks.emitting = float(weather.streaks) > 0.0
+	_streak_share = float(weather.streaks)
+	streaks.amount_ratio = _streak_share
+	streaks.emitting = _streak_share > 0.0
 	devil.emitting = bool(weather.devil)
 	devil.visible = devil.emitting
 	front.emitting = bool(weather.front)
@@ -226,12 +239,16 @@ func _process(delta: float) -> void:
 		at.y = _world.height_at(at.x, at.z)
 		streaks.global_position = at + Vector3(0, 0.4, 0)
 		front.global_position = at + Vector3(0, 3.0, 0)
+	if streaks.emitting:
+		streaks.amount_ratio = _streak_share * (0.25 + 0.75 * _world.gust())
 	if devil.emitting:
 		var d: Dictionary = _world.data.devil
 		var c: Array = _world.data.scatter.centre
 		_devil_angle += float(d.speed) / float(d.radius) * delta
-		var x := float(c[0]) + cos(_devil_angle) * float(d.radius)
-		var z := float(c[1]) + sin(_devil_angle) * float(d.radius)
+		# it wanders in and out a little as it goes round, never inside `radius` less its wander
+		var r := float(d.radius) * (1.0 + float(d.wander) * sin(_devil_angle * 3.0))
+		var x := float(c[0]) + cos(_devil_angle) * r
+		var z := float(c[1]) + sin(_devil_angle) * r
 		devil.position = Vector3(x, _world.height_at(x, z), z)
 		devil.rotate_y(2.5 * delta)
 

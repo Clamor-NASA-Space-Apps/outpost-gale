@@ -28,6 +28,7 @@ func play() -> bool:
 		"project.godot gravity is the sheet's")
 	await no_sinking()
 	await footsteps()
+	await life()
 	await sweep()
 	await turn_beside()
 	await corner()
@@ -89,12 +90,71 @@ func no_sinking() -> void:
 		check(worst < 0.02, "walking from %s: the feet sank %.3f m below the floor" % [spot[0], worst])
 
 
+## The layers on top of the clips (skills/living-atmosphere check 4): the chest breathes on the sound's own
+## clock, the helmet turns toward a thing worth noticing, and a stop leans back then swings once past upright.
+func life() -> void:
+	game.place(Vector3(OPEN.x, 0, OPEN.y + 6.0), 180)
+	await frames(30)
+	var audio: Object = player.breath_clock
+	if audio and not audio.started:
+		audio.start()  # a browser starts sound on the first tap; headless there is none
+	await frames(10)  # the chest moves from its own resting time onto the sound's
+	var worst := 0.0
+	var lo := 1.0
+	var hi := 0.0
+	for i in 300:
+		await frames(1)
+		# read in the physics step, advanced in the sound's process step: at most a frame apart
+		var gap := absf(angle_difference(player.breath * TAU, audio.breath_phase * TAU)) / TAU if audio else 1.0
+		worst = maxf(worst, gap)
+		lo = minf(lo, player.life.body.breath)
+		hi = maxf(hi, player.life.body.breath)
+	check(worst < 0.02, "the chest breathes on the breath sound's clock (at most %.3f of a breath apart)" % worst)
+	check(lo < 0.1 and hi > 0.9, "a full breath in 5 s standing (chest %.2f to %.2f)" % [lo, hi])
+	# a thing to the hero's right, a little ahead: the drawn head turns toward it
+	var sk: Skeleton3D = player.model.skeleton
+	var head := sk.find_bone(&"Head")
+	var drawn := [Vector3.ZERO]
+	var grab := func() -> void: drawn[0] = (sk.global_basis * sk.get_bone_global_pose(head).basis * Vector3.BACK).normalized()
+	sk.skeleton_updated.connect(grab)  # the pose after the modifiers is readable only here
+	await frames(5)
+	var b: Node3D = player.body
+	var mark := Node3D.new()
+	game.add_child(mark)
+	mark.global_position = b.global_position + b.global_basis.x * 1.2 - b.global_basis.z * 0.8 + Vector3.UP * 1.2
+	var to: Vector3 = (mark.global_position - (b.global_position + Vector3.UP * 1.7)).normalized()
+	var before: float = drawn[0].dot(to)
+	var box: Node = game.get_node("Interactions")
+	box.set_physics_process(false)  # it sets the attention every frame; here the test does
+	player.attention = mark
+	await frames(90)
+	check(drawn[0].dot(to) > before + 0.1, "the helmet turns toward a thing in reach (%.2f to %.2f)" % [before, drawn[0].dot(to)])
+	player.attention = null
+	box.set_physics_process(true)
+	sk.skeleton_updated.disconnect(grab)
+	mark.free()
+	action(&"move_forward", true)
+	action(&"hurry", true)
+	await frames(180)
+	action(&"move_forward", false)
+	action(&"hurry", false)
+	var back := 0.0
+	var past := 0.0
+	for i in 240:
+		await frames(1)
+		var l: float = player.life.body.lean.y
+		back = minf(back, l)
+		if back < 0.0 and player.moved < 0.01:
+			past = maxf(past, l)
+	check(back < -0.02 and past > 0.002, "a stop leans back then swings past upright once (%.3f, %.3f rad)" % [back, past])
+
+
 ## Feet plant in turn while walking and hurrying, each on the frame its boot is down (skills/suited-locomotion
 ## section 4: the drawn ankle at its planted height, within the sheet's contact height), both come down on a
 ## landing, and each mark is under the body.
 func footsteps() -> void:
 	var clips: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/clips.json"))
-	var planted: float = clips.feet.ankle_height_planted - player.tuning.hero.sink
+	var planted: float = clips.feet.ankle_height_planted - player.sink
 	var marks: Array = []
 	var worst := [0.0]
 	var log_step := func(pos: Vector3, _yaw: float, foot: String) -> void:

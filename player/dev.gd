@@ -42,8 +42,17 @@ func place(pos: Vector3, yaw_deg: float) -> void:
 	$Player.place(pos, yaw_deg)
 
 
+## `hero`: the side view. `carry`: the side view with a cargo bag hung on the hero, as the interactions do.
 func set_view(v: String) -> void:
-	if v == "hero":
+	if v == "carry" and not $Player.carried:
+		var bag := StaticBody3D.new()
+		bag.collision_layer = 0
+		bag.add_to_group("carriable")
+		bag.add_child(Forge.HouseStyle.apply(load("res://models/prop_cargo_bag.glb").instantiate(), Forge.HouseStyle.load_design("res://design.json")))
+		for c: CollisionObject3D in bag.find_children("*", "CollisionObject3D", true, false):
+			c.collision_layer = 0  # a carried bag never pushes its carrier
+		$Player.body.add_child(bag)
+	if v in ["hero", "carry"]:
 		side.make_current()
 	else:
 		$Player.cam.lens.make_current()

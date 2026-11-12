@@ -1,11 +1,12 @@
 extends Node3D
-## The world: terrain, every item in data/world.json on the ground, the rock scatter, the dust and one
-## reflection probe. A prefab whose model is not in models/ yet stands in as a labelled box of its real size,
+## The world: terrain, every item in data/world.json on the ground, the rock scatter, the dust, the machines
+## that work on their own, one gusting wind every wind listener reads, and one reflection probe. A prefab whose model is not in models/ yet stands in as a labelled box of its real size,
 ## so the sandbox runs before the models land. Collision always comes from what is drawn (skills/world-collision).
 
 const Terrain := preload("res://world/terrain.gd")
 const Rocks := preload("res://world/rocks.gd")
 const Dust := preload("res://world/dust.gd")
+const Machines := preload("res://world/machines.gd")
 # CONTRACTS.md collision layers, as bits
 const GROUND := 1
 const STATICS := 2
@@ -15,7 +16,12 @@ const VEHICLES := 16
 const CARRIABLES := 64
 const CELL := 64.0  # metres: still items in one cell share their meshes; the patch centre is a cell's middle
 
+## A sound the world makes on its own (a servo starting): the sandbox passes it to audio.play().
+signal sound(what: String, pos: Vector3)
+
 var data: Dictionary
+var hero: Node3D  # set by the sandbox: machines hold still while the hero stands at them
+var machines: Node
 var terrain: Node3D
 var rocks: Node3D
 var dust: Node3D
@@ -26,6 +32,12 @@ var hero_height: float  # for the sweeps in tests/world_test.gd
 var weather: Dictionary
 var sheet_values: Dictionary = {}  # reality.json row id -> value
 var _moving: RegEx
+var _blink: RegEx
+var _built := false
+var _time := 0.0
+var _gust := FastNoiseLite.new()
+var _pane_mark := Material.new()  # only tells HouseStyle.merge() to number the panes
+var _resting: Dictionary = {}  # carriable -> resting on the ground (parent is the world), to redraw contacts on a change
 var _probe: ReflectionProbe
 var _cells: Array[Node3D] = []
 
@@ -42,6 +54,9 @@ func build(design: Dictionary) -> void:
 		elif r.id == "hero.height":
 			hero_height = r.value
 	_moving = RegEx.create_from_string(data.moving)
+	_blink = RegEx.create_from_string(data.blink.nodes)
+	_pane_mark.set_meta("lit", true)
+	_gust.frequency = float(data.wind.gust_hz)
 	terrain = Terrain.new()
 	terrain.name = "Terrain"
 	add_child(terrain)
@@ -58,6 +73,11 @@ func build(design: Dictionary) -> void:
 	dust.name = "Dust"
 	add_child(dust)
 	dust.build(self)
+	machines = Machines.new()
+	machines.name = "Machines"
+	add_child(machines)
+	machines.build(self)
+	_contacts()
 	# the probe's light on rough ground came out as a bright square around the base (measured): the ground,
 	# the rocks and the dust sit on render layer 2, which the probe draws but does not shade. Dust under the
 	# probe came out twice as bright as the shaded ground it rose from (measured in a shadow)
@@ -68,6 +88,29 @@ func build(design: Dictionary) -> void:
 	for g: GeometryInstance3D in terrain.find_children("patch_*", "GeometryInstance3D", false, false):
 		g.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	restyle(design)
+	_built = true
+
+
+func _process(delta: float) -> void:
+	_time += delta
+	var changed := false
+	for n: Node3D in _resting:
+		var now := n.get_parent() == self
+		changed = changed or now != _resting[n]
+		_resting[n] = now
+	if changed:
+		_contacts()  # a bag picked up leaves the dust bare; put down, rest() draws it again
+
+
+## The wind's slow swell, 0 to 1: one value for every listener (dust streaks, the wind sound, the telltale),
+## so eye and ear believe one wind (skills/living-atmosphere section 2). data/world.json `wind`.
+func gust() -> float:
+	return clampf(0.5 + 0.5 * _gust.get_noise_1d(_time) * 1.6, 0.0, 1.0)
+
+
+## The wind speed of this moment, m/s: the sky state's speed taken up or down by the gust.
+func wind_now() -> float:
+	return float(weather.get("wind", 0.0)) * (1.0 + float(data.wind.share) * (2.0 * gust() - 1.0))
 
 
 ## A sky state or a quality switch: every material, lamp, the probe and the dust follow the design in force.
@@ -82,6 +125,7 @@ func restyle(design: Dictionary) -> void:
 	rocks.restyle(design)
 	weather = data.weather.get(design.get("name", ""), data.weather["Outpost Gale"])
 	dust.restyle(design, weather)
+	machines.restyle(design, weather)
 	_lamps(design)
 	# One probe for the life of the world: freeing one leaked its two atlas textures in Compatibility (measured,
 	# "Texture ... leaked" at exit). It draws its six faces once, and again whenever a property changes, so the
@@ -153,9 +197,33 @@ func rest(root: Node3D) -> void:
 	if kind != "vehicle" and prefab not in s.level:
 		feet = _tilt(root, feet)
 	var lift := INF  # how far up the root may go before a foot leaves the ground
+	var flat := PackedVector2Array()
 	for p in feet:
 		lift = minf(lift, height_at(p.x, p.z) - p.y)
+		flat.append(Vector2(p.x, p.z))
 	root.global_position.y += lift - depth
+	if kind == "vehicle":
+		return
+	root.set_meta("feet", flat)  # where the ground darkens round it (_contacts)
+	if kind == "carriable":
+		_resting[root] = root.get_parent() == self
+	if _built:
+		# set down after the world was built (a bag put down): grit and haze at the contact, the shadow redrawn
+		var g: Dictionary = data.grounding
+		var at := root.global_position
+		puff(Vector3(at.x, height_at(at.x, at.z), at.z), Vector3.DOWN * float(g.set_down_speed), float(g.set_down_strength))
+		_contacts()
+
+
+## Every resting item's feet and the solid rocks' into the ground's contact map (terrain.gd).
+func _contacts() -> void:
+	var feet := PackedVector2Array()
+	for n: Node3D in items.values():
+		if n.has_meta("feet") and n.get_parent() == self:
+			feet.append_array(n.get_meta("feet"))
+	if rocks:
+		feet.append_array(rocks.feet)
+	terrain.contacts(feet, data.grounding, float(data.play_half))
 
 
 ## Turns `root` about its origin so its feet (world space) lie along the ground's plane under them (a least-squares
@@ -399,7 +467,8 @@ func _merge(meshes: Array, parent: Node3D) -> MeshInstance3D:
 			var m := mi.get_active_material(s)
 			if not tools.has(m):
 				tools[m] = SurfaceTool.new()
-			Forge.HouseStyle.merge(tools[m], mi.mesh, s, to_parent * mi.global_transform, m)
+			# panes of a role some sky state lights (`lit_roles`) are numbered now, whatever the sky at load
+			Forge.HouseStyle.merge(tools[m], mi.mesh, s, to_parent * mi.global_transform, _pane_mark if m and m.resource_name in data.lit_roles else m)
 	var mesh := ArrayMesh.new()
 	for m: Material in tools:
 		tools[m].commit(mesh)
@@ -415,7 +484,8 @@ func _merge(meshes: Array, parent: Node3D) -> MeshInstance3D:
 func _still(n: Node3D) -> Array:
 	var parts: Array[Node3D] = n.get_meta("parts")
 	return n.find_children("*", "MeshInstance3D", true, false).filter(func(mi: MeshInstance3D) -> bool:
-		return mi.mesh != null and mi.skin == null and not _in_part(mi, parts))
+		# a flashing light keeps its own mesh, so its material can change without the rest of the cell
+		return mi.mesh != null and mi.skin == null and not _in_part(mi, parts) and not _blink.search(mi.name))
 
 
 ## The still meshes of every static item in one ground cell, merged per material (world-collision rule 9):

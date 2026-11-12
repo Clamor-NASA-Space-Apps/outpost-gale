@@ -39,6 +39,10 @@ The composition root is `sandbox/sandbox.gd`. It calls only these:
   positive; input.y throttle, forward positive), `seat() -> Transform3D` (global), `exit_point() -> Vector3` (global),
   `speed() -> float`. The sandbox root calls `player.exit()` on `interact` while driving.
 - `player.restyle(design)`: the sandbox calls it with `world.restyle()` on a sky or quality switch.
+- `player.act()`: the hero reaches (the interact clip); the interactions call it from `use()`, only when something is used.
+- `player.attention`: a `Node3D` or null, the thing the helmet turns toward; the interactions set it to their target.
+- The player reads `breath_phase` (0 to 1) from any sibling that has it (the audio node), so the chest rises on the
+  breath you hear.
 - `player.footstep(pos: Vector3, yaw_deg: float, foot: String)` signal; the root connects it to `world.mark()` and
   `world.puff()`. `world.mark(pos, yaw_deg, kind, width := 0.3)`: `foot_l`, `foot_r` or `wheel`.
 - `world.puff(pos: Vector3, vel: Vector3, strength: float, kind := "foot")`: ground-contact dust at the real contact

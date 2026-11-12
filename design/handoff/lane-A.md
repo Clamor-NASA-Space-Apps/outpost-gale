@@ -1,5 +1,17 @@
 # Lane A (player): handoff
 
+**12 Nov 2026, life pass (newest first).**
+- `player/hero_life.gd`: modifiers after the AnimationTree: breath (spine_03 tips back, clavicles rise) on the audio's
+  `breath_phase` while the sound runs (own resting clock before the first tap), lean into the felt push (a share of
+  atan(a / g), capped by hero.lean.max) through an underdamped spring that swings past upright at a stop, extra lean
+  with a bag, and two `LookAtModifier3D` (spine_03 then Head) toward `player.attention` or the camera's aim.
+- `player/follow_cam.gd`: lower-third framing by an off-axis frustum (the lens shifts, it does not turn), the spring
+  leads by its own steady lag once a pace holds, a ray 3 m ahead pitches for slopes, no recentring while the
+  hero walks toward the lens (it made "back" walk in circles).
+- `player.act()` and `player.attention` (CONTRACTS.md), called and set by sandbox/interactions.gd.
+- `hero.sink` is a sheet row now (ALSJ quote saved in design/research/pages/sinkage/).
+- `tests/doors_test.gd`: in and out of hab1, greenhouse and shelter. `player/dev.gd` view `carry` hangs a bag.
+
 **12 Nov 2026, suited hero pass (newest first; older notes below are history).**
 - `player/hero_model.gd`: `models/character_suited.glb` with `data/clips.json` (loops set in code). Gait blend walk/lope,
   `SYNC_MODE_CYCLIC_MUTABLE`, speeds measured from the feet (median stance speed: walk 0.999, lope 1.599 m/s). Footsteps

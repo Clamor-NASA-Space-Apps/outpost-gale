@@ -17,6 +17,7 @@
   "pip": "res://models/vehicle_pip.glb",
   "lamp": "res://models/prop_lamp.glb",
   "beacon": "res://models/prop_beacon.glb",
+  "telltale": "res://models/prop_telltale.glb",
   "lettuce_1": "res://models/prop_lettuce_1.glb",
   "lettuce_2": "res://models/prop_lettuce_2.glb",
   "lettuce_3": "res://models/prop_lettuce_3.glb",
@@ -102,6 +103,11 @@
    0.3,
    1.2,
    0.3
+  ],
+  "telltale": [
+   0.4,
+   2.3,
+   0.4
   ]
  },
  "items": [
@@ -277,6 +283,15 @@
    "yaw": 0
   },
   {
+   "id": "telltale",
+   "prefab": "telltale",
+   "pos": [
+    -3.2,
+    2.2
+   ],
+   "yaw": 90
+  },
+  {
    "id": "lander",
    "prefab": "lander",
    "pos": [
@@ -352,12 +367,45 @@
  "sink": {
   "_note": "how far each prefab sits in the dust: a reality.json row id per prefab, else default (skills/shadows-and-grounding, Sink). support: metres above an item's lowest drawn point that still count as resting on the ground (feet, skids, bevelled bottom edges). level: prefabs crews build level (floors, foundations, tracking mounts); everything else tilts to the ground under it, as a lander's legs or a bag do. Vehicles only touch: their drivers set them on their wheels. Rocks: reality.json rock.embed",
   "support": 0.05,
-  "level": ["habitat", "greenhouse", "storm_shelter", "build_pad", "solar_array", "dish"],
+  "level": ["habitat", "greenhouse", "storm_shelter", "build_pad", "solar_array", "dish", "telltale"],
   "default": "ground.sink.soft",
   "lander": "ground.sink.foot"
  },
  "shadow_min": 0.6,
- "moving": "^(door|dish)$|^(panel|wheel)_[0-9]+$",
+ "moving": "^(door|dish|tell)$|^(panel|wheel)_[0-9]+$",
+ "lit_roles": ["glass"],
+ "_lit_roles": "roles a sky state lights pane by pane (DESIGN.<state>.md `lit`, house_style): their panes are numbered when the meshes merge at load, whichever sky is up then",
+ "blink": {
+  "_note": "status lights that flash on their own (world/machines.gd): nodes named by `nodes` keep their own mesh and a copy of the light role. hz and duty: an obstruction beacon flashes 20 to 40 times a minute (FAA L-864 red 20 to 40, L-865 white 40, https://www.faa.gov/documentLibrary/media/Advisory_Circular/150-5345-43GH.pdf, from a search summary); WCAG 2.3.1 allows at most 3 flashes in any second. off: the share of the light left when it is dark",
+  "nodes": "^(cap|beacon)$",
+  "hz": 0.67,
+  "duty": 0.25,
+  "off": 0.15
+ },
+ "machines": {
+  "_note": "the base working on its own (world/machines.gd). tracker: solar panels start facing the sun and turn to it about their tube at slew_deg_s (after a sky switch or a tilt by hand) within limit_deg (30 keeps a panel's low edge at the 0.82 m of its 30 degree rest, above a walker's knees), re-aiming when the sun is step_deg off, lying flat (stow) where weather says stow (night, storm), and holding still for pause_s after anyone else moves one (the tilt interaction). dish: nods nod_deg either side of its rest every period_s at slew_deg_s. near_m: panels and dish hold still while the hero is this close (a machine stops when people come near). All art direction; servo: the sound each move starts with, played only within hear_m (Mars sound 'falters at just 26 feet (8 meters)', NASA/JPL 2022)",
+  "tracker": {"slew_deg_s": 1.5, "limit_deg": 30, "pause_s": 20, "step_deg": 2.0},
+  "near_m": 6.0,
+  "dish": {"nod_deg": 6, "period_s": 18, "slew_deg_s": 1.0},
+  "servo": "servo",
+  "hear_m": 8
+ },
+ "telltale": {
+  "_note": "Phoenix's Telltale (2008): a light Kapton tube on Kevlar fibres from a gallows on the met mast, its tilt read off camera images. tilt: [wind m/s, tilt rad] at 8 mbar, read off Fig. 25 of the Telltale calibration report (Gunnlaugsson et al., https://pds.nasa.gov/data/pds4/1000/tt_bundle_1000/document/TELLTALECALRPT.PDF; design/research/pages/alive/telltale.md): thin air barely moves it, about 1 degree at 4 m/s. flutter: the share of the tilt it trembles by (the report reads turbulence from the image blur), flutter_hz how fast; art direction",
+  "tilt": [[0, 0], [2, 0.005], [4, 0.02], [5, 0.03], [6.3, 0.06], [7.7, 0.085], [9.5, 0.13], [11, 0.19]],
+  "flutter": 0.5,
+  "flutter_hz": 1.3
+ },
+ "grounding": {
+  "_note": "the ground's answer under everything that rests on it (world.rest(), terrain.gdshader): a soft darkening where the sky is blocked (AO scales the ambient light only, skills/shadows-and-grounding section 4) plus a little in the albedo, and a faint rim of dust pushed up around the edge (a normal tilt). radius: m a foot's shadow reaches past it; ao, albedo: how much at the foot; pile: the rim's strength; px: the map's pixels over play_half; set_down_speed (m/s) and set_down_strength: the grit a bag throws when it is put down (world.puff). Art direction",
+  "radius": 0.35,
+  "ao": 0.8,
+  "albedo": 0.3,
+  "pile": 0.35,
+  "px": 2048,
+  "set_down_speed": 0.5,
+  "set_down_strength": 0.6
+ },
  "lamps": [
   "lamp",
   "beacon"
@@ -474,10 +522,13 @@
  },
  "wind": {
   "_note": "toward_deg: where the wind blows to, degrees clockwise from north (a design choice: no measured Gale direction found). Speeds per sky state in weather: Ingenuity's dust drifted downwind at 4 to 6 m/s (research/godot-build/movement-and-look.md section 4)",
-  "toward_deg": 60
+  "toward_deg": 60,
+  "_gust": "gust(): one slow swell every wind listener reads (dust streaks, the wind sound, the telltale; skills/living-atmosphere section 2). gust_hz: the noise's frequency, so a swell takes tens of seconds; share: how far a gust takes the sky state's speed above or below it. Both art direction: no measured Gale gust timing in our sources",
+  "gust_hz": 0.05,
+  "share": 0.35
  },
  "weather": {
-  "_note": "dust effects per sky state, keyed by the DESIGN.<state>.md name. streaks: share of the wind streaks shown; devil: the far dust devil (summer afternoons, NASA 2017); front: the storm's close dust clouds",
+  "_note": "dust effects per sky state, keyed by the DESIGN.<state>.md name. streaks: share of the wind streaks shown; devil: the far dust devil (summer afternoons, NASA 2017); front: the storm's close dust clouds; stow: the solar trackers lie flat (no sun at night; trackers stow flat in high wind)",
   "Outpost Gale": {
    "wind": 4.0,
    "streaks": 0.35,
@@ -494,13 +545,15 @@
    "wind": 4.0,
    "streaks": 0.2,
    "devil": false,
-   "front": false
+   "front": false,
+   "stow": true
   },
   "Outpost Gale storm": {
    "wind": 6.0,
    "streaks": 1.0,
    "devil": false,
-   "front": true
+   "front": true,
+   "stow": true
   }
  },
  "contact": {
@@ -518,8 +571,9 @@
   "haze_burst": 0.4
  },
  "devil": {
-  "_note": "the dust devil wanders a circle this far from the base centre, at this speed in m/s. Both are design choices (no measured Gale speed in our sources): slow enough to watch, far enough never to reach the base",
-  "radius": 160,
+  "_note": "the dust devil wanders round the base centre this far out, in and out by the share `wander`, at this speed in m/s; day only (weather), the summer afternoons NASA saw them at Gale (sol 1597). All design choices (no measured Gale speed in our sources): slow enough to watch, outside the lander and Curiosity, near enough to see from the base (at 160 m it did not show)",
+  "radius": 135,
+  "wander": 0.1,
   "speed": 3.0
  },
  "probe": {

@@ -4,6 +4,7 @@ extends Node3D
 ## this file holds none. It keeps the hero out of things and says where it is; it decides no rules.
 
 const HeroModel := preload("res://player/hero_model.gd")
+const HeroLife := preload("res://player/hero_life.gd")
 const FollowCam := preload("res://player/follow_cam.gd")
 const Touch := preload("res://player/touch.gd")
 const Controls := preload("res://player/controls.gd")
@@ -51,6 +52,13 @@ var launch := -1.0  # seconds of crouch left before take-off, negative when no h
 var last_pos := Vector3.ZERO
 var moved := 0.0  # horizontal speed from the change of position
 var carried: Node3D = null  # a bag the interactions hung on the body; it rides on the chest
+var attention: Node3D = null  # what the helmet turns toward: the interactions set their target here
+var life: HeroLife
+var sink: float  # m the drawn boots sit in the dust (hero.sink)
+var breath_clock: Object = null  # a sibling with `breath_phase` (the sound's clock), else our own
+var breath := 0.0
+var clock_seen := -1.0
+var last_vel := Vector3.ZERO
 var on_floor := false  # the body's floor contact, or a floor it was snapped down onto this frame
 
 
@@ -93,7 +101,10 @@ func _ready() -> void:
 	model = HeroModel.new()
 	body.add_child(model)
 	var clips: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CLIPS))
-	model.setup(load(MODEL).instantiate(), design, clips, tuning.hop, tuning.hero.sink, row.call("hero.contact.height"))
+	sink = row.call("hero.sink")
+	model.setup(load(MODEL).instantiate(), design, clips, tuning.hop, sink, row.call("hero.contact.height"))
+	life = HeroLife.new()
+	life.setup(model.skeleton, tuning.life, row.call("hero.lean.max"), gravity)
 	meshes.assign(model.find_children("*", "MeshInstance3D", true, false))
 	_fading()
 	_collider()
@@ -176,8 +187,31 @@ func _physics_process(delta: float) -> void:
 	else:
 		_walk(delta)
 	var p := body.global_position
-	moved = Vector2(p.x - last_pos.x, p.z - last_pos.z).length() / delta
+	var vel := Vector3(p.x - last_pos.x, 0.0, p.z - last_pos.z) / delta
+	moved = vel.length()
 	last_pos = p
+	_live(delta, (vel - last_vel) / delta)
+	last_vel = vel
+
+
+## The layers on top of the clips: breath on the sound's clock, lean from the push the body feels, and the
+## helmet toward what the interactions offer, else toward where the camera looks.
+func _live(delta: float, accel: Vector3) -> void:
+	var b: Dictionary = tuning.audio.breath  # the sound's own breath numbers, so body and sound agree
+	if breath_clock == null:
+		for n in get_parent().get_children():
+			if n.get("breath_phase") != null:
+				breath_clock = n
+	# the sound's clock while it runs; before the first tap starts the sound (a browser rule) it stands still,
+	# and the chest keeps its own resting time
+	var c: float = breath_clock.breath_phase if breath_clock else -1.0
+	breath = c if c >= 0.0 and c != clock_seen else fmod(breath + delta * b.rest / 60.0, 1.0)
+	clock_seen = c
+	var head := body.global_position + Vector3.UP * model.bounds.end.y * 0.9
+	var look: Vector3 = head - cam.lens.global_basis.z * tuning.life.look_far
+	if is_instance_valid(attention) and attention.is_inside_tree():
+		look = attention.global_position
+	life.update(delta, accel if not vehicle else Vector3.ZERO, carried != null, breath, b.inhale_share, look)
 
 
 func _walk(delta: float) -> void:
@@ -196,8 +230,6 @@ func _walk(delta: float) -> void:
 	body.velocity.x = -sin(yaw) * speed
 	body.velocity.z = -cos(yaw) * speed
 
-	if Input.is_action_just_pressed(&"interact") and carried == null:
-		model.act()  # a reach for what is in front; the interactions decide what it does
 	coyote = tuning.input.coyote if on_floor else coyote - delta
 	buffer = tuning.input.jump_buffer if Input.is_action_just_pressed(&"jump") else buffer - delta
 	if buffer > 0.0 and coyote > 0.0 and launch < 0.0:
@@ -322,9 +354,16 @@ func place(pos: Vector3, yaw_deg: float) -> void:
 	launch = -1.0
 	buffer = 0.0
 	last_pos = pos
+	last_vel = Vector3.ZERO
 	gait = "idle"
 	model.reset()
 	cam.snap(yaw)
+	life.snap(pos + Vector3(-sin(yaw), 0.0, -cos(yaw)) * tuning.life.look_far + Vector3.UP * model.bounds.end.y * 0.9)
+
+
+## The hero reaches for something it uses (CONTRACTS.md): the interactions call this when a use happens.
+func act() -> void:
+	model.act()
 
 
 ## Drive `v` (group `vehicle`): the hero sits on its seat and stops colliding, the camera follows the vehicle.

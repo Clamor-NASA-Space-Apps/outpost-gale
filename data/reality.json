@@ -431,6 +431,17 @@
    "source": "estimate: a foot counts as landed within 2 cm of the floor; a check on footstep timing, not a feel number"
   },
   {
+   "id": "hero.sink",
+   "real": [
+    0.003,
+    0.036
+   ],
+   "value": 0.01,
+   "unit": "m",
+   "source": "estimate: Armstrong on the Moon, 'I only go in a small fraction of an inch, maybe an eighth of an inch' (3 mm at 1/6 g; ALSJ 109:24:48, https://www.nasa.gov/wp-content/uploads/static/history/alsj/a11/a11.step.html); Viking Lander 1 footpad 3 went 0.036 m into blocky ground (Moore et al. 1987, USGS PP 1389). A boot weighs 2.3 times as much on Mars (0.38 g against 0.166 g), so about 1 cm. Excerpts: design/research/pages/sinkage/excerpts.md",
+   "note": "how far a planted boot sits in the dust: the drawn hero is this much lower than its collider"
+  },
+  {
    "id": "ground.sink.soft",
    "real": [
     0.005,

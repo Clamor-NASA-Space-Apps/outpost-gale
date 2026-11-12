@@ -48,6 +48,8 @@ func _ready() -> void:
 	add_child(audio)
 	audio.setup(world, player, tuning.audio)
 	interactions.used.connect(audio.used)
+	world.sound.connect(audio.play)  # the base's own machines (a servo starting)
+	world.hero = player.body  # the solar trackers hold still while the hero stands at them
 	var layer := CanvasLayer.new()
 	add_child(layer)
 	fps_label = Label.new()

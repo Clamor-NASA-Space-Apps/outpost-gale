@@ -50,6 +50,15 @@ for s in (-1, 1):
     wall(f"side{s}", -Y / 2 + BW, Y / 2, s * (X / 2 - BW / 2), False, s)
     lo, hi = sorted((s * DOOR, s * (X / 2 - BW)))
     wall(f"front{s}", lo, hi, Y / 2 - BW / 2, True, 1)
+# a liner on the inside faces: where the bags' rounded corners meet, the sky showed through in pin-points
+H = COURSES * BH
+IN = 0.006  # just proud of the bags' inner faces
+liner = [box("liner_back", (X - 2 * BW, 0.01, H), (0, -Y / 2 + BW + IN, H / 2), mat("trim"))]
+for s in (-1, 1):
+    liner.append(box(f"liner_side{s}", (0.01, Y - 2 * BW, H), (s * (X / 2 - BW - IN), 0, H / 2), mat("trim")))
+    w = X / 2 - BW - DOOR
+    liner.append(box(f"liner_front{s}", (w, 0.01, H), (s * (DOOR + w / 2), Y / 2 - BW - IN, H / 2), mat("trim")))
+bags += liner
 settle(join("walls-col", bags), (0, 0, 0))  # the first bag's sag must not tilt the whole wall
 
 # roof: a beam over the doorway, a metal deck, one layer of bags as shielding
