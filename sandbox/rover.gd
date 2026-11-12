@@ -16,7 +16,7 @@ var radius := 0.495  # the SEV's 39 in wheel
 # local points the body rests on, the driver's seat and the rear hatch, from the model (forge/vehicle_rover.py)
 const AXLE := 1.55
 const TRACK := 1.0
-const SEAT := Vector3(-0.5, 1.5, -1.3)  # hips here put the seated boots on the cabin floor (1.08)
+const SEAT := Vector3(-0.5, 1.4, -1.3)
 const HATCH := Vector3(0.0, 0.0, 3.2)
 
 

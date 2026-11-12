@@ -87,8 +87,8 @@
    "rise_s": 3,
    "fall_s": 15,
    "inhale_share": 0.4,
-   "db_rest": -10,
-   "db_hard": -3
+   "db_rest": -16,
+   "db_hard": -9
   },
   "step": {
    "db_soft": -10,
