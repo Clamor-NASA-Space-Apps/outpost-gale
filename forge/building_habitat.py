@@ -8,6 +8,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from base_kit import *  # noqa: E402,F403
+from hab_interior import fit_out, wall_trim  # noqa: E402
 
 R, H, WALL, SILL, TOP = 2.5, 3.5, 0.12, 0.28, 2.6   # radius, height, wall, floor top, wall top
 HW, HH, FRONT = row("hatch.width"), row("hatch.height"), 90  # hatch width and height, front angle (+Y)
@@ -86,6 +87,20 @@ bevel(box("utility_box", (0.12, 0.6, 0.7), at(R + 0.05, 0, 1.0), mat("trim")), w
 for dy in (-0.18, 0.0, 0.18):
     smooth(bar(f"conduit{dy}", (R + 0.14, dy, 0.65), (R + 0.14, dy, 0.02), 0.035, mat("metal")))
 status_light("utility_light", (R + 0.12, 0, 1.42), (0.05, 0.16, 0.05))
+
+# the fit-out for a crew of 2 (forge/hab_interior.py), clear of the hatch and its door's swing (65 to 115 degrees)
+U, _ = fit_out(SILL, R - WALL, TOP)
+wall_trim(SILL, R - WALL, TOP, WINDOWS, [(FRONT, 25), (301, 28), (214, 28), (172, 12), (348, 21), (22, 13), (141.5, 17), (62, 6)])
+if os.environ.get("FORGE_TRIS"):
+    dg = bpy.context.evaluated_depsgraph_get()
+    for o in sorted(U, key=lambda o: -sum(len(p.vertices) - 2 for p in o.evaluated_get(dg).data.polygons)):
+        print("TRIS", o.name, sum(len(p.vertices) - 2 for p in o.evaluated_get(dg).data.polygons))
+inside = join("interior-col", U)
+bpy.context.view_layer.update()
+for slot in (bpy.data.objects["slot_1"], bpy.data.objects["slot_2"]):  # under the fit-out, so what world.json puts
+    mw = slot.matrix_world.copy()                                        # in them is kept swept with it
+    slot.parent = inside
+    slot.matrix_world = mw
 
 wrap(flat_label("hab_label", "HAB 1", 0.75, (0, 0, 0), "trim", 0.03, 180), R, LABEL, 1.45)
 wrap(flat_label("team_label", "CLAMOR", 0.2, (0, 0, 0), "trim", 0.02, 180), R, LABEL, 1.0)  # the operator, under the name

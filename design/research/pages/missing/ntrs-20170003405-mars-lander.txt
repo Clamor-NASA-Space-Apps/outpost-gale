@@ -1,0 +1,496 @@
+Mission and Design Sensitivities for Human Mars Landers
+ Using Hypersonic Inflatable Aerodynamic Decelerators
+       Tara P. Polsgrove                                       Herbert D. Thomas                                  Alicia Dwyer Cianciolo
+NASA Marshall Space Flight Center                       NASA Marshall Space Flight Center                    NASA Langley Research Center
+     Huntsville, AL 35812                                     Huntsville, AL 35812                                  Hampton, VA 23681
+         256-544-1274                                             256-544-4493                                         816-434-5306
+   tara.polsgrove@.nasa.gov                                herbert.d.thomas@nasa.gov                        alicia.m.dwyercianciolo@nasa.gov
+
+                                       Tim Collins                                             Jamshid Samareh
+                              NASA Langley Research Center                               NASA Langley Research Center
+                                   Hampton, VA 23681                                          Hampton, VA 23681
+                                      757-864-3113                                               757-864-5776
+                                timothy.j.collins@nasa.gov                                jamshid.a.samareh@nasa.gov
+
+Abstract— Landing humans on Mars is one of NASA’s long term                           landers to Mars. Optimization of Earth-to-Mars
+goals. NASA’s Evolvable Mars Campaign (EMC) is focused on                             transportation systems includes finding the right balance of
+evaluating architectural trade options to define the capabilities                     launch manifests, orbital aggregation of elements, and Mars
+and elements needed to sustain human presence on the surface                          orbit capture strategies. This paper identifies the impacts of
+of Mars. The EMC study teams have considered a variety of in-
+                                                                                      a variety of architecture options on the human Mars lander,
+space propulsion options and surface mission options.
+Understanding how these choices affect the performance of the                         and informs the higher-level optimization of the architecture.
+lander will allow a balanced optimization of this complex system
+of systems problem. This paper presents the effects of mission                        This work was performed as part of NASA’s Evolvable Mars
+and vehicle design options on lander mass and performance.                            Campaign (EMC) study. The EMC is focused on evaluating
+Beginning with Earth launch, options include fairing size                             architectural trade options with the goal of achieving a
+assumptions, co-manifesting elements with the lander, and                             sustainable human presence on the surface of Mars in the
+Earth-Moon vicinity operations. Capturing into Mars orbit                             decade of the 2030’s. [1] The EMC study teams have
+using either aerocapture or propulsive capture is assessed. For                       considered a variety of in-space propulsion options and
+entry, descent, and landing both storable as well as oxygen and
+                                                                                      surface mission options that would support a crew of four for
+methane propellant combinations are considered, engine thrust
+level is assessed, and sensitivity to landed payload mass is                          a long duration stay. In each potential scenario a lander
+presented. This paper focuses on lander designs using the                             capable of delivering between 18 and 27 t of payload to the
+Hypersonic Inflatable Aerodynamic Decelerators, one of several                        surface is required. [2] With 20 t payload delivery capability
+entry system technologies currently considered for human                              on each lander, a total of 4 landers would be required to
+missions.                                                                             support a long duration surface mission. Landers designed to
+                                                                                      carry 27t of payload to the surface would reduce the number
+                                                                                      of landers to three. Figure 1 shows an image of the four-
+                      TABLE OF CONTENTS                                               lander 20t payload manifest on a common descent module.
+
+
+1. INTRODUCTION ....................................................... 1
+2. EARTH DEPARTURE OPTIONS ............................... 2
+3. MARS ARRIVAL OPTIONS ...................................... 4
+4. ENTRY DESCENT AND LANDING OPTIONS ............ 5
+5. RESULTS .................................................................. 6
+6. CONCLUSIONS ......................................................... 7
+                                                                                           Lander 1        Lander 2        Lander 3       Lander 4
+REFERENCES............................................................... 8
+BIOGRAPHY ................................................................ 8                   Figure 1. Notional 20 t Payload Manifest
+                                                                                      The Mars lander is comprised of three major pieces: the
+                                                                                      aerodynamic decelerator, the Mars descent module, and the
+                         1. INTRODUCTION                                              payload that is delivered to the surface. The integration of
+Designing a human Mars mission architecture requires a                                these three pieces is highly dependent on the decelerator
+complex optimization of many different interdependent                                 technology chosen. The reference lander design for EMC
+systems. Choices about Mars surface operations and                                    studies uses a Hypersonic Inflatable Aerodynamic
+equipment affect lander configuration and mass, which in                              Decelerator (HIAD) system to slow the vehicle in the Mars
+turn affects in-space transportation systems that deliver those                       atmosphere and oxygen and methane supersonic retro
+U.S. Government work not protected by U.S. copyright
+
+                                                                                  1
+propulsion for final descent and landing. [3] An image of the        This paper presents the effects of mission and vehicle design
+20t “Lander 2” configuration integrated with a HIAD is               options on lander mass and performance. Section 2
+shown in in Figure 2. The HIAD Entry Descent and Landing             summarizes the Earth launch options include fairing size
+(EDL) concept of operations is shown in Figure 3.                    assumptions, co-manifesting other elements with the lander,
+                                                                     and Earth-Moon vicinity operations. Section 3 describes the
+                                                                     Mars capture options, specifically           aerocapture and
+                                                                     propulsive capture are assessed. Finally, the entry, descent,
+                                                                     and landing sensitivities are presented in Section 4, including
+                                                                     a propellant trade of storable versus an In Situ Resource
+                                                                     Utilization production capable oxygen and methane
+                                                                     propellant system, engine thrust level, and sensitivity to
+                                                                     landed payload mass.
+
+                                                                                2. EARTH DEPARTURE OPTIONS
+ Figure 2. Human Mars Lander with HIAD deployed
+                                                                     Launch Manifest Options
+                                                                     The first step in this journey is getting off of the Earth. The
+                                                                     large payload volume and lift capacity offered by the Space
+                                                                     Launch System (SLS) is crucial for a human Mars mission.
+                                                                     Launch manifest and packaging of the lander depends on the
+                                                                     transportation option. Packaging is important because
+                                                                     adapter mass and lander primary structure mass are affected
+                                                                     by the height of the lander in the fairing when strength,
+                                                                     buckling, and stiffness are considered. Reference 8 describes
+                                                                     the effect of SLS Launch Vehicle Fairing Size on the payload
+                                                                     arrangement and packaging.
+
+                                                                     The EMC has considered two options for in-space
+                                                                     transportation, both have elements that are derived from the
+                                                                     Asteroid Robotic Redirect Mission (ARRM) Solar Electric
+                                                                     Propulsion (SEP) vehicle. The first, the SEP/Chemical Split
+                                                                     option [9], uses a SEP system with power that is limited to
+                                                                     what is minimally needed for lander delivery to Mars, 150
+                                                                     kW to the electric propulsion system (the total vehicle power
+ Figure 3. Entry Descent and Landing Configurations                  could be 190-280kW depending on mode of operation.) At
+                                                                     this power level it would take several years to deliver a lander
+                                                                     to Mars. In this option the crew would travel to Mars on a
+While the HIAD is the reference decelerator for EMC studies;         separate much faster system using chemical propulsion
+this team evaluated several other technologies for the human         (liquid oxygen and methane).             The second EMC
+Mars mission [4] including the Adaptive Deployable Entry             transportation option, SEP/Chem Hybrid [10] explores what
+and Placement Technology or ADEPT decelerator [5], the               would be required to enable reusability of transportation
+Rigid Mid Lift-to-Drag Ratio aeroshell is another [6] and the        systems. A reusable system would require double the power
+heritage capsule design [7].                                         level or 300 kW to the electric propulsion system (with total
+                                                                     vehicle power of 435 kW), and augmentation by a chemical
+For the HIAD reference option that is the focus of this paper,       propulsion system for some maneuvers in planetary gravity
+payload sits on top of the cylindrical descent module. The           wells.
+lander relies on the Earth to Mars transit system to provide
+power during the trip to Mars and deploys its own solar arrays       In the SEP/chem split option the lander is integrated with the
+to provide power once Mars orbit is achieved. Solid oxide            SEP stage in a 10 m diameter SLS payload fairing (9.1m
+fuel cells provide power as the vehicle flies through the Mars       payload envelope). This allows for the lander to be delivered
+atmosphere and for the first day after landing or until              to Mars using a single SLS launch. The lander and SEP stage
+connection to surface power infrastructure is established.           are launched together into an elliptical Earth orbit. The SEP
+Body mounted radiators reject excess vehicle heat, including         stage initiates a spiraling Earth escape trajectory with a lunar
+waste heat from an active cryofluid management system.               gravity assist for the final Earth departure. In the SEP/Chem
+Each of these systems must be considered when assessing              Hybrid option the reusable hybrid propulsion system (HPS)
+alternate mission operations. The lander design is covered in        is launched separate from the landers. Landers are launched
+detail in reference 3.                                               to Trans-Lunar injection (TLI) and rendezvous with the
+                                                                     hybrid propulsion system in lunar distant retrograde orbit
+                                                                     before continuing on to Mars. During Earth escape and
+
+
+                                                                 2
+transit to Mars both options assume that the transportation           Some reoriented payloads have undesirable load paths which
+stage will provide power for the lander and its cargo. Figure         will likely result in increased structural mass of those cargo
+4 depicts the lander as it might appear in launch configuration       elements.
+with and without a SEP stage. There is a conical launch
+vehicle adapter (LVA) with the SEP stage suspended below.             The taller landers have a higher center of gravity (CG), and
+Figure 5 shows Earth to Mars transit configuration for the            tighter packaging of payloads results in reduced flexibility to
+SEP/Chem Split option.                                                manage CG with payload positioning. Figure 6 shows an
+                                                                      image of the same cargo elements repackaged for the two
+                                                                      launch vehicle diameters. This lander, Lander 1 in figure 1,
+                                                                      contains a pressurized rover and logistics module and has an
+                                                                      x-axis cg location was at 4.6m from the nose (bottom) of the
+                                                                      vehicle. When the same payload elements were repackaged
+                                                                      to fit in the 8.4m diameter launch vehicle (7.5m dynamic
+                                                                      envelope), the stack height increased and the CG location
+                                                                      rose to 5.3m from the nose. At Earth launch this taller overall
+                                                                      stack height and CG location create challenges for meeting
+                                                                      launch stack stiffness requirements and results in more
+                                                                      massive adapters. The design changes also drive to a
+                                                                      narrower adapter between the Lander and the Mars Ascent
+                                                                      Vehicle (MAV), Lander 2 seen in Figures 1 and 2. The
+                                                                      narrower adapter has less bending stiffness, lower vibration
+                                                                      frequencies and is heavier.
+
+         Figure 4. Launch Configuration Options                       Taller payload stack height and CG location create additional
+                                                                      challenges for operations and performance. For a 16m
+                                                                      diameter deployed HIAD considered for this case, the CG
+                                                                      location in the 8.4 m fairing configuration is approaching the
+                                                                      stability limit CG of 5.6m from the nose. Flow impingement
+                                                                      during entry and descent is also a concern. For the 10m
+                                                                      fairing option the flight profile can be managed to avoid any
+                                                                      direct flow impingement on the cargo, but as the stack gets
+                                                                      taller flow impingement is likely resulting in an increased
+                                                                      burden of thermal protection systems for the cargo which
+                                                                      may complicate cargo offloading on the Martian surface.
+                                                                      Placement of engines and landing gear is also affected by the
+                                                                      reduced diameter. With a taller CG and a smaller diameter
+                                                                      base, the landing gear would have to be larger and deploy
+                                                                      further to provide the same stability. Tighter packaging could
+                                                                      pose challenges for offloading and may affect payload
+    Figure 5. Earth to Mars Transit Configuration                     thermal management during transit, and limited deck space
+                                                                      could restrict deployment of systems and operation of deck-
+Launch Fairing Options                                                mounted offloading devices.
+Both 8.4 and 10 meter diameter fairing options have been
+assessed for human Mars missions. The transit habitat and
+in-space propulsion stages can be packaged within the 8.4
+meter option, but packaging the landers within that constraint
+presents many challenges. Fairing diameter affects design,
+performance, and operations of the lander, surface cargo, and
+the design of launch vehicle adapters. These issues are
+summarized below and described in detail in reference 8.
+
+Current reference architectures assume a 10 meter diameter
+fairing. Adjusting the lander design to fit within a smaller
+diameter results in a taller vehicle as propellant tanks grow
+taller and surface cargo items are stacked or reoriented to the            9.1m diameter lander          7.5m diameter lander
+new constraint. In some cases cargo volume limitations                     10 m diameter fairing         8.4 m diameter fairing
+prevent packaging of some desired surface manifest
+elements, thus delaying delivery of mission capabilities and              Figure 6. Lander and Cargo Configurations Two
+requiring more landers to deliver the same cargo manifest.                        Launch Vehicle Fairing Options
+
+
+                                                                  3
+                                                Figure 7. Mars Orbit Options
+
+
+             3. MARS ARRIVAL OPTIONS                                   the lander approximately two days prior to Mars atmospheric
+                                                                       interface. After separation and through aerocapture the
+Mars arrival presents another opportunity to balance                   lander would generate its own power using solid oxide fuel
+responsibility between the lander and in-space transportation          cells, only deploying its own solar arrays after the parking
+stages. All past Mars landing missions performed direct                orbit was achieved. The HIAD would be deployed some
+entry and did not loiter in a parking orbit before descent. In         designated time prior to atmospheric interface.           The
+the EMC architecture options, the crew does not travel to              deceleration through the atmosphere would last
+Mars in the entry vehicle. It is sent to Mars prior to the crew        approximately 7 minutes and result in an orbit with an
+arrival and must remain in a parking orbit until they arrive.          apoapse of approximately 33,900 km. At apoapse the lander
+Orbit capture of the entry vehicle could be achieved                   would fire the reaction control system (RCS) propulsion to
+propulsively using SEP or chemical stages, or using                    impart a change in velocity of 15 m/s to raise periapsis to a
+aerodynamic drag in the Mars atmosphere to accomplish                  safe distance above the Martian atmosphere, approximately
+aerocapture.                                                           250 km altitude above the mean areoid. Just as in the Hybrid
+                                                                       option the vehicle may loiter in Mars orbit for up to one year
+For the SEP/Chem hybrid transportation option Hybrid                   before crew arrival and initiation of descent. Not all landers
+Propulsion System (HPS) propulsively captures into Mars                would loiter that long. Cargo landers could initiate descent
+orbit and spirals down to a 5 Sol orbit before releasing the           soon after orbit arrival but one lander must await the crew.
+lander. Five Sol, or five Martian days, refers to the orbital
+period of the highly elliptical orbit. The dimensions of the
+parking orbit relative to Phobos and Deimos at Mars are
+shown in Figure 7. The HPS can continue to provide services
+(power) to the lander for some portion of the orbit loiter, but
+at some point will detach from the lander and return to Earth
+for refueling and reuse. This orbit is higher than has been
+considered in past human Mars studies but is necessary to
+minimize flight time and allow for reuse of the HPS. The
+lander deploys its own solar arrays to provide power after
+separation from the HPS, see Figure 8. The lander orbits
+Mars for up to a year waiting on crew arrival. Once crew is
+on board and prepared for landing, a periapsis lowering
+maneuver is performed at apoapsis and the two and half-day
+journey to the surface begins. Solar arrays are jettisoned prior              Figure 8. Mars Orbit Loiter Configuration
+to atmospheric entry with fuel cells providing power for the
+remainder of descent and landing.
+                                                                       While the lander is designed to decelerate using the Martian
+For the SEP/Chem split option SEP power and mission                    atmosphere, there are particular concerns with the HIAD
+timeline can be minimized if the lander performs aerocapture           decelerator that must be addressed to accommodate
+into Mars orbit. Aerocapture into a one Sol Mars orbit is              aerocapture. The HIAD design uses an inflatable structure
+assumed. The size of the one sol orbit relative to the five-sol        covered by a flexible TPS. The inflatable structure is a
+orbit is also shown in Figure 7. In this option the SEP stage          stacked-torus design, meaning that it is built as a conical stack
+targets the lander for a 40 km minimum Mars altitude pass,             of pressurized rings, connected to each other and anchored to
+with an arrival velocity of 6.2 km/s, and then separates from          the central rigid nose by radial structural webbing. While
+
+
+                                                                   4
+HIAD flexible TPS samples have survived multiple heat
+pulse testing, the performance of the material deflated after           Propulsion System Options
+aerocapture and reinflated up to a year later has not been              Cryogenic and storable propulsion options have been
+characterized, and it is infeasible to carry gas generators             evaluated for the lander. To minimize cost across the
+onboard to keep the HIAD inflated during an extended loiter             architecture a common engine design for ascent, descent and
+in Mars orbit between aerocapture and entry. Therefore, the             other applications within the architecture is assumed
+decision was made to carry two separate HIAD’s, one for                 wherever possible. While recent advancements in
+aerocapture and one for entry. The aerocapture HIAD is                  manufacturing of rocket engines hold the promise of
+jettisoned before the orbit periapsis raise burn that occurs            significantly    reducing     engine     development      cost,
+after the initial atmospheric pass. To maintain similar ballistic       commonality is still expected to provide savings over
+coefficients in current trajectory simulations, the aerocapture         multiple unique engine developments. Engine thrust level
+HIAD is slightly larger, 18.8 m, compared to the entry HIAD,            trades for descent have been performed and a vehicle thrust-
+which has a 16.7 m diameter.                                            to-weight ratio of 2 is desired at engine initiation. The
+                                                                        individual engine thrust level is determined by the MAV
+   4. ENTRY DESCENT AND LANDING OPTIONS                                 application. Current lander designs use eight engines at 100
+                                                                        kN (22.5 klbf) of thrust each to provide the necessary thrust
+Entry system trades are covered in other papers. [4, 5, 6, 7]           for descent and landing. Using multiple engines for descent
+This section focuses on propulsion and cargo capacity trades.           distributes the plume over a wide area and is expected to
+                                                                        minimize site alteration that could threaten landing stability.
+Overview of Entry Descent and Landing Phases
+Descent is initiated from apoapsis of the parking orbit using           Liquid oxygen and methane propulsion is assumed for 2 of 3
+an RCS burn. The entry HIAD is inflated and entry begins at             architecture options studied in 2016, and that choice is driven
+approximately 125 km altitude. The vehicle flies with a                 by the Mars ascent vehicle. In situ production of liquid
+maximum hypersonic continuum lift-to-drag ratio of 0.2 and              oxygen for ascent reduces required lander cargo capacity
+an angle of attack of -16 deg. The guided entry uses a direct           because the Mars ascent vehicle can be delivered with fuel
+force numerical predictor corrector guidance algorithm to               only and then filled with liquid oxygen on the Martian surface
+control the vehicle until engine ignition. The entry trajectory         well before the crew arrive. Methane is chosen as the fuel for
+is designed to maintain maximum deceleration limits below               several reasons. Propellant combinations with higher
+4 g’s for deconditioned crew according to NASA’s Human                  mixture ratios are favored to allow the greatest benefit of
+System Integration Requirements. Crew and cargo missions                surface oxygen production.           The methane storage
+are designed using the same EDL sequence so that pre-                   temperature is close to the liquid oxygen storage temperature
+deployment of surface cargo demonstrates the sequence prior             and this simplifies the cryofluid management system design.
+to crew arrival. The guidance is targeting the time and                 Ascent performance is highly sensitive to Isp, and as the
+location to turn on the engines such that the vehicle can land          heaviest payload, MAV mass impacts lander and
+at an altitude of 0 km above the Mars Orbiter Laser Altimeter           transportation stage design. Packaging of both propellant and
+areoid. The descent sequence initiates when plugs or doors in           engines is another consideration. Other hydrocarbons have
+the rigid nose heatshield covering the eight 100 kN engines             been studied, but none are significantly better than methane,
+are blown off or opened prior to engine ignition. Additional            and a methane design allows for future extensibility to
+openings are revealed when the vehicle velocity becomes                 methane production on the Martian surface.
+subsonic to deploy the landing legs. The vehicle retains the
+HIAD to landing to minimize the risk associated with                    For the third architecture option a storable propellant
+separation. At 12 to 20 m above the surface the engine thrust           combination of monomethylhydrazine (MMH) and nitrogen
+is reduced such that the vehicle maintains a constant 2.5 m/s           tetroxide (NTO) is assumed for lander and MAV. Because
+descent velocity until touching down on the surface.                    the MAV cannot rely on in-situ propellant production in this
+                                                                        case it must be delivered fully loaded with propellant. A
+Figure 3 illustrated the concept of operations for the reference        MAV capable of ascending to a 1 Sol or 5 Sol orbit with
+EDL sequence. Once touchdown is achieved the inflatable                 storable propellants would be on the order of 40-50t and
+portion of the HIAD is deflated and retracted to allow for              would result in significantly larger landers to deliver them.
+cargo deployment. As the vehicle nears the surface, the                 To keep the lander size relatively small, it was decided that
+engine plumes will disturb regolith, which has the potential            this architecture should assume a MAV that only ascended to
+to damage the vehicle and other assets nearby. Retaining the            a low Mars orbit, 500 km circular, with an orbital taxi or other
+HIAD to the surface offers some protection of the payload               element completing the remainder of ascent with the crew.
+from surface plume interactions. To protect other surface               Even after reducing the MAV performance requirements, the
+assets, landings must occur outside of a predefined keep out            storable MAV is still in excess of the 20mt payload capacity
+zone, currently assumed to be 1 km from any surface asset.              assumed for the cryogenic oxygen and methane options. A
+Advances in landing accuracy will help to minimize the                  lander payload capability of at least 24t is needed for the
+actual separation distance between landings to no greater than          storable architecture option.
+the defined keep out zone. Landing within 50 meters of the
+landing target is the capability assumed for this mission.
+
+                                                                    5
+                                                                        Split lander options are too heavy to be launched to trans
+Sensitivity to payload mass                                             lunar injection (TLI) based on assumed performance of 45-
+Setting the lander payload capacity affects the number of               50t for the SLS Block 2. The reusable SEP/Chem Hybrid
+landers required to complete a mission which affects the                architecture option requires elements be launched to TLI to
+number of launches from Earth and the number and size of                meet up with the hybrid propulsion system, however only the
+transportation stages to deliver those landers to Mars. With            20t payload LOX/Methane option may be feasible assuming
+20t payload delivery capability on each lander, a total of 4            50t for SLS TLI performance, which must include launch
+landers would be required to support a long duration surface            adapters.
+mission. If each lander could carry 27t of payload to the
+surface then that number could be reduced to three [2]. A               Both 20 and 27t payload capability options were assessed for
+lander capable of delivering 40t of payload was assumed in              LOX/Methane landers. MMH/NTO landers have a payload
+NASA’s Design Reference Architecture 5.0. With this level               capacity that is consistent with the storable MAV
+of payload capability it may be possible to complete a                  requirements for that option. Payload mass fractions for each
+mission using only two landers. The challenge, however, of              transportation architecture option are similar across
+payload capabilities in excess of 30t is in the packaging.              LOX/Methane and MMH/NTO landers, 0.37-0.42 for
+Habitats and other human mission support infrastructure is on           SEP/Chem Split and 0.43-0.47 for the SEP/Chem Hybrid
+average much lower density than past robotic Mars mission               options. Lander performance is relatively insensitive to
+payloads. When large elements have to be stacked on top of              descent propulsion Isp. To expedite analysis the decelerator
+each other flow impingement during entry becomes a concern              diameters were fixed and the ballistic coefficient was allowed
+as well as the increased complexity of cargo offloading (most           to vary between the payload options. Further refinements
+of which must be done remotely before the crew arrive.                  with a fixed ballistic coefficient would result slight variations
+Other issues with tall lander and payload stacks and high CGs           in decelerator masses. The variation is anticipated to be small
+discussed in section 2 would be exacerbated as additional               because it is only the lightweight inflatable portion of the
+payload is added to each stack. For this reason and because             HIAD that would be affected.
+of the reduce demand on transportation stages only 20 - 27t
+payload delivery capability options were assessed in EMC                These options were developed by a team of subsystem and
+architectures.                                                          discipline experts. This work was then used as the basis for
+                                                                        a parametric mass model of this lander. The parametric
+                        5. RESULTS                                      model allows rapid exploration of the tradespace. Figure 9
+                                                                        shows an example of how this model can be used to evaluate
+Mass summaries of the lander options assessed are given in              sensitivity of a variety of parameters to payload mass.
+Table 1. Options for each transportation architecture are               Additional tradespace and sensitivities studies can be found
+included. The SEP/Chem Split architecture options, which                in Ref. [10].
+use aerocapture, have heavier decelerator system masses due
+to the decision to carry two separate HIAD systems for
+aerocapture and entry descent and landing. The SEP/Chem
+
+                                    Table 1. Mass Summary of Lander Options Assessed
+                                                                        Masses (kg)
+
+                               Aerocapture to 1 sol Parking Orbit                      Propulsive delivery to 5 sol Parking Orbit
+        Component                  SEP/Chem Split Options                                     SEP/Chem Hybrid Options
+
+                            27 t             20 t                                   27 t                 20 t
+                                                             NTO/MMH                                                     NTO/MMH
+                        LOX/Methane      LOX/Methane                            LOX/Methane          LOX/Methane
+        Structures          5442             4961               4961                4652                 4253               4136
+        Propulsion          5310             4899               5206                5260                 4842               5189
+          Power             1437             1217               1575                1437                 1437               1575
+          C&DH              136              136                136                 136                  136                136
+           C&T               76               76                 76                  76                   76                 76
+           GNC              116              116                116                 116                  116                116
+         Thermal            357              328                573                 357                  328                573
+        Decelerator         9444             9444               9444                4185                 4185               4185
+         Dry Mass          22,318           21,177             22,087              16,219               15,373             15,986
+          Cargo            27,000           20,000             23,881              27,000               20,000             24,187
+      Non-prop Fluids       851              848                951                 850                  843                920
+        Inert Mass         50,168           42,025             46,919              44,068               36,216             41,093
+      Used Propellant      14,093           11,668             12,289              12,519               10,367             11,497
+      Total Wet Mass       64,261           53,693             59,208                 56,587            46,583             52,590
+
+
+
+                                                                    6
+                                           Figure 9. Sensitivity to Payload Mass
+
+
+
+                     6. CONCLUSIONS                                    in the future to include additional propulsion capabilities or
+                                                                       other creative solutions to this problem.
+Lander design and performance is tied to every other element
+of the mission architecture. Launch vehicle fairing options            This paper presents the impacts on Mars lander design due to
+affect lander height and center of gravity as well as its flight       several transportation and operational decisions, but the only
+profile through entry and descent and even its design for              way to identify the most optimal solution is to look at the
+landing stability.         Performance requirements for                entire end to end mission architecture as a whole. Some
+transportation stages that carry crew and cargo to Mars and            minor penalty in lander mass may be acceptable if it
+back are driven by their largest payload, the lander. The              eliminates risk in another area or improves the value of the
+balance of responsibility between those stages and the lander          mission.
+during transit determines the number of decelerators the
+lander carries and its parking orbit at Mars. The deployment
+and design of surface payloads depend on how they are
+packaged on each lander, and while lander performance is
+relatively insensitive to the propellant choice options
+assessed, that choice significantly the capability of the MAV
+and the payload capacity of the lander, assuming common
+engine developments for both vehicles.
+
+One thing that is clear from these cases is that it is unlikely
+that any lander options will be launched directly to TLI. Only
+one of the options studied may be light enough, however
+while mass growth allowance has been applied to all cases
+there are still areas of the design that are immature making
+future mass growth in excess of the allowance possible. In
+addition, these cases represent only the HIAD decelerator
+options which is the lightest entry system technology
+considered for human landing missions.                Alternate
+decelerator options ADEPT, Mid L/D, and Capsule are all
+heavier [4]. The inability to deliver landers to TLI means that
+the reusable SEP/Chem Hybrid architecture must be adjusted
+
+
+                                                                   7
+                      REFERENCES                                                           BIOGRAPHY
+[1] Craig, Douglas A., Troutman, Patrick, Herrmann, Nicole,                                Tara Polsgrove is an aerospace
+    “Pioneering Space Through and Evolvable Mars                                           engineer in the Flight Programs and
+    Campaign,” AIAA SPACE 2015, Pasadena, CA, August                                       Partnerships Office at NASA's
+    31-September 2, 2015                                                                   Marshall Space Flight Center. She
+                                                                                           has been with NASA since 2000 and
+[2] Toups, L., Brown K., and Hoffman, S. J., “Transportation-                              has worked on many conceptual
+    Driven Mars Surface Operations Supporting an Evolvable                                 designs of advanced spacecraft,
+    Mars Campaign,” IEEE Aerospace Conference 2015                                         including performance and vehicle
+                                                                      integration for the Altair Lunar Lander. Her background
+[3] Polsgrove, Tara P., Cianciolo, A., et al, “Human Mars             is in interplanetary trajectory optimization and mission
+    Lander Design for NASA’s Evolvable Mars Campaign,”                analysis. Recent work has focused on Mars transportation
+    IEEE Aerospace Conference, Big Sky, MT, March 5-12,               and lander designs supporting missions to send humans to
+    2016.                                                             Mars. Ms. Polsgrove has a Bachelor of Science in
+                                                                      Aerospace Engineering from the Georgia Institute of
+[4] Cianciolo, Alicia, Polsgrove, Tara P., “Human Mars Entry,         Technology and a Master of Science in Engineering with a
+    Descent, and Landing Architecture Study Overview,”                Systems Engineering focus from the University of Alabama
+    AIAA SPACE 2016, Long Beach, CA, September 13-16,                 in Huntsville.
+    2016
+
+[5] Cassell, A., Brivkalns, C., Garcia, J., Bowles, J., Kinney,                           Alicia Dwyer Cianciolo is an
+    D., Yount, B., McGuire, K., Wercinski, P., Cianciolo, A.,                             aerospace engineer at the NASA
+    Polsgrove, T. “Human Mars Mission Design Study                                        Langley Research Center.           She
+    Utilizing the Adaptive Deployable Entry and Placement                                 specializes in developing simulations
+    Technology,” IEEE Aerospace Conference, Big Sky, MT                                   to analyze vehicle flight through
+    2017.                                                                                 different atmospheres in the solar
+                                                                                          system. Primarily focusing on Mars
+[6] Cerimele, C., Robertson, E., Sostaric, R., Campbell, C.,                              over the past 15 years, she has worked
+    Robinson, P., Hershey, M., Stachowiak, S., Matz, D.,                                  on several missions to the planet
+    Braden, E., Johnson, B., Garcia, J., Bowles, J., Kinney, D.                           including      the    Odyssey      and
+    “A Rigid Mid Lift-to-Drag Ratio Approach to Human                 Reconnaissance Orbiter aerobraking operations, the
+    Mars Entry, Descent, and Landing” AIAA SciTech 2017,              Exploration Rovers, and as a member of the Entry, Decent
+    Grapevine TX.                                                     and Landing Team that successfully landed the Curiosity
+                                                                      Rover on Mars in August of 2012. She is currently
+[7] Price, H., Manning, R., Sklyanskity, E., Braun, R., “A            supporting NASA’s the next lander mission to Mars,
+    High-Heritage Blunt-Body Entry, Descent, and Landing              InSight, and is working to analyze entry technologies that
+    Concept for Human Mars Exploration,” AIAA-2016-0219               will enable human exploration of the planet. She holds a
+                                                                      Bachelor of Science degree in Physics from Creighton
+[8] Jefferies, Sharon, Collins, Tim, Cianciolo, Alicia D.,            University and a Master of Science degree in Mechanical
+    Polsgrove, Tara, “Impacts of Launch Vehicle Fairing Size          Engineering from The George Washington University.
+    on Human Exploration Architectures” IEEE Aerospace
+    Conference, Big Sky, MT 2017.
+                                                                                             Herbert Thomas is an aerospace
+[9] Percy, T., McGuire, M., Polsgrove, T., “In-space                                         engineer in the Advanced Concepts
+   Transportation for NASA’s Evolvable Mars Campaign,”                                       Office at NASA’s Marshall Space
+   AIAA SPACE 2015, Pasadena, CA, August 31-September                                        Flight Center. His background is
+   2, 2015                                                                                   in orbital mechanics, mission
+                                                                                             analysis,      advanced     space
+[10] Merrill, R., Chai, P., Qu, M., “An Integrated Hybrid                                    propulsion, and propulsion system
+   Transportation    Architecture   for   Human     Mars                                     mass estimation. He has been with
+   Expeditions,” AIAA SPACE 2015, Pasadena, CA, August                NASA since 2004 and, before that, worked as a software
+   31-September 2, 2015                                               engineer in industry. He has worked on many conceptual
+                                                                      vehicle designs as both an analyst and study lead. Dr.
+[11] Samareh, J., et al. “Rapid Systems Analysis and Trade            Thomas has a Bachelor of Science in Aerospace
+   Studies for Human Mars EDL” NASA-TM (in                            Engineering, Master of Science in Engineering, and a
+   preparation).                                                      Doctor of Philosophy in Mechanical Engineering from the
+                                                                      University of Tennessee.
+
+
+
+
+                                                                  8
+                       Jamshid Samareh is a senior
+                       research aerospace engineer in the
+                       Vehicle Analysis Branch of NASA
+                       Langley Research Center. His
+                       research interests are in Entry,
+                       Descent, and Landing (EDL), mass
+                       modeling, multidisciplinary analysis
+                       and design optimization (MDAO),
+fluid-structure interaction, geometry modeling, and shape
+optimization.
+
+                         Tim Collins is a senior structures
+                         research     engineer    in    the
+                         Structural     Mechanics      and
+                         Concepts Branch at NASA
+                         Langley Research Center in
+                         Hampton, Virginia. His area of
+                         expertise is spacecraft structural
+                         design and analysis with an
+                         emphasis on conceptual-design
+                         trade studies supported by
+hardware-prototype demonstrations. He has been with
+NASA since 1987, working on structural concepts for
+numerous NASA programs ranging from precision
+telescopes to Lunar and Mars landers. He also specializes
+in structurally efficient concepts for robotic operations,
+including those required for in-space or surface-based
+servicing and assembly. Mr. Collins has a Bachelor’s
+Degree in Physics from the University of Rochester and a
+Master of Science Degree in Mechanical and Aerospace
+Engineering from the University of Virginia.
+
+
+
+
+                                                              9
+

@@ -26,6 +26,9 @@ func setup(tuning: Dictionary, colors: Dictionary, on_look: Callable) -> void:
 	add_child(root)
 	pad = Control.new()
 	pad.set_anchors_preset(Control.PRESET_FULL_RECT)
+	# passes what it does not use on to the 3D view: with STOP it ate the mouse once a touch had shown it (or on any
+	# touch-screen laptop), so a click never captured the cursor and a captured mouse never turned the view
+	pad.mouse_filter = Control.MOUSE_FILTER_PASS
 	pad.gui_input.connect(_on_pad)
 	root.add_child(pad)
 	stick = VirtualJoystick.new()

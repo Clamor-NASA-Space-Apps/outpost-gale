@@ -48,6 +48,9 @@ uniform float contact_albedo = 0.0;
 uniform float contact_pile = 0.0;
 // things that move (terrain.gd movers()): x, z, radius, strength; 12 is terrain.gd MOVERS
 uniform vec4 movers[12];
+// 1 on the backdrop (terrain.gd): it leaves the patch to the patch. Its rim's long triangles cut across the patch's
+// corners up to 1.1 m above it (measured, tests/edge_test.gd), drawn ground where nothing collides
+instance uniform float backdrop = 0.0;
 
 varying vec3 wpos;
 varying vec3 wnrm;
@@ -87,6 +90,9 @@ void vertex() {
 void fragment() {
 	vec3 n = normalize(wnrm);
 	vec2 m = (wpos.xz - macro_rect.xy) / macro_rect.zw;
+	if (backdrop > 0.5 && all(greaterThan(m, vec2(0.0))) && all(lessThan(m, vec2(1.0)))) {
+		discard;
+	}
 	// fade the 1 m map out over the patch's last 10%, where the backdrop takes over
 	float inside = smoothstep(0.0, 0.1, min(min(m.x, m.y), min(1.0 - m.x, 1.0 - m.y)));
 	if (inside > 0.0) {

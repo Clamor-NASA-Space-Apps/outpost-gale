@@ -1,6 +1,6 @@
 # The greenhouse: a geodesic dome (6.8 m across) on a low ring wall, entered through a short vestibule
 # with a doorway of data/reality.json hatch.width x hatch.height (the habitat's) and its own door leaf, which
-# swings into a vestibule wide enough to take it. Two raised grow beds under
+# swings into a vestibule wide enough to take it. Two hydroponic A-frames under
 # grow lights, with empty nodes slot_1..slot_8 where the lettuce models go.
 # Built from Blender's icosphere rather than the Quaternius Geodesic_Dome: that one is a closed shell on
 # feet with no doorway and painted-on panes, and a doorway cut into it left loose triangles.
@@ -10,6 +10,7 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import bmesh  # noqa: E402
 from base_kit import *  # noqa: E402,F403
+from mathutils import Vector  # noqa: E402
 
 RD, RW, FL = 3.4, 0.4, 0.2          # dome radius, ring wall height, floor top (over the uphill ground on a slope, under hero.step)
 HW, HH, TL = row("hatch.width"), row("hatch.height"), 2.4  # doorway, vestibule length
@@ -85,21 +86,53 @@ for s in (-1, 1):
 status_light("door_light", (0, FY + 0.08, FL + HH + 0.15), (0.3, 0.04, 0.06))
 inner_leaf(HW, HH, FY - 0.07, FL)
 
-# two raised beds either side of the aisle, soil on top, grow lights hung from the dome
+# two hydroponic A-frames either side of the aisle (nutrient film channels, the way commercial growers stack
+# lettuce): the steel frame is Deepak Singh's "Hydroponic Farming Setup" (Sketchfab, CC BY 4.0; ASSETS.md) at 0.8
+# of its size, the channels ours. Lettuce rides the upper aisle-side channel (slot_1..slot_8), where it stays
+# inside the reach of the frame's foot, so nobody walks into a leaf. Grow lights glow magenta (Veggie's red and blue).
+HYDRO = os.path.join(os.path.dirname(os.path.abspath(__file__)), *[".."] * 4, "assets-cache", "sketchfab", "hydroponic_farming_setup", "scene.gltf")
+AS, AH, AW = 0.8, 2.04 * 0.8, 1.39 * 0.8 / 2  # A-frame scale, height, half its foot
+
+
+def a_frame(x):
+    before = set(bpy.context.scene.objects)
+    bpy.ops.import_scene.gltf(filepath=HYDRO)
+    new = set(bpy.context.scene.objects) - before
+    bpy.context.view_layer.update()
+    frame = next(o for o in new if o.name == "Object_6" or o.name.startswith("Object_6."))
+    mw = frame.matrix_world.copy()
+    frame.parent = None
+    frame.matrix_world = mw
+    for o in new - {frame}:
+        bpy.data.objects.remove(o)
+    frame.data.materials[0] = mat("metal")
+    frame.rotation_euler.z += math.pi / 2  # its length along y, down the aisle
+    frame.scale *= AS
+    bpy.context.view_layer.update()
+    pts = [frame.matrix_world @ Vector(c) for c in frame.bound_box]
+    mid = sum(pts, Vector()) / 8
+    frame.location += Vector((x - mid.x, -0.2 - mid.y, FL + 0.005 - min(p.z for p in pts)))
+    return frame
+
+
 slot = 0
 for s in (-1, 1):
     x = s * 1.3
-    bed = bevel(box(f"bed{s}", (0.8, 3.6, 0.55), (x, -0.2, FL + 0.275), mat("trim")), width=0.03)
-    bed.name = f"bed{s}-col"
-    box(f"soil{s}", (0.7, 3.5, 0.04), (x, -0.2, FL + 0.55), mat("dust"))
-    box(f"growlight{s}", (0.14, 3.2, 0.05), (x, -0.2, 2.25), mat("light"))
+    parts = [a_frame(x)]
+    for h in (0.45, 1.05):  # a channel on each face at two heights, on the frame's arms
+        w = AW * (1 - h / AH) + 0.06
+        for side in (-1, 1):
+            parts.append(smooth(cyl(f"channel{s}{h}{side}", 0.05, 2.5, (x + side * w, -0.2, FL + h), mat("body"), 14, rot=(math.pi / 2, 0, 0))))
+    join(f"rack{s}-convcol", parts)
+    box(f"growlight{s}", (0.14, 3.2, 0.05), (x, -0.2, 2.25), mat("grow"))
     box(f"growlight_housing{s}", (0.2, 3.3, 0.06), (x, -0.2, 2.3), mat("trim"))
     for y in (-1.4, 1.0):
         top = RW + math.sqrt(RD * RD - x * x - y * y)
         bar(f"hanger{s}{y}", (x, y, 2.3), (x, y, top), 0.012, mat("metal"))
+    w = AW * (1 - 1.05 / AH) + 0.06
     for k in range(4):
         slot += 1
-        e = bpy.data.objects.new(f"slot_{slot}", None)  # where a lettuce model goes, on the soil
-        e.location = (x, -1.55 + k * 0.9, FL + 0.57)
+        e = bpy.data.objects.new(f"slot_{slot}", None)  # where a lettuce model goes, on the aisle-side channel
+        e.location = (x - s * w, -1.25 + k * 0.7, FL + 1.05 + 0.04)
         bpy.context.scene.collection.objects.link(e)
 done("building_greenhouse")

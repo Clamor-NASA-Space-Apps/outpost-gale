@@ -14,7 +14,9 @@ const THIN := 4
 const HERO := 8
 const VEHICLES := 16
 const CARRIABLES := 64
-const CELL := 64.0  # metres: still items in one cell share their meshes; the patch centre is a cell's middle
+# metres: still items in one cell share their meshes; the patch centre is a cell's middle. 128 holds the whole base,
+# the wing field and Mont Mercou in one cell, a draw call per material (64 split them three ways: 10 more calls)
+const CELL := 128.0
 
 ## A sound the world makes on its own (a servo starting): the sandbox passes it to audio.play().
 signal sound(what: String, pos: Vector3)
@@ -44,6 +46,9 @@ var _cells: Array[Node3D] = []
 var _touch: Dictionary = {}  # mover -> PackedVector4Array of its contact discs (touch())
 var _touch_dirty := false
 var _wheel := SphereShape3D.new()
+var _cables: MeshInstance3D
+var _static_parts: Array = []  # the moving parts of still items, drawn together (_instance())
+var _mirrors: Array[Dictionary] = []  # {mmi, srcs, at}: identical moving meshes drawn as one MultiMesh (_instance())
 
 
 func build(design: Dictionary) -> void:
@@ -69,6 +74,12 @@ func build(design: Dictionary) -> void:
 		items[it.id] = _item(it, design)
 	_plant(design, sheet)
 	_merge_cells()
+	var bags: Array = []
+	for n: Node3D in items.values():
+		if n.is_in_group("carriable"):
+			bags.append_array(n.find_children("merged", "MeshInstance3D", true, false))
+	_instance(bags + _static_parts, self)
+	_lay_cables(design)
 	rocks = Rocks.new()
 	rocks.name = "Rocks"
 	add_child(rocks)
@@ -87,6 +98,7 @@ func build(design: Dictionary) -> void:
 	# probe came out twice as bright as the shaded ground it rose from (measured in a shadow)
 	for g: GeometryInstance3D in terrain.find_children("*", "GeometryInstance3D", true, false) + rocks.find_children("*", "GeometryInstance3D", true, false) + dust.find_children("*", "GeometryInstance3D", true, false):
 		g.layers = 2
+	dust.layers = 2  # and every wheel stream made later
 	# the patch is within 2 m of flat over 400 m, so its shadow on itself is a few pixels at most, and each
 	# chunk in the shadow range was drawn again per split (the base view was over its 150 draw calls)
 	for g: GeometryInstance3D in terrain.find_children("patch_*", "GeometryInstance3D", false, false):
@@ -97,6 +109,13 @@ func build(design: Dictionary) -> void:
 
 func _process(delta: float) -> void:
 	_time += delta
+	for m: Dictionary in _mirrors:
+		var to_mmi: Transform3D = (m.mmi as Node3D).global_transform.affine_inverse()
+		for i in m.srcs.size():
+			var t: Transform3D = to_mmi * (m.srcs[i] as Node3D).global_transform
+			if t != m.at[i]:
+				m.at[i] = t
+				(m.mmi as MultiMeshInstance3D).multimesh.set_instance_transform(i, t)
 	for n: Node3D in _resting:
 		_resting[n] = n.get_parent() == self
 		if _resting[n] != _drawn.has(n):
@@ -167,14 +186,20 @@ func restyle(design: Dictionary) -> void:
 			Forge.HouseStyle.apply(part, design, false)  # it moves, so its detail must travel with it
 	for cell: Node3D in _cells:
 		Forge.HouseStyle.apply(cell, design, true)
+	if _cables:
+		Forge.HouseStyle.apply(_cables, design, true)
+	for m: Dictionary in _mirrors:
+		var mesh: Mesh = (m.mmi as MultiMeshInstance3D).multimesh.mesh
+		for i in mesh.get_surface_count():
+			mesh.surface_set_material(i, (m.srcs[0] as MeshInstance3D).get_active_material(i))
 	rocks.restyle(design)
 	weather = data.weather.get(design.get("name", ""), data.weather["Outpost Gale"])
 	dust.restyle(design, weather)
 	machines.restyle(design, weather)
 	_lamps(design)
 	# One probe for the life of the world: freeing one leaked its two atlas textures in Compatibility (measured,
-	# "Texture ... leaked" at exit). It draws its six faces once, and again whenever a property changes, so the
-	# ambient set below on every sky switch also makes metal reflect the new sky.
+	# "Texture ... leaked" at exit). The ambient set below does not redraw it (Compatibility ignores it for that):
+	# the sandbox's warm-up after every sky or quality switch does (HouseStyle.warm(), _redraw_probes()).
 	if _probe == null:
 		_probe = ReflectionProbe.new()
 		_probe.name = "Probe"
@@ -195,15 +220,30 @@ func height_at(x: float, z: float) -> float:
 	return terrain.height_at(x, z)
 
 
+## Where anything that moves may go, x and z (data/world.json `bound`), `margin` metres further in: inside it the
+## drawn ground, its collision and height_at() are one surface (the patch); past it there is only the backdrop.
+func bound(margin := 0.0) -> Rect2:
+	var h := float(data.bound.half) - margin
+	return Rect2(-h, -h, 2.0 * h, 2.0 * h)
+
+
+## How far `p` is past bound(margin), metres (0 inside).
+func past(p: Vector3, margin := 0.0) -> float:
+	var r := bound(margin)
+	var q := Vector2(p.x, p.z)
+	return q.distance_to(q.clamp(r.position, r.end))
+
+
 ## {pos: Vector3 on the ground, yaw: degrees}
 func landmark(name: String) -> Dictionary:
 	var l: Array = data.landmarks.get(name, data.landmarks.spawn)
 	return {"pos": Vector3(l[0], height_at(l[0], l[1]), l[1]), "yaw": float(l[2])}
 
 
-## A footprint ("foot_l", "foot_r") or a wheel print ("wheel", `width` in metres) pressed into the dust: terrain.gd draws it.
-func mark(pos: Vector3, yaw_deg: float, kind: String, width := 0.3) -> void:
-	terrain.mark(pos, yaw_deg, kind, width)
+## A footprint ("foot_l", "foot_r") or a wheel print ("wheel", `width` in metres) pressed into the dust: terrain.gd
+## draws it, `strength` 0 to 1 its depth.
+func mark(pos: Vector3, yaw_deg: float, kind: String, width := 0.3, strength := 1.0) -> void:
+	terrain.mark(pos, yaw_deg, kind, width, strength)
 
 
 ## Dust thrown by a boot or a wheel at contact: `vel` the foot's (or wheel rim's) world velocity, `strength`
@@ -354,6 +394,13 @@ func _item(it: Dictionary, design: Dictionary) -> Node3D:
 	root.position = Vector3(it.pos[0], 0, it.pos[1])
 	root.rotation.y = -deg_to_rad(float(it.get("yaw", 0)))
 	var parts := _parts(model)
+	var moving: Array = []
+	for p: Node3D in parts:
+		moving.append_array(([p] if p is MeshInstance3D else []) + p.find_children("*", "MeshInstance3D", true, false))
+	if kind == "static":
+		_static_parts.append_array(moving)  # every array's panels together, after all items (build())
+	else:
+		_instance(moving, model)  # a mover's own wheels ride with it
 	if kind == "static":
 		_solidify(model, parts)
 	else:
@@ -422,6 +469,44 @@ func _parts(model: Node3D) -> Array[Node3D]:
 
 func _in_part(n: Node, parts: Array[Node3D]) -> bool:
 	return parts.any(func(p: Node3D) -> bool: return p == n or p.is_ancestor_of(n))
+
+
+## Identical meshes that move (a rover's wheels, an array's panels, the cargo bags) drawn as one MultiMesh under
+## `holder`: a draw call per material for all of them, not one each (the base view was 233 calls against its 150).
+## Each keeps its node, its collision and its motion; its own mesh is hidden, and _process() copies where it is to
+## its instance.
+func _instance(meshes: Array, holder: Node3D) -> void:
+	var same: Dictionary = {}  # geometry and materials -> the meshes that have them
+	for mi: MeshInstance3D in meshes:
+		if mi.mesh == null or mi.skin != null:
+			continue
+		var key := []
+		for i in mi.mesh.get_surface_count():
+			key.append_array([mi.get_active_material(i), mi.mesh.surface_get_arrays(i)])
+		same.get_or_add(hash(key), []).append(mi)
+	for srcs: Array in same.values():
+		if srcs.size() < 2:
+			continue
+		var first: MeshInstance3D = srcs[0]
+		var mesh := first.mesh.duplicate() as Mesh  # its own copy: the restyle sets the drawn materials on it
+		for i in mesh.get_surface_count():
+			mesh.surface_set_material(i, first.get_active_material(i))
+		var mm := MultiMesh.new()
+		mm.transform_format = MultiMesh.TRANSFORM_3D
+		mm.mesh = mesh
+		mm.instance_count = srcs.size()
+		var mmi := MultiMeshInstance3D.new()
+		mmi.name = "all_" + first.name  # not "wheel_*": the rover and PIP find their wheels by name
+		mmi.multimesh = mm
+		mmi.cast_shadow = first.cast_shadow
+		mmi.layers = first.layers
+		holder.add_child(mmi)
+		var at: Array[Transform3D] = []
+		for i in srcs.size():
+			at.append(mmi.global_transform.affine_inverse() * (srcs[i] as Node3D).global_transform)
+			mm.set_instance_transform(i, at[i])
+			(srcs[i] as MeshInstance3D).visible = false
+		_mirrors.append({"mmi": mmi, "srcs": srcs, "at": at})
 
 
 ## Collision for a static item, from its own triangles. A model that arrives with bodies (-col names) chose
@@ -522,14 +607,25 @@ func _merge(meshes: Array, parent: Node3D) -> MeshInstance3D:
 				tools[m] = SurfaceTool.new()
 			# panes of a role some sky state lights (`lit_roles`) are numbered now, whatever the sky at load
 			Forge.HouseStyle.merge(tools[m], mi.mesh, s, to_parent * mi.global_transform, _pane_mark if m and m.resource_name in data.lit_roles else m)
-	var mesh := ArrayMesh.new()
-	for m: Material in tools:
-		tools[m].commit(mesh)
-		mesh.surface_set_material(mesh.get_surface_count() - 1, m)
-	var out := MeshInstance3D.new()
-	out.name = "merged"
-	out.mesh = mesh
-	parent.add_child(out)
+	# surfaces kept swept (DESIGN.md weathering.clean: floors, HAB 1's fit-out) are indoors or underfoot, so they go
+	# in a second mesh that casts no shadow: each shadowed surface is drawn again per shadow split (skills/frame-budget)
+	var out: MeshInstance3D
+	for swept in [false, true]:
+		var mesh := ArrayMesh.new()
+		for m: Material in tools:
+			if (m != null and m.get_meta("clean", false)) == swept:
+				tools[m].commit(mesh)
+				mesh.surface_set_material(mesh.get_surface_count() - 1, m)
+		if mesh.get_surface_count() == 0:
+			continue
+		var mi := MeshInstance3D.new()
+		mi.name = "merged_swept" if swept else "merged"
+		mi.mesh = mesh
+		if swept:
+			mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			mi.visibility_range_end = float(data.swept_range_m)  # rooms and floors are hidden from afar anyway
+		parent.add_child(mi)
+		out = mi if out == null else out
 	return out
 
 
@@ -591,8 +687,48 @@ func _lamps(design: Dictionary) -> void:
 			n.add_child(lamp)
 
 
+## Power cables on the ground (data/world.json `cables`): a box-section strip draped on height_at() every `step` m,
+## all lines one mesh in the role's material. No body: the hero steps over a cable a few centimetres high.
+func _lay_cables(design: Dictionary) -> void:
+	var c: Dictionary = data.get("cables", {})
+	if c.get("lines", []).is_empty():
+		return
+	var w := float(c.width) / 2.0
+	var h := float(c.height)
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for line: Array in c.lines:
+		var pts: Array[Vector3] = []
+		for i in line.size() - 1:
+			var a := Vector2(line[i][0], line[i][1])
+			var b := Vector2(line[i + 1][0], line[i + 1][1])
+			var n := maxi(1, ceili(a.distance_to(b) / float(c.step)))
+			for k in n + int(i == line.size() - 2):
+				var p := a.lerp(b, float(k) / n)
+				pts.append(Vector3(p.x, height_at(p.x, p.y) - h * 0.3, p.y))  # bedded a little into the dust
+		for i in pts.size() - 1:
+			var side := (pts[i + 1] - pts[i]).cross(Vector3.UP).normalized() * w
+			var up := Vector3.UP * h
+			# left wall, top, right wall: three quads per step
+			for q: Array in [[-side, -side + up], [-side + up, side + up], [side + up, side]]:
+				var a0: Vector3 = pts[i] + q[0]
+				var a1: Vector3 = pts[i] + q[1]
+				var b0: Vector3 = pts[i + 1] + q[0]
+				var b1: Vector3 = pts[i + 1] + q[1]
+				for v: Vector3 in [a0, b0, b1, a0, b1, a1]:
+					st.add_vertex(v)
+	st.generate_normals()
+	var mesh := st.commit()
+	mesh.surface_set_material(0, Forge.HouseStyle.role(design, c.role, true))
+	_cables = MeshInstance3D.new()
+	_cables.name = "Cables"
+	_cables.mesh = mesh
+	_cables.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF  # a few pixels wide: not worth a shadow pass
+	add_child(_cables)
+
+
 ## Lettuce in the greenhouse's grow-bed slots (data/world.json `plants`), sized so a full head is the sheet's
-## lettuce.width. They join the greenhouse, so the merge draws them with it.
+## lettuce.width, and any other prefab named there in its item's slot. They join the item, so the merge draws them with it.
 func _plant(design: Dictionary, sheet: Dictionary) -> void:
 	var width := 0.3
 	for r: Dictionary in sheet.rows:
@@ -606,8 +742,13 @@ func _plant(design: Dictionary, sheet: Dictionary) -> void:
 		slots.sort_custom(func(a: Node, b: Node) -> bool: return str(a.name).naturalnocasecmp_to(str(b.name)) < 0)
 		var scale_by := 0.0
 		for i in mini(slots.size(), stages.size()):
-			var plant := _model("lettuce_%d" % int(stages[i]), design)
+			# a prefab id is a model built at its real size (HAB 1's Veggie unit); a number is a lettuce stage
+			var plant := _model(stages[i] if stages[i] is String else "lettuce_%d" % int(stages[i]), design)
 			slots[i].add_child(plant)
+			if stages[i] is String:
+				# styled again from the slot's parent, so a slot in a room kept swept (HAB 1's `interior`) keeps it swept
+				Forge.HouseStyle.apply(slots[i].get_parent(), design, true)
+				continue
 			if scale_by == 0.0:
 				# measured in place, so a scale the slot carries from its model counts too
 				var full := drawn(_model_in(slots[i], "lettuce_4", design)).size

@@ -1,0 +1,1014 @@
+    Reduced Pressure Cabin Testing of the Orion Atmosphere
+                  Revitalization Technology
+
+                                               Amy B. Button1
+              Engineering and Science Contract Group/Jacobs Technology, Houston, Texas, 77058
+
+                                                    and
+
+                                         Jeffrey J. Sweterlitsch2
+                             NASA Johnson Space Center, Houston, Texas, 77058
+
+
+           An amine-based carbon dioxide (CO2) and water vapor sorbent in pressure-swing
+        regenerable beds has been developed by United Technologies Corp. Aerospace Systems
+        (UTAS, formerly Hamilton Sundstrand) and baselined for the Atmosphere Revitalization
+        System for moderate duration missions of the Orion Multipurpose Crew Vehicle (MPCV).
+        In previous years at this conference, reports were presented on extensive Johnson Space
+        Center testing of this technology in a sea-level pressure environment with simulated and
+        actual human metabolic loads in both open and closed-loop configurations. In 2011, the
+        technology was tested in an open cabin-loop configuration at ambient and two sub-ambient
+        pressures to compare the performance of the system to the results of previous tests at
+        ambient pressure. The testing used a human metabolic simulator with a different type of
+        water vapor generation than previously used, which added some unique challenges in the
+        data analysis. This paper summarizes the results of: baseline and some matrix testing at all
+        three cabin pressures, increased vacuum regeneration line pressure testing with a high
+        metabolic load, a set of tests studying CO2 and water vapor co-adsorption effects relative to
+        model-predicted performance, and validation tests of flight project computer model
+        predictions with specific operating conditions.
+
+
+                                              Nomenclature
+acfm   =     actual cubic feet per minute
+ARS    =     Atmosphere Revitalization System
+Btu/hr =     British thermal units per hour
+°C     =     degrees Celsius
+CAMRAS =     CO2 And Moisture Removal Amine Swing-Bed
+CO2    =     carbon dioxide
+ELS    =     Exploration Life Support
+°F     =     degrees Fahrenheit
+g/min  =     grams per minute
+GAC    =     Gas Analyzer Console
+H2O    =     water
+HMS    =     Human Metabolic Simulator
+HSIR   =     Human-Systems Integration Requirements
+JSC    =     Johnson Space Center
+lbm/hr =     pounds mass per hour
+min    =     minutes
+ml/min =     milliliters per minute
+1
+  Project Engineer, Air Revitalization Technology Development, 2224 Bay Area Boulevard, Mail Code JE77, AIAA
+Lifetime Member.
+2
+  Technical Lead, Air Revitalization Technology Development, 2101 Nasa Parkway, Mail Code EC3, not an AIAA
+Member.
+                                                         1
+                                 American Institute of Aeronautics and Astronautics
+mmHg       =   millimeters of mercury
+MPCV       =   Multipurpose Crew Vehicle
+NASA       =   National Aeronautics and Space Administration
+ppCO2      =   partial pressure of carbon dioxide
+psia       =   pounds per square inch, absolute
+scfm       =   standard cubic feet per minute
+slpm       =   standard liters per minue
+UTAS       =   United Technologies Corp. Aerospace Systems
+
+
+                                                 I. Introduction
+
+   H      UMAN beings produce carbon dioxide (CO2) when they breathe, but too high a concentration in the
+          atmosphere around them can quickly become toxic. For this reason, CO2 control is critical in the closed
+environment of a spacecraft. Humans also exhale water vapor and exchange water vapor with the atmosphere
+through their skin. Although excessive water (H2O) vapor is not dangerous to humans, it can be uncomfortable, and
+it can be hazardous to the electronic equipment in a spacecraft cabin, particularly if it condenses in undesired
+locations.
+    In the past, spacecraft have typically used separate systems to control CO2 and humidity. CO2 control methods
+have included sorption by lithium hydroxide or zeolite compounds, and water has typically been collected by
+condensing heat exchangers. However, those CO2 sorption systems have tended to be large and heavy, whether
+regenerable or not, and condensate water collection systems require a lower temperature thermal control system with
+a large heat capacity.
+    As an alternative to traditional CO2 sorption systems, United Technologies Corp. Aerospace Systems (UTAS)
+has spent many years developing amine-based vacuum-regenerated adsorption systems. The first major
+implementation of this type of system, known as the Regenerative CO2 Removal System, was tested on the Space
+Shuttle in the early 1990s. This design and the associated sorbent amine have since gone through a number of
+improvement cycles. The current iteration of the system uses a pair of interleaved-layer beds filled with SA9T,
+which is a sorbent system comprised of plastic beads coated with an amine.
+    SA9T, in addition to being a good CO2 sorbent, also has a great affinity for water vapor. When water vapor is
+removed from the cabin atmosphere with a regenerable sorbent instead of a traditional condensing heat exchanger,
+the spacecraft cooling system can be greatly simplified by eliminating a fairly significant heat load as well as the
+need for a low-temperature cooling loop. The interleaving of beds in this system minimizes total cabin heat loads
+from the adsorption and desorption processes by thermally linking them. UTAS studies have shown SA9T to be
+very stable over long periods. For these and other reasons, this technology was baselined as the primary CO2 and
+water vapor removal device for the new Orion Multipurpose Crew Vehicle (MPCV) spacecraft.
+    While UTAS’s technology was already relatively well developed and had undergone subscale and open-loop
+testing, NASA’s Exploration Life Support (ELS) and Orion Project Environmental Control and Life Support System
+development groups wanted more details on the performance of a full-scale device in a realistic spacecraft
+environment. The ELS Air Revitalization Systems team at Johnson Space Center (JSC) refitted an existing test
+chamber to test UTAS’s technology, which the Air Revitalization team calls the CO2 And Moisture Removal Amine
+Swing-bed, or CAMRAS.
+    The JSC team tested a single CAMRAS unit in two test phases in late 2006. The preliminary results of those
+tests were presented at this conference in 20071. A second CAMRAS unit of slightly-modified design was added to
+the system for the third phase of testing in mid-2007, and those results were presented at this conference in 20082. A
+third, significantly redesigned, CAMRAS unit with a new, more flight-like, valve style was tested in the ambient-
+pressure portion of a fourth phase of tests during the spring of 2009, and those results were presented here in 20103.
+A second portion of the fourth phase, involving reduced-pressure testing of many of the same fourth-phase cases,
+was conducted in summer 2011, and those results are presented in this paper. (These tests were run with the second
+test article because the third had been flown to the International Space Station for on-orbit testing.) This test series
+is colloquially known as CAMRAS Phase 4B.
+
+                                           II. Test Rig Description
+   In the anticipated MPCV application, a pair of CAMRAS units would be used together for most metabolic load
+levels. However, only one unit was available for this test, so the volume of the test chamber usually needed to
+represent only half the MPCV capsule free space. The single CAMRAS unit was therefore placed in a controllable
+                                                         2
+                                 American Institute of Aeronautics and Astronautics
+and well-mixed atmosphere of the appropriate volume: a test chamber once used for human testing during the
+Gemini and Apollo eras, now known as the Cabin portion of the 11-Foot Chamber. Certain test cases did call for
+examination of the effects of a single unit on the full Orion volume, so the Cabin served as the half volume, and
+when the full volume was needed, a pipe plug at the rear of the chamber was removed to expose a small tunnel that
+connects to another test chamber (which was sealed off from the tunnel for this test), and the normal in-chamber
+cooled air circulation was forced into the tunnel with a blower and a long hose. A pair of parallel blowers provided
+process loop airflow through the CAMRAS sorbent beds, and a vacuum source simulated a link to space vacuum for
+regeneration of the beds. The effects of humans on the cabin atmosphere were simulated with a second generation
+Human Metabolic Simulator (HMS), and the whole test rig, shown in Fig. 1 without the HMS, was outfitted with
+various sensors to monitor test conditions and experimental results.
+
+
+
+
+ Figure 1. CAMRAS Phase 4B test rig photo.
+    Figure 2 shows a simple diagram of the test rig described in this section. Air flowed from the process loop inlet
+past a filter, flow meter, and several sensors before passing into the CAMRAS air inlet port on the top of the unit.
+Air flowed out of the CAMRAS unit through another line, where several more sensors were located. Heat added by
+the blowers was removed by an in-line heat exchanger, and a final suite of sensors analyzed the process air as it
+returned to the chamber atmosphere. In addition to normal major atmospheric constituent monitoring, the test rig
+allowed offline Fourier Transform Infrared Spectrometer analysis of process gas grab samples from the inlet or
+outlet ends of the process loop. A system of large vacuum pumps was used to depressurize the chamber when
+required, after which the chamber was isolated from the vacuum source to best reflect only the effects of the HMS
+and the CAMRAS on the chamber atmosphere. During the test cases, all pressurization of the chamber was
+performed using only N2 and O2 supplies, to simulate the Orion operations and to closely control the oxygen
+concentration of the chamber atmosphere, which was limited to a maximum of 34% for safety reasons. A manually
+controlled bleed gas system was added just before test start to slowly bleed a mix of O2 and N2 into the chamber to
+counter the CAMRAS ullage and leakage pressure loss effects. However, because it was a purely manual system,
+there is no automatic data log record of the settings or actual flow rates, and the system inconsistently compensated
+for pressure and O2 concentration changes during test cases.
+
+
+
+                                                        3
+                                American Institute of Aeronautics and Astronautics
+     Figure 2. CAMRAS Phase 4B simplified test rig schematic.
+
+A. Test Article
+     The CAMRAS technology uses a
+pair of interleaved multilayer beds
+filled with sorbent beads. In the test
+article used for this test, CAMRAS 2, a
+spool-type valve directs airflow from
+the cabin, through the adsorbing bed,
+and back to the cabin while isolating
+the desorbing bed to a direct line to
+vacuum.       The valve periodically
+switches position, swapping the bed
+functions and equalizing pressure
+between the beds as it travels, which
+helps minimize ullage air loss. Each
+adsorption or desorption period is           Figure 3. CAMRAS internal flow (dual-end desorb).
+called a half-cycle. Figure 3 shows a
+simple schematic of the CAMRAS operation. The left side of the figure shows the spool valve shuttle positioned for
+bed A adsorption and bed B desorption; the right side shows the shuttle in the opposite position and the bed
+functions swapped. This original design, called “dual-end desorb”, pulls a vacuum on both ends of the desorbing
+bed. The test article used in this test was modified to allow regeneration by a source of dry pressurized gas for
+launch pad applications, and because of the associated flow path modifications, it can only allow vacuum desorption
+from one end of each bed. That purge gas desorption functionality was not tested during CAMRAS Phase 4B.
+     Highly porous plastic beads coated with an amine fill aluminum foam blocks in each CAMRAS and are retained
+in the foam with screens. The sorbent system, known as SA9T, adsorbs both carbon dioxide and water vapor. The
+adsorption reaction is exothermic and the vacuum-desorption reaction is endothermic; the use of aluminum foam
+and interleaving of bed layers for heat transfer helps conserve the overall system thermal energy so no direct heating
+or cooling of the device is required.
+
+
+                                                        4
+                                American Institute of Aeronautics and Astronautics
+    In the projected Orion application of this technology, three separate CAMRAS assemblies will be installed in the
+vehicle. Two will operate in parallel for a crew of four to six people, and the third will be reserved as a spare. The
+beds are sized such that, in an emergency, a single CAMRAS could maintain the cabin CO2 at safe levels for a crew
+of six indefinitely, provided a sufficient vacuum source.
+
+B. Metabolic Load Simulation
+    The second-generation Human Metabolic Simulator simulated human production of CO2 and H2O vapor. Water
+vapor generation is performed by a combination of evaporation and ultrasonic nebulization from a temperature-
+controlled bath, where the water is injected from a mass flow-controlled source and the water level in the tank is
+ideally balanced between vaporization and injection, as monitored by a sensitive weight scale. Gaseous CO2
+injection is accomplished via a traditional mass flow controller connected to a gas cylinder. The design of this HMS
+is presented in another paper at this conference4.
+  Table 1. HSIR metabolic CO2 and H2O generation rates.                Table 1 lists the metabolic carbon dioxide and
+                                                                   water generation rates for half of a representative
+                                                                   four-person all-male crew (to correlate to the half-
+        Crew Size &             2        2       1½ Rest,
+                                                                   volume chamber and halved CAMRAS
+        Activity             Sleep Normal ½ Exercise
+                                                                   complement) in configurations that might be
+        Metabolic CO2                            variable:
+                              0.91     1.44                        assigned to Orion. These rates are derived from
+        Generation Rate                          peak 3.57
+                              0.49     0.77                        the Constellation Program’s Human-Systems
+        (g/min, slpm)                            peak 1.91
+                                                                   Integration Requirements (HSIR) document. For
+        Metabolic H2O                            variable:         exercise metabolic loads, the metabolic loading
+                              1.26     2.35
+        Generation Rate                         peak 10.69         provided by the HMS is increased from two at
+                             0.167 0.311
+        (ml/min, lbm/hr)                         peak 1.41         nominal level to 1.5 nominal plus 0.5 person
+                                                                   exercising for the time period that it would take
+for the entire simulated crew to complete their exercises. Exercise for each crew member is simulated at 75% of
+maximum volumetric oxygen consumption and 5% exercise efficiency with elevated CO2 injection and increasing
+H2O injection for 30 minutes, with a 15-minute break between active exercise periods, where the CO2 injection
+returns to normal and the water injection rate decreases. Water generation rates for each simulated exerciser remain
+elevated for 60 minutes post-exercise, where people would continue sweating after ceasing the actual exercise.
+    The water vapor injection rates required for most of the test cases in this series unfortunately fell in an HMS
+operational zone between pure passive evaporation and the lowest nebulizer power setting. Consequently,
+depending on the needed vapor generation rate, a blower above the reservoir was automatically cycled on and off for
+certain percentages of a 20-minute duty period. The blower moved passively evaporated water vapor away from the
+water surface and thus achieved the right average water evaporation rate for the full duty period. The "on" portion
+of the 20-minute blower duty cycle was also tweaked during test cases as test operators observed upward or
+downward trends on the weight scale or refined the actual flow rate. Any metabolic generation rate high enough to
+require the activation of the nebulizers used the blower full time. The blower cycling caused regular swings in the
+chamber dew point, which were frequently out of synchronization with the normal slight CAMRAS-induced
+chamber dew point fluctuations and large CAMRAS outlet dew point fluctuations. To mitigate this effect in
+determination of test point completion, partway through the test series, the required steady state evaluation period
+for all test cases was adjusted from a minimum of six CAMRAS half-cycles to a minimum of a whole number of
+both CAMRAS half-cycles (at least six) and HMS blower duty cycles. In posttest data analysis, the steady-state
+chamber H2O vapor levels were calculated as a mathematical moving average of the process loop inlet ppH2O
+reading over the previous HMS blower duty period.
+    During exercise periods, the weight scale under the nebulizer tank typically reported that the net tank weight was
+slowly trending downward during the entirety of the exercise period, suggesting that the vaporization rate was too
+high relative to the injection rate. However, due to the highly dynamic nature of exercise metabolic load profiles, it
+would have further complicated the posttest data analysis if the test operators tried to adjust the water flow rates or
+nebulizer settings in the middle of the exercise profile, not to mention that it was impractical with the settings
+changing every 7.5 minutes. As such, exercise test case results must include a caveat that extra water vapor was
+most likely injected into the chamber atmosphere during the dynamic exercise period, which would have biased the
+chamber dew point higher than might be predicted. For reference, the target amount of water injected during the
+active portion of an exercise profile is about 1370 ml, so according to the weight scale differential estimates listed in
+the various results tables below, the Phase 4B test case injections were up to about 30% high. Then again, human
+beings are highly variable, so most simulated exercise test case results are only an approximation of any given real
+crew's metabolic output.
+                                                         5
+                                 American Institute of Aeronautics and Astronautics
+                                               III. Test Results
+
+A. Baseline Performance Tests
+    A baseline set of test cases that have been run in all prior test phases was repeated in CAMRAS Phase 4B. Each
+standard metabolic rate was tested with the same process flow rate and CAMRAS valve cycle period, and the
+optimal vacuum available from facility pumps. For Phase 4B, these cases were extended to the additional two
+principal atmospheric pressures under consideration for Orion (Lunar transit) and Altair (Lunar lander) missions,
+10.2 psia and 8.3 psia. Those pressures were selected based on those development programs, which have since been
+descoped, but the pressures are still likely to be representative of environments for future vehicle development
+programs that NASA has not yet explicitly defined. The blower flow through the CAMRAS was set to the rate
+recommended by UTAS (26 acfm), as was the spool valve cycle time (6.5 minutes). The exercise scenario assumes
+the third CAMRAS unit is completely reserved for emergency operations and that the four crew members exercise
+in sequence with 15-minute gaps between them. The details of the baseline test cases are described in Table 2.
+ Table 2. Baseline performance test conditions.
+
+    Simulated Crew Size                                4                       4                       4
+    Simulated Number of Operational
+                                                       2                       2                       2
+    CAMRAS Units
+    Chamber Volume                                half-Orion              half-Orion              half-Orion
+    Chamber Pressure                          14.7, 10.2, 8.3 psia    14.7, 10.2, 8.3 psia    14.7, 10.2, 8.3 psia
+    Chamber Temperature                              70°F                    70°F                    70°F
+    Initial Chamber CO2 Concentration                 N/A                     N/A               nominal steady
+    Initial Chamber Dew Point                         N/A                     N/A               nominal steady
+    HMS Crew Size                                   2 HSIR                  2 HSIR                  2 HSIR
+                                                                                                 1½ nominal,
+    Crew Activity                                  nominal                   sleep
+                                                                                                  ½ exercise
+                                                                                              nominal 0.77 slpm
+    Total Metabolic CO2 Injection Rate            0.77 slpm                0.49 slpm
+                                                                                                peak 1.91 slpm
+                                                                                             nominal 2.35 ml/min
+    Total Metabolic H2O Injection Rate           2.35 ml/min             1.26 ml/min
+                                                                                              peak 10.69 ml/min
+    CAMRAS Valve Cycle Period                      6.5 min                  6.5 min                 6.5 min
+    CAMRAS Inlet Flow Rate                         26 acfm                  26 acfm                 26 acfm
+    Vacuum Quality                                 nominal                  nominal                 nominal
+
+    A nominal metabolic load is a good comparison point for many test cases, and by far, this load represents the
+majority of the CAMRAS test data collected to date. Sleep metabolic loads present a low-end challenge for the
+CAMRAS system. At baseline operational settings, a pair of CAMRAS units have been found to overdry the cabin,
+which could cause discomfort for sleeping crew members. Baseline cases with a sleep metabolic load are a good
+method of comparing the performance of different CAMRAS units and different test rigs, but they do not
+necessarily represent the best way to operate a CAMRAS-based environmental control system while the crew is
+sleeping. Exercise cases are the most difficult to run correctly, and for various reasons the two reduced-pressure
+baseline cases ended up being cut short, which prevents their endpoint comparison to nominal baseline cases and
+fourth exerciser-peak points to other exercise cases; the cases could not be rerun due to schedule constraints and late
+discovery of the problems.
+    The Phase 4B results presented in Table 3 are more informative when compared to results of previous test series,
+but space limitation in this conference paper format precludes inclusion of those relevant earlier results. The reader
+is invited to review the full report on which this paper is based5 for a more in-depth analysis of these and all other
+test results presented in this paper.
+
+
+
+
+                                                         6
+                                 American Institute of Aeronautics and Astronautics
+ Table 3. Baseline performance test results.
+
+ Metabolic Load Type                      Nominal                     Sleep                       Exercise
+ Target Chamber Pressure
+                                   8.3     10.2     14.7      8.3      10.2     14.7      8.3      10.2      14.7
+ (psia)
+ Average Steady State                                                                    438        542
+                                  436       544      755      440      542      758                           757
+ Chamber Pressure (mmHg)                                                                begin      begin
+ Average Steady State                                                                     not        not
+                                  71.5     72.4     72.1      72.1     71.7     71.6                         71.3
+ Chamber Temperature (°F)                                                               steady     steady
+ Average Steady State
+                                                                                          not        not
+ CAMRAS Inlet Flow Rate           27.7     27.5     27.5      27.5     27.5     27.4                         27.4
+                                                                                        steady     steady
+ (acfm)
+ Final Steady State CO2
+                                 1.37 /    1.34 /   1.28 /   0.83 /   0.81 /   0.77 /     not        not     1.33 /
+ Partial Pressure (mmHg)/
+                                  0.31      0.25     0.17     0.19     0.15     0.10    steady     steady     0.18
+ Concentration (%)
+ Final Steady State Dew
+                                 28.8 /    28.1 /   29.7 /   15.9 /   19.9 /   16.5 /     not        not     30.0 /
+ Point (°F)/Relative
+                                  20.2      18.8     20.4     10.6     12.9     11.1    steady     steady     21.3
+ Humidity (%)
+ Final Steady State Cycling                                                               not        not
+                                  0.20     0.19     0.20      0.14     0.15     0.14                         0.21
+ Vacuum Pressure (mmHg)                                                                 steady     steady
+ Exercise Start CO2 Partial
+                                                                                         1.36      1.27      1.30
+ Pressure (mmHg)
+ Exercise First Peak CO2
+                                                                                         3.32      3.38      3.14
+ Partial Pressure (mmHg)
+                                                                                                    4.13
+ Exercise Highest Peak CO2
+                                                                                         4.27      (high     3.87
+ Partial Pressure (mmHg)
+                                                                                                   of 3)
+ Exercise Start Dew Point
+                                                                                         28.5      30.9      29.4
+ (°F)
+ Exercise First Peak Dew
+                                                                                         61.0 /    61.9 /    59.7 /
+ Point (°F)/Relative
+                                                                                          71.6      70.9      66.8
+ Humidity (%)
+                                                                                                   68.2 /
+ Exercise Highest Peak Dew
+                                                                                         67.9 /     84.1     64.8 /
+ Point (°F)/Relative
+                                                                                          86.3     (high      79.5
+ Humidity (%)
+                                                                                                   of 3)
+ Estimated Exercise Period
+                                                                                                  220 (3
+ H2O Discrepancy (scale                                                                   240                 130
+                                                                                                  peaks)
+ drop) (ml)
+
+These results suggest that CO2 concentration increases as chamber pressure decreases, given essentially the same
+temperature and process flow rate. The moisture readings seem unrelated to chamber pressure, and exhibit minimal
+differences that might be attributable to sensor accuracy or minor variations in the water injection rate (the flow
+controller is discussed in section IV, subsection A, of this paper). As previously noted, the two reduced-pressure
+exercise cases were not run to a final nominal metabolic load steady state condition. This prevents the comparison
+of these test cases to nominal baseline cases in this and previous test series. The 10.2 psia case only ran through
+three of the four exercise peaks, so that case cannot be fully compared to any of the other exercise cases, as the
+highest peaks often occur during the fourth exercise period.
+
+B. Degraded Vacuum Performance Tests
+    Ideally, the vacuum line pressure at the CAMRAS should be as low as possible to maximize CO2 and H2O
+desorption off of each bed within the short cycle period. However, the CAMRAS units may not be granted an
+optimum installation within the vehicle, where the optimum would include a large, short, straight line to space. The
+importance of the vacuum pressure on the CAMRAS operating performance must be quantified in order to lobby for
+
+                                                        7
+                                American Institute of Aeronautics and Astronautics
+CAMRAS vacuum-access proximity as the vehicle is designed, and to understand the performance impacts of higher
+vacuum line pressure. Past testing has shown that the performance of the CAMRAS unit is highly dependent on
+vacuum line pressure and conductance. In Phase 4A it was demonstrated that the base pressure (no load) of the
+vacuum line at the CAMRAS exhaust should not be much above 1 mmHg to enable the CAMRAS to remove CO2
+and water vapor fast enough to keep the crew safe in contingency situations such as a single operational CAMRAS
+for a crew of six, or to marginally keep up with an exercise metabolic load with a crew of four.
+    It has been hypothesized that there is a point at which flow effects internal to the CAMRAS overwhelm the
+effects of excellent vacuum during desorption. Further experimental insight was desired, but lower vacuum pressure
+and/or improved vacuum pumping speed were not practical improvements, as the existing vacuum pump system is
+already very large. Instead, tests were run with the high metabolic load of exercise periods. Four-person loads in
+both nominal and exercise levels were tested at the same conditions as the baseline cases, except with a 1 mmHg
+initial base vacuum pressure (most previous vacuum sensitivity tests were run with a six-person load). Two
+additional exercise cases were run at 8.3 psia and different base vacuum pressures between the test rig's minimum
+and 1 mmHg. A 14.7 psia exercise case was also run at an intermediate vacuum pressure for direct comparison with
+Phase 4A data, but it did not have time to run to steady state. Table 4 describes the specific test case conditions;
+some of the variants were not achieved within the available facility time.
+ Table 4. Degraded vacuum performance test conditions.
+
+               Simulated Crew Size                             4                       4
+               Simulated Number of Operational
+                                                               2                       2
+               CAMRAS Units
+               Chamber Volume                             half-Orion                half-Orion
+               Chamber Pressure                       14.7, 10.2, 8.3 psia     14.7, 10.2, 8.3 psia
+               Chamber Temperature                           70°F                      70°F
+               Initial Chamber CO2 Concentration              N/A            baseline nominal steady
+               Initial Chamber Dew Point                      N/A            baseline nominal steady
+               HMS Crew Size                                2 HSIR                    2 HSIR
+               Crew Activity                                nominal          1½ nominal, ½ exercise
+               Total Metabolic CO2 Injection                                    nominal 0.77 slpm
+                                                          0.77 slpm
+               Rate                                                              peak 1.91 slpm
+               Total Metabolic H2O Injection                                  nominal 2.35 ml/min
+                                                         2.35 ml/min
+               Rate                                                            peak 10.69 ml/min
+               CAMRAS Valve Cycle Period                   6.5 min                   6.5 min
+               Air Flow Rate                               26 acfm                   26 acfm
+               Base Vacuum Pressure (Absolute)           1.00 mmHg            1.00, 0.75, 0.5 mmHg
+
+    Table 5 summarizes the results of all of the Phase 4B degraded vacuum test cases. Once again, in the nominal
+load cases, increasing CO2 levels correlated well to decreasing chamber pressure, and H2O levels seem to be
+consistent across the range of pressures. Both constituents ran at slightly higher levels in all cases due to the
+degraded vacuum pressure used for regeneration of the sorbent. The 14.7 psia, 1.00 mmHg base vacuum exercise
+case was the first to use the extended steady state period, albeit not completely successfully. While comparisons
+between the non-1.00 mmHg base vacuum exercise cases cases are limited, the CO2 levels are higher in the 8.3 psia
+case with higher vacuum pressure than the one with lower pressure, and the steady state CO2 level in the
+1.00 mmHg base vacuum pressure exercise case is higher yet, though its peak exercise-period ppCO2 is lower, for
+unclear reasons. The baseline exercise case in the previous section, with the best vacuum pressure, cannot be
+compared for steady state conditions, but its CO2 peaks are lower. Likewise, the steady state dew point seems to get
+slightly higher with increasing vacuum pressure, but the peaks during the exercise period are not as clear a trend.
+Comparison of the 14.7 psia exercise cases at 0.5 mmHg base vacuum, 1.00 mmHg base vacuum, and baseline
+exhibits similar patterns that might be a slight trend, but are not entirely clear.
+
+
+
+
+                                                        8
+                                American Institute of Aeronautics and Astronautics
+ Table 5. Degraded vacuum performance test results.
+
+ Metabolic Load Type                       Nominal                     Exercise                     Exercise
+ Target Vacuum Base
+                                            1.00                        1.00               0.75      0.50      0.50
+ Pressure (mmHg)
+ Target Chamber Pressure
+                                   8.3      10.2     14.7      8.3      10.2      14.7      8.3       8.3      14.7
+ (psia)
+                                                                                                                 767
+ Average Steady State
+                                   438       528      754      442       557       761      430       434       dur.
+ Chamber Pressure (mmHg)
+                                                                                                                exer.
+ Average Steady State                                                                                            not
+                                  72.2      72.2     72.7      72.5     73.7      72.4     72.0      72.1
+ Chamber Temperature (°F)                                                                                      steady
+ Average Steady State
+                                                                                                                 not
+ CAMRAS Inlet Flow Rate           27.7      27.5     27.5      27.6     27.5      27.5     27.4      27.5
+                                                                                                               steady
+ (acfm)
+ Final Steady State CO2
+                                  1.59 /    1.58 /   1.50 /   1.60 /    1.57 /    1.49 /   1.53 /    1.46 /      not
+ Partial Pressure (mmHg)/
+                                   0.36      0.30     0.20     0.36      0.28      0.20     0.36      0.34     steady
+ Concentration (%)
+                                                                                  29.9 /
+ Final Steady State Dew
+                                  30.8 /    30.8 /   31.8 /   31.6 /    31.2 /     20.5    30.8 /    29.3 /      not
+ Point (°F)/Relative
+                                   21.2      21.4     21.9     21.9      20.8     rising    20.0      21.7     steady
+ Humidity (%)
+                                                                                   slow
+ Final Steady State Cycling                                                                                    0.55
+                                  1.04      1.04     1.04      1.04     1.03      1.03     0.78      0.55
+ Vacuum Pressure (mmHg)                                                                                        begin
+ Exercise Start CO2 Partial
+                                                               1.62     1.58      1.45     1.47      1.49      1.39
+ Pressure (mmHg)
+ Exercise First Peak CO2
+                                                               3.77     3.82      3.56     3.69      3.52      3.25
+ Partial Pressure (mmHg)
+ Exercise Highest Peak CO2
+                                                               4.43     4.48      4.23     4.54      4.40      4.35
+ Partial Pressure (mmHg)
+ Exercise Start Dew Point
+                                                               31.4     36.3      32.2     33.5      30.8      30.2
+ (°F)
+ Exercise First Peak Dew
+                                                              61.8 /    63.3 /    61.7 /   62.0 /    61.9 /    61.8 /
+ Point (°F)/Relative
+                                                               71.2      72.9      57.0     64.2      65.7      61.8
+ Humidity (%)
+ Exercise Highest Peak Dew
+                                                              68.8 /    68.9 /    67.5 /   69.9 /    69.9 /    68.2 /
+ Point (°F)/Relative
+                                                               85.2      83.0      69.0     79.4      82.8      70.3
+ Humidity (%)
+ Estimated Exercise Period
+ H2O Discrepancy (scale                                        250       320       160      315       285       210
+ drop) (ml)
+
+
+C. Cycle Time and Flow Rate Matrix Performance Tests
+    The spacecraft cabin CO2 level should ideally be maintained at an average concentration of 1% or less over the
+long term. The chamber dew point should be maintained above 33°F based on an MPCV requirement to maintain at
+least 25% relative humidity in the cabin (on daily average) at the typical 70°F target cabin temperature used in these
+tests. The higher the cabin temperature, the higher the minimum dew point value required to maintain the minimum
+25% relative humidity. The higher the relative humidity (up to the maximum dew point), the more comfortable the
+crew for long durations. The maximum chamber dew point target of 45°F is intended to prevent condensation on
+the uninsulated MPCV coolant loops, which will run at 47°F. The Orion Project has conceded that condensation
+may be allowed for transient time periods of high water load, such as during exercise periods, with the assumptions
+that the water will preferentially condense inside the cabin air heat exchanger (anticipated to be the coldest spot in
+the cabin) and that the condensed water will evaporate shortly after the high water load period, when the CAMRAS
+
+                                                        9
+                                American Institute of Aeronautics and Astronautics
+has had the opportunity to return the chamber dew point below the condensation temperature. In general,
+controlling the dew point within this relatively narrow band has turned out to be the most significant driver when
+optimizing process flow rate and cycle time in past testing. High CO2 levels were never an issue in nominal
+scenario tests, so long as the water vapor was sufficiently controlled.
+    In previous JSC test series, cases were run with a variety of process flow rates and cycle times at each of the
+metabolic rates in order to characterize the performance of the technology over a wide range of conditions. Data
+gathered from those tests was used to develop recommendations of system operational settings to maintain the cabin
+moisture and CO2 levels in the desired ranges while conserving blower power and ullage resource losses. Note that
+these matrix operational settings are intended to characterize the technology's performance with metabolic rates
+simulated by the HMS; however, current Orion MPCV system designs are more limited in terms of available flow
+rates and cycle times. All recommendations were based on using two of the three nominally-available CAMRAS
+units in a full-size MPCV cabin free volume; the actual tests were run with a single unit in a half-size volume.
+    Phase 4A tested the recommended settings with CAMRAS unit 3. In Phase 4B those same settings, plus a
+selection of other combinations, were tested at the additional two principal atmospheric pressures under
+consideration. A few cases were also run at 14.7 psia to provide direct comparisons for CAMRAS unit 2 and a
+simulated crew size of four people, where earlier general matrix condition test data was mostly gathered with other
+units and/or with a simulated crew size of six people. The basic test case conditions of all three types of metabolic
+loads are the same as those described in Table 2, except the specific chamber pressures, process flow rates, and
+cycle periods of individual test cases are presented in Table 6; additional variants were intended to be run, but were
+not achieved within the available facility time. In most of the Phase 4B test cases, the process flow rate at different
+chamber pressures was maintained constant as an actual flow rate; in other words, the test at each pressure might use
+26 acfm, but the standard flow rates natively measured by the flow meters differed, principally because of the
+pressure difference. Three cases in this section examine the relative performance of the system at different pressures
+when using the same standard flow rate. The test results of all of the completed matrix settings cases are presented
+in Table 7 (nominal and sleep loads) and Table 8 (exercise loads).
+ Table 6. Phase 4B cycle time and flow rate matrix test case operational conditions.
+
+                   Chamber       CAMRAS           CAMRAS
+     Metabolic
+                   Pressure      Inlet Flow      Valve Cycle                           Note
+      Load
+                    (psia)       Rate (acfm)     Period (min)
+                                                                  repeat of CAMRAS Phase 4A recommended
+       nominal        14.7            15              10
+                                                                        conditions with CAMRAS unit 2
+       nominal        10.2            15              10               14.7 psia recommended conditions
+       nominal         8.3            15              10               14.7 psia recommended conditions
+                                                                  repeat of CAMRAS Phase 4A recommended
+        sleep         14.7           7.5              15
+                                                                        conditions with CAMRAS unit 2
+        sleep         10.2           7.5              15               14.7 psia recommended conditions
+        sleep          8.3           7.5              15               14.7 psia recommended conditions
+                                                                  repeat of CAMRAS Phase 4A recommended
+       exercise       14.7            39               3
+                                                                        conditions with CAMRAS unit 2
+       exercise        8.3           39                3          14.7 psia recommended/maximum conditions
+       exercise       10.2           39                3          14.7 psia recommended/maximum conditions
+       exercise       10.2           39               6.5
+       exercise       8.3            39               6.5
+       exercise       14.7         26 scfm             3
+       exercise       10.2         26 scfm             3                    approximately 37.5 acfm
+       exercise        8.3         26 scfm             3                     approximately 46 acfm
+
+
+
+
+                                                         10
+                                 American Institute of Aeronautics and Astronautics
+ Table 7. Nominal and sleep load recommended settings test results.
+
+     Metabolic Load Type                                Nominal                             Sleep
+     Target Operational Settings               15 acfm flow, 10 min cycle        7.5 acfm flow, 15 min cycle
+     Target Chamber Pressure (psia)             8.3       10.2      14.7          8.3        10.2       14.7
+     Average Steady State Chamber
+                                                437        527        763         438        527         761
+     Pressure (mmHg)
+     Average Steady State Chamber
+                                                71.9       71.5      71.5        71.2        71.4        71.5
+     Temperature (°F)
+     Average Steady State CAMRAS Inlet
+                                                16.0       16.0      15.9         8.1         8.0        7.9
+     Flow Rate (acfm)
+     Final Steady State CO2 Partial            2.00 /     1.92 /     1.83 /                 2.15 /
+                                                                              2.21 / 0.50             2.03 / 0.27
+     Pressure (mmHg)/Concentration (%)          0.46       0.36       0.24                   0.41
+     Final Steady State Dew Point (°F)/        40.0 /     39.0 /     37.5 /   42.3 / 35.2   42.5 /    40.8 / 32.7
+     Relative Humidity (%)                      31.3       30.6       28.8    not steady     35.2     not steady
+     Final Steady State Cycling Vacuum
+                                                0.18       0.18      0.18        0.11        0.11        0.10
+     Pressure (mmHg)
+The JSC team's recommended operating conditions for both nominal and sleep metabolic loads meet the specified
+25% relative humidity to 45°F dew point range at all three pressures, and keep the CO2 concentration at or below
+0.5% at all three pressures. The previously noted trend of higher ppCO2 at lower cabin pressures holds here too, and
+the dew point seems to exhibit a similar trend, but the differences are small enough that they are within the sensor's
+nominal error.
+
+
+
+
+                                                        11
+                                American Institute of Aeronautics and Astronautics
+ Table 8. Exercise load matrix settings test results.
+
+ Metabolic Load Type                               Exercise                     Exercise               Exercise
+                                            Recommended: 39 acfm          26 scfm flow, 3 min        39 acfm flow,
+ Target Operational Settings
+                                               flow, 3 min cycle                 cycle               6.5 min cycle
+ Target Chamber Pressure (psia)              8.3      10.2    14.7       8.3     10.2     14.7       8.3      10.2
+ Average Steady State Chamber
+                                             418      524      748       429      533       761      428       533
+ Pressure (mmHg)
+ Average Steady State Chamber
+                                            74.4      74.1     74.0     76.0      73.6     72.2      74.3      73.3
+ Temperature (°F)
+ Average Steady State CAMRAS Inlet                                      50.3 /   40.7 /    28.2 /
+                                            41.3      41.1     40.9                                  41.5      41.2
+ Flow Rate (acfm/scfm)                                                   25.5     26.0      26.0
+ Final Steady State CO2 Partial             1.07 /   1.02 /   0.96 /    0.99 /   1.04 /    1.18 /   1.17 /    1.13 /
+ Pressure (mmHg)/ Concentration (%)          0.26     0.19     0.13      0.23     0.20      0.16     0.27      0.21
+ Final Steady State Dew Point (°F)/         24.4 /   21.8 /   23.6 /    21.7 /   23.1 /    28.8 /   24.3 /    24.3 /
+ Relative Humidity (%)                       14.7     13.2     14.4      12.3     14.3      19.5     14.8      15.3
+ Final Steady State Cycling Vacuum
+                                            0.24      0.22     0.24     0.23      0.23     0.24      0.19      0.19
+ Pressure (mmHg)
+                                            ~1.3      ~1.2
+ Exercise Start CO2 Partial Pressure
+                                             not       not     1.02     1.05      1.18     1.22      1.19      1.17
+ (mmHg)
+                                           steady    steady
+ Exercise First Peak CO2 Partial
+                                            2.88      2.92     2.60     2.85      2.86     3.01      3.19      3.20
+ Pressure (mmHg)
+ Exercise Highest Peak CO2 Partial
+                                            3.30      3.32     3.05     3.12      3.38     3.58      3.95      3.80
+ Pressure (mmHg)
+                                            ~23       ~23
+ Exercise Start Dew Point (°F)               not       not     24.4     26.8      28.4     31.1      26.5      25.7
+                                           steady    steady
+ Exercise First Peak Dew Point (°F)/       57.3 /    57.6 /   55.1 /    56.0 /   58.3 /    59.8 /   60.0 /    60.2 /
+ Relative Humidity (%)                      62.5      61.7     50.7      50.2     59.1      63.4     56.6      61.1
+ Exercise Highest Peak Dew Point           63.0 /    63.1 /   60.6 /    61.7 /   63.7 /    65.8 /   67.4 /    66.2 /
+ (°F)/ Relative Humidity (%)                72.9      73.2     57.8      61.2     69.8      71.9     77.1      72.8
+ Estimated Exercise Period H2O
+                                             315      395      200       360      410       180      365       410
+ Discrepancy (scale drop) (ml)
+    The exercise matrix case results show that the recommended settings case dew points exceeded the nominal
+Orion coolant loop temperature, as expected, but the shorter cycle time induced lower peak dew points than in the
+model projection cases or the baseline cases. As discussed in other test reports, spreading the exercise periods
+further apart than the tested 15 minutes would further reduce the peaks after the first exerciser. The excess water
+vapor generation in these cases also artificially inflates the peak exercise-period moisture values. Likewise, the CO2
+concentration peaked well above the ideal maximum of 0.5%, but still comfortably below 1%, but spreading the
+exercise periods out would reduce the maximum value. The steady state moisture levels are below the target range,
+but these recommended operational settings are tuned only for the exercise period; the intent would be to switch
+back to the nominal load recommended settings shortly after the last exerciser completed his or her cooldown period
+and after the cabin dew point was back down within the target range.
+    For most of these test cases, the mass of gas flowing through the CAMRAS at the lower chamber pressures was
+reduced because the volumetric flow rate was held constant while the air density decreased. In these cases, the
+single-pass efficiency was roughly the same at all three pressures, but less mass flowing through the bed meant less
+mass was available to be adsorbed. Meanwhile, the mass injection rate of the metabolic constituents was
+unchanged. Therefore, at lower chamber pressures, the injection rate was effectively higher relative to the total
+chamber gas mass. In the middle three cases above, the lower the pressure, the higher the actual volumetric flow
+rate; the mass flow rate through the CAMRAS stayed constant. Higher volumetric flow rates mean higher linear
+velocities, meaning that as the pressure decreased, the gas had less time in the bed to be adsorbed, and the lower the
+single-pass eficiency. However, it also means that the fixed volume of air in the chamber was moved through the
+sorbent beds more often. The test results show that more passes through the bed overwhelmed both the effects of
+                                                             12
+                                  American Institute of Aeronautics and Astronautics
+less time on each pass and the proportionally higher metabolic mass injection rates. These three cases show net
+lower quantities of both CO2 and H2O vapor as the pressure was decreased, although the CO2 was not scrubbed quite
+fast enough to reduce its relative proportion (concentration) as well as its simple quantity (ppCO2). The Orion
+blower is currently expected to operate at a set rotation rate rather than a particular standard flow rate, and that
+control system should allow consistent actual flow rates, like the majority of the test scenarios presented in this
+paper.
+    The right two columns of results in Table 8 show higher constituent levels than in the left three columns, but
+lower than the baseline cases in Table 3. In the past it has been observed for the smaller metabolic rates of nominal
+and sleep loads that increasing the flow rate through the CAMRAS greatly reduces the ultimate levels of CO2 and
+moisture in the air, while decreasing the cycle time also reduces them, but not as drastically. However, exercise
+loads are so high and so water-heavy that the difference between the constituent peaks in the Phase 4B case sets with
+half again as much flow rate and the same cycle period is on the order of only half as much as the difference
+between the case sets with just under half the cycle period and the same flow rate. Stated another way, for exercise
+cases, a shorter cycle period buys you more margin on the peaks than does an increased flow rate, but a combination
+of both shorter cycles and higher flows is still best. Then again, the shorter cycle period also comes with higher
+ullage losses of the cabin air, and higher flow rates require more power and generate more noise and heat, so a
+balance must be sought.
+
+D. Orion Project Model Projection Validation Tests
+    UTAS developed a set of anticipated MPCV cabin and atmosphere revitalization system operation conditions for
+the prime contractor, Lockheed Martin, using a computer model. Two different information releases on these cases
+were received by the JSC team, but the latter release did not contain several nominal operation scenarios, so the
+earlier results were used as the basis of these tests. To provide context for relating the results of the battery of JSC
+tests to UTAS’s models, JSC ran several test cases specifically emulating the UTAS model conditions. All of these
+test cases were previously run in Phase 4A at ambient pressure. However, the model conditions specify reduced
+pressure for the four-person crew cases, which only the Phase 4B test rig could replicate.
+    A full set of representative metabolic cases was tested, in addition to a case simulating a large crew struggling
+into or out of their space suits. The exercise and don/doff cases were run at a constant average metabolic rate, unlike
+the standard JSC exercise cases, which use a profile of increasing and decreasing water and CO2 injection rates for
+exercise scenarios. The vacuum system provided a space simulation pressure on par with that assumed by the Orion
+models, about 0.6 to 0.7 mmHg base pressure. Hamilton’s models assume that the third CAMRAS unit is used in
+heavy moisture loading conditions and that 78 acfm of available air flow is divided between the three parallel units.
+However, the Phase 4B JSC test rig was limited to a single test article and a physical configuration that could only
+halve the Orion-equivalent chamber volume. The JSC tests therefore modified the Hamilton conditions for two test
+cases (suit don/doff and exercise) by assuming that the third vehicle CAMRAS unit would be completely reserved
+for emergency capability. The Hamilton models also assume that only one CAMRAS unit will operate during sleep
+cases; the JSC test reflected that assumption by using the single test article in the full chamber volume with the full
+metabolic rates. The conditions and results for the model projection validation tests are described in Table 9.
+
+
+
+
+                                                         13
+                                 American Institute of Aeronautics and Astronautics
+ Table 9. Orion model projection validation test conditions and results.
+
+ Simulated Crew Size                           4           6            4            6           4            6
+                                                                                              exercise    don/doff
+ Crew Activity Type                        nominal      nominal       sleep        sleep
+                                                                                             (average)    (average)
+                                            half-        half-        full-       full-         half-       half-
+ Chamber Volume
+                                            Orion        Orion        Orion       Orion        Orion        Orion
+ Simulated Number of Operational
+                                               2           2            1            1           2            2
+ CAMRAS Units
+ Target Chamber Pressure (psia)              10.2         14.7        10.2         14.7         10.2         14.7
+ Target Chamber Temperature (°F)              75           75          70           70           80           80
+ Target HMS Crew Size and Heat                                                                               3@
+                                           2 @ 500      3 @ 500     4 @ 300      6 @ 300      2 @ 781
+ Load (Btu/hr)                                                                                              612.5
+ Total Metabolic CO2 Injection Rate         0.82 /       1.22 /       0.98 /      1.46 /       1.27 /       1.50 /
+ (slpm / lbm/hr)                            0.202        0.302        0.242       0.362        0.315        0.370
+ Total Metabolic H2O Injection Rate         3.51 /       5.26 /       2.03 /      3.05 /       8.32 /       8.78 /
+ (ml/min / lbm/hr)                          0.464        0.696        0.269       0.404        1.101        1.162
+ CAMRAS Valve Cycle Period (min)              10           5            26          16           5            5
+ Target CAMRAS Inlet Flow Rate
+                                              26           26          26           26           39          39
+ (acfm)
+ Target Vacuum Base Pressure
+                                           0.6 – 0.7    0.6 – 0.7   0.6 – 0.7    0.6 – 0.7    0.6 – 0.7   0.6 – 0.7
+ (mmHg)
+ Average Steady State Chamber
+                                             534          762          531         762          534          760
+ Pressure (mmHg)
+ Average Steady State Chamber
+                                             72.7         74.9        72.1         71.8         80.7        79.1
+ Temperature (°F)
+ Average Steady State CAMRAS Inlet
+                                             27.9         27.7        27.5         27.6         41.7        41.6
+ Flow Rate (acfm)
+ Model Projected ppCO2 (mmHg)                1.54         2.21         2.47        4.06         1.52         1.80
+ Final Steady State CO2 Partial             1.64 /       2.34 /       4.17 /      5.04 /       2.29 /       2.77 /
+ Pressure (mmHg)/ Concentration (%)          0.31         0.31         0.79        0.66         0.43         0.36
+ Model Projected Dew Point (°F)              43.9         51.7         34.8        40.8         53.8         55.2
+ Final Steady State Dew Point               42.1 /       50.0 /       35.0 /      39.1 /         not        58.6 /
+ (°F)/Relative Humidity (%)                  33.2         41.7         25.7        30.4        steady        49.5
+ Final Steady State Cycling Vacuum
+                                             0.67         0.74        0.61         0.66         0.77        0.83
+ Pressure (mmHg)
+
+    Both of the nominal cases yielded slightly higher CO2 levels and slightly lower dew points than the model
+predicted, but they are relatively close. The 4-person nominal case is best compared to the JSC team's
+recommended condition results at 10.2 psia in Table 7. The JSC team assumed better vacuum and the same cycle
+period, but would use less power for the blower in exchange for the better vacuum pressure. The resultant CO2
+levels are similar, around one-third of one percent concentration, and the steady state dew point is higher in this
+model validation case, which is most likely a result of a significantly higher assumed water injection rate.
+    Both of the sleep cases yielded significantly higher CO2 levels and comparable dew points relative to the model
+predictions. The 4-person sleep case is best compared to the JSC team's recommended condition results at 10.2 psia
+in Table 7. The JSC team assumed better vacuum and higher moisture injection rates; the resultant CO2 levels are
+significantly lower in the JSC-recommended case, and the steady state dew point is quite a bit lower in this model
+validation case. The JSC team's recommendation would use more ullage by cycling more frequently, but much less
+power for the blower; the JSC team's plan also has the advantage of keeping both beds of the main two units evenly
+loaded and ready to respond most effectively to contingency situations, while the model's plan would saturate one of
+the two beds of the idle unit, which would then take roughly an hour to rebalance when its cycling was started again.
+    Unfortunately, the moisture readings for the exercise case were unusable as test results, as they were highly
+unsteady and the error went undiscovered until after the test series was ended. The high-load cases are not directly
+comparable to any of the JSC-recommended cases due to the very different injection rate strategies, but they can still
+                                                        14
+                                American Institute of Aeronautics and Astronautics
+be compared to the model's projected results. The CO2 levels in the test cases ended up significantly higher than the
+model predicted, but these tests simulated the use of 2 CAMRAS units, while the model simulated the use of 3 units,
+so some differences are expected. The moisture levels were a little higher than predicted, and probably would have
+been somewhat lower than predicted if the third CAMRAS unit could have been simulated in testing.
+
+E. Co-adsorption Tests
+    JSC modeling staff have developed computer models of the CAMRAS technology performance based on data
+gathered in past JSC test series. In order to validate the models, occasional test cases are requested to replicate the
+inputs to a model case and see how closely the results of an actual test match the model's predictions. The modeling
+team requested three test cases as part of CAMRAS Phase 4B testing, and the cases can also be used to compare the
+removal rates of CO2 and water vapor separately versus together. Past testing has showed a slight co-adsorption
+effect, although it may be partially or wholly attributable to bed temperature differences; bed temperature swings are
+driven much more strongly by water vapor adsorption and desorption than by that of CO2.
+    Instead of injecting water vapor and CO2 into the chamber at metabolic rates and waiting to find out the steady
+state conditions, like all of the cases described in previous sections, these cases specified chamber conditions and
+sought out the correct HMS constituent injection rates to maintain those steady state conditions while the CAMRAS
+operated. These particular test cases were run with relatively long cycle times. The JSC model predictions of the
+injection rates required to maintain steady chamber conditions are included along with the test case details and
+results in Table 10.
+ Table 10. Co-adsorption test conditions and results.
+
+     Chamber Volume                                          full-Orion          full-Orion         full-Orion
+     Target Chamber Pressure                                  10.2 psia           10.2 psia          10.2 psia
+     Target Chamber Temperature                                  75°F               75°F               75°F
+                                                                0.57%                                 0.57%
+     Target CO2 Concentration (ppCO2)                                             0.00%
+                                                             (3 mmHg)                               (3 mmHg)
+                                                               very dry
+     Target Dew Point                                                              50°F                50°F
+                                                              (<-20°F)
+     CAMRAS Valve Cycle Period                                  20 min            20 min              20 min
+     Target CAMRAS Inlet Flow Rate                             10 acfm           10 acfm             10 acfm
+     Vacuum Quality                                            nominal           nominal             nominal
+     Average Steady State Chamber Pressure                   531 mmHg          529 mmHg            530 mmHg
+     Average Steady State Chamber Temperature                   73.6°F            74.4°F              74.6°F
+     Average Steady State CAMRAS Inlet Flow Rate              10.6 acfm         10.7 acfm           10.7 acfm
+     Model Predicted CO2 Injection Rate                       0.89 slpm           0 slpm            0.94 slpm
+     Test Final CO2 Injection Rate                            0.84 slpm            N/A              0.83 slpm
+     Final Steady State CO2 Partial Pressure /              2.99 mmHg          0.01 mmHg           3.04 mmHg
+     Concentration                                              0.56%             0.00%               0.57%
+     Model Predicted H2O Injection Rate                       0 ml/min         2.30 ml/min         2.30 ml/min
+     Test Final H2O Injection Rate                               N/A           2.37 ml/min         2.42 ml/min
+                                                          offscale low and        50.0°F              50.1°F
+     Final Steady State Dew Point/Relative Humidity
+                                                              dropping            42.4%               42.1%
+     Final Steady State Cycling Vacuum Pressure             0.08 mmHg          0.05 mmHg           0.12 mmHg
+
+    As was observed in a similar test group with single constituents and then both constituents at targeted levels in
+earlier testing, there does appear to be a small effect on the adsorption of the individual constituents when combined
+in a normal environment as compared to when they are evaluated individually. In Phase 4B, the CO2 adsorption rate
+was very slightly lower in combination with water vapor than without, while the water vapor seemed to be better
+adsorbed when combined with CO2 than it was alone. In the earlier testing, the differences were more pronounced
+for CO2, and water vapor was better alone. However, there were a few major differences in the two tests, any of
+which could have an effect. The 4B tests were run at 10.2 psia chamber pressure, while the earlier tests were run at
+ambient; the results in all of the above sections have suggested that CO2 adsorption is reduced at reduced chamber
+pressure, while water vapor adsorption remains generally unaffected. The earlier co-adsorption tests had somewhat
+higher cycling vacuum pressures, about 0.3 mmHg for the individual constituents and 0.6 mmHg for the
+                                                         15
+                                 American Institute of Aeronautics and Astronautics
+combination, and the efficiency of water removal has previously been shown to fall off more quickly with vacuum
+pressure than does the CO2 removal efficiency. The earlier single constituent cases were also run at a much higher
+chamber temperature, which, like degraded vacuum pressure, has been shown to reduce the efficiency of water
+removal faster than it does CO2 removal. Therefore, with lower chamber temperature and lower cycling vacuum
+pressure, one would expect the water vapor removal to be better in these Phase 4B cases than in the earlier series
+cases.
+   The components of the model used to generate the predicted results in this case are not known to the JSC test
+team. The earlier test results suggest that the combined CO2 removal rate should be lower than the individual
+removal rate, and that was again reflected in these results, but the model predicted the reverse relationship and
+overall higher removal rates. The water injection rates were predicted to be the same, but both sets of test results
+showed differences, albeit in opposite directions.
+
+                                        IV. Data Analysis Challenges
+
+A. Additional HMS Operational Challenges
+    A major source of uncertainty in this test series is related to the performance of the new HMS. The system used
+in most prior tests, while far from perfect, was at least reasonably well understood and integrated with the rest of the
+test rig. However, it was not suited to operate with a reduced-pressure test chamber. Ideally for the new HMS
+operation, the combined evaporation and nebulization rates should precisely match the liquid water injection rate,
+and the weight on the internal reservoir's scale should remain unchanged. Unfortunately, the real world is rarely
+ideal, plus this device was newly developed, then tested under time duress in a different chamber; it became
+apparent soon after test start that the settings weren't quite right, so there were several challenges. Refinement
+efforts were attempted as testing started, but there were still inconsistent discrepancies over time.
+    One of these discrepancies discovered in testing was that the water flow controller was behaving inconsistently,
+and afterward it was found to be oversized for these tests and a more appropriate model had become available since
+the original was purchased. There may also have been air bubbles trapped in the lines. To compensate for these
+flow controller issues, users set the desired flow rate, then manually spot-checked the rate with a stopwatch and
+graduated cylinder dripping water from the bypassed line. Adjustments to an extra software setting could then
+subtly adjust the computer control of the flow controller to generate the targeted flow rate. Unfortunately, the flow
+check was purely manual and temporarily diverted the water flow from the chamber; there are only non-
+comprehensive manual log records of when and for how long the flow was checked, the test operators did not check
+the flow on any particular pattern of times, and sometimes (early in the series) the flow was checked during critical
+phases, such as during an exercise profile. After the test it was discovered that the value of this extra setting was not
+recorded in the HMS automatic data file, so it, too, is subject to the uncertainty of manual log entries.
+
+B. Chamber Pressure and O2 Partial Pressure Inconsistency
+    In post-test data processing it was found that the steadiness of the chamber pressure and ppO2 during any given
+test case was generally poor. By design, the gross chamber pressure was not to be deliberately manipulated with the
+vacuum or repressurization systems during a test case. However, the CAMRAS was always subjecting the
+atmosphere to gas losses from leakage and ullage; the HMS was usually injecting water vapor and gaseous CO2 into
+the chamber; the chamber was subject to some small seal leakage to and from the ambient building air; changing
+temperature of the atmosphere inside the chamber, particularly during exercise cases, induced some natural pressure
+rise and fall; and the manual make-up gas injection state was not exhaustively monitored. All of these factors
+conspired to create chamber pressure and ppO2 conditions that were decidedly not steady state in most of the cases.
+All steady-state chamber pressure and temperature values presented in this report are simply averages of the
+instantaneous values during the steady state periods.
+
+C. Dew Point Pressure Sensitivity
+    Post-test consultation with the vendor of the probe-type dew point sensors revealed that the sensors are slightly
+susceptible to pressure-based error, but the error should induce a reading bias of less than 1.5°C low at the lowest
+test pressure.
+
+D. CO2 and H2O Sensor Array Reading Spread
+   Several CO2 probe sensors in series in the process loop frequently exhibited different readings (near or outside
+manufacturer accuracy limits) despite there being no components between them that should affect CO2 level. These
+sensors are known to be influenced by the surrounding pressure, so an in-house static comparison method was used
+                                                        16
+                                American Institute of Aeronautics and Astronautics
+to create calibration curves for the reduced pressures in use during this test series, which could add another layer of
+uncertainty. The moisture sensors downstream of the CAMRAS exhibited a similar range of values relative to one
+another when they should be reading the same value. When checked in static conditions at the beginning of testing,
+both types of sensors were within the manufacturer's accuracy limits, but the array of sensors covered much or all of
+the full extent of a centered ± error range. Comparison of periodic grab sample spectra to CO2 and H2O instrument
+readings from the equivalent locations in the process loop showed generally good correlation.
+
+E. Outlet Dew Point Reading Shift
+    For an as-yet unknown reason, most of the in-line moisture sensors downstream of the CAMRAS shifted their
+relative reading bias to one another early in the no-water co-adsorption case, and that shift appeared to be persistent
+in all subsequent test cases. Luckily, two runs of the Orion Project Model Validation 6-person sleep case had been
+done, one right before the co-adsorption cases and one right after them, so the differences can be clearly seen in two
+case runs that ought to have been more or less identical. Comparing the moisture steady state periods of the two
+cases can relate the effects of this dew point shift to the majority of cases that were run before the shift and the few
+cases that were run afterward. Test results after the dew point shift were adjusted slightly to counter the sensor shift,
+but the adjustments are only apparent in calculated operational efficiency results, which have not been included in
+this paper.
+
+F. Effects of the Grab Sample System
+    The CAMRAS Phase 4B test rig was equipped with sample lines at the inlet and outlet that could be flushed and
+connected to a sample container outside the chamber for offline analysis. Partway through the test series it was
+discovered that turning on the line heaters and/or the sample pumps for the sample lines in preparation for taking a
+sample frequently caused a downward step change in the HMS tank's weight scale reading, and there was not a
+corresponding upward step change in the reading when the heaters were turned off. There may have been
+correlating minor upward ticks in the chamber dew point, but they were not consistently observed. Complicating
+this assessment is the fact that the sample line heaters and sample pumps were manually controlled and the data
+from the sampling system was not automatically recorded, so the manual event logs must be relied upon to try to
+determine correlations. Shortly into the test series the team shifted to try to take final grab samples after the end of
+the steady state period to avoid the associated data complications. Where possible, any effect of the sample system
+was avoided in the selection of steady state periods for the presentation of the data in the reports.
+
+                                                  V. Conclusion
+    In conclusion, CAMRAS-controlled steady state ppCO2 levels seem to correlate very well to chamber pressure:
+operation at lower chamber pressures yields higher stable CO2 partial pressures and concentrations, assuming
+equivalent actual flow rates. The same-scfm cases further prove this relationship by yielding relatively lower CO2
+partial pressures at lower chamber pressures. It should be noted, however, that although it is unlikely, it is possible
+that the CO2 removal change could also or instead be related to changing O2 concentration in the process stream.
+The Phase 4B test series was not designed to decouple the effects of changing atmospheric pressure and changing
+oxygen concentrations.
+    CAMRAS water vapor removal seems to be largely unrelated to chamber pressure. Although there are slight
+differences between test cases at different pressures, they are not consistent, nor can they be said to be significant, as
+the manufacturer specifies the accuracy of the inlet sensor as approximately ±1.5°C or better for most of the range of
+the test results, not accounting for any pressure sensitivity.
+    In previous test series, it was observed that at ambient pressure and flow rates above approximately 10 scfm,
+CO2 saturation (when outlet concentration rises to match inlet concentration) occurs at about 20 minutes of
+continuous bed exposure. At lower flow rates, however, the saturation takes longer. This suggests that the CO2
+adsorption rate and quantity are limited, and at ambient pressure and moderate to high flow rates through the bed,
+the mass of CO2 flowing through the bed exceeds the mass that the bed can adsorb in the time available, such that
+the reaction continues at its maximum rate until it hits its maximum mass, which takes about 20 minutes. At lower
+pressure, a given volume of air flowing through the bed contains less mass, and for most Phase 4B cases, the flow
+rates were controlled volumetrically (lower scfm, equivalent acfm), so the overall CO2 level ended up being higher
+than the equivalent operational conditions at higher atmospheric pressure. The sorbent has a strong affinity for
+water vapor, and has previously been observed to take on the order of an hour to saturate a CAMRAS bed. Water
+vapor adsorption may even be slightly preferential, as demonstrated in the Phase 4B co-adsorption cases. The result
+
+
+                                                          17
+                                  American Institute of Aeronautics and Astronautics
+of this is that the sorbent still appears to capture essentially as much water vapor at lower pressures as at higher
+pressures. However, it is unknown if there is a lower pressure limit where this relationship may change.
+    The computer models developed by the Orion Project seem to relate moderately well to real-world test results,
+but the JSC test team believes that its own recommended operational conditions should be seriously considered as
+viable alternates to the Project model's propositions, as a potentially better balance of system functionality, power
+use, heat and noise generation, ullage losses, and maintenance of the cabin conditions within the target ranges.
+
+                                                    Acknowledgments
+    The authors would like to thank a number of people for their assistance in bringing the CAMRAS Phase 4B test
+to fruition. UTAS engineer Bill Papale has been a key designer and information resource for the CAMRAS
+technology itself. The JSC Air Team members – Team Lead Mary Walsh, Principal Investigator Jeffrey
+Sweterlitsch, Lead Test Operator and Data Analyst Amy Button, Craig Broerman, Su Curley, Javier Jimenez, ESCG
+Project Manager and HMS Developer Melissa Campbell – all played important roles in the design of the test rig and
+test plan, acquiring funding from various sources, staffing test operations around the clock, and in-test and post-test
+data analysis and reporting. Katie Collier and Charles Sager also helped staff the test operations. Matthew Stubbe
+did much of the early development work for the second generation HMS. ESCG Asset Management engineers and
+technicians performed the detailed test rig design and construction, and the technicians also ran several facility
+systems during testing. Test Directors Kenneth Anderle and Gianluca Callini led the efforts of the Asset
+Management team, as well as the team of Test Directors who helped staff the round-the-clock tests. Key engineers
+included Peter Masi, Jason Pond, and Jose Cervantes, and Kenneth Hees and Scott Stratton were key technicians in
+the buildup. JSC modeling analyst Kevin Lange provided the specifications and projected results for the co-
+adsorption test cases. The test rig requirements document was developed by members of the Air Team and the Lead
+Test Directors, and was assisted by Katy Hurlbert, John Cornwell, and Orion Project Engineer Richard Barido.
+Funding for the test was provided by NASA Johnson Space Center's Crew and Thermal Systems Division of the
+Engineering Directorate, the Orion Project, and ELS. The CAMRAS Phase 4B testing could not have been
+completed without the support of this broad range of organizations and people.
+
+                                                         References
+   1
+      Lin, A., et al., "Testing of an Amine-Based Pressure-Swing System for Carbon Dioxide and Humidity Control,"
+International Conference on Environmental Systems, 2007-01-3156, SAE, Warrendale, PA, 2007.
+    2
+      Lin, A., Smith, F., Sweterlitsch, J., Nalette, T., and Papale, W., "Further Testing of an Amine-Based Pressure-Swing System
+for Carbon Dioxide and Humidity Control," International Conference on Environmental Systems, 2008-01-2101, SAE,
+Warrendale, PA, 2008.
+    3
+      Button, A. B., and Sweterlitsch, J. J., “2009 Continued Testing of the Orion Atmosphere Revitalization Technology,”
+International Conference on Environmental Systems, 10.2514/6.2010-6163, AIAA, Reston, VA, 2010.
+    4
+      Campbell, M. C., Button, A. B., and Curley, S., “Design and Testing of a Human Metabolic Simulator (HMS) Utilizing
+Ultrasonic Nebulizer Technology for Water Vapor Generation,” International Conference on Environmental Systems, AIAA,
+Reston, VA, (submitted for publication).
+    5
+      Button, A., "CO2 And Moisture Removal Amine Swing-Bed (CAMRAS) Phase 4B Test Report," NASA Johnson Space
+Center, CTSD-ADV-1028, Houston, TX, 2012.
+
+
+
+
+                                                            18
+                                    American Institute of Aeronautics and Astronautics
+

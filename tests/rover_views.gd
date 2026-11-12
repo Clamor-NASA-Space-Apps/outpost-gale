@@ -1,10 +1,11 @@
 extends Node3D
 ## Camera presets for the rover and the doorways, around the real sandbox (capture-view --scene):
 ##   node ../../tools/capture-view.mjs . captures/rover --scene res://tests/rover_views.tscn --views side,front,seat --advance 1200 -- mode=drive
+## sky=night (or sunset, storm) switches the sky first, to judge the dust in that light.
 ## mode: park (the rover as placed), drive (the hero drives it east, starting at top speed), rock (the same, over a
 ## 0.3 m rock under the left wheels: the front pair is on it about 0.6 s in, the middle 1.15 s, the back 1.7 s).
 ## Views follow the rover: side, front (three-quarter from ahead), seat (close on the windscreen), low (wheels at
-## ground level); and fixed: gh_in, gh_out (greenhouse vestibule floor), hab_a, hab_b (habitat door frame, door open).
+## ground level), trail (low behind the left wheels, on the grit); and fixed: gh_in, gh_out (greenhouse vestibule floor), hab_a, hab_b (habitat door frame, door open).
 
 var game: Node3D
 var cam := Camera3D.new()
@@ -17,6 +18,9 @@ func _ready() -> void:
 			mode = a.trim_prefix("mode=")
 	game = load("res://sandbox/sandbox.tscn").instantiate()
 	add_child(game)
+	for a in OS.get_cmdline_user_args():
+		if a.begins_with("sky="):
+			game._sky(game.SKIES.find("design." + a.trim_prefix("sky=")))
 	Forge.register(self)
 	cam.fov = 60.0
 	cam.far = 8000.0
@@ -95,6 +99,7 @@ func set_view(v: String) -> void:
 		"seat": [Vector3(-2.4, 2.3, -4.2), Vector3(-0.5, 1.9, -0.8)],
 		"low": [Vector3(-4.5, 0.35, 1.2), Vector3(-1.0, 0.4, -0.5)],
 		"back": [Vector3(3.0, 2.0, 7.0), Vector3(0, 1.0, 0)],
+		"trail": [Vector3(-2.5, 0.7, 4.5), Vector3(-0.6, 0.2, 2.0)],  # low behind the left wheels: the grit stream
 	}
 	var gh: Node3D = game.world.items["greenhouse"]
 	var hab: Node3D = game.world.items["hab1"]

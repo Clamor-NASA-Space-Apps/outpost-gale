@@ -3,7 +3,7 @@ extends Node3D
 ## all read it. The far skyline is models/terrain_backdrop.glb. Both are drawn by terrain.gdshader.
 
 const SHADER := preload("res://world/terrain.gdshader")
-const CHUNK := 50  # cells per side of one patch mesh: 100 m pieces the camera can cull one by one
+const CHUNK := 100  # cells per side of one patch mesh: 200 m pieces, four in all (100 m ones drew 5 or 6 a view, each twice in sunlight)
 # The trail map: footprints and wheel tracks pressed into the dust, in a square that follows the camera.
 # 3 cm a pixel: a boot print (about 30 x 12 cm) is 10 x 4 px, enough for its tread. The square is DESIGN.md
 # quality `trail` pixels wide (2048 is 64 m).
@@ -51,6 +51,7 @@ func build(design: Dictionary) -> void:
 	var back: Node3D = load("res://models/terrain_backdrop.glb").instantiate()  # a web build has no file paths, only res://
 	for mi: MeshInstance3D in back.find_children("*", "MeshInstance3D", true, false):
 		mi.material_override = material
+		mi.set_instance_shader_parameter("backdrop", 1.0)  # not drawn over the patch (terrain.gdshader)
 		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF  # too far out to shade anything we see
 	add_child(back)
 
@@ -213,11 +214,12 @@ func movers(discs: PackedVector4Array) -> void:
 	material.set_shader_parameter("movers", discs)
 
 
-## A print pressed into the dust: `foot_l` / `foot_r` (a boot with tread) or `wheel` (`width` wide, along `yaw`).
+## A print pressed into the dust: `foot_l` / `foot_r` (a boot with tread) or `wheel` (`width` wide, along `yaw`),
+## `strength` (0 to 1) as deep as a full print; a fainter one never lightens a deeper one already there.
 ## Prints stay where they are made; they only fade when the square moves away from them.
 ## The map wraps (toroidal addressing, GPU Gems 2 ch. 2): world pixel g lives at g mod trail_px, so the square
 ## follows the camera without moving a byte, and only the strip that wraps in is cleared.
-func mark(pos: Vector3, yaw_deg: float, kind: String, width := 0.3) -> void:
+func mark(pos: Vector3, yaw_deg: float, kind: String, width := 0.3, strength := 1.0) -> void:
 	var px := TRAIL_MPX
 	var fwd := Vector2(sin(deg_to_rad(yaw_deg)), -cos(deg_to_rad(yaw_deg)))  # x, z of the heading
 	var side := Vector2(-fwd.y, fwd.x)
@@ -243,6 +245,7 @@ func mark(pos: Vector3, yaw_deg: float, kind: String, width := 0.3) -> void:
 				var arch := 1.0 - 0.25 * exp(-u * u * 8.0)
 				var e := u * u + pow(v / arch, 2.0)
 				depth = clampf((1.0 - e) * 4.0, 0.0, 1.0) * (0.75 + (0.25 if fposmod(d.dot(fwd) / 0.03, 1.0) >= 0.5 else 0.0))
+			depth *= strength
 			if depth > 0.0:
 				var tx := posmod(x, trail_px)
 				var ty := posmod(y, trail_px)

@@ -45,7 +45,8 @@ The composition root is `sandbox/sandbox.gd`. It calls only these:
 - The player reads `breath_phase` (0 to 1) from any sibling that has it (the audio node), so the chest rises on the
   breath you hear.
 - `player.footstep(pos: Vector3, yaw_deg: float, foot: String)` signal; the root connects it to `world.mark()` and
-  `world.puff()`. `world.mark(pos, yaw_deg, kind, width := 0.3)`: `foot_l`, `foot_r` or `wheel`.
+  `world.puff()`. `world.mark(pos, yaw_deg, kind, width := 0.3, strength := 1.0)`: `foot_l`, `foot_r` or `wheel`,
+  `strength` its depth (a rover's grows with speed).
 - A vehicle may have `top` (m/s): the camera then sits lower and closer, and looks further ahead, as the real
   speed nears it (`tuning.json` camera `rush_*`).
 - The mouse cursor: captured only by a left click that reaches the 3D view (`player/follow_cam.gd`); every HUD
@@ -61,12 +62,20 @@ The composition root is `sandbox/sandbox.gd`. It calls only these:
 `Forge.register(sandbox)`. `render_game_to_text()` returns:
 `player.{pos, speed, onFloor, gait, inside}`, `cam.{inside, dist}`, `heroScreen`, `interaction.{target, prompt}`,
 `vehicle.{driving, speed}`, `carry`, `sky`, `quality`, `fps`.
-`set_view(name)`: `default` (the play camera), `base`, `hero`, `horizon`, `storm`, `airlock`, `rover`.
+`set_view(name)`: `default` (the play camera), `base`, `hero`, `horizon`, `storm`, `airlock`, `rover`, `greenhouse`,
+`hab_in` (inside HAB 1: the life-support wall and bunks), `hab_desk` (inside HAB 1: galley, Veggie, desk and map).
 `place(pos, yaw_deg)`: the hero, through `player.place()`.
 
 ## Prefabs (`data/world.json` `prefabs`: id -> model file; a missing file loads a labelled stand-in box)
 `habitat`, `solar_array`, `battery_bank`, `oxygen_maker`, `water_recycler`, `greenhouse`, `storm_shelter`,
-`dish`, `build_pad`, `lander`, `rover`, `curiosity`, `cargo_bag`, `pip`, `lamp`, `beacon`, `rock_*`.
+`dish`, `build_pad`, `lander`, `rover`, `curiosity`, `cargo_bag`, `pip`, `lamp`, `beacon`, `telltale`, `veggie` (HAB 1's
+plant unit), `solar_wing`, `reactor` (fission surface power, near the west edge), `gale_map` (the wall map in HAB 1),
+`mont_mercou` (the butte), `lettuce_1` to `lettuce_4`, `rock_*`. (`water_recycler` stays registered but is not placed:
+water is recycled indoors, in HAB 1's racks.)
+- `plants`: `{item id: [slot entry, ...]}`, filling the model's `slot_N` nodes in order. An entry is a lettuce growth
+  stage (1 to 4) or a prefab id, which goes in at its own size (HAB 1: `veggie`, `gale_map`).
+- `cables`: power lines laid on the ground (`world.gd _lay_cables()`): polylines of [x, z] draped on `height_at()` every
+  `step` m, `width` and `height` m, one DESIGN.md `role`; rocks keep off them as off paths. One merged mesh, no collision.
 Groups: `floor` (anything walkable on top), `wall` (blocks), `thin` (layer 3), `interactable`, `vehicle`, `carriable`.
 
 ## Graphics settings (quality knobs; owner: `addons/forge/house_style.gd`, presets in DESIGN.md `quality`)
@@ -99,3 +108,31 @@ None. `world.build()` is synchronous (it loads everything it needs before return
 - `audio.music(name) -> bool` (rare cues on the Music bus: first_step, airlock_sealed, sunset, discovery, mission_lost),
   `audio.sky(name)`, `audio.set_volume(which, v)`. `render_game_to_text()` gains `audio.music` (the cue playing).
 - PIP (`sandbox/pip.gd`) wanders the base; `render_game_to_text()` gains a `pip` key (its position, goal, mode).
+
+## More life (12 Nov 2026)
+- The rover's drawn body rides a damped spring (`sandbox/rover.gd`): every drawn part but the wheels sits under a
+  `sprung` node, whose transform is `rover.lean` (body space). The physics body, its collision and the camera's
+  target stay on the wheels' plane; `seat()` includes `lean`, so the driver rides with the cab.
+- `audio.radio(who)`: a wordless call on the suit radio (`base`, `pip`), rare (`tuning.json` `audio.radio`) and only
+  when no cue or event sound is playing. PIP asks for it by emitting `sound("radio_pip", pos)`. `render_game_to_text()`
+  `audio` gains `radio.{who, at}`. `audio.music("quiet")`: the rare quiet-moment motif (`audio.motif`).
+- `follow_cam.glance: Array[Vector3]`: far points the view may turn toward, slowly and a few degrees, while the
+  player leaves the look alone and the hero stands on foot. `audio.gd` fills it in the sunset sky with the habitat
+  (and the dust devil when one is out); it is empty otherwise.
+
+## The end of the ground (12 Nov 2026)
+- The real ground is the 400 m patch (`data/terrain.json`); past it only the backdrop is drawn, with no collision.
+  `world.bound(margin := 0.0) -> Rect2` (x, z) is where anything that moves may go (`data/world.json` `bound.half`),
+  `world.past(pos, margin := 0.0) -> float` how far a point is past it. Inside it the drawn ground, its collision and
+  `height_at()` are one surface (`tests/edge_test.gd`).
+- `player.bound: Rect2`, set by the root from `world.bound()`: near its edge the hero's outward speed is held to what
+  its braking stops in, so it slows and stops on the line. The rover brakes for the line as for a wall (`blocked`
+  `"edge"`), with its centre kept `bound.reach` in for the hatch.
+- The safety net (`sandbox.gd _physics_process()`): the hero, the rover, PIP and any bag resting on the ground found
+  more than `bound.below` under the ground, or past the line, go back on top at the nearest spot inside; the hero
+  behind a short fade (`bound.fade_s`) when that is further than `bound.fade_over`. `sandbox.rescued` counts it (a
+  walk or a drive that needs it is a bug).
+- Reflection probes: `HouseStyle.warm()` redraws every probe from `at` after its variants, under the sky in force
+  (the probe's ambient setters do not redraw it in Compatibility): `at` must stand inside every probe. Render layer 2
+  holds the ground, the rocks and every dust emitter, also those made in play (`dust.layers`): the probe draws them
+  and does not shade them (`reflection_mask` 1), so dust is lit as the ground it rose from.

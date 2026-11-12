@@ -1,0 +1,819 @@
+ International Space Station Crew Quarters Ventilation and
+              Acoustic Design Implementation
+
+                                           James L. Broyan, Jr.'
+                          NASA Lyndon B. Johnson Space Center, Houston, TX, 77058
+
+                                               Scott M. Cad Y2
+                                 GeoControl Systems, Inc., Houston, TX, 77058
+
+                                                     and
+
+                                             David A. Welsh'
+                                  MEI Technologies, Inc., Houston, TX 77058
+
+
+            The International Space Station (ISS) United States Operational Segment has four
+        permanent rack sized ISS Crew Quarters (CQs) providing a private crew member- space.
+        The CQs use Node 2 cabin air for ventilation/thermal cooling, as opposed to conditioned
+        ducted air- from the ISS Common Cabin Air Assembly (CCAA) or the ISS fluid cooling loop.
+        Consequently, CQ can only increase the air flow rate to reduce the temperature delta
+        between the cabin and the CQ interior. However, increasing airflow causes increased
+        acoustic noise so efficient airflow distribution is an important design parameter. The CQ
+        utilized a two fan push-pull configuration to ensure fresh air at the crew member's head
+        position and reduce acoustic exposure. The CQ ventilation ducts are conduits to the louder
+        Node 2 cabin aisle way which required significant acoustic mitigation controls. The CQ
+        interior needs to be below noise criteria curve 40 (NC-40). The design implementation of the
+        CQ ventilation system and acoustic mitigation are very inter-related and require
+        consideration of crew comfort balanced with use of interior habitable volume,
+        accommodation of fan failures, and possible crew uses that impact ventilation and acoustic
+        performance. Each CQ required —13% of its total volume and ---6% of its total mass to
+        reduce acoustic noise. This paper illustrates the types of model analysis, assumptions, vehicle
+        interactions, and trade-offs required for CQ ventilation and acoustics. Additionally, on-orbit
+        ventilation system performance and initial crew feedback is presented. This approach is
+        applicable to any private enclosed space that the crew will occupy.
+
+
+                                               Nomenclature
+CCAA      =   Coinrnon Cabin Air Assembly
+COz       =   Carbon Dioxide
+CQ        =   Crew Quarter
+dB        =   decibel
+dBA       =   decibel A-weighted
+JSC       =   Johnson Space Center
+Hz        =   Hertz
+ISS       =   International Space Station
+NC        =   Noise criterion curve
+Tess      =   Temporary Sleep Station
+
+
+
+' Habitability Hardware Group Lead, Crew & Thermal Systems Division, M/S: EC3, not AIAA affiliated.
+2 Deputy Division Chief Engineer, Structural Engineering Division, M/S: ES1, not AIAA affiliated-
+3
+  Senior Acoustics Engineer, JSC Acoustics Office, M/S: SF22, not AIAA affiliated.
+
+                              American Institute of Aeronautics and Astronautics
+                                                    I. Introduction
+    After the launch of shuttle assembly flight STS-131 (19A) in April 2010, the International Space Station (ISS)
+will contain the full complement of four Crew Quarters (CQs). The CQs are located the four bay 5 locations of Node
+2 and form a ring. Overviews of the general architectural layout of CQ and the general tradeoffs during its
+development have been previously described' .2 . A brief overview of the layout is necessary prior to a more detailed
+discussion of the acoustical challenges addressed by the CQ design.
+    Functionally a CQ provides an acoustically quiet and visually isolated area in which crew members can sleep,
+relax, and retreat to a private area. The ISS volume allocated to a CQ is a standard ISS rack volume with two
+protrusions, shown in Fig. 1. Approximately 8 cm of additional head room is provided with a deployable ceiling called a
+pop-up. The pop-up is integral to the CQ rack and deployed once the CQ rack is installed. In the on-orbit deployed
+configuration, a 30-cm protrusion called the bump-out, extends into the Node 2 aisle way. This volume provides no direct
+habitable for the crew, with the exception of the door passage. As will be described, the bump-out volume was allocated to
+the ventilation system.
+    The total deployed volume of CQ is --2.1 m3 and it was desirable to provide as large a habitable volume for the
+crew member as possible. This presented a design challenge to provide adequate air flow, minimize fan generated
+noise, and reduce exterior noise transmitted into the CQ interior.
+
+                                                                            Popu
+
+
+
+                                                                           Bump
+                                                                             out
+
+
+                                                                          Intake
+                                                                          Duct
+                                                                          Inlet
+
+                                                                         Exhausl
+                                                                            Duci
+                                                                           Outlet
+
+ Figure 1. Port/Deck CQ on-orbit configuration in a rack handling adapter (white tubular structure),
+ external views (left to right): forward side, front side - toward aisle way, and aft side.
+
+                                    II. Ventilation/Acoustic Architecture
+    The physical and operational considerations of the CQ ventilation and acoustics architecture were deteniuned at
+several levels. Operationally at the vehicle level, the Node 2 Conunon Cabin Air Assembly (CCAA) can be adjusted
+to reduce the ISS aisle way temperature to --18°C. Since the aisle way air temperature can be controlled, the CQs
+were not provided interfaces to the ISS coolant loops. This required the CQs to utilize air exchange with the aisle
+way to provide crew comfort. Each CQ draws in aisle way air perpendicular to the rack face through an intake duct
+inlet, shown in Fig. 1. The air is circulated throu gh the CQ volume by two fans. Inside the CQ, the air adsorbs the
+crew member's metabolic heat (100-132 watts) and the electronics waste heat (--153 watts). The air is then directed
+though the CQ exhaust duct outlet, see Fig. 1, and directed parallel to the rack face and down the aisle way toward
+the Node 2 CCAA air return. These CQ air intake and exhaust directions are consistent with the general Node 2 air
+circulation which allows the CCAA smoke detector to identify combustion events within the CQ. Additionally, these
+intake and exhaust directions minimize recirculation of air between CQs which would result in some CQ interiors
+not receiving adequate cooling. The primary vehicle level interface ventilation requirements for the CQ are:
+         • 0.42-5.1 m3/min of airflow.
+         • < 76 m/min exhaust air velocity.
+    At the vehicle level, all the CQs are physically located in one area, Node 2, bay 5. Node 2 is at one end of ISS so
+there is less crew translation which can impart impulse noise and moderate vibration to the CQ interior.
+
+
+
+                                  American Institute of Aeronautics and Astronautics
+Additionally, Node 2 provides a lower acoustic environment because the remaining four rack bays are relatively
+quite electrical power converter racks. The primary vehicle level interface acoustic requirements for the CQ are:
+         • CQ interior between noise criterion (NC) curves 25 and 40.
+         • External noise environment in Node 2 aisle way of NC curve 52.
+         • CQ exterior acoustic emissions of NC curve 40.
+    It was acknowledged at the beginning of the CQ project that ventilation and acoustics were the primary
+functional requirements and would be the most challenging to satisfy. If the CQ ventilation (quantity and control)
+was inadequate for crew comfortable, they would not use it. If the CQ interior was not sufficiently quiet ; the crew
+would need hearing protection or sleep medications — both of which are unacceptable for lon g term use.
+Additionally, the ventilation system removes carbon dioxide which is an asphyxiation hazard. The asphyxiation
+hazard is categorized as a catastrophic hazard and required redundancy.
+    The CQ project addressed these vehicle interface requirements by decomposing them into three primary
+hardware systems: fans, ducts, and structure/blankets. These three areas are interrelated and were developed in
+parallel to meet the hardware delivery schedule constraints. Figure 2 illustrates the location of all the bump-out
+features that are accessible to the crew when inside the CQ without the acoustic blankets. The acoustic blankets are
+not shown but attach to the structure with hook and loop fastener patches. In Fig. 2 the CQ is in the launch
+configuration where the bump-out is reversed and mounted to rack front so there is no aisle way protrusion.
+
+                 Air Intake Diffusei                                              Fan Speed Control Switch
+
+            Intake Air Flow Senso
+            (Hidden behind Panel
+                                                                                  Air Intake Assembly Enclosure
+           Egress Light Assembly
+           (Recessed under Panel
+                           Fire Por                                               Air Intake Close-out Panel
+                   Bump-out Door
+
+               Velcro patches for                                                 Electrical connectors to Rack
+               attach ment of acou!
+               blankets
+            Exhaust Air Flow Sens                                                 Power Supply (Hidden behind
+            (Hidden behind Screer                                                 Air Exhaust Screen)
+       Block Prevention Net Assem
+
+
+     Figure 2. Port/Deck CQ in the launch configuration.
+    Figure 3 illustrates the interior of the CQ bump-out in the on-orbit deployed position. In this configuration the
+white interior acoustic blankets cover most surfaces to reduce acoustic noise transmitted from the ISS aisle way. In
+the deployed configuration, it is difficult to obtain a single full height view of the buinp-out. The general layout and
+air flow of the intake duct layout and exhaust duct layout and air flow are depicted in Figs. 4 and 5 respectively. The
+red line represents the air flow path. These shapes and features will be described greater detail in the following
+sections.
+
+A. Fan Architecture
+   Two fans per CQ were required to prevent a single point failure (complex implementations of redundant motor
+windings and internal sensors were not considered due to schedule constraints). Both serial and parallel
+implementations of the dual fan system were investigated as possible solutions. Several characteristics were
+compared; including: power efficiency, pressure head capability, packa ging, acoustic interactions ; and failure
+modes. A standard 90 min fan was the largest common sized fan that could be packaged in each duct.
+   The serial fan configuration has one fan downstream of the first fan. The fans can be physically mounted in
+separate ducts but connected by the CQ interior volume. This configuration allows each fan to add its head pressure
+capability to move the single column of air through the ducting: thereby allowing the system to operate at a higher
+pressure head for a given flow rate. The fan pressure head is required to overcome the back pressure (pressure loss)
+generated by the ventilation ducts' length and number of bends.
+
+
+                                       American Institute of Aeronautics and Astronautics
+                                                          180°Turn                Intake Duct
+                                                       Guide Vanes                      Outlet
+
+
+
+
+                ^
+                                                           Acoustics Intake
+                                                          Abatement 1    Fan
+      II^                                                  Volumes
+      f
+
+
+
+
+                                                                 Air Intake
+                                                                                           A
+                                                                 Duct Inlet ^;
+  L         _
+                                                                     Screen
+  f
+
+
+ Figure 3. Port /Deck CQ interior in the
+ on-orbit deployed configuration.                    Figure 4. Intake duct ventilation flow path and volume
+                                                     dedicated to abatements.
+    The parallel fan configuration has two fans
+side by side or in parallel ducts of equal
+pressure drop. The fans can be physically                                                                     power
+separated into separate parallel ducts of equal                                                              supply
+back pressure. This configuration allows each
+fan a hi gher flow rate for a given pressure head.                                                                           Exhaust
+Figure 5 shows the comparison of a sin gle CQ                                                        -        j              Fan
+fan; two CQ fans in series, and two CQ fans in                       Y
+parallel.                                                            Fr                  I i_
+    As will be discussed in the `duct acoustic                                                                    ^^ A b atern c
+                                                                              n ^ •1 i •'                                     Ab atem ent
+considerations' section later, the ducting                                                                                    volumes
+required numerous bends and abatements to
+reduce acoustic noise from the ISS aisle way
+and the CQ fans themselves. The CQ ducts'              Exhaust
+backpressure and is represented in Fi g. 5 as the         Duct                Line o fAir Exhaust Duct Inlet
+black system curve. In the serial configuration,        screen                 sight             Opening JBIockage
+                                                                              Muffler            Prevention Net not shown]
+one fan can be near the crew's head and the
+other near their feet. This requires less duct Figure 5. Exhaust duct ventilation flow path and volume
+volume near the crew's head and increases the dedicated to abatements.
+CQ's perceived interior volume. In the parallel
+configuration; both fans (or at least the duct outlets) must be near the crew's head. This is required to provide the
+coolest air to the crew's head and to ensure CO 2 removal when the CQ door is open. This requires increased duct
+volume near the crew's head and decreases the CQ's perceived interior volume. Additionally, the parallel fan
+configuration also requires an isolation damper prevent back flow out the duct if one fan failed.
+        In addition to the crew head duct volume advantage, the point of intersection between the system curve and
+either the serial fan curve or the parallel fan curves of Fig. 5 illustrates the differences in flow. The serial fan
+configuration can provide 2.7 m3/min of airflow and is in an area of stable fan performance. Whereas, the parallel
+fan configuration provides 2.1 m3/1111n, and is in an area of potentially unstable fan performance (relatively flat
+region of curve). This unstable region of the parallel fan curve could result in acoustical oscillations from fan/duct
+backpressure interactions.
+    Based on the reduced duct volume at the crew head and the increased airflow rate at higher duct backpressures,
+the serial fan configuration was selected. The calculated flow/backpressure requirements combined with acoustical
+considerations enabled the number of commercially available fans to be narrowed. The JSC Acoustics Office
+assisted in developing an acoustics plan and evaluating candidate fans. The following general guidelines were used
+narrowing fan selection:
+
+
+
+                                 American Institute of Aeronautics and Astronautics
+                                                                                         • Fans with more fan blades are
+       350
+                                                                                   generally quieter because the blade
+                                                    —System Resistance
+                                                                                   loadingdecreases.
+                                                    --One Fan
+                                                                                         • Generally fans with plastic
+       300      -------------------------------     -A 2 Fans in Series       -
+                                                                                   blades are quieter than metal fan blades.
+                                            l       #-2 Fans in Parallel
+                                                                                         • Lower fan rotational speeds
+       250                                                                         are generally quieter.
+                                                                                         • Locate fans away from surface
+
+   ai 200
+               ----------------------- / ---------------------------------         panels. This helps to avoid turbulent air
+                                                                                   flow, which causes greater noise.
+                                                                                         • Design ducting which muffles
+  a 150         --------------- -- ------------------------------------            and absorbs noise.
+                                                                                         • Keep flow paths smooth.
+                                                                                       Cotmnercial fans were reviewed but
+       100                                                                         generally only fans used in previous
+                                       ----------0---------------------------      military or aerospace applications had
+                                                                                   acceptable motor and drive electronics.
+        50     ----------/ ----- lm ^ --- -----------------°------------------I    The largest fan frame size, 90 nun, which
+                                                                                   could be reasonable packaged in the CQ
+                                                                                   duct volume was selected to allow it to
+                                                                                   operate at lower speeds. However, most
+                                                                              8
+                                                                  fans in this size range were optimized for
+                          Air Flow, m3lmin                        higher   flow and back pressure, required
+ Figure 5. CQ fan performance for single, serial, and parallel more electrical power, and generated
+ configurations.                                                  more acoustical noise than acceptable to
+                                                                  the CQ project. The JSC Acoustics
+                                                    Office was in the process of generating a database of
+               Power                                sound characteristics of commercially available fans and
+          Multimeter                                recommended five fans for testing. Each fan was
+                                                    mounted in a simple test stand that allowed for varying
+                                               ^ the backpressure to deter m ine the actual flow rate,
+      Flow Test Box --.^                       1'I power draw, and acoustic signature, Fig. 6. Most fan
+                                     a
+                                                    manufacturer acoustic data is for operation in free air
+   Mieromanometer                    q              without backpressure. As a fan is subjected to
+                                                    backpressure the acoustic noise can increase
+             Flow Meter — significantly. For the CQ application, testing resulted in
+   L
+                          the selection of an EBM-Papst 4184N/2XH fan as the
+                          best compromise between power, flow rate, pressure,
+                          size and acoustics. The fan also contained a tachometer
+             Balance Fan  to monitor rotational speed which was used as part of
+                          the CQ fault detection.
+                                                                    1. Fan Operation versus Thermal Loads
+        Back Pressure                                               Since the CQ is cooled by air exchange with the ISS
+             Valve-Piste                                            aisle way, increasing the air flow rate by increasing the
+                                                                    fan speed decreases the temperate increase (delta) with
+                                                                    the aisle way. For flows above approximately 2.4
+                                                                    m3 /min there is little additional cooling, see Fig. 7. As
+ Figure 6. CO fan flow performance test stand.             air flow increases, fan generated noise and duct
+                                                           aeronoise increase. This resulted in the CQ maximum
+fan speed setting to be limited to generate 2.6 m 3/min. The fan speed was set at three speeds: low (1.8 m3/min),
+medium (23m3/min), and high (2.6m3/min). Continuous speed control while feasible, introduces less reliable/more
+complex electrical components with the air speeds not chan ging perceptively (--1.8 to 5.5 kin/hr). Details of the
+thermal loads were previous described'.                      v
+
+
+
+
+                                    American Institute of Aeronautics and Astronautics
+                                                                            B. Duct Architecture
+                                                                               The system curve, Fig. 5, increases rather
+ W    U                                         --s—   Sleeping Heat Load
+ a
+ a ^
+                                                                            rapidly due to the number of bends and the volume
+ aa          ------------- ------------------          Awake Heat Load      limits of the CQ bump-out which limited the
+ da
+ (^                                                                         effective duct diameter. Although the duct shape
+ M m
+ L                                                                          changes several times to fit in the volume around
+   R
+   L                                                                        the doorway, the duct cross sectional area is
+      a.                                                                    maintained at --120 cm'. The serial fan
+ C N                                                                        confi g uration allowed one duct at the crew head
+ a=
+                                                                            position, named the `intake duct', to transfer air
+ E m                                                                        from the ISS aisle way to the CQ interior. The duct
+ (U
+ L                                                                          at the crew foot potion, named the `exhaust duct'
+ o a                                                                        transfers air from the CQ interior to the ISS aisle
+ a^ o
+ ^ ^L                                                               way. When the CQ door is opened each fan/duct
+ l'J x                                                              system works independently because air can short
+ U LU                                                               circuit through the door. Another benefit to the
+          1.5                2.0             2.5              3.0   serial fan/duct configuration is that it allowed the
+                Ventilation Flow Rate [standard m3lminute]          CQ power supply to be mounted downstream of
+Figure 7. Temperature rise. Verses flow rate.'                      the CQ interior environment so that the electronics
+                                                                    could stay cool while rejecting the --17watts into
+air after the air exits the CQ habitable volume. This resulted in a decrease in interior air temperature of — 0.6 0C or
+the equivalent of 0.4 to 0.7 m3/nun of airflow due to the relatively flat curves of Fig. 7.
+     The CQ ducts not only direct air but also must adsorb fan generated noise and reduce the noise transmitted from
+the exterior. Conventional rigid ducting would direct the NC-52 aisle way noise into the CQ interior and easily
+exceed the NC-40 requirement. The ventilation system could not protrude into the CQ rack volume because of
+system level trade studies indicated the best manifest/crew deployment configuration for the bump-out was to be
+removed and reversed to fit completely flush with the rack volume as a single unit for launch. Additionally, this
+provided structural rigidity during launch and reduced crew time during assembly. The total bump-out volume is
+--0.39 m3 . The door size of the previous Temporary Sleep Station (TeSS) 1 was maintained and this translation area
+was maintained through the bump-out depth. The door volume utilized --50% (--0.19 m) of the bump-out volume
+and provides additional interior crew volume in the elbow/torso area — which is useful when using the laptop table or
+changing clothing. This allowed the maximum interior crew volume. Greater duct volume was allocated to the inlet
+duct, --34% of the bump-out volume (-0.13 m 3), because the outlet is at the crew head position. The volume shape
+was complex, running along the forward edge of the door; and between the top of the door and upper bump-out
+chamfer. The exhaust duct volume, —11% of the bump-out volume (--0.04 m 3), was located below the door and the
+lower bump-out chamfer. The remaining bump-out volume was used for stricture and miscellaneous hardware.
+2. Duct Acoustic Abatement Considerations
+     The interior of the duct surfaces needed to be covered with sound adsorbing material that was acoustically
+porous, adsorb a wide range of acoustic frequencies, have low frangible (particle generation), cleanable, replaceable,
+and meet the ISS flamunability and mold/fungus resistance standards. Extensive configurations of foams, fills,
+coverings, and stiffening materials were tested with the assistance of the JSC Acoustic Office. The final flight
+abatement design consisted of 19 foam blocks and fabric blankets for the CQ duct surfaces. The integrated
+abatement shapes provided a smooth flow surface and utilize all the remaining bump-out volume. The inlet flow
+path directs air around three 90 turns and one 180 turn. The intake fan was located close to the front of the duct to
+allow more opportunities for adsorption before entering the CQ interior. The exhaust flow path provided one 90
+degree turn, one 180 degree turn and one muffler region. The depth of the foam at each turn was varied to tailor each
+area for a particular acoustic noise half-wave len gth. Several functional duct mocks were used to develop the
+abatement implementation.                             V
+
+
+
+
+                                          American Institute of Aeronautics and Astronautics
+3. Duct Mockup Acoustic Tests
+In addition to the mockups used for crew evaluations'; the project created a series of full scale ducts early in the
+development phase. These full scale units were required to characterize the competing requirements of power draw;
+heat rejection for crew comfort/electrical cooling, sound level requirements, packaging limitations, and
+manufacturability concerns. The first unit had a wood structure and melamine foam abatements to line the flow path
+and attenuate the sound levels. The benefit of the wooden mock-up was the ability to easily reconfigure it with
+multiple abatement materials. This enabled abatements to be tailor to the adsorbed acoustic frequencies of the fan
+and external environment. The initial duct test stands were comprised of separate intake and exhaust duct structures
+to evaluate individual duct performance Fig. 8 and Fig. 9.
+
+
+
+
+ Figure 8. Initial functional intake duct (wood and              Figure 9. Initial functional exhaust duct (wood
+ melamine) in acoustic testing.                                  and melamine) functional mockup.
+    The wooden test unit was used to measure CQ specific initial design data for: fan placement within the ducts,
+system backpressure, flow rate assessments; and rough acoustic measurements. The initial fan and flow testing
+allowed determination of fan rotational speeds, initial placements of flow sensors, and back pressure of abatement
+lined ducts. The second round of testing with the wooden test articles was to improve acoustic sensitivity fidelity of
+fan placement in the duct. In Fig. 8 the horizontal alununum plate in between the yellow melamine abatements held
+the intake fan. The intake fan position was adjusted vertically to characterize its effect on acoustic levels. Similar
+testing was done to the exhaust duct fan placement. The third round of testing investigated placement of airflow
+sensors and flow distribution at the duct outlets. The airflow sensors function similar to a hotwire anemometer. The
+sensor heats an area of its surface and the airflow across the sensor cools it down. The sensor compares the ambient
+temperature and the current temperature of the heated area and evaluates it against the heated area's theoretical
+temperature without airflow. The sensor provides a volta ge output proportional to the change in the air flow across
+the heated area. With the many turns in the ducting, it was difficult to find a location that provided a consistent
+representative air speed for flow monitoring. Eventually, the intake duct geometry was slightly altered to place the
+flow sensor in a narrower cross sectional area that provided more uniform airspeed changes with changing flow rate.
+Similarly the exhaust flow sensor was moved to the highest air speed location of the divergent zone. Moving both
+    Air Speed, m/min: n 4-34 n 30-60  50-90 n 90-124 n 120-150
+                                                                                  flow sensors to higher airspeed
+                                                                               6 regions was required because testing
+                                                                                  revealed that ducting areas with low
+                                                                               S air speeds did not change
+                                                                               4 sufficiently during fan/duct failure
+                                     tr
+                                                                               3 scenarios. During detailed airspeed
+                                                                               Z
+                                                                                  measurements of the intake duct
+                                                                                  outlet, it was discovered that the
+                                                                                  centrifugal effects of the duct bends
+   1 2    3 4 5      6 7    3 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+                                                                                  was larger than expected, see Fig. 10
+                                                                                  (zone E). The majority of the air
+Figure 10. Air speed at each opening in air diffuser outlet after flow was forced to one end of the
+addition of flow vanes to create five air channels (A through E).                 intake duct outlet diffuser. A five
+                                                                                  channel set of guide vanes were
+
+
+                                 American Institute of Aeronautics and Astronautics
+added to more evenly divide the airflow across the diffuser. Figure 10 is the result of 138 hot wire anemometer
+readings at each intervene opening in the intake duct outlet diffuser (see Fig. 2 and Fig. 4). The letters A through E
+represent the channels between the guide vanes.
+4. Flight-like Duct Abatement Tests
+    As previously discussed' a full scale mid-fidelity mockup was used for crew evaluations. This mockup structure
+was fabricated from aluminum and composites similar to the flight unit. Additionally, flight-like acoustic blankets
+and duct abatements were used to test the integrated acoustic mitigation's effectiveness. Several abatements required
+minor adjustments for proper fit. Testing revealed the intake duct fan's elastomeric mounts did not properly isolate
+the fan and resulted in structural noise transmission. The design solution was to capture the fan within one of the
+foam abatements, see Fig 11. This soft capture approach reduced the structure transmitted noise but could possibly
+damage the abatement during launch so the fan was launch separately and installed on orbit. Additionally the mid-
+fidelity mockup revealed a slight acoustic interaction between the intake and exhaust fans. Inside the CQ interior,
+the fan interaction caused a slight periodic `beating.' The design solution was to change the electrical drive circuit to
+reduce the exhaust fan speed —10 rotations per nunute to remove the beating. Testing indicated that there was likely
+going to be a minor exceedance near the fan blade pass frequency. Several minor abatement adjustments were
+incorporated into the final design to reduce the exceedance.
+
+                                               C. Structure Transmitted Acoustic Architecture
+                                                   If the ISS ventilation equipment and payload mounted fans/pumps
+                                               met their acoustic requirements the need for mitigating structure
+                           ` transmitted noise would be greatly reduced. There is a great need for
+                                               the development of inherently quite fans and pumps to reduce mass
+                                               dedicated to passive acoustical controls. In addition to the noise
+                                               generated by the CQ fans and conducted through the ventilation ducts,
+                                               the ISS aisle way noise (NC-52) is also transmitted through the
+                                               structure. Candidate materials were tested for their acoustic
+                                               transmission losses from 63 to 10,000 Hz. Larger transmission losses
+                                               indicate greater absorbance of sound energy.
+                                               5. Stnictural Materials
+                                                   The CQ racks were constructed of an aluminum frame that captured
+                                               panels of composite (black material in Fig. 1) or plastic material. The
+                                               aft side wall, forward side wall, lower back panel, and floor were
+                                               constructed of light weight carbon fiber skin/Nomex® honeycomb core
+                                               of ---2.8 cm thickness. A single Nomex® honeycomb core, a double
+                                               honeycomb core (two cells of half the total thickness with a parting
+                                               sheeting between them), and the TeSS' Fibrelam® material were
+                                               tested. The single and double cores' attenuation were essentially
+Figure 11. Intake fan soft captured in identical below 800 Hz. The double core provided ---1-3 dB greater
+foam abatement.                                attenuation above 800 Hz. The Fibrelam® transmission was similar to
+                                               the carbon fiber composites below 200 Hz but generally 5-20 dB less
+attenuation above 200 Hz compared to the carbon fibevNomexG composites. The single Nomex® core carbon fiber
+composite panels were selected because ease of manufacturer outweighed the minor acoustical benefit. The lowest
+transnssion loss was —12 dB at 100 Hz.
+    The CQ racks also incorporated ­ 125 kg of ultra high molecular weight polyethylene for reduction of radiation
+material. The 6-cm thick panels are located in the pop-up ceiling, and back walls (except for the lowest panel). This
+material was selected for its radiation reduction properties. The lowest transmission loss was --12 dB at 100 Hz.
+    The CQ rack bump-out is constructed primarily of aluminum (-0.1-0.7 cm thickness) due to the many angles and
+internal attachment points. The aluminum exhibits little transmission loss below 300 Hz. At 300 Hz, the aluminum
+transmission loss is --7dB. Since the transmission losses below 300 Hz were so low, the bump-out's exterior acoustic
+blankets were incorporate acoustic barrier materials.
+
+
+
+
+                                 American Institute of Aeronautics and Astronautics
+6. Acoustic Blankets
+As summarized in the preceding paragraph, the CQ rack bump does not provide much low frequency acoustic
+mitigation and a blanket is required. The blanket design had to balance flammability requirements, cleanability, and
+acoustics. Nomex® is often used in space applications because of its flammability resistance but it can retain stains,
+trap dirt, and be difficult to clean as was experienced in the TeSS acoustic blankets. Five fabrics (Nomex(&, Ortho
+fabric, a TeflorrR fabric, and two Gore -TeX® fabrics) were evaluated for stain resistance and cleanability. Soiling
+was evaluated by combining elements from ASTM D4265, `Standard Guide for Evaluating Stain Removal
+Performance in Home Laundering', AATCC Test Method 118-1983, `Oil Repellency: Hydrocarbon Resistance
+Test', and AATCC Evaluating Procedure — Gray Scale for Stainin g.' The fabric samples were soiled with instant
+coffee (an ISS drink) and an oil to simulate human skin oils. The Gore-Tex® and Teflon® fabrics were substantially
+more resistant to staining than the Nomex® and Ortho fabrics. Additionally, the air permeability of the fabrics was
+evaluated using ASTM D737, `Standard Test Method for Air Permeability of Textile Fabric.' Fabrics with higher air
+permeability allow more sound energy to transfer through to lower layers of sound adsorbing material. TeSS'
+Nomex® had the lowest air permeability of 2.0 m 3/hr whereas the other materials ranged from 17-140 m 3/hr
+depending on the material weave. Evaluation of the two tests resulted in the selection of a white Gore-Tex® fabric
+for the interior surface of the blankets. White Nomex® for the external surface next to the CQ structure was selected
+for its flammability resistance and relatively high stiffness to give the blankets `body' during handling and
+installation. The primary sound blocker is Barium Impregnated Silicon Oxide (BISCO®) elastomeric sheet, 1.2
+kg/mZ . It provides a minimum of 11 dB reduction. A ran ge of sound adsorbing interior materials were tested
+including: Nomex® Durette® felt (used on TeSS), Kevlar, and Thinsulate TM . Initially Thinsulate TM was chosen
+because it was 26% lighter per unit area than Kevlar. However, Thinsulate TM unexpectedly failed the flame
+propagation test so it was replaced with Kevlar because it is lighter per unit area than Durette® felt. The CQ interior
+blankets are similar construction except the BISCO® is not required because the CQ structure provides adequate
+acoustic blocking. The final construction of the blankets is depicted in Fig. 12. From a usability perspective, the
+blankets were quilted to prevent billowing. 5-cm by 5-cm hook and loop fasteners patches are used on the backside
+to attach the blankets to the CQ structure and sinular patches are used on the front to allow attachment of crew
+items. Grommets are used to reinforce mounting holes for D-rings that are used to hold crew items with elastic cords
+or ties. From a performance perspective the amount of thru stitching used for quilting and attachment hook-loop
+fasteners is nummized because it compresses the thickness which reduces acoustic adsorption. Quilting was limited
+to -- every 10 cm and the hook and loop fasteners were bonded to the fabric and corner stitched throu gh the top
+fabric surfaces to minimize blanket compression, Fig 13.
+
+
+
+
+                            e
+                       ..   ~ u
+          ai   E       Li    i ` 1°
+
+          3    a       ^     a    3
+     CU        L
+                       Y
+                                  L.J
+
+
+
+
+                   I
+
+               Quilted                                              Quilted
+               Interior                                             Exterior
+               Blanket                                              Blanket
+
+ Figure 12.            Interior (leftl and exterior (ri-2ht) acoustic blanket material lavers.
+
+                                     III. Flight hardware implementation
+The CQ flight structure, electronics, and abatement design completion was later than planned and resulted in limited
+opportunity for full flight test of the integrated fan, abatement, and blanket testing. Additionally, program funding
+limits had removed the qualification CQ unit. As described above, this resulted in the mid-fidelity mockup's use
+being extended beyond the original planned crew uses. It was also used for testing portions of the blankets, fan
+operation, and duct abatements.y
+
+
+                                        American Institute of Aeronautics and Astronautics
+                                          D. Acoustic Blankets
+                                              The three-dimensional external bump-out acoustic blanket was fit
+                                          checked with the bump-out during its mechanical assembly. Likewise
+                                          the interior blankets were test fit to the rack structure during assembly
+                                          and revealed that several hook and loop fastener patches were not in
+                                          proper alignment due to inadvertent mirror image differences between
+                                          port and starboard configuration. These enabled minor adjustments to
+                                          blanket patterns as all four CQs were being fabricated simultaneously.
+                                          Despite acoustic testing to select lighter weight materials, the CQ
+                                          blankets still weighed --23 kg per CQ and occupied --0.1 in' of volume.
+
+                                  E. Duct/Abatements Integration
+                                  Figure 14 shows the CQ bump-out during final assembly without the
+                                  interior acoustic blankets, close out panels, and antiblockage net. This
+                                  configuration allows the majority of ventilation abatements to be visible.
+                                  The gold surfaces are Durette g felt and have good air permeability
+                                  characteristics. The abatement interior composition varies depending on
+                                  the abatement piece, but typically contains an open cell polyimide foam
+                                  external contoured shape and a Thinsulate TM batting interior. The olive
+ Figure 13. Typical CQ sleep wall drab green exterior is a Nomex® covering to reduce the frangibility. The
+                                                                  abatements are held to the aluminum
+                 Deep 180'                                        walls with a combination of hook and
+                                               Flow Guide         loop fasteners and light compression. All
+                                               Vanes              of the abatements are designed to be
+                                                                  cleanable with the ISS vacuum cleaner
+                                               Intake             outfitted with an upholstery brush
+                                               Septum             attachment. The abatements can also be
+                                               Abatement          replaced if they are dammed or become
+                                                                  unacceptability dirty.
+
+                                                       Intake Fan        F. Certification Acoustic Testing
+                                                       Abatement             Prior to final delivery, acoustic
+                                                                         certification testing of the CQ rack was
+                                                     Intake Inlet        conducted to compare the acoustic
+                                                     Blanket performance with the requirements.
+                                                                         Reiterating the CQ acoustic requirements
+                                                                         include the exterior rack emissions, the
+                                                                         minimum interior, and the maximum
+                                            IPI       Intake             interior sound levels.
+                                         -            Duct                   The ISS acoustic requirements for
+                                                      Inlet              hardware and interior volumes were
+                                           _                             developed from experience gained
+                 ►                                   Deep Exhaust during the Space Shuttle program and
+                 /                                   Abatement           the NASA missions to the Russian Mir
+              i
+                           ?                                             space station.     The requirements are
+                                 _-                                      written in terms of noise criterion (NC)
+                                                                         curves, which allow higher sound levels
+                                                     Exhaust Duet
+        Exhaust Cutlet       Line of Sight                               in the low frequency octave bands where
+    Screen & Diffuser        Muffler                 Fan                 human hearin g is less sensitive . 3 NASA
+           Abatements                                                    habitability standards establish NC-50 as
+                                                                         the acoustic work environment and NC-
+Figure 14.   Bump-out interior with acoustic blankets and closeout 40 as the limit for sleep environments .4
+panels removed to expose ventilation duct acoustic abatements.           The NC-50 curve is the limit where 75%
+                                                                         of conversation can be understood with a
+                                                                         normal speaking level at 1.5 to 1.8 m.
+The NC-40 limit for sleep environments was established as the level that is needed to provide auditory rest for the
+                                                        10
+                                American Institute of Aeronautics and Astronautics
+crew to prevent stress; anxiety and to promote physical relaxation. Additionally the minimum requirement for the
+sleep environment is that the sound level must exceed NC-25. This minimum requirement was established due to
+feedback from the crew indicating that they wanted to hear the machinery operating in their vicinity so that they
+could subjectively tell if there was a malfunction based on the change in sounds.
+                                                                                    The CQ rack exterior continuous
+     70
+                                                                                acoustic emissions requirement is that
+                                                 (Area Weighted Exterior
+                                                                                the levels are not to exceed the NC-40
+            Fc^,                                 -7 • NC- 40 Requirement        octave band limits. This is a sub
+     FY()  ----' ------------------------------------------------------         allocation of the overall Node 2
+                    r^                                                          module   to meet NC-50 when all the
+                                                                                Node's hardware acoustic spectrums
+  v                                                                             are integrated. Exterior emissions of
+  a s0
+                                                                                the CQ rackwere assessed using a
+  m`                                                                            spatially weighted average calculated
+                                                                                from a 14 nucrophone array that was
+  a 40
+                                                                  _•I           distributed across the front and sides
+                                                                                of the bump-out structure. This
+                                                                                method has been used before on other
+                                                                                ISS rack systems. However. the CQ is
+  ^ 30
+                                                                                the most complex geometry rack to
+  3
+  O
+                                                                                date that the array method has been
+ LOS
+                                                                                applied. From the measurements, it
+     20                                                                         was determined that exterior noise
+                                                                                level met the NC-40 requirements
+                                                                                with the ventilation at the "low" speed
+                                                                                setting. Fig. 1.5. This was considered
+       10
+                                                                               acceptable because the "low" speed
+              63   125    250      500    1000 2000 4000 8000 A-Wt OA          setting was considered the continuous
+                                Octave Band Frequency, Hz
+                                                                               operating condition. The higher
+Figure 15. Area weighted average sound level of exterior of CQ.                settings were considered intermittent
+                                                                               operating conditions.
+                                                                                   The CQ interior sound level
+                                                                               acoustic requirements are measured at
+                                                                               the occupant head location are to be
+                                                                               greater than NC-25 and not to exceed
+                                                                               NC-40. The exterior sound level
+                                                                               requirement also only applies at the
+                                                                               low speed ventilation setting. The
+                                                                               rational for this is that the crew has
+                                                                               control of the ventilation speed and
+                                                                               can adjust it to suit their personal
+                                                                               preference. Therefore, the lowest
+                                                                               ventilation setting is considered the
+                                                                               nominal condition for this analysis.
+                                                                                   The occupant head location was
+                                                                               determined using the range between
+                                                                               the 95 th percentile male and the 5th
+                                                                               percentile female. The occupant's
+                                                                               zero-gravity neutral body posture
+                                                                               limits the head position to within a 10
+                                                                               cm range. The midpoint of this range
+                                                                               next to the side wall sleeping bag was
+Figure 16. Photograph of the CQ interior 30 cm measurement grid.               used    for   the      head    location
+                                                                               measurements.
+   Although the occupant head location was the only point dictated by the acoustic requirement, three other interior
+locations were also used in order to assess the overall interior sound field of the CQ rack, shown in Fi g. 16.
+                                                            11
+                                   American Institute of Aeronautics and Astronautics
+      70                                                                            The octave band spectrum results
+                                                                                for all four measurement locations
+                                                                                are shown in Fig. IT An exceedance
+                                                                                to the acoustic requirement is noted
+      60
+                                                                                in the 250 Hz octave band at the
+  M
+                                                                                occupant head        location.   The
+ w                                                                              frequency of the exceedance
+      50                                                                        corresponds with the blade pass
+ v                                                                              frequency of the inlet and exhaust
+ m                                                               fans and this band's levels were a
+ ^i                                                              challenge during the developmental
+  J  40                                                          acoustic testing. It is interesting to
+  m                                                              note the variation of the level of the
+  H                                                              250 Hz octave band peak over the
+                                                                 CQ volume. The level drops
+  cL 30
+                                                                 dramatically as the measurement
+  C
+  0
+                                                                 location moves toward the center of
+                                                                 the volume. This indicates that the
+     20                                                          geometry of the interior volume
+                                                                 plays an important role in the
+                                                                 amplification and attenuation of
+                                                                 particular frequency content of an
+     10                                                          acoustic signal. On the basis of this
+          63    125    250     500 1000 2000 4000 8000 A-wt OA large variation with measurement
+                           Octave (Band Frequency, Hz            location, an exception to the acoustic
+Figure 17. CQ interior sound level measurements at low fan speed requirement was granted.
+from microphone array.
+
+
+                                      IV. CQ On-orbit Performance
+
+G. Crew Feedback
+    Since the initial CQ installation in Dec 2008, six crew members have occupied the CQs. Crew privacy
+restrictions prevent the delineation of specific crew comments. However, in general crew feedback has been very
+favorable. The crew has indicated that overall volume, illumination, and stowage of the CQ are acceptable. There
+have been a few comments about the desire for a few more hook and loop fastener patches for display/placement of
+crew items. Adequacy of airflow has generally been acceptable with most crew members reporting that they kept the
+fan on low or medium speed. Since the interior temperature of CQ is dependent on the combination of the Node 2
+CCAA temperature setting and the CQ fan speed setting, there have been times when one crew member is too warm
+while others are comfortable. Acoustically the crew recognizes that the CQ does provide a needed acoustic break
+from the ISS aisle ways and work areas. The interior does allow a quiet and dark place for sleeping. However,
+several crews have commented that the fan's high speed setting does generate a louder acoustical environment than
+desirable.
+    The only on-orbit issue has been the repeated triggering of the starboard CQ single fan failure alarm. The alarm
+can be triggered by either the intake or exhaust duct because the signals are lo gically `OR'ed together.
+Troubleshooting to date has included limited crew inspection and air speed readings with a handheld meter in the
+CQ air outlets. With only limited crew time available for trouble shooting it has not been practical to get sufficient
+data to compensate for the variability caused by the relatively low air speed and turbulent divergent outlet airflow.
+Although inconclusive, the leading alarm trigger candidate is that dust has accumulated on both fans and or flow
+sensors and reduced the air flour. The CQ interior is vacuumed weekly including the inlet screens of both the inlet
+and exhaust ducts. Lint is reported to be present on the screens during the cleaning. Although the fans are cleanable,
+they are purposely located in the duct interiors and surrounded by acoustical abatements to reduce acoustical noise.
+The intake fan requires the removal of two panels and one abatement to access. The exhaust fan requires the
+removal of the antiblockage net and one panel to access. The CQ fans and ducts are scheduled to have their first
+disassembly and cleanin g in April 2010. Based on this initial cleaning activity the frequency of cleaning will be
+adjusted in order to maintain adequate ventilation system performance.
+                                                          12
+                                 American Institute of Aeronautics and Astronautics
+H. Acoustic Measurements
+    Acoustic measurement surveys of the ISS are conducted bi-monthly. Always of particular interest to these
+surveys are the sleep locations of the crew. Due to the short delivery schedule for the CQ racks, it was not possible
+to perforni an acoustic test of the first two racks that were delivered to the ISS in late 2008 on fli g ht ULF2.
+However. the CQ rack that acoustic certification testing was performed arrived in late 2009 on flight 17A. To date,
+all three units have been surveyed. Typical octave-band spectra of the three units measured at the occupant head
+location operating at low speed are shown in Fig. 18, as well as the ground test measurement results. Note the blue
+curve is the acoustic certification rack discussed previously-
+      70                                                                            The variation between the three
+                                                         p Node 2, Port, Say 5   units on-orbit is somewhat
+              {                                         -4— Made 2, Stbd, Bay 5  surprising, as well as the relatively
+              $. ' •                                       -JPM, Deck, Bay 4
+                                                                                 low sound levels on-orbit as
+      60    --- -      - ---------------------- ------                           compared to the ground test. There
+                                                        —a NG-40 Requirement
+   M                                                                             are several possibilities for the
+                                                                                 variations between units and the
+  ^v 50     ----- -------- 'o -------------------------------------------        ground testing. First, the microphone
+                                                                                 location is not as well controlled
+  m                                   O.                                         during the on-orbit as in the
+                                                                             o   laboratory. The crew member
+      40
+                                                       o -:      ------------ -- performing the measurement is
+  v                                           n ___                              simply asked to place the
+  3
+                                                                                 microphone in the occupant head
+   m
+  a` 30                                                              sleep position and take the
+  C                                                                  measurement. Second, some
+  c                                                                  variation was noted during the
+  Ln
+                                                                     ground testing based on the
+       20                                                            assembly of the CQ stricture and
+                                                                     abatements. Since the racks were
+                                                                     assembled on orbit on different
+       10
+                                                                     occasions, it is not surprising that
+                                                                     some variation between the
+            63     125     250    500    1000 2000 4000 800D A-wt OA
+                               Octave Band Frequency, Hz
+                                                                     acoustics of the racks would be
+ Figure 18. On-orbit CQ interior sound level measurements at the noted. Finally, the decrease in levels
+                                                                                to compared t the CQ ground
+ occupant head location with then fan on low fan speed.
+                                                                                testing is attributed         to the
+deployment of crew personal effects (such as clothing) inside the rack. Acoustic tests performed durin g the
+development of the CQ indicated that the interior sound levels were very sensitive to the volume and absorption of
+items placed inside. However for to maintain repeatability, crew items were not accounted for in the certification test
+since they vary from crew-member to crew-member. Crew items that are installed on-orbit can include stowage bags
+for clothin g, pictures, laptop, and other items.
+
+                                                V. Conclusions
+In general, the ISS CQs have received favorable crew comments with respect to acoustics. Some crew comments
+have indicated the need for reducing the acoustic signature of fans on high speed. As demonstrated by the CQ
+hardware it is possible to reduce noise transmission from the relatively acoustically noisy ISS aisle way to provide a
+dedicated crew volume that is quite and private. The use of full scale functional ventilation,-acoustic mockups is
+critical to successful implementation. However, this paper illustrates the significant design considerations, testing,
+and impacts required to reduce acoustic noise by --12 dBA for a 2.1 in habitable volume. In addition to the
+development cost for acoustic reductions while providing adequate ventilation, the CQ had to allocate --13% and
+--6%, respectively of its total mass and volume. The total impact across all four CQs is --91kg and 1.1 m3 . This is a
+significant penalty for passive noise cancellation for ISS which is in low earth orbit. Future missions at Lagrange
+points or planetary surfaces can likely not support this level of mass and volume impact. It would be beneficial to
+reduce noise at its source using advanced quite fans and active noise cancellation inside ventilation ducts. This
+would reduce the ambient acoustic noise of future vehicles and greatly reduce or eliminate the need for passive
+acoustic measures.
+
+                                                          13
+                                 American Institute of Aeronautics and Astronautics
+                                                  Acknowledgments
+    This paper summarizes the hard work that was performed by numerous JSC NASA, Engineering Support Con-
+tract, Bioastronautics Contract, engineers, analysts, functional specialist, technicians, and crew members. The CQ
+project is funded by the NASA JSC ISS Vehicle Office.
+
+                                                       References
+    'Broyan, J. L., Borrego, M. A., Bahr, J. F., "International Space Station USOS Crew Quarters Development," 2008-01-2026,
+38"' International Conference on Environmental Systems, SAE International, Warrendale, PA, 2008.
+    ZBroyan, J. L., Borrego, M. A., Baler, J. F., "International Space Station USOS Crew Quarters On-orbit vs. Design
+Performance Comparison," 2009-01-2367, 391'` International Conference on Environmental Systems, SAE International,
+Warrendale, PA, 2009.
+    3Beranek, L. L., Ver, I. V., "Noise and Vibration Control Engineering," John Wiley & Sons, 2006.
+    4"Man-System Integration Standard," NASA-STD-3000 vol. III, 1994-
+    5Goodman, J. R. "International Space Station Acoustics," NOISE-CON 2003, Institute of Noise Control Engineers,
+Indianapolis, IN, 2003.
+
+
+
+
+                                                          14
+                                  American Institute of Aeronautics and Astronautics
+

@@ -112,7 +112,7 @@ def islands(bm):
 def paint(o, roles):
     """Every face gets a role by where it sits: the NASA texture (a white suit with a flag, a NASA logo, a
     mission patch and a red stripe) is dropped, so no insignia survives."""
-    suit, trim, metal, visor, body, _accent = roles
+    suit, trim, metal, visor, body, _accent, _stripe = roles
     bm = bmesh.new()  # read the faces first: clearing the slots resets every face's material index
     bm.from_mesh(o.data)
     bm.faces.ensure_lookup_table()
@@ -299,7 +299,7 @@ def skin(o, arm):
 
 def build():
     reset()
-    roles = [mat(n) for n in ("suit", "trim", "metal", "visor", "body", "accent")]
+    roles = [mat(n) for n in ("suit", "trim", "metal", "visor", "body", "accent", "stripe")]
     suit = load_suit()
     paint(suit, roles)
     arm, src = fit_rig()
@@ -307,8 +307,8 @@ def build():
     for s, sx in (("l", 1), ("r", -1)):
         sh, el, hip, kn = (joint(n, s) for n in ("shoulder", "elbow", "hip", "knee"))
         wr = joint("wrist", s)
-        bands[band(suit, "band_arm_" + s, sh.lerp(el, 0.6), el - sh, 0.06, roles[5])] = "upperarm_" + s
-        bands[band(suit, "band_leg_" + s, hip.lerp(kn, 0.62), kn - hip, 0.07, roles[5])] = "thigh_" + s
+        bands[band(suit, "band_arm_" + s, sh.lerp(el, 0.6), el - sh, 0.06, roles[6])] = "upperarm_" + s
+        bands[band(suit, "band_leg_" + s, hip.lerp(kn, 0.62), kn - hip, 0.07, roles[6])] = "thigh_" + s
         bands[band(suit, "ring_wrist_" + s, wr + Vector((0.0 * sx, 0, 0)), wr - el, 0.025, roles[2])] = "hand_" + s
     marks = {}
     for b, bone in bands.items():
@@ -321,7 +321,7 @@ def build():
     suit.name = "astronaut"
     smooth(suit, 40)
     bare = skin(suit, arm)
-    # the team's patch on the left arm, between the shoulder and the teal band; no insignia (AGENTS.md). Joined after
+    # the team's patch on the left arm, between the shoulder and the orange band; no insignia (AGENTS.md). Joined after
     # the automatic weights: its small separate pieces made the heat solve fail and crumpled the sleeve
     sh, el = joint("shoulder", "l"), joint("elbow", "l")
     for o in patch(suit, "patch", sh, el, 0.105, roles[1], roles[5]):

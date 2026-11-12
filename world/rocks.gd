@@ -134,7 +134,7 @@ func _blocked(x: float, z: float, r: float) -> bool:
 		if x > box.position.x - r and x < box.end.x + r and z > box.position.z - r and z < box.end.z + r:
 			return true
 	var half: float = _world.data.paths.width / 2.0 + r
-	for line: Array in _world.data.paths.lines:
+	for line: Array in _world.data.paths.lines + _world.data.get("cables", {}).get("lines", []):  # a cable lies on bare ground too
 		for i in line.size() - 1:
 			var a := Vector3(line[i][0], 0, line[i][1])
 			var b := Vector3(line[i + 1][0], 0, line[i + 1][1])

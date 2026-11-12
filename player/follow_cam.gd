@@ -31,6 +31,8 @@ var steady := Vector3.ZERO  # the travel, slowly averaged: what the spring may l
 var slope := 0.0  # rad of extra pitch for the ground ahead
 var fast := 0.0  # m/s at which the shot is all the way into its speed framing (rush_*); 0 for none (on foot)
 var rush := 0.0  # 0 to 1: how far into it, eased by lead_rate so a start or a stop never jerks the lens
+var glance: Array[Vector3] = []  # far things worth a slow look while the view is left alone (the owner fills it)
+var glanced := 0.0  # rad the view has turned toward them since the player last looked
 
 
 func setup(tuning: Dictionary) -> void:
@@ -75,6 +77,7 @@ func snap(heading: float) -> void:
 	steady = Vector3.ZERO
 	slope = 0.0
 	rush = 0.0
+	glanced = 0.0
 	floor_y = target.global_position.y
 	global_position = target.global_position + Vector3.UP * height
 	dist = _wanted()
@@ -87,6 +90,7 @@ func look(right_deg: float, down_deg: float) -> void:
 	yaw -= deg_to_rad(right_deg)
 	pitch = clampf(pitch - deg_to_rad(down_deg), deg_to_rad(t.pitch_min), deg_to_rad(t.pitch_max))
 	idle = 0.0
+	glanced = 0.0
 
 
 ## The camera's flat heading: what "forward" means for the move keys.
@@ -111,6 +115,18 @@ func follow(delta: float, travel: Vector3, facing: float, on_floor: bool) -> voi
 	if idle > t.recentre_after and speed > 0.0 and away:
 		var heading := facing if travel.dot(Vector3(-sin(facing), 0, -cos(facing))) < 0.0 else atan2(-travel.x, -travel.z)
 		yaw = lerp_angle(yaw, heading, 1.0 - exp(-t.recentre_per_m * speed * delta))
+	# a far thing worth seeing (Nesky #32: for a far target, rotate): with the view left alone and the hero standing
+	# on foot (`fast` is a vehicle's), the yaw turns slowly toward the one most in front, a few degrees at most, and
+	# the next look takes over at once (#34, #35: never take control, never while the player looks). Yaw only
+	elif glance.size() and idle > t.glance_after and speed < 0.05 and fast == 0.0 and glanced < deg_to_rad(t.glance_max_deg):
+		var best := INF
+		for p in glance:
+			var err := wrapf(atan2(global_position.x - p.x, global_position.z - p.z) - yaw, -PI, PI)
+			best = err if absf(err) < absf(best) else best
+		if absf(best) < deg_to_rad(t.glance_front_deg):
+			var step := signf(best) * minf(absf(best), deg_to_rad(t.glance_deg_s) * delta)
+			yaw += step
+			glanced += absf(step)
 	var at := target.global_position
 	if on_floor:
 		floor_y = at.y

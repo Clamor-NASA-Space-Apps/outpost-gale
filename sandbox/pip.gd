@@ -7,7 +7,9 @@ extends AnimatableBody3D
 ## Motion, lights and a beep only: nothing here changes game state (hard rule 1).
 ## Speed, acceleration and turn rate: reality.json pip.*; behaviour and timing: world.json `pip` (art direction).
 
-signal sound(what: String, pos: Vector3)  # "pip_go" setting out, "pip_hello" noticing the hero (audio.play)
+# "pip_go" setting out, "pip_hello" noticing the hero (audio.play); "radio_pip" a chirp on the suit radio when it sets
+# out to visit the hero or notices them (audio.radio(): rare, and only once the air is clear)
+signal sound(what: String, pos: Vector3)
 
 const STATICS := 2
 const THIN := 4
@@ -175,7 +177,9 @@ func _wants_greet(to_hero: Vector2) -> bool:
 
 func _greet(hero: Vector3, to_hero: Vector2) -> void:
 	_go("hero", hero + Vector3(-to_hero.x, 0.0, -to_hero.y).normalized() * float(p.greet_stand_m))
-	if state != "drive":
+	if state == "drive":
+		sound.emit("radio_pip", global_position)
+	else:
 		_greet_cool = float(p.greet_cool_s)  # no way there: try again later, not every frame
 
 
@@ -315,6 +319,7 @@ func _hello() -> void:
 	_flash = float(p.flashes) / float(p.flash_hz)
 	_wiggle = maxf(_wiggle, float(p.wiggle_s) * 0.5)
 	sound.emit("pip_hello", global_position)
+	sound.emit("radio_pip", global_position)
 
 
 ## A rover on the move within flee_m: get out to the side it is on, away from the rover's path.

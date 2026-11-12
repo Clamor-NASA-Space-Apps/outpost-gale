@@ -1,0 +1,1019 @@
+72nd Annual SAWE Conference                                                                 SAWE Paper No. 3593
+May 18-22, 2013                                                                             Category No. 18, 19
+St. Louis MO
+
+
+
+
+                                     Trade Study of System Level Ranked
+                           Radiation Protection Concepts for Deep Space Exploration
+
+
+
+
+                                                     Edited by
+                                     Jeffrey A. Cerro, Aerospace Technologist1
+                                              Vehicle Analysis Branch
+                                          NASA Langley Research Center
+                                                 Hampton, Virginia
+
+
+
+
+                                               For Presentation at the
+                                    72nd Annual Conference on Mass Properties
+                                                        of the
+                                      Society of Allied Weight Engineers, Inc.
+                                               May 18th - 22nd, 2013
+                                             St. Louis, Missouri, USA
+
+
+
+
+The Society is not responsible for statements or opinions in papers or discussions at the meeting. This paper meets all
+regulations for public information disclosure under ITAR EAR
+
+1
+    MSME, PE; Member SAWE, AIAA
+72nd Annual SAWE Conference                                                                SAWE Paper No. 3593
+May 18-22, 2013                                                                            Category No. 18, 19
+St. Louis MO
+
+
+                                  Trade Study of System Level Ranked
+                        Radiation Protection Concepts for Deep Space Exploration
+                                                       Edited by
+                                                   Jeffrey A. Cerro
+                                               Vehicle Analysis Branch
+                                             NASA Langley Research Center
+                                               Hampton, Virginia, USA
+
+                                                         Abstract
+   A strategic focus area for NASA is to pursue the development of technologies which support exploration in space
+   beyond the current inhabited region of low earth orbit. An unresolved issue for crewed deep space exploration
+   involves limiting crew radiation exposure to below acceptable levels, considering both solar particle events and
+   galactic cosmic ray contributions to dosage. Galactic cosmic ray mitigation is not addressed in this paper, but by
+   addressing credible, easily implemented, and mass efficient solutions for the possibility of solar particle events,
+   additional margin is provided that can be used for cosmic ray dose accumulation. As a result, NASA’s Advanced
+   Engineering Systems project office initiated this Radiation Storm Shelter design activity. This paper reports on the
+   first year results of an expected 3 year Storm Shelter study effort which will mature concepts and operational
+   scenarios that protect exploration astronauts from solar particle radiation events. Large trade space definition,
+   candidate concept ranking, and a planned demonstration comprised the majority of FY12 activities. A system key
+   performance parameter is minimization of the required increase in mass needed to provide a safe environment. Total
+   system mass along with operational assessments and other defined protection system metrics provide the guiding
+   metrics to proceed with concept developments. After a downselect to four primary methods, the concepts were
+   analyzed for dosage severity and the amount of shielding mass necessary to bring dosage to acceptable values.
+   Besides analytical assessments, subscale models of several concepts and one full scale concept demonstrator were
+   created. FY12 work terminated with a plan to demonstrate test articles of two selected approaches. The process of
+   arriving at these selections and their current envisioned implementation are presented in this paper.
+
+   Introduction
+   NASA’s goal for exploration of space outside the protection of Earth’s magnetic field requires demonstration of
+   technologies which can mitigate the effects of radiation dosage to crew members. The Advanced Exploration
+   Systems [AES] technology program organizes developments for crew systems, vehicle systems, and operations. It
+   also encompasses the use of robotic precursor missions to gain knowledge prior to or in place of the need to assign
+   crew to a particular mission. Defined within the AES Crew Systems project is a task to develop radiation protection
+   systems and define their integration with proposed mission operations. Shielding, analysis tools, and advanced
+   dosimetry sensors are technology development study areas in this, the AES Radiation Works (RadWorks) project.
+
+   In this paper, the RadWorks Storm Shelter development sub-task is reported on. Status for the first year of a three
+   year effort is presented. Storm Shelter work includes modeling and assessment of radiation sheltering techniques
+   from a system viewpoint with emphasis towards fast track prototyping. Initially, a large systems solution trade space
+   is subjectively assessed, competing figures of merit are weighted, and concept approaches are ranked. Selection of a
+   path forward is discussed with this qualitative ranking in place to characterize concept pros and cons. Decision
+   analysis leads to a focus on several types of protection options and these options are expanded upon with more
+   detailed analysis and again a decision analysis to choose the preferred path for second year development and
+   demonstration. Assessment includes system mass impacts on the decision process; mass metrics are based upon
+   shielding thickness requirements determined by detailed radiation transport analyses. First year activities also
+   included demonstrations of sub-scale prototyping. Second year deliverables will consist of full scale prototyping for
+   multiple approaches while the final products at the end of the third year are envisioned to be an integration of one or
+   two solutions into a full scale deep space exploration demonstration item with an associated usage logistics
+   assessment. This paper is a summarization of inputs from the large multidisciplinary team gratefully acknowledged
+   in Appendix A.
+
+
+
+                                                             1
+72nd Annual SAWE Conference                                                                            SAWE Paper No. 3593
+May 18-22, 2013                                                                                        Category No. 18, 19
+St. Louis MO
+
+
+
+Large Trade Space Screening
+                                                                          There is a rich history of technical approaches which
+                                                                          suggest means to provide radiation protection for
+                                                                          astronauts living in transfer and habitation space
+                                                                          vehicles [NRC2008] [RUC2012] [CLO2005]. For the
+                                                                          RadWorks Storm Shelter team, the approach was to
+                                                                          integrate an appropriate selection of protection
+                                                                          schemes in the vehicle environment of NASA’s
+                                                                          Habitat Demonstration Unit (HDU) [HDU2010].
+                                                                          Considered in that integration are the effects of mass,
+                                                                          operational logistics and radiation protection as they
+                                                                          influence the selection of a “best” protection
+                                                                          approach. Initial activities in FY2012 involved team
+                                                                          based multi-reviewer subjective screening of many
+      Figure 1 - HDU, Baseline Crew Quarters                              existing radiation protection techniques which have
+                 Arrangement                                              been envisioned in past NASA studies. This large
+                                                                          trade space screening activity developed a
+                                                                          characterization of screening methodologies based
+                       Protection Scheme
+                                                                          upon how various systems are constructed and
+          Individual     Common Area        Protection Basic to
+                                                                          operated. Because technically detailed CAD models
+          Protection       Protection         Habit Structure             of the HDU existed from previous work, and such
+                                                                          models were required to perform radiation transport
+   Wearable    Single Crew     Loft                   Loft                analyses, the Storm Shelter team utilized the HDU as
+              Compartment
+                               Main Floor             Main Floor          a vehicle to assess storm shelter integrations within.
+                               Airlock                Airlock
+                                                                          Figure 1 shows an interior arrangement for the HDU.
+                               Galley                 Galley       Figure 2 shows the trade tree utilized by the storm
+                               Hygiene Unit            Hygiene Unit
+                                                                  shelter team to categorize and discuss potential
+                                                                  protection approaches. To minimize the size of a
+                Figure 2 - Large Trade Space                      region which must be protected, the idea of shielding
+                                                                  crew members only rather than a larger surrounding
+volume seemed inherently worthy. Such approaches are captured as “Individual Protection” concepts. Another
+efficient volumetric packaging method is to combine all crew into a small area and shield only that region; such
+approaches are categorized as being in a “Common Area”. Considering the operational constraints imposed upon
+crew for either of these first two approaches, the third leg of the tree focuses on concepts which shield large portions
+of the overall vehicle and pose no particular operational demands on the crew. The actual trade tree depicted in
+Figure 2 was captured down to seven levels of hierarchy using a commercial trade tool analysis program [VIS2008].
+
+The event scenario that is prescribed for comparison of all approaches is that of providing required protection to four
+crew for a 36 hour period from the danger imposed by a Solar Particle Event (SPE). The crew has a maximum of
+one hour to prepare and inhabit the protected area; a time of less than 15 minutes is tracked as an ultimate
+performance metric goal. In terms of mass as a performance metric, a very aggressive mass savings goal is pursued.
+It is required that the system protection mass be only 20% of what is required to protect crew if the crew is
+integrated into a habitat similar to the current International Space Station crew quarters approach. Crew quarters
+positioned on the structural wall of the habitat, and protected with polyethylene, provide this baseline mass measure.
+An ultimate goal for protection mass penalty at or below 10% is also tracked as a higher performance metric.
+
+Team discussion and concept ranking sessions were held early so that a multi-view stakeholder background would
+influence the chosen path towards a preliminary selection of concepts. A commercial decision analysis program
+[LOG] was used to track the ranking of protection categories as judged against system performance metrics.
+Multiple stakeholder rankings of decision metrics were averaged to provide a single input to the decision analysis.
+The multiple criteria for concept ranking were weighted in two different manners to understand how concept
+selection may change if mass savings are deemed of greater program value. Table 1 shows the factors used to weight
+
+                                                                      2
+72nd Annual SAWE Conference                                                                                  SAWE Paper No. 3593
+May 18-22, 2013                                                                                              Category No. 18, 19
+St. Louis MO
+
+figure of merit summations for the two preference sets. Even weighting of all figures of merit is compared to using a
+weighted summation with preference towards emphasizing the importance of mass savings.
+
+                                          Table 1- Large Tradespace Metric Weighting Factors
+                                                                       Weighting - Preference Set
+                  Measure                                Mass Performance                 Even Weighting
+                   Mass                                        1/2                               1/3
+           Operational Assy. Time                              1/3                               1/3
+            Crew Functionality                                 1/6                               1/3
+Figure 3 shows the ranking of alternatives based upon the two weighting preference sets. Ranking shows that despite
+set preference, the pre-integrated waterwall for a two person crew quarters is a highly preferred approach (utility of
+.834 and .826). A water based wearable bladder ranks second if Mass Performance weighting is desirable (utility of
+.748). Deployable fabric/tent is least favorably ranked with utility values of .616 and .579. Water bladder based
+wearables are generally highly rated and capture a personal protection concept. In the main section, reposition of
+panels and logistics is moderately rated but is noted as useful for capturing a non-water wall solution. The pre-
+integrated blind concept was not as highly rated, but was the top rated concept in what is considered the
+“Deployable” category. Though numeric in presentation, this early screening process was subjective; its value was
+in organizing the discussion of the proposed concepts for consideration of the pros and cons of each. Subsequent
+discussion between LaRC technical personnel and program management resulted in creating four general categories
+which are taken forward for greater analytical assessment; they are 1) Wearable 2) Deployable 3) Crew Quarters
+Centric, and 4) Reconfigured Components.
+
+                                                                       Even Weighting            Mass Savings Preference
+
+    2 Person Crew Quarters – pre-integrated water wall
+    Main section – Deployable fabric/tent
+    Main section – pre-integrated water wall
+    2 Person Crew Quarters – build water wall
+    Main section – build water wall plus logistics
+    2 Person Crew Quarters – water bladder
+    Single person – water based wearable
+    Main section – reposition panels/logistics
+    Main section – pre-integrated blinds
+    Main section – inflatable protection structure
+
+
+                                                Operational Assembly       Mass Savings   Post Deployment Crew Functionality
+                         Figure 3 – Level 1 trade tree ranking for multiple sets of decision ranking metrics
+
+Concept Definition
+Having decided upon a general approach using four types of protection, and for purposes of radiation transport
+analysis, sample concepts had to next be refined to a point of definition where they could be integrated into a
+Computer Aided Design (CAD) representation. CAD incorporation is required to perform radiation transport
+analysis of the crewed habitat. Physical properties primarily in terms of mass, geometry, and location are required
+within a virtual mockup dedicated to a radiation analysis process. CAD models were matured to facilitate parasitic
+mass analyses and scaled demonstration developments as well. This section describes the concepts matured through
+the design phase which were subsequently used for the radiation and mass analyses.
+Wearable:
+Wearable approaches take little general habitat volume and can utilize different types of logistics to provide
+sheltering thickness to a garment. A sleeping bag type implementation was chosen for analysis and demonstration
+purposes of a wearable garment protection system (Figure 4). Such an enhanced sleeping garment, utilized within a
+habitats crew quarters means work and sleep activities, can be accommodated in a space proven to be habitable and
+productive for the duration of an SPE. Additionally, sleeping bags are designed in this case to be worn in the sense
+that the lower leg may extend thru the garment such that protection could be maintained during translation through
+the habitat and use of the astronauts feet for motion/anchoring is available.
+
+
+                                                                          3
+72nd Annual SAWE Conference                                                                         SAWE Paper No. 3593
+May 18-22, 2013                                                                                     Category No. 18, 19
+St. Louis MO
+
+Two approaches to wearable concepts are included in the storm shelter                - Head to Knee design
+protection options. One uses an integrated water bladder for protection              - Light weight sleeping bag with one integrated bladder
+                                                                                     - Double breasted design for adequate protection
+and the other uses a pouch system to contain water, food and Heat Melt
+Compacted (HMC) [SHU2012] bricks. The water bladder sleeping bag
+seeks to leverage the existing sleeping bag/restraint system available to
+the crew, and also available contingency life support water, to reduce                                     Arm access holes
+required additional mass. Water bladders would be pre-integrated into
+the sleeping bags and could be either pre-filled or filled as needed for an
+SPE. A detachable water-filled hood is included to provide head and
+neck (thyroid) protection. The bladder within the sleeping bag covers
+                                                                                                                          Double breasted
+the body from the head to the knees maintaining complete protection of                                                    (overlap region)
+blood-forming organs but providing some relief to the overall amount of
+inertial mass which the occupant must deal with.
+Operationally, food and water pouches would be preassembled and
+packaged such that the system could easily be pulled from storage and
+quickly attached to the sleeping bag/restraint. Packaging would be
+arranged so that food and water pouches could be exchanged, used or            section bulkheads
+replaced with the HMC bricks as needed.                                          with flow thru
+                                                                                     access
+
+Deployable:                                                                  Figure 4 - Water bladder based sleeping
+                                                                                        bag concept
+Deployable concepts feature a structural frame deployment utilizing
+available materials (e.g., logistics, water, trash, etc.) to protect a region of a habitat interior. Initial concepts
+considered included “blinds” of protection material which fold out of ceiling and wall locations, “cargo netting
+concepts” which use netting to arrange logistics carried in Crew Transfer Bags (CTBs), and concepts utilizing
+unfolded CTBs, termed Multi-use CTBs (MCTB) [SHU2012]. HMC bricks, food, and water provisions provide fill
+                                                  material for a deployable SPE protection shelter. Kinematic
+                                                  structures such as pop-up ribbing to support a radiation protection
+                                                  cover material were also discussed.
+                           Stored Shape
+
+                                                   Deployable analysis focused on an individual shelter leveraging
+                                                   contingency water and logistics. Figure 5 shows the features of the
+                           Tanks Deployed          individual deployment shelter concept. A hinged water tank holds
+                                                   contingency water and the support elements used to create the
+                                                   deployed structure. Shelter frame supports assemble onto the
+                                                   unfolded assembly to support positioning of a frame covering
+                           Framing Installed
+                                                   which holds the protection elements. HMC bricks, CTB’s, food
+                                                   storage etc. could be pre-integrated into sheets which would be
+                                                   attached to the deployed shelter framing.
+
+                                                   Crew Quarters Centric:
+                          Framing Covered          The Crew Quarters centric approach was rated as a very likely
+                                                   location for radiation protection. It was then chosen as the location
+                                                   to demonstrate use of a water wall. Figure 6 shows a single ISS-
+                                                   type crew quarter which would be constructed from structural
+                          Logistics Installation
+                                                   panels which also contain contingency life support water. To
+                                                   preserve the inner mold line of the original design, wall thickness
+                                                   increases are applied outward. A major advantage of crew
+                          Interior Size            quarters-based shelters is that the space within the crew quarters
+                                                   has been designed and proven for durations of occupation
+                                                   approaching the length of an SPE. Crew activity functions such as
+                                                   clerical work, reading as well as sleeping are already provided for
+                                                   in this living space and crewmembers are accustomed to working
+         Figure 5 - Deployable Concept             within this enclosure.
+
+
+
+                                                           4
+72nd Annual SAWE Conference                                                                SAWE Paper No. 3593
+May 18-22, 2013                                                                            Category No. 18, 19
+St. Louis MO
+
+An additional savings could be provided if multiple crew quarters
+can be ganged together, sidewall to sidewall. Adjacent sidewalls
+would not have to be a radiation wall, reducing the number of
+surfaces requiring protection. Also, from a radiation protection
+perspective, placing the crew quarters as close to the center of the
+habitat as possible is useful because it then accommodates
+component storage between the outer wall of the habitat and the
+outer most wall of the crew quarters.
+
+Reconfigured Components:
+                                              Reconfiguring        of
+                                              components to create
+                                                                          Figure 6 - Crew Quarters Centric Shielding
+                                              a Storm Shelter was
+                                              accomplished by the
+                                              incorporation of dual use structural panels and associated
+                                              repositioning of logistics. This approach is based on structural panels
+                                              that can quickly be removed without tools and assembled together to
+                                              construct a radiation shelter. Figure 7 shows an HDU section with
+                                              with the “dual-use” waterwall floor panels highlighted in blue. These
+                                              panels are attached to sub-flooring structure using “no-tools”
+                                              fasteners. Assembly of the panels into a radiation shelter is
+                                              accomplished with “no-tools” fasteners such as push-button quick-
+                                              release pins and locking push-pull quick release pins. Some of the
+                                              main section panels are shown as removed from their flooring
+    Figure 7 - Reconfigured Components
+                                              positions and reassembled around the elevator shaft to create a
+                Main Deck
+                                              centrally protected region. In this case panels are hung from ceiling
+                                              hard-points and pinned securely to the lower lift gate structure.
+
+For panels which are not intended to be moved, they can still serve to hold contingency logistics and serve both
+structural and radiation protection functions. Such panels, which makeup the remaining central enclosure access and
+additional structure are shown in green and brown. The “Reconfigurable Components” option is the only concept
+analyzed which focuses on providing a common protection area for all four crew members. Attaching logistics such
+as CTB’s to the repositioned panels further enhances radiation protection capability of this design with little
+parasitic mass penalty.
+
+Radiation Analyses
+Details of the concept radiation analyses for the RadWorks Storm Shelter project are to be published in References
+[WAL2013A] and [WAL2013B]. A summary of that work is presented here to show the levels of protection
+required, in terms of mass, for the competing protection schemes.
+The shielding efficacy of each concept was evaluated in terms of a reduction in astronaut radiation dosage. Two
+requirements for dosage reduction were assessed, a threshold value of 50% and a goal of 70%. Shielding meets the
+required percentage exposure reduction if the effective dose for the crew inside the concept is less than 50%, or
+70%, of the baseline value of a habitat in an ISS style crew quarters placement. Baseline values of 450 mSv in the
+crew quarters and 361 MSv in the main section of the HDU were determined to base dosage reductions upon. Note
+that baseline masses for the ISS style initial condition were determined to be 1500 lbm for the 50% reduction level,
+and 4000 lbm for the 70% reduction level. Dosage is determined based on the effective dose for a 50th percentile
+female astronaut in the habitat in its normal configuration and then repeating the calculation for the same astronaut
+within the habitat reconfigured to include the shielding concept.
+
+
+
+
+                                                         5
+72nd Annual SAWE Conference                                                                 SAWE Paper No. 3593
+May 18-22, 2013                                                                             Category No. 18, 19
+St. Louis MO
+
+Of note and as explained in [WAL2013A] shielding requirements are driven in large part by the choice of the SPE
+model used as a design basis, with the astronaut position in the habitat playing a significant but smaller roll. A
+design basis SPE for exploration missions has not yet been identified. A design basis SPE as determined by
+[XAP2009] was used for this study. This is a conservative dosage level as compared to alternative SPE models,
+Xapsos yielded greater than a 50% increase in crew dosage as compared to a King ’72 model for nominal crew
+stationed in the main section of the HDU. Logistics and element subsystems can provide much natural radiation
+protection. The HDU model was populated with appropriate consumables and equipment, as shown in Figure 8.
+Presented in this figure is the basic CAD model used for radiation transport analyses. Protection concepts, crew, and
+logistics are appropriately added to this basic model to assess radiation material thickness requirements of the
+competing concepts. Calculated masses, summarized and Table 2, are the primary input to calculation of each
+concepts parasitic mass requirement.
+
+
+
+
+   Panel 1 – Overall View         Panel 2 – Inside Cutaway      Panel 3 – Logistics Added   Panel 4 - Subsystems Added
+                                  Figure 8 - HDU CAD Simulation for Radiation Analyses
+
+
+                      Table 2 – Protection Requirements Based on Radiation Transport Analysis
+                                                 Water Wall Thickness (in)        Total Mass for 4 Astronauts (lbm)
+                                                  50%             70%                  50%               70%
+    Wearable
+                   Wearable Shield                 2.1               5.0               1527               3636
+                   in Crew Quarters
+                   Wearable Shield                 2.8               6.1               2036               4436
+                   in Main Section
+
+                                                Food/Brick Layer Thickness        Total Mass for 4 Astronauts (lbm)
+                                                          (g/cm2)
+    Deployable                                    50%               70%                50%                70%
+                   Modeled as Water             1.33-2.35        8.70-11.23            627                3693
+                   Modeled as Aluminum          1.86-3.43       14.69-20.65            905                6520
+
+                                                 Water Wall Thickness (in)            Total Mass of Water (lbm)
+    Crew Quarters Centric                         50%             70%                  50%               70%
+                  Original Position                2.7             7.7                 3119              8942
+                  Moved Inward                  0.49-0.84       4.95-5.12              676               5827
+                  Doubling Up                    0-0.82         3.50-4.93              379               2656
+
+                                                 Water Wall Thickness (in)            Total Mass of Water (lbm)
+    Reconfigured Components                       50%             70%                  50%               70%
+                  Panels Only                   1.04-1.65       4.04-5.00              1696              5785
+                  Panels Plus Logistics             0           1.67-2.85                0               2677
+
+
+
+
+                                                         6
+72nd Annual SAWE Conference                                                                    SAWE Paper No. 3593
+May 18-22, 2013                                                                                Category No. 18, 19
+St. Louis MO
+
+Operational Features & Solar Particle Event Timelines
+Operational approach timelines for use of a shelter concept during an SPE are required to judge performance against
+a Key Performance Parameter, the requirement that the: “Storm Shelter shall be deployed/assembled in Less Than 60
+Minutes”. For each approach, it is assumed that at time zero a call is made to take shelter. At this time there is one
+crew member in the lower loft, two in the main section of the habitat and one in the hygiene unit. For each shelter
+concept a series of tasks were defined which take each astronaut from event notification to a protected state. Some
+tasks may occur in parallel and some in serial. Task timeline assessments were prepared and Figure 9 shows an
+assessment result example for the case of having four crew quarters with pre-integrated water walls. The astronaut in
+the loft region can move quickly to the crew quarters and be in a protected state in approximately two minutes.
+Simultaneously, one astronaut in the main section can proceed to the loft region followed by the second person who
+was originally located in the main section. The fourth person is assumed to move quickly to the main section, but
+must wait three minutes before moving to the loft and subsequently taking shelter in a crew quarters. Total time for
+this event is seven minutes.
+
+  Task Name                                       Duration                     Elapsed Time, minutes
+                                                  (minutes)       0   1    2        3       4       5     6      7
+
+  SPE Crew Quarters – Pre-integrated Water wall      7
+    loft person                                      2
+       move to crew quarters                         1
+       inhabit crew quarters                         1
+    main section personnel                           5
+       person 1                                      3
+          move to loft                               2
+          inhabit crew quarters                      1
+       person 2                                      3
+          move to loft                               2
+          inhabit crew quarters                      1
+       hygiene person                                7
+          move to main level                         1
+          move to loft                               2
+          inhabit crew quarters                      1
+
+                                 Figure 9 - Event Timeline - Crew Quarters Centric
+The sleeping bag wearable concept was assessed in two different operational scenarios. One which assumes the
+sleeping bags are prefilled with water prior to declaration of an SPE, and one where each sleeping bag must be filled
+with water from the habitat life support system upon event notification. For the prefilled scenario, the crew person in
+the loft proceeds directly to his CQ to don the sleeping bag and hood protection. Some timing cushion is provided in
+moving astronauts thru the central corridor from the other locations to perform the same act. The main section crew
+next move to their respective Loft CQ’s locations followed finally by the crew member who was in the hygiene
+portion of the habitat. Total time estimated to implement this solution is 15 minutes. Operating in this manner
+assumes the water used for protection is contingency water and is not required for on-demand access by the habitat’s
+Environmental Control and Life Support System (ECLSS). The second sleeping bag wearable operational
+assessment was made assuming the water bladders used for protection would have to be filled from primary water
+prior to donning for the SPE. It is assumed adequate water exists in the primary ECLSS and those four ports are
+simultaneously utilized, one by each astronaut, to fill his sleeping bag. The sleeping bags are in storage in vicinity of
+the water supply and taken out for use during an event. Upon filling one’s sleeping bag, the astronaut proceeds to his
+crew quarters for a primary location during the event. Some mobility while wearing the sleeping garment is
+provided by this approach. This approach is assessed at 36 minutes for deployment time.
+
+The deployable shelter is removed from a position of utilization such as existing nominally as a partition or tabletop.
+It is unfolded and the skeleton structure erected which can then be covered with a pre-filled flexible wall made of
+pockets of food or HMC bricks, depending on how far into a mission it is before an SPE occurs. It is assumed in this
+operational approach that all four deployable shelters are assembled simultaneously by its respective future resident.
+This approach is assessed at 26 minutes for deployment time.
+
+
+
+
+                                                              7
+72nd Annual SAWE Conference                                                                    SAWE Paper No. 3593
+May 18-22, 2013                                                                                Category No. 18, 19
+St. Louis MO
+
+                                                 A more operationally intensive approach, though one that provides
+    Table 3 - Concept Deployment Times
+                                                 for common location of all four crew members in a centrally located
+                            Deployment           shelter, is that of using repositioned structural panels to create such a
+                           time, minutes         shelter region. To implement this concept, crew members are
+                                                 assigned simultaneous tasks including removal of panels from a
+   Wearable Prefilled           15.0             habitat floor or wall and positioning these around an existing central
+    Wearable Fill as                             framework to create a protective enclosure. The panels are
+                                36.0
+       Needed                                    considered pre-filled with contingency water. There is considerable
+     Deployable                 26.0             amount of assembly in this approach, but because the crew is
+                                                 working on parallel tasks, the deployment time is assessed at only 27
+     CQ Waterwall                                minutes. An additional deployment time was assigned to this
+                                7.0
+       Prefilled                                 approach where instead of having pre-filled water based panels,
+                                                 normal structural panels with scarring for logistics attachment is
+   Reposition Panels            27.0
+                                                 assumed. This was advantageous from a mass savings potential, but
+ Reposition Panels and                           was judged to place deployment time at the upper end of useful
+                                60.0             utility, 60 minutes. Table 3 summarizes the assessment of SPE
+  Logistics Adjustment
+                                                 timelines for each protection approach.
+
+Parasitic Mass Estimations
+Mass estimations for the storm shelter protection options are derived from two primary sources. First is the basic
+structure and hardware associated with supporting and providing a means to implement the chosen protection
+material, second is the protection material itself, which has been quantified by the radiation analyses previously
+described. In this section, these two contributions are summed and compared for each concept. Parasitic mass is then
+calculated for each concept. Items, which would be on-board for any other purpose, though used for radiation
+                                                                            protection, are not counted as parasitic
+                     Table 4 - Parasitic Mass Summary                       mass. The primary example of this is
+                                                                            “contingency water”. Such water was
+                                         Protection mass                    baselined at 1300lbm for our presumed
+                   Prescribed      Basic      Basic   Predicted 4 person    Deep Space Habitat DSH design
+                    Radiation Protected Parasitic Parasitic parasitic       mission. Additonal water, which is
+                   Reduction       Mass       Mass     Dry Mass   mass      included     because     of    radiation
+                                       Single Person Mass                   protection needs, is counted as parasitic
+     Wearable         50%           534         17        19       805      even though it may be useful in an
+     Wearable         70%           977         19        21      2577      emergency if sufficient access to it is
+    Deployable        50%           636        131       196       784      provided.
+  Deployable         70%         1531      131          196        784
+ Crew Quarters       50%         545        41           62        246          Mass tables were assembled for each of
+ Crew Quarters       70%         1832       41           62        4763         the concept approaches for both the
+                                                                                50% and 70% levels of radiation
+                               Four person mass divided by 4
+                                                                                reduction protection. These detailed
+                                                                                tables are not included in this report,
+  Repositioned
+                                                                                but their highlights are now discussed
+   Panels, no
+                                                                                and summations presented in Table 4.
+    logistics        50%         909        44          52         1619         Use of the wearable garment in the
+  Repositioned                                                                  main section of the habitat requires 2.8
+   Panels, no                                                                   inches of water for the 50% radiation
+    logistics        70%         1930       44          52         5703         reduction condition and 6.1 inches for
+  Repositioned                                                                  the 70% condition. There is a miniscule
+   Panels, and                                                                  dry mass requirement for the wearable
+    logistics        50%         230        44          52         209          approach,     but    considering     the
+  Repositioned                                                                  contingency mass water limit the
+   Panels, and                                                                  parasitic masses are significant at 805
+    logistics        70%         1032       44          52         2113         lbm and 2577 lbm for the 50 and 70%
+                                                                                radiation reductions. If wearable usage
+
+
+                                                              8
+72nd Annual SAWE Conference                                                                 SAWE Paper No. 3593
+May 18-22, 2013                                                                             Category No. 18, 19
+St. Louis MO
+
+is restricted to within a lower loft located crew quarters the 2.8 and 6.1 inch numbers drop to 2.1 and 5.0 inches
+respectively.
+
+Mass calculation for the deployable concept is based on the operational scenario where each crew uses a single
+deployed apparatus. Because the deployable concept is designed with a fixed 2.0in. size water wall, which does not
+exceed the contingency water mass allotment, there was no parasitic water mass to declare. The remaining five sides
+of the deployed enclosure are assumed to be shielded with logistics which also are not declared to be parasitic. The
+brick manufacturing equipment itself is non-parasitic as it is assumed to be required hardware for the purpose of
+garbage compaction regardless of the use of its created product. Because of these assumptions the parasitic mass for
+the deployable concept is constant between conditons of 50% or 70% dosage reduction. The validity of such
+assumptions is a subject for future consideration.
+
+For the current analysis, sufficient food is available in terms of mass to support the shielding of the deployable
+concept prior to HMC brick creation. Timing of logistics availabilty, considering initial stored locations, and use
+rates would really be required to develop scneario showing exactly how items like food, HMC bricks, and
+contintency water can be accessed for radiation protection. Discrete Event Simulation analysis was recognized as a
+good quantitative means for characterizing component usage over a mission timeline.
+
+For the Crew Quarters Waterwall shelter concept, nominally each crew member is housed in their own crew
+quarters during an SPE. This approach does show a higher declared parasitic mass for the 70% radiation reduction
+requirement than for the 50% case. As the shielding in this concept is provided by water, and a large amount of
+water is required for the 70% condition, 4500 lbm out of a required 5825lbm of water is parasitic. Of note also is
+the condition of utilizing two single Crew Quarters to house two crew each for the SPE event. In this operational
+scenario the shielding required mass reduction is on the order of 30% for the 50% radiation reduction case and 50%
+for the 70% radiation reduction.
+                                                                         Utilizing the reconfigured component
+           Table 5 - Summary of Protection Mass Requirements             approach, the HDU central corridor is
+                                                                         reconfigured to simultaneously support
+                           50% effectivity,       70% effectivity,       housing of four crew members during the
+                        1500 lbm base mass     4000 lbm base mass        SPE. Water is chosen as the protection
+                         mass,                mass,                      mechanism and there is resulting parasitic
+ Concept                  lbm     mass_ratio   lbm       mass_ratio
+                                                                         water at both radiation protection levels. If
+                                                                         at the same time logistics are used to
+ Wearable                 805         0.54     2577          0.64        supplement the repositioned panels,
+ Deployable               784         0.52      784          0.20        parasitic water mass drops to 0 for the
+ CQ_waterwall             246         0.16     4763          1.19        50% radiation reduction case and drops
+ Structural Panel                                                        from 5500lbm to 1900 lbm for the 70%
+ Reuse                   1619         1.08     5703          1.43        condition.
+ Structural Panel
+ Reuse_with                                                              The 4 person parasitic mass is tracked in
+                                                                         Table 4 to provide input to Table 5. Table
+ logistics                209         0.14     2113          0.53        5 provides a summary of the masses
+                                                                          required for protection for the concepts
+    Table 6 - Concept Demonstration Methods, FY12              under consideration, and the ratio of that mass to the
+                                                               baseline mass. Both 50% and 70% radiation
+                                                               reduction conditions are presented. As defined in the
+                                                               radiation analysis process, 1500 lbm is the reference
+                                                               baseline radiation protection mass required for the
+                                                               50% radiation reduction analysis and 4000 lbm is the
+                                                               baseline for 70% radiation reduction. Calculated
+                                                               protection mass is normalized by the baseline
+                                                               numbers in order to rate concepts against the
+                                                               percentage based Key Performance Parameter for
+                                                               radiation protection mass.
+
+
+
+                                                          9
+ 72nd Annual SAWE Conference                                                                 SAWE Paper No. 3593
+ May 18-22, 2013                                                                             Category No. 18, 19
+ St. Louis MO
+
+
+
+ Concept Demonstrations
+                                     A primary deliverable for the Storm Shelter FY ’12 project consisted of
+                                     providing physical demonstration items for at least two concepts. Along with the
+                                     physical demonstration item emphasis, additional demonstration methods
+                                     assisted in forming the basis from which to assess each approaches project
+                                     metric pros and cons. The full set of demonstration items finally provided is
+                                     shown in Table 6.
+
+                                     CAD models were developed for each approach. These virtual mockups defined
+                                     size, mass, and placement of all components which make up a protection
+                                     approach. They are used for concept communication
+                                     and numerically for radiation protection design in
+                                     conjunction with the radiation transport analysis
+                                     process.
+
+                                      Another demonstration/assessment tool was to create
+Figure 10 – 1/8 Scale model of
+the HDU DSH configuration,            three dimensional printing and associated sub-scale
+highlighting use of repositioned      fabricated models depicting the primary aspects of each
+structural panels                     approach. Figure 10 shows the tabletop model for the
+                                      HDU DSH configuration as created utilizing three
+                                     dimensional printing. Coloration of components is used
+                                     to distinguish types of structural components. The blue
+                                     floor panels may be relocated to build a protected
+                                     region around the central core of the HDU. The green
+                                     panels are existing panels which are considered to be of
+                                     a waterwall structural concept. Not shown are the crew
+                                     quarters, also modeled as 1/8 scale components which
+                                     can be placed in the tabletop model. Positioning at the
+                                     ISS location, adjacent to the loft outer wall and also at   Figure 11 – Full scale
+                                     the protection advantageous position closer to the HDU      model of a wearable
+                                     central core is possible.                                   water wall based
+                                                                                                 sleeping garment
+                                     The wearable water filled concept was developed at full scale level, Figure 11, as
+  Figure 12 – x scale model of a     well as initially with sub-scale level fabrications, Figure 12. The wearable
+   wearable water wall based
+        sleeping garment
+                                     sleeping bag includes a removable bladder, Figure 13, to simulate the storage of
+                                     water as its means of providing crew protection. Only air was used as a filling
+                                               medium for an assessment of bulk operational issues. Water
+                                               containment issues will be looked at in the continuing work effort.
+
+                                              Figure 14 shows the components of the deployable concept at various
+                                              stages of deployment. This is also a primarily 3D printed model of
+                                              1/8th scale. In this arrangement, three deployable habitats have been
+                                              combined to provide a table top surface useful for a meeting space in a
+                                              DSH vehicle element. One of the deployable items is shown being
+                                              unfolded and then framed with the logistics supporting framework. The
+                                              red and blue Food/water or HMC brick pouches cover the framework.
+
+                                              The crew quarters centric approach met with consistent group
+Figure 13 – Water wall bladder insert for
+                                              acceptance as a likely protection region. It may be considered a region
+            the wearable garment
+                                              where several methods of protection could be demonstrated, water
+                                              walls, deployed partitions, sleeping garments. Another full scale
+
+
+
+
+                                                           10
+72nd Annual SAWE Conference                                                                                     SAWE Paper No. 3593
+May 18-22, 2013                                                                                                 Category No. 18, 19
+St. Louis MO
+
+demonstration item created for FY12 was thus a wooden mockup of a typical ISS style crew quarters, Figure 15.
+This mockup will be further developed in FY13 to begin to better understand the logistics of crew interaction with
+chosen protection items.
+                                              Finally, for presentation and outreach opportunities, a descriptive
+                                              poster [Appendix B] [LaRC2012] and four minute animation
+                                              [VID2] were made available to describe the RadWorks Storm
+                                              Shelter work for the year. The animation depicts a deep space
+                                              habit subject to an SPE and the selection and implementation of
+                                              representative concepts from the four defined categories of
+                                              Wearable, Deployable, Crew Quarters Centric, and Reconfigurable
+                                              Components. These outreach items, including the subscale and
+                                              full scale models, were utilized at a NASA LaRC Open House
+                                              [LARC2012] to describe to the general public the severity of the
+                                              need to provide radiation protection to astronauts on a deep space
+                                              exploration mission and to show how protection methods can be
+      Figure 14 – 1/8th scale model of the    consistently assessed.
+            Deployable Protection Concept
+
+Concept Selection - Decision Analysis
+                                                                     RadWorks Storm Shelter design engineering in coordination with
+                                                                     detailed concept radiation analysis provides a consistent basis for
+                                                                     quantification of performance parameters that can be used to
+                                                                     compare and contrast the system performance of competing storm
+                                                                     shelter approaches. System performance evaluation is made by
+                                                                     considering the importance of each of a chosen set of performance
+                                                                     Figures of Merit (FOMs). The Logical Decisions software program
+                                                                     is again used to perform concept rankings in a variety of
+                                                                     interpretive ways. To make these rankings first the relative
+                                                                     importance of the rating FOMs are defined. Four FOM weighting
+                                                                     approaches were used to rank the importance of one requirement
+       Figure 15 - Full Scale Crew Quarters                          relative to another, Table 7. These weightings are the “preference
+                  Logistics Mockup                                   sets” defined within the decision analysis software.
+
+       Table 7 - Figure of Merit Weighting Preference Sets                           Using multiple weighting preference sets provides
+                                              Preference Set Name                    rigor with respect to concept selection. If the same
+                                All Weights     Baseline         Mass   Deployment   concept(s) always appear at the top of a ranking
+                                    Equal                       Savings    Time
+                                                               Emphasis Emphasis     despite the rating set chosen, it is a more
+ protects 4 astronauts              1               0              0         0       programmatically robust selection. Note that three
+ provide 36 hour habitability       1               7              7         7
+ deploy in less than 60             1              10             10        15
+                                                                                     requirements are given zero importance. This is not
+ minutes                                                                             because they are not important in general, but
+ added mass % of baseline           1             10            15         10        because they are not important as a discriminator
+ protection
+ design for ops in 1g env.          1              0            0           0
+                                                                                     between concepts. Baseline weighting places equal
+ integrates with FY14 HDU           1              0            0           0        emphasis on mass savings and deployment time.
+ facilitates egress during an       1              5            5           5        The Mass Savings and Deployment Time weighting
+ SPE
+ deployable by 2 persons or         1              5            5           5
+                                                                                     sets then provide more value to concepts which
+ less                                                                                minimize mass or deployment time respectively.
+
+Each scored FOM provides additional “utility” to a candidate alternative. Utility as utilized by RadWorks is a
+quantity which can range between between 0 and 1, between zero and full utility. Raw scores such as percent mass
+savings or deployment time are assigned a utility value thru a utility function. The weighted summation of all FOM
+utility values provides a concept’s integrated utility rating.
+
+Before the weighted summation utility integration can be performed, each alternative must be scored for each FOM.
+We have shown how raw score values are derived for the deployment time and mass savings figures of merit. Table
+
+
+                                                                                11
+72nd Annual SAWE Conference                                                                                              SAWE Paper No. 3593
+May 18-22, 2013                                                                                                          Category No. 18, 19
+St. Louis MO
+
+8 shows these values in data columns three and four for each of six alternative concept approaches. Additionally raw
+scoring is shown for the other six FOMs. The utility scores are then summed up on a preference set weighted
+average basis.
+                               Table 8 - FOM Ratings for the 50% Radiation Reduction Condition
+                      protects 4    habitability deploy in less added mass % of design for ops integrates with facilitates egress deployable by
+                      astronauts                    than 60     baseline protection in 1g env.    FY14 HDU       during an SPE     2 persons or
+                                                   minutes                                                                             less
+ Wearable Prefilled      4.0           0.4           15.0             54                 Yes             Yes               0.8           1.0
+ Deployable              4.0           0.6           26.0             52                 Yes             Yes               0.5           2.0
+ Reposition Panels       4.0           0.6           27.0             108                Yes             Yes               0.7           2.0
+ CQ Waterwall            4.0           1.0           7.0              16                 Yes             Yes               0.9           1.0
+ Prefilled
+ Wearable Fill as        4.0           0.4           36.0             54                 Yes             Yes               0.8            4
+ Needed
+ Reposition Panels       4.0           0.6           60.0             14                 Yes             Yes               0.6           2.0
+ and Logistics
+ Adjustment
+
+
+
+                                                                                                                  Figure 16 shows a utility
+                                                                                                                  scoring breakout for the case
+                                                                                                                  where a 50% radiation
+                                                                                                                  dosage reduction is required
+                                                                                                                  and the preference weighting
+                                                                                                                  set selected is skewed
+                                                                                                                  towards the importance of
+                                                                                                                  saving mass. The Crew
+                                                                                                                  Quarters water wall concept
+                                                                                                                  garners the most utility with
+                                                                                                                  most of that utility coming
+                                                                                                                  from mass savings, short
+                 Figure 16 - Typical utility ranking figure of merit breakout                                     deployment      time      and
+                           for the mass savings preference weighting set                                          habitability.
+                           and the 50% radiation reduction requirement
+                                                                                     A summary of final utility
+                                                                                     scores for the four FOM
+preference weighting sets and the two radiation reduction requirements is provided in Table 9. The Crew Quarters
+Waterwall stands out as being the top utility ranked concept for all FOM weighting sets and for both levels of
+radiation reduction requirement. The prefilled wearable approach is generally second in utility, exchanging ranking
+with a deployable approach for conditions of greater protection requirement. A reconfigured panel approach is not
+                                               Table 9 - System Performance Utility Rankings
+                                                                   Weighting Set and Radiation Protection Level
+
+                                                                                                Preference for Mass             Preference for
+                                         all FOMs equal             Baseline weights                  Savings              Deployment Time Savings
+                                       50%           70%          50%           70%              50%             70%          50%          70%
+                                     Radiation     Radiation    Radiation     Radiation        Radiation       Radiation    Radiation    Radiation
+                                     Reduction     Reduction    Reduction     Reduction        Reduction       Reduction    Reduction    Reduction
+ Concept
+ Wearable - Prefilled                  0.835         0.435         0.719         0.521           0.720           0.540           0.722     0.549
+ Wearable filled on demand             0.666         0.678         0.489         0.130           0.518           0.195           0.479     0.090
+ Deployable                            0.800         0.820         0.669         0.712           0.677           0.734           0.657     0.695
+ Reconfigure Panels                    0.788         0.766         0.616         0.568           0.622           0.535           0.608     0.566
+ Reconfigure Panels and Logistics      0.766         0.741         0.580         0.528           0.597           0.552           0.511     0.465
+ Crew Quarters water wall              0.963         0.898         0.933         0.794           0.931           0.748           0.927     0.804
+
+                                        Rank           1             2             3               4
+
+
+                                                                         12
+72nd Annual SAWE Conference                                                                 SAWE Paper No. 3593
+May 18-22, 2013                                                                             Category No. 18, 19
+St. Louis MO
+
+far behind the deployable ranking with some exception for the case of requiring 70% radiation reduction and mass
+efficiency. Note also that for the case of 50% radiation reduction, the selection of the top 4 concepts is independent
+of weighting set. This provides some good feeling that for this level of reduction, that concept ranking would satisfy
+multiple habitat development stakeholders. Wearables drop to mid to low ranking for the 70% radiation conditions.
+For 70% radiation reduction, Deployables are the second most favored concept. Note this is tempered by the fact
+that HMC bricks were not used for the crew quarters option and a large amount of water is parasitic for the case of
+70% radiation reduction. Also it can be concluded that filling wearables on an as needed basis does not appear as an
+attractive option.
+
+The value in determining quantitative rankings for concept selections is not primarily to arrive at a numerically
+determined solution, but rather to show in a clear manner the pros and cons of each concept, with respect to
+performance parameters and weighting considerations to program managers. Management can be briefed on the
+technically derived rankings so that they understand the issues covered in the analysis. Consideration of other
+program factors such as the influence of technologies from other development programs can then be considered in
+planning on what concept(s) to spend future resources and development efforts. The RadWorks Storm Shelter
+technical and management personnel collaborated on this forward planning and chose to continue development of
+demonstration items for a Crew Quarters Centric and a Deployable approach. The crew quarters approach is easily
+justified by the utility ranking process. The deployable approach was chosen because it actually was reworked to
+consider aspects of protection items from a reconfigured panel approach with incorporation of additional logistics.
+The wearable prefilled approach was not selected for further demonstration because a great deal of progress, to a full
+scale demonstration item, was already achieved during the FY12 activity. Similar use of water, food and HMC brick
+protection items will be incorporated into both the Crew Quarters Centric and Deployable approach. The wearable
+approach, actually well rated for the 50% radiation reduction condition, is seen as a useful means to provide
+augmentation to the other two chosen concepts. The Repositioned Components approach, was somewhat poorly
+rated, but is unique in that it was the only approach which creates a single protection region for the full crew. This
+design aspect will be incorporated into the ongoing deployable approach. Also the incorporation of logistics
+reconfiguring, which showed as of great importance for higher radiation dosage will be incorporated into FY13
+activities.
+Summary and Future Work
+Some summarization of this projects work can be made which are felt to be useful for forward work planning and
+for general consideration in future DSH element design work.
+
+   Formal decision analysis allows the decision maker to determine sensitivity of selection ranking to figure of
+    merit importance, or changes in figure of merit ratings. A selection process useful for communication of
+    technical design issues with project managers has been created. The process assists in quantifying storm shelter
+    performance from a system level viewpoint.
+   Especially for cases of greater radiation dosage reduction requirements, it is mass advantageous to keep crew
+    surrounded by logistics and element sub-systems for as much time as possible. As a design example, crew
+    quarters located down the center of a cylinder with logistics surrounding them in an annular manner could be a
+    more advantageous arrangement than the typical ISS design with crew quarters on the perimeter of the habitat
+    element.
+   Reuse of logistics material and dual use structures can be counted on to reduce parasitic mass needs. Ex:
+    Design of protection mechanism storage for food/water bag, and HMC bricks which can accommodate any of
+    these packages over the timeline of a mission is an important consideration.
+   Water shielding is non-parasitic only if the water can be used for habitat living functions. To be useable as
+    non-parasitic the water must be extractable from the water wall such as by a collapsing bladder w/pumping, or
+    a positive expulsion device.
+   Knowledge of the amounts of logistics on hand through a mission timeline though not assessed is noted to be
+    important to show that sufficient radiation protection is available for reconfiguration during an SPE which
+    could occur at any timepoint in a long mission. One way to assess this may be to perform mission Discrete
+    Event Simulation (DES) to quantify logistics, food, water, and waste product usage over time. DES can answer
+
+                                                         13
+72nd Annual SAWE Conference                                                                 SAWE Paper No. 3593
+May 18-22, 2013                                                                             Category No. 18, 19
+St. Louis MO
+
+     operational questions such as how much of a particular item is required at mission start, how much is available
+     throughout the mission and where at any point in time are items located.
+   In comparison to water, HMC brick shielded designs were not considered parasitic. This was purely a
+    judgment made for the assessment work done in FY12. Because of this note that conditions which require
+    large amounts of shielding water, such as for 70% radiation reduction, fared poorly on a mass savings basis for
+    water as opposed to HMC bricks.
+   It is not required and likely not effective that only one solution approach be utilized to reduce radiation
+    exposure. Subject to the goal of minimizing mass it is recognized that simultaneous utilization of protections
+    may be possible. Particularly, an individual wearable garment is easily utilized by a crew member inside an
+    additionally protected region such as a protected crew quarters or a deployed or fabricated shelter region.
+
+The focus of continuing Storm Shelter work will be to develop selected radiation protection concepts to a degree
+that they can be integrated into a demonstration DSH element where human in loop simulations of operational
+logistics can be played out. Based on the Storm Shelter work of FY12 it was decided that in FY 13 the Crew
+Quarters Centric and Deployable/Logistics based concepts will be developed to the point of demonstration outside
+of a defined habitat element. In FY14 it is planned that one or both of these concepts will be further developed to be
+operable as a human-in-loop simulation element, integrated into a full vehicle DSH simulator. Possible redirection to
+a Waypoint Spacecraft element from the HDU will also be instrumental in redefining the shelter concept
+implementations and their operational requirements. The HDU DSH configuration could be replaced by an element
+or elements derived from existing ISS pressurized elements. In the coming year of activity [FY13] there is a need to
+increase shelter concept definition with respect to required subsystem interface requirements and operational
+constraints concerning mechanical, power, water, ventilation, heat, humidity, lighting, and communication
+interfaces.
+
+
+
+
+                                                         14
+72nd Annual SAWE Conference                                                                  SAWE Paper No. 3593
+May 18-22, 2013                                                                              Category No. 18, 19
+St. Louis MO
+
+                                                       References
+
+AES        NASA, “Advanced Exploration Systems”,                NRC2008     National Research Council: “Managing Space
+           Program                                                          Radiation Risk in the New Era of Space
+           http://www.nasa.gov/directorates/heo/aes/inde                    Exploration”, ISBN: 0-309-11384-9, 2008
+           x.html                                                           http://www.nap.edu/catalog/12045.html
+COH2012 Cohen, M. M.; Flynn, M. T.; Matossian, R. L.:           RUC2012     Rucker, M.A.; Thompson, S.: “Developing a
+        “WATER WALLS ARCHITECTURE:                                          Habitat For Long Duration, Deep Space
+        MASSIVELY REDUNDANT AND HIGHLY                                      Missions” , Global Space Exploration
+        RELIABLE LIFE SUPPORT FOR LONG                                      Conference, 22-24 May 2012, L'Enfant Plaza
+        DURATION EXPLORATION MISSIONS”..                                    Hotel, Washington, DC, USA. GLEX-
+        Global Space Exploration Conference                                 2012.05.3.8x12222.
+        (GLEX), Washington, DC, USA, 22-24 May
+        2012. Paris, France: International Astronautical        VID1        Video – NASA: “Radiation and Human
+        Federation, GLEX-2012.10.1.9x12503. PDF                             Space Exploration”
+                                                                            http://www.nasa.gov/multimedia/videogallery
+CLO2005 Clowdsley, M.S.; et. al. “Radiation Protection                      /index.html?media_id=14692127
+        for Lunar Mission Scenarios”, AIAA Space
+        2005, September 2005, Long Beach,                       VID2        RadWorks Storm Shelter Project: Year 1
+        California, AIAA 2005-6652.                                         Summary Video,
+                                                                            http://www.youtube.com/watch?v=ad
+HDU2010 Tri, T.O. et.al. .: “NASA’s Habitat                                 mRr0sp_v8
+        Demonstration Unit (HDU) Pressurized
+        Excursion Module (PEM) In-Field                         VIS2008     Visionary Tools, “Insight Tree”,
+        Demonstration at Desert RATS 2010”, AIAA                            www.visionarytools.com.
+        41st International Conference on
+                                                                WAL2013A (pending) Walker, S.A.; Clowdsley, M.S.;
+        Environmental Systems 17 - 21 July 2011,
+                                                                         Abston, H.L.; Matthew A. Simon, M.A.; and
+        Portland, Oregon, AIAA 2011-5017.
+                                                                         Adam M. Gallegos, A.M.: “Radiation
+KEN2007 Kennedy, K.; Toups L.; Smitherman D.:                            Exposure Analysis Supporting the
+        “Lunar Habitation Strategies”, AIAA 2007-                        Development of Solar Particle Event
+        6275, AIAA SPACE 2007 Conference &                               Shielding Technologies”, AIAA 43rd
+        Exposition, 18 - 20 September 2007, Long                         International Conference on Environmental
+        Beach, California.                                               Systems, 14 - 18 July 2013, Vail, Colorado.
+LARC2012 Langley Research Center: NASA Langley                  WAL2013B (pending) Walker, S.A.; Clowdsley, M.S.;
+         Research Center 95th Year Anniversary Open                      Abston, H.L.; Whitlow, D.R.; Schneider,
+         House,                                                          N.R.; and Simon, M.A.: “Evaluating the
+         http://www.nasa.gov/centers/langley/events/95                   Effectiveness of Multiple Methods for
+         th-tour.html                                                    Reducing Astronaut Exposure to Solar
+SHU2012 Shull, S.; Casillas, R.P.; Howe, A.S.: “NASA                     Particle Events”, AIAA SPACE 2013
+        Advanced Explorations Systems: Concepts for                      Conference & Exposition, 10 - 12 September
+        Logistics to Living”, AIAA SPACE 2012                            2013, San Diego, California.
+        Conference & Exposition 11 - 13 September
+        2012, Pasadena, California AIAA 2012-5252               XAP2009     Xapsos, M.: “Probabilistic Model of the Solar
+LOG        Logical Decisions: “Logical Decisions for                        Energetic Particle Environment”, 47th AIAA
+           Windows”, Logical Decisions 9206 Saint                           Aerospace Sciences Meeting , DOI:
+           Marks Pl, Fairfax, VA 22042 USA,                                 10.2514/6.2009-1493, Publication Date: 05
+           www.logicaldecisions.com.                                        January 2009 - 08 January 2009.
+
+
+
+
+                                                           15
+72nd Annual SAWE Conference                                                                          SAWE Paper No. 3593
+May 18-22, 2013                                                                                      Category No. 18, 19
+St. Louis MO
+
+                                                                Appendix A
+
+                                   NASA LaRC - Radiation Storm Shelter Team
+
+                  Name            Responsibility                     Affiliation
+        Lee       Abston          HDU CAD model developer            NASA LaRC – Engineering Directorate
+        Rob       Andrews         Fabrication                        NASA LaRC – Engineering Directorate
+        Sherry    Araiza          Resource Analyst                   NASA LaRC – Space Technology and Exploration Dir.
+
+        David     Castle          CQ Centric Design                NASA LaRC – Engineering Directorate
+        Jeff      Cerro           Conceptual Design and Eval       NASA LaRC – Systems Analysis and Concepts
+        Martha    Clowdsley       Radiation Analysis               NASA LaRC – Research Directorate
+        Heidi     Connolly        Configuration Management         Analytical Mechanics Associates, Inc.
+        Adam      Gallegos        CAD modeling                     Lockheed Martin Corp.
+        Nicole    Hintermeister   Scheduling                       AMA Space Systems, Inc.
+        Sam       James           Fabrication                      NASA LaRC – Engineering Directorate
+        Tommy     Jordan          Element Lead                     NASA LaRC – Engineering Directorate
+        Mike      Langford        Reconfigurable Components Design NASA LaRC – Engineering Directorate
+        Vincent   Le              Deployable Concept Design          NASA LaRC – Engineering Directorate
+        David     Moore           Deputy Project Manager             NASA LaRC – Engineering Directorate
+        Ken       Neubauer        Risk Management                    Futron Corporation
+        Lee       Noble           Systems Engineering and Int        NASA LaRC – Engineering Directorate
+        Shawn     Scharf          Risk Management                    Futron Corporation
+        Ed        Shea            Risk Management                    Futron Corporation
+        Matt      Simon           Habitat Design - SME               NASA LaRC – Systems Analysis and Concepts
+        Debi      Tomek           Project Manager                    NASA LaRC – Space Technology and Exploration Dir.
+        Steve     Walker          Radiation Analysis                 Old Dominion University
+        Judith    Watson          Wearable Concept Design            NASA LaRC – Research Directorate
+
+
+
+
+                                                                16
+72nd Annual SAWE Conference            SAWE Paper No. 3593
+May 18-22, 2013                        Category No. 18, 19
+St. Louis MO
+
+
+
+                              Appendix B
+
+
+
+
+                                  17
+72nd Annual SAWE Conference                                                                 SAWE Paper No. 3593
+May 18-22, 2013                                                                             Category No. 18, 19
+St. Louis MO
+
+Biography:
+
+Jeff Cerro has over 30 years of experience at the NASA Langley Research Center. He is currently a structural mass properties
+and vehicle systems analyst in the Vehicle Analysis Branch. He works to support NASA initiatives in the areas of space
+exploration and orbital access. In 2012 Mr. Cerro was a team member on the Advanced Exploration Systems, Radiation
+Storm Shelter analysis team. He led activities in the systematic trade space assessment of solution approaches to maintain
+acceptable space radiation dosage for astronauts destined to perform deep space exploration missions. This document is a
+consolidation of the work performed on that task by the RadWorks Storm Shelter team members identified in the Appendix
+of this report. Mr. Cerro is a registered Professional Engineer with a Masters in Mechanical Engineering from Rensselaer
+Polytechnic Institute. He is currently active in the SAWE in advancing society goals in creating accredited mass properties
+standards, and in moving towards a future of greater digital distribution of society publications. Additionally, Mr. Cerro is a
+senior member of the American Institute of Aeronautics and Astronautics.
+
+
+
+
+                                                              18
+

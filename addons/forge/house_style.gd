@@ -682,10 +682,13 @@ static func _fit_pixels(view: Viewport, q: Dictionary) -> void:
 ## frame-budget section 1). Call it behind a cover at load and after a quality or sky switch, and await it. Each
 ## distinct render `layers` value seen gets its own copy (a reflection probe's mask makes another variant), and a
 ## design with lamps gets a lamp over half the stage (a lamp in reach is another variant). Put `at` inside any
-## reflection probe the game has.
+## reflection probe the game has: each probe is redrawn there after the variants, under the new sky (_redraw_probes()).
 static func warm(root: Node, design: Dictionary, at: Transform3D, extra: Array = [], frames := 3) -> void:
 	if Array(OS.get_cmdline_user_args()).any(func(a: String) -> bool: return a.begins_with("--forge-job=")):
-		return  # a tool run wants pictures and state, not hitches; every variant on the tools' software GL took minutes
+		# a tool run wants pictures and state, not hitches; every variant on the tools' software GL took minutes. Its
+		# pictures still need the probes in the sky in force
+		await _redraw_probes(root, at)
+		return
 	# each material with what its instances use: the render layers (a probe's reflection mask picks a variant), whether
 	# it is drawn instanced (MultiMesh, particles) and whether it casts (a depth variant). Copies of the same variant
 	# cost a draw, not a compile; an unused variant costs a compile (seconds on the web), so only these are drawn.
@@ -778,7 +781,41 @@ static func warm(root: Node, design: Dictionary, at: Transform3D, extra: Array =
 		await tree.process_frame
 	if not is_instance_valid(stage):
 		return  # the scene went away while it warmed
-	if was and is_instance_valid(was):
-		was.make_current()
+	if cam.current and was and is_instance_valid(was):
+		was.make_current()  # unless the game moved to another camera meanwhile (a preset view)
 	stage.free()
+	await _redraw_probes(root, at)
+
+
+## Frames an UPDATE_ONCE probe takes once a camera sees it: one to be queued by the cull, one for its six faces, then
+## one per roughness mip, at most 8 (renderer_scene_cull.cpp render_probes(), gles3 light_storage.cpp, 4.7.2), plus one.
+const PROBE_FRAMES := 11
+
+## Every ReflectionProbe under `root` drawn again from a camera at `at`, after the warm stage is gone (or the probe
+## would keep its boxes and particles). A probe keeps its old picture until a property that dirties it changes: its
+## ambient colour and energy do not (a sky switch left the base reflecting the sunset at night, 12 Nov playtest), and
+## re-setting `update_mode` does. A dirty probe is queued only when a camera sees it, and the renderer draws one
+## probe at a time, so the camera stays for PROBE_FRAMES per probe.
+static func _redraw_probes(root: Node, at: Transform3D) -> void:
+	var probes := root.find_children("*", "ReflectionProbe", true, false)
+	if probes.is_empty() or not root.is_inside_tree():
+		return
+	for p: ReflectionProbe in probes:
+		p.update_mode = p.update_mode
+	var cam := Camera3D.new()
+	var was := root.get_viewport().get_camera_3d()
+	if was:
+		cam.fov = was.fov
+		cam.near = was.near
+		cam.far = was.far
+	root.add_child(cam)
+	cam.global_transform = at
+	cam.make_current()
+	for i in PROBE_FRAMES * probes.size():
+		await root.get_tree().process_frame
+	if not is_instance_valid(cam):
+		return
+	if cam.current and was and is_instance_valid(was):
+		was.make_current()  # unless the game moved to another camera meanwhile (a preset view)
+	cam.free()
 

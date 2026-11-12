@@ -16,7 +16,7 @@ class Errors extends Logger:
 
 
 func _init() -> void:
-	watchdog = 60.0  # the sweep casts a few thousand shapes and the sky loop rebuilds the rig four times
+	watchdog = 90.0  # the sweep casts a few thousand shapes and the sky loop rebuilds the rig four times
 
 
 func play() -> bool:
@@ -111,8 +111,35 @@ func play() -> bool:
 		check(errors.lines.is_empty(), "sky %s: errors %s" % [game.SKIES[i], errors.lines.slice(0, 3)])
 		_no_leftovers(game, world, game.SKIES[i])
 	game._sky(0)
+	await _probe(game, world)
 	OS.remove_logger(errors)
 	return true
+
+
+## A sky switch redraws the base's reflection probe behind the cover, from inside its box, for every step it takes:
+## its ambient setters do not redraw it, and it kept the sunset at night (12 Nov playtest). And every dust emitter,
+## also those made in play, is on the layer the probe does not shade (lit as the ground: it glowed at night).
+func _probe(game: Node3D, world: Node3D) -> void:
+	while game.busy():
+		await frames(1)
+	game._sky(game.SKIES.find("design.night"))
+	var probe: ReflectionProbe = world.get_node("Probe")
+	var box := AABB(probe.global_position - probe.size / 2.0, probe.size)
+	var seen := 0
+	for i in 3000:
+		if not game.busy():
+			break
+		await frames(1)
+		var cam := root.get_viewport().get_camera_3d()
+		if cam and cam.get_parent().name != "WarmStage" and box.has_point(cam.global_position):
+			seen += 1
+	var need: int = load("res://addons/forge/house_style.gd").PROBE_FRAMES
+	check(seen >= need, "the probe is redrawn behind the cover after a sky switch (%d frames from inside it, needs %d)" % [seen, need])
+	for e: GPUParticles3D in world.dust.find_children("*", "GPUParticles3D", true, false):
+		check(e.layers == 2, "dust %s on render layer 2, which the probe does not shade (%d)" % [e.name, e.layers])
+	game._sky(0)
+	while game.busy():
+		await frames(1)
 
 
 ## A boot's dust (skills/ground-contact-fx checks): standing still throws nothing, a step's grit flies no higher

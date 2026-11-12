@@ -1,0 +1,77 @@
+Solar Power System Evaluated for the
+Human Exploration of Mars
+
+
+
+
+             Mars surface photovoltaic-regenerative fuel cell power system.
+
+The electric power system is a crucial element of any mission for the human exploration of
+the Martian surface. The bulk of the power generated will be delivered to crew life-
+support systems, extravehicular activity suits, robotic vehicles, and predeployed in situ
+resource utilization (ISRU) equipment. In one mission scenario, before the crew departs
+for Mars, the ISRU plant operates for 435 days producing liquefied methane and oxygen
+for ascent-stage propellants and water for crew life support. About 200 days after ISRU
+production is completed, the crew arrives for a 500-day surface stay. In this scenario, the
+power system must operate for a total of 1130 days (equivalent to 1100 Martian "sols"),
+providing 400 MW-hr of energy to the ISRU plant and up to 18 kW of daytime user
+power.
+
+A photovoltaic power-generation system with regenerative fuel cell (RFC) energy storage
+has been under study at the NASA Glenn Research Center at Lewis Field (ref. 1). The
+conceptual power system (shown in the preceding illustration) is dominated by the 4000-
+m2 class photovoltaic array that is deployed orthogonally as four tent structures, each
+approximately 5 m on a side and 100-m long. The structures are composed of composite
+members deployed by an articulating mast, an inflatable boom, or rover vehicles, and are
+subsequently anchored to the ground. Array panels consist of thin polymer membranes
+with thin-film solar cells. The array is divided into eight independent electrical sections
+with solar cell strings operating at 600 V. Energy storage is provided by regenerative fuel
+cells based on hydrogen-oxygen proton exchange membrane technology. Hydrogen and
+oxygen reactants are stored in gaseous form at 3000 psi, and the water produced is stored
+at 14.7 psi. The fuel cell operating temperature is maintained by a 40-m2 deployable
+pumped-fluid loop radiator that uses water as the working fluid. The power management
+and distribution (PMAD) architecture features eight independent, regulated 600-Vdc
+channels. Power management and distribution power cables use various gauges of copper
+conductors with ethylene tetrafluoroethylene insulation.
+To assess power system design options and sizing, we developed a dedicated Fortran code
+to predict detailed power system performance and estimate system mass. This code also
+modeled the requisite Mars surface environments: solar insolation, Sun angles, dust
+storms, dust deposition, and thermal and ultraviolet radiation. Using this code, trade
+studies were performed to assess performance and mass sensitivities to power system
+design parameters (photovoltaic array geometry and orientation) and mission parameters
+(landing date and landing site latitude, terrain slope, and dust storm activity).
+
+
+
+
+                                  Mission power profile.
+
+Mission analysis cases were also run. Power results are shown in this graph for an analysis
+case with a September 1, 2012, landing date; 18.95° North latitude landing site; two
+seasonal dusts storms; and tent arrays. To meet user load requirements and the ISRU
+energy requirement, an 8-metric ton (MT) power system and 4000-m2 photovoltaic array
+area were required for the assumed advanced CuInS2 thin-film solar cell technology. In
+this figure, the top curve is the average daytime photovoltaic array power, the middle
+curve is average daytime user load power, and the bottom curve is nighttime power. At
+mission day 1, daytime user power exceeds 120 kW before falling off to 80 kW at the end
+of the mission. Throughout the mission, nighttime user power is set to the nighttime
+power requirement. In this analysis, "nighttime" is defined as the 13- to 15-hr period when
+array power output is below the daytime power requirement. During dust storms, power
+system capability falls off dramatically so that by mission day 900, a daily energy balance
+cannot be maintained. Under these conditions, the ISRU plant is placed in standby mode,
+and the regenerative fuel cell energy storage is gradually discharged to meet user loads.
+
+References
+   1. Kerslake, T.W.; and Kohout, L.L.: Solar Electric Power System Analyses for Mars
+      Surface Missions. 34th Intersociety Energy Conversion Engineering Conference,
+      SAE Paper 99–01–2482 (NASA/TM—1999-209288), 1999.
+
+Glenn contact: Thomas W. Kerslake, (216) 433–5373,
+Thomas.W.Kerslake@grc.nasa.gov
+
+Author: Thomas W. Kerslake
+
+Headquarters program office: OSF
+
+Programs/Projects: HEDS
+

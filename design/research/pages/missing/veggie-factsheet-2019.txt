@@ -1,0 +1,207 @@
+National Aeronautics and Space Administration
+
+
+
+
+Veggie
+
+
+
+
+                                                                                                                             NASAfacts
+NASA has led the charge in space exploration for more than six decades, and through the Artemis program, we
+will build on our work in low-Earth orbit. NASA’s Artemis lunar exploration program includes sending a suite of
+new science instruments and technology demonstrations to study the Moon, landing the first woman and next
+man on the lunar surface by 2024, and establishing a sustained presence by 2028. The agency will leverage its
+Artemis experience and technologies to prepare for the next giant leap – sending astronauts to Mars.
+
+As humans expand space exploration farther from Earth, the ability to grow a supplemental food crop is a
+solution to the challenge of long-duration missions into deep space. The packaged diet currently used by
+crews in low-Earth orbit works well and has supported an uninterrupted human presence in space since Nov.
+2, 2000; however, it relies on frequent resupply missions. During a two- or three-year mission to Mars, the
+vitamins and quality of packaged food would degrade over time. Supplementation with fresh, edible crops
+will provide necessary nutrients while also enhancing dietary variety. Anecdotal evidence also supports the
+potential for psychological benefits for astronauts, rooted in the enjoyment of eating and caring for plants.
+
+
+The System
+ • The Vegetable Production System (Veggie) is a plant               • The Veggie concept is a simple, low-power sys-
+   growth unit on the International Space Station.                     tem to grow fresh, nutritious food for our astro-
+                                                                       nauts to supplement their diet and use as a tool to
+                                                                       support relaxation and recreation.
+
+                                                                     • There are two Veggie units aboard the station,
+                                                                       along with a more sophisticated growth chamber,
+                                                                       the Advanced Plant Habitat.
+
+                                                                     • Veggie was built by ORBITEC in Madison, Wis-
+                                                                       consin (Sierra Nevada Corporation acquired OR-
+                                                                       BITEC in 2014) under the NASA Small Business
+                                                                       Innovation Research (SBIR) program.
+
+                                                                     • Earlier versions of the Veggie hardware were test-
+                                                                       ed at NASA’s Kennedy Space Center.
+
+                                                                     • The Veggie hardware and the VEG-01 experiment
+                                                                       flew to the space station as commercial cargo,
+                                                                       part of NASA’s Commercial Resupply Services
+                                                                       SpaceX CRS-3 mission that launched from Ken-
+                                                                       nedy Space Center on April 18, 2014.
+
+                                                                     • Astronauts Rick Mastracchio and Steve Swanson
+                                                                       installed Veggie in the Columbus Laboratory Mod-
+                                                                       ule on May 7, 2014.
+NASA astronaut Peggy Whitson is seen during harvesting and
+cleaning of VEG-03 in the space station’s Node 2. VEG-03 used
+the Veggie plant growth facility to cultivate a type of cabbage to   • Veggie runs on about 70 watts for the lights, fans
+be harvested in orbit, with samples returned to Earth for testing.     and control electronics.
+NASA astronaut Shane Kimbrough is photographed during VEG-03 harvest and stow of red romaine lettuce in the space station’s Columbus Module.
+
+
+
+ • Veggie utilizes passive wicking to provide water to the                   • Each plant pillow receives two or three seeds as a hedge
+   plants as they grow.                                                        against germination failure.
+
+ • Currently, the seeds are glued into wicks, which are white                • Future plans are to have seeds embedded in a tape or film,
+   flaps emerging from the top of a plant pillow.                              which would allow seeds and pillows to fly independently.
+                                                                               The space station could have a seed bank and a plant pil-
+ • The glue actually is guar gum, a water-soluble natural poly-                low bank, which would allow crews to decide what to grow.
+   mer made from legumes called guar beans. This is what
+   secures the seeds in place. Check your ice cream – you                    • The plant experiment starts by placing the root mat on the
+   may find guar gum as a thickening agent.                                    Veggie baseplate, then the plant pillows are bungeed in
+                                                                               place on top of the root mat. Water is injected into the plant
+ • Plant pillows are Teflon-coated black Kevlar with a Nomex                   pillow, then water is injected into the root mat. The wicks
+   bottom, which contains the growth media (calcined clay –                    carry the water to the seeds, which are glued in, and the
+   often used to condition baseball infields), controlled release              combination of water and light trigger germination. Seeds
+   fertilizer and water (injected through a quick-disconnect                   are oriented so that the plant grows up and the roots grow
+   valve). Kevlar is a strong synthetic fiber and Nomex is a syn-              down into the plant pillow.
+   thetic fiber that is flame- and heat-resistant.
+                                                                             • As part of each plant experiment in Veggie, researchers at
+ • The water reservoir known as the root mat has a Nomex                       Kennedy grow crops on the ground in sync with the orbital
+   top, which wicks water from an interior water bag. The root                 experiments as a control group.
+   mat Nomex, when in contact with the Nomex plant pillow
+   bottom, allows water transfer to the pillows.                             • Growing plants in microgravity is complicated by the fluid
+                                                                               physics and lack of convective flow.
+
+
+
+Veggie                                                                   2                                                              NASA Facts
+ • Plants need oxygen and carbon dioxide, and the roots need                 frozen in the station’s Minus Eighty-Degree Laboratory Freezer
+   water and oxygen at the same time. Too much water stresses                for ISS (MELFI) for return to Earth and further study (microbial
+   plants like a flood, and too little is like a drought. The calcined       analysis, antioxidant capacity, mineral analysis and anthocyan-
+   clay media surface roughness, surface area and particle size              in concentration). This was the first crop grown and consumed
+   traps air and absorbs water such that the root has both at the            in NASA hardware. The three U.S. Orbital Segment members
+   same time. Veggie has a fan system, which draws in cabin air              enjoyed the leafy green with balsamic vinegar and extra virgin
+   for the growing plants to ensure they don’t end up in a diffu-            olive oil. They saved some of the lettuce for dinner with their
+   sion controlled bubble of humidity and oxygen.                            Russian teammates. According to Kjell’s Twitter account, he
+                                                                             enjoyed the lettuce on a space cheeseburger!
+ • As a good practice and precaution, the Veggie team also
+   developed a produce-sanitizing step for leafy greens utiliz-              Veggie’s Third Crop
+   ing food-safe, citric acid-based wipes that are used to sani-
+   tize the fresh produce and also clean the Veggie units.                   On Nov. 16, 2015, Astronaut Kjell Lindgren initiated VEG-01 C,
+                                                                             with one set of six plant pillows planted with zinnia seeds. This
+ • NASA is building up the ingredients for a pick-and-eat sal-               was the last experiment for VEG-01. The zinnia has a longer
+   ad; or rather, a pick, sanitize and eat salad since there is no           growth period, different duration photoperiod and flowered as
+   way to cook on the station yet.                                           part of the experiment. They can be considered a precursor for
+                                                                             a tomato and other plants that need to flower and fruit. Seeds
+ • Astronauts have grown eight different types of leafy greens               were on-orbit for more than a year and a half and so germina-
+   in Veggie for the astronauts to eat. Overall, 15 different                tion data is of value for long-duration spaceflight campaigns.
+   types of plants have grown in space in Veggie. Researchers                Long-duration growth will assist in determining viability of oth-
+   at Kennedy Space Center have tested more than 100 crops                   er long-duration crops in Veggie. Veggie did not encounter is-
+   on the ground.                                                            sues with pollen or flower production. Growing flowering plants
+                                                                             and allowing them to flower verified this. Astronauts harvested
+ • Including experiments by teams of student citizen scien-                  plants and returned them, along with plant pillows, to Earth for
+   tists working in partnership with the Veggie team via the                 microbial analysis and root structure visualization. It is of value
+   Fairchild Tropical Botanic Garden’s Growing Beyond Earth                  to determine if microbial population changes by plant species.
+   Project challenge, more than 200 crops have been tested                   A NASA intern at Kennedy was able to germinate seeds from
+   for potential use in space.                                               the zinnias returned from space, and researchers grew numer-
+                                                                             ous daughter plants, indicating that pollination occurred in mi-
+ • NASA is seeking further data on crop appeal and the ben-                  crogravity. When tomatoes are grown in space, crew members
+   efit, if any, of having and caring for plants on crew morale.             will need to pollinate the flowers to produce fruit.
+
+
+VEG-01                                                                       All Veggie Crop Experiments
+                                                                             for Human Consumption
+Veggie’s First Crop in Space
+Astronaut Steve Swanson started the first crop of lettuce on                  • VEG-01 B: ‘Outredgeous’ red romaine lettuce – July 8, 2015
+May 8, 2014, and it grew for 33 days. VEG-01 A included one                     - Aug. 10, 2015.
+set of six plant pillows planted with red romaine lettuce seeds.
+The first crop of lettuce had one pillow with no germination and              • VEG-03 A: ‘Outredgeous’ red romaine lettuce using cut-
+two plants that were lost due to water stress. Three healthy let-               and-come-again repetitive harvest technique – Oct. 25,
+tuce plants were harvested after 33 days, frozen, and returned                  2016 – Dec. 28, 2016.
+to Kennedy for food safety analysis. Results were good with
+the plants being as clean, if not cleaner, than those purchased               • VEG-03 B: ‘Tokyo Bekana’ Chinese cabbage – Jan. 20,
+at grocery stores.                                                              2017 - Feb. 17, 2017.
+
+
+Veggie’s Second Crop                                                          • VEG-03 C: ‘Tokyo Bekana’ Chinese cabbage using cut-
+                                                                                and-come-again repetitive harvest technique – April 3, 2017
+Astronaut Scott Kelly initiated VEG-01 B, the second crop of                    - May 31, 2017.
+lettuce, on July, 8, 2015, and both he and Astronaut Kjell Lind-
+gren cared for the plants. The crop grew for 33 days. VEG-01 B                • VEG-03 D: Mizuna mustard, ‘Outredgeous’ red romaine let-
+included one set of six plant pillows planted with red romaine                  tuce and ‘Waldmann’s Green’ lettuce using cut-and-come-
+lettuce seeds. On Aug. 10, 2015, the crew enjoyed the fruits of                 again repetitive harvest technique – Sept. 26, 2017 - Nov.
+their labor by harvesting half of the leaves from each plant for                23, 2017 (harvested and eaten on Thanksgiving).
+consumption. The rest of the plant tissue was harvested and
+
+Veggie                                                                   3                                                           NASA Facts
+ • VEG-03 E: Mizuna mustard, ‘Outredgeous’
+   red romaine lettuce and ‘Waldmann’s Green’
+   lettuce using cut-and-come-again repetitive
+   harvest technique grown concurrent with
+   Veg-03 F – Feb. 6, 2018 - April 6, 2018.
+
+ • VEG-03 F: Mizuna mustard, ‘Outredgeous’
+   red romaine lettuce and ‘Waldmann’s Green’
+   lettuce using cut-and-come-again repetitive
+   harvest technique grown concurrent with
+   Veg-03 E – Feb. 9, 2018 - April 9, 2018.
+
+ • VEG-03 G: ‘Red Russian’ kale and ‘Dragoon’
+   lettuce – Oct. 25, 2018 - Nov. 28, 2018.
+
+ • VEG-03 H: ‘Wasabi’ mustard and ‘Extra
+   Dwarf’ pak choi – March 9, 2019 - April 6,
+   2019.
+
+ • VEG-04 A: Mizuna mustard using Red-Rich
+   and Blue-Rich light recipes – June 4, 2019 -
+   July 9, 2019.
+
+ • VEG-04 B: Mizuna mustard grown using
+   Red-Rich and Blue-Rich light recipes and
+   cut-and-come-again repetitive harvest tech-
+   nique – Oct. 1, 2019 – Nov. 28, 2019.
+                                                   Inside the Veggie flight laboratory in the Space Station Processing Facility at NASA’s Kennedy
+All Veggie Crop Experiments                        Space Center in Florida, Matthew Romeyn harvests a portion of the ‘Outredgeous’ red romaine
+                                                   lettuce from the VEG-03 ground control unit.
+Not for Human Consumption
+Here is a list of space biology experiments that                      • APEX-04: Arabidopsis – Feb. 25, 2017 - March 16, 2017.
+astronauts grew in Veggie but did not eat:
+                                                                      • APEX-05: Arabidopsis – Dec. 20, 2017 - Jan. 9, 2018.
+ • VEG-01 A: ‘Outredgeous’ red romaine lettuce – May 8,
+   2014 - June 10, 2014 (proof-of-concept experiment).                • APEX-06: Brachypodium – April 12, 2018 - April 20, 2018.
+
+ • APEX-03-1: Arabidopsis – Jan. 15, 2015 - Jan. 26, 2015.            • VEG-PONDS-01: ‘Outredgeous’ red romaine lettuce – April
+                                                                        25, 2018 - May 14, 2018 (tech demo of a new type of con-
+ • APEX-03-2: Arabidopsis – Jan. 15, 2015 - Feb. 3, 2015.               tainer: the Passive Orbital Nutrient Delivery System).
+
+ • VEG-01 C: Zinnia – Nov. 16, 2016 - Feb. 14, 2016.                  • Space Algae: Algae.
+
+ • CERES: Lentil, mustard and radish – Jan. 3, 2017 - Jan.            • Microalgae: Algae.
+   12, 2017 (European Space Agency’s education program ex-
+   periment that grew the same seeds as hundreds of school            • VEG-PONDS-02: ‘Outredgeous’ red romaine lettuce – April
+   children on Earth).                                                  25, 2019 - May 17, 2019 (second tech demo for PONDS).
+
+
+
+
+National Aeronautics and Space Administration
+John F. Kennedy Space Center
+Kennedy Space Center, FL 32899
+
+
+www.nasa.gov
+
+FS-2020-01-007-KSC
+

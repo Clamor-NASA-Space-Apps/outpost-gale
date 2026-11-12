@@ -42,16 +42,21 @@ All in `models/`. Triangles and licence per file: [ASSETS.md](ASSETS.md). "Movin
 
 | File | What it is | Real-world thing | Moving parts | Status |
 |---|---|---|---|---|
-| `building_habitat.glb` | 5 m drum, hollow, ramp, 1.2 x 2.2 m hatch, "HAB 1" lettering, mast, tanks | NASA Habitat Demonstration Unit | `door` (swings in) | done, WIP edit today |
-| `building_greenhouse.glb` | 6.8 m geodesic dome, vestibule, 2 grow beds, 8 lettuce slots | Mars greenhouse (forged, not the Quaternius dome: it has no doorway) | `door` | done, WIP edit today |
+| `building_habitat.glb` | 5 m drum, ramp, 1.2 x 2.2 m hatch, "HAB 1" lettering, mast, tanks; fitted for 2 crew: water-bag-lined bunks (the storm shelter), galley, toilet, CO2 and water racks (ISS rack faces), O2/N2 valve panel, workstation with the Gale map, 2 suits, ceiling lights | NASA Habitat Demonstration Unit; ISS racks | `door` (swings in) | done, fit-out 13 Nov |
+| `building_greenhouse.glb` | 6.8 m geodesic dome, vestibule, 2 hydroponic A-frames under magenta grow lights, 8 lettuce slots | Mars greenhouse (forged, not the Quaternius dome: it has no doorway) | `door` | done, WIP edit today |
 | `building_solar_array.glb` | 4 panels on a single-axis tracker | NASA surface-power wing | `panel_1..4` (tilt about the tube) | done, WIP edit today. No panel collision |
 | `building_dish.glb` | 3 m parabolic dish on a pedestal | base high-gain antenna | `dish` (nods) | done. No dish collision |
 | `building_storm_shelter.glb` | Stacked cargo bags, 3.0 x 2.42 x 2.81 m, one doorway | NASA Orion storm shelter (bags of food and water) | none | done. 12.5k triangles, the heaviest |
 | `building_lander.glb` | Crewed lander, 6 m footprint, 7.45 m tall, ladder | generic crewed lander (ending vehicle is an open team decision) | none | done, WIP edit today |
 | `pad_build.glb` | 6 x 6 m paver pad with corner lamps | build plot | none | done |
 | `prop_battery_bank.glb` | Cabinet, POWER sign, status light | battery bank | status light blinks | done, WIP edit today |
-| `prop_oxygen_maker.glb` | Electrolysis cabinet and O2 tank | ISS-style oxygen generator | status light | done, WIP edit today |
-| `prop_water_recycler.glb` | Water processor, tanks, filters | ISS water recovery | status light | done, WIP edit today |
+| `prop_oxygen_maker.glb` | Gas bottle skid by the airlock: 3 O2 (2 + spare) and 1 N2, line into HAB 1 | tanked gas of NASA's 30-sol plan, ISS tanks by the airlock | status light | re-forged 13 Nov |
+| `prop_veggie.glb` | Veggie unit: magenta light cap, 6 pillows: red romaine, radish, microgreens, a wilted plant | NASA Veggie (ISS) | none | done 13 Nov, in HAB 1's galley |
+| `prop_gale_map.glb` | 0.56 m table map of Gale and Mount Sharp, pin at the base (approximate) | LPG-3D model from NASA/JPL-Caltech/MSSS (CC BY-NC) | none | done 13 Nov, on HAB 1's desk |
+| `building_reactor.glb` | 10 kWe fission unit, radiator mast, flashing beacon, 190 m out, cable to HAB 1 | NASA Fission Surface Power | `beacon` blinks | done 13 Nov |
+| `building_solar_wing.glb` | Fixed 40 m solar wing; 6 rows = 600 m2 | DRA 5.0 solar wing | none | done 13 Nov |
+| `rock_mont_mercou.glb` | Mont Mercou outcrop, baked photo colour, landmark `mercou` | the real outcrop at Gale (LPG-3D, CC BY-NC) | none | done 13 Nov |
+| `prop_water_recycler.glb` | Water processor, tanks, filters | ISS water recovery | status light | done; moved indoors as a rack, the outdoor one stays until tuning.json `machines` drops `water` |
 | `prop_lettuce_1..4.glb` | Four growth stages | Veggie lettuce (Quaternius crops) | none (scaled by game) | done |
 | `prop_cargo_bag.glb` | Cargo Transfer Bag 0.5 x 0.42 x 0.27 m | NASA CTB | carried | done |
 | `prop_lamp.glb` | 3 m work-light mast | field floodlight | none | done, WIP edit today |
@@ -76,7 +81,7 @@ All built from data by `world/world.gd` (612 lines). The scene is `data/world.js
 |---|---|
 | Terrain | Real Gale patch from HiRISE `DTEEC_018854_1755`, 201 x 201 samples at 2 m (400 m square), 1 m normal map, 100 m chunks the camera can cull. Collision from the same heights, `height_at()` is the single source. Centre is 200 m west of Bradbury Landing |
 | Skyline | `terrain_backdrop.glb`: Mount Sharp and the rim (MOLA 128 ppd) |
-| Base layout | 21 items: habitat, oxygen, water, battery, 2 solar arrays, greenhouse, shelter, dish, 2 pads, rover, PIP, 3 bags, 2 lamps, beacon, telltale, lander at (90, -70), Curiosity at (80, 95) |
+| Base layout | 33 items: habitat, gas skid, water, 3 battery banks, 2 solar arrays, 6 solar wings, reactor, Mont Mercou, greenhouse, shelter, dish, 2 pads, rover, PIP, 3 bags, 2 lamps, beacon, telltale, lander at (90, -70), Curiosity at (80, 95) |
 | Landmarks | `spawn`, `base`, `airlock`, `solar`, `greenhouse`, `rover`, `lander`, `curiosity`, `edge` (teleport key T cycles them) |
 | Rocks | 45 solid rocks (0.5 to 2.2 m, convex hulls) and 2,500 pebbles in 3 MultiMeshes. None on items, pads or 2.5 m walkways. Rocks part buried by `rock.embed` |
 | Sky states | `design` (day, sun 12 degrees, gold), `design.sunset` (4 degrees, blue halo, twilight, 60% lit windows), `design.night` (no sun, lamps on, 85% windows), `design.storm` (fog 2 to 120 m, cherry red, dim). Switched by key B. Blending between them at runtime is hackathon work |

@@ -1,0 +1,1132 @@
+47th International Conference on Environmental Systems                                                              ICES-2017-89
+16-20 July 2017, Charleston, South Carolina
+
+
+
+
+                 Oxygen Storage Tanks Are Feasible for Mars Transit
+
+                                                       Harry W. Jones1
+                                    NASA Ames Research Center, Moffett Field, CA, 94035-0001
+
+
+                     The Mars transit tanks will probably be titanium lined, composite overwrapped pressure
+                  vessels (COPVs) similar to those used in the space shuttle and International Space Station
+                  (ISS). Since the mass of a storage tank is proportional to the mass of the gas it contains, the
+                  required oxygen will use about the same mass of tanks regardless of the number and size of
+                  the tanks. Using existing relatively small COPVs is possible. Pressure vessels can fail due to
+                  rupture and leakage but no failures have occurred in space and the expected failure rates
+                  are very low. Since one or two spare tanks are required for reliability, using smaller tanks
+                  can reduce the total mass. For a Mars round trip, the mass of oxygen and tanks including
+                  spares is roughly equal to the mass of the ISS Oxygen Generation Assembly (OGA) and its
+                  spares. Since the OGA must orbit Mars and be returned to Earth, while half the storage
+                  tanks are emptied on the way to Mars and can be abandoned, storage tanks have a
+                  significant launch mass advantage over the OGA. Storage tanks are simpler, more reliable,
+                  and have fewer failure modes than an OGA. They would have smaller design and
+                  development costs and need less crew time and maintenance. Oxygen storage tanks are
+                  feasible for Mars transit and are attractive compared to the ISS OGA.
+
+
+                                                        Nomenclature
+        AIK      =      Airlock Installation Kit
+        COPV     =      Composite Overwrapped Pressure Vessel
+        EFA      =      External Fill Assembly
+        GFA      =      Ground Fill Assembly
+        HPGT     =      High Pressure Gas Tank
+        IFA      =      Internal Fill Assembly
+        ISS      =      International Space Station
+        MDP      =      Maximum Design Pressure
+        MPQD =          Medium Pressure QD
+        NORS     =      Nitrogen Oxygen Recharge System
+        OGA      =      Oxygen Generation Assembly
+        PCA      =      Pressure Control Assembly
+        Pr(LOC) =       Probability of Loss of Crew
+        QD       =      Quick Disconnect
+        RTA      =      Recharge Tank Assembly
+        RVA      =      RTA Valve Assembly
+
+                                                      Mathematical symbols
+        M           =   mass, kg
+        P           =   gauge pressure, Pa
+        Pa          =   Pascal, kg/m-s2
+        R           =   radius, m
+        T           =   thickness, m
+        V           =   volume, m3
+        W           =   width, m
+        ρ           =   density, kg/m3
+        σ           =   stress, Pa
+
+        1
+            Systems Engineer, Bioengineering Branch, Mail Stop N239-8.
+                                                 I. Introduction
+
+T    HIS paper describes the design of oxygen storage tank systems suitable for Mars transit. The oxygen storage
+     tank is the major component of a complete oxygen storage system for Mars transit. Filters, valves, and sensors
+are also needed.
+    The design of gas pressure vessels is described. Pressure vessels are usually spheres or cylinders with rounded
+end caps. Traditionally they are made of welded steel, but for light weight space applications, composite fiber is
+wound around a titanium metal liner, forming a composite overwrapped pressure vessel (COPV). The mass of a
+pressure vessel decreases with the strength of its materials and increases proportionally to the mass of the gas it
+contains.
+    Pressure vessels are designed for safety reasons to “leak before burst.” Proof testing at overpressure can be used
+to detect flaws. Close mechanical tolerances and pressure safety factors are used to reduce the failure probability.
+The usual failure probability is very low, 1 in 1,000 to 1 in 100,000 per year. To ensure a safe supply of oxygen, one
+or two spare oxygen tanks must be provided. Providing the total required oxygen in five or ten tanks rather than in
+one large one does not change the total launch mass and does not significantly increase development cost.
+    The design of pressure vessels has advanced in five steps, all-metal, metal with overwrap in the hoop direction
+only, metal liner with a composite fiber overwrap (a COPV), all-composite with a polymer liner and fiber overwrap,
+and all-composite linerless. NASA has developed an all-composite pressure vessel, but nearly all operational NASA
+pressure vessels are COPVs. The NASA space shuttle orbiter had twenty-four. They were somewhat overdesigned
+and their effective life was estimated by accelerated test at 350 years. The ISS has thirteen different types of on-
+board COPVs, some in multiple copies. Orbital ATK has produced 20 different COPVs for space use. None of the
+shuttle, ISS, or other space COPVs has ever failed.
+    The most recent NASA pressure vessel development is for the International Space Station (ISS) Nitrogen
+Oxygen Recharge System (NORS). The NORS system design provides guidance for the design of a Mars transit
+oxygen storage system, but more mass efficient COPVS similar to other recent Orbital AKT products would
+probably be used.
+
+                                          II. Pressure vessel design
+    This section describes the design of gas pressure vessels. It includes a description, mass estimate, scaling, and
+materials.
+    The mass of a pressure vessel is proportional to the mass of the gas it contains. “No matter what shape it takes,
+the minimum mass of a pressure vessel scales with the pressure and volume it contains and is inversely proportional
+to the strength to weight ratio of the construction material.” (Wikipedia, Pressure vessel) Since, according to the
+Ideal Gas Law, the mass of the gas within a tank is proportional to its pressure times volume divided by temperature,
+this means that the minimum mass of a pressure vessel is proportional to the mass of the gas it contains. (Roylance,
+2001)
+
+A. Pressure vessel description – shape, material, safety features
+    Pressure vessels are designed to hold gases at much higher than ambient pressures, thousands of psi. Since they
+are intrinsically dangerous, commercial pressure vessels are built to code and inspected. Pressure vessels are usually
+spheres or cylinders. The most common design is a cylinder with end caps that are hemispherical or dish shaped.
+(Wikipedia, Pressure vessel) (Roylance, 2001)
+    Many pressure vessels are made of welded steel. The steel should have high impact resistance and, if needed, be
+composed for corrosion resistance. Some lightweight pressure vessels are made of composite materials, such as
+carbon fiber held in place with a polymer. The composite material may be wound around a metal liner, forming a
+COPV. (Wikipedia, Composite overwrapped pressure vessel) (McLaughlan et al., 2011) Composites save launch
+mass for space applications.
+    Pressure vessels are designed to “leak before burst,” so that a crack will grow through the wall and allow the gas
+to escape and reduce pressure, before the vessel fractures and explodes. Pressure vessels are designed to a
+Maximum Design Pressure (MDP) and usually have a safety valve to ensure that the maximum pressure is not
+exceeded. (Wikipedia, Pressure vessel) (Megyesy, 2008)
+
+B. Pressure vessel design – tank mass `
+   For any shape, the mass of a pressure vessel increases directly with the pressure and volume it contains and is
+inversely proportional to the strength to weight ratio of its construction material. For a cylinder with hemispherical
+ends, the minimum mass of the pressure vessel is
+
+                                                          2
+                                 International Conference on Environmental Systems
+   M = 2 π R2 (R + W) P ρ/σ
+
+    M is the minimum pressure vessel mass (kg), R is the cylinder radius (m), W is the cylinder width (m), P is the
+gauge pressure above ambient (Pa), ρ is the density of the pressure vessel material (kg/m3), and σ is the maximum
+working stress that the material can tolerate, (Pa). The term σ/ρ is the strength to weight ratio of the pressure
+vessel’s material. The Pascal, Pa, is used to measure pressure, stress, and ultimate tensile strength. A Pascal is kg/m-
+s2 in SI base units. (Wikipedia, Pressure vessel) (fxsolver, Mass+) (One standard atmosphere, 14.7 psi, is equal to
+101.3 kPa.)
+    The derivation of this formula for the mass of a cylindrical pressure vessel provides some additional insight.
+
+   M = cylinder material volume * ρ, where ρ is the density of the pressure vessel material.
+
+   M = surface area * thickness * ρ
+
+    The walls of a cylindrical pressure vessel experience different stresses and therefore are designed to have
+different thickness.
+
+   The stress in a spherical pressure vessel is:
+
+   σ sphere = P R/2T, where T is the thickness of the wall (m).
+
+    This result is obtained by setting the internal force, the pressure times the internal area, P π R2, equal to the
+resisting force, the wall stress times wall cross sectional area, σ sphere 2 π R T.
+
+   The stresses in a cylinder wall of a cylindrical pressure vessel are:
+
+   σ hoop = P R /T, measured around the circumference of the cylinder, and,
+
+   σ long = P R /2T, measured down the length of the cylinder. (Wikipedia, Pressure vessel)
+
+   Note that the cylinder hoop stress is twice the cylinder axial stress and also twice the hemispherical end cap
+spherical stress. To equalize the stresses at the joint of the cylinder and the hemispherical end caps, the cylinder
+walls are made twice as thick as the hemispherical cap walls. (Wikipedia, Pressure vessel) (Roylance, 2001)
+(Megyesy, 2008)
+
+   T sphere = P R /2 σ
+
+   T cylinder = P R/σ
+
+   Note that the wall thickness is proportional to the cylinder radius. Thus the mass is
+
+   M = spherical surface area * spherical wall thickness * ρ + cylinder surface area * cylinder wall thickness * ρ
+
+   M = 4 π R2 * T sphere * ρ + 2 π R W * 2 T sphere * ρ = 4 π R * (R + W) *T sphere * ρ
+
+   M = 4 π R2 * P R/2 σ * ρ + 2 π R W * P R/σ ∗ ρ = 2 π R2 (R + W) P ρ/σ
+
+  This formula applies to thin walled cylinders, R > 10 or 20 T. For steel cylinders, the cylinder walls are often
+made thicker to reduce deformation at the joints. (Roylance, 2001)
+
+C. Pressure vessel design – gas and tank mass and scaling
+   “No matter what shape it takes, the minimum mass of a pressure vessel scales with the pressure and volume it
+contains and is inversely proportional to the strength to weight ratio of the construction material.” (Wikipedia,
+
+
+                                                           3
+                                  International Conference on Environmental Systems
+Pressure vessel) If the temperature is constant, a fixed pressure and volume implies a fixed mass of gas, so the mass
+of the tank is proportional to the mass of gas stored.
+    The ideal gas equation is:
+
+    P V = n R T, where n is the number of moles of gas and a mole is the mass equal to the atomic weight in grams,
+R is the ideal gas constant in units of liters kPa/moles K, and T here is the temperature in Kelvin (K).
+
+   The mass of gas in a tank is:
+
+   Mgas = n * atomic weight = P V/R T * atomic weight
+
+   At a fixed temperature and pressure, the mass of gas in a tank is directly proportional to the tank volume.
+
+   The volume of a cylindrical tank with hemispherical ends is
+
+   V = 4/3 π R3 + π R2 W = π R2 (4/3 R + W), where V is volume.
+
+   The mass of a cylindrical tank with hemispherical ends is
+
+   Mtank = 2 π R2 (R + W) P ρ/σ
+
+   Mgas ~ π R2 (4/3 R + W),
+
+    Mgas has a factor of 4/3 R + W rather than the R + W in Mtank, but W > R and tank mass should scale quite
+closely with the mass of gas the tank contains.
+
+    The mass of a pressure vessel is closely proportional to the mass of the gas it contains. The mass efficiency of
+gas storage, measured as the mass of the gas stored divided by the mass of the gas plus the storage tank, is roughly
+constant for different size tanks of the same shape. There are no economies of scale for increasing pressure or for
+increasing tank mass to stored gas mass. For storing gases, "tankage efficiency" is independent of pressure at a given
+temperature. Colder temperatures would allow greater stored gas mass. (Wikipedia, Pressure vessel)
+
+D. Pressure vessel material – steel or composite
+    Most commercial tanks are made of steel. To manufacture a cylindrical tank with hemispherical ends, rolled
+parts must be welded together, and the welding must be done carefully. The steel must have high strength and a high
+impact resistance, especially for low temperatures. Special alloy steel should be used where ordinary carbon steel
+would corrode. Thicker walls and higher mass may be used to reduce deformation at the end joints. (Wikipedia,
+Pressure vessel)
+    If low tank mass is required, such as in space, the pressure vessels can be made of layered light weight
+composite materials, often with a metal liner. They can be reinforced using high tensile strength carbon fiber held in
+place with a polymer. The fiber can be oriented to counter the different cylinder wall stresses. An infinitely long
+cylinder would be wound at an optimal winding angle of 54.7 degrees, as this gives the necessary double strength in
+the circular hoop direction compared to that in the length direction. Fiber wound composite material tanks can be
+very light, but are much more difficult to manufacture. (Wikipedia, Pressure vessel)
+
+                            III. Pressure vessel failures, reliability, and cost
+    Failures of pressure vessels are unusual, but pressure vessels are so common that many failures have occurred
+and been analyzed. This section discusses the pressure vessel failure modes and causes, failure prevention, and
+historical failure rates. Cost is also discussed.
+
+A. Pressure vessel failure modes and causes
+    Pressure vessels can fail to hold their contained gases either by a slow leak or a sudden rupture. They sometimes
+experience slow deformation or degradation that can lead to failure. Some pressure vessel failure modes are shown
+in Table 1.
+
+
+                                                            4
+                                   International Conference on Environmental Systems
+                                Table 1. Pressure vessel failure modes. (Simonen, 2002)
+                                    Severity                         Failure mode
+                         Major failures                   Fracture/catastrophic rupture
+                                                          Excessive leakage
+                         Minor problems and warnings Leaking through cracks
+                                                          Wall corrosion and thinning
+                                                          Tank deformation
+                                                          Small cracks
+
+   The failure modes are listed in order of decreasing severity and increasing likelihood. Small cracks are much
+more common than major leaks or ruptures. However, in long term installations, a minor degradation such as small
+cracks can progress to leakage through cracks and ultimately even to a catastrophic failure. (Simonen, 2002) Table 2
+shows possible pressure vessel failure causes.
+
+                                Table 2. Pressure vessel failure causes. (Simonen, 2002)
+                                 Failure cause                               Sudden              Long term
+           Pressure over design limit                                           x
+           Temperature over design limit                                        x
+           Temperature below brittle fracture limit                             x
+           Improper design and fabrication                                      x
+           Improper operation, repair, and maintenance                          x
+           External event damage                                                x
+           Excessive vibration                                                  x                    x
+           Material or welding defects                                          x                    x
+           Corrosion                                                                                 x
+           Wear                                                                                      x
+           Thermal fatigue cracking                                                                  x
+           Vibration fatigue cracking                                                                x
+           Stress corrosion cracking                                                                 x
+           High-temperature creep                                                                    x
+           Long-term embrittlement                                                                   x
+
+    Some failure causes can occur suddenly, in response to some event. These include overpressure, extreme
+overheating, external events such as earthquakes, and human errors such as improper design and fabrication
+including material or welding defects and also improper operation, repair, and maintenance. (Simonen, 2002) (TWI,
+2016)
+    Other failure modes only occur after a long period of time in service, such as corrosion, wear, fatigue cracking,
+stress corrosion cracking, creep, and hydrogen embrittlement. Years can go by before a leak or rupture. Metal
+fatigue is common. Small-diameter piping is often subject to vibrational that causes cracking. Large vessels can
+suffer fatigue due to cyclic thermal stresses due to hot and cold flows. Corrosion is also common and causes wall
+thinning, pitting, and cracking. (Simonen, 2002) (TWI, 2016)
+
+B. Pressure vessel failure prevention
+    Most sudden failures can be prevented by ensuring proper design, fabrication, inspection, operation, repair, and
+maintenance. Good engineering procedures should be used, possibly following a recognized code. The approach is
+to ensure adequate material strength, to prevent high stress, to stress relieve by post-weld heat-treatment, to fabricate
+using qualified welders and procedures, to inspect to minimize the number of defects, and finally to proof test.
+(TWI, 2016)
+    Proof testing is the traditional method to demonstrate that pressure vessels do not contain flaws that can cause
+catastrophic failure. The vessel is pressurized with water to more than the maximum service stress, and if the
+component survives it is expected to be safe. (TWI, 2016)
+    Proof testing does not take account of any crack growth during the service life of the component. Long term
+failures can be due to cyclic stresses or environmental conditions, causing fatigue or corrosion. Cracking can be
+monitored and inspection results used to predict greater or lesser reliability than previously expected. (TWI, 2016)
+
+
+                                                          5
+                                 International Conference on Environmental Systems
+C. Stress induced failures and failure prediction theory
+     A pressure vessel can be expected to fail when the load or induced stress is greater than the material strength,
+measured in terms of the allowable stress. A tank material such as steel under increasing stress will first deform
+elastically but still be able to return to its original shape when the applied stress is removed. Greater stress beyond
+the yield point will cause the material to deform plastically. If plasticity occurs over a full load bearing area, collapse
+occurs. If the load stress exceeds the tensile strength of the material, the material will fail by breaking or rupturing.
+If lesser loads are applied for many cycles, a failure may occur due to fatigue. Sustained loads at low temperatures
+could result in brittle fracture. (Arnold, 1972) (Chattopadhyay, 2005)
+     These failures in pressure vessels are stress dependent. For high reliability, the induced stress level must be
+maintained below the allowable material stress level. The induced stress level must be less than the allowable level
+for all the relevant failure modes, such as plastic collapse, rupture, fatigue, and brittle fracture. For a given pressure
+vessel shape and content, the induced stress level in the walls can be reduced by increasing the shell thickness and
+vessel mass. (Arnold, 1972) (Chattopadhyay, 2005)
+     The typical industrial design process required by code is to assign a safety factor so that the induced stress level
+is some fraction of the allowable material stress level. For example, the ASME Code requires that the allowable
+stress intensity should not be higher than two-thirds of the minimum specified yield strength of the material or one-
+third of the minimum specified ultimate tensile strength of the material. (Arnold, 1972) (Chattopadhyay, 2005) In a
+cylindrical pressure vessel, the hoop stress is the highest stress. The shear stress, the difference between opposing
+stresses, is also important. Failure is governed by the combination of all stress components. (Arnold, 1972)
+(Chattopadhyay, 2005)
+     A theoretical model can be used to predict failure probability, but calibrating it would be difficult. The
+probability of failure is roughly the probability that an induced stress will exceed the allowable stress. Probability
+distributions can be constructed for both the induced stress and the allowable stress. The hoop stress can be
+determined as the function of the pressure and the geometry of the vessel. The expected variations in pressure and
+dimensions determine the probability distribution of the induced stress. The distribution functions of yield strength
+and ultimate tensile strength can be measured and are typically normal. “In practice, the radius and shell thickness of
+a pressure vessel are held to rather close tolerances (about 2%) when compared with the expected variation in loads
+and material strengths (about 15%).” (Arnold, 1972) In practice, the safety factors are much larger than the expected
+variations in stresses and the usual failure probability is very low.
+
+D. Pressure vessel failure rates
+    Lees has extensive material on pressure vessel design and he describes many failure rate surveys. Smith and
+Warwick found 229 potentially dangerous failures, including 206 cracks, and 13 catastrophic failures in 20,000 high
+quality vessels over 310,000 vessel-years, corresponding to failure rates of 7.4 * 10-4 and 4.2 * 10-5 per year. Other
+surveys of 100,000’s of vessel years found no catastrophic failures, indicating that the catastrophic failure rate is less
+than 1 in 100,000, 1 * 10-5, per year. Davenport surveyed 360,000 mostly thin walled lower quality pressure vessels
+over 1.8 * 10 6 vessel years and found 60 cracks in 92 total failures, a total failure rate of 5 * 10-5 per year. In general
+hazard assessments, values of 10-6, 10-5, and 10-4 failures per year are typically used respectively for catastrophic
+failure, leakage, and worst case. (Lees, 2012)
+    The Flemish Government has provided a summary and analysis of the Smith and Warwick pressure vessel
+failure survey. The 229 failures included 216 cracks due to split propagation, 5 defects before delivery, 1 corrosion,
+3 malfunction and human error, 3 creep, and 1 unverified. The 216 splits included 52 due to material fatigue, 30
+corrosion, 63 manufacturing defects, 61 unknown, and 10 miscellaneous. The most significant failures occurred
+during the first years of operation. Because of the large data set the overall failure rate of 7.4 * 10-4 has a very
+narrow 99% confidence interval of 6.2 * 10-4 to 8.7 * 10-4. (Flemish Government, 2009)
+
+E. Pressure vessel costs
+    Pressure vessels are commonly used and cost estimates can be obtained from on-line calculators, commercial
+software, and a cost estimating relation given below. The cost of a pressure vessel increases as some fractional
+power of its mass. For a given material and shape, such as carbon steel in a cylinder with hemispherical ends, the
+internal pressure and dimensions determine the required shell thickness and the total pressure vessel mass.
+    A chemical encyclopedia article reports the pressure vessel cost estimating relations developed for use in
+ASPEN and widely used in the industry. (Mulet et al., 1993) ASPEN’s material and energy balance calculations can
+be used to size equipment and estimate capital and operating costs. Cost data was gathered for shop fabricated
+pressure vessels built to code. The vessel cost correlated well with the shell weight and total weight including
+
+
+                                                           6
+                                  International Conference on Environmental Systems
+nozzles, man holes, and supports. For a given material, assumed to be carbon steel for the base vessel, the vessel
+shell weight can be calculated from the diameter, length, and pressure. Adjustments are applied for other materials.
+   The cost of a horizontal pressure vessel is
+
+   Cost = exp [8.114 – 0.16449 ln M + 0.04333 (ln M)2]
+
+    The formula applies to steel tanks from one thousand to one million pounds. M is mass in kg. The standard
+deviation of the cost was 8.7% and the estimator is close to the data. Cost adjustments are available for other
+materials. (Mulet et al., 1993)
+    Since the cost of a pressure vessel increases more slowly than the mass of the tank and the mass of the gas
+stored, storing a given amount of gas in several tanks is more expensive than one big tank. This is shown in Table 3.
+
+                       Table 3. The cost of storing a fixed amount of gas in N or N + 1 tanks.
+        N, number of tanks Normalized cost for 1 Normalized cost for N Normalized cost for N + 1
+                1                    1.00                     1.00                         2.00
+                2                    0.60                     1.19                         1.79
+                3                    0.45                     1.35                         1.80
+                4                    0.37                     1.49                         1.86
+                5                    0.32                     1.61                         1.93
+                6                    0.29                     1.73                         2.01
+               10                    0.21                     2.12                         2.33
+               15                    0.17                     2.54                         2.71
+               20                    0.15                     2.91                         3.06
+
+    Since the mass of a tank is proportional to the mass of the gas it contains, 20 small tanks weigh roughly as much
+as one full size one containing the same gas. However, the cost of a smaller tank does not decrease as rapidly as its
+mass, per the formula, so the 20 small tanks cost 2.91 times as much as the one full size tank. However, adding one
+full size spare doubles the cost, while adding one spare to five or six smaller ones is a one-fifth or one-sixth cost
+increase and the total cost is no more than two full size tanks. The cost of a larger number of tanks would be further
+reduced if the learning curve reduction in cost is also considered. And the cost of developing the tanks is likely to be
+small compared to the cost of launching the tanks and the mass they contain into space. This suggests that the
+number of tanks can be optimized considering reliability and operations as more important than launch mass or
+development cost. However, developing a new tank larger than those now available could have much larger costs for
+design, tooling, and manufacturing than using currently available smaller tanks.
+
+                                          IV. Pressure vessel types
+    Pressure vessels have been classified using five categories or types based on their construction. Each higher type
+is more advanced, lighter, and more expensive. (LeGault, 2012)
+    Type I pressure vessels have all-metal construction, usually carbon steel, and are widely available. Commercial
+code Type I vessels are inexpensive, costing about five dollars per liter of volume. Type I vessels are the heaviest,
+weighing approximately 1.4 kg/liter.
+    Type II pressure vessels are typically steel or aluminum with a glass-fiber composite overwrap in the hoop
+direction. “The metal vessel and composite materials share about equal structural loads. Type II vessels cost about
+50 percent more to manufacture than Type I vessels, but they weigh 30 to 40 percent less.” (LeGault, 2012)
+    Type III vessels are COPVs. They have a metal liner, usually aluminum but titanium for space, with a full
+carbon fiber or other composite overwrap. The composite wrap carries the structural load.
+    Type IV vessels are all-composite, featuring a polymer liner, typically high-density polyethylene, with carbon
+fiber or hybrid carbon/glass composite fiber.
+    Type III and Type IV vessels reduce mass further than Type II vessels, to 0.3 to 0.45 kg/liter. The cost of Type
+III and Type IV vessels is about two times greater than Type II vessels and 3.5 times greater than the all-metal Type
+I tanks. Composite vessels have higher corrosion resistance, fatigue resistance, service life, and overall safety. For
+high-pressure applications to 5,000 psi or higher, Type III and Type IV vessels usually are the most practical
+solution. Type III and Type IV pressure vessels can remain in use for up to 30 years before replacement, twice the
+time allowed for Type I and Type II vessels. (LeGault, 2012)
+
+
+                                                          7
+                                 International Conference on Environmental Systems
+    Type V vessels are all-composite and linerless. The “Type V tank has been the pressure vessel industry’s holy
+grail for years.” (Composites World, 2014) Recently a Type V tank was designed, built, tested, and flown for gas
+storage on a student satellite. The 1.9 liter tank weighed only 0.2 kg. It was carbon fiber and epoxy resin. “It had an
+operational pressure of 200 psi, a proof pressure of 1,000 psi, and a burst pressure between 2,000 and 2,500 psi.”
+(Composites World, 2014) Linerless tanks are expected to be 15 to 20 percent lighter than the nearest Type IV
+equivalents. (LeGault, 2012)
+    NASA has developed and tested a Type V propellant tank for cryogenic liquid hydrogen.
+       “In 2013, The National Aeronautics and Space Admin. (NASA, Washington, D.C.) announced on July 2 that it recently
+       completed a major space technology development milestone by successfully testing a large, pressurized cryogenic
+       propellant tank made of composite materials. The almost 8-ft/2.4m diameter composite tank will hold cryogenic
+       propellants (gasses chilled to subfreezing temperatures and condensed to form highly combustible liquids) critical to
+       future long-term human exploration missions beyond low-Earth orbit. In the past, propellant tanks have been fabricated
+       from metals. Switching from metallic to composite construction holds the potential to dramatically increase the
+       performance of future space systems through a dramatic reduction in weight. A potential initial target application for the
+       composite technology is an upgrade to the upper stage of NASA’s Space Launch System (SLS) heavy-lift rocket.”
+       (Composites World, 2014)
+
+                          V. Composite overwrapped pressure vessels (COPVs)
+    A composite overwrapped pressure vessel (COPV) has a very thin, impermeable liner wrapped with load bearing
+fibers held in a matrix. The liner does not support load or pressure but prevents leaks through microcracks in the
+matrix. A shell can be used to protect against impact damage. The fibers, usually carbon and kevlar, are wrapped
+around the liner and embedded in a polymer matrix. COPVs have lower weight than metallic pressure vessels but
+are more expensive and difficult to design. (Wikipedia, Composite overwrapped pressure vessel)
+    COPVs have been used in aerospace applications for decades and are considered safe and cost effective.
+“COPVs are currently used at NASA to contain high-pressure fluids in propulsion, science experiments and life
+support applications. These COPVs have a significant weight advantage over all-metal vessels; but, as compared to
+all-metal vessels, COPVs require unique design, manufacturing, and test requirements.” (McLaughlan et al., 2011)
+
+A. COPV design
+    The composite in a COPV is formed of structural fibers and a resin that are overwrapped on a liner. Long fibers
+provide tensile strength and the resin holds the fibers and carries the shear loads. This composite is applied over an
+interior liner of rubber, plastic, or thin ductile metal. The fiber and wet resin are wrapped on the liner to form the
+composite structure. The liner prevents leaks and usually provides little structural support, but some are load-
+sharing. “On most ISS and Shuttle COPVs, the vessel liner is substantial and serves as a partial structural element by
+carrying a portion of the pressure load.” (McLaughlan et al., 2011)
+    Both metal vessels and COPVs are used for weight limited rocket and spacecraft applications. Typically, a
+COPV will have approximately one-half the weight of a comparable metal tank. A heavier all-metal vessel usually
+has a more straightforward design, lower manufacturing cost, and well understood verification of fracture control by
+analysis. “(E)ach application of a pressure vessel should have a mass, performance, cost and risk trade.”
+(McLaughlan et al., 2011)
+    COPV design includes analysis of the liner, the fiber overwrap, and their interaction. The liner may be of ductile
+aluminum, with no load-sharing, or steel, titanium, or cryogenic stainless steel for a load-sharing. Plastic-lined
+COPVs can save weight. The fiber is generally applied as a ribbon of multiple fibers that passes through a bath for
+resin application and is wound on the liner. Cylindrical vessels are wound in both the longitudinal and
+circumferential or hoop directions. In a process called autofretage, the COPV is pressurized above the liner yield
+strength, causing it to permanently expand and induce stress in the fiber composite and compressive strain in the
+liner. This improves the cycle life performance of the liner. (McLaughlan et al., 2011)
+    The COPV factors of safety should be higher than for metal vessels to compensate for design unknowns,
+manufacturing variability, and less conclusive inspection and test. Factors of safety should also be adjusted
+according to usage, which can vary from single-pressurization, brief, low risk orbital missions to long-term critical
+applications requiring many pressurization cycles. (McLaughlan et al., 2011)
+
+B. COPV failure modes
+   COPVs have different failure modes than metal vessels, and the failures are less well understood and
+manageable. It is difficult to predict the expected failure mode due to the interaction between the liner and the fiber-
+matrix composite. The overpressure testing used to detect flaws in metal vessels is generally not applicable to
+
+                                                           8
+                                  International Conference on Environmental Systems
+COPVs. Composites may fail due to stress rupture or static fatigue after a long time at operating pressure. Surface
+impacts and even minor surface damage can reduce the burst strength of carbon fiber composites, but kevlar is more
+damage tolerant. (McLaughlan et al., 2011)
+    The four major potential COPV failure modes are:
+    1) Burst from over-pressurization. The pressurization source must be controlled.
+    2) Fatigue failure of the liner. The design should ensure an adequate number of pressure cycles.
+    3) Burst resulting from damage. Protection from handling damage is needed.
+    4) Stress rupture of the composite overwrap. Stress rupture occurs when the composite degrades over time and
+the vessel suddenly bursts, possibly causing injury and damage. (McLaughlan et al., 2011)
+    “Pressure, duration of time at pressure, and temperature experienced contribute to the degradation of the fiber
+and/or the fiber-matrix interface, particularly around accumulations of fiber breaks, and these increase the
+probability of COPV stress rupture.” (McLaughlan et al., 2011)
+
+                                          VI. NASA shuttle COPVs
+    The NASA space shuttle orbiter has twenty-four internal Kevlar COPVs, six 26 inch COPVs for nitrogen for life
+support and eighteen 19, 20, and 40 inch COPVs for helium for maneuvering and propulsion. These were designed
+in the 1970s and built during the late 1970’s and into the early 1980’s. The shuttle COPVs have operated reliably but
+with some concerns. (McLaughlan et al., 2011) (Kezirian, 2010) Newer NASA COPVs have carbon/epoxy
+overwraps. (Thesken et al., 2009) The space shuttle uses some metallic tanks. Eighteen tanks store liquid oxygen for
+atmosphere and liquid oxygen and liquid hydrogen for propulsion and fuel cells.
+
+A. Shuttle COPV description
+    When the space shuttle COPVs were designed in the 1970’s, COPVs were new and the design approaches for
+metal vessels were still used. The design included a load-sharing metal liner. The composite wrap was considered to
+be a highly reliable supplement to the metal liner performance. The load sharing between the metal liner and the
+overwrap was poorly understood. “The factor-of-safety margins, development testing, burst test articles,
+manufacturing inspections, and acceptance procedures did not fully address the unique, and generally unknown,
+composite characteristics.” (McLaughlan et al., 2011)
+    The shuttle COPVs have titanium liners, 0.104 inch thick, and titanium bosses. The composite overwrap is
+Kevlar49 fiber in epoxy, 0.739 inch thick. The composite carries seventy or eighty percent of the load at the
+operating pressure. Using the 24 Kevlar COPVs saved approximately 752 pounds on each shuttle compared to an all
+metal tank design. (Kezirian, 2010)
+    The design requirement for the liner was “leak before burst,” so that if a crack occurs it would grow slowly
+enough for the gas to gradually escape. Tanks were pressure cycled to confirm this. (Kezirian et al., 2011)
+
+B. Shuttle COPV reliability
+    The major concern in space shuttle COPV performance has been the expected time to stress rupture failure. A
+stress rupture is a sudden and catastrophic failure of the overwrap after holding pressure at a stress level below the
+ultimate strength over an extended time. Currently there is no simple method of determining the stress rupture life of
+a COPV, nor is there a screening technique to determine if a particular COPV is close to the time of a stress rupture
+failure. (Russell et al., 2010) A stress rupture failure could be catastrophic. Despite this concern, shuttle experience,
+analysis, and test have all indicated excellent reliability. “To date, there have been zero stress rupture failures of
+COPVs in NASA spaceflight applications.” (McLaughlan et al., 2011)
+    Specifically, the stress rupture life of NASA’s kevlar fiber COPVs was a concern due to their long usage and the
+lack of understanding of stress rupture in kevlar fibers. The data show that the rupture process is a function of stress,
+temperature, and time. However due to the load sharing liner, the manufacturing induced stresses, and the design
+details, the actual fiber stress was not clearly known. (Thesken et al., 2009)
+    After the Columbia accident, shuttle engineers reexamined the COPV flight certification. The initial estimate of
+the probability of a catastrophic failure was one in five through STS-107. Replacing all existing flight COPVs was
+considered unfeasible. Two COPVs identified as high risk were replaced. Improvements were made in ground
+procedures to reduce risk. Pressure loading was done in stages to reduce temperature. The maximum load was
+reduced when possible. The reliability model was updated using a Kevlar database and a flight vessel burst test,
+which had a lower than expected burst pressure. The reliability was estimated at 0.998 for the planned remaining
+flights of the shuttle program, STS-118 through STS-135. (Kezirian et al., 2011) The stress rupture reliability model
+predicted that each shuttle was flying with a tank reliability of greater than 0.999 per flight. (Russell et al., 2010)
+
+
+                                                          9
+                                 International Conference on Environmental Systems
+    Additional confidence was gained by an accelerated stress rupture test that was performed on one of the high risk
+tanks removed from a shuttle. Phase I was conducted at flight pressure, 4,850 psi, with age accelerated at 130°F, out
+to 38,000 total effective hours. The reliability model predicted a 50% chance of failure but the tank passed with no
+issues. Phase II was conducted at flight pressure and 160°F to 87,000 total effective hours. The reliability model
+predicted a 95% chance of failure but none occurred. Phase III included an increase in pressure above flight limits to
+5,200 psi and age acceleration at 160°F to 113,000 total effective hours. The model predicted a 99% chance of tank
+failure but the tank performed well. The last phase IV was performed at a higher pressure and temperature of 5,400
+psi and 174°F. The COPV tank finally failed after accumulating a total of 3,100,000 effective hours, roughly 350
+years. And this was for one of the two flown tanks that were removed because they had expected high risk. “(T)he
+model was shown to have significant conservatism.” “Test was first experimental determination of tank lifetime
+(industry wide).” “Test of a Flight article (exposed to space environments) proves no missed physics (confirms
+analysis).” (Gebhardt, 2010) (Russell et al., 2010)
+
+                      VII. International Space Station (ISS) on board COPVs
+    The International Space Station (ISS) has many pressure vessels used to store oxygen and other gases. The High
+Pressure Gas Tanks (HPGTs) store oxygen and nitrogen to maintain the atmosphere. The Nitrogen Tank Assemblies
+(NTAs) store nitrogen for thermal control. Eleven smaller Composite Overwrapped Pressure Vessels (COPVs) store
+various gases. The ISS on-board COPVs are shown in Table 4.
+
+                     Table 4. International Space Station (ISS) on-board COPVs. (Kezirian, 2010)
+          System    Diameter, in            Gas          Volume, in3 Maximum operating pressure, psig
+          HPGT          37.89        Oxygen, nitrogen       26,093                  3,400
+           NTA       45 L x 19.7         Nitrogen           12,000                  3,000
+           PCU          15.37             Xenon              1,680                  3,000
+          SAFER         9Lx6             Nitrogen             170                  10,000
+           VGA      7.22 L x 3.55           Air               44.6                  3,000
+           GBA       17.1 L x 8.5         Argon               655                   3,000
+           AMS          15.37             Xenon              1,680                  3,000
+           AMS           12.4         Carbon dioxide          813                   3,200
+           AMS       21.7 L x 6.6         Helium              505                   3,538
+          VCAM       8.1 L x 3.68         Helium              47.8                  2,150
+           GBU            9.8             Argon               467                   2,630
+           GBU            9.8             Helium              467                   2,630
+           GBU            9.8         Carbon dioxide          467                   2,630
+
+   Table 4 only nomenclature.
+   AMS       = Alpha Magnetic Spectrometer
+   GBA       = Gas Bottle Assembly
+   GBU       = Gas bottle Unit
+   NTA       = Nitrogen Tank Assembly
+   PCU       = Plasma Contactor Unit
+   SAFER = Simplified Aid for Extravehicular Activity Rescue.
+   VCAM      = Vehicle Cabin
+   VGA       = Verification Gas Assembly
+   None of the COPV tanks has experienced a stress rupture failure so far in the history of ISS. (Groome, 2012)
+
+A. High Pressure Gas Tanks (HPGTs) and Nitrogen Tank Assemblies (NTAs)
+     The HPGTs are located near the airlock. There are two oxygen HPGTs and two nitrogen HPGTs with one
+oxygen and one nitrogen on-orbit spare. Nitrogen is also stored in the external Thermal Control System in two
+Nitrogen Tank Assemblies (NTAs) located on two different trusses. (Dick, 2011-5226) (Dick et al., 2009-01-2413)
+     The oxygen HPGTs have a maximum design pressure of 3,000 psia, but are normally pressurized to 2,400 psia
+maximum. A full oxygen tank has approximately 94.3 kg of oxygen. The nitrogen HPGTs have a maximum design
+pressure of 3,400 psia, but are also normally pressurized to 2,400 psia maximum. A full nitrogen tank has
+approximately 84.4 kg of nitrogen. (Dick et al., 2009-01-2413) The HPGTs weigh 544 kg, empty. (Carrasquillo et
+al., 1997) The HPGT mass and efficiency are shown in Table 5.
+
+                                                        10
+                                International Conference on Environmental Systems
+                                             Table 5. HPGT mass and efficiency.
+        System            Dry mass, kg      Gas mass, kg Mass efficiency = gas/total           Mass multiple = total/gas
+     HPGT, oxygen             544               94.3               0.148                                6.77
+     HPGT, nitrogen           544               84.4               0.134                                7.45
+
+                                          VIII. Orbital ATK COPVs
+   The ISS COPVs were made by Orbital ATK, as have been most other space COPVs. An on-line data sheet
+describes 20 different COPVs. Table 6 shows some of the Orbital ATK COPVs.
+
+                               Table 6. Orbital ATK COPVs. (Orbital-ATK data sheet, 2016)
+  Tank mass,      Volume,       Operating pressure, Oxygen mass,     Mass efficiency =                     Mass multiple =
+      kg           liters               psi              kg              gas/total                            total/gas
+      6.4           32.1               2,500             7.3               0.53                                 1.88
+      7.0           50.0               2,176             9.9               0.58                                 1.71
+     10.0           67.3               4,500            27.4               0.73                                 1.36
+     10.5           67.3               4,500            27.4               0.72                                 1.38
+     10.7           67.3               4,500            27.4               0.72                                 1.39
+     12.2           54.1               2,875            14.1               0.54                                 1.87
+     12.7           81.4               4,800            35.4               0.74                                 1.36
+     16.8           87.0               4,496            35.5               0.68                                 1.47
+     19.1          119.7               2,875            31.2               0.62                                 1.61
+     20.4          132.8               2,875            34.6               0.63                                 1.59
+
+   There are only 10 entries because similar items have been combined. For all the COPVs, the mass efficiency
+averages 0.65 and the mass multiple 1.56. The higher pressure COPVs, 4,500 psi or near, have a mass efficiency of
+about 0.72 and a mass multiple of about 1.38. The least efficient higher pressure COPV, with mass efficiency of
+0.68 and mass multiple of 1.47, is heavier and stronger than the others with higher proof pressure and higher burst
+pressure. Since the mass of gas in a tank is proportional to pressure, increasing pressure increases the mass
+contained. The least efficient higher pressure COPV is essentially equivalent to the others. The best Orbital ATK
+COPV is roughly two times more mass efficient than the NORS COPVs described below.
+   The best existing Orbital AKT COPV design for Mars transit would be the one with 12.7 kg tank mass and 35.4
+kg of oxygen contained. It has the highest efficiency, 0.74, and lowest mass multiple, 1.36.
+   The Orbital ATK COPVs can be expected to be very reliable.
+       “Orbital ATK is the world's leading producer of titanium propellant tanks used in military, scientific and commercial
+       satellites, space-launch vehicles, and space-exploration vehicles ... The tanks have been a part of nearly every large U.S.
+       launch vehicle and geosynchronous earth-orbit satellite, with 100 percent reliability. Orbital ATK propellant tanks have
+       landed on Mars, Venus and the Moon, and have visited every planet in the solar system. They have been an integral part
+       of nearly every major space-exploration vehicle, including Cassini, Mariner, Pioneer and Voyager.” (Orbital-ATK,
+       Propellant Tanks, 2016)
+
+        IX. International Space Station (ISS) Nitrogen Oxygen Recharge System (NORS)
+   The Nitrogen Oxygen Recharge System (NORS) is used to transport oxygen and nitrogen to ISS. The NORS
+tank is a COPV contained in the Recharge Tank Assembly (RTA).
+
+A. NORS design specifications
+   The NORS COPV design specifications are given in Table 7.
+
+                          Table 7. NORS COPV design specifications. (Kezirian et al, 2012)
+                                Specification                          Value
+                     Maximum design pressure                         7,000 psia
+                     Working fill pressure                    6,000 psia (41.4 MPa)
+                     Minimum volume                             2.43 cu ft (68.8 L)
+                     Maximum empty weight                       104 lbm (47.2 kg)
+                     Maximum envelope                            31” L x 18.5” D
+
+                                                           11
+                                   International Conference on Environmental Systems
+    The NORS COPV tank is designed and manufactured by Orbital ATK. The COPV is designed to hold
+approximately 27.2 kg (60 lbm) of nitrogen or 36.3 kg (80 lbm) of oxygen. (Dick, 2011-5226) The COPV has a
+metal liner and carbon-composite overwrap. Some actual values differ from the design plan. The COPV is a
+cylindrical tank with an actual volume of approximately 2.68 cubic feet (75.9 L). (Dick and Griffin, 2012-3614) The
+RTAs are filled with 38.1 kg (84 lbm) of oxygen or 28.6 kg (63 lbm) nitrogen. The RTAs also contain a valve
+assembly with a high pressure quick disconnect, isolation valve, vent valve to enable venting of the quick disconnect
+to cabin before mate/demate, and a rough pressure gauge. (Schaezler and Cook, 2015)
+    The best current values for RTA dry mass and content mass are 55.5 kg empty, 38.3 kg of oxygen, and 28.7, kg
+of nitrogen. (Duchesne, 2016) The NORS mass and mass efficiency are shown in Table 8.
+
+                                      Table 8. NORS mass and mass efficiency.
+                                                              Mass efficiency =
+       System              Dry mass, kg      Gas mass, kg                                  Mass multiple = total/gas
+                                                                   gas/total
+   RTA, oxygen                 55.5              38.3                 0.41                             2.45
+   RTA, nitrogen               55.5              28.7                 0.34                             2.93
+
+    The NORS COPV is roughly three times more mass efficient than the HPGT, but only about half as efficient as
+the best Orbital ATK COPVs.
+
+B. Use of NORS tanks on ISS and in the future
+     The first NORS oxygen and nitrogen RTAs were flown to ISS together on August 19, 2015 and installed January
+19, 2016. They contained 84 lbm (38.2 kg) of oxygen and 63 lbm (28.6 kg) of nitrogen. Oxygen has been transferred
+from an RTA to an HPGT. “The empty NORS RTAs will be returned to earth on a subsequent SpaceX flight for re-
+fill and re-launch. NORS tanks can be re-used up to 10 times.” (Gentry, 2016-406)
+     The ISS atmosphere control and supply system includes a Pressure Control Assembly (PCA), the HPGTs and
+NORS, and various regulators and valves. “They are not generally gravity sensitive and have proven to be very
+robust and dependable components on Apollo, Shuttle and ISS. … it is expected that NORS will be the gas transport
+standard for the foreseeable future.” (West et al., 2016-226)
+
+                         X. Nitrogen Oxygen Recharge System (NORS) design
+    The NORS has five components: the Ground Fill Assembly (GFA), the Recharge Tank Assembly (RTA), the
+Internal Fill Assembly (IFA), the External Fill Assembly (EFA), and the Airlock Installation Kit (AIK). The
+Recharge Tank Assembly (RTA) is the pressure vessel used to transport pressurized oxygen and nitrogen to the ISS.
+(Dick et al., 2009-01-2413) The Internal Fill Assemblies (IFA) regulate the flow of gas from the RTA. The RTA and
+IFA are discussed.
+
+A. Recharge Tank Assembly (RTA)
+   The Recharge Tank Assembly (RTA) is shown in Figure 1.
+
+
+                                                                                          COPV
+
+
+
+                                                                                                  RVA
+
+                                                                                                  QD
+
+
+
+
+   Figure 1. The Recharge Tank Assembly (RTA). (Schaezler and Cook 2015-146)
+
+                                                        12
+                                International Conference on Environmental Systems
+    The RTA consists of three parts: a composite overwrap pressure vessel (COPV), the RTA Valve Assembly
+(RVA), and a high pressure Quick Disconnect (QD). The tank has a single port for filling and emptying, but has an
+opposed boss for handling purposes. (Dick, 2011-5226)
+    The RTA Valve Assembly (RVA)was designed and manufactured by Cobham. The RVA isolates the flow of gas
+from the COPV and provides a connection to the Internal Fill Assembly (IFA) thought the Quick Disconnect (QD).
+To allow easier QD operation by avoiding the need to connect and disconnect under pressure, the RVA includes a
+line depress valve. Additionally, the RVA includes a pressure gauge to measure the quantity of gas contained in the
+COPV and a burst disk required for air transport. (Dick, 2011-5226) (Dick and Griffin, 2012-3614) The RVA is
+shown in Figure 2.
+
+
+
+
+   Figure 2. The RTA Valve Assembly (RVA). (Dick et al., 2013-3499)
+
+   The RVA includes two filters, a pressure gauge, a burst disk, a manual isolation valve, and a manual
+depressurization valve. (Dick et al., 2013-3499)
+
+B. Internal Fill Assemblies (IFAs)
+    Fill assemblies interface between the RVA and gas destinations and regulate the pressure below the Maximum
+Design Pressure (MDP). The Internal Fill Assemblies (IFA) regulate the pressure of the gas from the RTA to the
+airlock interface to the HPGTs. At the outlet of the IFA, a Medium Pressure QD (MPQD) provides a connection
+between the RVA and the destination interface. (Dick, 2011-5226) The IFA is shown in Figure 3.
+
+
+
+
+   Figure 3. The Internal Fill Assembly (IFA). (Dick et al., 2013-3499)
+
+                                                       13
+                               International Conference on Environmental Systems
+   The IFA includes four filters, a pressure gauge, an isolation valve, a regulator, a flow limiter, dual relief valves, a
+check valve, and a flow rate selector. (Dick et al., 2013-3499)
+
+C. NORS design issues
+     The first task in designing the NORS was determining the pressure vessel size and fill pressure. The RTA must
+fit through a hatch that is 31.5 inches in diameter. The RTA must also have protection against loads and impacts
+experienced during shipping and handling. The pressure vessel had to be no larger than 24 inches in diameter. (Dick
+et al., 2009-01-2413) The final diameter was 18.5 inches.
+     Next the tank volume and pressure needed to be established. An analysis was made of spherical tanks with
+diameters of 12, 18, and 24 inches at pressures from 2,000 psia to 10,000 psia. The mass of gas transferred was
+compared to the mass of the tank to determine mass efficiency. This analysis showed that a 20 inch pressure vessel
+charged to 7,000 psia was the optimum size. The need to accommodate a 10 degrees C increase in temperature
+within the Maximum Design Pressure (MDP) led to reducing the fill pressure to 6,000 psia. (Dick et al., 2009-01-
+2413) Because of the different uses of the oxygen and nitrogen, a regulator assembly is needed with the ability to
+lower the pressure of gases and provide for variable flow rates. (Dick et al., 2009-01-2413)
+     Vessels with pressures ranging from 6,000 to 7,000 psia are nearly unprecedented on-orbit. High pressure
+oxygen means that stainless steel cannot be used since it would be consumed in an ignition. Oxygen compatible
+materials such as Monel or brass must be used. (Dick et al., 2009-01-2413)
+     The original NORS architecture included a regulator with a single relief valve on the outlet to prevent over
+pressurizing the downstream system. “However, upon review with the Safety organization, this architecture was
+deemed to be unacceptable. … NASA requires two fault tolerance against any catastrophic hazard. This means that
+if a hazard is considered catastrophic there must be three controls to prevent the hazard from occurring. …
+Therefore, the NORS architecture was altered to use redundant relief valves at the outlet of the oxygen and nitrogen
+internal regulators.” (Dick, 2011-5226)
+
+                            XI. Mars transit oxygen tank new design approach
+    How should the Mars transit oxygen tank be developed? The space tank industry has accumulated a great deal of
+design knowledge and flight experience, and has many flight qualified tank designs.
+    The most direct and least expensive approach would be to use a qualified tank as is. The additional engineering
+effort may be only a simple qualification-by-similarity report or could extend to a full stress and fracture analysis
+and some protoflight testing. Also for relatively low cost, an existing tank can be adapted. It can be modified
+without affecting the tank shell qualification status, perhaps by changing the support structure or the size of the inlet
+or outlet. (Tam et al., 2008-4940)
+    To implement an optimal tank solution, it is almost always necessary to develop and qualify a new custom-
+designed tank. “This process includes design, analysis, engineering, tooling, component qualification, tank
+qualification, and tank fabrication. The effort demands considerable expertise and consumes significant amount of
+resources, and requires the commitment to an extended program schedule.” (Tam et al., 2008-4940) This is the most
+expensive and highest risk option, but it should be considered and may be justified for the unique mission of a
+human Mars transit.
+    A design trade study should be conducted to determine the best Mars transit oxygen tank design. (Tam et al.,
+2008-4940) Some of the steps are as follows:
+
+   1. Prepare a preliminary specification, to be modified according to study results.
+   2. Develop a trade study methodology, including criteria and weights, again to be revised.
+   3. Assess existing tank designs and identify best candidates.
+   4. Consider tank shell configuration. Probably a central cylinder with hemispherical heads rather than fully
+       spherical or cylindrical with space saving ellipsoidal heads.
+   5. Consider tank construction. Probably a COPV with titanium shell and full wrap rather than all titanium, all
+       composite, or hybrid with metal heads and composite overwrapped cylinder section. Include inlet, boss, and
+       mounting.
+   6. Consider tank size. Titanium plate sizes and increasing cost of tooling limit tank diameter. More smaller
+       tanks reduce the size and cost of spares.
+   7. Consider impact of higher-level, system-wide trades. Mass, volume, reliability, safety, risk.
+
+        “(T)he best overall value for the spacecraft – can only be found through a systematic review of all available options. A
+        comprehensive review also provides opportunities to examine other factors, such as risk, schedule, and benefits such as
+
+                                                           14
+                                   International Conference on Environmental Systems
+       launch vehicle savings. ... Trade studies also serve another critical function – to facilitate communication between
+       customers and tank designers. While Equipment Specification should be respected as a governing document with a
+       collection of all requirements, the intent of these requirements are best communicated through technical and
+       programmatic interchanges. The opportunity for such interchanges offered by the trade studies can be tremendously
+       valuable. We have concluded many trade studies by recommending minor changes to the Equipment Specification … It
+       is through these trade studies that one can learn to look beyond the requirements of a single component and focus on a
+       system-level approach to find the best value for the satellite system.” (Tam et al., 2008-4940)
+    A new tank designed for Mars transit would probably more mass efficient than existing tanks. The large expense
+of a Mars mission and the relatively low cost of a tank development could justify an extensive design effort. COPVs
+are highly reliable, so it could be possible to reduce the tank mass while retaining less but sufficient reliability. The
+overall reliability can be restored by adding filled spare tanks, which would increase mass. It is not clear what tank
+mass and reliability would give the minimum overall mass for the required reliability. The oxygen storage tanks for
+Mars transit should have extensive reliability testing and analysis.
+
+                        XII. Mars transit oxygen storage system requirements
+   This section considers the requirements for an oxygen storage system design for a Mars transit mission. The
+basic mission parameters include the transit duration, the number of crew, and the daily oxygen consumption per
+crewmember. These together determine the quantity of oxygen required. Another basic mission requirement is the
+acceptable Probability of Loss of Crew, Pr(LOC), due to a failure of the oxygen supply.
+
+A. The Mars transit mission duration
+    Oxygen storage tanks could be used for the Mars transit portion of a Mars surface mission. This is an alternative
+system design to be traded off against the use of a redesigned ISS Oxygen Generation Assembly (OGA) or perhaps a
+new Mars specific design for a different oxygen electrolysis system. An important question is how long the oxygen
+supply must last.
+    The transit mission would consist of the trip to Mars, a non-operating wait either brief or extended in Mars orbit,
+and the return trip to Earth. Each leg of the Mars transit can last from 200 to 270 days. The typical outbound and
+return transit times are 225 days each, so oxygen must be supplied to the crew for 450 days. The typical total
+mission time is 935 days, with 485 days on the surface. (Boden and Hoffman, 2000)
+    Two similar but separate oxygen tank assemblies will be used, one for the trip to Mars and one for the return to
+Earth. The empty outbound tanks will be allowed to fly out past Mars, so the outbound tanks must supply oxygen
+only for the first 225 days. The full return trip tanks must be captured in Mars orbit and then sent back toward Earth.
+The return trip oxygen tanks provide oxygen for the last 225 days of the typical 935-day mission, so their required
+life is longer, the full 935 days.
+
+B. Oxygen requirement for Mars transit
+    The amount of oxygen required is about 0.84 kg per crewmember per day. (Weiland, 1994) It is assumed that
+there are four crew, and that all descend to the surface. The oxygen requirement is given in Table 9.
+
+                                        Table 9. Mars transit oxygen requirement.
+                        Requirement
+                        Number of crew                                            4
+                        Trip out duration                                     225 days
+                        Trip out oxygen                                        756 kg
+                        Quiescent operation                                   485 days
+                        Trip back duration                                    225 days
+                        Trip back oxygen                                       756 kg
+                        Total oxygen                                          1,512 kg
+
+   The outbound and return oxygen requirements are shown separately since the outbound tanks will be empty and
+can be allowed to fly by Mars, while the full return trip tanks must be captured into Mars orbit and sent back
+towards Earth, as would an oxygen generation system.
+
+C. Probability of Loss of Crew, Pr(LOC), for the Mars transit oxygen supply
+    The Probability of Loss of Crew, Pr(LOC), on a space mission was about one percent for launch and one percent
+for reentry during the shuttle era. The Pr(LOC) due to a life support failure has been roughly similar. (Jones, 2013-
+
+                                                         15
+                                 International Conference on Environmental Systems
+3315) For Mars exploration, a reasonable initial assumption would be that we should not exceed the past one percent
+Pr(LOC) for life support failures. Allocating the Pr(LOC) < 0.01 between water, oxygen, carbon dioxide, pressure,
+food, fire suppression, and other vital life support systems, we can assume that the Mars transit oxygen system must
+have Pr(LOC) < 0.001. Since storage systems have had high reliability, it might be overall cost effective to have an
+even lower Pr(LOC) for the oxygen system, so that more Pr(LOC) could be allocated to other more risky mission
+elements.
+
+                              XIII. Tanks for Mars transit oxygen storage
+   The tanks that could be used for Mars transit oxygen storage are all Composite Overwrapped Pressure Vessels
+(COPVs). They include the ISS High Pressure Gas Tanks (HPGTs), the Orbital ATK COPV space tanks, the ISS
+Nitrogen Oxygen Recharge System (NORS) tanks, and a possible new oxygen tank designed for Mars transit.
+   Table 10 shows the tank oxygen mass, empty mass, total mass, mass increase ratio, one way and round trip mass,
+and number of tanks for the ISS HPGT tanks, Orbital tanks, ISS NORS tanks, and possible new design Mars tanks.
+
+                                      Table 10. Tank oxygen and total masses.
+                                           ISS HPGT tank Orbital tank ISS NORS tank                  New Mars tank
+    Single tank oxygen mass, kg                   94.3          35.4           38.3                       75
+    Single tank empty mass, kg                    544           12.7           55.5                       15
+    Single tank oxygen and tank mass, kg         638.3          48.1           93.8                       90
+    Mass increase ratio                           6.77          1.36           2.45                      1.20
+    One way oxygen mass, kg                       756           756            756                       756
+    One way number of tanks (rounded)               8            21             20                        10
+    One way tank and oxygen mass, kg             5,106         1,010          1,876                      900
+    Round trip number of tanks                     16            42             40                        20
+    Round trip tank and oxygen mass, kg         10,212         2,020          3,752                     1,800
+
+    The HPGT tank is the oxygen tank from Table 5. The Orbital tank is the 12.7 kg tank from Table 6. The NORS
+tank is the oxygen RTA from Table 8. The HPGT is large and rugged but inefficient, while the more efficient
+Orbital and NORS tanks are so small that about 20 would be required for oxygen on a one-way transit to Mars. A
+larger and more efficient design seems called for, so a hypothetical improved new Mars tank is shown in Table 10.
+The assumed new design would have about twice the oxygen content of the Orbital and NORS tanks but a relatively
+smaller empty tank mass. The tankage over head of the new Mars tank is assumed to be only 20%, much less than
+the 36% of the Orbital tank. Such a mass efficiency improvement may not be achievable. The purpose of assuming
+this advanced new Mars tank is to see how it would improve oxygen storage system performance, and the round trip
+mass is reduced 10%. The next section surprisingly shows this gain disappears. Since a storage tank system requires
+one or two spares regardless of tank size, the larger new Mars tanks increase the mass needed for spares.
+
+                    XIV. Number of spare tanks for Mars transit oxygen storage
+   The number of spare tanks required depends on the overall requirement on the Probability of Loss of Crew,
+Pr(LOC), which would occur if the oxygen supply fails, and on the expected tank reliability. It is assumed that the
+Mars transit oxygen system must have Pr(LOC) < 0.001.
+
+A. Expected COPV tank reliability and need for spares
+    The analysis of the accelerated life testing on a used shuttle COPV tank found an estimated life of 350 years for
+the worst shuttle tank the testers could obtain. This would indicate the probability of a tank failure is less than 1/350
+= 0.0028 per year. If the outbound Mars transit is 225 days long, the probability of any tank failing going to Mars is
+estimated as 225/365 * (1/350) = 0.0017. Ten or twenty tanks will have ten or twenty times this failure probability,
+roughly one or two percent. As the requirement is a failure probability of less than 0.001, one-tenth of one percent,
+spare tanks are needed.
+    The need for spares is greater on the return trip. The return trip to Earth lasts until the last day of the mission,
+935 days. The probability of any tank failing on the round trip is estimated as 935/365 * (1/350) = 0.0073. Ten or
+twenty tanks will have ten or twenty times this failure probability, roughly seven or fourteen percent.
+
+
+
+
+                                                         16
+                                 International Conference on Environmental Systems
+B. Computing the number of spare tanks
+    The number of tanks required to hold the oxygen for a one way transit to or from Mars is 8, 21, 20, and 10 in
+Table 10. If the number of required tanks is r and the number of spares is s, the total number of tanks is n = r + s. To
+provide the needed oxygen, r out of the n tanks must not fail on the trip.
+    This is an “r out of n” redundancy problem. The reliability and failure probability are found using the binomial
+distribution. For general r and n, the system reliability, R, is the probability that r, r+1, … up to n subsystems
+survive to time t. This is the cumulative binomial distribution from i = r to n. Using a sufficient number of spares, s
+= n – r, any theoretical reliability can be attained. The cost is the added mass of the filled spare tanks.
+
+C. The number of spares for the outbound transit tank assembly
+    The number of spares to achieve an overall failure rate of 0.001 is computed for the outbound transit tank
+assembly, assuming the probability of a single tank failure is 1/350 = 0.0028 per year. For an outbound Mars transit
+of 225 days, the probability of one tank failing going to Mars is (1/350) * (225/365) = 0.0017. The required number
+of tanks, the number of spares, the mass increase, and failure probability is shown in Table 11 for the candidate
+tanks of Table 10.
+
+           Table 11. The required number of tanks, the number of spare tanks, the mass increase ratio, the failure
+                  probability, and the one-way mass for the candidate tanks for the outbound transit.
+  r, required          s, spare       n = r + s, total      Mass increase ratio,        Failure             One way
+      tanks             tanks              tanks                     n/r              probability             mass
+                                                     ISS HPGT tank
+         8                 0                  8                     1.00                0.0135               5,106
+         8                 1                  9                     1.13                0.0001               5,744
+                                                       Orbital tank
+        21                 0                 21                     1.00                0.0351               1,010
+        21                 1                 22                     1.05                0.0007               1,058
+                                                     ISS NORS tank
+        20                 0                 20                     1.00                0.0335               1,876
+        20                 1                 21                     1.05                0.0006               1,970
+                                                      New Mars tank
+        10                 0                 10                     1.00                0.0169                 900
+        10                 1                 11                     1.10                0.0002                 990
+
+    For all the candidate tanks, only one spare is required to achieve the required failure probability of less than
+0.001. The overall mass increase is 13% for the ISS HPGT, 5% for the Orbital AKT and ISS NORS tanks, and 10%
+for the new Mars tanks. The new Mars tanks lose much of their mass advantage over the Orbital AKT tanks because
+each is about twice as big, including the spare.
+
+D. The number of spares for the return transit tank assembly
+    The number of spares to achieve an overall failure rate of 0.001 is computed for the return transit tank assembly,
+assuming the probability of a single tank failure is 1/350 = 0.0028 per year. For the full Mars mission duration of
+935 days, the probability of one tank failing going to Mars is (1/350) * (935/365) = 0.0073. The required number of
+tanks, the number of spares, the mass increase, and failure probability is shown in Table 12 for the candidate tanks
+of Table 10.
+
+
+
+
+                                                         17
+                                 International Conference on Environmental Systems
+           Table 12. The required number of tanks, the number of spare tanks, the mass increase ratio, the failure
+                     probability, and the one-way mass for the candidate tanks for the return transit.
+  r, required          s, spare         n = r + s, total      Mass increase ratio,        Failure           One way
+      tanks             tanks                tanks                     n/r              probability           mass
+                                                       ISS HPGT tank
+         8                 0                    8                     1.00                0.0569             5,106
+         8                 1                    9                     1.13                0.0019             5,744
+         8                 2                   10                     1.25                0.0000             6,383
+                                                         Orbital tank
+        21                 0                   21                     1.00                0.1426             1,010
+        21                 1                   22                     1.05                0.0112             1,058
+        21                 2                   23                     1.10                0.0006             1,106
+                                                       ISS NORS tank
+        20                 0                   20                     1.00                0.1363             1,876
+        20                 1                   21                     1.05                0.0102             1,970
+        20                 2                   22                     1.10                0.0005             2,064
+                                                        New Mars tank
+        10                 0                   10                     1.00                0.0706               900
+        10                 1                   11                     1.10                0.0028               990
+        10                 2                   12                     1.20                0.0001             1,080
+
+     For all the candidate tanks, two spares are required to achieve the required failure probability of less than 0.001.
+The overall mass increase is 25% for the ISS HPGT, 10% for the Orbital AKT and ISS NORS tanks, and 20% for
+the new Mars tanks. The new Mars tanks have little mass advantage over the Orbital AKT tanks because each spare
+is larger.
+
+E. Tank reliability and spares
+    The number of spares depends on the expected tank reliability. The 350 year expected life number that was used
+depends on a single test of a shuttle tank. These early tanks had additional strength due to a load bearing inner liner,
+so later tank designs may be less robust. The space shuttle had 24 internal COPVs and typically three were
+operational from 1981 to 2011, so the total failure free experience was about 24 * 3 * 30 = 2,160 vessel-years. This
+would indicate a roughly six times longer life and one-sixth the failure rate that was used above.
+    The ISS has about twenty COPVs, counting multiple HPGTs and NTAs. It has been operational about fifteen
+years, indicating about 300 vessel-years of failure free operation. The 350 year expected life used to compute the
+number of spares seems reasonable, even conservative since no failures have occurred.
+
+                                                XV. Conclusion
+    The paper reviewed pressure vessel design, failure modes, reliability, and cost. Pressure vessel types were
+described, including the COPVs used by NASA. The oxygen requirements and possible tank designs for Mars
+transit were given and the required mass was computed, including spares.
+    The mass of a pressure vessel is proportional to the mass of the gas it contains. The mass of gas depends on the
+tank’s pressure, volume, and temperature. The mass of a pressure vessel depends on its surface area, wall thickness,
+and the density of the wall material. The wall thickness is determined by the tank pressure and the stress tolerance of
+the wall material. It was shown that the mass of a pressure vessel scales with the pressure and volume it contains,
+which determines the mass of the gas it contains, and it also scales with the ratio of the wall material’s density to
+stress tolerance.
+    Given the same tank material and shape, a given mass of gas will require the same mass of tankage, regardless of
+the number of larger or smaller tanks that are used. Increasing tank pressure increases gas mass and equally
+increases wall stress, wall thickness, and tank mass. Lighter tanks require lighter and stronger wall materials.
+    Pressure vessels fail due to rupture and leakage but failure rates are low. Fewer, larger tanks would cost less per
+kg of gas contained, but adding the cost of one spare tank significantly cuts the total cost saving of larger tanks. The
+size and number of the tanks used is not a significant cost determinant.
+    Pressure vessels can be all steel, combined metal and fiberglass overwrap, or COPVs with a metal and composite
+overwrap that carries the structural load. COPVs have a significant weight advantage over all-metal vessels.
+Titanium lined COPVs have been used in space for decades on almost all missions. The shuttle and ISS have used
+
+                                                         18
+                                 International Conference on Environmental Systems
+many produced by Orbital ATK. They are considered safe, robust, dependable, and cost effective. None have failed
+and the expected life based on experience is 100’s of years. The best existing tank or possibly a similar improved
+tank could be used for Mars transit.
+    For a 450 day Mars transit out and back, a crew of four will need 1,512 kg of oxygen. The best Orbital tank
+would require 42 tanks and a total mass of 2,020 kg without spares. An improved similar tank with about twice the
+capacity and half the tank mass overhead would require 20 tanks and a total mass of 1,800 kg. This small 10% mass
+saving becomes much smaller when one spare tank is added for the outbound trip and two spares for the return. The
+cost of designing and qualifying a new tank design may not be needed. Using existing COPVs is feasible for Mars
+transit.
+    Previous work found that the current ISS OGA is not feasible for Mars transit. (Jones, 2016-103) This result was
+initially indicated by the large mass of the OGA and its spares, which is more than the mass of the oxygen it would
+provide. The total mass of the ISS OGA plus three sets of onboard spare subsystems would be 4,119 lbs or 1,872 kg.
+(Jones, 2016-103) The mass of the oxygen to be consumed is 1,512 kg, 19% lower. The total mass of 45 filled
+oxygen tanks similar to the Orbital tank, 42 containing the needed oxygen and 3 spares, would be 2,164 kg, 13 %
+higher. However, orbital mechanics give a strong mass advantage to using tanks. On the outbound trip, 21 tanks will
+be emptied and can be allowed to fly by Mars, but the 21 return trip tanks and 2 or 3 spares must be captured into
+Mars orbit and sent back towards Earth. Only about half the oxygen tanks requite many times their mass in rockets
+and propulsion gas to return them to Earth, but the entire oxygen generation system must make the return trip. Using
+the ISS OGA for Mars transit would require about twice the mass as using the best current oxygen tanks.
+    The OGA would not save mass or reduce launch cost, but launch cost has declined in size and relative
+importance. (Jones, 2017-87) Other factors are more important. Mars requires higher reliability than ISS and deep
+space radiation hardening. The cost of designing and developing an OGA similar to the ISS design would be much
+larger than for using existing or developing new tanks. Compared to tanks, the OGA is very complex and has many
+more failure modes. Tanks need little crew time to operate or or maintain. Tank storage is highly reliable and can
+easily increase reliability using a few more spares. Tanks easily operate in microgravity and do not produce
+contamination or noise. Existing oxygen storage tanks are feasible for Mars transit and are attractive compared to
+the ISS OGA.
+
+                                                         References
+    Arnold, H. G., “Pressure vessel reliability as a function of allowable stress,” thesis, Oak Ridge National Laboratory, 1972,
+web.ornl.gov/info/reports/1972/3445605147677.pdf, accessed April 1, 2016.
+    Boden, D. G., and Hoffman, S. J., “Orbit Selection and Astrodynamics,” in Larson, W. K., and Pranke, L. K, eds., Human
+Spaceflight: Mission Analysis and Design, McGraw-Hill, New York, 2000.
+    Carrasquillo, R. L., Reuter, J. L., and Philistine, C. L., “Summary of Resources for the International Space Station
+Environmental Control and Life Support System,” Proceedings of the 27th International Conference on Environmental Systems,
+SAE 972332, 1997.
+    Chattopadhyay, S., Pressure Vessels Design and Practice, CRC press, 2005.
+    Composites World, The markets: Pressure vessels (2014), Jan. 1, 2014. http://www.compositesworld.com/articles/the-
+markets-pressure-vessels-2012, accessed 4/1/2016.
+    Dick, B. N., and Griffin, T. E., “International Space Station Nitrogen Oxygen Recharge System,” AIAA 2012-3614, 42nd
+International Conference on Environmental Systems, 2012.
+    Dick, B. N., Tokasz, S., and Griffin, T. E., “Development of the International Space Station Nitrogen Oxygen Recharge
+System,” AIAA 2013-3499, 43rd International Conference on Environmental Systems (ICES), July 14-18, 2013, Vail, CO, 2013.
+    Dick, B., “Current Status of the Nitrogen Oxygen Recharge System,” AIAA 2011-5226, 41st International Conference on
+Environmental Systems, 2011.
+    Dick, B., Cook, T., and Leonard, D., “Nitrogen Oxygen Recharge System (NORS) for the International Space Station,” 2009-
+01-2413, 39th International Conference on Environmental Systems, 2009.
+    Duchesne, S. M., email, May 10, 2016.
+    Flemish Government, BACKGROUND INFORMATION: APPENDIX TO HANDBOOK FAILURE FREQUENCIES,
+2009. vr_rlbvr_rl_hbff_background_information_EN.pdf, downloaded April 6, 2016.
+    fxsolver, Mass+,
+http://www.fxsolver.com/browse/formulas/Mass+of+pressure+Cylindrical+vessel+with+hemispherical+ends%28+capsule%29,
+accessed 3/31/2016.
+    Gebhardt, C., “NASA Reviews COPV Reliability Concerns for Final Program Flights,” NASASpaceFlight.com, July 18,
+2010, https://www.nasaspaceflight.com/2010/07/nasa-reviews-copv-for-final-program-flights/, accessed April 6, 2016.
+    Gentry, G. J., ‘International Space Station (ISS) Environmental Control and Life Support (ECLS) System Overview of
+Events: 2015-2016,” ICES-2016-406, 46th International Conference on Environmental Systems, Vienna, 2016.
+    Groome, W. C. A., Ripple, Tate Publishing, 2012.
+
+
+                                                           19
+                                   International Conference on Environmental Systems
+    Jones, H. W., “Much Lower Launch Costs Make Resupply Cheaper Than Recycling for Space Life Support,” Submitted as
+ICES-2017-87, 47th International Conference on Environmental Systems, 16-20 July 2017, Charleston, South Carolina.
+    Jones, H. W., “Space Life Support Risk and Reliability,” 2013-3315, AIAA, Washington, DC, 43rd International Conference
+on Environmental Systems, 2013.
+    Jones, H. W., “Using the International Space Station (ISS) Oxygen Generation Assembly (OGA) Is Not Feasible for Mars
+Transit,” ICES-2016-103, 46th International Conference on Environmental Systems, 10-14 July 2016, Vienna, Austria.
+    Kezirian, M. T., Johnson, K. L., and Phoenix, S. L., "Composite overwrapped pressure vessels (COPV): Flight rationale for
+the Space Shuttle Program." AIAA, 2011, ntrs.nasa.gov/archive/nasa/casi.ntrs.nasa.gov/20110015972.pdf, downloaded April 6,
+2016.
+    Kezirian, M., “Composite Overwrapped Pressure Vessels (COPV): Developing Flight Rationale for the Space Shuttle
+Program,” Boeing, November 3, 2010. ntrs.nasa.gov/archive/nasa/casi.ntrs.nasa.gov/20100036778.pdf, accessed April 6, 2016.
+    Kezirian, M., Cook, A., Dick, B., and Phoenix, S. L., “Providing Pressurized Gasses to the International Space Station (ISS):
+Developing a Composite Overwrapped Pressure Vessel (COPV) for the Safe Transport of Oxygen and Nitrogen,” Composites
+Conference 2012, August 15, 2012.
+    Lees, F., Lees’ Loss Prevention in the Process Industries: Hazard Identification, Assessment, and Control, Elsevier,
+Butterworth-Heinmann, Oxford, 2012.
+    LeGault, M., “Pressure vessel tank types,” Composites World, Jul. 2, 2012,
+http://www.compositesworld.com/articles/pressure-vessel-tank-types, accessed 4/1/2016.
+    McLaughlan, P. B., Forth, S. C., and Grimes, L. R., Composite Overwrapped Pressure Vessels, A Primer, NASA/SP–2011–
+573, March, 2011.
+    Megyesy, E. F., Pressure Vessel Handbook, PV Publishing, Oklahoma City, www.pressurevesselhandbook.com. 2008,
+downloaded 3/31/2016.
+    Mulet, A., Corripio, A. B., and Evans, L. B., “Pressure Vessel Costs,” in Encyclopedia of Chemical Processing and Design:
+Volume 42 – Pressure-Relieving Devices, Rupture Disks: Selection of Process Control and Dynamics: Savings from Upgrading,
+McKetta, J. J., ed., Marcel Dekker, New York, 1993. (Also CRC Press, 1992.)
+    Orbital AKT data sheet, http://www.psi-pci.com/Data_Sheet_Index_Pressurant-PN.htm, retrieved April 21, 2016.
+    Orbital-ATK, Propellant Tanks, https://www.orbitalatk.com/space-systems/space-components/propellant-tanks/, accessed
+June 6, 2016.
+    Roylance, D., “Pressure vessels,” August 23, 2001, web.mit.edu/course/3/3.11/www/modules/pv.pdf, downloaded 3/31/2016.
+    Russell, R., Flynn, H., Forth, S., Greene, N., Kezirian, M., Varanauski, D., Leifeste, M., Yoder, T., and Warren Woodworth,
+W., “Composite Overwrapped Pressure Vessels (COPV) Stress Rupture Test Part 2,” 2010.
+    Schaezler, R. N., and Cook, A. J., “Report on ISS O2 Production, Gas Supply & Partial Pressure Management,” ICES-2015-
+146, 45th International Conference on Environmental Systems, Bellevue, Washington
+    Simonen, F. A., “Pressure Vessels and Piping Systems: Reliability, Risk and Safety Assessment,” ANCILLARY
+EQUIPMENT AND ELECTRICAL EQUIPMENT, Encyclopedia of Desalination and Water Resources (DESWARE), 2002,
+www.desware.net/Sample-Chapters/D09/E6-165-07-00.pdf, accessed April 4, 2016.
+    Tam, W. H., Ballinger, I., and Jaekle, D. E., Jr., “Tank Trade Studies – An Overview,” AIAA 2008-4940, 2008.
+    Thesken, J. C., Murthy, P. L. N., Phoenix, S. L., Greene, N., Palko, J. L., Eldridge, J., Sutter, J., Saulsberry, R., and Beeson,
+H., “A Theoretical Investigation of Composite Overwrapped Pressure Vessel (COPV) Mechanics Applied to NASA Full Scale
+Tests,” NASA/TM —2009-215684, 2009.
+    TWI, The Welding Institute, “How can failure of pipelines and pressure vessels be prevented?” 2016, http://www.twi-
+global.com/technical-knowledge/faqs/structural-integrity-faqs/faq-how-can-failure-of-pipelines-and-pressure-vessels-be-
+prevented/, accessed April 4, 2016.
+    West, W., Samplatsky, D., Gentry, G. J., and Duggan, M., “Lunar Surface Habitats as a Development Opportunity for Mars
+Surface Life Support Systems,” ICES-2016-226, 46th International Conference on Environmental Systems, Vienna, 2016.
+    Wieland, P. O., Designing for Human Presence in Space: An Introduction to Environmental Control and Life Support
+Systems, NASA Reference Publication RP-1324, 1994.
+    Wikipedia, Composite overwrapped pressure vesselhttps://en.wikipedia.org/wiki/Composite_overwrapped_pressure_vessel,
+accessed 3/31/2016.
+    Wikipedia, Pressure vessel, https://en.wikipedia.org/wiki/Pressure_vessel, accessed 3/31/2016.
+
+
+
+
+                                                            20
+                                    International Conference on Environmental Systems
+

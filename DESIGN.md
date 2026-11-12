@@ -19,9 +19,12 @@ colors:
   rock: "#86716a"
   dust: "#c98a5a"
   hazard: "#e7b440"
+  stripe: "#d8691c"
   light: "#8ef7ea"
   suit: "#e9e4da"
   plant: "#76a83c"
+  romaine: "#7e2a3a"
+  grow: "#e04fd2"
   visor: "#b8913c"
   sky: "#c27d4c"
   horizon: "#f6d9a6"
@@ -81,11 +84,14 @@ materials:
   rock: { color: "{colors.rock}", roughness: 0.95, metalness: 0, detail: { texture: "textures/rock_albedo.jpg", normal: "textures/rock_normal.jpg", roughness: "textures/rock_rough.jpg", textureSize: 1.83, strength: 1.0, pattern: grain, size: 1.83 }, weathering: 0 }
   dust: { color: "{colors.dust}", roughness: 1, metalness: 0, detail: { texture: "textures/dust_albedo.jpg", normal: "textures/dust_normal.jpg", roughness: "textures/dust_rough.jpg", textureSize: 3.1, strength: 1.0, pattern: grain, size: 3.1, gravel: { texture: "textures/gravel_albedo.jpg", normal: "textures/gravel_normal.jpg", textureSize: 2.48, share: 0.3 }, ripple: { normal: "textures/ripple_normal.jpg", textureSize: 12 } }, weathering: 0 }
   hazard: { color: "{colors.hazard}", roughness: 0.5, metalness: 0 }
+  stripe: { color: "{colors.stripe}", roughness: 0.8, metalness: 0 }
   light: { color: "{colors.light}", roughness: 0.4, metalness: 0, emissive: 2.5, weathering: 0 }
   suit: { color: "{colors.suit}", roughness: 0.85, metalness: 0, detail: { texture: "textures/suit_albedo.jpg", normal: "textures/suit_normal.jpg", roughness: "textures/suit_rough.jpg", textureSize: 0.4, strength: 0.7, pattern: grain, size: 0.4 } }
   plant: { color: "{colors.plant}", roughness: 0.6, metalness: 0, weathering: 0 }
+  romaine: { color: "{colors.romaine}", roughness: 0.6, metalness: 0, weathering: 0 }
+  grow: { color: "{colors.grow}", roughness: 0.4, metalness: 0, emissive: 2.0, weathering: 0 }
   visor: { color: "{colors.visor}", roughness: 0.12, metalness: 1, weathering: 0 }
-weathering: { color: "{colors.dust}", amount: 0.6, side: 0.45, crevice: 0.6, noise: 1.2, texture: "textures/dust_albedo.jpg", textureSize: 1.5, clean: "^panel_[0-9]+$|^(floor|vest_floor|floor_mat|dashboard)(-col)?$" }
+weathering: { color: "{colors.dust}", amount: 0.6, side: 0.45, crevice: 0.6, noise: 1.2, texture: "textures/dust_albedo.jpg", textureSize: 1.5, clean: "^panel_[0-9]+$|^(floor|vest_floor|floor_mat|dashboard|interior)(-col)?$" }
 geometry:
   shading: smooth
   bevel: 0.03
@@ -122,6 +128,7 @@ quality:
   max: { msaa: 8, scale: 1, shadows: 4, shadowMap: 4096, shadowRange: 60, shadowFilter: 5, normalBias: 4, glow: 0.5, ssao: true, detail: texture, aniso: 4, ground: full, particles: 1, trail: 2048 }
 kit:
   "^(tex_0[1-5]|wheels|parts_AO)$": keep
+  "^(iss_panels|mercou_photo|gale_photo)$": keep
   "^internals$": body
   "^terrain$": dust
   "metalDark": metal
@@ -162,11 +169,14 @@ fog, default colours, grey HUD boxes.
 ## Colors
 
 - `body`, `trim`: hulls, suits, panels. `hazard`: warm trim on machines (refs 3, 12). Never on the hero.
+- `stripe`: the dark orange bands on the suit's arms and legs (Ravindu, 12 Nov 2026), nowhere else. The suit
+  stays white, so the hero still reads against Mars.
 - `accent`: the one cool colour. It marks the hero, things that are on or usable, and the HUD's
   interactive parts. Small share of any frame. `light` is its glowing form.
 - `rock` is the grey stone under the dust; `dust` is the red coat on flat ground. Steep faces show rock.
 - `sky`, `horizon`, `ground`, `shade` feed the light rig and fog only. `shade` is the cool ambient that
   keeps shadows from going black or muddy.
+- `grow` is the plant light's magenta glow and nothing else; `romaine` is red leaves and roots only.
 - `danger` is HUD only, so red always means a problem. `primary` (amber) is the HUD's main colour.
 
 ## Typography
@@ -189,7 +199,7 @@ always with an icon, pulsing no faster than 3 times a second.
 
 ## Materials
 
-Twelve roles: `visor` (an EVA helmet's gold sun visor: opaque, so no face ever shows), plus the seven core ones and `dust` (the ground), `hazard`, `suit` (the astronauts' fabric, so they never wear hull panels) and `plant` (lettuce green, Ravindu's pick on 12 Nov; NASA's Veggie grew red romaine, but green reads as lettuce). Kit models map by material name (`kit`).
+Fifteen roles: `visor` (an EVA helmet's gold sun visor: opaque, so no face ever shows), plus the seven core ones and `dust` (the ground), `hazard`, `suit` (the astronauts' fabric, so they never wear hull panels), `stripe` (the suit's bands), `plant` (lettuce green, Ravindu's pick on 12 Nov), `romaine` (the red leaf of 'Outredgeous', the first lettuce eaten in space, and a radish's red root) and `grow` (the magenta glow of Veggie's red 630 nm and blue 455 nm LEDs, NTRS 20160005059; both roles approved by Ravindu on 12 Nov 2026). Kit models map by material name (`kit`).
 
 Photo sets (CC0, `textures/README.md`): body MetalPlates009, metal Metal011, trim Rubber004, suit
 Fabric061, rock cliff_side, dust moon_02 (fine powder, after Ravindu asked for a soft Sahara / *The Martian*
@@ -200,7 +210,7 @@ on Mars"): every model wears settled dust in the `dust` colour, the same colour 
 are 60% covered, about 460 sols at the typical 0.2% per sol (Lorenz 2021); walls a share of that, undersides none,
 more in the seams of each photo set. Thin, it tints the paint and lets its plates and lettering show; it always takes
 the shine. The storm file raises tops to 85% and walls to 65% of that (Curiosity's vertical target reached 49% in a
-major storm). Clean on purpose: the solar panels (swept, `clean`), pressurised floors (habitat, greenhouse, rover cabin: crews sweep them), lights, the visor, plants, the ground and rocks
+major storm). Clean on purpose: the solar panels (swept, `clean`), pressurised floors and HAB 1's fit-out (`interior`: habitat, greenhouse, rover cabin: crews sweep them), lights, the visor, plants, the ground and rocks
 (already dust). Glass gets a film (0.35), the teal accent stays legible (0.6). `design/research/pages/dust-coat/`.
 
 ## Quality
@@ -227,7 +237,7 @@ Kenney Space Kit: `metal` to body, `metalDark` to metal, `metalRed` to hazard, `
 ## Do's and Don'ts
 
 Do keep the accent rare and cool. Do keep Mount Sharp on the horizon. Don't make the astronaut red
-or orange. Don't put `danger` on a model. Don't use shapes that cannot exist at Gale.
+or orange (the bands are the only orange on it). Don't put `danger` on a model. Don't use shapes that cannot exist at Gale.
 
 ## Decided exceptions
 

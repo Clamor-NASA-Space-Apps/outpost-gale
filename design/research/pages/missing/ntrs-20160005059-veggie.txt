@@ -1,0 +1,44 @@
+                                                                                              National Aeronautics and
+
+
+
+
+               Veggie
+                                                                                                 Space Administration
+
+
+
+
+               Vegetable Production System (Veggie)
+               The Vegetable Production System (Veggie) was developed by Orbital Technologies Corp. to be a simple, easily
+               stowed, and high growth volume yet low resource facility capable of producing fresh vegetables on the International
+               Space Station (ISS). In addition to growing vegetables in space, Veggie can support a variety of experiments
+               designed to determine how plants respond to microgravity, provide real-time psychological benefits for the crew,
+               and conduct outreach activities. Currently, Veggie provides the largest volume available for plant growth on the ISS.
+
+               Veggie provides lighting, water and nutrient delivery for plant growth. It utilizes the cabin environment for
+               temperature control and a source of carbon dioxide for photosynthesis. Veggie contains a large adjustable light
+               emitting diode (LED) light bank and a reservoir that supplies water via capillary action to root pillows containing
+               substrate, nutrients and seeds. Water is administered on-orbit to initiate seed germination and periodically added
+               throughout the growth cycle until the vegetables are harvested.
+
+               Specifications:
+               Light Provision
+                 • 100-500 μmol m-2 s-1 photosynthetic photon flux density (PPFD)
+                 • Red (630 nm), Blue (455 nm) and Green (530 nm)
+               Cabin Air Fan Settings: Low / High / Off
+               Baseplate Footprint: 29.2 cm x 36.8 cm
+               Maximum Height: 47.0 cm empty; 41.9 cm with root mat
+
+
+
+
+               Points of Contact: Howard G. Levine, Ph.D. | Email: howard.g.levine@nasa.gov
+                                  Trent M. Smith | Email: trent.m.smith@nasa.gov
+www.nasa.gov                                                                                                             SP-2015-11-435-KSC
+Vegetable Production System (Veggie)
+Veggie has also supported Petri plate based science experiments as part of the Kennedy Space Center Advanced
+Plant Experiments on-orbit (APEX) payload series. APEX missions have included monocot and dicot plant species
+that were grown for a pre-defined duration, photographed, harvested, and preserved for return to Earth. In some
+instances, Petri plates have undergone fluorescent microscopy within the Light Microscopy Module (LMM).
+

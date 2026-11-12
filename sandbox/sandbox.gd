@@ -17,6 +17,8 @@ const VIEWS := {
 	"airlock": [Vector3(-2.5, 1.7, 7.5), Vector3(0, 1.2, 2.5)],
 	"rover": [Vector3(-16, 3.0, 8), Vector3(-10, 1.2, 0)],
 	"greenhouse": [Vector3(-9.5, 5.5, -1.5), Vector3(-14, 0.4, -6)],
+	"hab_in": [Vector3(0.3, 2.0, 1.4), Vector3(0.6, 1.1, -2.0)],  # inside HAB 1: the life-support wall and bunks
+	"hab_desk": [Vector3(0.9, 2.0, -0.6), Vector3(-2.0, 1.0, 0.9)],  # inside HAB 1: galley, Veggie, desk and map
 }
 
 @onready var world: Node3D = $World
@@ -36,6 +38,8 @@ var hop := 0  # the next landmark the teleport key goes to
 var cover: ColorRect  # over the screen while new shaders compile (load, a sky or quality switch)
 var _warming := false
 var _rewarm := false
+var _netted: Array[Node3D] = []  # besides the hero, what the safety net watches (_physics_process)
+var rescued := 0  # how many times the safety net moved something (tests/edge_test.gd)
 
 
 func _ready() -> void:
@@ -52,6 +56,7 @@ func _ready() -> void:
 	Forge.HouseStyle.set_quality(self, design, quality, overrides)
 	world.build(design)
 	var s: Dictionary = world.landmark("spawn")
+	player.bound = world.bound()
 	player.place(s.pos, s.yaw)
 	interactions = Interactions.new()
 	interactions.name = "Interactions"
@@ -94,11 +99,55 @@ func _ready() -> void:
 	add_child(settings)
 	settings.setup(self)
 	_warm()
+	for n: Node3D in world.items.values():
+		if n.is_in_group("vehicle") or n.is_in_group("carriable"):
+			_netted.append(n)  # the rover, PIP, the bags
 	Forge.register(self)
 
 
 func _process(_delta: float) -> void:
 	fps_label.text = "%d fps  %s  %s" % [Engine.get_frames_per_second(), quality, SKIES[sky].trim_prefix("design.").replace("design", "day")]
+
+
+## The safety net (CONTRACTS.md): a body found under the ground or past world.bound() goes back on top at the nearest
+## spot inside. The bound and the braking keep everything on the real ground, so this is for what nobody foresaw (a
+## body pushed through a floor). The hero moves behind a short fade when that is far, so no teleport shows.
+func _physics_process(_delta: float) -> void:
+	if player.vehicle == null:
+		var p: Vector3 = player.body.global_position
+		var to := _net(p)
+		if to != p:
+			rescued += 1
+		if to.distance_to(p) > float(world.data.bound.fade_over):
+			_flash()
+			player.place(to, -rad_to_deg(player.yaw))
+		elif to != p:
+			player.body.global_position = to
+			player.body.velocity.y = maxf(player.body.velocity.y, 0.0)
+	for n: Node3D in _netted:
+		if n.get_parent() == world or n.is_in_group("vehicle"):  # a bag in the hands rides the hero
+			var to := _net(n.global_position)
+			if to != n.global_position:
+				rescued += 1
+				n.global_position = to
+
+
+## The nearest spot to `p` inside world.bound(), lifted onto the ground when it is under it by more than `below`.
+func _net(p: Vector3) -> Vector3:
+	var r: Rect2 = world.bound()
+	var q := Vector2(p.x, p.z).clamp(r.position, r.end)
+	var ground: float = world.height_at(q.x, q.y)
+	if q == Vector2(p.x, p.z) and p.y >= ground - float(world.data.bound.below):
+		return p
+	return Vector3(q.x, maxf(p.y, ground), q.y)
+
+
+func _flash() -> void:
+	cover.color = Color(Color.html(design.colors.surface), 1.0)
+	cover.visible = true
+	var t := create_tween()
+	t.tween_property(cover, "color:a", 0.0, float(world.data.bound.fade_s))
+	t.tween_callback(func() -> void: cover.visible = _warming)
 
 
 func _unhandled_input(e: InputEvent) -> void:

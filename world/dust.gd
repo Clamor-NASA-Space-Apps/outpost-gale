@@ -36,6 +36,9 @@ var _next_grit := 0  # the oldest of each pool, reused next
 var _next_haze := 0
 var _streams: Dictionary = {}  # id -> {grit, haze, off}: emitters that run while a wheel rolls (stream())
 var _streak_share := 0.0  # the sky state's share of streaks; a gust shows all of it, a lull a quarter
+## Render layers for emitters made after build(): world.gd puts the dust on the ground's layer, which the base's
+## reflection probe does not shade. A stream made later on layer 1 took the probe's light and glowed at night.
+var layers := 1
 var _share := 1.0  # DESIGN.md quality `particles`: the share of every emitter's grains a preset draws
 static var _shaders: Dictionary = {}  # dust.gdshader per variant: one compile serves every material made from it
 
@@ -268,6 +271,8 @@ func _stream(id: String) -> void:
 	var hp := (haze[0].process_material as ParticleProcessMaterial).duplicate() as ParticleProcessMaterial
 	hp.color_ramp = (h.process_material as ParticleProcessMaterial).color_ramp
 	h.process_material = hp
+	g.layers = layers
+	h.layers = layers
 	_streams[id] = {"grit": g, "haze": h, "off": 0.0, "frame": 0}
 
 

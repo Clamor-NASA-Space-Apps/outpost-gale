@@ -7,6 +7,10 @@ extends Node
 ## in or out is a crossfade of bus volumes.
 ## Music is rare (skills/living-atmosphere): a cue at a few earned moments (music()), on its own clear bus, never two at
 ## once and never soon after the last one; nothing ducks for it, so the suit stays loudest.
+## The radio and the quiet moments: now and then a wordless call from the base or a chirp from PIP on the suit radio,
+## clear (a radio is not heard through the helmet), rare and never over another cue; a short motif when the hero
+## stands still outside a while or first sees the dust devil; and, in the sunset sky, the far things worth a slow
+## look for the camera (follow_cam `glance`).
 
 const BUSES := ["Suit", "Outside", "Habitat", "UI", "Music"]
 const SOLIDS := 2  # collision layer 2, statics: a boot on one is on rock or a pad, not in the dust
@@ -37,6 +41,16 @@ var _cue_end := -1e9  # _time the last cue ends; the next may start tuning `musi
 var _was_inside := false
 var _stepped_out := false  # first_step has played this session
 var _sky := ""
+var _busy_until := -1e9  # _time the last event sound (a door, a beep, a radio call) ends
+var radio_last := -1e9  # _time the last radio sound started
+var radio_who := ""  # and whose it was: "base" or "pip"
+var _radio_want := ""  # a radio sound waiting for quiet
+var _radio_by := 0.0  # until this _time, then it is dropped
+var _radio_next: float  # _time the base calls next
+var _motif_at := -1e9  # _time the quiet motif last started
+var _still_s := 0.0  # seconds the hero has stood still outside
+var _devil_seen := false
+var _glance: Array[Vector3] = []  # the camera's own list (follow_cam `glance`), filled in the sunset sky
 
 
 func setup(w: Node3D, p: Node3D, tuning: Dictionary) -> void:
@@ -54,6 +68,8 @@ func setup(w: Node3D, p: Node3D, tuning: Dictionary) -> void:
 	_hab_box = _enclosure(_hab)
 	_rover = world.items.get("rover")
 	player.footstep.connect(_step)
+	_radio_next = randf_range(t.radio.base_s[0], t.radio.base_s[1])
+	player.cam.glance = _glance
 	# a browser starts no sound before the player's first press (exporting_for_web.rst); elsewhere start now
 	if not OS.has_feature("web"):
 		start()
@@ -122,11 +138,14 @@ func _process(delta: float) -> void:
 	_wind.volume_db = t.wind.db + linear_to_db(clampf(wind, 0.05, 2.0))
 	if _rover:
 		_drive()
+	_radio()
+	_quiet_moments(delta)
 
 
 ## The sounds an interaction makes (sandbox/interactions.gd `used`): one name, where it happened.
 func used(what: String, pos: Vector3) -> void:
 	_one_shot("chirp", "UI", t.chirp_db)  # the suit acknowledges, no words
+	_hold(_stream("chirp"))
 	match what:
 		"door_open":
 			play("hiss", pos)  # the lock equalises, then the door moves
@@ -151,6 +170,8 @@ func music(name: String) -> bool:
 	var s := _stream("music/" + name)
 	if not started or s == null or _time < _cue_end + float(m.gap_s):
 		return false
+	if name == t.motif.name:
+		_motif_at = _time
 	var q := _flat("music/" + name, "Music", -60.0)
 	q.play()
 	create_tween().tween_property(q, "volume_db", float(m.db), float(m.fade_s))
@@ -177,6 +198,9 @@ func set_volume(which: String, v: float) -> void:
 func play(sound: String, pos: Vector3) -> void:
 	if not started:
 		return
+	if sound.begins_with("radio_"):
+		radio(sound.trim_prefix("radio_"))  # PIP on the radio, not in the air
+		return
 	for v: Array in [["", "Habitat"], ["_out", "Outside"]]:
 		var s := _stream(sound + v[0])
 		if s:
@@ -184,6 +208,14 @@ func play(sound: String, pos: Vector3) -> void:
 			q.pitch_scale = 1.0 + randf_range(-t.pitch, t.pitch)
 			q.play()
 			_free_after(q)
+			_hold(s)
+
+
+## A radio sound from `who` ("base" or "pip"): it waits for quiet (no cue, no event sound) up to `radio.wait_s`,
+## then is dropped; and none comes within `radio.gap_s` of the last, so the radio stays rare.
+func radio(who: String) -> void:
+	_radio_want = who
+	_radio_by = _time + float(t.radio.wait_s)
 
 
 func state() -> Dictionary:
@@ -191,7 +223,8 @@ func state() -> Dictionary:
 	for b: String in BUSES:
 		buses[b] = snappedf(AudioServer.get_bus_volume_db(AudioServer.get_bus_index(b)), 0.1)
 	return {"audio": {"started": started, "inside": snappedf(inside, 0.01), "buses": buses, "breath": snappedf(breath_rate, 0.1),
-		"gust": snappedf(gust, 0.01), "steps": steps, "lastStep": last_step, "music": cue}}
+		"gust": snappedf(gust, 0.01), "steps": steps, "lastStep": last_step, "music": cue,
+		"radio": {"who": radio_who, "at": snappedf(radio_last, 0.01)}}}
 
 
 func _step(pos: Vector3, _yaw: float, foot: String) -> void:
@@ -238,9 +271,9 @@ func _drive() -> void:
 	var k := clampf(absf(_rover.speed()) / maxf(_rover.top, 0.1), 0.0, 1.0)
 	var r: Dictionary = t.rover
 	for q: AudioStreamPlayer3D in _rover_loops.motor:
-		_run(q, driving, r.motor_db + linear_to_db(0.3 + 0.7 * k), lerpf(r.pitch_min, r.pitch_max, k))
+		_run(q, driving, r.motor_db + linear_to_db(lerpf(r.motor_idle, 1.0, k)), lerpf(r.pitch_min, r.pitch_max, k))
 	for q: AudioStreamPlayer3D in _rover_loops.wheels:
-		_run(q, k > 0.02, r.wheels_db + linear_to_db(maxf(k, 0.01)), lerpf(0.85, 1.1, k))
+		_run(q, k > 0.02, r.wheels_db + linear_to_db(maxf(k, 0.01)), lerpf(r.wheels_pitch[0], r.wheels_pitch[1], k))
 
 
 func _run(q: AudioStreamPlayer3D, on: bool, db: float, pitch: float) -> void:
@@ -251,6 +284,58 @@ func _run(q: AudioStreamPlayer3D, on: bool, db: float, pitch: float) -> void:
 			q.stop()
 	q.volume_db = db
 	q.pitch_scale = pitch
+
+
+## The base calls now and then; a waiting radio sound plays once the air is clear.
+func _radio() -> void:
+	var r: Dictionary = t.radio
+	if _time >= _radio_next:
+		_radio_next = _time + randf_range(r.base_s[0], r.base_s[1])
+		radio("base")
+	if _radio_want == "":
+		return
+	if _time > _radio_by:
+		_radio_want = ""
+	elif _clear() and _time >= radio_last + float(r.gap_s):
+		var sound := "radio_" + _radio_want
+		_one_shot(sound, "Suit", float(r.db))
+		_hold(_stream(sound))
+		radio_last = _time
+		radio_who = _radio_want
+		_radio_want = ""
+
+
+## The motif on a quiet moment: the hero standing still outside for a while, or the first time the dust devil is
+## near the middle of the view; and the far things the camera may glance at in the sunset sky.
+func _quiet_moments(delta: float) -> void:
+	var m: Dictionary = t.motif
+	var outside := inside == 0.0 and player.vehicle == null
+	_still_s = _still_s + delta if outside and player.moved < float(m.still_speed) else 0.0
+	var devil: Node3D = world.dust.devil
+	var cam := get_viewport().get_camera_3d()
+	var sighted := false
+	if not _devil_seen and devil.emitting and cam and not cam.is_position_behind(devil.global_position):
+		var at := cam.unproject_position(devil.global_position) / get_viewport().get_visible_rect().size
+		sighted = absf(at.x - 0.5) < float(m.devil_centre) and at.y > 0.0 and at.y < 1.0
+	if (sighted or _still_s > float(m.still_s)) and _time > float(m.after_s) and _time >= _motif_at + float(m.gap_s) and _clear():
+		if music(m.name):
+			_devil_seen = _devil_seen or sighted
+			_still_s = 0.0
+	_glance.clear()
+	if _sky == "design.sunset" and outside:
+		_glance.append(_hab.global_transform * _hab_box.get_center())
+		if devil.emitting:
+			_glance.append(devil.global_position)
+
+
+## No music cue playing and no event sound sounding.
+func _clear() -> bool:
+	return _time >= _busy_until and _time >= _cue_end
+
+
+func _hold(s: AudioStream) -> void:
+	if s:
+		_busy_until = maxf(_busy_until, _time + s.get_length())
 
 
 func _inside_now() -> bool:

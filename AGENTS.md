@@ -60,3 +60,7 @@ Its own repo. Commits signed off (`git commit -s`), prefixed by area, ending wit
   solve fail (2,889 unweighted vertices, a crumpled sleeve in play): join them after skin() and make them rigid.
 - `feel-probe --film` draws every row of the run under xvfb, and the sandbox timed out at 300 s: film one row with
   `--only <id> --film <id>`, and check pass/fail headless without `--film`.
+- rover.gd and pip.gd find wheels with `find_children("wheel_*")`: never name a helper node `wheel_*` (a MultiMesh
+  copy named so became a seventh wheel; world_test caught it).
+- Anything made during play (a dust stream, a spawned prop) must take the render layer its family uses (ground and
+  dust are layer 2, which the reflection probe does not shade): wheel grit made late on layer 1 glowed at night.

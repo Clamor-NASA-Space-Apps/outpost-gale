@@ -19,9 +19,12 @@ colors:
   rock: "#86716a"
   dust: "#c98a5a"
   hazard: "#e7b440"
+  stripe: "#d8691c"
   light: "#8ef7ea"
   suit: "#e9e4da"
   plant: "#76a83c"
+  romaine: "#7e2a3a"
+  grow: "#e04fd2"
   visor: "#b8913c"
   sky: "#0e0d1f"
   horizon: "#26233d"
@@ -81,11 +84,14 @@ materials:
   rock: { color: "{colors.rock}", roughness: 0.95, metalness: 0, detail: { texture: "textures/rock_albedo.jpg", normal: "textures/rock_normal.jpg", roughness: "textures/rock_rough.jpg", textureSize: 1.83, strength: 1.0, pattern: grain, size: 1.83 }, weathering: 0 }
   dust: { color: "{colors.dust}", roughness: 1, metalness: 0, detail: { texture: "textures/dust_albedo.jpg", normal: "textures/dust_normal.jpg", roughness: "textures/dust_rough.jpg", textureSize: 3.1, strength: 1.0, pattern: grain, size: 3.1, gravel: { texture: "textures/gravel_albedo.jpg", normal: "textures/gravel_normal.jpg", textureSize: 2.48, share: 0.3 }, ripple: { normal: "textures/ripple_normal.jpg", textureSize: 12 } }, weathering: 0 }
   hazard: { color: "{colors.hazard}", roughness: 0.5, metalness: 0 }
+  stripe: { color: "{colors.stripe}", roughness: 0.8, metalness: 0 }
   light: { color: "{colors.light}", roughness: 0.4, metalness: 0, emissive: 2.5, weathering: 0 }
   suit: { color: "{colors.suit}", roughness: 0.85, metalness: 0, detail: { texture: "textures/suit_albedo.jpg", normal: "textures/suit_normal.jpg", roughness: "textures/suit_rough.jpg", textureSize: 0.4, strength: 0.7, pattern: grain, size: 0.4 } }
   plant: { color: "{colors.plant}", roughness: 0.6, metalness: 0, weathering: 0 }
+  romaine: { color: "{colors.romaine}", roughness: 0.6, metalness: 0, weathering: 0 }
+  grow: { color: "{colors.grow}", roughness: 0.4, metalness: 0, emissive: 2.0, weathering: 0 }
   visor: { color: "{colors.visor}", roughness: 0.12, metalness: 1, weathering: 0 }
-weathering: { color: "{colors.dust}", amount: 0.6, side: 0.45, crevice: 0.6, noise: 1.2, texture: "textures/dust_albedo.jpg", textureSize: 1.5, clean: "^panel_[0-9]+$|^(floor|vest_floor|floor_mat|dashboard)(-col)?$" }
+weathering: { color: "{colors.dust}", amount: 0.6, side: 0.45, crevice: 0.6, noise: 1.2, texture: "textures/dust_albedo.jpg", textureSize: 1.5, clean: "^panel_[0-9]+$|^(floor|vest_floor|floor_mat|dashboard|interior)(-col)?$" }
 geometry:
   shading: smooth
   bevel: 0.03
@@ -142,6 +148,7 @@ quality:
   max: { msaa: 8, scale: 1, shadows: 4, shadowMap: 4096, shadowRange: 60, shadowFilter: 5, normalBias: 4, glow: 0.5, ssao: true, detail: texture, aniso: 4, ground: full, particles: 1, trail: 2048 }
 kit:
   "^(tex_0[1-5]|wheels|parts_AO)$": keep
+  "^(iss_panels|mercou_photo|gale_photo)$": keep
   "^internals$": body
   "^terrain$": dust
   "metalDark": metal

@@ -21,7 +21,12 @@
   "lettuce_1": "res://models/prop_lettuce_1.glb",
   "lettuce_2": "res://models/prop_lettuce_2.glb",
   "lettuce_3": "res://models/prop_lettuce_3.glb",
-  "lettuce_4": "res://models/prop_lettuce_4.glb"
+  "lettuce_4": "res://models/prop_lettuce_4.glb",
+  "veggie": "res://models/prop_veggie.glb",
+  "solar_wing": "res://models/building_solar_wing.glb",
+  "reactor": "res://models/building_reactor.glb",
+  "gale_map": "res://models/prop_gale_map.glb",
+  "mont_mercou": "res://models/rock_mont_mercou.glb"
  },
  "standin": {
   "habitat": [
@@ -124,19 +129,10 @@
    "id": "oxygen",
    "prefab": "oxygen_maker",
    "pos": [
-    4.5,
-    1.5
+    -2.285,
+    2.637
    ],
-   "yaw": 270
-  },
-  {
-   "id": "water",
-   "prefab": "water_recycler",
-   "pos": [
-    4.5,
-    -1.5
-   ],
-   "yaw": 270
+   "yaw": 208
   },
   {
    "id": "battery",
@@ -286,8 +282,8 @@
    "id": "telltale",
    "prefab": "telltale",
    "pos": [
-    -3.2,
-    2.2
+    -4.4,
+    2.0
    ],
    "yaw": 90
   },
@@ -308,7 +304,17 @@
     95
    ],
    "yaw": 320
-  }
+  },
+  {"id": "battery2", "prefab": "battery_bank", "pos": [15.1, 2], "yaw": 270},
+  {"id": "battery3", "prefab": "battery_bank", "pos": [16.2, 2], "yaw": 270},
+  {"id": "wing1", "prefab": "solar_wing", "pos": [56, 5], "yaw": 0},
+  {"id": "wing2", "prefab": "solar_wing", "pos": [56, 10], "yaw": 0},
+  {"id": "wing3", "prefab": "solar_wing", "pos": [56, 15], "yaw": 0},
+  {"id": "wing4", "prefab": "solar_wing", "pos": [56, 20], "yaw": 0},
+  {"id": "wing5", "prefab": "solar_wing", "pos": [56, 25], "yaw": 0},
+  {"id": "wing6", "prefab": "solar_wing", "pos": [56, 30], "yaw": 0},
+  {"id": "reactor", "prefab": "reactor", "pos": [-180, -60], "yaw": 0},
+  {"id": "mercou", "prefab": "mont_mercou", "pos": [-40, 38], "yaw": 45}
  ],
  "landmarks": {
   "spawn": [
@@ -355,9 +361,31 @@
    140,
    0,
    90
+  ],
+  "mercou": [
+   -33,
+   31,
+   225
+  ]
+ },
+ "cables": {
+  "_note": "power cables laid on the ground (world.gd _cables): polylines of [x, z], draped on height_at() every step m, width and height in metres, in a DESIGN.md role; rocks keep off them as off paths. The reactor's 3 kVac line comes in from 1 km in the real plan (NTRS 20250000841); our patch ends at 200 m, so the reactor stands near its west edge, 190 m out, and the line runs to HAB 1's utility panel. The field's line runs to the batteries, theirs to the habitat. Size and route are ours",
+  "role": "trim", "width": 0.06, "height": 0.04, "step": 1.0,
+  "lines": [
+   [[-178, -59], [-60, -30], [-12, -12], [-7, -3], [-2.75, -0.4]],
+   [[36, 17.5], [24, 9], [16.2, 2.9]],
+   [[13.2, 2.2], [6, 1.2], [2.6, 0.6]]
   ]
  },
  "play_half": 150,
+ "bound": {
+  "_note": "where anything that moves may go: |x| and |z| up to half (m from the patch centre). The ground is real only on the 400 m patch (data/terrain.json, half 200): past it the backdrop is drawn with no collision, and height_at() reads the patch edge. 190 keeps a body's reach inside it: the rover's centre stays reach (m, its rear hatch) further in, and the cameras behind (5 m on foot, 9 m driving) stay over the patch. Near the line the hero and the rover slow at their own braking (reality.json hero.stop, rover.brake) and stop on it. The safety net (sandbox.gd): a body found more than below (m) under the ground, or past the line, goes back on top at the nearest spot inside, behind a short fade (fade_s) when that is further than fade_over (m). Art direction",
+  "half": 190,
+  "reach": 3.5,
+  "below": 0.3,
+  "fade_over": 2.0,
+  "fade_s": 0.3
+ },
  "kinds": {
   "_note": "how an item collides; anything not named here is a static (layer 2, or 3 when narrower than the hero)",
   "rover": "vehicle",
@@ -373,6 +401,8 @@
   "rover": "ground.sink.soft"
  },
  "shadow_min": 0.6,
+ "_swept_range_m": "metres from the camera to a ground cell's centre (the patch centre for the base) beyond which its swept surfaces (floors, HAB 1's fit-out: DESIGN.md weathering.clean) are not drawn: seen only through doorways, they cost a draw call each from anywhere (world.gd _merge). Art direction",
+ "swept_range_m": 30,
  "moving": "^(door|dish|tell|head|status_bar)$|^(panel|wheel)_[0-9]+$",
  "lit_roles": ["glass"],
  "_lit_roles": "roles a sky state lights pane by pane (DESIGN.<state>.md `lit`, house_style): their panes are numbered when the meshes merge at load, whichever sky is up then",
@@ -612,7 +642,7 @@
   "greet_m": 8.0, "greet_stand_m": 1.6, "still_speed": 0.15, "still_s": 4.0, "greet_s": 6.0, "greet_cool_s": 40,
   "yield_m": 1.5, "yield_deg": 40, "wait_s": 3.0, "patience_s": 4.0,
   "feeler_m": 1.0, "feel_s": 0.2, "arrive_m": 0.35, "via_m": 0.7, "clearance": 0.25, "stuck_s": 6.0,
-  "door_clear_m": 2.0, "rooms": ["habitat", "greenhouse", "storm_shelter"], "room_margin": 0.4,
+  "door_clear_m": 2.0, "rooms": ["habitat", "greenhouse", "storm_shelter"], "room_margin": 0.6,
   "flee_m": 6.0,
   "look_s": [3.0, 6.0], "near_m": 8.0, "face_deg": 50, "glance_s": [1.2, 3.0], "glance_m": 0.4,
   "head_yaw_deg": 110, "head_pitch_deg": 35, "head_deg_s": 140, "tilt_deg": 14,
@@ -622,7 +652,7 @@
   "track_every": 0.1, "track_width": 0.08, "shade": [0.35, 0.6]
  },
  "plants": {
-  "_note": "lettuce in the greenhouse grow-bed slots (slot_N nodes of its model), one growth stage per slot; stage 4 is a harvest-size head (reality.json lettuce.width)",
+  "_note": "lettuce in the greenhouse grow-bed slots (slot_N nodes of its model), one growth stage per slot; stage 4 is a harvest-size head (reality.json lettuce.width). A prefab id instead of a stage goes in at its own size: HAB 1's Veggie unit on the galley counter",
   "greenhouse": [
    1,
    2,
@@ -632,6 +662,7 @@
    3,
    2,
    1
-  ]
+  ],
+  "hab1": ["veggie", "gale_map"]
  }
 }

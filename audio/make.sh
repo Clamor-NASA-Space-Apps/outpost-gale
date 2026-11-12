@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Builds every file in audio/ from the downloads in assets-cache (and our own synthesis), once, with ffmpeg.
-# Usage (from the project folder): nice -n 10 taskset -c 5-7 bash audio/make.sh [music]   (music: only audio/music/)
+# Usage (from the project folder): nice -n 10 taskset -c 5-7 bash audio/make.sh [music|radio]   (only audio/music/, or
+# only the radio sounds)
 # Why baked: a Godot web build plays audio in Sample mode, where bus effects do not run (design/research/alive.md 4.3),
 # so every muffle is in the file. `<name>.ogg` is the clear copy (Habitat bus, full air), `<name>_out.ogg` the one
 # heard on Mars through a helmet (Outside bus). Credits: ASSETS.md, Sound.
@@ -57,7 +58,7 @@ music() {
 	mkdir -p music
 	# ours (Apache-2.0, assets-cache/music/ours/make_motifs.py): a 20 ms fade in against a click, 0.3 s out at the end
 	END="areverse,afade=t=in:d=0.3,areverse"
-	for f in first_step airlock_sealed discovery mission_lost; do
+	for f in first_step airlock_sealed discovery mission_lost quiet; do
 		tune "$M/ours/$f.ogg" "afade=t=in:d=0.02,$END" "$f.ogg"
 	done
 	# Kilua Boy's Sunset Walk is 48 bars of 1.6 s (its hits land on 12.8, 25.6, 49.6, 51.2 s, measured from the
@@ -66,8 +67,35 @@ music() {
 	tune "$M/oga-kiluaboy-sunset-walk/SunsetWalk.ogg" "atrim=0:25.55,asetpts=N/SR/TB,afade=t=in:d=0.02,afade=t=out:st=22.75:d=2.8" sunset.ogg
 	du -ch music/*.ogg | tail -1
 }
+
+# The suit radio (our own synthesis, wordless): heard through the headset, so clear, but squeezed into a radio's
+# voice band (300 Hz to 3 kHz, art direction). The base: a key-down click, Apollo's Quindar intro tone (2,525 Hz,
+# 250 ms), an open carrier's hiss, the outro tone (2,475 Hz, 250 ms) and the squelch tail as the carrier drops
+# (design/research/pages/alive/rover-spring-and-radio.md). PIP: a click, two quick rising chirps, the tail.
+radio() {
+	local band="highpass=f=300,highpass=f=300,lowpass=f=3000,lowpass=f=3000"
+	local f="aformat=sample_rates=32000:channel_layouts=mono"
+	ffmpeg -v error -y -f lavfi -i "anoisesrc=c=white:d=0.012:a=0.8:seed=11:r=32000" \
+		-f lavfi -i "sine=f=2525:d=0.25:r=32000" -f lavfi -i "anoisesrc=c=white:d=0.45:a=0.1:seed=12:r=32000" \
+		-f lavfi -i "sine=f=2475:d=0.25:r=32000" -f lavfi -i "anoisesrc=c=white:d=0.18:a=0.5:seed=13:r=32000" \
+		-filter_complex "[0]$f[c];[1]$f,volume=0.5,afade=t=in:d=0.005,afade=t=out:st=0.245:d=0.005[i];\
+[2]$f,afade=t=in:d=0.02[h];[3]$f,volume=0.5,afade=t=in:d=0.005,afade=t=out:st=0.245:d=0.005[o];\
+[4]$f,afade=t=out:st=0.03:d=0.15[s];[c][i][h][o][s]concat=n=5:v=0:a=1" -ac 1 "$T/rb.wav"
+	shot "$T/rb.wav" "$band" radio_base.ogg
+	ffmpeg -v error -y -f lavfi -i "anoisesrc=c=white:d=0.012:a=0.8:seed=21:r=32000" \
+		-f lavfi -i "aevalsrc='0.5*sin(2*PI*(1300*t+3000*t*t))':d=0.09:s=32000" -f lavfi -i "anullsrc=r=32000:cl=mono:d=0.05" \
+		-f lavfi -i "aevalsrc='0.5*sin(2*PI*(1500*t+4000*t*t))':d=0.11:s=32000" -f lavfi -i "anoisesrc=c=white:d=0.14:a=0.45:seed=22:r=32000" \
+		-filter_complex "[0]$f[c];[1]$f,afade=t=in:d=0.005,afade=t=out:st=0.08:d=0.01[a];[2]$f[g];\
+[3]$f,afade=t=in:d=0.005,afade=t=out:st=0.09:d=0.02[b];[4]$f,afade=t=out:st=0.02:d=0.12[s];[c][a][g][b][s]concat=n=5:v=0:a=1" -ac 1 "$T/rp.wav"
+	shot "$T/rp.wav" "$band" radio_pip.ogg
+}
+
 if [ "${1:-}" = music ]; then
 	music
+	exit 0
+fi
+if [ "${1:-}" = radio ]; then
+	radio
 	exit 0
 fi
 
@@ -153,5 +181,6 @@ for pair in "maximize_003:pip_go" "question_002:pip_hello"; do
 	shot "$K/interface-sounds/Audio/${pair%%:*}.ogg" "$OUT" "${pair##*:}_out.ogg"
 done
 
+radio
 music
 du -ch ./*.ogg | tail -1

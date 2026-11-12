@@ -1,0 +1,77 @@
+         Exercise Equipment Usability Assessment for a Deep Space Concept
+                                  Vehicle
+
+             Brooke M. Rhodes, Mississippi State University, Mississippi State, MS 39762
+               David W. Reynolds, Marshall Space Flight Center, Huntsville, AL 35812
+
+        With international aspirations to send astronauts to deep space, the world is now faced
+with the complex problem of keeping astronauts healthy in unexplored hostile environments for
+durations of time never before attempted by humans. The great physical demands imparted by
+space exploration compound the problem of astronaut health, as the astronauts must not only be
+healthy, but physically fit upon destination arrival in order to perform the scientific tasks
+required of them. Additionally, future deep space exploration necessitates the development of
+environments conducive to long-duration habitation that would supplement propulsive vehicles.
+Space Launch System (SLS) core stage barrel sections present large volumes of robust structure
+that can be recycled and used for long duration habitation. This assessment will focus on one
+such conceptual craft, referred to as the SLS Derived Habitat (SLS-DH).
+        Marshall Space Flight Center’s (MSFC) Advanced Concepts Office (ACO) has
+formulated a high-level layout of this SLS-DH with parameters such as floor number and
+orientation, floor designations, grid dimensions, wall placement, etc. Yet to be determined,
+however, is the layout of the exercise area. Currently the SLS-DH features three floors laid out
+longitudinally, leaving 2m of height between the floor and ceilings. This short distance between
+levels introduces challenges for proper placement of exercise equipment such as treadmills and
+stationary bicycles, as the dynamic envelope for the 95th percentile male astronauts is greater
+than 2m. This study aims to
+assess the optimal equipment
+layout and sizing for the
+exercise area of this habitat.
+        Figure 1 illustrates the
+layout of the DSH concept
+demonstrator located at MSFC.
+The exercise area is located on
+the lower level, seen here as the
+front half of the level occupied
+by a crew member. This small
+volume does not allow for
+numerous or bulky exercise
+machines, so the conceptual
+equipment has been limited to a
+treadmill and stationary bicycle.
+With the most current treadmill
+aboard the International Space
+Station (ISS), the Combined
+Operational Load-Bearing
+External Resistance Treadmill
+(COLBERT), being located in                                       Figure 1
+an International Standard Payload Rack (ISPR), the bottom of the conceptual treadmill features a
+height of 38in. Making the treadmill flush with the floor would be impossible in this rack
+                                                                         configuration, as the
+                                                                         distance from the outer
+                                                                         wall of the spacecraft to
+                                                                         the bottom floor would be
+                                                                         too shallow. From
+                                                                         preliminary sizing, the
+                                                                         38in required for the
+                                                                         bottom of the treadmill
+                                                                         combined with a 78in
+                                                                         operational envelope for a
+                                                                         95th percentile may not be
+                                                                         accommodated in the
+                                                                         exercise area in a vertical
+                                                                         orientation. Figure 2
+                                                                         demonstrates the volume
+                                                                         required (in maroon) for
+                                Figure 2                                 an ISPR-bound treadmill
+                                                                         in the concept
+demonstrator. Early indications as seen in this figure indicate that the crew members would
+contact the ceiling in such an arrangement.
+        An assessment will be conducted to evaluate various orientations of exercise equipment
+in the concept demonstrator. Orientations to be tested include putting the bottom of the treadmill
+on the wall, having the treadmill at an angle in the floor both horizontally and vertically, and
+having a shorter (non-rack bound) treadmill in a vertical orientation on the floor. This
+assessment will yield findings regarding sizing of the area and how well participants feel they
+could exercise in such an environment. Due to the restrictions of assessing a microgravity
+vehicle in a normal-gravity environment, simulations in MSFC’s Virtual Environments Lab
+(VEL) may be necessary. Final deliverables will include recommendations regarding the
+location and size of possible exercise equipment aboard the SLS-Derived DSH.
+

@@ -1,7 +1,7 @@
 extends "res://addons/forge/test.gd"
 ## The sound bed listens to the game (skills/living-atmosphere, Checks): godot --headless --path . -s tests/audio_test.gd
 
-const KEYS := ["started", "inside", "buses", "breath", "gust", "steps", "lastStep", "music"]
+const KEYS := ["started", "inside", "buses", "breath", "gust", "steps", "lastStep", "music", "radio"]
 
 var game: Node3D
 var audio: Node

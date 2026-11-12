@@ -63,6 +63,9 @@ var on_floor := false  # the body's floor contact, or a floor it was snapped dow
 var fading: Shader  # hero.gdshader built with FADE: blended, swapped in only while the lens is close
 var shown := 1.0  # the fade the materials carry now
 var glancing := false  # the camera faces the hero: the helmet looks at the lens, not along its aim
+## Where the body may walk (x, z), set by the composition root; no area: anywhere. Near its edge the outward speed is
+## held to what the hero's braking still stops in, so the hero slows and stops on the line, with no wall's jolt.
+var bound := Rect2()
 
 
 func _ready() -> void:
@@ -264,6 +267,12 @@ func _walk(delta: float) -> void:
 	body.rotation.y = yaw
 	body.velocity.x = -sin(yaw) * speed
 	body.velocity.z = -cos(yaw) * speed
+	if bound.has_area():
+		var p := body.global_position
+		body.velocity.x = _held(body.velocity.x, p.x - bound.position.x, bound.end.x - p.x)
+		body.velocity.z = _held(body.velocity.z, p.z - bound.position.y, bound.end.y - p.z)
+		# the speed is what is left, or a turn back in would wait for the brakes to take off speed it never had
+		speed = minf(speed, Vector2(body.velocity.x, body.velocity.z).length())
 
 	coyote = tuning.input.coyote if on_floor else coyote - delta
 	buffer = tuning.input.jump_buffer if Input.is_action_just_pressed(&"jump") else buffer - delta
@@ -301,6 +310,15 @@ func _walk(delta: float) -> void:
 	# a landing after real air time: a teleport's settle or a curb's single frame off the floor is not one
 	_steps(steps, on_floor and not was_on_floor and coyote <= 0.0)
 	cam.follow(delta, Vector3(real.x, 0.0, real.z), yaw, on_floor)
+
+
+## A speed along one axis held to what the brakes stop in the room left: `back` metres behind, `ahead` in front,
+## and never more than the room in one step (the last millimetre would otherwise step over the line).
+func _held(v: float, back: float, ahead: float) -> float:
+	var hz := float(Engine.physics_ticks_per_second)
+	back = maxf(back, 0.0)
+	ahead = maxf(ahead, 0.0)
+	return clampf(v, -minf(sqrt(2.0 * brake * back), back * hz), minf(sqrt(2.0 * brake * ahead), ahead * hz))
 
 
 ## Puts the feet on the floor under them, if it is within a step: up at once, when the body fits there (the
