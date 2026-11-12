@@ -1,0 +1,920 @@
+<!DOCTYPE HTML><html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="https://www.giss.nasa.gov/css/css2104.css" media="all" />
+
+
+<title>NASA GISS: Mars24 Sunclock &mdash; Algorithm and Worked Examples</title>
+<link rel="stylesheet" type="text/css" title="Mars24 Help CSS" href="help.css">
+<link rel="apple-touch-icon" href="/gfx/apple-touch-icon-180x180.png" />
+<link rel="apple-touch-icon-precomposed" href="/gfx/apple-touch-icon-180x180.png" />
+<link rel="apple-touch-icon" sizes="192x192" href="/gfx/apple-touch-icon-192x192.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/gfx/apple-touch-icon-180x180.png" />
+<link rel="apple-touch-icon" sizes="152x152" href="/gfx/apple-touch-icon-152x152.png" />
+<link rel="apple-touch-icon" sizes="128x128" href="/gfx/apple-touch-icon-128x128.png" />
+<link rel="apple-touch-icon" sizes="76x76" href="/gfx/apple-touch-icon-76x76.png" />
+<meta name="orgcode" content="611" />
+<meta name="rno" content="Gavin.A.Schmidt.1" />
+<meta name="content-owner" content="Robert.B.Schmunk.1" />
+<meta name="webmaster" content="Robert.B.Schmunk.1" />
+<meta name="viewport" content="width=956, initial-scale=1" /><script id="_fed_an_ua_tag" src="https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=NASA&amp;subagency=GISS&amp;yt=true&amp;dclink=true" async="async"></script>
+</head>
+<body>
+<div id="bkg1"><div id="bkg2"></div><!-- end bkg2 --></div><!-- end bkg1 -->
+<div id="page">
+<div class="hidden">
+<a href="#content" title="Go to Main Content" accesskey="2">Go to Main Content (Accesskey 2)</a><br /><a href="#nav" title="Go to Site Menu" accesskey="3">Go to Site Menu (Accesskey 3)</a></div><!-- end hidden -->
+<div id="header">
+<div id="headerlogo">
+<a href="https://www.nasa.gov/"><img src="https://www.giss.nasa.gov/gfx/2013/nasa_x2.png" alt="NASA Logo, National Aeronautics and Space Administration" style="width:140px;height:98px" /></a></div><!-- end headerlogo -->
+<div id="centername">
+<h1><a href="https://www.nasa.gov/">National Aeronautics and Space Administration</a></h1>
+<h2><a href="https://www.giss.nasa.gov/">Goddard Institute for Space Studies</a></h2></div><!-- end centername -->
+<div id="hierarchy">
+<h2><a href="https://www.nasa.gov/goddard/">Goddard Space Flight Center</a><br /><a href="https://science.gsfc.nasa.gov/sci">Sciences and Exploration Directorate</a><br /><a href="https://science.gsfc.nasa.gov/earth">Earth Sciences Division</a></h2></div><!-- end hierarchy --></div><!-- end header -->
+<div id="paper">
+<div id="content"><div id="cpad">
+
+
+
+
+
+
+<h2>Mars24 Sunclock &mdash; Time on Mars</h2>
+
+<h3>Algorithm and Worked Examples</h3>
+
+<p class="m24_dateline">(Updated 2025-01-07)</p>
+
+<p>
+The calculations made by Mars24 to determine the time for a given location on Mars are
+primarily based on Allison and McEwen (2000, henceforth AM2000). We also refer to
+Allison (1997, henceforth A1997), of which AM2000 was a thorough update. However, some
+typographical errors appeared in the published version of AM2000, and some calculations
+have been revised since that paper was published because of the availability of new data.
+Various revisions were described in a unpublished paper by Allison &amp; Ferrier, as well
+as in some later, unpublished calculations by Allison.</p>
+
+<p>
+Consequently, we provide here step-by-step documentation of the equations employed
+by Mars24 for users who wish to implement their own Mars timekeeping applications that match
+the result of the app. At the end of this presentation, we also provide two worked examples for
+verification of intermediate results.</p>
+
+
+
+<h3 id="m24_equations">I. Equations</h3>
+
+<h4>A. Determine Days Since J2000 Epoch</h4>
+
+<p>Our Mars time calculations will use the parameter
+&#916;<var>t</var><sub>J2000</sub>, the elapsed time in days since the J2000
+epoch, i.e., 12:00 on Jan. 1, 2000 (TT). The following describes how we get
+there from a Java call which returns the system time. If one has an alternative
+scheme for obtaining &#916;<var>t</var><sub>J2000</sub>, then these steps can be skipped.</p>
+
+<p>A-1. Get a starting Earth time.</p>
+
+<div class="m24_in24">
+
+    <p>Mars24 is written in Java, so we use the
+    <code>System.currentTimeMillis()</code> method to find out the number of
+    milliseconds, <var>millis</var>, that have elapsed since 00:00:00 on Jan. 1, 1970
+    (i.e., the Unix epoch).</p>
+
+    <p>Unfortunately, the standard Java date/time classes do not keep track of
+    <a href="https://www.timeanddate.com/time/leapseconds.html">leap seconds</a>, i.e.,
+    they keep time in UT rather than UTC. Consequently, when Mars24 calls
+    <code>System.currentTimeMillis()</code>, it expects that
+    the value returned uses UT rather than UTC.</p>
+
+    <p>Only A-2 in the following steps explicitly uses <var>millis</var>.
+    However, there are some displays in Mars24 which also use other readings
+    based on the value of <var>millis</var>,
+    so there is a possibility that if Mars24 is used on a computational arrangement
+    that <i>does</i> keep track of leap seconds, errors would result.</p>
+
+</div>
+
+<p>A-2. Convert millis to Julian Date (UT).</p>
+
+<div class="m24_in24">
+
+    <p>Although there's plenty of sample code available on-line that
+    demonstrates how to convert a Gregorian calendar date to a
+    <a href="https://aa.usno.navy.mil/data/JulianDate">Julian Date</a>,
+    we simply use the offset from a known, recent Julian Date.
+    Again, we use the Unix epoch, 00:00:00 on Jan. 1, 1970.</p>
+
+    <p class="m24_equation">
+    JD<sub>UT</sub>
+    = 2440587.5 + (<var>millis</var> / 8.64&#215;10<sup>7</sup> ms/day)
+    </p>
+
+</div>
+
+<p>A-3. Determine time offset from J2000 epoch (UT).</p>
+
+<div class="m24_in24">
+
+    <p>This step is optional; we only need to make this calculation if the date is <i>before</i>
+    Jan. 1, 1972. Determine the elapsed time in Julian centuries since 12:00 on Jan. 1, 2000 (UT).</p>
+
+    <p class="m24_equation">
+    <var>T</var>
+    = (JD<sub>UT</sub> - 2451545.0) / 36525.
+    </p>
+
+</div>
+
+<p>A-4. Determine UTC to TT conversion.
+(Replaces AM2000, eq. 27)</p>
+
+<div class="m24_in24">
+
+    <p>Terrestrial Time (TT) advances at constant rate, as does UTC, but no leap
+    seconds are inserted into it and so it gradually gets further ahead of UTC.
+    The best way to determine the difference between TT and UTC is to consult a
+    <a href="https://hpiers.obspm.fr/iers/bul/bulc/Leap_Second.dat">table of leap seconds</a>.
+    Alternatively, one could try to use an empirical formula.</p>
+
+    <p>In Mars24 we, oddly enough, use both methods. We use a table for dates after Jan. 1,
+    1972, and a formula for dates prior to then. In consulting IERS or USNO leap second table,
+    however, it is important to note that the table provides values for the TAI-UTC difference,
+    where TAI is International Atomic Time. To obtain the TT-UTC difference, add 32.184 seconds
+    to the value of TAI-UTC. For example, the table indicates that on Jan. 1, 2017, the TAI-UTC
+    value is 37.0 seconds, and thus, the value for TT-UTC on that date (and until the next date
+    on which another leap second is added to the clock) would be
+    37.0s + 32.184s = 69.184s.</p>
+
+    <p>The formula applied for dates prior to Jan. 1, 1972, is similar
+    to AM2000, eq. 27, but has been revised and includes additional terms:</p>
+
+    <p class="m24_equation">
+    TT - UTC = 64.184s
+            + 59 s &#215; <var>T</var>
+            - 51.2 s &#215; <var>T</var><sup>2</sup>
+            - 67.1 s &#215; <var>T</var><sup>3</sup>
+            - 16.4 s &#215; <var>T</var><sup>4</sup>
+    </p>
+
+    <p>(Note: Mars24 accounts for the leap second added at the end of Dec. 31, 2016.
+    It does not allow for any leap seconds that may have been subsequently added,
+    which as of winter 2025, there have been none. The most recent
+    <a href="https://hpiers.obspm.fr/eoppc/bul/bulc/bulletinc.dat">Bulletin C 67</a>
+    from the <a href="https://hpiers.obspm.fr/">International Earth Rotation and Reference
+    Systems Service</a> (IERS) indicates that no leap second addition will be added at
+    the end of June 30, 2025.</p>
+
+</div>
+
+<p>A-5. Determine Julian Date (TT).</p>
+
+<div class="m24_in24">
+
+    <p class="m24_equation">
+    JD<sub>TT</sub>
+    = JD<sub>UT</sub> + [(TT - UTC) / 86400 s&#183;day<sup>-1</sup>]
+    </p>
+
+</div>
+
+<p>A-6. Determine time offset from J2000 epoch (TT). (AM2000, eq. 15)</p>
+
+<div class="m24_in24">
+
+    <p class="m24_equation">
+    &#916;<var>t</var><sub>J2000</sub>
+    = JD<sub>TT</sub> - 2451545.0
+    </p>
+
+</div>
+
+<h4>B. Determine Mars Parameters of Date</h4>
+
+<p>Now we turn our attention to Mars, first determining some orbital parameters.</p>
+
+<p>B-1. Determine Mars mean anomaly. (AM2000, eq. 16)</p>
+
+<div class="m24_in24">
+
+    <p class="m24_equation">
+    <var>M</var>
+    = 19.3871&deg; + 0.52402073&deg; &#916;<var>t</var><sub>J2000</sub>
+    </p>
+
+</div>
+
+<p>B-2. Determine angle of Fiction Mean Sun. (AM2000, eq. 17)</p>
+
+<div class="m24_in24">
+
+    <p class="m24_equation">
+    &#945;<sub>FMS</sub>
+    = 270.3871&deg; + 0.524038496&deg; &#916;<var>t</var><sub>J2000</sub>
+    </p>
+
+</div>
+
+<p>B-3. Determine perturbers. (AM2000, eq. 18)</p>
+
+<div class="m24_in24">
+
+    <p class="m24_equation">
+    PBS
+    = &#931;<sub>(i=1,7)</sub> <var>A</var><sub>i</sub>&nbsp;cos&nbsp;[ (0.985626&deg; &#916;<var>t</var><sub>J2000</sub> / &#964;<sub>i</sub>) + &#966;<sub>i</sub>]
+    </p>
+
+    <p>where 0.985626&deg; = 360&deg; / 365.25, and</p>
+
+    <table class="m24_eqtable">
+
+    <thead>
+    <tr>
+        <th>i</th>
+        <th><var>A</var><sub>i</sub></th>
+        <th>&#964;<sub>i</sub></th>
+        <th>&#966;<sub>i</sub></th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr class="m24_aright">
+      <td>1</td>
+      <td>0.0071</td>
+      <td>2.2353</td>
+      <td>49.409</td>
+    </tr>
+    <tr class="m24_aright">
+      <td>2</td>
+      <td>0.0057</td>
+      <td>2.7543</td>
+      <td>168.173</td>
+    </tr>
+    <tr class="m24_aright">
+      <td>3</td>
+      <td>0.0039</td>
+      <td>1.1177</td>
+      <td>191.837</td>
+    </tr>
+    <tr class="m24_aright">
+      <td>4</td>
+      <td>0.0037</td>
+      <td>15.7866</td>
+      <td>21.736</td>
+    </tr>
+    <tr class="m24_aright">
+      <td>5</td>
+      <td>0.0021</td>
+      <td>2.1354</td>
+      <td>15.704</td>
+    </tr>
+    <tr class="m24_aright">
+      <td>6</td>
+      <td>0.0020</td>
+      <td>2.4694</td>
+      <td>95.528</td>
+    </tr>
+    <tr class="m24_aright">
+      <td>7</td>
+      <td>0.0018</td>
+      <td>32.8493</td>
+      <td>49.095</td>
+    </tr>
+    </tbody>
+    </table>
+
+</div>
+
+<p>B-4. Determine Equation of Center.
+(Bracketed term in AM2000, eqs. 19 and 20)</p>
+
+<div class="m24_in24">
+
+    <p>The equation of center is the true anomaly minus mean anomaly.</p>
+
+    <p class="m24_equation">
+    &#957;&nbsp;-&nbsp;<var>M</var>
+    = (10.691&deg; + 3.0&deg; &#215; 10<sup>-7</sup> &#916;<var>t</var><sub>J2000</sub>)&nbsp;sin&nbsp;<var>M</var>
+            +&nbsp;0.623&deg;&nbsp;sin&nbsp;2<var>M</var>
+            +&nbsp;0.050&deg;&nbsp;sin&nbsp;3<var>M</var>
+            +&nbsp;0.005&deg;&nbsp;sin&nbsp;4<var>M</var>
+            +&nbsp;0.0005&deg;&nbsp;sin&nbsp;5<var>M</var>
+            +&nbsp;PBS
+    </p>
+
+</div>
+
+<p>B-5. Determine areocentric solar longitude. (AM2000, eq. 19)</p>
+
+<div class="m24_in24">
+
+    <p class="m24_equation">
+    <var>L</var><sub>s</sub>
+    = &#945;<sub>FMS</sub> + (&#957;&nbsp;-&nbsp;<var>M</var>)
+    </p>
+
+</div>
+
+<h4>C. Determine Mars Time</h4>
+
+<p>C-1. Determine Equation of Time. (AM2000, eq. 20)</p>
+
+<div class="m24_in24">
+
+    <p class="m24_equation">
+    EOT
+    = 2.861&deg;&nbsp;sin&nbsp;2<var>L</var><sub>s</sub>
+            -&nbsp;0.071&deg;&nbsp;sin&nbsp;4<var>L</var><sub>s</sub>
+            +&nbsp;0.002&deg;&nbsp;sin&nbsp;6<var>L</var><sub>s</sub>
+            -&nbsp;(&#957;&nbsp;-&nbsp;<var>M</var>)
+    </p>
+
+    <p>The above result for EOT is in degrees.
+    Multiply by (24&nbsp;h&nbsp;/&nbsp;360&deg;) = (1&nbsp;h&nbsp;/&nbsp;15&deg;) to obtain the
+    result in hours.</p>
+
+</div>
+
+<p>C-2. Determine Mean Solar Time at Mars's prime meridian, i.e., Airy Mean Time.
+(AM2000, eq. 22, modified)</p>
+
+<div class="m24_in24">
+
+    <p>This is the mean solar time at Mars's prime meridian.</p>
+
+    <p class="m24_equation">
+    MST
+    = mod<sub>24</sub> { 24 h &#215; ( [(JD<sub>TT</sub> - 2451549.5) / 1.0274912517] + 44796.0 - 0.0009626 ) }
+    </p>
+
+    <p>The function mod<sub>X</sub> indicates a re-setting of the function
+    parameter, a cyclical value, to a value between 0 and <var>X</var>. In this
+    case, we apply mod<sub>24</sub> to indicate that values outside the
+    range 0-24 should be re-set to be within that range, e.g.,
+    mod<sub>24</sub>&nbsp;(30) = 6.</p>
+
+</div>
+
+<p>C-3. Determine Local Mean Solar Time.</p>
+
+<div class="m24_in24">
+
+    <p>The Local Mean Solar Time for a given planetographic longitude, &#923;, in degrees west,
+    is easily determined by offsetting from the mean solar time on the prime meridian.</p>
+
+    <p class="m24_equation">
+    LMST
+    = mod<sub>24</sub> { MST - &#923; (24 h / 360&deg;) }
+    = mod<sub>24</sub> { MST - &#923; (1 h / 15&deg;) }
+    </p>
+
+</div>
+
+<p>C-4. Determine Local True Solar Time. (AM2000, eq. 23)</p>
+
+<div class="m24_in24">
+
+    <p class="m24_equation">
+    LTST
+    = LMST + EOT (24 h / 360&deg;)
+    = LMST + EOT (1 h / 15&deg;)
+    </p>
+
+</div>
+
+<p>C-5. Determine subsolar longitude</p>
+
+<div class="m24_in24">
+
+    <p class="m24_equation">
+    &#923;<sub>s</sub>
+    = MST (360&deg; / 24 h) + EOT + 180&deg;
+    = MST (15&deg; / h) + EOT + 180&deg;
+    </p>
+
+</div>
+
+
+<h4>D. Additional Calculations</h4>
+
+<p>D-1. Determine solar declination (planetographic). (A1997, eq. 5)</p>
+
+<div class="m24_in24">
+
+    <p class="m24_equation">
+    &#948;<sub>s</sub>
+    = arcsin (0.42565&nbsp;sin&nbsp;<var>L</var><sub>s</sub>)
+                + 0.25&deg;&nbsp;sin&nbsp;<var>L</var><sub>s</sub>
+    </p>
+
+</div>
+
+<p>D-2. Determine heliocentric distance. (AM2000, eq. 25, corrected)</p>
+
+<div class="m24_in24">
+
+    <p class="m24_equation">
+    <var>R</var><sub>M</sub>
+    = 1.52367934 &#215;
+                    (1.00436
+                    -&nbsp;0.09309&nbsp;cos&nbsp;M
+                    -&nbsp;0.004336&nbsp;cos&nbsp;2<var>M</var>
+                    -&nbsp;0.00031&nbsp;cos&nbsp;3<var>M</var>
+                    -&nbsp;0.00003&nbsp;cos&nbsp;4<var>M</var>)
+    </p>
+
+</div>
+
+<p>D-3. Determine heliocentric longitude. (AM2000, eq. 26)</p>
+
+<div class="m24_in24">
+
+    <p class="m24_equation">
+    <var>l</var><sub>M</sub>
+    = <var>L</var><sub>s</sub>
+            +&nbsp;85.061&deg;
+            -&nbsp;0.015&deg;&nbsp;sin&nbsp;(71&deg;&nbsp;+&nbsp;2<var>L</var><sub>s</sub>)
+            -&nbsp;5.5&deg;&#215;10<sup>-6</sup>&nbsp;&#916;<var>t</var><sub>J2000</sub>
+    </p>
+
+</div>
+
+<p>D-4. Determine heliocentric latitude.</p>
+
+<div class="m24_in24">
+
+    <p class="m24_equation">
+    <var>b</var><sub>M</sub>
+    = -(1.8497&deg; - 2.23&deg;&#215;10<sup>-5</sup>&nbsp;&#916;<var>t</var><sub>J2000</sub>)
+            sin&nbsp;(<var>L</var><sub>s</sub> -&nbsp;144.50&deg; +&nbsp;2.57&deg;&#215;10<sup>-6</sup>&nbsp;&#916;<var>t</var><sub>J2000</sub>)
+    </p>
+
+</div>
+
+<p>D-5. Determine local solar elevation</p>
+
+<div class="m24_in24">
+
+    <p>For any given point on Mars's surface, we want to determine the angle of the
+    sun. The zenith angle is:</p>
+
+    <p class="m24_equation">
+    <var>Z</var>
+    = arccos (sin &#948;<sub>s</sub> sin &#x03c6; + cos &#948;<sub>s</sub> cos &#x03c6; cos <var>H</var>)
+    </p>
+
+    <p>where &#x03c6; is the planetographic latitude,
+    &#923; is the planetographic longitude,
+    and <var>H</var> the hour angle,
+    &#923; - &#923;<sub>s</sub>.</p>
+
+    <p>The solar elevation is simply 90&deg; - <var>Z</var>.</p>
+
+</div>
+
+<p>D-6. Determine local solar azimuth</p>
+
+<div class="m24_in24">
+
+    <p>The second element of the sun's location as seen from a point on Mars's surface
+    is its azimuth, i.e., compass angle relative to due north.</p>
+
+    <p class="m24_equation">
+    <var>A</var>
+    = arctan (sin <var>H</var> / (cos &#x03c6; tan &#948;<sub>s</sub> - sin &#x03c6; cos <var>H</var>))
+    </p>
+
+    <p>(Note: When applying this equation in your computer code or spreadsheet, use the
+    <var>atan2</var> function so that the correct quadrant is obtained.)</p>
+</div>
+
+
+
+
+
+
+<h3 id="examples">II. Worked Examples</h3>
+
+<h4>Near Coincident Earth and Mars Times</h4>
+
+<p>An easy-to-remember benchmark for calibrating clocks is a date and time at
+which the "standard time" for both Mars and Earth was almost the same.
+When the time on Earth was 00:00:00 on Jan. 6, 2000 (UTC), it was just 21
+Mars-seconds away from also being mean midnight at the Mars prime meridian.
+Let's run through the calculations to see if we obtain MST = 23:59:39.
+For longitude and latitude, we specify 0&deg;W 0&deg;N.</p>
+
+<div class="m24_in24">
+
+<table class="m24_eqtable">
+<thead>
+<tr>
+  <th>Eq.</th>
+  <th>Parameter</th>
+  <th>Value</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+  <td>A-1</td>
+  <td><var>millis</var></td>
+  <td>947116800000 ms</td>
+</tr>
+<tr>
+  <td>A-2</td>
+  <td>JD<sub>UT</sub></td>
+  <td>2451549.5</td>
+</tr>
+<tr>
+  <td>A-3</td>
+  <td><var>T</var></td>
+  <td>&mdash;</td>
+</tr>
+<tr>
+  <td>A-4</td>
+  <td>TT - UTC</td>
+  <td>64.184 s</td>
+</tr>
+<tr>
+  <td>A-5</td>
+  <td>JD<sub>TT</sub></td>
+  <td>2451549.50074</td>
+</tr>
+<tr>
+  <td>A-6</td>
+  <td>&#916;<var>t</var><sub>J2000</sub></td>
+  <td>4.50074</td>
+</tr>
+
+<tr>
+  <td>B-1</td>
+  <td><var>M</var></td>
+  <td>21.74558&deg;</td>
+</tr>
+<tr>
+  <td>B-2</td>
+  <td>&#945;<sub>FMS</sub></td>
+  <td>272.74566&deg;</td>
+</tr>
+<tr>
+  <td>B-3</td>
+  <td>PBS</td>
+  <td>0.00142&deg;</td>
+</tr>
+<tr>
+  <td>B-4</td>
+  <td>&#957;&nbsp;-&nbsp;<var>M</var></td>
+  <td>4.44193&deg;</td>
+</tr>
+<tr>
+  <td>B-5</td>
+  <td><var>L</var><sub>s</sub></td>
+  <td>277.18758&deg;</td>
+</tr>
+
+<tr>
+  <td>C-1</td>
+  <td>EOT</td>
+  <td>-5.18774&deg; = -0.34585 h = -00:20:45</td>
+</tr>
+<tr>
+  <td>C-2</td>
+  <td>MST</td>
+  <td style="background:#ffeeee">mod<sub>24</sub> (1075103.99425 h) = 23.99425 h = 23:59:39</td>
+</tr>
+<tr>
+  <td>C-3</td>
+  <td>LMST</td>
+  <td>23.99425 h = 23:59:39</td>
+</tr>
+<tr>
+  <td>C-4</td>
+  <td>LTST</td>
+  <td>23.64840 h = 23:38:54</td>
+</tr>
+<tr>
+  <td>C-5</td>
+  <td>&#923;<sub>s</sub></td>
+  <td>174.72600&deg;</td>
+</tr>
+
+<tr>
+  <td>D-1</td>
+  <td>&#948;<sub>s</sub></td>
+  <td>-25.22825&deg;</td>
+</tr>
+<tr>
+  <td>D-2</td>
+  <td><var>R</var><sub>M</sub></td>
+  <td>1.39358 AU</td>
+</tr>
+<tr>
+  <td>D-3</td>
+  <td><var>l</var><sub>M</sub></td>
+  <td>2.26352&deg;</td>
+</tr>
+<tr>
+  <td>D-4</td>
+  <td><var>b</var><sub>M</sub></td>
+  <td>-1.35957&deg;</td>
+</tr>
+<tr>
+  <td>D-5</td>
+  <td><var>Z</var></td>
+  <td>154.26182&deg;</td>
+</tr>
+<tr>
+  <td>D-6</td>
+  <td><var>A</var></td>
+  <td>191.03905&deg;</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+
+<h4>MER-A <i>Spirit</i> Landing</h4>
+
+<p>The Mars Exploration Rover A, <i>Spirit</i>, landed on Jan. 4, 2004
+(UTC; in U.S. timezones it was late Jan. 3). For the planned landing
+target, local true midnight prior to touchdown was expected at 13:46:31 UTC
+on Jan. 3.
+We specify longitude and latitude of 184.702&deg;W -14.640&deg;N.
+We expect to obtain that the Mars local time at that location was
+LTST = 00:00:00 and the solar azimuth was 180&deg;.</p>
+
+
+<div class="m24_in24">
+
+<table class="m24_eqtable">
+<thead>
+<tr>
+  <th>Eq.</th>
+  <th>Parameter</th>
+  <th>Value</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+  <td>A-1</td>
+  <td><var>millis</var></td>
+  <td>1073137591000 ms</td>
+</tr>
+<tr>
+  <td>A-2</td>
+  <td>JD<sub>UT</sub></td>
+  <td>2453008.07397</td>
+</tr>
+<tr>
+  <td>A-3</td>
+  <td><var>T</var></td>
+  <td>&mdash;</td>
+</tr>
+<tr>
+  <td>A-4</td>
+  <td>TT - UTC</td>
+  <td>64.184 s</td>
+</tr>
+<tr>
+  <td>A-5</td>
+  <td>JD<sub>TT</sub></td>
+  <td>2453008.07471</td>
+</tr>
+<tr>
+  <td>A-6</td>
+  <td>&#916;<var>t</var><sub>J2000</sub></td>
+  <td>1463.07471</td>
+</tr>
+
+<tr>
+  <td>B-1</td>
+  <td><var>M</var></td>
+  <td>786.06858&deg; &#8594; 66.06858&deg;</td>
+</tr>
+<tr>
+  <td>B-2</td>
+  <td>&#945;<sub>FMS</sub></td>
+  <td>1037.09457&deg; &#8594; 317.09457&deg;</td>
+</tr>
+<tr>
+  <td>B-3</td>
+  <td>PBS</td>
+  <td>0.01614&deg;</td>
+</tr>
+<tr>
+  <td>B-4</td>
+  <td>&#957;&nbsp;-&nbsp;<var>M</var></td>
+  <td>10.22959&deg;</td>
+</tr>
+<tr>
+  <td>B-5</td>
+  <td><var>L</var><sub>s</sub></td>
+  <td>1047.32416&deg; &#8594; 327.32416&deg;</td>
+</tr>
+
+<tr>
+  <td>C-1</td>
+  <td>EOT</td>
+  <td>-12.77553&deg; = -0.85170 h = -00:51:06</td>
+</tr>
+<tr>
+  <td>C-2</td>
+  <td>MST</td>
+  <td>mod<sub>24</sub> (1109173.16537 h) = 13.16537 h = 13:09:55</td>
+</tr>
+<tr>
+  <td>C-3</td>
+  <td>LMST</td>
+  <td>0.85190 h = 00:51:07</td>
+</tr>
+<tr>
+  <td>C-4</td>
+  <td>LTST</td>
+  <td style="background:#ffeeee">0.00025 h = 00:00:00</td>
+</tr>
+<tr>
+  <td>C-5</td>
+  <td>&#923;<sub>s</sub></td>
+  <td>4.70500&deg;</td>
+</tr>
+
+<tr>
+  <td>D-1</td>
+  <td>&#948;<sub>s</sub></td>
+  <td>-13.42065&deg;</td>
+</tr>
+<tr>
+  <td>D-2</td>
+  <td><var>R</var><sub>M</sub></td>
+  <td>1.47767 AU</td>
+</tr>
+<tr>
+  <td>D-3</td>
+  <td><var>l</var><sub>M</sub></td>
+  <td>52.37564&deg;</td>
+</tr>
+<tr>
+  <td>D-4</td>
+  <td><var>b</var><sub>M</sub></td>
+  <td>0.08965&deg;</td>
+</tr>
+<tr>
+  <td>D-5</td>
+  <td><var>Z</var></td>
+  <td>151.93895&deg;</td>
+</tr>
+<tr>
+  <td>D-6</td>
+  <td><var>A</var></td>
+  <td style="background:#ffeeee">179.99383&deg;</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+
+
+
+
+<h3 id="references">Reference</h3>
+
+<p>Discussion of the data and formulae used by Mars24 may be found in:</p>
+
+<ul>
+<li>Allison, M. 1997.
+  <a href="https://www.giss.nasa.gov/pubs/abs/al04000r.html">
+  Accurate analytic representations of solar time and seasons on Mars with applications
+  to the Pathfinder/Surveyor missions</a>.
+  <cite>Geophys. Res. Lett.</cite>, <b>24</b>, 1967-1970.</li>
+
+<li>Allison, M., and M. McEwen 2000.
+  <a href="https://www.giss.nasa.gov/pubs/abs/al05000n.html">
+  A post-Pathfinder evaluation of aerocentric solar coordinates with improved timing
+  recipes for Mars seasonal/diurnal climate studies</a>.
+  <cite>Planet. Space Sci.</cite>, <b>48</b>, 215-235.</li>
+
+</ul>
+
+
+
+
+
+<!--
+
+<hr />
+
+<p>Subsequent to May 2008, the following revisions have been made here:</p>
+
+<ul>
+<li>2013-05-24:
+    Typo fixed.
+<li>2014-10-14:
+    Demonstration of C-2 in first worked example corrected to include the raw result prior to
+    calculating the mod-24 value.</li>
+<li>2015-06-30:
+    Equations B-1, B-2, C-2, and D-2 were modified according to recent research by Allison (2015)
+    and the worked examples were correspondingly updated.</li>
+<li>2018-04-03, 09-26:
+    Updated journal article links and cleaned up some HTML.</li>
+</ul>
+
+-->
+
+
+
+
+
+
+
+<h4 class="goback">&#x2022;
+<a href="index.html">Return to Mars24 Help Index</a></h4>
+
+<h4 class="goback">&#x2022;
+<a href="https://www.giss.nasa.gov/tools/mars24/">Go to Mars24 Website</a></h4>
+
+<div class="clear"></div></div><!-- end cpad --><div id="endpaper"></div></div><!-- end content -->
+<div id="nav"><h3>Site Menu</h3>
+<ul id="mnav">
+<li><a href="https://www.giss.nasa.gov/">GISS Home</a></li>
+<li><a href="https://www.giss.nasa.gov/research/">News &amp; Features</a>
+<ul class="mnav2">
+<li><a href="https://www.giss.nasa.gov/research/">News &amp; Features Overview</a></li></ul><!-- end mnav2 --></li>
+<li><a href="https://www.giss.nasa.gov/projects/">Projects &amp; Groups</a>
+<ul class="mnav2">
+<li><a href="https://www.giss.nasa.gov/projects/">Projects Overview</a></li>
+<li><a href="https://www.giss.nasa.gov/projects/astrobio/">Astrobiology &amp; ROCKE-3D</a></li>
+<li><a href="https://www.giss.nasa.gov/projects/impacts/">Climate Impacts</a></li>
+<li><a href="https://www.giss.nasa.gov/projects/gcm/">Climate Modeling</a></li>
+<li><a href="https://www.giss.nasa.gov/projects/iri_forecasts/">IRI Forecasts</a></li>
+<li><a href="https://isccp.giss.nasa.gov/">ISCCP</a></li>
+<li><a href="https://www.giss.nasa.gov/projects/rasi/">RASI</a></li></ul><!-- end mnav2 --></li>
+<li><a href="https://data.giss.nasa.gov/">Datasets</a>
+<ul class="mnav2">
+<li><a href="https://data.giss.nasa.gov/">Datasets Overview</a></li>
+<li><a href="https://data.giss.nasa.gov/gistemp/">GISTEMP Surface Temperature</a></li>
+<li><a href="https://data.giss.nasa.gov/modelE/">Model E Simulations</a></li>
+<li><a href="https://data.giss.nasa.gov/modelforce/">Model Forcings</a></li>
+<li><a href="https://data.giss.nasa.gov/rocke3d/maps/">ROCKE-3D Simulations</a></li>
+<li><a href="https://isccp.giss.nasa.gov/products/onlineData.html">ISCCP Data Products</a></li>
+<li><a href="https://gacp.giss.nasa.gov/datasets/">GACP Data Products</a></li></ul><!-- end mnav2 --></li>
+<li><a href="https://www.giss.nasa.gov/pubs/">Publications</a>
+<ul class="mnav2">
+<li><a href="https://www.giss.nasa.gov/pubs/">Publications Overview</a></li>
+<li><a href="https://www.giss.nasa.gov/pubs/year/2026.html">2026 Publications</a></li>
+<li><a href="https://www.giss.nasa.gov/pubs/year/2025.html">2025 Publications</a></li>
+<li><a href="https://www.giss.nasa.gov/pubs/year/2024.html">2024 Publications</a></li>
+<li><a href="https://www.giss.nasa.gov/pubs/year/inpress.html">Accepted &amp; In Press</a></li>
+<li><a href="https://www.giss.nasa.gov/pubs/authors/">Author Bibliographies</a></li>
+<li><a href="https://www.giss.nasa.gov/pubs/best.html">Annual Best</a></li>
+<li><a href="https://www.giss.nasa.gov/pubs/cited.html">Most Cited</a></li>
+<li><a href="https://www.giss.nasa.gov/pubs/dissertations.html">Dissertations</a></li></ul><!-- end mnav2 --></li><li class="sel"><a href="https://www.giss.nasa.gov/tools/">Software</a>
+<ul class="mnav2">
+<li><a href="https://www.giss.nasa.gov/tools/">Software Overview</a></li>
+<li><a href="https://www.giss.nasa.gov/tools/modelE/">GCM Model E</a></li>
+<li><a href="https://www.giss.nasa.gov/tools/panoply/">Panoply Data Viewer</a></li>
+<li><a href="https://www.giss.nasa.gov/tools/gprojector/">G.Projector</a></li>
+<li><a href="https://www.giss.nasa.gov/tools/mars24/">Mars24 Sunclock</a></li></ul><!-- end mnav2 --></li>
+<li><a href="https://www.giss.nasa.gov/edu/">Education</a>
+<ul class="mnav2">
+<li><a href="https://www.giss.nasa.gov/edu/">Education Overview</a></li>
+<li><a href="https://www.giss.nasa.gov/edu/intern/">Internships</a></li>
+<li><a href="https://www.giss.nasa.gov/edu/grad/">Graduate Study</a></li>
+<li><a href="https://www.giss.nasa.gov/about/jobs/postdoc.html">Postdoc Research</a></li>
+<li><a href="https://www.giss.nasa.gov/edu/res/">STEM Curriculum Modules</a></li></ul><!-- end mnav2 --></li>
+<li><a href="https://www.giss.nasa.gov/events/">Events</a>
+<ul class="mnav2">
+<li><a href="https://www.giss.nasa.gov/events/">Events Overview</a></li>
+<li><a href="https://www.giss.nasa.gov/events/lunch/">Lunch Seminars</a></li>
+<li><a href="https://www.giss.nasa.gov/events/past.html">Past Special Events</a></li></ul><!-- end mnav2 --></li>
+<li><a href="https://www.giss.nasa.gov/about/">About GISS</a>
+<ul class="mnav2">
+<li><a href="https://www.giss.nasa.gov/about/">About GISS</a></li>
+<li><a href="https://www.giss.nasa.gov/about/management.html">Management Staff</a></li>
+<li><a href="https://www.giss.nasa.gov/staff/">Personnel Directory</a></li>
+<li><a href="https://www.giss.nasa.gov/about/jobs/">Employment</a></li></ul><!-- end mnav2 --></li></ul><!-- end mnav --></div><!-- end nav -->
+</div><!-- end paper -->
+<div id="footer">
+<div id="footerlogo">
+<a href="https://www.nasa.gov"><img src="https://www.giss.nasa.gov/gfx/2013/nasa_x2.png" alt="NASA Logo, National Aeronautics and Space Administration" style="width:140px;height:98px" /></a></div><!-- end footerlogo -->
+<div id="footersig"><a href="https://www.nasa.gov/goddard/" class="imageLink"><img src="https://www.giss.nasa.gov/gfx/2013/gsig.png" alt="Goddard Space Flight Center" style="width:172px;height:68px" /></a></div><!-- end footersig -->
+<div id="footerinfo">
+<p>Page updated: Apr  3, 2025</p>
+<p>Website Curator:
+<a href="https://www.giss.nasa.gov/staff/rschmunk.html">
+Robert B. Schmunk</a>
+&mdash;
+NASA Official:
+<a href="https://www.giss.nasa.gov/staff/gschmidt.html">
+Gavin A. Schmidt</a></p>
+<p><a href="https://www.giss.nasa.gov/about/contact.html">Contact GISS</a> &mdash;
+<a href="https://www.nasa.gov/about/highlights/HP_Privacy.html">NASA Privacy Policy</a> &mdash;
+<a href="https://www.nasa.gov/general/accessibility/">Accessibility</a></p></div><!-- end footerinfo --></div><!-- end footer --></div><!-- end page --></body>
+
+</html>
+
+
+
+

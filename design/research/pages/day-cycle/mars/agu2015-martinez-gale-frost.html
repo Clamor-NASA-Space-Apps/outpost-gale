@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html class="adapt">
+
+	<head>
+		<META http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+<link href="stylesheets/reset.css" rel="stylesheet" type="text/css" />
+<link href="stylesheets/adapt.css" rel="stylesheet" type="text/css" />
+
+
+<link href="stylesheets/style.css" rel="stylesheet"  type="text/css" />
+
+<script type="text/javascript">
+
+	function hideAddressBar()
+	{
+	  if(!window.location.hash)
+	  {
+		  if(document.height < window.outerHeight)
+		  {
+			  document.body.style.height = (window.outerHeight + 50) + 'px';
+		  }
+
+		  setTimeout( function(){ window.scrollTo(0, 1); }, 50 );
+	  }
+	}
+
+	window.addEventListener("load", function(){ if(!window.pageYOffset){ hideAddressBar(); } } );
+	window.addEventListener("orientationchange", hideAddressBar );
+
+</script>
+
+ <link  href="/style/shared/960reset.css" rel="stylesheet" type="text/css" /> 
+<script type="text/javascript">
+// Edit to suit your needs.
+var ADAPT_CONFIG = {
+	// Where is your CSS?
+	path: '/static/js/adapt/css/',
+
+	// false = Only run once, when page first loads.
+	// true = Change on window resize and page tilt.
+	dynamic: true,
+
+// Optional callback... myCallback(i, width)
+	callback: function (i, width) {
+		document.documentElement.id = 'range_' + i;
+	},
+
+	// First range entry is the minimum.
+	// Last range entry is the maximum.
+	// Separate ranges by "to" keyword.
+	range: [
+		'0px    to 760px  = mobile.css',
+		'760px  to 980px  = 720.css',
+		'980px            = 960.css'
+
+	]
+};
+</script>
+
+<script src="/static/js/adapt/js/adapt.js"></script>
+
+<script type="text/javascript">
+
+	function hideAddressBar() {
+	  if(!window.location.hash) {
+
+		  if(document.height < 600) {
+
+			  document.body.style.height = (window.outerHeight + 50) + 'px';
+		  }
+
+		  setTimeout( function(){ window.scrollTo(0, 1); }, 50 );
+	  }
+	}
+
+	window.addEventListener("load", function(){ if(!window.pageYOffset){ hideAddressBar(); } } );
+	window.addEventListener("orientationchange", hideAddressBar );
+
+</script>
+
+<script type="text/javascript" src="/static/js/jquery/1/jquery.min.js"></script>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		  $("button#mobilemenu").click(function(){
+			$("div.mobilenav").toggle(300);
+		  });
+		});
+</script>
+
+<!--[if lte IE 7]>
+<style type="text/css">
+h4 a {position:relative; height:1%}
+</style>
+<![endif]-->
+
+<!--[if lte IE 6]>
+<script type="text/javascript">
+   try { document.execCommand( "BackgroundImageCache", false, true); } catch(e) {};
+</script>
+<![endif]-->
+<!--[if !lt IE 6]><!-->
+
+<script type="text/javascript" src="/static/js/jquery/1/jquery.min.js"></script>
+
+
+<script type="text/javascript" src="/static/jslib/expand_noall.js"></script>
+
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+$(function() {
+	$("#steps h1.dateexpand").toggler();
+	$("#steps").expandAll({
+	  trigger: "h1.dateexpand",
+	  ref: "h1.dateexpand",
+	  showMethod: "slideDown",
+	  hideMethod: "slideUp"
+	});
+});
+$(function() {
+	$("#steps h2.programexpand").toggler();
+	$("#steps").expandAll({
+	  trigger: "h2.programexpand",
+	  ref: "h2.programexpand",
+	  showMethod: "slideDown",
+	  hideMethod: "slideUp"
+	});
+});
+//--><!]]>
+</script>
+<!--<![endif]-->
+
+		<title>Abstract: Analysis of likely Frost Events and day-to-night Variability in near-surface Water Vapor at Gale (2015 AGU Fall Meeting)</title>
+		<meta name="keywords" content="G. Martinez, E. Fischer, N. Renno, E. Sebastian, O. Kemppinen, N. Bridges, C. Borlina, P.-Y. Meslin, M. Genzer, A.-M. Harri, A. Vicente-Retortillo, M. de la Torre-Juárez, M. Ramos, F. Gomez, J. Gomez-Elvira, 1, bySessionTitleProcesses in the Present-Day Atmosphere of Mars III Posters, byPaperTitleAnalysis of likely Frost Events and day-to-night Variability in near-surface Water Vapor at Gale, byPaperid69524, 1">
+		<meta name="citation_language" content="English">
+<meta name="citation_date" content="2015/12/15">
+<meta name="citation_author" content="Martinez, German">
+<meta name="citation_conference_title" content="2015 AGU Fall Meeting">
+<meta name="citation_author_institution" content="University of Michigan Ann Arbor">
+<meta name="citation_title" content="Analysis of likely Frost Events and day-to-night Variability in near-surface Water Vapor at Gale">
+<meta name="citation_publisher" content="Agu">
+	</head>
+	
+<body class="webprogram paper">	
+<div class="container_12 wrap">
+	<div class="bannerwrapper">
+		<header>
+			<div class="grid_12">
+				<div class="banner clearfix">
+	<div class="bannerimage">
+		
+		<a href="http://fallmeeting.agu.org/2015/" target="_blank"><img src="images/banner.png" alt="2015 AGU Fall Meeting: http://fallmeeting.agu.org/2015/"></a>
+	</div>
+
+	<h1>
+		<div class="bannertitle">
+			<div>2015 AGU Fall Meeting</div>
+			<div>December 14 - 18, 2015</div>
+		</div>
+	</h1>
+	<div class="menu">
+		<button id="mobilemenu">Menu</button>
+		<div class="mobilenav"><ul class="nav">
+		<li><a href="start.html" class=" menustart"><div class="box"></div><div class="text">Search</div></a></li>
+
+		
+		<li><a href="meeting.html" class=" menubrowse"><div class="box"></div><div class="text">Browse Program</div></a></li>
+		
+		<li><a href="authora.html"
+			class=" menuauthor"><div class="box"></div><div class="text">Browse by person</div></a></li>
+	
+
+		
+
+		
+
+			
+
+			
+
+			
+
+			
+			
+
+		
+			
+	
+		
+
+		
+
+
+	</ul></div>
+	</div>
+</div>
+			</div>
+		</header>
+	</div>
+	<div class="contentwrapper">
+		<div class="grid_9 push_3">
+			<section>
+				<div class="content">
+					
+<h2>
+	<div class="subtitle">
+		<span class="number">P23B-2142</span>
+		<div class="subtext">Analysis of likely Frost Events and day-to-night Variability in near-surface Water Vapor at Gale</div>
+	</div>
+</h2>
+
+
+
+					
+
+	
+	<div class="datetime">Tuesday, 15 December 2015</div>
+	<div class="location">Poster Hall (Moscone South)</div>
+
+
+
+	
+	<div class="paperauthors">
+	
+		<b>German Martinez</b><sup>1</sup>, Erik Fischer<sup>1</sup>, Nilton O Renno<sup>1</sup>, Eduardo Sebastian<sup>2</sup>, Osku Kemppinen<sup>3</sup>, Nathan Bridges<sup>4</sup>, Caue Borlina<sup>5</sup>, Pierre-Yves Meslin<sup>6</sup>, Maria Genzer<sup>3</sup>, Ari-Matti Harri<sup>3</sup>, Alvaro Vicente-Retortillo<sup>7</sup>, Manuel de la Torre-Juárez<sup>8</sup>, Miguel Ramos<sup>9</sup>, Felipe Gomez<sup>2</sup> and Javier Gomez-Elvira<sup>10</sup>, (1)University of Michigan Ann Arbor, Ann Arbor, MI, United States, (2)Centro de Astrobiología, Madrid, Spain, (3)Finnish Meteorological Inst, Helsinki, Finland, (4)Applied Physics Laboratory Johns Hopkins, Laurel, MD, United States, (5)University of Michigan, Ann Arbor, MI, United States, (6)Universite Paul Sabatier, Toulouse, France, (7)Complutense University of Madrid, Madrid, Spain, (8)Jet Propulsion Laboratory, Pasadena, CA, United States, (9)Universidad de Alcalá, Alcalá de Henares, Spain, (10)Organization Not Listed, Washington, DC, United States
+	
+</div>
+
+	
+
+ 
+	
+	<div class="media">
+	
+</div>
+
+	
+	
+
+	
+	<div class="abstract">
+		<h5>Abstract:</h5>
+		We analyze REMS simultaneous measurements of relative humidity and ground temperature with the highest confidence to identify frost events at Gale crater during the first 1000 sols of the MSL mission. The relative humidity sensor has recently been recalibrated (June 2015), providing relative humidity values slightly lower than those in the previous release (Dec 2014). Here we only use relative humidity data obtained with the latest recalibration parameters.
+<p>We find that the most likely frost events occurred at four different locations: Dingo Gap during sols 529-535, an unnamed place during sols 554-560, Kimberley during sols 609-617, and an unnamed place during sols 673-676. At these four locations, the terrain features thermal inertia of<i> </i>~200 SI units, a value much lower than that of 365 ± 50 SI units obtained from satellite measurements at the landing ellipse. We estimate a maximum thickness of the frost layer likely developed at these four locations of the order of tenths of μm, with the precipitable water content (<em>PWC</em>) showing values of a few pr-μm.
+<p>Since water vapor pressure values derived from REMS measurements present high uncertainties during the daytime, the day-to-night variability in the near-surface water content at Gale cannot be analyzed using only REMS products. By comparing the nighttime <i>PWC</i> values obtained from REMS with the daytime <i>PWC</i> values obtained from satellite, we estimate a day-to-night ratio of the near-surface water vapor pressure at Gale of about 5.
+	</div>
+
+
+		
+<div class="footer">	
+	
+
+	
+	<div class="siblings">
+	
+		
+			<a href="Paper67273.html">&lt;&lt; Previous Abstract</a>
+		
+
+		|
+
+		
+			<a href="Paper61610.html">Next Abstract &gt;&gt;</a>
+		
+	
+</div>
+
+
+	
+
+</div>
+
+
+				</div>
+			</section>
+		</div>
+		<div class="grid_3 pull_9">
+			<aside>
+				<nav>
+					<div class="navigation" id="navigation">
+	<ul class="nav">
+		<li><a href="start.html" class=" menustart"><div class="box"></div><div class="text">Search</div></a></li>
+
+		
+		<li><a href="meeting.html" class=" menubrowse"><div class="box"></div><div class="text">Browse Program</div></a></li>
+		
+		<li><a href="authora.html"
+			class=" menuauthor"><div class="box"></div><div class="text">Browse by person</div></a></li>
+	
+
+		
+
+		
+
+			
+
+			
+
+			
+
+			
+			
+
+		
+			
+	
+		
+
+		
+
+
+	</ul>
+</div>
+				</nav>				
+				
+			</aside>
+		</div>
+	</div>
+</div>
+<footer>
+	<section id="footer">
+		 <div class="container_12">
+			<section class="meeting_footer">
+			<div class="grid_7">
+				<ul>
+					<li id="menu-item-2351986" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-2351986"><a href="http://sites.agu.org">AGU.org</a></li>
+					<li id="menu-item-2351987" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2351987"><a href="http://fallmeeting.agu.org/2014/general-information/about-agu/">About AGU</a></li>
+					<li id="menu-item-2351988" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2351988"><a href="http://fallmeeting.agu.org/2014/general-information/about-the-agu-fall-meeting/">About the AGU Fall Meeting</a></li>
+					<li id="menu-item-2351989" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-2351989"><a href="http://sites.agu.org/meetings">AGU Meetings</a></li>
+					<li id="menu-item-2351990" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2351990"><a href="http://fallmeeting.agu.org/2014/general-information/faqs/">FAQs</a></li>
+					<li id="menu-item-2351991" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2351991"><a href="http://fallmeeting.agu.org/2014/sitemap/">Sitemap</a></li>
+				</ul>
+			</div>
+
+			<div class="grid_5">
+				<p>&copy; 2014 American Geophysical Union. All Rights Reserved.</p>
+			</div>
+			</section>
+			<div class="clear"></div>
+			<div class="grid_12">
+				<p class="footnote">AGU galvanizes a community of Earth and space scientists that collaboratively advances and communicates science and its power to ensure a sustainable future.</p>
+				<!-- <p class="footnote">Click <a href="javascript: var feedback=window.open('../feedback.epl?jsclose=1','Feedback', 'directories=no,menubar=no,status=no,location=no,height=480,width=600')">here</a></b> to request technical assistance, report technical problems or to provide feedback on this system. </p>
+				<p class="footnote">For urgently needed technical support, phone +1 (401) 334-0220 between the hours of 8:30 AM and 6:00 PM Monday through Friday, US Eastern Standard Time (GMT -05:00). At the prompt, enter support code 1438.</p> -->
+			</div>
+		</div>
+		<div class="image_footer clearfix">
+			<div class="image_1"></div>
+			<div class="image_2"></div>
+		</div>
+		
+	</section>
+	
+</footer>
+</body>
+</html>
+	

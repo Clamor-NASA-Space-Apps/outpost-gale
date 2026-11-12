@@ -1,0 +1,33 @@
+Day-cycle (Mars, Gale) sources, read 2026-11-12. file <- url. Curl with its default user agent unless noted.
+giss-mars24-time-notes.html <- https://www.giss.nasa.gov/tools/mars24/help/notes.html
+giss-mars24-algorithm.html <- https://www.giss.nasa.gov/tools/mars24/help/algorithm.html
+martinez2017-ssr-near-surface-climate.pdf (+ .txt, pdftotext -layout) <- https://link.springer.com/content/pdf/10.1007/s11214-017-0360-x.pdf (open access)
+guzewich2019-msl-dust-storm.txt <- pdftotext -layout of ../../night-sky/ntrs-guzewich2019-msl-dust-storm.pdf (already saved there)
+newman2019-jgr-gale-vortices.pdf (+ .txt, pdftotext -raw; the PDF's font spacing splits words, search with \s*) <- https://aaltodoc.aalto.fi/bitstreams/37d1b1f4-3bd2-4cd3-af40-d37b5545572e/download (doi:10.1029/2019JE006082)
+epsc2017-294.pdf (+ .txt) <- https://meetingorganizer.copernicus.org/EPSC2017/EPSC2017-294.pdf
+cab-ullan2017-gale-wind-pressure.html <- https://cab.inta-csic.es/en/publicaciones/analysis-of-wind-induced-dynamic-pressure-fluctuations-during-one-and-a-half-martian-years-at-gale-crater/ (abstract of Ullan et al. 2017, Icarus 288, 78-87)
+arxiv-2204.12850-emm-surface-temp-vs-rovers.pdf (+ .txt, pdftotext plain) <- https://arxiv.org/pdf/2204.12850
+agu2014-martinez-gale-frost.html <- https://agu.confex.com/agu/fm14/webprogram/Paper8101.html
+agu2015-martinez-gale-frost.html <- https://agu.confex.com/agu/fm15/webprogram/Paper69524.html
+pds-pia00571-viking2-frost.html <- https://pds-rings.seti.org/press_releases/pages/PIA00xxx/PIA00571.html
+pds-pia11043-phoenix-morning-frost.html <- https://pds-rings.seti.org/press_releases/pages/PIA11xxx/PIA11043.html
+pds-pia11182-phoenix-trench-frost.html <- https://pds-rings.seti.org/press_releases/pages/PIA11xxx/PIA11182.html
+pds-pia16476-whirlwind-signs.html <- https://pds-rings.seti.org/press_releases/pages/PIA16xxx/PIA16476.html
+pds-pia16914-whirlwind-detection.html <- https://pds-rings.seti.org/press_releases/pages/PIA16xxx/PIA16914.html
+nasa-pia00783-sunset-twin-peaks.html <- https://science.nasa.gov/photojournal/sunset-over-twin-peaks/
+nasa-pathfinder-true-color-sol24.html <- https://science.nasa.gov/resource/true-color-of-mars-pathfinder-sol-24-at-4-pm/
+nasa-10-things-storms-solar-system.html <- https://science.nasa.gov/earth/10-things-tour-of-storms-across-the-solar-system/
+mpf-astronomical-results.html <- https://discmaster.textfiles.com/file/14242/Mars%20Pathfinder%20Website.iso/mpf/science/astronomical.html?html=true (archive of NASA's 1997 Mars Pathfinder website CD)
+nasa-steady-temperatures-gale.html <- https://science.nasa.gov/photojournal/steady-temperatures-at-mars-gale-crater
+nasa-msl-fact-sheet-2014.pdf (+ .txt) <- https://solarsystem.nasa.gov/docs/MSL%20Fact%20Sheet%20REV-141119.pdf
+nasa-pia07458-dust-devils-seen-by-spirit.html <- https://science.nasa.gov/photojournal/dust-devils-seen-by-spirit/
+planetary-mer-update-2005-03-25.html <- https://www.planetary.org/articles/03-25-mer-update
+nasa-eds-blue-ghost-moon-2025.html <- https://www.nasa.gov/image-article/nasas-dust-shield-successfully-repels-lunar-regolith-on-moon/
+ntrs-20120003264-calle-dust-mitigation.pdf (+ .txt) <- https://ntrs.nasa.gov/api/citations/20120003264/downloads/20120003264.pdf
+ntrs-20050196565-dart-mars-dust.pdf (+ .txt) <- https://ntrs.nasa.gov/api/citations/20050196565/downloads/20050196565.pdf
+ntrs-20160002628-rucker-solar-vs-fission.pdf (+ .txt; abstract only) <- https://ntrs.nasa.gov/api/citations/20160002628/downloads/20160002628.pdf
+ntrs-20160011275-rucker-solar-vs-fission-slides.pdf (+ .txt) <- https://ntrs.nasa.gov/api/citations/20160011275/downloads/20160011275.pdf
+ntrs-20170000235-mcnatt-pv-precursor-mars.pdf (+ .txt) <- https://ntrs.nasa.gov/api/citations/20170000235/downloads/20170000235.pdf
+jpl-mount-sharp-panorama-2013.md <- https://www.jpl.nasa.gov/news/panorama-from-nasa-mars-rover-shows-mount-sharp/ (WebFetch)
+jpl-curiosity-shining-clouds-2021.md <- https://www.jpl.nasa.gov/news/nasas-curiosity-rover-captures-shining-clouds-on-mars/ (WebFetch)
+Note: kwic.py strips anything between < and > in a .txt too, so a PDF text with "<1 ppm ... >" loses a chunk; those lines were confirmed with a plain whitespace-normalised regex search instead.

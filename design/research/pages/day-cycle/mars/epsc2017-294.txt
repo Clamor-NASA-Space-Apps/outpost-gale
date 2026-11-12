@@ -1,0 +1,172 @@
+                                                                                                  EPSC
+EPSC Abstracts
+Vol. 11, EPSC2017-294, 2017
+European Planetary Science Congress 2017
+                                                                                                   European Planetary Science Congress
+c Author(s) 2017
+
+
+
+
+       Meteorological properties of Martian Dust Devils as
+                       observed by MSL
+
+H. Kahanpää (1,2), M. T. Lemmon (3), E. Mason (3) and M. Battalio (3)
+(1) Finnish Meteorological Institute, Helsinki, Finland (henrik.kahanpaa@fmi.fi), (2) Aalto University / School of Electrical
+Engineering, Espoo, Finland, (3) Texas A&M University / Department of Atmospheric Sciences, Texas, USA
+
+
+
+
+Abstract                                                          temperature, relative humidity and UV radiation flux.
+                                                                  Nominally REMS performs 5-minute long
+The Mars Science Laboratory rover (MSL) has                       measurement sessions with 1 Hz sampling rate,
+observed dust devils simultaneously by imaging and                starting on every Martian hour. Furthermore, one
+by meteorological measurements. We use this data to               hour long "extended measurement sessions" are
+determine central pressure drops and maximum wind                 performed by REMS at varying times of the sol.
+speeds inside these Martian dust devils.                          MSL is also equipped with cameras capable of
+                                                                  filming atmospheric "movies", i.e. sequences of
+                                                                  images aimed to survey varying atmospheric
+1. Introduction                                                   phenomena.
+Dust devils on Mars were first detected in images
+taken by the Viking orbiters [14]. Since then dust                2.2 Measurement strategy
+devils have been imaged by several Mars orbiters and
+landers (reviews of these observations are given in [2]           A campaign of imaging Dust Devil Search Movies
+and [10]). In addition, Mars landers with                         was initiated soon after Curiosity landed in Gale
+meteorological instrumentation have detected abrupt               crater on August 6, 2012 [8]. These movies consist of
+changes in wind direction and transient pressure dips             4 to 24 frames pointed towards North. 249 such
+interpreted as being caused by passing convective                 movies had been taken up till sol 1520 but only two
+vortices    [1][5][9][11][12][13].   However,      the            dust devil had been detected in them [6][8]. However,
+connection between the vortices detected in the wind              a dust devil was identified in South/South-West
+and pressure data and the optically detected dust                 direction in a multispectral sequence taken by
+devils and has remained unclear. For example, it has              Curiosity's Mast Camera (Mastcam) on sol 1520 [6].
+not been known if the vortices detected by                        Since then Navcam dust devil surveys have been
+meteorological means lifted dust or not. As a                     performed in all directions. In these surveys two
+consequence, the meteorological properties of                     images are taken in each direction to identify moving
+Martian dust lifting vortices have been poorly                    features. In addition, "movies" with durations up till
+constrained. The reason for this is that dust devils              30 minutes, comprising of 21 to 45 frames, have been
+have not been observed simultaneously by both                     taken by Navcam in directions where dust devils
+imaging and by meteorological measurements, until                 have been detected in the surveys. REMS extended
+now.                                                              measurement sessions have been scheduled to cover
+                                                                  these movies whenever possible.
+2. Methods                                                        2.3 Determining the central pressure
+2.1 Instrumentation                                               drops of imaged vortices
+The MSL rover Curiosity [4] carries a suite of                    We analyze the REMS atmospheric pressure data
+environmental sensors called REMS (Rover                          measured during Navcam movies that contain
+Environmental Monitoring Station) [3]. REMS                       identified dust devils. If a pressure dip is detected
+includes sensors for measuring atmospheric pressure,              concurrently with the passing of a dust devil, then we
+wind speed and direction, air temperature, ground                 model the pressure field of the dust devil by the
+Lorentzian vortex model [1][5][7]. In this model, the      3. Results
+pressure p at distance d from vortex center is given
+by                                                         We have identified 214 unique dust devils in the dust
+                                                           devil surveys and movies imaged over sols 1545
+                           pcentre                        through 1660. The great majority of these dust devils
+       p ( d )  p                    ,            (1)
+                        2d / D   1
+                                   2
+                                                           have been detected in the foothills of Aeolis Mons,
+                                                           the central mountain of Gale crater. Apparently the
+                                                           explanation why only two dust devils were detected
+where p∞ is the background pressure level, D is the        in the original Dust Devil Search Movies is that these
+half-maximum diameter of the pressure depression of        movies faced North, i.e. towards the plains on the
+the vortex and Δpcentre is the magnitude of the            crater floor and away from the central mountain [6].
+pressure depression at the center of the vortex. The       The REMS instrument recorded environmental
+pressure curve detected by a stationary measurement        variables,     including     atmospheric      pressure,
+station, as a function of time t, can be calculated from   concurrently with 56% of the images in Navcam dust
+eq. 1 by assuming that the vortex moves along a            devil surveys and movies. We are currently
+straight line and passes by the measurement station at     investigating the dust devils detected in these images
+distance dmin at time point t0 [1]:                        using the methods described in section 2. First results
+                                                           of the inferred central pressure drops and maximum
+                                 pobs                     wind speeds inside these Martian dust devils will be
+       pobs (t )  p                           ,   (2)   shown in this presentation.
+                          2(t  t0 ) /  2  1
+                                                           4. Summary and Conclusions
+where Γ is the half-maximum duration of the
+detected pressure dip and Δpobs is the magnitude of        This is the first study where central pressure drops of
+the detected pressure drop at time point t0. The ratio     Martian dust devils are determined using in situ data.
+of the detected pressure drop Δpobs and the central        The results will be used to constrain the threshold
+pressure drop Δpcentre can be solved from geometry:        pressure drop and/or threshold wind velocity required
+                                                           for dust lifting in a Martian convective vortex.
+       pcentre
+                
+                     U      2
+                                  ,                  (3)
+                                                           Knowledge on these threshold values helps in
+                                                           parametrizing the amount of dust lifted by dust devils
+        pobs     U 2  4d min
+                              2
+                                                           in numerical models of the Martian atmosphere.
+
+where U is the translation velocity of the vortex. We      Acknowledgements
+use eq. 3 to determine the central pressure drops of
+dust devils detected simultaneously in the movies and      The contribution of H. Kahanpää in this study was
+pressure data. The detected pressure drop duration Γ       funded by The Finnish Cultural Foundation (grant
+and the detected pressure drop magnitude Δpobs are         number 00170395), and the travel expenses of H.
+solved from the pressure data, and the distance of the     Kahanpää were granted by the Emil Aaltonen
+closest encounter dmin with the dust devil and its         foundation.
+translation velocity U are determined from the
+images, leaving Δpcentre the only unknown factor in
+eq. 3. Further, when the central pressure drop of a
+dust devil has been solved, then the maximum
+tangential wind velocity of the dust devil can be
+solved by assuming that the vortex is in cyclostrophic
+balance. We estimate the maximum wind velocities
+inside the dust devils by summing the calculated
+maximum tangential wind velocities and the
+observed translation velocities.
+                                                               [13] Steakley, K., and Murphy, J.: A year of convective
+References                                                     vortex activity at Gale crater, Icarus, Vol. 278, pp. 180-193,
+[1] Ellehoj, M. D. et al.: Convective vortices and dust        2016.
+devils at the Phoenix Mars mission landing site, J. Geophys.
+Res., Vol. 115, E00E16, 2010.                                  [14] Thomas, P., and Gierasch, P. J.: Dust devils on Mars,
+                                                               Science, Vol. 230(4722), pp. 175-177, 1985.
+[2] Fenton, L. et al.: Orbital Observations of Dust Lofted
+by Daytime Convective Turbulence, Space Sci. Rev., Vol.
+203(1), pp. 89-142, 2016.
+
+[3] Gómez-Elvira, J. et al.: REMS: The Environmental
+Sensor Suite for the Mars Science Laboratory Rover, Space
+Sci Rev, Vol. 170, pp. 583-640, 2012.
+
+[4] Grotzinger, J. P. et al.: Mars Science Laboratory
+mission and science investigation, Space Sci. Rev., Vol.
+170, pp. 5-56, 2012.
+
+[5] Kahanpää, H. et al.: Convective vortices and dust devils
+at the MSL landing site: Annual variability, J. Geophys.
+Res. Planets, Vol. 121(8), pp. 1514-1549, 2016.
+
+[6] Lemmon, M. T., Newman, C. E., Renno, N., Mason, E.,
+Battalio, M., Richardson, M. I., and Kahanpää, H.: Dust
+devil activity at the Curiosity Mars rover field site, 48th
+Lunar and Planetary Science Conference, 20–24 March
+2017, The Woodlands, Texas, USA, 2017.
+
+[7] Lorenz, R. D.: Heuristic estimation of dust devil vortex
+parameters     and    trajectories    from    single-station
+meteorological observations: Application to InSight at
+Mars, Icarus, Vol. 271, pp. 326-337, 2016.
+
+[8] Moores, J. E. et al.: Observational evidence of a
+suppressed planetary boundary layer in northern Gale
+Crater, Mars as seen by the Navcam instrument onboard
+the Mars Science Laboratory rover, Icarus, Vol. 249(15),
+pp. 129-142, 2015.
+
+[9] Murphy, J., and Nelli, S.: Mars Pathfinder convective
+vortices: Frequency of occurrence, Geophys. Res. Lett.,
+Vol. 29(23), pp. 2103, 2002.
+
+[10] Murphy, J. et al.: Field Measurements of Terrestrial
+and Martian Dust Devils, Space Sci. Rev., Vol. 203(1), pp.
+39-87, 2016.
+
+[11] Ringrose, T. J., Towner, M. C., and Zarnecki, J. C.:
+Convective vortices on Mars: A reanalysis of Viking
+Lander 2 meteorological data, sols 1–60, Icarus, Vol.
+163(1), pp. 78-87, 2003.
+
+[12] Ryan, J. A., and Lucich, R. D.: Possible dust devils,
+vortices on Mars, J. Geophys. Res., Vol. 88(C15), pp.
+11005-11011, 1983.
+

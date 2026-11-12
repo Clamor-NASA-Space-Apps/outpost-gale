@@ -1,0 +1,259 @@
+         Design of Photovoltaic Power System for a Precursor Mission
+                       for Human Exploration of Mars
+                                Jeremiah McNatt, Geoffrey Landis, and James Fincannon
+
+               NASA John Glenn Research Center, 21000 Brookpark Road, Cleveland, OH 44135
+
+   Abstract    —     This project analyzed the viability of a        daytime. In this case, the system goes into a standby mode
+photovoltaic power source for technology demonstration mission       every evening. This requires that the ISRU plant be capable of
+to demonstrate Mars in-situ resource utilization (ISRU) to           being cooled down and warmed back up every day.
+produce propellant for a future human mission, based on
+                                                                       Case 2 produces oxygen at the required rate but is
+technology available within the next ten years. For this
+assessment, we performed a power-system design study for a           augmented by batteries to allow for continuous operation of
+scaled ISRU demonstrator lander on the Mars surface based on         the ISRU plant. This configuration eliminates the need to
+existing solar array technologies.                                   power down the ISRU plant (except in the case of the major
+   Index Terms — solar power generation, photovoltaic cells,         dust storm) and would shorten the amount of time needed to
+Mars.                                                                demonstrate the ability to produce the amount of liquid
+                                                                     required. The addition of the batteries will cause the solar
+                       I. INTRODUCTION                               arrays to be larger due to the need to both run the ISRU plant
+                                                                     and charge the batteries during the daytime.
+  NASA’s Advanced Exploration Systems (AES) Modular                    For Case 3 we looked back at daytime only production but
+Power Systems (AMPS) project aims to develop and infuse              doubled the production rate to 0.9 kg/hr of liquid oxygen. This
+new power system and component technologies for                      case would bring down the overall time to produce the
+exploration based ground demonstrations and to assess design         necessary amount of oxygen but would also require additional
+concepts for future flight missions. One of the goals of this        ISRU components and larger solar arrays. This case still has
+project was to analyze the viability of a photovoltaic power         the potential problem of cycling the ISRU plant off daily as in
+source for technology demonstration mission to demonstrate           Case 1.
+Mars in-situ resource utilization (ISRU) to produce propellant
+for a future human mission, based on technology available
+                                                                                     III. DESIGN ASSUMPTIONS
+within the next five years. For this assessment, we performed a
+power-system design study for a scaled ISRU demonstrator               In an effort to make the study as realistic as possible, the
+lander on the Mars surface based on existing solar array             assessment utilized technology that is either currently available
+technologies [1]. As a figure of merit, the power requirements       or projected to be in the next 5 – 10 years. Assumptions were
+for the system are derived from the ISRU plant’s need to             made as to the availability and extensibility of some
+demonstrate the production of 4400 kg of liquid oxygen at a          technologies but no major advances were considered. As much
+minimum rate of 0.45 kg/hr. The assessment resulted in the           as possible, lander components were not modified between
+design of a lander consisting of four lightweight solar arrays,      each power system trade. Components related to the power
+providing up to 16 kW of power. Details on the use of solar          system included energy storage, thermal and radiation
+power on the Mars surface for the ISRU demonstration are             protection, and power system structural supports were
+presented here.                                                      considered and included in the assessment.
+                                                                       There are possibly multiple solar array structures that could
+                                                                     fulfill the needs of the ISRU demonstrator but due to the
+                           II. CASES
+                                                                     limited timeframe for this assessment a down select to one
+   Three cases were assessed for operation of the ISRU plant         technology was necessary. The rationale for this selection was
+by solar power with an emphasis on demonstrating the                 to utilize a solar array that could be deployed by its own
+production rate while reducing mass, reducing production             mechanisms and not require robotics or complex
+time, and maintain operation in the Martian environment. A           undemonstrated methods for deployment. Additionally, the
+landing site of 2 degrees south of the equator was selected for      array needed to be very compact when stowed and have the
+all cases due to its uniformity of daylight throughout the year.     capability of resisting the Martian wind loads. The Orbital
+A 120 day power-down of the ISRU plant was incorporated in           ATK Ultraflex has been successfully demonstrated on Mars
+all cases due to the potential for a global dust storm. Solar cell   (although at a modest diameter) with the Mars Phoenix lander
+and array technology is also consistent across the three cases.      and is also to be used with the Mars Insight lander, both which
+   The baseline case (Case 1) is operated at the required rate       have exposure to these wind loads. The characteristics of the
+for liquid oxygen production of 0.45 kg/hr. needed to                Ultraflex solar array for the Mars surface power application is
+demonstrate the functionality of the ISRU system during the
+based on work by ATK which shows the capability of their                    4 wings, designed for 2.7 g (to allow for operation
+design at various diameters and loading levels [2]. The data                 under Mars gravity and wind loading).
+presented by ATK include curves of point designs based on                   ATK Ultraflex arrays integrated with two axis
+their detailed models for acceleration loads of up to 2.7 g and              gimbals
+voltages up to 120 V assuming various kind of solar cell                    Tracking is beneficial for low optical depths, also
+technology. For these designs, higher voltage is beneficial to               required for dust removal.
+reducing overall system mass, so the 120 V point designs were               Cells 33% efficient at BOL, 28°C, AM0; 30% at
+used. The point designs using the 2.7 g high acceleration                    Mars surface, 73% packing factor.
+loads (originally based on spacecraft propulsive loads, but                 Assumed no radiation degradation
+indirectly applicable to Mars wind loads) were used to utilize              Mars at average distance= 1.52 AU
+the extreme structural capability of the Ultraflex structures that          Optical depth = 1; (calculated atmospheric dust
+are needed for a wind loading environment. It has been shown                 power solar attenuation factor = 0.68) [8]
+subsequently that the Ultraflex structures can be designed for              Dust storm optical depth = 5 (calculated atmospheric
+even higher g loads if desired (e.g. Cygnus 5 g loads for ISS                dust power solar attenuation factor = 0.24)
+loads). Inverted metamorphic multijuction (IMM) solar cells                 Settled dust is removed via two axis gimbal
+(33% conversion efficiency at 1 AU and 28°C) were also                       articulation (Dust power loss factor = 0.95) [9]
+selected to minimize mass and obtain more performance than
+conventional state of the art triple junction cells which were
+                                                                                         IV. CASE RESULTS
+used on the earlier Mars landers [3].
+   The solar arrays for the ISRU demonstrator were sized                 In general, the three solar power cases for the ISRU
+based on insignificant radiation degradation and only a thin         demonstrator appear similar in layout. The lander consists of
+coverglass is assumed to be required. Two axis gimbals are           the ISRU plant, propellant storage, batteries, and four solar
+included to improve power generation via pointing for sun            arrays mounted around the circumference. The solar arrays are
+tracking and to assist in dust removal. The gimbals were             stowed against the lander for launch and flight and would
+scaled based on the mass of the solar array they must support        autonomously deploy after landing. The stowed configuration
+and were from CEV Orion designs which were capable of 2.7            for Case 1 is shown in Figure 1. A concept of operations
+g TLI acceleration loads. On the Martian surface, the IMM            (ConOps) was conceived for each case and is presented below.
+cells are expected to have a 30% conversion efficiency               The ConOps is notional for each case and the dates are
+including spectral losses from the atmosphere. The packing           provided for demonstrate the amount of time needed to
+density of cells on the Ultraflex array is was set at 73%. After     operate the ISRU plant.
+initial deployment a 5% permanent dust power loss is added to
+the assumption with more accumulated dust removed
+periodically. It is also assumed that the system have 4 solar
+arrays equally spaced around the lander to make best use of
+available area and balanced for the lander.
+    During a 120 day dust storm, we assume no ISRU
+production. Based on MER-B dust storm data [4]–[7], the
+optical depth goes from the baseline 1.0 to a worse case value
+of ~5.0. The incident energy on the solar array would be 35%
+of the baseline design used in sizing. The solar arrays provide
+power only to housekeeping loads during the dust storm. The
+duration and intensity of most dust storms are not expected to
+be as severe as the worst case scenario estimates used in this
+study. In practice, the system would be placed into the dust
+storm standby mode when daily solar intensity flux reaches a
+set minimum point. The system would go into full production
+mode when the daily flux increases above that point.
+    The following is a list of key parameters considered for this
+assessment in determining the proper sizing of the solar arrays
+to meet the ISRU plant production requirements:
+
+        120 V to main ISRU load, 28 V nominal bus for
+         spacecraft housekeeping loads
+        120 V lightweight array using IMM cells
+                                                                       Fig. 2. Case 1 lander with 5.6 meter diameter Ultraflex solar
+                                                                       arrays. The arrays have the ability to tilt up for 45 degrees both for
+                                                                       sun tracking and for dust mitigation.
+
+                                                                           This case is designed for daytime only production with the
+                                                                       ISRU system cycling off daily. It was assumed for this case
+                                                                       that the plant is capable of being cycled on and off this often
+                                                                       which may turn out to not be practical. The mass for the solar
+                                                                       arrays in Case 1A is a total of approximately 120 kg. The mass
+                                                                       of the lithium ion batteries used provide standby power to
+                                                                       restart the ISRU plant each morning is approximately 100 kg.
+                                                                       For this production rate, the ISRU system mass is projected to
+                                                                       be 163 kg.
+
+
+
+
+Fig. 1. ISRU plant in stowed solar array configuration for Case 1.
+The solar arrays are stowed and spaced around the lander. The launch
+vehicle is a Delta IV Heavy.
+
+    The requirements for Case 1 were met by using four 5.6
+meter diameter Ultraflex arrays with two axis gimbals (Figure
+2). This configuration would operate for 10 hours per day and
+produce liquid oxygen at the required 0.45 kg/hr. rate. The
+production time is limited to 10 hours per day due to the ISRU
+plant needing to warm up slowly from its overnight standby
+state. At this rate, it would take approximately 1100 days to
+produce the required 4400 kg of liquid oxygen. As designed,            Fig. 3. ConOps for Case 1. It would take approximately 3 Earth
+                                                                       years to successfully demonstrate the ISRU system.
+the system would store 1500 kg while the rest of the produced
+oxygen is vented. The ability to demonstrate storage of the
+                                                                         In Case 2, the ISRU plant operates continuously throughout
+produced oxygen was required but the amount to needed to be            the Martian day and night. The production rate is the same as
+stored was not specified. A value of 1500 kg was used as an            in Case 1 at 0.45 kg per hour but is not limited to 10 hours
+arbitrary point of demonstration. A ConOps showing key                 each day. To run continuously, the solar arrays needed to be
+mission phases is shown in Figure 3. The dust storm is                 increased and significant energy storage needed to be added to
+expected to occur at some point during oxygen production at            the lander. The solar arrays need to be large enough to run the
+which point the ISRU would be put into a standby state similar         ISRU plant during the day and charge the energy storage
+to what it does during the Martian night. During the dust              system with enough power to run throughout the night. This
+storm, stored oxygen is expected to boil off.                          resulted in needing four 7.5 meter diameter solar arrays which
+                                                                       have a mass of approximately 260 kg. The solar arrays are
+                                                                       shown in Figure 4 as compared to those of Case 1. The
+                                                                       batteries would add an additional 900 kg. Since the ISRU
+plant is the same, its mass remains at 163 kg. The ConOps for        is met by using the same four 7.5 meter diameter arrays as
+Case 2 is shown in Figure 5. Here the 4400 kg production             Case 2 and the 100 kg of batteries similar to Case 1. The mass
+requirement is met in approximately 530 days. The same               of the ISRU plant is increased to approximately 284 kg which
+amount of oxygen is stored but would not necessarily be              allows for the doubled production rate.
+vented during the dust storm like it was in Case 1. The larger           This case has similar ConOps to Case 1 in that it would be
+solar arrays and energy storage would likely allow for the           cycled on and off daily. However, the larger solar arrays
+oxygen to be maintained during the dust storm.                       would provide sufficient power during the dust storm to
+                                                                     maintain storage of the oxygen during the dust storm. The
+                                                                     practicality of cycling the ISRU plant daily is still a concern
+                                                                     for this case.
+                                                                         Table 1 provides a comparison between the cases
+                                                                     considered in this study. Although the arrays are larger and the
+                                                                     full system much heavier, Case 2 has the advantage of limited
+                                                                     cycles between standby and production of the ISRU plant and
+                                                                     the shorter overall time to demonstrate the required production
+                                                                     metric. However, Case 1 does have the smallest mass and
+                                                                     would be the least expensive option to build and launch. If the
+                                                                     cycling between standby and production is negligible or can be
+                                                                     mitigated, then Case 1 would be the most likely candidate.
+
+
+                                                                                          V. CONCLUSIONS
+Fig. 4. Comparison of solar array sizes between Case 1 and Case
+2. The size of the lander is the same in both cases.                     This assessment considered a solar array option for use on
+                                                                     an ISRU demonstration mission as a precursor to a human
+                                                                     crewed mission on the surface of Mars. The assessment was
+                                                                     performed over the course of five weeks and provided a
+                                                                     snapshot of a possible technology solution for this mission.
+                                                                     Within these cases, it was shown that solar power may be a
+                                                                     viable option for meeting the mission requirements dependent
+                                                                     on many factors including the mission location and our current
+                                                                     understanding of the ISRU plant at both the demonstrator and
+                                                                     the full scale sizes.
+                                                                         This study is based on the power and storage needs of a
+                                                                     concept ISRU plant available at this time. The ISRU plant has
+                                                                     nominal component detail at this time and additional full
+                                                                     system details are needed to better refine and help validate this
+                                                                     assessment. Namely, the ability of the ISRU system to be
+                                                                     cycled between standby mode and production mode multiple
+Fig. 5. ConOps for Case 2. Additional batteries have been added      times during its operation needs to be addressed. Additionally,
+to the lander to allow for continuous production and for storage
+                                                                     the thermal support systems considered were quite large
+during the dust storm.
+                                                                     assuming that cryocooler atmospheric collection systems are
+                                                                     used. Multiple technology advances were expected which
+    Case 3 is similar to Case 1 in that the ISRU plant is
+                                                                     benefited the assessment. Higher efficient solar cell and
+allowed to cycle on and off daily, but here the production plant
+                                                                     improved battery performance would be required to make full
+has a doubled capacity to allow for a production rate of 0.9 kg
+                                                                     use of solar arrays for a potential human crewed mission.
+per hour of oxygen. The amount of oxygen produced and
+stored is the same as the previous cases. At this higher rate, the
+production is achieved in approximately 610 days. This system
+                                                            TABLE I
+                                                  RESULTS OF CASE COMPARISONS
+                                                Case 1                       Case 2                        Case 3
+
+          Description                 Single ISRU Plant,             Single ISRU Plant,         Dual ISRU Plant, Daytime
+                                      Daytime Production             Continuous Production      Production
+          ISRU, Power, Thermal,
+          Avionics, Mechanical
+          Mass (w 30% growth)                  1116 kg                       2396 kg                      1507 kg
+          Available Power                       ~8 kW                        ~16 kW                       ~16 kW
+          Solar Array Size               Four 5.6 m diameter           Four 7.5 m diameter          Four 7.5 m diameter
+          Solar Array Mass                      120 kg                        260 kg                       260 kg
+          Battery Mass                         ~100 kg                       ~900 kg                      ~100 kg
+          ISRU System Mass                      163 kg                        163 kg                       284 kg
+          Daily Production of O2                4.5 kg                       10.8 kg                       9.0 kg
+          Days to Produce 4400 kg
+          of LOX                                 1098                          527                           609
+          ISRU System Standby /
+          Production Cycles                      1098                           <5                           609
+
+
+    It is suggested that future assessments explore the impacts         [3] G. Landis, “Solar Cell Selection for Mars,” 2nd WCPEC Vol.
+on the system of higher latitudes and fixed angle arrays. The               III, Vienna, July 1998.
+                                                                        [4] P. Stella, R. C. Ewell, and J. J. Hoskin. "Design and
+ISRU plant needs further refinement and a point design should               performance of the MER (Mars Exploration Rovers) solar
+be performed at the system level to better provide integration              arrays," 31st IEEE Photovoltaic Specialists Conference, 2005.
+with demonstrators and future Mars missions. This would                 [5] P. Stella, K. Chin, E. Wood, J. Herman and R. Ewell,
+include exploring alternate atmospheric collection devices and              “Managing PV power on mars-MER rovers,” 34th IEEE
+more optimal radiator layouts. It is also understood that any               Photovoltaic Specialists Conference, June 2009.
+                                                                        [6] G. Landis and P. Jenkins, “Measurement of the Settling Rate of
+changes to the launch vehicle or the lander system would
+                                                                            Atmospheric Dust on Mars by the MAE Instrument on Mars
+necessitate changes to this design and should be considered.                Pathfinder,” J. Geophys. Res., 105, E1, Jan. 2000.
+Additionally, it is recommended that estimates for dust storm           [7] A. Vaughan, J. Johnson, K. Herkenhoff, R. Sullivan, G. Landis,
+duration, optical depth, and frequency based on location and                W. Goetz, M. Madsen, “Pancam & Microscopic Imager
+seasonal effects is understood and that a better definition of              Observations of Dust Accumulation & Removal on the Spirit
+dust parameters in terms of accumulation on surfaces and                    and Opportunity Rovers,” Mars Dust Cycle Workshop, 2009
+                                                                            NASA Ames Research Center, Sept. 15-17, 2009.
+removal is defined.                                                     [8] R. Haberle, C. McKay, J. Pollack, O. Gwynne, D. Atkinson, J.
+                                                                            Appelbaum, G. Landis, R. Zurek, D. Flood, “Atmospheric
+                                                                            Effects on the Utility of Solar Power on Mars,” Resources of
+REFERENCES                                                                  Near Earth Space, 799-818. U. Arizona Press Space Science
+[1] G. Sanders, A. Paz, L. Oryshchyn, K. Araghi, A. Muscatello, D.          Series (1993).
+    Linne, J. Kleinhenz, T. Peters, Mars ISRU for Production of         [9] G. Landis and P. Jenkins, “Dust Mitigation for Mars Solar
+    Mission Critical Consumables – Options, Recent Studies, and             Arrays,” Proc. 29th IEEE Photovoltaic Specialists Conference,
+    Current State of the Art, paper AIAA 2015-4458.                         New Orleans LA, May 19-24 2002, 812-815.
+[2] D. Murphy, “ATK Ultraflex Scaling: Advanced Solar Array
+    Technology,” SPRAT XXII, Sept 2011.
+

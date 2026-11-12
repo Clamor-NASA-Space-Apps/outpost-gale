@@ -1,0 +1,479 @@
+<!DOCTYPE HTML><html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="https://www.giss.nasa.gov/css/css2104.css" media="all" />
+
+
+<title>NASA GISS: Mars24 Sunclock &mdash; Technical Notes on Mars Solar Time</title>
+<link rel="stylesheet" type="text/css" title="Mars24 Help CSS" href="help.css">
+<link rel="apple-touch-icon" href="/gfx/apple-touch-icon-180x180.png" />
+<link rel="apple-touch-icon-precomposed" href="/gfx/apple-touch-icon-180x180.png" />
+<link rel="apple-touch-icon" sizes="192x192" href="/gfx/apple-touch-icon-192x192.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/gfx/apple-touch-icon-180x180.png" />
+<link rel="apple-touch-icon" sizes="152x152" href="/gfx/apple-touch-icon-152x152.png" />
+<link rel="apple-touch-icon" sizes="128x128" href="/gfx/apple-touch-icon-128x128.png" />
+<link rel="apple-touch-icon" sizes="76x76" href="/gfx/apple-touch-icon-76x76.png" />
+<meta name="orgcode" content="611" />
+<meta name="rno" content="Gavin.A.Schmidt.1" />
+<meta name="content-owner" content="Robert.B.Schmunk.1" />
+<meta name="webmaster" content="Robert.B.Schmunk.1" />
+<meta name="viewport" content="width=956, initial-scale=1" /><script id="_fed_an_ua_tag" src="https://dap.digitalgov.gov/Universal-Federated-Analytics-Min.js?agency=NASA&amp;subagency=GISS&amp;yt=true&amp;dclink=true" async="async"></script>
+</head>
+<body>
+<div id="bkg1"><div id="bkg2"></div><!-- end bkg2 --></div><!-- end bkg1 -->
+<div id="page">
+<div class="hidden">
+<a href="#content" title="Go to Main Content" accesskey="2">Go to Main Content (Accesskey 2)</a><br /><a href="#nav" title="Go to Site Menu" accesskey="3">Go to Site Menu (Accesskey 3)</a></div><!-- end hidden -->
+<div id="header">
+<div id="headerlogo">
+<a href="https://www.nasa.gov/"><img src="https://www.giss.nasa.gov/gfx/2013/nasa_x2.png" alt="NASA Logo, National Aeronautics and Space Administration" style="width:140px;height:98px" /></a></div><!-- end headerlogo -->
+<div id="centername">
+<h1><a href="https://www.nasa.gov/">National Aeronautics and Space Administration</a></h1>
+<h2><a href="https://www.giss.nasa.gov/">Goddard Institute for Space Studies</a></h2></div><!-- end centername -->
+<div id="hierarchy">
+<h2><a href="https://www.nasa.gov/goddard/">Goddard Space Flight Center</a><br /><a href="https://science.gsfc.nasa.gov/sci">Sciences and Exploration Directorate</a><br /><a href="https://science.gsfc.nasa.gov/earth">Earth Sciences Division</a></h2></div><!-- end hierarchy --></div><!-- end header -->
+<div id="paper">
+<div id="content"><div id="cpad">
+
+
+
+
+<h2>Mars24 Sunclock &mdash; Time on Mars</h2>
+
+<h3>Technical Notes on Mars Solar Time as Adopted by the Mars24 Sunclock</h3>
+
+
+
+
+<p class="byline">By Michael Allison and Robert Schmunk<br>
+NASA Goddard Institute for Space Studies</p>
+
+<p class="m24_dateline">(Updated 2023-05-15)</p>
+
+
+
+<p>These notes provide a technical brief on the definitions of numeric read-outs in Mars24.
+The cited papers and further details may be found in the
+<a href="credits.html#references">references</a>, including journal articles by
+Allison (1997), Allison and McEwen (2000), and others.
+A less technical account of solar time on Mars is provided in the 1998 website article
+<a href="https://www.giss.nasa.gov/research/briefs/1998_allison_02/">"Telling Time on Mars"</a>.
+Information about the specific controls and displays in Mars24 is provided in the accompanying
+<a href="guide.html">User's Guide</a>.</p>
+
+
+
+
+<hr style="width:50%" />
+
+<h3>Mars Solar Days and 24-hr Clock Convention</h3>
+
+<p>Following the long-standing practice originally adopted in 1976 by the Viking Lander
+missions, the daily variation of Mars solar time is reckoned in terms of a 24 Mars-hour clock,
+representing a 24-part division of the planet's solar day, along with the traditional
+sexagesimal subdivisions of 60 minutes and 60 seconds. A <b>Mars solar day</b> has a mean
+period of <b>24 hours 39 minutes 35.244 seconds</b>, and is customarily referred to as a
+<b>"sol"</b> in order to distinguish this from the roughly 3% shorter solar day on Earth.
+The Mars sidereal day, as measured with respect to the fixed stars, is 24h 37m 22.663s, as
+compared with 23h 56m 04.0905s for Earth.</p>
+
+
+
+
+
+<hr style="width:50%" />
+
+<h3>Mars Solar Seasons</h3>
+
+<p>The apparent seasonal advance of the Sun at Mars is commonly measured in terms of the
+<b>areocentric longitude</b> <var>L<sub>s</sub></var>, as referred to the planet's vernal
+equinox (the ascending node of the apparent seasonal motion of the Sun on the planet's
+equator). As defined, <var>L<sub>s</sub></var> = 0&deg;, 90&deg;, 180&deg;, and
+270&deg; indicate the Mars northern hemisphere vernal equinox, summer solstice, autumnal
+equinox, and winter solstice, respectively.</p>
+
+<p>In terms of <var>L<sub>s</sub></var>, the seasonally variable, planet-centered
+<b>solar declination</b> <var>d</var> equals
+arcsin<span style="size: 1.1em">[</span>(sin&nbsp;<var>&epsilon;</var>)(sin&nbsp;<var>L<sub>s</sub></var>)<span style="size: 1.1em">]</span>,
+where the obliquity <var>&epsilon;</var> is the inclination of the planet's spin axis with respect
+to the plane of its orbit. For an accurate account of the solar illumination relative to
+the plane of a locally flat surface, the solar declination can be corrected for the small
+difference appropriate to the so-called planetographic measure of latitude on an oblate
+sphere, as it is in the Mars24 sunclock.</p>
+
+<p>As a result of Mars's orbital eccentricity, <var>L<sub>s</sub></var> advances
+somewhat unevenly with time, but can be efficiently evaluated as a trigonometric power
+series for the orbital eccentricity and the orbital mean anomaly measured with respect to
+the perihelion. The areocentric longitude at perihelion,
+<var>L<sub>s,p</sub></var> = 251&deg;.000 + 0&deg;.0064891&#215;(yr - 2000), indicates a
+near alignment of the planet's closest approach to the Sun in its orbit with its winter
+solstice season, as related to the occasional onset of global dust storms within the
+advance of this season.</p>
+
+
+
+
+
+<hr style="width:50%" />
+
+<h3>Mars Orbit Periods</h3>
+
+<p>The period for the repetition of the planet-centered measure of mean Solar longitude is
+referred to as the tropical year. (This period is linked to the rate of advance of the
+"Fictitious Mean Sun," as discussed below.) The <b>Mars tropical year</b> is <b>686.9725
+day or 668.5921 sol</b>. For comparison, the Mars sidereal year, as measured with respect
+to the fixed stars, is 668.5991 sol. The difference between these values results from the
+precession of the planet's spin axis.</p>
+
+<p>The mean interval between the repetition of the planet's perihelion passage, or
+anomalistic year, is 668.6147 sol, and corresponds to the rate of advance of the planet's
+orbital mean anomaly. The mean repetition period for a particular solar season varies with
+the <var>L<sub>s</sub></var>. The mean repetition intervals for the vernal equinox, summer
+solstice, autumnal equinox, and winter solstice on Mars are 668.5906 sol, 668.5879 sol,
+668.5940 sol, and 668.5957 sol, respectively, and the average of these is just the tropical
+year.</p>
+
+
+
+
+<hr style="width:50%" />
+
+<h3>Mean and True Solar Time</h3>
+
+<p>Also as a result of a planet's orbital eccentricity, as well as its obliquity, there is
+a seasonally variable discrepancy between the even advance of an artificially defined Mean
+Solar Time and of the True Solar Time corresponding to the actual planet-centered position
+of the Sun in its sky. Following the conventional usage of terrestrial timekeeping, Mean
+Solar Time on Mars has been defined in reference to the so-called Right Ascension of the
+<b>Fictitious Mean Sun (FMS)</b>. As defined, the FMS is the angle between the planet's
+vernal equinox, measured along the plane of its equator, and an artificially defined
+"dynamical mean Sun" advancing at a rate corresponding to the planet's solar tropical year
+(i.e., the Mars FMS advances at a rate of 360&deg;/686.9725 day or 0.5240384&deg;/day).
+Its numerical value (to within an arbitrary multiple of 360&deg;) is just the sum of the
+orbital mean anomaly, <var>M</var>, and the areocentric longitude at perihelion,
+<var>L<sub>s,p</sub></var>. The FMS
+at Mars was evaluated by Allison and McEwen (2000) (hereafter "AM2000") as a mean
+fit to an accurate calculation of the areocentric longitude over 134 Mars orbits
+(for the years 1874-2127), adjusted in its angular placement by the (~0&deg;.0046)
+solar aberration. This evaluation was adopted by the Mars Exploration Rover
+project for its definition of Mars Mean Solar Time (cf. Roncoli et al., 2002).</p>
+
+<p>The difference between the True Solar Time (TST) and the Mean Solar Time (MST),
+equivalent in the corresponding angular measure to the difference between the right
+ascensions of the FMS and the true Sun, is referred to as the <b>Equation of Time</b>
+(EOT). For Earth, the EOT varies between -14.2min and +16.3min. Mars, with its
+more than five times larger orbital eccentricity, has an EOT varying between -51.1min
+and +39.9min. The parametric plot of the EOT vs. the solar declination is called
+the solar analemma. For Earth, this takes the form of a
+<a href="https://apod.nasa.gov/apod/ap020709.html">figure-8</a> pattern, which is often
+marked on sundials and globes (for the latter typically in the empty space of the South
+Pacific). For Mars, the analemma assumes the shape of a
+<a href="https://www.giss.nasa.gov/research/briefs/1998_allison_02/">raindrop</a> or
+<a href="https://antwrp.gsfc.nasa.gov/apod/ap030626.html">mis-shapen pear</a>.</p>
+
+
+
+
+
+<hr style="width:50%" />
+
+<h3>Local and "Zonal" Times</h3>
+
+<p>The definition of the Mars prime meridian has become better refined as observations of the
+planet have allowed its improvement. A small circular albedo feature observed in the 1830s by
+astronomers attempting to measure the planet's rotation was used in 1877 to designate Mars's
+prime meridian of 0&deg;. The location was subsequently named Sinus Meridiani ("Meridian Bay").</p>
+
+<p>Following observations of Mars by Mariner 9, a half-kilometer-wide crater within Sinus Meridiani
+was used to designate longitude 0&deg; (de Vaucoulers et al., 1973).
+A crater within the crater was later designated
+<a href="https://mars.jpl.nasa.gov/mgs/msss/camera/images/01_31_01_releases/airy0/">
+Airy-0</a>,
+commemorating British astronomer George Biddel Airy, who built the telescope at Greenwich whose
+location came to be defined the prime meridian on Earth.
+</p>
+
+<p>More recent efforts to constrain the uncertainty in
+Mars lander locations bave suggested a further refinement of the prime meridian definition to
+within 6 meters based on the lander locations, and specifically that longitude 0&deg; be defined
+as exactly being 47.95137&deg; east of Viking Lander 1 (Kuchynka et al., 2014).</p>
+
+<p>The Mars24 application refers to mean solar time at Mars's prime meridian as
+"Airy Mean Time" (AMT), in analogy to Earth's "Greenwich Mean Time" (GMT),
+although the latter term has been supplanted by the more accurate
+<a href="https://www.nist.gov/pml/time-and-frequency-division/nist-time-frequently-asked-questions-faq">Coordinated Universal Time</a>
+(UTC) in international timekeeping services.</p>
+
+<p>For a given location on Mars, the Local True Solar Time (LTST) and Local Mean Solar Time
+(LMST) are easily determined from the TST and MST at the prime meridian by adding a number of
+Mars hours equal to the location's east longitude divided by 15. Thus, a location at 45&deg;W
+would have an LTST that is exactly three Mars hours behind the true solar time at 0&deg;.</p>
+
+<p>In the mid-1800s the use of locally measured and defined time on Earth was gradually
+supplanted by the use of time zones in order to facilitate standardization of railroad schedules
+and, to a lesser extent, of recording scientific observations. This process culminated in 1884
+in an international conference that created the global system of time zones and specified the
+longitude of Greenwich as the prime meridian. Each zone is approximately 15&deg; wide, the exact
+width and shape subject to political boundaries and significant geographic features. Within each,
+zone clocks are referenced to the same hour.</p>
+
+<p>Mars24 includes the option to display the local time at a selected location in terms of
+similarly constructed "Martian time zones". We have defined these zones to be exactly
+15&deg; wide and centered on successive 15&deg; multiples of longitude, at 0&deg;, 15&deg;,
+30&deg;, etc. Aside from use of the term "Airy Mean Time", we have not attempted to name
+these zones, as for example "Olympus Standard Time", but do identify their read-out with a
+suffix indicating the timezone offset. Thus, for the case of Olympus Mons, the timezone
+identifier is "AMT-9", or nine Mars hours behind Airy Mean Time.</p>
+
+
+
+
+<hr style="width:50%" />
+
+<h3>Mars Sol Date (MSD)</h3>
+
+<p>Numerous month-year calendars have been proposed for Mars, in the scientific literature,
+popular fiction, and elsewhere. Likewise, schemes for counting Mars years from one or
+another epoch have appeared in the scientific literature, to varying degrees of
+approbriation. The Mars24 application does not yet employ any of these calendars or
+enumerations.</p>
+
+<p>We have, however, included in the Mars24 displays the <b>"Mars Sol Date" (MSD)</b>,
+as defined by AM2000. This represents a sequential count of Mars
+solar days elapsed since 1873 December 29 at approximately Greenwich noon (Julian Date 2405522.0).
+This epoch was prior to the great 1877 perihelic opposition of Mars and precedes nearly all
+detailed observations of temporal changes on the planet. It corresponds to a Mars
+<var>L<sub>s</sub></var> of 277&deg;, approximately the same planetocentric solar longitude as
+that for the Earth on the same date. MSD 44796.0 is approximately coincident with 2000 January
+6.0, at a near-coincidence of prime meridian midnights on the two planets and a repetition of
+Mars <var>L<sub>s</sub></var> = 277&deg;. The period 44796 sols also represents a near
+commensurability of 126 Julian years and 67 Mars tropical revolutions. In principle, the MSD
+could be used as a coherent sol-date reference for a variety of Mars missions and observations.</p>
+
+
+
+
+<hr style="width:50%" />
+
+<h3>Mars24 Accuracy</h3>
+
+<p>Mars24 uses the short-series representation of the seven-largest short-period planetary
+perturbations of the Mars orbital longitude specified by AM2000, as adapted from Simon et al.
+(1994). Detailed comparisons with an accurate ephemeris suggest that the maximum error in the
+calculated <var>L<sub>s</sub></var> by the adopted algorithm is 0&deg;.008 over &#177;100 years
+of J2000. According to the implicit dependence of the calculated EOT on the
+<var>L<sub>s</sub></var>, the resulting True Solar Time can be estimated to be in error by as
+much as 3 sec. The error in the currently coded conversion between TT and UTC is itself in
+error for some periods in the post-1975 era by as much as 3 sec.</p>
+
+<p>Of course, the calculation of local (true or mean) solar time cannot be any more accurate
+than the longitudinal placement of the local point of interest. Predicted solar times for a
+given lander location may therefore need to be revised as improved knowledge of their locations
+becomes available. Although relatively precise coordinates of post-2000 landers were obtained
+quickly after their landing, disputes as to the precise locations of the two Viking Landers
+continued for some time and were not settled until the landers were spotted decades later in
+surface photography taken by later orbiters.</p>
+
+<p>Although time-of-day may be calculate from knowledge of longitude, estimates of the times of
+local sunrise and sunset, as well as times of Earthrise and Earthset, also require the
+planetographic latitude. Even so, the results may be in error due to local topography and
+atmospheric refraction. Comparison to known times for a limited number of solar and Earth rise
+and set events at Mars lander sites suggest that absent topographic and atmospheric effects, the
+error in calculating these times is less than 30 seconds.</p>
+
+
+
+
+
+<hr style="width:50%" />
+
+<h3>Lander Mission Times</h3>
+
+<p>Each Mars lander mission project has adopted a different reference for its solar timekeeping
+and mission clock. Mission dates are commonly given as a count of sols since the date on which
+the particular lander touched down on the Martian surface. Depending on mission criteria the sol
+during which landing occurred has been variously designated as either Sol 0 or Sol 1. Generally
+speaking, timekeeping begins with Sol 0 if the mission landed late in the day and was unable to
+perform "meaningful mission operations" until the next sol.</p>
+
+<p>A more complex question has been how to define the epoch when the initial sol commenced.
+Again this has varied, being based on either the (planned) landing site LTST or LMST midnight
+immediately prior to the landing, or on some specified offset from that prior midnight. But no
+matter how this initial epoch for the mission clock has been defined, lander
+clocks have usually then "ticked" at the rate of mean Mars time.</p>
+
+<p>Note: For the earlier lander missions &mdash; the two Viking Landers as well as for Mars
+Pathfinder &mdash; discrepancies between mission clock specifications and Mars24's attempt to
+match mission data timetags are the result of improved knowledge of the Mars spin pole as well
+as updates to Martian cartography, both arising from data collected by these missions as well as
+from photography collected by orbiter missions such as the Viking Orbiters and Mars Global
+Surveyor.</p>
+
+
+<p><b>Viking Landers (VL1, VL2):</b>
+The "local lander time" for the two NASA
+<a href="https://mars.nasa.gov/mars-exploration/missions/viking-1-2/">Viking Lander</a>
+missions each began with Sol 0, commencing from midnight LTST at the respective lander
+location immediately prior to touchdown, but advancing at the rate of mean solar time. The
+locations used in determining the LTST midnight were apparently the landing coordinates selected
+during the period between when the Viking Orbiters reached Mars and when the Landers were
+subsequently deployed, i.e., the longitude used for VL1 time calculations was 312.5&deg;E and for
+VL2 was 134.14&deg;E. However, Mars24 calculates mission times for the two landers based on
+explicit UTC epochs for each Viking Lander's Sol 0 that were obtained from lander meteorology
+data tape documentation archived with the National Space Science Data Center.</p>
+
+<p><b>Mars Pathfinder (MPF):</b>
+Mission planning documentation for NASA's
+<a href="https://mars.nasa.gov/mars-exploration/missions/pathfinder/">Mars Pathfinder</a>
+lander and its <i>Sojourner</i> rover discussed not only the meaning of LTST and LMST but also a
+"hybrid solar time", essentially a somewhat complex offset version of LMST that would have been
+periodically adjusted to constrain the difference between LTST and the offset LMST to less than
+5 min (Vaughan, 1995). However, timetags for the "Mars local solar time" included in material
+such as the Pathfinder mission website (e.g., the
+<a href="https://mars.nasa.gov/MPF/mpf/mpftechtraj.html#MDATA">
+trajectory data webpage</a>) all appear to have used only a LTST schema rather than the hybrid
+system. The Mars24 display of MPF mission time uses LTST timekeeping and is intended to match
+these posted timetags.</p>
+
+<p><b>Mars Exploration Rovers (MER-A, MER-B) - Spirit and Opportunity:</b>
+The "hybrid local solar time" adopted for the two NASA
+<a href="https://mars.jpl.nasa.gov/mer/home/">Mars Exploration Rover Project</a>
+rovers was based on an offset from landing site LMST as described by Roncoli et al. (2002), and
+called there the "MER Continuous Time Algorithm". The intention of these offsets was that at
+approximately the middle of each of the MER-A and -B nominal missions (i.e., on the 45th sol
+after landing), lander mission time should align with LTST to within 30 seconds. For MER-A
+<i>Spirit</i>, the difference between lander mission time and LMST was more than 41 minutes;
+while for MER-B <i>Opportunity</i> the difference was more than 37 minutes. As with Pathfinder,
+Sol 1 for each MER lander denoted the solar day on which the lander touched down. Although based
+on the planned landing longitudes, the clock times for both rovers are calculated in Mars24
+using explicit UTC epochs.</p>
+
+<p><b>Mars Phoenix (PHX):</b>
+NASA's <a href="https://mars.nasa.gov/mars-exploration/missions/phoenix/">Mars Phoenix</a>
+mission reverted to using Sol 0 to indicate the solar day on which the lander touched down.
+Mission planners originally specified a mission clock based on LMST at a planned landing
+site at 233.35&deg;E. However, there was a late decision to shift the landing about 0.9&deg;
+eastward, while retaining a mission clock based on the prior location. This decision would have
+resulted in a mission clock offset from LMST by about two and half minutes, but as it turned out,
+<i>Phoenix</i> landed 5 km off target, at 234.248&deg;E. The end result was that mission time
+and lander site LMST differed by about three and a half minutes.</p>
+
+<p><b>Mars Science Laboratory (MSL) - Curiosity:</b>
+NASA's <a href="https://mars.jpl.nasa.gov/msl/">Mars Science Laboratory</a> project also defined
+Sol 0 as the solar day on which the rover would touch down. During planning, mission controllers
+specified a mission clock commencing at midnight LMST for a landing site at 137.42&deg;E. The
+landing site was later slightly altered and course corrections were made while MSL was in-flight
+to Mars. As <i>Curiosity</i> landed slightly "long" of the final target coordinates, the landing
+site turned out to be at 137.442&deg;E. Following the example of <i>Phoenix</i>, there was
+no re-definition of the MSL mission clock to match the actual landing coordinates, and so a
+difference of a several seconds between LMST at the landing site and mission clock resulted.</p>
+
+<p><b>InSight (NSYT):</b>
+NASA's <a href="https://mars.nasa.gov/insight/">Mars InSight</a> project defined Sol 0 as the
+solar day on which the lander would touch down, which occurred Nov. 26, 2018. During planning,
+a mission clock was defined as commencing at midnight LMST for a landing site at 135.97&deg;E.
+Landing actually occurred at 135.62&deg;E, meaning that the mission clock is about 85 seconds
+ahead of the lander's LMST.</p>
+
+<p><b>Mars 2020 (M20) - Perseverance:</b>
+NASA's <a href="https://mars.nasa.gov/mars2020/">Mars 2020 Perseverance</a> project specified
+Sol 0 as the solar day on which the rover would touch down, which occurred Feb. 18, 2021. During
+planning, mission controllers specified a mission clock commencing at midnight LMST for a landing
+site at 77.43&deg;E. Landing occurred at 77.45&deg;E, resulting in a difference of about 5 seconds
+between the mission clocks and the landing site LMST.</p>
+
+<p><b>Zhurong:</b>
+Information about any use of sol count or local solar time mission clock by the Chinese (CNSA)
+Tianwen-1 <i>Zhurong</i> lander-rover project has not been received.</p>
+
+
+
+
+
+<h4 class="goback">&#x2022;
+<a href="index.html">Return to Mars24 Help Index</a></h4>
+
+<h4 class="goback">&#x2022;
+<a href="https://www.giss.nasa.gov/tools/mars24/">Go to Mars24 Website</a></h4>
+
+<div class="clear"></div></div><!-- end cpad --><div id="endpaper"></div></div><!-- end content -->
+<div id="nav"><h3>Site Menu</h3>
+<ul id="mnav">
+<li><a href="https://www.giss.nasa.gov/">GISS Home</a></li>
+<li><a href="https://www.giss.nasa.gov/research/">News &amp; Features</a>
+<ul class="mnav2">
+<li><a href="https://www.giss.nasa.gov/research/">News &amp; Features Overview</a></li></ul><!-- end mnav2 --></li>
+<li><a href="https://www.giss.nasa.gov/projects/">Projects &amp; Groups</a>
+<ul class="mnav2">
+<li><a href="https://www.giss.nasa.gov/projects/">Projects Overview</a></li>
+<li><a href="https://www.giss.nasa.gov/projects/astrobio/">Astrobiology &amp; ROCKE-3D</a></li>
+<li><a href="https://www.giss.nasa.gov/projects/impacts/">Climate Impacts</a></li>
+<li><a href="https://www.giss.nasa.gov/projects/gcm/">Climate Modeling</a></li>
+<li><a href="https://www.giss.nasa.gov/projects/iri_forecasts/">IRI Forecasts</a></li>
+<li><a href="https://isccp.giss.nasa.gov/">ISCCP</a></li>
+<li><a href="https://www.giss.nasa.gov/projects/rasi/">RASI</a></li></ul><!-- end mnav2 --></li>
+<li><a href="https://data.giss.nasa.gov/">Datasets</a>
+<ul class="mnav2">
+<li><a href="https://data.giss.nasa.gov/">Datasets Overview</a></li>
+<li><a href="https://data.giss.nasa.gov/gistemp/">GISTEMP Surface Temperature</a></li>
+<li><a href="https://data.giss.nasa.gov/modelE/">Model E Simulations</a></li>
+<li><a href="https://data.giss.nasa.gov/modelforce/">Model Forcings</a></li>
+<li><a href="https://data.giss.nasa.gov/rocke3d/maps/">ROCKE-3D Simulations</a></li>
+<li><a href="https://isccp.giss.nasa.gov/products/onlineData.html">ISCCP Data Products</a></li>
+<li><a href="https://gacp.giss.nasa.gov/datasets/">GACP Data Products</a></li></ul><!-- end mnav2 --></li>
+<li><a href="https://www.giss.nasa.gov/pubs/">Publications</a>
+<ul class="mnav2">
+<li><a href="https://www.giss.nasa.gov/pubs/">Publications Overview</a></li>
+<li><a href="https://www.giss.nasa.gov/pubs/year/2026.html">2026 Publications</a></li>
+<li><a href="https://www.giss.nasa.gov/pubs/year/2025.html">2025 Publications</a></li>
+<li><a href="https://www.giss.nasa.gov/pubs/year/2024.html">2024 Publications</a></li>
+<li><a href="https://www.giss.nasa.gov/pubs/year/inpress.html">Accepted &amp; In Press</a></li>
+<li><a href="https://www.giss.nasa.gov/pubs/authors/">Author Bibliographies</a></li>
+<li><a href="https://www.giss.nasa.gov/pubs/best.html">Annual Best</a></li>
+<li><a href="https://www.giss.nasa.gov/pubs/cited.html">Most Cited</a></li>
+<li><a href="https://www.giss.nasa.gov/pubs/dissertations.html">Dissertations</a></li></ul><!-- end mnav2 --></li><li class="sel"><a href="https://www.giss.nasa.gov/tools/">Software</a>
+<ul class="mnav2">
+<li><a href="https://www.giss.nasa.gov/tools/">Software Overview</a></li>
+<li><a href="https://www.giss.nasa.gov/tools/modelE/">GCM Model E</a></li>
+<li><a href="https://www.giss.nasa.gov/tools/panoply/">Panoply Data Viewer</a></li>
+<li><a href="https://www.giss.nasa.gov/tools/gprojector/">G.Projector</a></li>
+<li><a href="https://www.giss.nasa.gov/tools/mars24/">Mars24 Sunclock</a></li></ul><!-- end mnav2 --></li>
+<li><a href="https://www.giss.nasa.gov/edu/">Education</a>
+<ul class="mnav2">
+<li><a href="https://www.giss.nasa.gov/edu/">Education Overview</a></li>
+<li><a href="https://www.giss.nasa.gov/edu/intern/">Internships</a></li>
+<li><a href="https://www.giss.nasa.gov/edu/grad/">Graduate Study</a></li>
+<li><a href="https://www.giss.nasa.gov/about/jobs/postdoc.html">Postdoc Research</a></li>
+<li><a href="https://www.giss.nasa.gov/edu/res/">STEM Curriculum Modules</a></li></ul><!-- end mnav2 --></li>
+<li><a href="https://www.giss.nasa.gov/events/">Events</a>
+<ul class="mnav2">
+<li><a href="https://www.giss.nasa.gov/events/">Events Overview</a></li>
+<li><a href="https://www.giss.nasa.gov/events/lunch/">Lunch Seminars</a></li>
+<li><a href="https://www.giss.nasa.gov/events/past.html">Past Special Events</a></li></ul><!-- end mnav2 --></li>
+<li><a href="https://www.giss.nasa.gov/about/">About GISS</a>
+<ul class="mnav2">
+<li><a href="https://www.giss.nasa.gov/about/">About GISS</a></li>
+<li><a href="https://www.giss.nasa.gov/about/management.html">Management Staff</a></li>
+<li><a href="https://www.giss.nasa.gov/staff/">Personnel Directory</a></li>
+<li><a href="https://www.giss.nasa.gov/about/jobs/">Employment</a></li></ul><!-- end mnav2 --></li></ul><!-- end mnav --></div><!-- end nav -->
+</div><!-- end paper -->
+<div id="footer">
+<div id="footerlogo">
+<a href="https://www.nasa.gov"><img src="https://www.giss.nasa.gov/gfx/2013/nasa_x2.png" alt="NASA Logo, National Aeronautics and Space Administration" style="width:140px;height:98px" /></a></div><!-- end footerlogo -->
+<div id="footersig"><a href="https://www.nasa.gov/goddard/" class="imageLink"><img src="https://www.giss.nasa.gov/gfx/2013/gsig.png" alt="Goddard Space Flight Center" style="width:172px;height:68px" /></a></div><!-- end footersig -->
+<div id="footerinfo">
+<p>Page updated: Apr  3, 2025</p>
+<p>Website Curator:
+<a href="https://www.giss.nasa.gov/staff/rschmunk.html">
+Robert B. Schmunk</a>
+&mdash;
+NASA Official:
+<a href="https://www.giss.nasa.gov/staff/gschmidt.html">
+Gavin A. Schmidt</a></p>
+<p><a href="https://www.giss.nasa.gov/about/contact.html">Contact GISS</a> &mdash;
+<a href="https://www.nasa.gov/about/highlights/HP_Privacy.html">NASA Privacy Policy</a> &mdash;
+<a href="https://www.nasa.gov/general/accessibility/">Accessibility</a></p></div><!-- end footerinfo --></div><!-- end footer --></div><!-- end page --></body>
+
+</html>
+
+

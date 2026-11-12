@@ -1,0 +1,100 @@
+DART: Instrument Package Developed
+for Investigating Atmospheric Dust on
+Mars
+
+
+
+
+   Artist's conception of Mars-2001 Surveyor Lander, with an inset showing the DART
+                                  experiment package.
+
+Mars' dust-filled atmosphere could be a significant problem for photovoltaic array
+operation during long missions on the surface of Mars. Measurements made by Pathfinder
+showed a 0.3-percent loss of solar array performance per day due to dust obscuration.
+Thus, dust deposition is the limiting factor in the lifetime of solar arrays for Martian power
+systems, and developing design tools to mitigate this deposition is important for long
+missions.
+
+Despite the fact that dust deposition will severely degrade solar arrays, few details are
+known about the physical properties of Mars dust. The Dust Accumulation and Removal
+Test (DART) instrument was designed to gather this needed information: to quantify dust
+deposition, to measure the properties of the settled dust and its effect on array
+performance, and to test several ways to mitigate the effect of settled dust on a solar
+array. Although DART's purpose is to gather information critical to the design of future
+power systems on the surface of Mars, it will also provide significant scientific data on the
+properties of settled atmospheric dust through its dust characterization instrumentation.
+Two instruments will characterize dust: the dust microscope and the materials adherence
+experiment (MAE) commandable dust cover. In addition, two dust-mitigation tests will be
+conducted: tilted cell tests and an electrostatic dust-repulsion test.
+
+DART's fixed-focus microscope is intended to furnish information about the size
+distribution of the settled dust. As atmospheric dust settles on DART's transparent glass
+settling plate, it will be imaged from below through a 340 objective that focuses onto a
+512- by 512-pixel CMOS focal plane array. The microscope's resolution is about 0.5 mm,
+and its total mass is 200 g. Since settled dust may be different in character from the dust
+that remains suspended in the atmosphere, this information is of considerable interest in
+the design of dust-mitigation strategies. For larger particles, the DART microscope will
+also yield shape information.
+
+The MAE dust cover, which is based on the experiment flown on Path-finder, consists of a
+transparent plate onto which dust settles. This plate is located above three small solar cells
+used in short-circuit current mode to measure solar intensity in three wavelength bands. A
+mechanism allows the cover to be rotated away from the cells. Comparison of the cell
+output with the dust-covered plate in position and removed measures the dust coverage
+independently of other changes in the cell performance or the atmosphere. By taking a
+spectrum of the sunlight through the MAE settling plate, we can also obtain a transmission
+spectrum of the settled dust.
+
+Measurements of the camera window on the Viking lander showed no dust adhering to the
+vertical surface. Observations of the thermal shell of the Viking landers seemed to show
+that dust also did not build up on tilted surfaces. Unfortunately, no quantitative
+measurement of the accumulation could be made. A high priority is, therefore, to see
+whether tilted solar cells avoid dust accumulation, and to find what angle is required to
+avoid dust coverage. The tilted cell measurement consists of solar cells tilted at 30°, 45°,
+and 60°; a horizontal control; and another solar cell tilted at 30° with a low friction
+(diamondlike carbon) coating.
+
+The Martian atmospheric dust is expected to be charged. The electrostatic experiment will
+use a high-voltage solar cell to provide a potential of about 80 V to a transparent
+conductor on the front surface of the solar cell cover-glass. It will test three
+configurationsa positive potential applied to the cell cover, a negative potential applied to
+the cell, and a transverse field applied across the cellto determine whether electrostatic
+fields can be used to mitigate the deposition of dust on solar arrays. These configurations
+will be compared with the control cell with no applied potential.
+
+DART's sensors will provide both scientific information and important engineering data on
+the operation of solar power systems on Mars. DART will measure the dust accumulation
+rate and the transmitted spectrum of the dust, and it will image individual settled particles
+to determine the size distribution and the particle shape, as well as gather information on
+electrostatic properties. DART was developed to fly as part of the MIP experiment on the
+(now postponed) Mars-2001 Surveyor Lander. The flight hardware was designed, built,
+and qualified for flight at the NASA Glenn Research Center, and it is ready to go to Mars.
+DART Experiment flight hardware prepares for testing. The experiment team poses with
+  the test hardware. Clockwise from upper left: John Lekki--Glenn, software engineer;
+Phillip Jenkins--Ohio Aerospace Institute, lead engineer for DART; Geoffrey A. Landis--
+Glenn, principal investigator for DART; and David Scheiman--Ohio Aerospace Institute,
+                            principal investigator for MATE.
+
+Find out more about DART:
+http://powerweb.grc.nasa.gov/pvsee/publications/mars/Mars99.html
+
+
+References
+   1. Jenkins, P.P., et al.: Status of the Dust Accumulation and Removal Technology
+      Experiment for the Mars 2001 Surveyor Lander. The Fifth International
+      Conference on Mars. Lunar and Planetary Institute, Houston, TX, 1999.
+
+   2. Landis, G.A.; and Jenkins, P.P.: Measurement of the Settling Rate of Atmospheric
+      Dust on Mars by the MAE Instrument on Mars Pathfinder. J. Geoph. Res. Planets,
+      vol. 105, no. E1, 2000, pp. 1855-1857.
+
+Ohio Aerospace Institute contact: Phillip P. Jenkins, 216-433-2233,
+Phillip.P.Jenkins@grc.nasa.gov
+Glenn contacts: Dr. Geoffrey A. Landis, 216-433-2238,
+Geoffrey.A.Landis@grc.nasa.gov; Cosmo R. Baraona, 216-433-5301,
+Cosmo.R.Baraona@grc.nasa.gov; and Michael J. Krasowski, 216-433-3729,
+Michael.J.Krasowski@grc.nasa.gov
+Author: Dr. Geoffrey A. Landis
+Headquarters program office: OSF
+Programs/Projects: Mars Surveyor
+

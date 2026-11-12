@@ -1,0 +1,565 @@
+Geophysical Research Letters
+RESEARCH LETTER                                Mars Science Laboratory Observations of the 2018/Mars
+10.1029/2018GL080839
+                                               Year 34 Global Dust Storm
+Special Section:                               Scott D. Guzewich1 , M. Lemmon2, C. L. Smith3, G. Martínez4, Á. de Vicente-Retortillo4,
+Studies of the 2018/Mars Year                  C. E. Newman5 , M. Baker6 , C. Campbell3, B. Cooper3, J. Gómez-Elvira7, A.-M. Harri8,
+34 Planet-Encircling Dust
+Storm                                          D. Hassler9 , F. J. Martin-Torres10,11, T. McConnochie12, J. E. Moores3, H. Kahanpää8,13 ,
+                                               A. Khayat1,14, M. I. Richardson5, M. D. Smith1 , R. Sullivan15 , M. de la Torre Juarez16,
+                                               A. R. Vasavada16 , D. Viúdez-Moreiras7 , C. Zeitlin17 , and Maria-Paz Zorzano Mier7,10
+Key Points:
+• The Curiosity rover conducted a              1
+                                                NASA Goddard Spaceﬂight Center, Greenbelt, MD, USA, 2Space Science Institute, College Station, TX, USA, 3Department of
+  dedicated science campaign to study
+  the 2018 Mars global dust storm              Earth and Space Science and Engineering, York University, Toronto, Ontario, Canada, 4College of Engineering, University of
+• Atmospheric opacity reached a peak           Michigan, Ann Arbor, MI, USA, 5Aeolis Research, Pasadena, CA, USA, 6Department of Earth and Planetary Science, The Johns
+  of 8.5, and horizontal visibility            Hopkins University, Baltimore, MD, USA, 7Centro de Astrobiología (INTA-CSIC), Madrid, Spain, 8Finnish Meteorological
+  dropped to 2.7 km
+                                               Institute, Helsinki, Finland, 9Southwest Research Institute, Boulder, CO, USA, 10Atmospheric Science Group, Division of
+• Meteorological conditions in Gale
+  Crater were substantially altered,           Space Technology, Department of Computer Science, Electrical and Space Engineering, Luleå University of Technology,
+  with changes to the pressure,                Luleå, Sweden, 11Instituto Andaluz de Ciencias de la Tierra (CSIC-UGR), Armilla, Granada, Spain, 12Department of
+  temperature, and humidity cycles             Astronomy, University of Maryland, College Park, MD, USA, 13School of Electrical Engineering, Aalto University, Espoo,
+                                               Finland, 14CRESST II and Department of Astronomy, University of Maryland, College Park, MD, USA, 15Cornell Center for
+Supporting Information:                        Astrophysics and Planetary Science, Cornell University, Ithaca, NY, USA, 16Jet Propulsion Laboratory, California Institute of
+• Supporting Information S1                    Technology, Pasadena, CA, USA, 17Leidos, Houston, TX, USA
+• Supporting Information S2
+• Supporting Information S3
+• Data Set S1                                  Abstract Mars Science Laboratory Curiosity rover observations of the 2018/Mars year 34 global/
+• Data Set S2
+                                               planet-encircling dust storm represent the ﬁrst in situ measurements of a global dust storm with dedicated
+• Data Set S3
+                                               meteorological sensors since the Viking Landers. The Mars Science Laboratory team planned and executed
+Correspondence to:                             a science campaign lasting approximately 100 Martian sols to study the storm involving an enhanced cadence
+S. D. Guzewich,                                of environmental monitoring using the rover’s meteorological sensors, cameras, and spectrometers. Mast
+scott.d.guzewich@nasa.gov
+                                               Camera 880-nm optical depth reached 8.5, and Rover Environmental Monitoring Station measurements
+                                               indicated a 97% reduction in incident total ultraviolet solar radiation at the surface, 30K reduction in diurnal
+Citation:                                      range of air temperature, and an increase in the semidiurnal pressure tide amplitude to 40 Pa. No active
+Guzewich, S. D., Lemmon, M., Smith, C.
+                                               dust-lifting sites were detected within Gale Crater, and global and local atmospheric dynamics were drastically
+L., Martínez, G., de Vicente-Retortillo, Á.,
+Newman, C. E., et al. (2019). Mars             altered during the storm. This work presents an overview of the mission’s storm observations and initial results.
+Science Laboratory observations of the
+2018/Mars year 34 global dust storm.           Plain Language Summary The 2018 Mars global dust storm was observed by six spacecraft in orbit
+Geophysical Research Letters, 46, 71–79.       and two rovers on the surface. This paper provides an overview and description of the Mars Science
+https://doi.org/10.1029/2018GL080839
+                                               Laboratory Curiosity rover’s observations during the storm. For approximately 100 Martian days (sols), the
+                                               rover conducted an enhanced cadence of environmental observations to study the storm. These are the ﬁrst
+Received 9 OCT 2018
+Accepted 29 NOV 2018                           observations of a Martian global dust storm with meteorological sensors near the equator. Atmospheric
+Accepted article online 5 DEC 2018             opacity reached a peak of 8.5, attenuating ~97% of the total solar ultraviolet radiation at the surface. Most of
+Published online 5 JAN 2019
+                                               the dust was sourced from outside Gale Crater, with no indications of dust lifting within the crater during the
+                                               height of the storm. Meteorological conditions were substantially altered, with changes to the pressure,
+                                               temperature, and humidity patterns. Dust devil activity ceased for several weeks due to the reduction in
+                                               temperature contrast between the surface and atmosphere. There was no indication of unusual aeolian
+                                               transport, suggesting Martian global dust storms are not a major cause of sand dune movement.
+
+
+                                               1. Introduction
+                                               Global, or planet-encircling, dust storms are an enigmatic feature of the Martian climate. For our purposes,
+                                               the terms “planet-encircling” and “global” are equivalent, and we use global for this work. Global dust storms
+                                               typically occur every few Mars years (MY) and persist for weeks to months (we utilize the Martian calendar of
+©2018. American Geophysical Union.             Clancy et al., 2000). They radically alter atmospheric circulation (Conrath, 1975; Guzewich et al., 2014; Haberle
+All Rights Reserved.                           et al., 1982; Leovy & Zurek, 1979; Newman et al., 2002; Wilson, 1997; Zurek, 1982), change surface albedo
+This article has been contributed to by
+US Government employees and their
+                                               patterns (e.g., Cantor, 2007; Szwast et al., 2006; Vincendon et al., 2015), and modify subsequent transport
+work is in the public domain in the USA.       and deposition of water and CO2 at the poles (Benson & James, 2005; Cantor, 2007; Strausberg et al., 2005).
+
+
+GUZEWICH ET AL.                                                                                                                                                          71
+                                        Geophysical Research Letters                                                      10.1029/2018GL080839
+
+
+
+                                                                              The 2018/MY34 storm began as “arcuate” or frontal-like dust storms in the
+                                                                              northern hemisphere (e.g., Wang et al., 2003) that ultimately initiated,
+                                                                              merged, or expanded dust-lifting activity in the southern hemisphere
+                                                                              (Malin et al., 2018a, 2018b, 2018c). Precursor storms formed in mid-May
+                                                                              2018, Ls ~181° (“Ls” is areocentric solar longitude, and Ls = 0° represents
+                                                                              northern spring equinox), across Acidalia Planitia (30–60°N, 300–360°E)
+                                                                              and Utopia Planitia (30–60°N, 80–140°E) before expanding to cover much
+                                                                              of the northern hemisphere and tropics over the next 2 weeks. By early
+                                                                              June, Ls ~ 188°, substantial dust lifting was occurring independently in
+Figure 1. Mastcam 880-nm atmospheric optical depth during the 2018/ the southern hemisphere, and those storms along the receding southern
+MY34 global dust storm plotted against solar longitude and Mars Science
+                                                                              seasonal CO2 polar ice cap (e.g., Toigo et al., 2002) merged with the larger
+Laboratory (MSL) mission sol number. One-sigma error bars are plotted for all
+points (but only visible for a few points). Points are color coded based on   storm  along and north of the equator (Malin et al., 2018c, 2018d). By mid-
+local true solar time (LTST) of observation with “Morning” deﬁned as 0700–    June, Ls ~ 193°, the storm was termed global (Malin et al., 2018d, 2018e).
+1000 LTST, “Mid-Sol” as 1000–1400 LTST, and “Afternoon” as after 1400 LTST. Dust lifting continued sporadically for another 2–3 weeks until early July,
+Dashed-vertical lines indicate when the MSL global dust storm campaign        Ls ~ 205°, when the storm began a long decay phase and dust started set-
+started and stopped.
+                                                                              tling out of the atmosphere (Malin et al., 2018f, 2018g). By mid-September,
+                                            Ls ~ 250°, dust returned to climatologically typical levels for the perihelion season, which we use to deﬁne
+                                            when the storm ended (Malin et al., 2018h).
+                                      Curiosity’s observations of the storm represent the ﬁrst in situ observations of a Martian global dust storm
+                                      with dedicated meteorological sensors since the Viking landers in 1977 (e.g., Ryan & Henry, 1979) and the ﬁrst
+                                      in situ observations with such sensors near the equator. Section 2 introduces Curiosity’s instruments that
+                                      were employed to study the storm and the science campaign that was conducted by the Mars Science
+                                      Laboratory (MSL) team. We present our ﬁndings in section 3, which serves as an overview to the mission’s
+                                      observations during the dust storm (and will be substantially augmented by upcoming future papers discuss-
+                                      ing individual results in greater detail), and section 4 concludes.
+
+
+                                      2. Methodology
+                                      Curiosity carries a suite of instrumentation to study the climate and meteorology of Gale Crater (Gómez-Elvira
+                                      et al., 2012; Grotzinger et al., 2012). During the dust storm, relevant observations were frequently obtained by
+                                      the Rover Environmental Monitoring Station (REMS) (Gómez-Elvira et al., 2012), the Mast Camera (Mastcam;
+                                      Bell et al., 2017), the Navigation Cameras (Navcam; e.g., Moore et al., 2016; Moores et al., 2015), and the
+                                      Radiation Assessment Detector (e.g., Rafkin et al., 2014). Less frequent observations were obtained by the
+                                      Chemistry and Camera instrument (McConnochie et al., 2018).
+                                      Prior to the MY33 dust storm season, the MSL science team created a “global dust storm campaign” involving
+                                      an increased cadence of environmental monitoring, to be initiated in the event that a large dust storm
+                                      occurred on the planet that could reach global status. The campaign was updated in early 2018, prior to
+                                      the MY34 dust storm season, to account for changes in the rover’s instrument and operational posture, pri-
+                                      marily the failure of the last working anemometer board of the REMS wind sensor near MSL mission Sol 1500
+                                      (Viúdez-Moreiras et al., 2019a, 2019b). The campaign was initiated on Sol 2075 (7 June 2018, Ls = 188.7°) and
+                                      stopped on Sol 2169 (11 September 2018, Ls = 248.2°). During the global dust storm campaign, REMS 1-hr-
+                                      extended blocks were scheduled every 3 hr to measure air and ground temperature, relative humidity
+                                      (RH), ultraviolet radiation, and air pressure (see Newman et al., 2017, for a description of the typical REMS
+                                      observation cadence, which includes 1-hr-duration “extended blocks” scheduled every 6 hr that slide 1 hr ear-
+                                      lier each sol). Mastcam measurements of atmospheric opacity (“tau” and “line-of-sight extinction” observa-
+                                      tions) (Lemmon et al., 2015) were conducted at least once per sol (with two exceptions) from Sol 2072 to
+                                      Sol 2119 and then at a normal rate (approximately three times per week) for the remainder of the storm.
+                                      Values shown below in Figure 1 are retrieved using the Mastcam 880- and 867-nm ﬁlters. Almost daily
+                                      Navcam observations of line-of-sight atmospheric extinction (Moore et al., 2016; Moores et al., 2015) and dust
+                                      devil activity (approximately two to three per week) were scheduled in addition to an increased frequency of
+                                      Chemistry and Camera passive sky observations to monitor dust particle properties and atmospheric gas
+                                      abundances (McConnochie et al., 2018). Due to Curiosity’s radioisotope thermoelectric generator power
+                                      source, science operations were not precluded or reduced during the dust storm.
+
+
+GUZEWICH ET AL.                                                                                                                                        72
+                   Geophysical Research Letters                                                       10.1029/2018GL080839
+
+
+
+                  The scientiﬁc goals of the campaign included, but were not limited to, the following:
+                  1. How does the meteorological environment within Gale Crater change before and during a global dust
+                     storm? What is the signature of global atmospheric dynamics on the local environment via pressure, tem-
+                     perature, and humidity?
+                  2. How does the abundance, vertical distribution, and physical characteristics of atmospheric dust evolve
+                     during a storm?
+                  3. Are aeolian processes altered during a storm?
+                  4. Is the local water cycle altered by the storm? If so, in what way?
+
+
+                  3. Results
+                  3.1. Column-Integrated Atmospheric Dust Opacity
+                  Atmospheric dust loading is a major driver of the dynamics, and circulation of the Martian atmosphere and
+                  higher dust loading intensiﬁes the circulation (e.g., Haberle et al., 1982; Newman et al., 2002; Wilson, 1997;
+                  Wilson & Hamilton, 1996; Zurek, 1982; Zurek & Leovy, 1981). Therefore, understanding dust opacity during
+                  the storm contextualizes all other meteorological observations. Previous in situ measurements of column
+                  dust opacity during Martian global dust storms came from the Viking landers in 1977/MY12 and the Mars
+                  Exploration Rovers Spirit and Opportunity in 2007/MY28. Pollack et al. (1979) found the (670-nm) dust opacity
+                  to be 2.7–3.2 and 3.7–9 (representing the lower and upper limits of the maximum opacity during the storms)
+                  for the two global dust storms observed by Viking Lander 1. During the 2007/MY28 storm the Spirit rover saw
+                  (880-nm) dust opacities reach 4.3, while Opportunity reached 4.6 and possibly 5 (Lemmon et al., 2015).
+                  As the storm grew between Ls = 180° and 190°, dust opacity was modest in Gale Crater with values as low as
+                  0.57 on Sol 2073 (Ls = 188.3°) and generally between 0.6 and 0.7 (Figure 1). This is comparable to observed
+                  MY33 values and about 0.1 less than in MY32.
+                  Substantial dust from the storm reached Gale Crater on Sols 2076 and 2077 (Ls = 190.1–190.5°), when opacity
+                  climbed from 0.78 on Sol 2075 to 1.77 on Sol 2077 (Figure 1). The most dramatic increase in dust opacity
+                  occurred between Sols 2080 and 2085 (Ls = 192.5–195.5°) when opacity climbed from 1.56 to the peak of
+                  8.5 (Figure 1). Orbital observations by the Mars Color Imager indicate this rapid change in dust opacity over
+                  Gale was linked to the global evolution of the storm. The initial rise in dust opacity between Sols 2075 and
+                  2080 appears due to the dissipation of a local-scale dust storm southwest of Gale Crater in addition to trans-
+                  port of dust globally from the more intense dust lifting in the opposite hemisphere (Malin et al., 2018d).
+                  Between Sols 2080 and 2085, dust lifting near Hellas Basin, Tyrrhena Terra, and Hesperia Planum expanded
+                  and encompassed Gale Crater (Malin et al., 2018d). Orbital and rover perspectives indicate the majority of
+                  dust observed in Gale Crater was advected from elsewhere, that is, from locations where active dust lifting
+                  was observed (Malin et al., 2018d, 2018e).
+                  Although the storm did not peak globally (i.e., major dust lifting did not cease) for several more weeks (Malin
+                  et al., 2018g), opacity in Gale Crater began to decline immediately after the dust opacity peak on Sol 2085.
+                  Starting on Sol 2107, when sedimentation-only processes appear to begin, through Sol 2171, Curiosity
+                  observed an opacity exponential decay timescale of 43 ± 2 sols, identical to the 43 sols of the Mars
+                  Exploration Rovers during the 2007/MY28 storm (Lemmon et al., 2015) and close to the 51 sols observed
+                  by Viking Lander 1 during the second global storm of 1977/MY12 (Pollack et al., 1979).
+                  Primarily during the ﬁrst month of the campaign, multiple Mastcam tau observations were often taken on the
+                  same sol to search for short-term opacity variation. Variation of ~0.1–0.25 (above the 1σ level) was seen over
+                  1–3 hr during the mid-sol and afternoon periods.
+
+                  3.2. Line-of-Sight Atmospheric Dust Opacity
+                  In addition to the column-integrated opacity, Curiosity regularly measures the in-crater line-of-sight opacity
+                  by imaging the north rim of Gale Crater with Mastcam and Navcam (Moore et al., 2016; Moores et al., 2015).
+                  While the column opacity has occasionally high sol-to-sol variability (e.g., Smith et al., 2016), the in-crater opa-
+                  city typically exhibits less transient behavior and often a time lag between column and corresponding in-
+                  crater opacity increases (e.g., Guzewich et al., 2017). As the storm approached Gale, Curiosity was parked near
+                  the north edge of the Vera Rubin Ridge. This gave a consistent view for the Mastcam crater rim extinction
+
+
+GUZEWICH ET AL.                                                                                                                    73
+                                        Geophysical Research Letters                                                        10.1029/2018GL080839
+
+
+
+                                                                            images shown in the ﬁrst three rows of Figure 2. By the end of the storm
+                                                                            (bottom row of Figure 2), the rover had moved elsewhere, but the viewing
+                                                                            angle and range did not appreciably change.
+                                                                            For a sense of scale, the north crater rim that can be clearly seen in the ﬁrst
+                                                                            row of Figure 2 is approximately 30 km distant from the rover, while the
+                                                                            Bagnold dune ﬁelds and bluffs are 2–5 km distant. The high horizontal
+                                                                            opacity during the storm broke some of the assumptions used to calculate
+                                                                            line-of-sight extinction by Moores et al. (2015) and Moore et al. (2016).
+                                                                            Horizontal visibility is a standard terrestrial weather variable reported to
+                                                                            provide information about obscurations in the air and is marked by human
+                                                                            observers as the distance to the farthest discernable object. That value fell
+                                                                            to approximately 2.7 km on Sol 2094. Note that this is 9 sols after the max-
+                                                                            imum in column optical depth (Figure 1), suggesting that the bulk of atmo-
+                                                                            spheric dust did advect into Gale Crater from elsewhere (and hence was
+                                                                            above the boundary layer within the crater) before settling to lower alti-
+                                                                            tudes with time. By Sols 2151 and 2171 (bottom row in Figure 2), features
+                                                                            in the crater rim can be seen again.
+
+                                                                            3.3. Meteorological Measurements
+                                                                             Figure 3 provides an overview of meteorological variables measured by
+                                                                             REMS, and Figure 3a displays the diurnal pressure cycle at three represen-
+                                                                             tative times during the growth and onset of the storm: Sol 2053 (before
+                                                                             the precursor storms formed in the northern hemisphere), Sol 2074 (as
+                                                                             the storm was rapidly growing and encroaching on Gale), and Sol 2096
+                                                                             (after the storm was termed global and dust opacity in Gale was very high,
+                                                                             ~6). There are two roughly equal contributions to the diurnal pressure cycle
+                                                                             at Gale Crater under normal dust conditions. Roughly half the amplitude is
+                                                                             provided by the large-scale thermal tides, of which the diurnal mode dom-
+                                                                             inates (Guzewich et al., 2016). The other half is provided by daily redistribu-
+                                                                             tion of atmospheric mass over the complex mesoscale terrain of Gale
+                                                                             Crater (Richardson & Newman, 2018). The changes depicted in Figure 3a
+                                                                             are thus driven by the variation in both amplitudes of the pressure tides
+                                                                             and the mesoscale circulation. The diurnal pressure component is most
+                                                                             sensitive to dust at the observation location and relatively insensitive to
+                                                                             global atmospheric dust loading (Guzewich et al., 2016). Prior to the storm
+                                                                             (asterisks in Figure 3a), the diurnal pressure amplitude (the source of most
+                                                                             of the variability seen during a sol) was near 32 Pa, which is seasonally typi-
+Figure 2. Mast Camera “crater rim line-of-sight extinction” images identiﬁed cal. As dust encroached on Gale Crater on Sol 2083 (not shown), the diurnal
+by sol number and local true solar time (LTST).                              amplitude reached 48 Pa before returning to climatological values of 30–
+                                                                             40 Pa afterward. The diurnal amplitude during the storm is likely domi-
+                                         nated by the tide rather than the mesoscale “hydrostatic adjustment” circulation (see subsequent paragraphs).
+                                         The semidiurnal variation, which is almost entirely tidal and highly sensitive to globally integrated atmo-
+                                         spheric dust forcing (e.g., Bridger & Murphy, 1998; Wilson & Hamilton, 1996), rose to planetary record levels
+                                         and closely tracked the expansion of the storm in the southern hemisphere. Prior to Ls = 189°, the semidiurnal
+                                         tide was near climatological values of ~12–14 Pa, before rapidly increasing to ~40 Pa on Sol 2095/Ls = 201.5°.
+                                       Diurnal temperature variation decreased drastically in the storm, with typical prestorm maximum-minimum
+                                       air and ground temperature ranges of ~70 and ~90 K, respectively (Ls < 185° in Figure 3b), declining to ~30
+                                       and ~35 K during the storm (see also Prats et al., 2018). Prior to the storm, there was also a clear difference
+                                       between air and ground maximum and minimum temperatures, with the ground temperature typically
+                                       5–10 K cooler at night and 10–15 K warmer during the daytime (diamonds in Figure 3b). High atmospheric
+                                       dust opacity warms overnight low temperatures due to increased downwelling infrared radiation (Martínez
+                                       et al., 2017), resulting in nighttime minimum air and ground temperatures (both occurring near 05:00 local
+                                       true solar time) ~10 and ~20 K warmer than prestorm values, respectively. Daytime maximum air and
+
+
+GUZEWICH ET AL.                                                                                                                                          74
+                   Geophysical Research Letters                                                           10.1029/2018GL080839
+
+
+
+
+                  Figure 3. Rover Environmental Monitoring Station observations of (a) the diurnal air pressure cycle as a function of Local
+                  Mean Solar Time (LMST), (b) the diurnal maximum and minimum air and ground temperatures, (c) the diurnal maximum
+                  measured RH (generally achieved between 04:00 and 06:00 local true solar time) and water vapor abundance obtained
+                  at the same time as RH, and (d) the diurnal maximum ultraviolet (UV) photodiode current. RH = relative humidity;
+                  VMR = volume mixing ratio.
+
+
+                  ground temperatures (occurring around 14:00–15:00 and 12:00–13:00 local true solar time, respectively)
+                  were depressed by ~30 and ~35 K due to diminished incoming solar radiation. During the storm, the
+                  nighttime ground temperatures closely matched the nighttime air temperatures, implying isothermal
+                  conditions in the lowest 1.5 m of the atmosphere (as was anticipated). Daytime ground temperatures also
+                  closely followed the air temperature but remained ~5 K warmer. As dust opacity declined, the normal
+                  differences between daytime air and ground temperatures returned, but the nighttime similarity
+                  remained past Ls = 240°. Daily average air temperature decreased by approximately 10 K relative to
+                  prestorm values.
+                  The diurnal air temperature range reduction of just over 50% will have generated a similar fractional reduc-
+                  tion in the amplitude of the nontidal diurnal pressure cycle at the rover. From modeling of the daily pressure
+                  cycle under nonstorm conditions, it has been shown that about 15 Pa of the ~32 Pa observed diurnal pressure
+                  amplitude is due to the daily local hydrostatic rebalancing ﬂow (see Figure 5a and section 4.3 of Richardson &
+                  Newman, 2018). As the relationship between the daily nontidal pressure amplitude and the daily tempera-
+                  ture range at the Curiosity site is linear (see section 6.4 of Richardson & Newman, 2018), the roughly 50% drop
+                  in the air temperature cycle during the storm will have reduced the daily nontidal pressure amplitude to
+                  ~8 Pa. Thus, of the ~48-Pa total diurnal pressure amplitude observed at the storm peak, the large-scale tide
+                  was likely responsible for about ~40 Pa, representing an increase of the diurnal thermotidal amplitude from
+                  ~15 to ~40 Pa due to the storm.
+                  The REMS measurements of RH are the ﬁrst performed during a global dust storm (Figure 3c). Orbital obser-
+                  vations of previous global storms have hinted that the atmosphere exhibits a lower water content during and
+                  after global dust storms as atmospheric temperatures warm (Fedorova et al., 2018; Smith et al., 2002, 2018).
+                  Figure 3c shows that daily maximum RH (asterisks) dropped to ~5% as the storm encompassed Gale Crater
+                  (Ls > 195°), largely due to warmer overnight minimum temperatures (Figure 3b). As the storm abated, daily
+                  maximum RH values returned to seasonally typical values of ~10%. Figure 3c also shows water vapor volume
+                  mixing ratio values obtained at the same time as RH using concurrent REMS RH, temperature, and atmo-
+                  spheric pressure (Martínez et al., 2017). The decreasing volume mixing ratio values between Ls = 170° and
+                  190° (just prior to the storm reaching Gale) also occurred in previous years. Interestingly, neither the
+
+
+GUZEWICH ET AL.                                                                                                                          75
+                   Geophysical Research Letters                                                            10.1029/2018GL080839
+
+
+
+
+                  Figure 4. Observed dust devils and Rover Environmental Monitoring Station (REMS) pressure vortices before, during, and
+                  immediately after the dust storm plotted against local true solar time and sol. Gray shading shows time periods with REMS
+                  observations. Red circles indicate a detected REMS pressure vortex, with larger circles indicating a pressure drop >1.5 Pa.
+                  Crosses indicate Navcam “dust devil” observations in which no dust devils were detected, while diamonds show obser-
+                  vations with detections (each layer of diamond corresponds to an additional detection within the observation).
+
+
+                  sudden increase between Ls = 190° and 195° nor the following decreasing trend were observed in previous
+                  years. A detailed study of these phenomena will be presented in future work.
+                  Solar ﬂux at the surface was substantially curtailed during the storm. Figure 3d shows the daily maximum UV
+                  photodiode current, corresponding to the maximum detected UV solar ﬂux, for the REMS UVABC channel
+                  before and during the storm. Note that we present UV photodiode current (not UV solar ﬂux), as ﬂux values
+                  have not been corrected for dust deposition on the REMS UV sensors (Smith et al., 2016; Vicente-Retortillo
+                  et al., 2018) and for inaccuracies in the angular response of the sensors (Vicente-Retortillo et al., 2017). That
+                  correction will be presented in future work. Prior to the storm, daily maximum UVABC photodiode currents
+                  were typically 1,400–1,500 nA before falling to values as low as 40 nA when the highest opacity values were
+                  observed in Gale on Sols 2085–2100. Neglecting dust deposition blocking additional solar radiation, this
+                  implies a ~97% reduction in incident total UV solar radiation (direct plus diffuse) at the surface during the
+                  storm relative to previous years at the same season (i.e., when atmospheric optical depth was approximately
+                  0.7). Note that at UV wavelengths, the single-scattering albedo is lower than at visible and near-infrared
+                  wavelengths (Wolff et al., 2009, 2010), resulting in greater absorption.
+                  3.4. Vortex and Dust Devil Activity
+                  Early in the MSL mission, only one candidate dust devil was directly imaged (Moores et al., 2015) despite
+                  numerous convective vortices detected with REMS pressure measurements (Kahanpää et al., 2016;
+                  Ordóñez-Etxeberria et al., 2018; Steakley and Murphy, 2016). In the past 1.5 MY, altered dust devil search
+                  sequence pointing and the rover’s physical proximity to locations that appear more conducive to dust devils
+                  have resulted in regular and numerous dust devil detections within the foothills around Mount Sharp
+                  (Lemmon et al., 2017).
+                  Newman et al. (2002) showed, using the Rennó et al. (1998) thermodynamic theory, that increased dust load-
+                  ing is expected to have a negative feedback on dust devil activity due to the reduction in sensible heat ﬂux
+                  driven by the near-surface atmospheric temperature gradient. Ignoring changes to the wind conditions, the
+                  reduced temperature gradient drove an approximately 80% reduction in sensible heat ﬂux during the height
+                  of the storm near Sol 2085.
+                  Dust devils and convective vortices are seasonally more abundant in southern hemisphere spring and sum-
+                  mer, and the expected seasonal increase of dust devils was observed prior to the onset of the global dust
+                  storm (i.e., before Sol 2070). However, once the dust opacity increased, dust devils/convective vortices ceased
+                  entirely within Gale Crater from Sol 2082 to 2106 (Figure 4). One convective pressure vortex was detected on
+                  Sol 2107, and then more regular detections resumed after Sol 2116. The ﬁrst imaged dust devil was not seen
+
+
+GUZEWICH ET AL.                                                                                                                           76
+                                           Geophysical Research Letters                                                                           10.1029/2018GL080839
+
+
+
+                                          until Sol 2137 when opacity decreased to 2.84. Dust devil and pressure vortex frequency was substantially
+                                          reduced below prestorm values through mid-September (Ls ~ 250°).
+                                          3.5. Other Results
+                                          We brieﬂy mention additional results that will be expanded upon in future work. A series of Mastcam sky sur-
+                                          vey observations were conducted to examine dust particles properties and their potential variation during
+                                          the storm. Smith and Wolff (2014) describe the methodology for determining dust particle effective radii.
+                                          We ﬁnd that dust effective radius increased from 1.4 μm prior to the storm on Sol 2065 to greater than
+                                          4 μm on Sol 2097 when optical depth was >6. This corroborates work during previous global dust storms that
+                                          indicates larger particles are lifted by the storm (e.g., Clancy et al., 2010). Modeling of the surface thermally
+                                          derived albedo (from REMS ground temperature measurements, see Figure 3b) shows that the surface
+                                          albedo increased from 0.2 to 0.28 due to a thin dust coating while thermal inertia was unchanged (see
+                                          Vasavada et al. (2017) for details on the methodology to produce this result).
+                                          “Change detection imaging” with Mastcam has been used previously to assess wind-driven motion of surface
+                                          sediment (Baker, Lapotre, et al., 2018; Baker, Newman, et al., 2018; Bridges et al., 2017). Change detection
+                                          images were acquired at three sites during the dust storm (“Duluth,” “Voyageurs,” and “Stoer”) to constrain
+                                          the storm’s effect on surface winds around Curiosity. The tail end of the Duluth imaging campaign revealed
+                                          substantial sediment motion between Sols 2083 and 2084, just preceding the Sol 2085 opacity peak. Still, this
+                                          level of motion was not inconsistent with changes during this season of MY33 (Baker, Lapotre, et al., 2018).
+                                          Subsequent images obtained at Voyageurs (Sols 2110–2114) and Stoer (Sols 2136–2152) indicated moderate
+                                          levels of aeolian activity, including a small amount of impact ripple migration. Analogous ripple migration has
+                                          been observed in other instances along the rover’s traverse, indicating that the aeolian landscape in Gale
+                                          Crater may be more controlled by seasonally active background winds than by episodic events (Baker,
+                                          Lapotre, et al., 2018; Baker, Newman, et al., 2018; Bridges et al., 2017).
+
+                                          4. Conclusions
+                                          For approximately 100 Martian sols, the MSL science team conducted an intensive science campaign to study
+                                          the 2018/MY34 global dust storm involving an increased cadence of environmental monitoring activities
+                                          with Curiosity’s instruments.
+                                          Atmospheric optical depth measured by Mastcam solar imaging increased from prestorm values near 0.6 to a
+                                          peak of 8.5 over just 12 sols (Ls = 188–196°). Subsequently, opacity began a steady decline at a decay rate of
+                                          43 ± 2 sols, very similar to decay rates observed by previous landed missions (e.g., Mars Exploration Rovers
+                                          and Viking Landers). Comparison of column optical depth and in-crater line-of-sight optical depth observed
+                                          by Mastcam and Navcam indicate that much or all of the dust was sourced from outside of Gale Crater. There
+                                          were no direct indications of dust lifting within Gale Crater during the storm between Sols 2079 and 2138.
+                                          The dust attenuated approximately 97% of the incident total (direct plus diffuse) UV solar radiation at the sur-
+                                          face, leading to a ~40- and ~55-K reduction in diurnal range of air and ground temperature, respectively,
+                                          which resulted in nearly isothermal conditions between the surface and lower atmosphere at night and
+Acknowledgments                           reduced values of midsol thermal gradient. Such conditions reduced the daytime sensible heat ﬂux, leading
+This work was funded by a MSL             to a complete absence of dust devils and convective pressure vortices during the height of the storm.
+Participating Scientist grant to S.
+Guzewich. A portion of the research was   The REMS pressure sensor observed enhanced atmospheric tides, with the semidiurnal tide reaching ampli-
+carried out at the Jet Propulsion
+                                          tudes of 40 Pa, nearly quadrupling climatological values for early southern hemisphere spring. The diurnal
+Laboratory, California Institute of
+Technology, under a contract with the     pressure cycle was also enhanced, with the tidal contribution increasing by a factor of ~3, while the local
+National Aeronautics and Space            mesoscale contribution likely decreased by ~50%.
+Administration. MSL data are freely
+available on the Planetary Data System    Surface change detection images did not reveal any signiﬁcant change to aeolian transport relative to pre-
+within 6 months after receipt on Earth.   vious years, supporting the overarching idea that the aeolian landscape on Mars is shaped more by gradual
+Data used to make the ﬁgures are
+included in the supporting information.
+                                          processes than by episodic events.
+Mastcam and Navcam images are freely
+available at https://mars.nasa.gov/msl/
+multimedia/raw/. We thank two
+                                          References
+anonymous reviewers for their helpful     Baker, M. M., Lapotre, M. G. A., Minitti, M. E., Newman, C. E., Sullivan, R., Weitz, C. M., et al. (2018). The Bagnold Dunes in southern summer:
+comments, which have improved this          Active sediment transport on Mars observed by the Curiosity rover. Geophysical Research Letters, 45, 8853–8863. https://doi.org/10.1029/
+manuscript.                                 2018GL079040
+
+
+
+GUZEWICH ET AL.                                                                                                                                                                       77
+                   Geophysical Research Letters                                                                                  10.1029/2018GL080839
+
+
+
+                  Baker, M. M., Newman, C. E., Lapotre, M. G. A., Sullivan, R., Bridges, N. T., & Lewis, K. W. (2018). Coarse sediment transport in the modern
+                     Martian environment. Journal of Geophysical Research: Planets, 123, 1380–1394. https://doi.org/10.1002/2017JE005513
+                  Bell, J. F. III, Godber, A., McNair, S., Caplinger, M. A., Maki, J. N., Lemmon, M. T., et al. (2017). The Mars Science Laboratory Curiosity rover
+                     Mastcam instruments: Preﬂight and in-ﬂight calibration, validation, and data archiving. Earth and Space Science, 4, 396–452. https://doi.
+                     org/10.1002/2016EA000219
+                  Benson, J. L., & James, P. B. (2005). Yearly comparisons of the Martian polar caps: 1999–2003 Mars Orbiter Camera observations. Icarus, 174(2),
+                     513–523. https://doi.org/10.1016/j.icarus.2004.08.025
+                  Bridger, A. F. C., & Murphy, J. R. (1998). Mars’ surface pressure tides and their behavior during global dust storms. Journal of Geophysical
+                     Research, 103(3334), 85,887–88,601.
+                  Bridges, N. T., Sullivan, R., Newman, C. E., Navarro, S., van Beek, J., Ewing, R. C., et al. (2017). Martian aeolian activity at the Bagnold Dunes, Gale
+                     Crater: The view from the surface and orbit. Journal of Geophysical Research: Planets, 122, 2077–2110. https://doi.org/10.1002/
+                     2017JE005263
+                  Cantor, B. A. (2007). MOC observations of the 2001 Mars planet-encircling dust storm. Icarus, 186(1), 60–96. https://doi.org/10.1016/j.
+                     icarus.2006.08.019
+                  Clancy, R. T., Sandor, B. J., Wolff, M. J., Christensen, P. R., Smith, M. D., Pearl, J. C., et al. (2000). An intercomparison of ground-based millimeter,
+                     MGS TES, and Viking atmospheric temperature measurements: Seasonal and interannual variability of temperatures and dust loading in
+                     the global Mars atmosphere. Journal of Geophysical Research, 105(E4), 9553–9571. https://doi.org/10.1029/1999JE001089
+                  Clancy, R. T., Wolff, M. J., Whitney, B. A., Cantor, B. A., Smith, M. D., & McConnochie, T. H. (2010). Extension of atmospheric dust loading to
+                     high altitudes during the 2001 Mars dust storm: MGS TES limb observations. Icarus, 207(1), 98–109. https://doi.org/10.1016/j.
+                     icarus.2009.10.011
+                  Conrath, B. J. (1975). Thermal structure of the Martian atmosphere during the dissipation of the dust storm of 1971. Icarus, 24(1), 36–46.
+                     https://doi.org/10.1016/0019-1035(75)90156-6
+                  Fedorova, A., Bertaux, J.-L., Betsis, D., Montmessin, F., Korablev, O., Maltagliati, L., & Clarke, J. (2018). Water vapor in the middle atmosphere of
+                     Mars during the 2007 global dust storm. Icarus, 300, 440–457. https://doi.org/10.1016/j.icarus.2017.09.025
+                  Gómez-Elvira, J., Armiens, C., Castañer, L., Domínguez, M., Genzer, M., Gómez, F., et al. (2012). REMS: The environmental sensor suite for the
+                     Mars Science Laboratory. Space Science Reviews, 170(1-4), 583–640. https://doi.org/10.1007/s11214-012-9921-1
+                  Grotzinger, J. P., Crisp, J., Vasavada, A. R., Anderson, R. C., Baker, C. J., Barry, R., et al. (2012). Mars Science Laboratory mission and science
+                     investigation. Space Science Reviews, 170(1–4), 5–56. https://doi.org/10.1007/s11214-012-9892-2
+                  Guzewich, S. D., Newman, C. E., de la Torre Juarez, M., Wilson, R. J., Lemmon, M., Smith, M. D., et al. (2016). Atmospheric tides in Gale Crater,
+                     Mars. Icarus, 268, 37–49. https://doi.org/10.1016/j.icarus.2015.12.028
+                  Guzewich, S. D., Newman, C. E., Smith, M. D., Moores, J. E., Smith, C. L., Moore, C., et al. (2017). The vertical dust proﬁle over Gale Crater, Mars.
+                     Journal of Geophysical Research: Planets, 122, 2779–2792. https://doi.org/10.1002/2017JE005420
+                  Guzewich, S. D., Wilson, R. J., McConnochie, T. H., Toigo, A. D., Banﬁeld, D. J., & Smith, M. D. (2014). Thermal tides during the 2001 Martian
+                     global-scale dust storm. Journal of Geophysical Research: Planets, 119, 506–519. https://doi.org/10.1002/2013JE004502
+                  Haberle, R. M., Leovy, C. B., & Pollack, J. B. (1982). Some effects of global dust storms on the atmospheric circulation on Mars. Icarus, 50(2-3),
+                     322–367. https://doi.org/10.1016/0019-1035(82)90129-4
+                  Kahanpää, H., Newman, C. E., Moores, J. E., Zorzano, M.-P., Martín-Torres, J., Navarro, S., et al. (2016). Convective vortices and dust devils at
+                     the MSL landing site: Annual variability. Journal of Geophysical Research: Planets, 121, 1514–1549. https://doi.org/10.1002/
+                     2016JE005027
+                  Lemmon, M. T., Newman, C. E., Rennó, N., Mason, E., Battalio, M., Richardson, M. I., & Kahanpää, H. (2017), Dust devil activity at the Curiosity
+                     Mars rover ﬁeld site, #2952. Presented at the 48th lunar and planetary science conference, Houston, TX, 2017.
+                  Lemmon, M. T., Wolff, M. J., Bell, J. F. III, Smith, M. D., Cantor, B. A., & Smith, P. H. (2015). Dust aerosol, clouds, and the atmospheric optical
+                     depth record over 5 Mars years of the Mars Exploration Rover mission. Icarus, 251, 96–111. https://doi.org/10.1016/j.icarus.2014.03.029
+                  Leovy, C. B., & Zurek, R. W. (1979). Thermal tides and Martian dust storms: Direct evidence for coupling. Journal of Geophysical Research,
+                     84(B6), 2956–2968. https://doi.org/10.1029/JB084iB06p02956
+                  Malin, M. C., Cantor, B. A., & Britton, A. W. (2018a). MRO MARCI weather report for the week of 21 May 2018–27 May 2018, Malin Space Science
+                     Systems Captioned Image Release, MSSS-532. Retrieved from http://www.msss.com/msss_images/2018/05/30/
+                  Malin, M. C., Cantor, B. A., & Britton, A. W. (2018b). MRO MARCI weather report for the week of 28 May 2018–3 June 2018, Malin Space Science
+                     Systems Captioned Image Release, MSSS-533. Retrieved from http://www.msss.com/msss_images/2018/06/06/
+                  Malin, M. C., Cantor, B. A., & Britton, A. W. (2018c). MRO MARCI weather report for the week of 4 June 2018–10 June 2018, Malin Space Science
+                     Systems Captioned Image Release, MSSS-534. Retrieved from http://www.msss.com/msss_images/2018/06/13/
+                  Malin, M. C., Cantor, B. A., & Britton, A. W. (2018d). MRO MARCI weather report for the week of 11 June 2018–17 June 2018, Malin Space
+                     Science Systems Captioned Image Release, MSSS-535. Retrieved from http://www.msss.com/msss_images/2018/06/20/
+                  Malin, M. C., Cantor, B. A., & Britton, A. W. (2018e). MRO MARCI weather report for the week of 18 June 2018–24 June 2018, Malin Space
+                     Science Systems Captioned Image Release, MSSS-536. Retrieved from http://www.msss.com/msss_images/2018/06/27/
+                  Malin, M. C., Cantor, B. A., & Britton, A. W. (2018f). MRO MARCI weather report for the week of 2 July 2018–8 July 2018, Malin Space Science
+                     Systems Captioned Image Release, MSSS-538. Retrieved from http://www.msss.com/msss_images/2018/07/11/
+                  Malin, M. C., Cantor, B. A., & Britton, A. W. (2018g). MRO MARCI weather report for the week of 16 July 2018–22 July 2018, Malin Space Science
+                     Systems Captioned Image Release, MSSS-540. Retrieved from http://www.msss.com/msss_images/2018/07/25/
+                  Malin, M.C., Cantor, B.A., & Britton, A.W. (2018h). MCO MARCI weather report for the week of 3 September 2018–9 September 2018, Malin
+                     Space Science Systems Captioned Image Release, MSSS-547. Retrieved from http://www.msss.com/msss_images/2018/09/12/
+                  Martínez, G. M., Newman, C. E., De Vicente-Retortillo, A., Fischer, E., Rennó, N. O., Richardson, M. I., et al. (2017). The modern near-surface
+                     Martian climate: A review of in-situ meteorological data from Viking to Curiosity. Space Science Reviews, 212(1-2), 295–338. https://doi.org/
+                     10.1007/s11214-017-0360-x
+                  McConnochie, T. H., Smith, M. D., Wolff, M. J., Bender, S., Lemmon, M., Wiens, R. C., et al. (2018). Retrieval of water vapor column abundance
+                     and aerosol properties from ChemCam passive sky spectroscopy. Icarus, 307, 294–326. https://doi.org/10.1016/j.icarus.2017.10.043
+                  Moore, C. A., Moores, J. E., Lemmon, M. T., Rafkin, S. C. R., Francis, R., Pla-García, J., et al. (2016). A full Martian year of line-of-sight extinction
+                     within Gale Crater, Mars as acquired by the MSL Navcam through sol 900. Icarus, 264, 102–108. https://doi.org/10.1016/j.
+                     icarus.2015.09.001
+                  Moores, J. E., Lemmon, M. T., Kahanpää, H., Rafkin, S. C. R., Francis, R., Pla-Garcia, J., et al. (2015). Observational evidence of a suppressed
+                     planetary boundary layer in northern Gale Crater, Mars as seen by the Navcam instrument onboard the Mars Science Laboratory rover.
+                     Icarus, 249, 129–142. https://doi.org/10.1016/j.icarus.2014.09.020
+
+
+
+GUZEWICH ET AL.                                                                                                                                                        78
+                   Geophysical Research Letters                                                                                  10.1029/2018GL080839
+
+
+
+                  Newman, C. E., Gómez-Elvira, J., Richardson, M. I., Marín, M., Navarro, S., Torres, J., et al. (2017). Winds measured by the Rover Environmental
+                     Monitoring System (REMS) during the Mars Science Laboratory (MSL) rover’s Bagnold Dunes campaign and comparison with numerical
+                     modeling using MarsWRF. Icarus, 291, 203–231. https://doi.org/10.1016/j.icarus.2016.12.016
+                  Newman, C. E., Lewis, S. R., Read, P. L., & Forget, F. (2002). Modeling the Martian dust cycle, 1. Representations of dust transport processes.
+                     Journal of Geophysical Research, 107(E12), L04203. https://doi.org/10.1029/2002JE001910
+                  Ordóñez-Etxeberria, I., Hueso, R., & Sánchez-Lavega, A. (2018). A systematic search of sudden pressure drops on Gale crater during two
+                     Martian years derived from MSL/REMS data. Icarus, 299, 308–330. https://doi.org/10.1016/j.icarus.2017.07.032
+                  Pollack, J. B., Colburn, D. S., Flasar, F. M., Kahn, R., Carlston, C. E., & Pidek, D. G. (1979). Properties and effects of dust particles suspended in the
+                     Martian atmosphere. Journal of Geophysical Research, 84(B6), 2929–2945. https://doi.org/10.1029/JB084iB06p02929
+                  Prats, B., Archer, D., Trainer, M., Malespin, C., Teinturier, S., Guzewich, S. D., et al. (2018). 2018 Mars global dust storm—Effects of airborne dust
+                     and particle deposition on Mars Science Laboratory SAM (sample analysis at Mars) instrument inlet cover actuator temperatures, pre-
+                     sented at the Fall American Geophysical Union Meeting, Washington, DC, December, 2018.
+                  Rafkin, S. C. R., Zeitlin, C., Ehresmann, B., Hassler, D., Guo, J., Köhler, J., et al., & the MSL Science Team (2014). Diurnal variations of energetic
+                     particle radiation at the surface of Mars as observed by the Mars Science Laboratory Radiation Assessment Detector. Journal of
+                     Geophysical Research: Planets, 119, 1345–1358. https://doi.org/10.1002/2013JE004525
+                  Rennó, N. O., Burkett, M. L., & Larkin, M. P. (1998). A simple thermodynamic model for dust devils. Journal of the Atmospheric Sciences, 55(21),
+                     3244–3252. https://doi.org/10.1175/1520-0469(1998)055<3244:ASTTFD>2.0.CO;2
+                  Richardson, M. I., & Newman, C. E. (2018). On the relationship between surface pressure, terrain elevation, and air temperature. Part I: The
+                     large diurnal surface pressure range at Gale Crater, Mars and its origin due to lateral hydrostatic adjustment. Planetary and Space Science.
+                     https://doi.org/10.1016/j.pss.2018.07.003
+                  Ryan, J. A., & Henry, R. M. (1979). Mars atmospheric phenomena during major dust storms, as measured at surface. Journal of Geophysical
+                     Research, 84(B6), 2821. https://doi.org/10.1029/JB084iB06p02821
+                  Smith, M. D., Conrath, B. J., Pearl, J. C., & Christensen, P. R. (2002). Thermal emission spectrometer observations of the Martian planet-
+                     encircling dust storm 2001A. Icarus, 157(1), 259–263. https://doi.org/10.1006/icar.2001.6797
+                  Smith, M. D., Daerden, F., Neary, L., & Khayat, A. (2018). The climatology of carbon monoxide and water vapor on Mars as observed by CRISM
+                     and modeled by the GEM-Mars general circulation model. Icarus, 301, 117–131. https://doi.org/10.1016/j.icarus.2017.09.027
+                  Smith, M. D., & Wolff, M. J. (2014). Dust aerosol particle size and shape using MER Navcam and Pancam sky imaging, presented at the 5th
+                     International Workshop on the Mars Atmosphere: Modelling and Observations, Oxford, UK, January, 2014.
+                  Smith, M. D., Zorzano, M.-P., Lemmon, M., Martín-Torres, J., & Mendaza de Cal, T. (2016). Aerosol optical depth as observed by the Mars
+                     Science Laboratory REMS UV photodiodes. Icarus, 280, 234–248. https://doi.org/10.1016/j.icarus.2016.07.012
+                  Steakley, K., & Murphy, J. (2016). A year of convective vortex activity at Gale crater. Icarus, 278, 180–193. https://doi.org/10.1016/j.
+                     icarus.2016.06.010
+                  Strausberg, M. J., Wang, H., Richardson, M. I., Ewald, S. P., & Toigo, A. D. (2005). Observations of the initiation and evolution of the 2001 Mars
+                     global dust storm. Journal of Geophysical Research, 110, E02006. https://doi.org/10.1029/2004JE002361
+                  Szwast, M. A., Richardson, M. I., & Vasavada, A. R. (2006). Surface dust redistribution on Mars as observed by the Mars Global Surveyor and
+                     Viking orbiters. Journal of Geophysical Research, 111, E11008. https://doi.org/10.1029/2005JE002485
+                  Toigo, A. D., Richardson, M. I., Wilson, R. J., Wang, H., & Ingersoll, A. P. (2002). A ﬁrst look at dust lifting and dust storms near the south pole of
+                     Mars with a mesoscale model. Journal of Geophysical Research, 107(E7). https://doi.org/10.1029/2001JE001592
+                  Vasavada, A. R., Piqueux, S., Lewis, K. W., Lemmon, M. T., & Smith, M. D. (2017). Thermophysical properties along Curosity’s traverse in Gale
+                     crater, Mars, derived from the REMS ground temperature sensor. Icarus, 284, 372–386.
+                  Vicente-Retortillo, Á., Martínez, G. M., Renno, N., Newman, C. E., Ordonez-Etxeberria, I., Lemmon, M. T. et al. (2018). Seasonal deposition and
+                     lifting of dust on Mars as observed by the curiosity rover. Scientiﬁc Reports, 8, 17576. https://doi.org/10.1038/s41598-018-35946-8
+                  Vicente-Retortillo, Á., Martínez, G. M., Rennó, N. O., Lemmon, M. T., & de la Torre-Juárez, M. (2017). Determination of dust aerosol particle size
+                     at Gale Crater using REMS UVS and Mastcam measurements. Geophysical Research Letters, 44, 3502–3508. https://doi.org/10.1002/
+                     2017GL072589
+                  Vincendon, M., Audouard, J., Altieri, F., & Ody, A. (2015). Mars Express measurements of surface albedo changes over 2004–2010. Icarus, 251,
+                     145–163. https://doi.org/10.1016/j.icarus.2014.10.029
+                  Viúdez-Moreiras, D., Gómez-Elvira, J., Newman, C. E., Navarro, S., Marin, M., Torres, J., et al. (2019a). Gale surface wind characterization based
+                     on the Mars Science Laboratory REMS dataset. Part I: Wind retrieval and Gale’s wind speeds and directions. Icarus, 319.
+                  Viúdez-Moreiras, D., Gómez-Elvira, J., Newman, C. E., Navarro, S., Marin, M., Torres, J., et al. (2019b). Gale surface wind characterization based
+                     on the Mars Science Laboratory REMS dataset. Part II: Wind probability distributions. Icarus, 319, 645–656.
+                  Wang, H., Richardson, M. I., Wilson, R. J., Ingersoll, A. P., Toigo, A. D., & Zurek, R. W. (2003). Cyclones, tides, and the origin of a cross-equatorial
+                     dust storm on Mars. Geophysical Research Letters, 30(9), 1488. https://doi.org/10.1029/2002GL016828
+                  Wilson, R. J. (1997). A general circulation model simulation of the Martian polar warming. Geophysical Research Letters, 24(2), 123–126. https://
+                     doi.org/10.1029/96GL03814
+                  Wilson, R. J., & Hamilton, K. (1996). Comprehensive model simulation of thermal tides in the Martian atmosphere. Journal of the Atmospheric
+                     Sciences, 53(9), 1290–1326. https://doi.org/10.1175/1520-0469(1996)053<1290:CMSOTT>2.0.CO;2
+                  Wolff, M. J., Clancy, R. T., Goguen, J. D., Malin, M. C., & Cantor, B. A. (2010). Ultraviolet dust aerosol properties as observed by MARCI. Icarus,
+                     208(1), 143–155. https://doi.org/10.1016/j.icarus.2010.01.010
+                  Wolff, M. J., Smith, M. D., Clancy, R. T., Arvidson, R., Kahre, M., Seelos, F. IV, et al. (2009). Wavelength dependence of dust aerosol single-
+                     scattering albedo as observed by the Compact Reconnaissance Imaging Spectrometer. Journal of Geophysical Research, 114, E00D04.
+                     https://doi.org/10.1029/2009JE003350
+                  Zurek, R., & Leovy, C. B. (1981). Thermal tides in the dusty Martian atmosphere: A veriﬁcation of theory. Science, 213(4506), 437–439. https://
+                     doi.org/10.1126/science.213.4506.437
+                  Zurek, R. W. (1982). Martian great dust storms: An update. Icarus, 50(2–3), 288–310. https://doi.org/10.1016/0019-1035(82)90127-0
+
+
+
+
+GUZEWICH ET AL.                                                                                                                                                         79
+

@@ -1,0 +1,119 @@
+ ELECTRODYNAMIC DUST SHIELD FOR SOLAR PANELS ON MARS. C.I. Calle', C.R. Buhler2 , J.G.
+ Mantovani3 , S. Clements4, A. Chen5, M.K. Mazumder 6, A.S. Bins6, and A.W. Nowicki 2 . 1 Electrostatics and Mate-
+ rials Physics Laboratory, NASA Kennedy Space Center, YA-C2-T, Kennedy Space Center, FL 32899; 2ASRC
+ Aerospace, ASRC-15, Kennedy Space Center, FL 32899; 'Florida Jistitute of Technology, Melbourne, FL 32901;
+ 4Department of Physics and Astronomy, Appalachian State University, Boone, SC 28608, 5Department of Physics,
+ Oklahoma Baptist University, Shawnee, OK 74804, 6Department of Applied Science, University of Arkansas at
+ Little Rock, Little Rock, AR 72204.
+
+
+        Introduction: The Materials Adherence Experi-         moval was observed at voltages as low as 800 vp_p
+  ment on the Mars Pathfinder mission measured an             under ambient (Earth) conditions.
+   obscuration of the solar arrays due to dust deposition         Fig. 1 shows the dust-laden Electrodynamic Dust
+  at a rate of about 0.2 8% per day. It was estimated that    Shield before and after the voltage was applied. Ap-
+  settling dust may cause degradation in performance of       plication of the AC field showed that positively
+  a solar panel of between 22% and 89% over the course        charged particles moved to the left while negatively
+  of two years [1, 2]. These results were obtained with-      charged particles were deposited to the right of the
+  out the presence of a global dust storm.                    screen. A short movie of this experiment is located at:
+      Several types of adherence forces keep dust parti-      http ://physics.ksc.nasa.gov/CurrentResearch/Electrody
+  cles attached to surfaces. The most widely discussed        nam icScreen/Electrodynam ic.htm
+  adherence force is the electrostatic force. Laboratory
+  experiments [3] as well as indirect evidence from the
+  Wheel Abrasion Experiment on Pathfinder [4] indi-
+  cate that it is very likely that the particles suspended
+  in the Martian atmosphere are electrostatically
+  charged.
+       Electrodynamic Dust Shield: Masuda and col-
+  laborators at the University of Tokyo developed a
+ method to lift and transport particles called the elec-
+ tric curtain, in which a series of parallel electrodes
+ connected to an AC source generate a traveling wave
+ that acts as a contactiess conveyor [5-8].
+      We have developed an Electrodynamic Dust Shield
+ prototype to remove dust from surfaces using elec-
+ trodes that are alternately connected to an AC source
+ and to ground. The electrodes are embedded in a
+ transparent dielectric film to decrease their breakdown
+ potential. Several prototype shields have been tested to
+ check the cleaning efficiency as a function of various
+ line widths and spacings. We used square waveforms
+ in which the frequency was varied from 0 to 500 I-[z
+ and the voltage was varied from 0 to 10 kV [9].
+     Experiments under terrestrial environmental con-
+ ditions were performed with a screen with 0.7 mm
+thick electrodes at a spacing of 1.5 mm. The screen
+was coated with two thin coats of polyurethane in or-
+der to prevent spark discharge. A thin coating of the
+JSC Mars-I Martian simulant [10] was deposited onto
+the prototype shild. The simulant dust was baked out
+at 150°C for several days to remove moisture and the
+particle sizes were less than 50 J.tm in diameter. About     Figure 1. (top) The dust-laden screen before the volt-
+4000 Volts weak-to-peak) at 500 Hz was applied to            age was applied and (bottom) dust removal after-
+the screen to remove the fine adhesive dust. Dust re-        wards. This experiment was performed at terrestrial
+                                                             environmental conditions.
+     Experiments Under Simulated Martian Pres-               are needed to lift and move these dust particles. The
+sures: Further experiments using various spacings            weaker gravity on Mars should also aid in the removal
+and widths are shown below. Figure 2 shows the mini-         process. The electrical breakdown of the gas did not
+mum voltage amplitude (square wave) required for             occur until the amplitude of the potential exceeded
+particle transport as a function of frequency for three      800 volts (1600 V) with the three prototype screens.
+screens at both atmospheric pressure and simulated               The dust deposition depended highly on the spac-
+Martian pressures of 7 torr CO2 The voltage values           ing and width of the screen. For the largest spacing
+for particle movement at atmospheric pressure are           (black line in Fig. 2), the particles deposited in the
+consistent with the literature [8] with lower voltages      region between the electrodes, while the smaller spac-
+required for lower frequencies. It is well known that       ing (red line) deposited the particles onto the
+the lower pressure of the Martian environment is            grounded electrodes. Complete removal was not ob-
+conducive to electrical breakdown due to Paschen's          tained (with this signal-phase signal) until the spacing
+Law, which limits the strength of the electric field        was down to 1.0 mm (green line) for the given signal.
+allowed between two conducting surfaces. Therefore,         For continuous operation, the prototype screens were 5
+experiments were designed to check the feasibility of          10 cm in size and required less than 0.02 W/cm2
+using this approach under Martian conditions. We            when activated. On Mars, this system will be activated
+present the results for the Electrodynamic Dust shield      only when dust removal is required, perhaps once a
+at low pressures in CO2.                                    sol. Therefore, the daily power requirement will be
+                                                            relatively low. In these experiments, we completely
+             Width=0.6mm Spacüg=2.0mm                       covered the screens with approximately 0.5-1.0 grams
+             Width=0.5mm Spacing =1.5mm
+-   2000     Width=0.3mm Spacing =1.0mm                     of simulant, far more than the expected 30,000 parti-
+                                                            cles per cm2 [11].
+    1500
+                                                                 Preliminary results with these unoptimized
+    1000
+                                                            screens indicate that this technology can be applied
+                                                           under Martian conditions without electrostatic break-
+     500                                                   down problems. Furthermore, the low voltages and
+                                                           frequency requirements should not pose serious power,
+             100      200        300      400    500       mass or safety concerns for future space vehicles.
+                            Frequency                           References: [I] Landis, G.A., Acta Astronautica,
+                                                           38, No. 1, 885 (1996). [2] Landis, G.A. and Jenkins,
+                                                           P.P., JGR, 105, 1855 (2000). [3] Calle C.I., J.G. Man-
+    800
+                                                           tovani, C.R. Buhler, E.E. Groop, M.G. Buehler and
+    600                                                    A.W. Nowicki, Proc.of the ESA -IEEE Joint Meeting
+                                                           on Electrostatics, Laplacian Press, Morgan Hill, CA,
+    400
+                                                           pp. 90 (2003). [4] Farrel, W.M., M.L. Kaiser, M.D.
+                                                           Desch, J.G. Houser, S.A. Cummer, D.M. Wilt, and
+    200
+                                                           G.A Landis, JGR, 104, 3795 (1999). [5] Masuda, S.,
+           100       200        300       400   500       Advances in Static Electricity, 1, Auxilia, S.A., Brus-
+                           Frequency
+                                                           sels, 398 (1970). [6] Masuda, S., Proc. ofAlbany Con-
+Figure 2. The minimum voltage required for particle       ference on Electrostatics, (1971). [7] Masuda, S. Fuji-
+transport as a function of frequency for screens of       bayashi, K., Ishida, K., and Inaba, H., Electronic En-
+various widths and spacings at (top) atmospheric pres-    gineering in Japan, 92, 9 (1972). [8] Masuda, S.,and
+sures and (bottom) at simulated Martian pressures 7       Matsumoto, Y., Proc.of the .2" International on Static
+torr CO2.                                                 ElectrfIcation, Frankfurt (1973). [9] Sims, R.A.,
+                                                          Bins, A.S., Wilson, J.D., Yurteri, C.U., Mazumder,
+     At lower pressures (Fig. 2, bottom), the Electro-    M.K., Càlle, C.I., and Buhler, C.R., Proc.of the ESA-
+dynamic Dust Shield performed extremely well. The
+                                                          IEEE Joint Meeting on Electrostatics 2003, Laplacian
+voltages required were very low and the efficiency was
+                                                          Press, Morgan Hill, CA, 814 (2003a [10] Allen, C.C.,
+not a strong function of the frequency. Much lower
+                                                          Jager, K., Morris, R., Lindstrom, D., Lindstrom, M.,
+voltages were required for transport and the cleaning     and Lockwood, J., Proc.of the Conference American
+efficiency was enhanced. Due to the much lower at-        Society of Civil Engineers, Albuquerque, NM, 469,
+mospheric pressure on Mars the initial change in mo-      (1998). [11] Landis, G.A., Acta Astronautica, 38, No.
+mentum of the dust particles is greater. As a result,
+                                                          1, 885 (1996).
+smaller electrostatic forces (lower electrode voltages)
+

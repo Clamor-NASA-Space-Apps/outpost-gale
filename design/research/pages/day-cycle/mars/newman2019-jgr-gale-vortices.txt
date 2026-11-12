@@ -1,0 +1,1127 @@
+This is an electronic reprint of the original article.
+This reprint may differ from the original in pagination and typographic detail.
+Powered by TCPDF (www.tcpdf.org)
+This material is protected by copyright and other intellectual property rights, and duplication or sale of all or
+part of any of the repository collections is not permitted, except that material may be duplicated by you for
+your research use or educational purposes in electronic or print form. You must obtain permission for any
+other use. Electronic or print copies may not be offered, whether for sale or otherwise to anyone who is not
+an authorised user.
+Newman, C. E.; Kahanpää, Henrik; Richardson, M. I.; Martinez, German; Vicente-Retortillo,
+Álvaro; Lemmon, M.
+Convective vortex and dust devil predictions for Gale Crater over three Mars years and
+comparison with MSL‐REMS observations
+Published in:
+Journal of Geophysical Research: Planets
+DOI:
+10.1029/2019JE006082
+Published: 01/12/2019
+Document Version
+Publisher's PDF, also known as Version of record
+Please cite the original version:
+Newman, C. E., Kahanpää, H., Richardson, M. I., Martinez, G., Vicente-Retortillo, Á., & Lemmon, M. (2019).
+Convective vortex and dust devil predictions for Gale Crater over three Mars years and comparison with MSL
+REMS observations. Journal of Geophysical Research: Planets, 124(12), 3442-3468.
+https://doi.org/10.1029/2019JE006082M ars W R F C o n v ecti v e V ort e x a n d D ust D e vil Pr e dicti o ns
+f or G al e Cr at er O v er 3 M ars Y e ars a n d C o m p aris o n
+Wit h M S L ‐R E M S O bs er v ati o ns
+C. E. N e w m a n 1
+, H. K a h a n p ä ä2
+, M. I. Ric h ar ds o n1
+, G. M. M artí n ez3, 4
+,
+A. Vic e nt e ‐R et ortill o 4
+, a n d M. T. L e m m o n5
+1
+Ae olis Researc h, Pasa de na, C A, US A, 2
+Sc h o ol of Electrical E ngi neeri ng, Aalt o U niversity, Es p o o, Fi nla n d, 3
+L u nar a n d
+Pla netary I nstit ute, U niversities S pace Researc h Ass ociati o n, H o ust o n, T X, US A, 4
+C ollege of E ngi neeri ng, U niversity of
+Mic higa n, A n n Ar b or, MI, US A, 5
+S pace Scie nce I nstit ute, C ollege Stati o n, T X, US A
+A bstr act C o nvective v ortices a n d d ust devils have bee n i nferre d a n d o bserve d i n Gale Crater, Mars,
+usi ng Mars Scie nce La b orat ory ( MS L) mete or ol ogical data a n d ca mera i mages. Re n n ó et al. (1998, htt ps://
+d oi. org/10.1175/1520 ‐0469(1998)055 <3244:asttf d >2.0.c o;2) m o dele d c o nvective v ortices as c o nvective heat
+e ngi nes a n d pre dicte d a “d ust devil activity ” ( D D A) t hat de pe n ds o nly o n l ocal mete or ol ogical varia bles,
+s peciﬁ cally t he se nsi ble heat ﬂ ux a n d t he vertical t her m o dy na mic ef ﬁ cie ncy w hic h i ncreases wit h t he
+press ure t hic k ness of t he pla netary b o u n dary layer. T his w or k uses o ut p ut fr o m t he Mars W R F Ge neral
+Circ ulati o n M o del, r u n wit h hig h ‐res ol uti o n nests over Gale Crater, t o pre dict D D A as a f u ncti o n ofl ocati o n,
+ti me of day, a n d seas o n, a n d c o m pares t hese pre dicti o ns t o t he rec or d of v ortices f o u n d i n MS L's R over
+E nvir o n me ntal M o nit ori ng Stati o n press ure data set. M uc h of t he o bserve d ti me ‐of ‐day a n d seas o nal
+variati o n of v ortex activity is ca pt ure d, s uc h as maxi m u m ( mi ni m u m) activity i n s o ut her n s u m mer ( wi nter),
+pea ki ng bet wee n 11:00 a n d 14:00. H o wever, w hile t w o daily pea ks are pre dicte d ar o u n d b ot h e q ui n oxes,
+o nly alate m or ni ng pea kis o bserve d. A ni ncreasei n v ortex activityis pre dicte d as MS L cli m bs t he n ort h west
+sl o pes of Ae olis M o ns, as o bserve d. T his is attri b ute d largely t o i ncrease d se nsi ble heat ﬂ ux, d ue t o (i) larger
+dayti me s urface ‐t o‐air te m perat ure differe nces over hig her terrai n, e n ha nce d by re d uce d t her mal i nertia,
+a n d (ii) t he i ncrease i n drag vel ocity ass ociate d wit h faster dayti me u psl o pe wi n ds. H o wever, t he o bserve d
+i ncrease i n n u m ber of v ortex press ure dr o ps is m uc h str o nger t ha n t he pre dicte d D D A i ncrease, alt h o ug h a
+better matc h exists w he n a t hres h ol d D D A is use d.
+Pl ai n L a n g u a g e S u m m ar y T he dayti me Martia n at m os p here pr o d uces c o nvective v ortices calle d
+“d ust devils ” w he n t hey are d ust ‐ﬁ lle d. V ortices pr o d uce ra pi d press ure dr o ps, w hic h have bee n detecte d i n
+Gale Crater by Mars Scie nce La b orat ory i nstr u me nts. O bserve d v ortex press ure dr o ps are c o m pare d wit h
+v ortex activity pre dicte d usi ng a n u merical m o del, Mars W R F. Beca use v ortices are far s maller t ha n
+Mars W R F's gri d s paci ng, t he m o del ca n't pre dict t he m directly. I nstea d, t he t he ory of Re n n ó et al. (1998) is
+use d t o calc ulate “d ust devil activity ” ( D D A) – a meas ure of v ortex activity – base d o n t he large ‐scale
+at m os p heric state. Pre dicte d D D A matc hes t he ge neral variati o n of v ortex o bservati o ns wit h ti me of day a n d
+seas o n, s uc h as maxi m u m ( mi ni m u m) activity i n s o ut her n s u m mer ( wi nter), pea ki ng bet wee n 11:00 a n d
+14:00. H o wever, w hile t w o daily pea ks are pre dicte d ar o u n d b ot h e q ui n oxes, o nly a late m or ni ng pea k is
+o bserve d. Pre dicte d D D A als o i ncreases as Mars Scie nce La b orat ory cli m bs t he sl o pes of Ae olis M o ns, as
+o bserve d. T his is attri b ute d t o (i) larger dayti me s urface ‐t o‐air te m perat ure differe nces at hig her altit u des
+a n d (ii) faster dayti me u psl o pe wi n ds hig her u p t he sl o pes. H o wever, t he o bserve d i ncrease i n n u m ber of
+v ortex press ure dr o psis m uc h str o nger t ha n t he pre dicte d D D Ai ncrease, alt h o ug h t hey matc h better w he n a
+t hres h ol d D D A is use d.
+1. I ntr o d ucti o n
+C o nvective v ortices occ ur d uri ng peri o ds of str o ng c o nvective heati ng of t he s urface, w he n t he gr o u n d te m-
+perat ure excee ds t he air te m perat ure, war mi ng t he air a b ove t he s urface. As t his air rises, existi ng v orticity
+bec o mes m ore vertical a n d i nte nsi ﬁ es, wit h t he air s pirali ng ar o u n d a l o w‐press ure regi o n t hat devel o ps i n
+t he v ortex c ore ( Bal me & Greeley, 2006; Ka na k, 2005; S piga et al., 2016; T oig o et al., 2003). R otati o n is ra n-
+d o mly cl oc k wise or c o u ntercl oc k wise, a n d v ortices ofte n occ ur i n pairs or cl usters ( Bal me & Greeley, 2006).
+T hey may exte n d t o at least t he heig ht of t he pla netary b o u n dary layer ( P B L), w hic h c o m m o nly exte n ds t o
+©2019. T he A ut h ors.
+T his is a n o pe n access article u n der t he
+ter ms of t he Creative C o m m o ns
+Attri b uti o n Lice nse, w hic h per mits use,
+distri b uti o n a n d re pr o d ucti o n i n a ny
+me di u m, pr ovi de d t he origi nal w or k is
+pr o perly cite d.
+R E S E A R C H A R TI C L E
+10.1029/2019J E006082
+K e y P oi nts:
+• Mars W R F o ut p ut c o m bi ne d wit h
+t her m o dy na mic t he ory is use d t o
+pre dict te m p oral a n d s patial tre n ds
+of “d ust devil activity ” i n Gale Crater
+• M o dele d activity a n d o bserve d
+v ortex press ure dr o ps are b ot h
+greatest i n l ocal s u m mer, pea ki ng
+~13:00 ‐14:00, a n d s mallest i n wi nter
+• Se nsi ble heat ﬂ ux drives i ncrease d
+activity as MS L cli m bs, b ut press ure
+dr o p n u m bers i ncrease faster, u nless
+a t hres h ol d activity is use d
+S u p p orti n g I nf or m ati o n:
+• S u p p orti ng I nf or mati o n S1
+C orr es p o n d e nc e t o:
+C. E. Ne w ma n,
+claire @ae olisresearc h.c o m
+Cit ati o n:
+Ne w ma n, C. E., Ka ha n pää, H.,
+Ric har ds o n, M. I., Marti nez, G. M.,
+Vice nte ‐Ret ortill o, A., & Le m m o n, M.
+(2019). C o nvective v ortex a n d d ust devil
+pre dicti o ns f or gale crater over 3 mars
+years a n d c o m paris o n wit h MS L ‐R E MS
+o bservati o ns. Jo ur n al of Geo p hysic al
+Rese arc h: Pl a nets , 124
+htt ps:// d oi. org/ 10.1029/ 2019J E006082
+Receive d 9 J U N 2019
+Acce pte d 6 N O V 2019
+Acce pte d article o nli ne 15 N O V 2019
+N E W M A N E T A L.
+, 3442–3468.
+P u blis he d o nli ne 2 8 D E C 2019
+3442~2 –3 k m i n Eart h's deserts a n d t o ~10 – 12 k m over ma ny parts of Mars a n d sig ni ﬁ ca ntly hig her i n s o me
+regi o ns; d ust devils wit h heig hts u p t o 16.5 k m have bee n i de ntiﬁ e d i n s o me regi o ns ( Fe nt o n et al., 2016;
+Fe nt o n & L ore nz, 2015). D ust devils are v ortices t hat c o ntai n d ust, ma ki ng t he m visi ble; t his d ust is raise d
+via str o ng ta nge ntial wi n ds ar o u n d t he v ortex c ore, assiste d by t he “s ucti o n effect” of t he press ure dr o p
+a n d ot her t her m o p hysical fact ors (see, e.g., Nea krase et al., 2016 f or a revie w of all pr ocesses t hat have bee n
+pr o p ose d). Mars v ortices, he nce d ust devils, ca n gr o w m uc hlarger t ha n o n Eart h. He nce w hile t helargest o n
+Eart h may reac h a fe w te ns of m i n dia meter, o n Mars t hey may reac h or or der a k m i n dia meter ( Fe nt o n
+et al., 2016). Detecti o n of v ortices is ty pically acc o m plis he d by detecti ng t heir press ure dr o p sig nat ure, wit h
+wi n d (s pee d a n d directi o n) a n d te m perat ure als o meas ura bly affecte d w he n a v ortex passes cl ose e n o ug h t o
+t he se ns ors (e.g., Ka ha n pää et al., 2016; M ur p hy et al., 2016; see als o secti o n 2.1). I n t he case of d ust devils,
+detecti o n is als o p ossi ble via i magi ng or by meas uri ng c ha nges i n i nc o mi ng s olar ra diati o n if t he v ortex is
+d usty e n o ug h (e.g., Le m m o n et al., 2004, M ur p hy et al., 2016; see als o secti o n 2.2).
+C o nvective v ortices are of partic ulari nterest o n Mars beca use d ust devils aret h o ug htt o be o ne oft he pri mary
+mea ns ofi njecti ng d usti nt o t he t hi n Martia n at m os p here,i n w hic h t he t her mal str uct ure a n d he nce circ ula-
+ti o n are str o ngly i m pacte d by its prese nce ( Gierasc h & G o o dy, 1972; S mit h, 2004). N ote t hat Mars n o n‐c o n-
+vective v ortices have als o bee n i nferre d fr o m nig htti me press ure data (e.g., Or d o nez ‐Exte berria et al., 2018)
+a n d areli kely a res ult of mec ha nically f orce d t ur b ule nce. H o wever, t hey arelessli kely t o raise d ust hig hi nt o
+t he at m os p here or n oticea blyi ncrease t he at m os p heric d ustl oa di ng; t he P B L de pt his very s mall ( he nce ver-
+tical mixi ng is str o ngly i n hi bite d) bet wee n a p pr oxi mately a n h o ur after s u nrise a n d a n h o ur bef ore s u nset
+(e.g., F o nseca et al., 2017), he nce a ny d ustlifte disli kely ret ur ne d ra pi dlyt ot he s urface. O bservati o ns of active
+d ustlifti ng ce nters d uri ng d ust st or m o nset s h o wlittle c orrelati o n wit h o bservati o ns of w here a n d w he n d ust
+devils a n d t heir trac ks occ ur ( Ca nt or et al., 2006). Si milarly, t he ory a n d m o deli ng st u dies all s uggest t hat
+fe wer d ust devils s h o ul d occ ur as t he at m os p here bec o mes d ustier, w hic h is i n c o ntrast t o t he ra pi d ra m pi ng
+u p of d ust i njecti o n as d ust l oa di ng i ncreases d uri ng st or m o nset (e.g., Ka hre et al., 2006; Ne w ma n et al.,
+2002a, 2002 b). H o wever,itis esti mate dt hat d ust raise d by d ust devils or ot herf or ms of s mall ‐scale c o nvective
+d ust lifti ng acc o u nts f or m ost of t he d ust raise d o utsi de of t he “st or m seas o n” ( Ls ~0–180°) a n d he nce t hat
+t hese pr ocesses are res p o nsi blef ort he o bserve dte m perat ures att his ti me of year, w hic h arete ns of K war mer
+t ha n a “clear” at m os p here w o ul d be ( Bas u et al., 2004; Ka hre et al., 2006; Ne w ma n et al., 2002a, 2002 b).
+1.1. T h e or y of C o n v ecti v e V ortic es a n d D ust D e vils
+Re n n ó et al. (1998) ( he ncef ort h R98) pr ovi de d a t he ory t hat m o dels c o nvective v ortices as c o nvective heat
+e ngi nes a n d pre dict a “d ust devil activity ” ( D D A) t hat de pe n ds o nly o n l ocal mete or ol ogical varia bles.
+N ote t hat des pite t he na me, t his t he ory a p plies e q ually t o v ortices wit h or wit h o ut d ust. T he t he ory of
+R98, descri be d i n secti o n 3.2, has bee n use d i n several Mars Ge neral Circ ulati o n M o dels ( G C Ms) t o pre dict
+t he a m o u nt of d ust lifti ng by d ust devils; lifti ng set pr o p orti o nal t o t he D D A a p pears t o s uccessf ully ca pt ure
+t he gl o bal “bac kgr o u n d ” d ust a m o u nt i n t he at m os p here as a f u ncti o n of seas o n w he n n o maj or d ust st or ms
+are prese nt ( Bas u et al., 2004; Ka hre et al., 2006). T he t he ory has als o previ o usly bee n teste d by c o m pari ng
+pre dicti o ns of gl o bal m o dels b ot h wit h t he s pati ote m p oral variati o n of d ust devils a n d t heir trac ks o bserve d
+fr o m or bit (see secti o n 1.1.1) a n d wit h t he variati o n of i mage d d ust devils a n d c o nvective v ortices (i nferre d
+fr o m press ure data) o bserve d fr o m t he s urface (see secti o n 1.1.2).
+T he D D A is a meas ure of t he e nergy t hat may be har nesse d by v ortices, b ut h o w t his s h o ul d be distri b ute d
+i nt o a v ortex distri b uti o n is n ot clear at prese nt. F or exa m ple, s h o ul d a n i ncrease i n D D A res ulti n m ore v or-
+tices, or a n i ncrease i n t he maxi m u m v ortex stre ngt h, or b ot h? T o date, c o m paris o ns wit h o bservati o ns have
+largely f oc use d o n t he n u m ber of v ortices ( or trac ks) detecte d, b ut secti o n 5.3 als o i nvestigates t he relati o n-
+s hi p t o press ure dr o p mag nit u de.
+1.1.1. C o m p aris o ns of T h e or y Wit h Or bit al O bs er v ati o ns
+Ka hre et al. (2006) f o u n d t hat t he s patial a n d seas o nal patter ns of D D A pre dicte d usi ng a G C M were br oa dly
+c o nsiste nt wit h o bservati o ns of d ust devils a n d t heir trac ks fr o m or bit ( Fis her et al., 2005): b ot h s h o w pea k
+activity d uri ng l ocal s u m mer i n b ot h he mis p heres, wit h A maz o nis mar ke d as a partic ularly active regi o n.
+H o wever, or bital data sets at t he res ol uti o n re q uire d have li mite d s patial a n d seas o nal c overage a n d d o
+n ot ty pically pr ovi de i nf or mati o n o n ti me ‐of ‐day variati o n, as o bservati o ns are ofte n ma de at t he sa me l ocal
+ti me eac h or bit. I n partic ular, after n o o n o bservati o ns are far m ore c o m m o n t ha n m or ni ng o nes, alt h o ug h,
+10.1029/2019J E 006082 J o ur n al of G e o p h ysic al R es e arc h: Pl a n ets
+N E W M A N E T A L. 3443e.g., t he C ol o ur a n d Stere o S urface I magi ng Syste m o n t he Trace Gas Or biteris a ble t o c over t he f ull dayti me
+p orti o n of t he di ur nal cycle d ue t o its n o n ‐S u n‐sy nc hr o n o us or bit ( T h o mas et al., 2017).
+A f urt her iss ue is t hat s maller d ust devils ca n n ot be see n fr o m or bit a n d d ust devils wit h relatively l o w d ust
+c o nte nt may be misse d. Als o, d ust devil trac ks or eve n d ust devils t he mselves may n ot be visi ble over certai n
+s urfaces, e.g.,if t he s urface reveale d w he n alayer of d ustis re m ove d has t he sa me c ol or a n d al be d o, as mig ht
+be tr ue of a t hic k d ust de p osit. T hese arg u me nts may ex plai n w hy Ka hre et al. (2006) f o u n d t hat s mall b ut
+n o nzer o D D A val ues are pre dicte d f or s o me seas o ns a n d l ocati o ns at w hic h n o d ust devils or trac ks are
+o bserve d ( Ka ha n pää et al., 2016), alt h o ug h t his may als o i n dicate a t hres h ol d D D A is nee de d f or v ortices
+t o f or m or d ust lifti ng t o occ ur; see als o secti o n 5.3. I n a d diti o n, if t here is n o l ofta ble d ust i n a regi o n t he n
+n o d ust devils or trac ks will be see n, eve nif n u mer o us str o ng v ortices occ ur. T hereis n o way t oi nfer t he pre-
+se nce of d ust‐free v ortices fr o m or bit, he nce or bital o bservati o ns are biase d agai nst regi o ns wit h l o w d ust
+availa bility. Or bital data sets of d ust devils a n d t heir trac ks t h us c o ntai n n u mer o us biases a n d are n oti deally
+s uite d t o testi ng t he ories of v ortex or d ust devil n u m ber, stre ngt h, ti mi ng of occ urre nce, etc.
+1.1.2. Pri or C o m p aris o ns of T h e or y Wit h L a n d e d (I n Sit u) O bs er v ati o ns
+U nli ke or bital data sets,i n sit u meas ure me nts d o n ot s ufferfro m m ost oft he a b oveiss ues. O nt he s urface, b ot h
+d ust ‐ﬁ lle d a n d e m pty v ortices are m ost straig htf or war dly detecte d by meas uri ng t he variatio n of s urface pres-
+s ure, wit h ra pi d b ut s hort‐live d press ure dr o psi n dicati ngt he cl ose passage of a v ortex'sl o w‐press ure c ore (e.g.,
+M ur p hy & Nelli, 2002; Sc ho ﬁ el d et al., 1997). S urfacei magi ng of d ust devils ca n t he n be use d t o c over a wi der
+area;t o pr ovi de esti mates oft he s pee d, dia meter, a n d heig ht of v ortices; a n d t o assesst heir d ust ‐raisi ng a bility.
+T he mai n disa dva ntages ofi n sit u meas ure me nts are t hat s patial c overageis far m oreli mite d t ha n fr o m or bit:
+d ust devils m ust be visiblefr o mt he r over orla n der, wit hi ncreasi ng biast o war d detecti nglarger a n d/ or d ustier
+d ust devils ast he dista ncei ncreases; si milarly, v ortices ca n o nly be detecte di n press ure dataift hey affect pres-
+s ure att hela n de dl ocatio n. F or press ure detectio ns,it ca n be difﬁ c ultt o deco nvolvet he effects of stre ngt h, dia-
+meter, s pee d of passage, a n d dista nce, es pecially wit h o ut relia ble wi n d data or i magi ng, alt h o ug h several
+efforts have bee n ma de t o d o s o (e.g., Jac kso n et al., 2018; K urga ns ky, 2019; L ore nz, 2016). Yet overall, s urface
+missio ns havet he p ote ntialt o ca pt uret he seas o nal a n d di ur nal variati o n of nearlyt hef ull stre ngt h s pectr u m of
+d ust devils a n d v orticesi n a si nglel ocati o n or regi o n. F orla n ders,i magi ng ca n also pr ovi de s o meli mite di nfor-
+matio n o n a ny s patial variatio nsi n d ust devils acr osst he sce ne, w hilef or r overs, s patial variati o nsi n b ot h d ust
+devils a n d d ust ‐free v ortices may be meas ure d as t he l ocati o n c ha nges over t he missi o n.
+Ka hre et al. (2006) f o u n d t hat t he pre dicte d di ur nal variati o n of D D A at t he Mars Pat h ﬁ n der ( M P F) la n di ng
+site usi ng t heir G C M's o ut p ut was very c o nsiste nt wit h t he di ur nal variatio n of dayti me c o nvective v ortices
+i nferre d fr o m M P F press ure data ( M ur p hy & Nelli, 2002), wit h t he pea k occ urri ng bet wee n n o o n a n d 1 p m
+L TS T. Usi ng a differe nt G C M, C ha p ma n et al. (2017) also n ote d a ge neral agree me nt bet wee n pre dicte d
+D D A a n d t he o bserve d di ur nal cycle of n u m ber of c o nvective v ortices at t he M P F a n d also at t he P h oe nix
+La n der sites ( Elle hoj et al., 2010), alt h o ug h i n b ot h cases t he m o del a p peare d t o pre dict a slig htly later pea k
+ti me of day. H o wever, C ha p ma n et al. (2017) f o u n d a mis matc h at t he Vi ki ng La n der 2 site, f or w hic h t heir
+G C M pre dicte d pea k D D A i n t he late after no o n (aro u n d 17:00), w hereas o bservatio ns of wi n d ﬂ uct uatio ns
+i nter prete d as bei ng ca use d by v ortices pea ke d bet wee n 10 a m a n d n o o n ( Ri ngr ose et al., 2003). T hey also
+f o u n d a mis matc hf or Gale Crater, wit ht heir G C M pre dicti ng b ot h a m or ni ng a n d after n oo n pea ki n D D A over
+t he ﬁ rst Mars year, w hereas t he average di ur nal cycle f o u n d fro m press ure dr o p o bservati o ns over t he sa me
+perio d s ho ws a si ngle pea k aro u n d n o o n ( Ka ha n pää et al., 2016). I n fact, t here a p pears t o be a stro ng o bserve d
+seas o nal variatio n i n t he di ur nal cycle i n Gale Crater, as disc usse d i n sectio ns 5.1 a n d 5.2 belo w.
+Pri or t o t he c urre nt w or k, Ka ha n pää et al. (2016) was t he o nly st u dy t o have c o m pare d t he seas o nal variati o n
+of pre dicte d D D A wit h s urface o bservati o ns of seas o nal v ortex activity, as i nferre d fr o m t he ﬁ rst year of s ur-
+face press ure data ta ke n fr o m t he Mars Scie nce La b orat ory ( MS L) C uri osity r over. Usi ng o ut p ut fr o m a hig h‐
+res ol uti o n, neste d mes oscale m o del ( Mars W R F, w hic h is als o use d i n t he c urre nt w or k, see secti o n 3), t hey
+f o u n d a n overall g o o d matc h bet wee n t he pre dicte d D D A a n d o bserve d seas o nal cycle. T he mai n exce pti o n
+was ar o u n d s o ut her n s u m mer s olstice, d uri ng w hic h ti me far fe wer v ortex press ure dr o ps werei nferre d t ha n
+pre dicte d. T he p ossi ble ca use of t his mis matc h is disc usse d f urt her i n secti o n 5.1.
+1.2. Pri or M o d eli n g of t h e Circ ul ati o n i n t h e G al e Cr at er R e gi o n
+U nli ke pri or la n di ng sites w here d ust devils have bee n st u die d, t he Gale Crater site of t he MS L missi o n has
+sig niﬁ ca nt mes oscale t o p ogra p hic relief. W hile direct o bservati o ns of circ ulati o n are li mite d t o t he MS L
+10.1029/2019J E 006082 J o ur n al of G e o p h ysic al R es e arc h: Pl a n ets
+N E W M A N E T A L. 3444i nstr u me nts, t he nat ure of t he circ ulati o n has bee n m o dele d by several differe nt gr o u ps ( Tyler & Bar nes,
+2013, 2015; Raf ki n et al., 2016; Pla ‐Garcia et al., 2016; Ne w ma n et al., 2017; F o nseca et al., 2017;
+Ric har ds o n & Ne w ma n, 2018). T he str o ng relief ge nerates c o m plex mes oscale circ ulati o ns t hati nteract b ot h
+wit h t he large ‐scale ﬂ o ws c o m m o nly o bserve d at ot her la n di ng sites a n d wit h t he micr oscale ( P B L) circ ula-
+ti o n a n d str uct ure. De pe n di ng o n t he ti me of year a n d t he stre ngt h of t he large‐scale ﬂ o ws, t he circ ulati o n
+t hat t he MS L r over o bserves ca n be d o mi nate d by ﬂ o ws i n d uce d wit hi n t he crater itself. A sig ni ﬁ ca nt tr ue
+b u oya ncy sl o pe ﬂ o w is ass ociate d wit h near ‐s urface u psl o pe (a na batic) dayti me a n d nig htti me d o w nsl o pe
+( kata batic) wi n ds ( Tyler & Bar nes, 2013), t h o ug h t his ﬂ o w is sig ni ﬁ ca ntly m o diﬁ e d i n practice by net hy dr o-
+static re bala nci ng of t he at m os p here bet wee n l o w a n d hig h t o p ogra p hy as t he near‐s urface scale heig ht dra-
+matically c ha nges d uri ng t he daily cycle ( Raf ki n et al., 2016; Ric har ds o n & Ne w ma n, 2018).
+T he lateral a dvecti o n of war m air “u p sl o pe ” al o ng wit h a dia batic c o oli ng of t his air will te n d t o re d uce t he
+t her mal drive f or c o nvecti o n. I n a d diti o n, i ncrease d wi n ds te n d t o ge nerate a d diti o nal near‐s urface t ur b u-
+le nce t hr o ug h s hear, w hic h has t he effect of c o oli ng t he s urface t hr o ug hi ncrease d s urfacelayer se nsi ble heat
+ﬂ uxes; i n m ore extre me f or m, t his ca n be see n i n t he ﬂ o ws over t he walls of Valles Mari neris i n n u merical
+si m ulati o ns, w here t he di ur nal cycle of gr o u n d a n d near‐s urface air te m perat ures ca n be greatly re d uce d
+(S piga et al., 2011). B ot h of t hese mec ha nis ms will te n d t o decrease c o nvecti o n over t he sl o pes of Ae olis
+M o ns. By c o ntrast, t he mes oscale circ ulati o n set u p wit hi n t he crater d uri ng t he dayti me te n ds t o c o nverge
+over Ae olis M o ns a n d over t he crater ri m, wit h d o w n welli ng overt he crater tre nc h. W he nitis d o mi na nt, t his
+has t he effect of s u p pressi ng t he P B L de pt h over t he tre nc h ( Tyler & Bar nes, 2015) a n d he nce da m pi ng P B L
+m oti o ns s uc h as c o nvective v ortices t here.
+H o wever, as descri be d i n s o me detail i n secti o n ??, t he mes oscale ﬂ o w is n ot al ways d o mi na nt, a n d i n s o me
+cases t he i nﬂ ue nce of large ‐scale ﬂ o ws o n Gale Crater bec o mes sig ni ﬁ ca nt ( Ne w ma n et al., 2017; Pla‐Garcia
+et al., 2016; Raf ki n et al., 2016). It is t h us i m p orta nt n ot t o get t o o attac he d t o a si m plistic, i dealize d c o nce p-
+ti o n of t he Gale Crater ﬂ o w syste m a n d s peci ﬁ cally t he i dea t hat t he dayti me b o u n dary layer is al ways s u p-
+presse d i n t he Gale Crater tre nc h d uri ng t he dayti me.
+1.3. O v er vi e w of t h e W or k Pr es e nt e d H er e
+D ust devils a n d c o nvective v ortices have bee n o bserve d i n great n u m bers i n Gale Crater by i nstr u me nts o n
+MS L, wit h t heir fre q ue ncy varyi ng str o ngly wit h l ocati o n, ti me of day, a n d seas o n. T his data set t h us pr o-
+vi des a n excelle nt test of t he ories a n d m o dels t hat pre dict t he i nte nsity of c o nvective v ortex activity a n d
+t he a m o u nt of d ust raise d by t he m. T his pa per f oc uses o n c o m pari ng o bservati o ns wit h t her m o dy na mically
+derive d pre dicti o ns of D D A, o btai ne d by c o m bi ni ng t he t he ory of R98 wit h mete or ol ogical varia bles o ut p ut
+fr o m t he Mars W R F neste d mes oscale m o del, r u n at a gri d s paci ng of ~1.4 k m over Gale Crater.
+Secti o n 2 descri bes h o w MS L i nstr u me nts are use d t o detect v ortices a n d d ust devils, disc usses previ o usly
+p u blis he d res ults, a n d ﬁ nally descri bes t he met h o ds use d here t o i nfer v ortices fr o m press ure data.
+Secti o n 3 descri bes t he Mars W R F m o del a n d h o w its o ut p ut is use d t o pre dict t he D D A, as de ﬁ ne d i n R98.
+Secti o n 4 prese nts Mars W R F pre dicti o ns acr oss Gale Crater as a f u ncti o n of l ocal ti me at l ocal s u m mer s ol-
+stice, as well as seas o nal variati o ns at selecte d ti mes of s ol f or t he regi o n i n w hic h MS L o perates. Secti o n 5
+c o m pares v ortices meas ure d by MS L's R over E nvir o n me ntal M o nit ori ng Stati o n ( R E MS) wit h t he D D A pre-
+dicte d at t he ti me a n d l ocati o n of t he o bservati o ns a n d exa mi nes w hat deter mi nes t he D D A variati o n i n t he
+m o del. Secti o n 6 c o ncl u des.
+2. V ort e x a n d D ust D e vil O bs er v ati o ns M a d e b y M S L
+MS L carries several i nstr u me nts t hat have bee n use d t o detect c o nvective v ortices a n d/ or d ust devils: a
+mete or ol ogical se ns or s uite i n t he f or m of R E MS a n d ca meras i n t he f or m of t he r over's navigati o n ca meras
+( Navca ms) a n d mast‐m o u nte d scie nce ca mera ( Mastca m).
+2.1. V ort e x O bs er v ati o ns wit h R E M S
+T he R E MS s uite i ncl u des se ns ors f or meas uri ng at m os p heric press ure, te m perat ure, relative h u mi dity, U V
+ra diati o n ﬂ ux, a n d wi n d s pee d a n d directi o n. Meas ure me nts are perf or me d at a rate of 1 Hz f or ty pically
+u p t o te n h o urs per s ol, w here a s ol is a Mars s olar day. T his i ncl u des 5 mi n utes of o bservati o ns at t he start
+of every h o uri n L ocal Mea n S olar Ti me ( L MS T) pl us ty pically eig ht 1 ‐h o ur “exte n de d bl oc ks” per s ol, w here
+a n h o ur is deﬁ ne d as 1/24 of a s ol a n d a mi n ute as 1/60 of a n h o ur. T he ca de nce of R E MS exte n de d bl oc ks is
+10.1029/2019J E 006082 J o ur n al of G e o p h ysic al R es e arc h: Pl a n ets
+N E W M A N E T A L. 3445descri be di n detaili n, e.g., Ne w ma n et al. (2017), b ut basically res ultsi n all h o urs of t he s ol bei ng o bserve d at
+least o nce at 1 Hz i n every 6‐s ol peri o d a n d al m ost daily c overage of t he h o ur c o ntai ni ng n o o n L ocal Tr ue
+S olar Ti me ( L TS T), i.e., w he n s olar i ns olati o n pea ks.
+W he n s o me part of a c o nvective v ortex passes over t he r over, its sig nat ure may be see n i n (i) a ra pi d, s h ort ‐
+live d press ure dr o p d ue t o t he v ortex's l o w‐press ure c ore. Its sig nat ure may p ossi bly als o be see n i n (ii) a
+ra pi d, si m ulta ne o us c ha nge i n wi n d directi o n as t he r otati ng v ortex m oves acr oss t he se ns or p ositi o n, (iii)
+ra pi d, si m ulta ne o us air te m perat ure ﬂ uct uati o ns ass ociate d wit h t he war m c ore of t he v ortex a n d t he mixi ng
+of air ar o u n dit, a n d/ or (iv) a n ass ociate d, relatively s h ort ‐live d decreasei n U V ﬂ uxif t he v ortex c o ntai ns s uf-
+ﬁ cie nt d ust t hat it bl oc ks s o me s olar ra diati o n fr o m reac hi ng t he s urface. T he latter ca n be use d t o esti mate
+t he a m o u nt of d ust prese nt i n t he v ortex, alt h o ug h a sig niﬁ ca nt a m o u nt of d ust m ust sit i n t he at m os p heric
+c ol u m n a b ove t he r over t o ca use s uc h effects, w hic h is li keliest f or larger d ust devils t hat pass bet wee n t he
+r over a n d t he S u n directi o n. If a c o nvective v ortex d oes n ot pass directly over t he r over, ma ny of t hese o bser-
+vati o ns are m ore m ute d a n d ca n bei m p ossi ble t o differe ntiate fr o m ge neral t ur b ule ncei n t he area, alt h o ug h
+t hey may be use d t o s u p p ort t he arg u me nt f or v ortex passage w he n a press ure sig nal is detecte d.
+W hile t he te m p oral ( di ur nal a n d seas o nal) c overage of R E MS meas ure me ntsis very g o o d, t heir s patial c over-
+age is li mite d t o t he l ocati o n of MS L. F ort u nately, MS L is a r over. T h us by A pril 2018, it ha d n ot o nly m o n-
+it ore d t hree c o m plete Mars years b ut ha d als o drive n m ore t ha n 18.5 k m (a p pr oxi mately 9 k m as t he cr o w
+ﬂ ies) fr o m its origi nal l ocati o n i n t he tre nc h of t he crater. As s h o w n i n Fig ure 1, over t his peri o d, MS L
+cr osse d t hr o ug h t he Bag n ol d D u nes a n d bega n t o cli m b t he sl o pes of Ae olis M o ns. T his mea ns t hat t he
+R E MS data set als o c o ntai ns i nf or mati o n o n t he s patial variati o n of v ortex activity, al beit o nly al o ng t he
+r over's traverse.
+2.2. D ust D e vil O bs er v ati o ns Wit h N a vc a m/ M astc a m
+R E MS meas ure me nts pr ovi de i nf or mati o n a b o ut v ortex activity at t he r over l ocati o n, b ut it is dif ﬁ c ult t o
+extract i nf or mati o n a b o ut t heir size or m oti o n (es pecially w he n si m ulta ne o us wi n d data are a bse nt) or
+h o w m uc h d ust t hey c o ntai n. By c o ntrast, MS L's ca meras ca n be use d t o i mage d ust devils directly, yet n o
+clear sig hti ngs of d ust devils were ma de i n t he ﬁ rst 2 years of t he MS L missi o n. U ntil s h ortly after s ol
+Fi g ur e 1. (a) Gale Crater t o p ogra p hy a n d t hel ocati o n of t he r over traverse. ( b) T he r over traverse over t he ﬁ rst 3 Mars years of t he MS L missi o n, pl otte d over a Mars
+Rec o n naissa nce Or biter C o ntext Ca mera i mage. Cya n ovals c o ntai n all r over l ocati o ns f or a si ngle MS L year. T he MS L l ocati o ns are s h o w n wit h differe nt c ol ors
+de pe n di ng o n seas o n as t he lege n d b ox i n ( b) i n dicates. T here are very fe w re d d ots i n MS L years 1 a n d 2, d ue t o t he r over m ovi ng little ar o u n d s u m mer s olstice i n
+t h ose years.
+10.1029/2019J E 006082 J o ur n al of G e o p h ysic al R es e arc h: Pl a n ets
+N E W M A N E T A L. 34461520, Navca m d ust devil searc hes l o o ke d n ort h acr oss t he crater tre nc h. I n retr os pect, t his a p pears t o have
+bee n a p o or c h oice, as t he D D A is pre dicte d t o be ge nerally l o w t here c o m pare d t o ot her directi o ns visi ble
+fr o m t hat l ocati o n (see secti o n 4.1), alt h o ug h d ust availa bility may als o have bee n a n iss ue. S u bse q ue nt
+searc hes l o o ki ng t o war d Ae olis M o ns pr ove d far m ore s uccessf ul, alt h o ug h Navca m 360° s urveys are per-
+f or me d reg ularlyi n a d diti o n t ol o nger m ovies t o av oi d directi o nal bias cree pi ngi n agai n. I n fact, as t he r over
+has cli m be d hig her, it has bec o me c o m m o n t o see d ust devils w he n i magi ng t o t he n ort h, as t his n o w l o o ks
+bac k d o w n t he sl o pes. H o wever, t he res ultis t hat t he list of d ust devils f o u n di n s urveys o nly exte n ds bac k as
+far as s ol 1607, ~2.4 years i nt o t he missi o n. T he peri o d si nce t hat ti me n o w excee ds o ne Mars year b ut
+i ncl u des a gl o bal a n d regi o nal d ust st or m i n M Y34, b ot h of w hic h str o ngly affecte d at m os p heric d ust o paci-
+ties b ut were n ot i ncl u de d i n t he prese nt Mars W R F si m ulati o ns. Give n t he str o ng i m pact of at m os p heric
+d ust o pacity o n b ot h t he pre dicte d D D A ( w hic h decreases as o pacity i ncreases; Ne w ma n et al., 2002a) a n d
+o bserve d v ortex a n d d ust devil occ urre nce ( w hic h str o ngly decrease d d uri ng t he M Y34 gl o bal st or m;
+G uze wic h et al., 2018), a c o m paris o n wit h i magi ng is t heref ore deferre d t o a f ut ure pa per i n w hic h
+Mars W R F is f orce d wit h realistic o bserve d d ust o pacity ma ps f or a give n year, rat her t ha n usi ng a d ust sce-
+nari o t hat re prese nts a n o ns peci ﬁ c year wit h n o maj or st or ms.
+2.3. Pr e vi o usl y P u blis h e d R es ults
+Stea kley a n d M ur p hy (2016), Ka ha n pää et al. (2016), a n d Or d o nez ‐Exte berria et al. (2018) have all previ o usly
+exa mi ne d v ortex activity i n Gale Crater usi ng R E MS data. I n Stea kley a n d M ur p hy (2016), t he sig nat ures of
+245 c o nvective v ortices wit h press ure dr o ps excee di ng 0.3 Pa were f o u n d i n t he ﬁ rst 707 s ols of t he missi o n,
+e q uivale nt t o a n average of ~1 v ortex per s ol after acc o u nti ng f or t hei nc o m plete te m p oral sa m pli ng of R E MS
+meas ure me nts. T hey als o f o u n d t hat press ure dr o ps pea ke d bet wee n 11:00 a n d 13:00 L TS T, wit h v ortices
+m ore fre q ue nt d uri ng l ocal s pri ng a n d s u m mer t ha n i n fall a n d wi nter.
+A p pr oxi mately t he sa me peri o d was i nvestigate d by Ka ha n pää et al. (2016), w h o f o u n d si milar res ults i n
+ter ms of t he ti mi ng a n d seas o nal be havi or of press ure dr o ps excee di ng 0.5 Pa. I n a d diti o n, t hey c o m pare d
+t hese res ults t o D D A pre dicti o ns ma de usi ng o ut p ut fr o m t he Mars W R F m o del (see secti o n 3 f or m ore
+details). T hey f o u n d t hat t he D D A calc ulate d fr o m Mars W R F o ut p ut pre dicte d t he seas o nal variati o n of
+o bserve d press ure dr o ps ( > 0.5 Pa) relatively well, exce ptf or a n over pre dicti o n of t he pea k ar o u n dl ocal s u m-
+mer s olstice ( Ls ~270°), w hic h t hey attri b ute d t o t hel ocally hig h t her mali nertia of t he s peci ﬁ c area w here t he
+r over wasl ocate d over m uc h of t his peri o d, as disc usse di n secti o n 5.1. Fi nally, t hey als o i nter prete d a v ortex
+b urst o n s ol 664 as p ossi bly bei ng d ue t o a fr o nt passi ng over Gale Crater.
+T w o f ull years of R E MS data were st u die d by Or d o nez ‐Exte berria et al. (2018), w h o f o u n d 635 dayti me pres-
+s ure dr o ps excee di ng 0.5 Pa over 1417 s ols, c orres p o n di ng t o a n average rate of 1.2 eve nts per s ol w he n c or-
+recte d f or sa m pli ng. T hese dr o ps were m ost prevale nt near l ocal n o o n, b ut t hey als o n ote d several wea k
+eve nts n ot c orrelate d wit h str o ng s urface‐t o‐air te m perat ure differe nces, as well as n oti ng a large n u m ber
+of nig htti me press ure dr o ps, w hic h were i nter prete d as bei ng d ue t o mec ha nically f orce d t ur b ule nce.
+Nig htti me press ure dr o ps were es pecially str o ng i n regi o ns of r o ug h or stee p t o p ogra p hy a n d s h o we d seas o-
+nal de pe n de nces w hic h may li n k t he m t o variati o ns i n l ocal ‐ a n d regi o nal‐scale wi n ds. Fi nally, t hey n ote d
+r o ug hly a d o u bli ng i n t he n u m ber of day a n d nig ht press ure dr o ps fr o m t he ﬁ rst t o sec o n d Mars year of
+t he missi o n.
+2.4. M et h o d ol o g y Us e d i n T his W or k
+A met h o d si milar t o t hat descri be d by Ka ha n pää et al. (2016) is use d t o i de ntify passi ng v ortices. M ovi ng
+t hr o ug h t he R E MS press ure data set i n 20‐s sli di ng wi n d o ws, a v ortex ca n di date is i de ntiﬁ e d if eit her of
+t he f oll o wi ng criteria are met:
+• Mi ni m u m press ure > 0.5 Pa l o wer t ha n t he mea n of t he previ o us a n d next 20 ‐s i ntervals
+• Mi ni m u m press ure > 0.3 Pa l o wer a n d mea n press ure > 0.1 Pa l o wer t ha n t he mea n of t he previ o us a n d
+next 20 ‐s i ntervals
+N ote t hat t he ﬁ rst of t hese criteria was n ot a p plie d by Ka ha n pää et al. (2016). T he criteri o n was a d de d t o
+i de ntify relatively str o ng press ure dr o ps wit h very s h ort d urati o n. S uc h eve nts a p peare d t o be c o m m o n d ur-
+i ng t he sec o n d a n d t hir d Martia n year of t he MS L missi o n, u nli ke d uri ng t he ﬁ rst year. T he sec o n d criteri o n
+e na bles t he detecti o n of press ure dr o ps wit h d urati o ns l o nger t ha n 60s, w hic h is a n a dva ntage c o m pare d t o
+t he met h o ds a p plie d by Stea kley a n d M ur p hy (2016) a n d Or d o nez‐Exte berria et al. (2018). A vis ual
+10.1029/2019J E 006082 J o ur n al of G e o p h ysic al R es e arc h: Pl a n ets
+N E W M A N E T A L. 3447i ns pecti o n of every press ure dr o p is t he n perf or me d t o i de ntify a n d re m ove a ny t hat d o n ot l o o k v ortex‐li ke
+or w hic h are “d o u ble c o u nti ng ” of t he sa me v ortex by t he alg orit h m. Fig ure S1 s h o ws s o me exa m ples of pres-
+s ure dr o ps retai ne d a n d re m ove d d uri ng t his ste p. I n c o m m o n wit h Ka ha n pää et al. (2016), wea k press ure
+dr o ps a p peari ng si m ulta ne o usly wit h t he R E MS U V se ns or passi ngi nt o or c o mi ng o ut of t he s ha d o w of r over
+str uct ures are re m ove d as t hese eve nts are a p pare ntly ca use d by t he “s ha d o w effect” of t he R E MS press ure
+se ns or, ﬁ rst re p orte d by Harri et al. (2014) a n d n ote d als o by Or d o nez‐Exte berria et al. (2018). Nevert heless,
+by c o ntrast wit h Ka ha n pää et al. (2016), press ure dr o ps wit h mag nit u de excee di ng 0.8 Pa are retai ne d.
+Mag nit u des a n d half maxi m u m d urati o ns of t he v ortex ca n di dates are deter mi ne d by ﬁ tti ng a li near c o m bi-
+nati o n of a L ore ntzia n f u ncti o n a n d ali ne t o t he R E MS press ure data as descri be d by Ka ha n pää et al. (2016).
+V ortices t hat arrive i n pairs or larger “b ursts ” are f or t he m ost part ha n dle d i n divi d ually; h o wever a fe w
+eve nts wit h m ulti ple press ure mi ni ma are ﬁ tte d wit h a li near c o m bi nati o n of t w o L ore ntzia n f u ncti o ns.
+After t his, eve nts wit h a mag nit u de s maller t ha n a t hres h ol d val ue are discar de d. I n c o ntrast t o Ka ha n pää
+et al. (2016) a n d Or d o nez‐Exte berria et al. (2018), t his st u dy uses a t hres h ol d of 0.6 Pa i nstea d of 0.5 Pa,
+t he rati o nale bei ng t hat t he press ure data of MS L years 2 a n d 3 are s o meti mes n oisier t ha n t h ose of year
+1, c o m plicati ng t he i de nti ﬁ cati o n of press ure dr o ps s maller t ha n 0.6 Pa. F or c o m plete ness, t he distri b uti o n
+of press ure dr o ps is als o f o u n d usi ng a met h o d very si milar t o t hat of Or d o nez ‐Exte berria et al. (2018) a n d
+usi ng a t hres h ol d of 0.5 Pa. W hile t his sec o n d met h o d res ults i nfe wer l o ng d urati o n, large press ure dr o ps
+bei ng disc overe d, t he overall patter n of di ur nal a n d seas o nal varia bility is very si milar usi ng eit her met h o d
+(see secti o n 5.1).
+3. Usi n g M ars W R F M es osc al e O ut p ut t o Pr e dict D D A i n G al e Cr at er
+3.1. T h e M ars W R F M o d el a n d Its C o n ﬁ g ur ati o n f or T his W or k
+Mars W R Fis a m ultiscale m o del of t he Martia n at m os p here, descri be di n Ric har ds o n et al. (2007), T oig o et al.
+(2012), Ne w ma n a n d Ric har ds o n (2015), a n d Ne w ma n et al. (2019). T his w or k uses a very si milar m o del c o n-
+ﬁ g urati o n t o t hat descri be d i n Ne w ma n et al. (2017), i n w hic h Mars W R F was r u n as a gl o bal 2° m o del wit h
+ﬁ ve “neste d ” hig her res ol uti o n regi o ns r o ug hly ce ntere d o n MS L's la n di ng site, wit h eac h nest s maller t ha n
+its pare nt a n d wit h t hree ti mes t he h oriz o ntal res ol uti o n; see Fig ure 14 of t hat pa per. I n t his w or k, h o wever,
+o nly f o ur nests are use d, givi ng ﬁ ve d o mai ns i n t otal a n d a res ol uti o n of ~1.4 k m i n t he i n ner m ost nest
+( d o mai n 5), w hic h c overs all of Gale Crater. I n a d diti o n, t he prese nt w or k pri marily uses res ultsfr o m vertical
+gri d B descri be d i n Ne w ma n et al. (2017), as it was f o u n d t o pr o d uce t he best matc h t o wi n ds a n d ae olia n
+feat ures wit hi n Gale Crater. H o wever, s o me res ults are als o s h o w n t hat use vertical gri d A, w hic h m ore
+ﬁ nely res olves t he l o west p orti o n of t he b o u n dary layer, t o de m o nstrate t he i m pact of m o del set u p (see
+secti o n 5.4).
+T he ti me ‐varyi ng, t hree‐di me nsi o nal at m os p heric d ust distri b uti o n see n by Mars W R F's ra diative tra nsfer
+sc he me is prescri be d usi ng t he Mars Cli mate Data base Mars Gl o bal S urvey or d ust sce nari o, w hic h was
+devel o pe d t o be re prese ntative of a year wit h o ut a ny maj or d ust st or ms ( F orget et al., 2001; Le wis et al.,
+2001). T welve si m ulati o ns, eac h lasti ng eig ht s ols wit h t he ﬁ rst t he n discar de d as a “s pi n u p” s ol, were r u n
+at are oce ntric s olar l o ngit u de, Ls = 0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, a n d 330°, t o f ully sa m ple
+t he a n n ual cycle of s olar f orci ng.
+M ost of t he s patially varia ble s urface pr o perties c o me fr o m Mars Gl o bal S urvey or Mars Or biter Laser
+Alti meter a n d T her mal E missi o n S pectr o meter o bservati o ns ( C hriste nse n et al., 2001). T hese i ncl u de
+M O L A t o p ogra p hic heig ht (S mit h & Z u ber, 1996), t he M O L A i ntras h ot s urface r o ug h ness ma p ( Garvi n
+et al., 1999), a n d ma ps of al be d o, t her mal i nertia, a n d e missivity ( P utzig & Mell o n, 2007). A d diti o nal
+hig h ‐res ol uti o n t o p ogra p hy data, fr o m a Mars Ex press, Hig h Res ol uti o n Stere o Ca mera i nstr u me nt Digital
+Terrai n Ma p, were use d over Gale Crater f or d o mai n 5 ( Ne u k u m et al., 2004; Ja u ma n n et al., 2007).
+Alt h o ug h s o me l ocal s urface pr o perties have bee n meas ure d by MS L (e.g., t her mal i nertia i nferre d fr o m
+t he di ur nal cycle of s urface te m perat ure), t hese are n ot necessarily re prese ntative of t he s urface pr o perties
+eve n a fe w meters a way, w hereas v ortex press ure dr o ps detecte d by R E MS may be ca use d by v ortices t hat
+passe d several h u n dre d meters fr o m t he r over a n d origi nally f or me d at a n eve n greater dista nce. D ue t o dri-
+va bility re q uire me nts a n d scie nce i nterest, t he s urface pr o perties meas ure d al o ng t he r over traverse are
+s o meti mes n ot eve n re prese ntative of t he ty pical l ocal regi o n ar o u n d it, alt h o ug h a lac k of v ortices over a
+l o ng peri o d w he n MS L ex pl ore d “Yell o w k nife Bay ” is i n dee d m ost li kely attri b uta ble t o m uc h hig her
+10.1029/2019J E 006082 J o ur n al of G e o p h ysic al R es e arc h: Pl a n ets
+N E W M A N E T A L. 3448t her mal i nertias over t hat e ntire regi o n (see secti o n 5.1). Overall, h o wever, c o m bi ni ng l ocally a n d re m otely
+meas ure d s urface pr o perties a p pr o priately i nt o a n i m pr ove d ma p of t he regi o n ar o u n d MS L w o ul d be very
+c halle ngi ng. I n a d diti o n, t he overall patter n of D D A pre dicte d i n Gale Crater is f o u n d t o be m ore c o ntr olle d
+by t o p ogra p hy t ha n by variati o ns i n al be d o or t her mal i nertia (secti o n 4.2.2). He nce, des pite t he s o me w hat
+l o w res ol uti o n, o nly ma ps of s urface pr o perties derive d fr o m or bital data are use d i n t his w or k.
+3.2. D ust D e vil a n d V ort e x T h e or y a n d C o m bi n ati o n wit h M ars W R F O ut p ut
+I n R98, c o nvective v ortices (a n d he nce d ust devils) are m o dele d as c o nvective heat e ngi nes. T he D D A is
+de ﬁ ne d as:
+Λ ≈ max 0 ;η F s ð Þ; (1)
+w here F s is t he s urface se nsi ble heat ﬂ ux (t he heat i n p ut t o t he base of t he v ortex) a n d η is t he vertical t her-
+m o dy na mic ef ﬁ cie ncy of t he d ust devil c o nvective heat e ngi ne (t he fracti o n of t he i n p ut heat t ur ne d i nt o
+mec ha nical w or k). After s o me ma ni p ulati o n, η is give n as:
+η≈ 1− b; (2)
+w here
+b≡
+p χ þ 1
+s − p χ þ 1
+to p
+p s− p to p χ þ 1 ð Þp χ
+s
+; (3)
+a n d w here p s is t he a m bie nt s urface press ure, p t o p is t he a m bie nt press ure at t he t o p of t he c o nvective b o u n d-
+ary layer, a n d χ is t he rati o of t he u niversal gas c o nsta nt a n d t he heat ca pacity at c o nsta nt press ure, e q ual t o
+0.25 f or Mars. T he P B L t o p is calc ulate di nsi de Mars W R F's b o u n dary layer sc he me as t he l ocati o n w here t he
+b ul k Ric har ds o n n u m ber falls t o a critical val ue of 0.5 ( H o ng & Pa n, 1996).
+I n Mars W R F, t he se nsi ble heat ﬂ ux is give n by:
+F s ¼ C d ρu T s urf − T air ; (4)
+w here C d is a drag c oefﬁ cie nt t hat de pe n ds o n t he sta bility of t he near‐s urface at m os p here, ρ is air de nsity,
+u *is drag vel ocity, a n d T s urf a n d T air are t he s urface a n d 1.5‐m layer air te m perat ures, res pectively. B ot h t he
+se nsi ble heat ﬂ ux a n d u *are calc ulate d i nsi de Mars W R F's s urface layer sc he me ( Z ha ng & A nt hes, 1982),
+w hic h uses M o ni n ‐O b u k h ov si milarity a n d acc o u nts f or f o ur sta bility categ ories: sta ble, mec ha nically
+i n d uce d t ur b ule nce, u nsta ble f orce d c o nvecti o n, a n d u nsta ble free c o nvecti o n.
+4. V ort e x a n d D ust D e vil Pr e dicti o ns Acr oss G al e Cr at er Usi n g M ars W R F
+T his secti o n prese nts D D A pre dicti o ns acr oss Gale Crater a n d ex pl ores h o w t he D D A a n d its c o ntri b uti ng
+ter ms are affecte d by s urface pr o perties a n d t he circ ulati o n. Secti o ns 4.1 a n d 4.2f oc us o nl ocal (i.e., s o ut her n)
+s u m mer s olstice, Ls = 270°, t he ti me of pea k s olar f orci ng a n d greatest v ortex activity i n Gale Crater, wit h
+seas o nal variati o ns ex pl ore d i n secti o n 4.3. Secti o n 5 t he n c o m pares MS L o bservati o ns of v ortex press ure
+dr o ps wit h pre dicte d D D A al o ng t he r over traverse over 3 Mars years, usi ng t he c o ntext pr ovi de d i n
+secti o n 4 t o i nter pret t h ose res ults.
+4.1. O v er vi e w of Pr e dict e d D D A at S o ut h er n S u m m er S olstic e
+Fig ure 2 s h o ws t he pre dicte d D D A acr oss t he crater at Ls ~270° over eig ht ti me peri o ds. Pre dicte d D D A o ut-
+si de t hese peri o ds is negligi ble ( bel o w 0.02). I n ter ms of te m p oral variati o n, t he pre dicte d D D A pea ks i n t he
+12:00–14:00 peri o d, wit h al m ost n o ne pre dicte d bet wee n 08:00 a n d 09:00 a n d o nly slig htly m ore bet wee n
+16:00 a n d 17:00. I n ter ms of s patial variati o n, t he l o west pre dicte d D D A occ urs i n t he crater tre nc h t o t he
+N, N E, a n d N W of t he MS L la n di ng site a n d t o t he S E a n d S of Ae olis M o ns, alt h o ug h t here is als o a ba n d
+of l o w pre dicte d D D A t hat r u ns east war d acr oss t he n ort her n sl o pes of Ae olis M o ns, starti ng r o ug hly fr o m
+t he MS Lla n di ng site. T he hig hest pre dicte d D D A occ urslargely o n t he N W, S W, a n d S E crater ri m (as well as
+i n s o me regi o ns o utsi de t he crater) a n di n a n ort h‐s o ut h stri p r u n ni ng t hr o ug h m ost of t he wester n si de of t he
+10.1029/2019J E 006082 J o ur n al of G e o p h ysic al R es e arc h: Pl a n ets
+N E W M A N E T A L. 3449crater tre nc h. T here is als o m o derate D D A pre dicte d over m ost of Ae olis M o ns a n d i n t he S W q ua dra nt of
+t he tre nc h.
+Fr o m a n MS L pers pective, base d o n t hese pl ots (see als o t he “z o o me d‐i n” pl ots disc usse d i n secti o n 4.3), o ne
+mig ht ex pect t hat l o o ki ng fr o m t he la n di ng site t o war d t he sl o pes of Ae olis M o ns or t o t he S W, bet wee n
+a b o ut l ocal n o o n a n d 15:00, w o ul d have pr ovi de d t he best c ha nce of o bservi ng d ust devils i n near ‐ﬁ el d
+MS L i magi ng. C o nversely, l o o ki ng a ny w here bet wee n t he N W a n d N E (i.e., t o war d t he nearest p orti o n of
+t he crater ri m), or t o war d t he sl o pes of Ae olis M o ns r o ug hly d ue east of t he la n di ng site, w o ul d pr ovi de
+t he w orst c ha nce, regar dless of ti me of day. It is t heref ore u nf ort u nate t hat MS L's early d ust devil i magi ng
+f oc use d o nl o o ki ng acr oss t he plai ns of t he tre nc h r o ug hly t o t he n ort h; t his may have c o ntri b ute d t o t helac k
+of d ust devils i mage d i n t he ﬁ rst p orti o n of t he missi o n, as disc usse d i n secti o n 2.2. H o wever, t he c ha ngi ng
+p ositi o n of MS L over t he c o urse of t he missi o n (see Fig ure 1) als o br o ug ht t he r over hig her u p t he N W sl o pes
+of Ae olis M o ns, i nt o t he regi o n wit h m o derate pre dicte d D D A, w hic h w o ul d be ex pecte d t o pr ovi de m ore
+near ‐ﬁ el d i magi ng of d ust devils i n several directi o ns a n d m ore detecti o ns of i n sit u v ortex press ure dr o ps.
+Fi g ur e 2. Pre dicte d D D A (c ol or c o nt o urs) over Gale Crater f or ni ne peri o ds (s h o w n i n L TS T)i n l ocal s u m mer ( Ls ~270°), calc ulate d fr o m Mars W R F d o mai n 5 o ut-
+p ut usi ng e q uati o n (1). T o p ogra p hyis s h o w n as blac k c o nt o urs (c o nt o uri nterval 500 m). T he MS Lla n di ng site (at 137.4417° E, 4.5895°S)isi n t he ce nter of t he w hite
+dia m o n d.
+10.1029/2019J E 006082 J o ur n al of G e o p h ysic al R es e arc h: Pl a n ets
+N E W M A N E T A L. 34504.2. C o ntr ols o n t h e Pr e dict e d D D A at S o ut h er n S u m m er S olstic e
+Fig ure 3 s h o ws t he D D A a n d ter ms c o ntri b uti ng t o it – t he vertical t her m o dy na mic efﬁ cie ncy a n d se nsi ble
+heat ﬂ ux – f or t hree of t he ti me peri o ds s h o w n i n Fig ure 2: 10:00– 11:00, 12:00–13:00, a n d 14:00 –15:00 L TS T.
+Fr o m t hese pl ots,itis clear t hat t he patter n of D D A has str o ng si milarities t o t he patter n of se nsi ble heat ﬂ ux.
+I nsi de t he crater, b ot h are l o west over m uc h of t he tre nc h (es pecially t he regi o ns pic ke d o ut i n secti o n 4.1 as
+havi ngl o w D D A) a n d are hig hest over m uc h of Ae olis M o ns a n di n a n ort h ‐s o ut h stri p at ~137° E. H o wever,
+t he D D A mi ni m u m t hat stretc hes east acr oss t he n ort her n sl o pes of Ae olis M o ns is directly li n ke d t o t he
+str o ng mi ni m u m i n t her m o dy na mic efﬁ cie ncy t here. N ote t hat t he se nsi ble heat ﬂ ux pea ks i n t he
+12:00–13:00 pl ot, w hereas t he t her m o dy na mic ef ﬁ cie ncy pea ks i n t he 14:00–15:00 pl ot. T his is beca use t he
+f or mer has a faster res p o nse t o c ha nges i n s olar heati ng, as it largely i nv olves t he s urface heati ng u p.
+H o wever, t he t her m o dy na mic ef ﬁ cie ncy relates t o t he P B L de pt h, w hic h ta kes s o me ti me t o i ncrease
+Fi g ur e 3. D D A (t o p r o w) a n ditst w o c o ntri b ut ors, se nsi ble heat ﬂ ux ( mi d dle r o w) a n d verticalt her m o dy na mic ef ﬁ cie ncy ( b ott o m r o w), at s o ut her n s u m mer s olstice
+( Ls ~270°)i n t hree dayti me peri o ds: 10:00–11:00 (left c ol u m n), 12:00 – 13:00 ( mi d dle c ol u m n), a n d 14:00 –15:00 (rig ht c ol u m n) L TS T. T o p ogra p hy a n d w hite dia m o n d
+are as descri be d i n Fig ure 2.
+10.1029/2019J E 006082 J o ur n al of G e o p h ysic al R es e arc h: Pl a n ets
+N E W M A N E T A L. 3451f oll o wi ng i ncrease d s urface war mi ng. He nce t here is ty pically a delay of a b o ut 2 h o urs bet wee n t he ti me of
+pea k f orci ng (ar o u n d l ocal n o o n) a n d pea k P B L de pt h. T he differe nt ti mi ngs are disc usse d f urt her i n
+secti o n 5.
+4.2.1. V ertic al T h er m o d y n a mic Ef ﬁ ci e nc y a n d Its C o ntri b ut ors
+T he t o p t w o r o ws of Fig ure 4 s h o w t he vertical t her m o dy na mic ef ﬁ cie ncy a n dits mai n c o ntri b ut or, t he pres-
+s ure t hic k ness of t he P B L P s urf‐P t o p (see e q uati o n (3)), a n d de m o nstrate h o w cl osely t he s pati ote m p oral var-
+iati o ni n t he f or mer f oll o ws t hat of t helatter. Overall,i n t his seas o n, t he press ure t hic k ness of t he c o nvective
+b o u n dary layer wit hi n t he crater is al ways greatest i n t he tre nc h a n d gr o ws sig ni ﬁ ca ntly as t he day pr o-
+gresses, wit h t he t hi n nest b o u n dary layer over Ae olis M o ns a n d i ncreasi ng o nly m o derately over t he ti mes
+s h o w n. B o u n darylayer de pt h is m ore ofte n prese nte d i n heig ht c o or di nates ( b ott o m r o w of Fig ure 4), w hic h
+dis plays a very si milar patter n. I nteresti ngly, t his is al m ost t he reverse of t he s patial distri b uti o n n ote d i n,
+e.g., Tyler a n d Bar nes (2015), w hic h f oc use d o n a n earlier seas o n: Ls ~150°, t he ti me of MS L's la n di ng.
+Fi g ur e 4. As i n Fig ure 3 b ut n o w s h o wi ng t he vertical t her m o dy na mic ef ﬁ cie ncy (t o p r o w), its mai n c o ntri b ut or, t he press ure t hic k ness of t he P B L ( mi d dle r o w),
+a n d t he P B L t hic k ness i n k m ( b ott o m r o w).
+10.1029/2019J E 006082 J o ur n al of G e o p h ysic al R es e arc h: Pl a n ets
+N E W M A N E T A L. 3452W hile s o me o bservati o ns have s h o w n t hat P B L de pt h o n Mars is larger w here t he press ure is l o wer, s uc h as
+over hig h t o p ogra p hy (e.g., Hi ns o n et al., 2008, 2019), t he nat ure of t he s o ut her n s u m mer circ ulati o n at Gale
+Crater pr o d uces a n i nversi o n of t his res ult. T he ca use of t he s patial variati o n i n P B L de pt h a n d its de pe n-
+de nce o n seas o n is disc usse d f urt her i n secti o n 4.3.
+4.2.2. S urf ac e S e nsi bl e H e at Fl u x a n d Its C o ntri b ut ors
+Fig ure 5 s h o ws t he mai n c o ntri b ut ors t o t he s urface se nsi ble heat ﬂ ux – near ‐s urface air de nsity ρ, drag vel o-
+city u *, a n d t he s urface‐t o‐air te m perat ure differe nce T s urf‐T air (see e q uati o n (4)) – i n t hree dayti me peri o ds.
+Se nsi ble heat ﬂ ux is als o i n ﬂ ue nce d by differe nces i n t he drag c oef ﬁ cie nt C d , w hic h varies wit h t he sta bility
+of t he b o u n dary layer, b ut t he a d diti o nal variati o ns i ntr o d uce d are less t ha n a fe w perce nt. Fr o m a c o m par-
+is o n of all f o ur r o ws of Fig ure 5, t he patter n of pre dicte d s urface se nsi ble heat ﬂ ux is m ost i n ﬂ ue nce d by t he
+variati o n of t he s urface‐t o‐air te m perat ure differe nce, f oll o we d by t hat of u *. Near‐s urface air de nsity varies
+s patially byless t ha n a fact or of t w o over t he w h ole d o mai ni n t he 10:00– 11:00 peri o d a n d by eve nless as t he
+day pr ogresses a n d he nce has littlei m pact o n t he patter n of se nsi ble heat ﬂ ux viaits prese nce as a m ulti plier
+i n e q uati o n (4).
+O nt he c o ntrary,t here a p pearst o be a str o ng negative c orrelati o n bet wee nt he patter n of near ‐s urface air de n-
+sity a n d se nsi ble heat ﬂ ux, b ut t his is largely d ue t o t he crater t o p ogra p hy w hic h str o ngly i n ﬂ ue nces b ot h.
+Alt h o ug h s urface te m perat ure str o ngly c o ntr ols near ‐s urface air te m perat ures via ra diative heati ng a n d se n-
+si ble heat ﬂ ux, dayti me airte m perat ures meas ure d att he sa me heig ht, x, a b ovet hel ocal s urface will be c o oler
+f or a n air parcel at heig ht x a b ove t he sl o pes of Ae olis M o ns t ha n f or o ne at heig ht x a b ove t he crater tre nc h.
+T he air parcel a b ovet he hig her gr o u n dis c o oler d uet o h oriz o ntal (al o ng c o nsta nt ge o p ote ntial s urfaces) mix-
+i ng wit h neig h b ori ng air parcelst hat are at hig her altit u des a b ovet heir o w nl ocal s urface (a n d aret h us c ol der
+d ue t o t he ge nerally negative dayti mela pse ratesi n t he real at m os p here). T his res ultsi nlarger T s urf‐T air over
+Ae olis M o ns t ha n over t he crater tre nc h a n d he nce cl osely li n ks s urface t o p ogra p hy t o t he D D A.
+Ot her s urface pr o perties, s uc h as t her mal i nertia a n d al be d o, als o have a n i m pact o n t he patter n of T s urf‐T air
+s h o w n i n t he b ott o m r o w of Fig ure 5. T he t o p r o w of Fig ure 6 s h o ws t he al be d o a n d t her mal i nertia ma ps
+use d by Mars W R F i n t he d o mai n 5 nest. Ae olis M o ns has t he l o west t her mal i nertias i nsi de t he crater, wit h
+t he next l o west bei ng i n a t hi n stri p r u n ni ng a p pr oxi mately n ort h‐s o ut h at ~137° E. I nter me diate val ues
+occ ur over m ost of t he s o ut her n tre nc h, wit h t he hig hest val ues of t her mal i nertia over m ost of t he n ort her n
+tre nc h a n d i n a n area j ust t o t he S E of Ae olis M o ns. T he s urface al be d o is als o l o w i n a n ort h‐s o ut h stri p at
+~137° E a n d ~138.5° E, as well as over t he s o ut her n half of Gale Crater. Fig ure 7 c o m pares res ults fr o m t he
+origi nal si m ulati o n wit h o ne usi ng u nif or m al be d o a n d t her mali nertia acr oss d o mai n 5. T he varia ble s urface
+pr o pertiesi n t he origi nal si m ulati o n a p pear res p o nsi ble f or (i) t he n ort h ‐s o ut h stri p of hig h s urface te m pera-
+t ures a n d hig h s urface‐t o‐air te m perat ure differe nces at ~137° E, d ue t o l o wer al be d o a n d t her mal i nertia
+ca usi ng t he s urface t o war m m ore ra pi dly after s u nrise, a n d f or (ii) slig htly re d uci ng t he s urface ‐t o‐air te m-
+perat ure differe nce i n t he n ort her n crater tre nc h, d ue t o hig h al be d os a n d t her mal i nertias t hat res ult i n
+l o wer dayti me s urface te m perat ures. C o nversely, hig h al be d os a n d l o w t her mal i nertias over Ae olis M o ns
+a p pear t o largely ca ncel o ut a n d t o have little net effect o n t he overall patter n of pre dicte d D D A. Overall,
+t he n, t he b ul k of t he patter n of s urface‐t o‐air te m perat ure differe nce i nsi de Gale Crater a p pears largely
+i nse nsitive t o t he al be d o a n d t her mal i nertia ma p. I n partic ular, Ae olis M o ns has t he greatest val ues of
+T s urf‐T air , wit h s maller val ues occ urri ng i n t he crater tre nc h, regar dless of w het her varyi ng or u nif or m s ur-
+face t her mal pr o perties are use d. T h us t he t o p ogra p hic c o ntr ol o n air te m perat ure, descri be d a b ove, a p pears
+t o d o mi nate over t he i nﬂ ue nce of ot her s urface pr o perties o n s urface te m perat ure.
+T he dayti me patter n of u *is a res ult of c o nstr uctive a n d destr uctive i nterfere nce bet wee n (i) l ocal dayti me
+sl o pe ﬂ o ws i nsi de t he crater, u p t he sl o pes of Ae olis M o ns a n d t he crater ri m; (ii) regi o nal dayti me sl o pe
+ﬂ o ws acr oss t he dic h ot o my b o u n dary w here Gale Crater sits, u p t he sl o pe fr o m a p pr oxi mately N t o S ( or
+N N E t o SS W); a n d (iii) t he gl o bal circ ulati o n at t his ti me of year, w he n t he Ha dley circ ulati o n is str o ngest
+a n d c o nsists of u p welli ng i n t he s o ut her n he mis p here, d o w n welli ng i n t he n ort her n he mis p here, a n d a
+ret ur n ﬂ o w fr o m N t o S acr oss t he e q uat or. T he res ulti ng early after n o o n circ ulati o n f or t his regi o n a n d
+f or Gale Crater i n partic ular is s h o w n i n t he b ott o m r o w of Fig ure 6, i n t he f or m of wi n d vect ors at 1.5 m
+a b ove t he s urface i n d o mai ns 4 a n d 5 of t he m o del. Regi o nally, n ort herly (i.e., fr o m t he n ort h) wi n ds d o m-
+i nate, d ue t o t he gl o bal a n d regi o nal dayti me ﬂ o ws bei ngi n t he sa me directi o ni n t his seas o n. T here are s o me
+sig ns of t he ﬂ o w diverti ng t o g o ar o u n d Gale Crater, b utit als o brea ksi nt o t he crater over t he N W ri m, pe ne-
+trati ng part way acr oss t he tre nc h t here. By c o ntrast,l ocal dayti me u psl o pe wi n ds over m uc h of t he n ort her n
+10.1029/2019J E 006082 J o ur n al of G e o p h ysic al R es e arc h: Pl a n ets
+N E W M A N E T A L. 3453Fi g ur e 5. As i n Fig ure 3 b ut n o w s h o wi ng se nsi ble heat ﬂ ux (t o p) a n d its mai n c o ntri b ut ors: near ‐s urface air de nsity (sec o n d r o w), drag vel ocity (t hir d r o w), a n d
+s urface‐t o‐air te m perat ure differe nce ( b ott o m).
+10.1029/2019J E 006082 J o ur n al of G e o p h ysic al R es e arc h: Pl a n ets
+N E W M A N E T A L. 3454ri m sl o pes a p pear t o o p p ose t he e ntry of wi n d acr oss t he rest of t he n ort her n ri m a n d i nt o t he n ort her n
+tre nc h. L ocal dayti me u psl o pe ﬂ o ws o n t he stee per, n ort h si de of Ae olis M o ns ( w hic h stic ks u p hig h
+a b ove t he altit u de of t he n ort her n ri m) rei nf orce t he larger ‐scale n ort herly ﬂ o w as it passes over t he
+mi d dle a n d hig her sl o pes, wit h u psl o pe wi n ds o n t he ge ntler s o ut her n sl o pes t o o wea k t o o p p ose it exce pt
+i n o ne s mall regi o n. C o m pari ng t o t he t hir d r o w of Fig ure 5, it is clear t hat t he n ort h westerlies by t he N W
+crater ri m, a n d str o ng n ort herlies over m uc h of Ae olis M o ns, d o mi nate t he patter n of u *i nsi de t he crater.
+He nce overall,it a p pears t hat t he c ha nge i n se nsi ble heat ﬂ ux al o ng t he r over traverse (fr o m t he la n di ng site
+i n t he crater tre nc h t o Ae olis M o ns' sl o pes)is pre d o mi na ntly a res ult of Gale Crater's t o p ogra p hy, w hic h pr o-
+d uces b ot h (a) air de nsity variati o ns drivi ng s urface ‐t o‐air te m perat ure differe nces t hat pea k over Ae olis
+M o ns a n d ( b) sl o pe wi n ds t hat als o pea k over m uc h of Ae olis M o ns, wit h t he effect of al be d o a n d t her mal
+i nertia ma ps bei ng o nly sec o n dary.
+4.2.3. C a us e of t h e S p ati ot e m p or al B e h a vi or of D D A i n S o ut h er n S u m m er i n G al e Cr at er
+I n s u m mary, d uri ng s o ut her n s u m mer i n Gale Crater, t he s patial patter n of se nsi ble heat ﬂ ux is c o ntr olle d
+largely by t her mal pr ocesses a n d wi n d patter ns drive n by t he crater t o p ogra p hy (a n d sec o n darily by al be d o
+Fi g ur e 6. T o p r o w: (a) Al be d o a n d ( b) t her mali nertia ma ps use di n Mars W R F d o mai n 5 (see secti o n 3.1f or details). B ott o m r o w: Mars W R Ft o p ogra p hy (c ol ors) a n d
+wi n d vect ors (arr o ws) at 1.5 m a b ove t he s urface i n (c) d o mai n 4 a n d ( d) d o mai n 5 at 2 p m L TS T at s o ut her n s u m mer s olstice.
+10.1029/2019J E 006082 J o ur n al of G e o p h ysic al R es e arc h: Pl a n ets
+N E W M A N E T A L. 3455a n d t her mal i nertia variati o ns), w hile t he patter n of t her m o dy na mic ef ﬁ cie ncy is ca use d by t he s u p pressi o n
+of t he P B L over Ae olis M o ns c o m pare d t o t he crater tre nc h i n t his seas o n. H o wever, t he latteris pre dicte d t o
+vary c o nsi dera bly wit h ti me of year, as ex pl ore d f urt her i n secti o n 4.3. Overall, t he variati o n i n se nsi ble heat
+Fi g ur e 7. C o m pari ng c o ntri b ut ors t o se nsi ble heat ﬂ ux, as well as se nsi ble heat ﬂ ux a n d D D A, at n o o n at s o ut her n s u m mer s olstice, f or a si m ulati o n wit h (left t w o
+c ol u m ns) o bserve d a n d (rig ht t w o c ol u m ns) u nif or m t her mal i nertia a n d al be d o ma ps, i n Mars W R F d o mai n 5. C ol or bars are as i n Fig ures 3 (f or D D A), 5 (f or
+se nsi ble heat ﬂ ux a n d c o ntri b uti ng varia bles), a n d 6 (f or s urface pr o perty ma ps).
+10.1029/2019J E 006082 J o ur n al of G e o p h ysic al R es e arc h: Pl a n ets
+N E W M A N E T A L. 3456ﬂ uxlargely dictates t he patter n of D D A, wit h t he t her m o dy na mic ef ﬁ cie ncy acti ng t o di mi nis h t he pea k over
+Ae olis M o ns a n d wea ke n t he mi ni m u m i n t he crater tre nc h.
+As descri be d at t he t o p of secti o n 4.2, t he se nsi ble heat ﬂ ux pea ks cl oser t ol ocal n o o n, w hile t her m o dy na mic
+efﬁ cie ncy pea ks after ~14:00. T he net res ult is a si ngle pea k i n pre dicte d D D A bet wee n ~ n o o n a n d 14:00 i n
+t his seas o n. I n s o me ot her seas o ns, h o wever, t hislater pea ki n t her m o dy na mic efﬁ cie ncy, pl us alatei ncrease
+i n se nsi ble heat ﬂ ux d ue t o str o ng after n o o n wi n ds, res ults i n a d o u ble ‐pea k str uct ure bei ng pre dicte d (see
+secti o n 5.2.1).
+4.3. S e as o n al V ari ati o ns i n t h e P att er n of Pr e dict e d D D A i n G al e Cr at er
+T his secti o n exa mi nes t he pre dicte d seas o nal a n d s patial variati o ns acr oss t he N W q ua dra nt of Gale Crater,
+w hic h c o ntai ns t he MS L traverse. Fig ure 8 z o o ms i n o n t hat p orti o n of d o mai n 5 t o exa mi ne i n m ore detail
+t he s patial variati o n at f o ur ti mes of year: Ls = 0°, 90°, 180° a n d 270°. Se nsi ble heat ﬂ ux a n d vertical t her m o-
+dy na mic ef ﬁ cie ncy pea k at differe nt ti mes of s ol (see disc ussi o n early i n secti o n 4.2) a n d he nce are s h o w n i n
+Fig ure 8 at t he ti mes w he n t his pea k ty pically occ urs (12:00 –13:00 a n d 14:00 –15:00, res pectively), wit h D D A
+s h o w n at b ot h ti mes of s ol. Fig ures S2, S3, a n d S4 a d diti o nally s h o w res ults at t hree ti mes of s ol f or, res pec-
+tively, D D A, se nsi ble heat ﬂ ux, a n d vertical t her m o dy na mic ef ﬁ cie ncy.
+As ex pecte d, t he seas o n wit h t he wea kest s olar heati ng, l ocal wi nter ( Ls = 90°), has t he l o west pre dicte d
+D D A (left c ol u m n), pea ki ng near t he t o p of Ae olis M o ns at b ot h ti mes s h o w n. T he largest D D A over t his
+regi o n are pre dicte d i n l ocal s u m mer ( Ls = 270°), wit h i nter me diate D D A at t he t w o e q ui n oxes ( Ls = 0
+a n d 180°). H o wever, t he pea k val ues i n s u m mer occ ur cl ose t o t he wester n e dge of t he regi o n, at least 10
+k m fr o m t he r over traverse, o ut of t he ra nge of d ust devil i magi ng a n d m uc h t o o far a way t o affect t he
+R E MS press ure sig nal. T hese pea ks are clearly tie d t oi ncreasesi n t he se nsi ble heat ﬂ ux t here (t hir d c ol u m n),
+as disc usse d i n secti o n 4.2.
+I n t he regi o n cl oser t o t he r over traverse, se nsi ble heat ﬂ ux is ge nerally str o nger i n all seas o ns over Ae olis
+M o ns t ha ni n t he crater tre nc h. T he patter n of s urface ‐t o‐air te m perat ure differe nceis very si milari n all sea-
+s o ns, as it is largely deter mi ne d by t he crater t o p ogra p hy a n d ot her s urface pr o perties. T his mea ns t hat sea-
+s o nal variati o ns i n t he patter n of se nsi ble heat ﬂ ux are largely dictate d by seas o nal variati o ns i n t he patter n
+of drag vel ocity a n d he nce wi n ds. Ar o u n d s u m mer s olstice, f or exa m ple, t he regi o n w here MS L has beg u n
+cli m bi ng t he sl o pes of Ae olis M o ns has partic ularly wea k wi n d s pee ds (see t hir d r o w of Fig ure 5, w here a
+“t o ng ue” of l o wer wi n d s pee ds exte n ds fr o m t he tre nc h u p t he sl o pes). T h us, at least i n t his si m ulati o n,
+u *is pre dicte d t o i ncrease al o ng MS L's r o ute less t ha n it w o ul d have ha d t he r over cli m be d, e.g., a m ore wes-
+ter n sl o pe. Secti o n 5 f urt her disc usses t he relative i m p orta nce of t he wi n d ﬁ el d i n ca pt uri ng o bserve d varia-
+ti o ns i n v ortex activity d ue t o MS L's c ha ngi ng p ositi o n.
+As disc usse d i n secti o n 4.2.1, i n s u m mer t he dayti me P B L de pt h, he nce vertical t her m o dy na mic ef ﬁ -
+cie ncy, is pre dicte d t o be s maller over t he Ae olis M o ns sl o pes t ha n i n t he crater tre nc h. H o wever, t he
+o p p osite is largely tr ue over t he t hree ot her seas o ns s h o w n i n Fig ure 8. I n fact, t he dayti me P B L de pt h
+is pre dicte d t o pea k over Ae olis M o ns fr o m Ls ~330 t o 180° i n t he 12:00–13:00 peri o d (see Fig ure S4)
+a n d fr o m Ls ~30 t o 150° i n t he 14:00 –15:00 peri o d. T his is c o nsiste nt wit h a n u m ber of st u dies carrie d
+o ut f or MS L's la n di ng seas o n ( Ls ~150°), w hic h pre dicte d t hat t he P B L de pt h w o ul d be larger over
+Ae olis M o ns t ha n i n t he tre nc h (e.g., Tyler & Bar nes, 2013). T he c ha nge i n patter n wit h seas o n is d ue
+t o w het her t he crater circ ulati o n is pri marily drive n by regi o nal or l ocal (crater i nteri or) ﬂ o ws. Ar o u n d
+l ocal wi nter s olstice ( Ls = 90°), f or exa m ple, t he wi n ds meas ure d by MS L were str o ngly li n ke d t o l ocal
+u psl o pe ( d o w nsl o pe) ﬂ o ws o nt o ( off) Ae olis M o ns ( Ne w ma n et al., 2017; Ric har ds o n & Ne w ma n, 2018)
+wit h n o clear regi o nal i n ﬂ ue nce. Str o ng, sy m metric dayti me ﬂ o ws u p t hese sl o pes w o ul d be m ore li kely
+t o pr o d uce a hig her dayti me P B L de pt h over Ae olis M o ns. Ar o u n d l ocal s u m mer s olstice ( Ls = 270°),
+h o wever, availa ble MS L wi n d a n d ae olia n o bservati o ns ( Ba ker et al., 2018; Vi ú dez ‐M oreiras et al.,
+2019) a n d m o deli ng (e.g., Raf ki n et al., 2016) s uggest t hat str o ng regi o nal a n d larger ‐scale ﬂ o ws pe netrat-
+i ng i nt o t he crater fr o m t he n ort h have m ore i m p orta nce. As a res ult, t he circ ulati o ns i nsi de a n d o utsi de
+t he crater – es pecially its n ort her n half – are far m ore c o n necte d. T his i n t ur n res ults i n a n i ncrease d P B L
+de pt h o n t he n ort her n ri m a n d tre nc h i n s u m mer c o m pare d t o t he us ually “s u p presse d” crater i nteri or
+b o u n dary layer (e.g., Raf ki n et al., 2016) b ut c o nversely disr u pts t he u psl o pe wi n ds t hat were res p o nsi ble
+f or i ncreasi ng t he P B L de pt h over Ae olis M o ns i n wi nter.
+10.1029/2019J E 006082 J o ur n al of G e o p h ysic al R es e arc h: Pl a n ets
+N E W M A N E T A L. 3457Overall, if MS L c o nti n ues t o scale t he sl o pes of Ae olis M o ns f or a n ot her 3 years, Fig ure 8 s uggests t hat
+i ncreasi ng n u m bers of v ortex press ure dr o ps w o ul d be o bserve d i n m ost seas o ns. I n l ocal s u m mer, h o wever,
+t his will be d ue t o t he i ncrease d se nsi ble heat ﬂ ux, as t he vertical t her m o dy na mic ef ﬁ cie ncy i n t hat seas o nis
+ex pecte d t o decrease q uite str o ngly as MS L cli m bs t he sl o pes f urt her.
+Fi g ur e 8. D D A fr o m n o o n t o 13:00 ( ﬁ rst c ol u m n) a n d 14:00 t o 15:00 (sec o n d c ol u m n), se nsi ble heat ﬂ ux fr o m n o o n t o 13:00 (t hir d c ol u m n), a n d vertical t her m o-
+dy na mic ef ﬁ cie ncy fr o m 14:00 t o 15:00 (f o urt h c ol u m n), pre dicte d by Mars W R F i n a z o o me d ‐i n regi o n of d o mai n 5, average d over 7 s ols f or eac h of t he f o ur
+seas o ns. T o p r o w, Ls = 0°; sec o n d r o w, Ls = 90°; t hir d r o w, Ls = 180°; b ott o m r o w, Ls = 270°. T he w hite b oxes c o ntai n MS L's traverse over t he ﬁ rst 3 Mars years of
+t he MS L missi o n.
+10.1029/2019J E 006082 J o ur n al of G e o p h ysic al R es e arc h: Pl a n ets
+N E W M A N E T A L. 34585. Dir ect C o m p aris o n B et w e e n M ars W R F Pr e dicti o ns a n d M S L O bs er v ati o ns
+A q ua ntitative pre dicti o n of t he v ortex activity o bserve d by MS L ca n be ma de by sa m pli ng t he pre dicte d
+D D A at t he r overl ocati o n f or eac h Ls a n d L TS T h o ur. T his ca n t he n be c o m pare d directly wit h o bservati o ns
+of v ortices a n d d ust devils t o assess t he m o del's perf or ma nce a n d – if t hereis agree me nt – t oi nfer reas o ns f or
+t he o bserve d seas o nal a n d i ntera n n ual c ha nges. Secti o n 5.1 pr ovi des t he statistics of v ortex press ure dr o ps
+over t he ﬁ rst 1980 s ols ( nearly 3 Mars years) of t he missi o n, extracte d usi ng t he met h o d descri be d i n
+secti o n 2.4. Beca use MS L la n de d at ~4.6°S at Ls ~150°, s h ortly bef ore l ocal (i.e., s o ut her n) s pri ng e q ui n ox
+( Ls = 180°), eac h Mars year ( Y Rs 1– 3) is br o ke n i nt o f o ur wi de peri o ds ce ntere d o n l ocal (i) s pri ng e q ui n ox
+( Ls = 135– 225°), (ii) s u m mer s olstice ( Ls = 225 –315°), (iii) fall e q ui n ox ( Ls = 315 –45°), a n d (iv) wi nter s ol-
+stice ( Ls = 45–135°). Secti o n 5.2 c o m pares t hese statistics wit h t h ose o btai ne d fr o m Mars W R F o ut p ut a n d
+de m o nstrates t hat t he m o del pre dicts ma ny as pects of t he o bserve d v ortex activity. Secti o n 5.3 exa mi nes
+t he relati o ns hi p bet wee n D D A a n d v ortex n u m bers as a f u ncti o n of v ortex stre ngt h, w hile secti o n 5.4 exa m-
+i nes t he i m pact of si m ulati o n set u p o n res ults.
+5.1. T h e St atistics of O bs er v e d Pr ess ur e Dr o ps i n 12 P eri o ds S p a n ni n g S ols 1 t o 1980
+T he stac ke d hist ogra ms i n Fig ure 9 s h o w t he i nferre d n u m ber of press ure dr o ps per h o ur f or eac h h o ur
+bet wee n 07:00 a n d 17:00 L TS T, f or f o ur seas o nal ti me peri o ds i n t he ﬁ rst 3 years of MS L's missi o n. T hese
+were o btai ne d by n or malizi ng t he n u m ber of o bserve d press ure dr o ps by t he n u m ber of meas ure me nts i n
+eac h peri o d. T he press ure dr o ps are als o bi n ne d acc or di ng t o t he mag nit u de of t he detecte d press ure dr o p
+of eac h eve nt, usi ng f o ur l ogarit h mic mag nit u de bi ns t hat c over t he ra nge fr o m t he detecti o n t hres h ol d of
+0.6 Pa t o t he maxi m u m v ortex press ure dr o p mag nit u de detecte d over t his peri o d of j ust u n der 5.6 Pa. T he
+res ults f or t he ﬁ rst 2 years are c o nsiste nt wit h t h ose prese nte d i n previ o usly p u blis he d w or k (see
+secti o n 2.3) a n d are als o c o nsiste nt wit h res ults f or all 3 years o btai ne d usi ng a met h o d very si milar t o t hat
+of Or d o nez ‐Exte berria et al. (2018) (see Text S1 a n d Fig ures S5 a n d S6).
+I n m ost Mars years, t he largest n u m ber of v ortex press ure dr o ps occ urs i n t he peri o d s urr o u n di ng s u m mer
+s olstice a n d t he s mallesti n t he peri o d s urr o u n di ng wi nter s olstice, wit h o ne mai n exce pti o n. I n Y R1, t he per-
+i o d ar o u n d s u m mer s olstice was relativelyl o wi n b ot h n u m ber a n d mag nit u de of press ure dr o ps c o m pare d t o
+t he peri o d s urr o u n di ng s pri ng e q ui n ox. As s uggeste d t o ex plai n si milar res ults f o u n d i n Ka ha n pää et al.
+(2016), t his may have bee n d ue t o t he r over sitti ng at o ne l ocati o n fr o m MS L s ol 166 t o 272 ( Ls ~250–
+317°), w hic h is very si milar t o t he Y R1 s u m mer s olstice peri o d ( de ﬁ ne d as Ls = 225 –315°) s h o w n i n t he sec-
+o n d pl ot i n t he t o p r o w of Fig ure 9. T his l ocati o n ( “Yell o w k nife Bay ”) was meas ure d t o have a m uc h hig her
+t her mal i nertia t ha n near by regi o ns ( Martí nez et al., 2014), w hic h w o ul d have pr o d uce d a sl o wer rise i n s ur-
+face te m perat ure d uri ng t he day, re d uce d t he dayti me se nsi ble heat ﬂ ux, a n d very li kely res ulte d i n t he
+re d uce d v ortex activity o bserve d by R E MS. By c o ntrast, t he t her mal i nertia ma ps use d i n Mars W R F are
+derive d fr o m or bital data a n d d o n ot ca pt ure s uc h l ocal variati o ns; t h us Mars W R F di d n ot pre dict s uc h a
+decrease i n t he D D A (see disc ussi o n i n secti o n 3.1).
+T w o ot her peri o ds als o c o me cl ose t o bei ng exce pti o ns. I n Y R3, a c o m para ble n u m ber of press ure dr o ps were
+meas ure d ar o u n d wi nter s olstice as ar o u n d t he previ o us s pri ng e q ui n ox. H o wever, t his is m ost pr o ba bly a
+res ult of t he str o ng i ncrease i n v ortex activity as t he r over cli m be d ra pi dly hig her o n t he sl o pes; i.e., t here
+wereli kelyfar m ore press ure dr o ps rec or de di n t he peri o d ar o u n d t he follo wi ngs pri ng ( n ot c o nsi dere di n t his
+st u dy). Sec o n d, t he peri o d ar o u n d fall e q ui n ox i n Y R2 has a s maller n u m ber of press ure dr o ps overall t ha n
+t he peri o d ar o u n d t hat s u m mer s olstice, b ut t here is a greater pea k i n n u m ber of dr o ps bet wee n 11:00 a n d
+13:00. T his is d ue t o several s ols w he n t he at m os p here was a n o mal o usly c o nvective ar o u n d l ocal n o o n, as
+als o n ote d by Or d o nez‐Exte berria et al. (2018). Ty pically, t he n u m ber of 1 ‐h o ur meas ure me nt peri o ds c o n-
+tai ni ng N v ortices (s h o w ni n Fig ure S7) decreasesl ogarit h mically wit h N u p t o N ~10 a n d t he n decli nes m ore
+sl o wly, b ut a “h u m p ” ar o u n d N ~18 c orres p o n ds t o s uc h es pecially restless peri o ds.
+I n m ost seas o ns a n d Mars years, t he pea k n u m ber of o bserve d v ortex press ure dr o ps occ urs bet wee n 11:00
+a n d 14:00 L TS T. It a p pears t o s ke w earlier i n t his peri o d ar o u n d t he e q ui n oxes ( ﬁ rst a n d t hir d c ol u m ns)
+a n d later ar o u n d t he s olstices (sec o n d a n d f o urt h c ol u m ns), alt h o ug h agai n t he seas o n s pa n ni ng l ocal s u m-
+mer i n Y R1 is a n o mal o us here. Fi nally, t here is a str o ng overall year ‐t o‐year i ncrease i n t he n u m ber a n d
+mag nit u de of o bserve d v ortex press ure dr o ps f or m ost peri o ds a n d ti mes of day, wit h t he greatest activity
+occ urri ng w he n MS L sits hig hest o n t he sl o pes of Ae olis M o ns.
+10.1029/2019J E 006082 J o ur n al of G e o p h ysic al R es e arc h: Pl a n ets
+N E W M A N E T A L. 34595.2. M ars W R F‐Pr e dict e d D D A at t h e R o v er L oc ati o n
+Fig ure 9 als o s h o ws Mars W R F pre dicti o ns of D D A f or t he sa me ti me ‐of ‐day ra nge a n d seas o nal peri o ds f or
+w hic h t he R E MS press ure dr o p data are s h o w n. Eac h pa nel is pr o d uce d by ste p pi ng t hr o ug h t hat seas o nal
+peri o d s ol by s ol, sa m pli ng t he mi n ute ‐by ‐mi n ute D D A pre dicti o ns i n t he m o del at MS L's l ocati o n f or t hat
+s ol (i nter p olati ng bet wee n res ults f or t he t w o Mars W R F si m ulati o ns t hat are cl osest t o it i n Ls), a n d t he n
+averagi ng t he res ults at eac h ti me of day over all s ols c o ntai ne d i n t he peri o d. C o m pari ng t he o bservati o ns
+a n d Mars W R F pre dicti o ns s h o ws t hat t he ge neral seas o nal a n d di ur nal variati o n is largely ca pt ure d i n t he
+variati o n of D D A pre dicte d usi ng Mars W R F o ut p ut. T he ge neral tre n d ofi ncrease d v orticesfr o m year t o year
+f or m ost seas o ns a n d ti mes of s ol is als o ca pt ure d by t he m o del; h o wever, t he o bserve d n u m ber of v ortex
+press ure dr o ps i ncreases faster t ha n t he pre dicte d D D A as MS L cli m bs u p t he sl o pe of Ae olis M o ns. T his
+is disc usse d f urt her i n secti o n 5.3.
+F or b ot h t he o bserve d n u m ber of press ure dr o ps a n d pre dicte d D D A, t he pea k ge nerally occ ursi n t he peri o d
+c o ntai ni ng s u m mer s olstice, is re d uce d i n t he peri o ds ar o u n d b ot h e q ui n oxes, a n d is s mallest i n t he wi nter
+s olstice peri o ds. T he exce pti o ns are ar o u n d Y R1 s u m mer s olstice, w he n o bserve d activity is l o w (see disc us-
+si o ni n secti o n 5.1), a n d ar o u n d Y R3 wi nter s olstice, w he n t he o bserve d activityis c o m para ble t o t hat ar o u n d
+t he prece di ng s pri ng e q ui n ox. T helatteris als o pre dicte d by Mars W R F, h o wever, a n d (as disc usse di n secti o n
+5.1) is li kely d ue t o t he year ‐t o‐year i ncrease as MS L cli m bs Ae olis M o ns. B ot h pea k D D A a n d n u m ber of
+v ortices occ ur ar o u n d t he s olstices i n t he 13:00 t o 15:00 peri o d (agai n, exce pt f or t he s u m mer s olstice of
+Y R1, w he n o bservati o ns di p) a n d occ ur earlier ar o u n d t he e q ui n oxes. H o wever, t he clear pre dicte d
+“d o u ble ‐pea k ” str uct ure i n D D A ar o u n d s pri ng e q ui n ox, w hic h is als o visi ble ar o u n d fall e q ui n ox, is ge ner-
+ally n ot see ni n t he o bserve d n u m ber of v ortices or press ure dr o p mag nit u des. By c o ntrast, t hereis a hi nt of a
+Fi g ur e 9. R E MS o bserve d press ure dr o ps, se parate d acc or di ng t o t he mag nit u de of t he press ure dr o p (stac ke d hist ogra ms; c ol ore d bars), c o m pare d t o t he D D A at
+MS L's l ocati o n pre dicte d by Mars W R F ( dar k gree n li nes) as a f u ncti o n of ti me of s ol over f o ur seas o nal ra nges eac h s pa n ni ng 90° of Ls, a n d ce ntere d o n Ls = 180°,
+270°, 0°, a n d 90°. T he P oiss o n ( N
+0. 5
+) c o u nti ng err or is als o s h o w n ( blac k bars).
+10.1029/2019J E 006082 J o ur n al of G e o p h ysic al R es e arc h: Pl a n ets
+N E W M A N E T A L. 3460d o u ble ‐pea k str uct ure i n t he o bservati o ns ar o u n d s u m mer s olstice ( partic ularly i n Y R3, w hereas i n t he
+m o del it is m ost n oticea ble i n Y R1).
+I n s u m mary, t here is ge neral agree me nt b ut als o s o me sig niﬁ ca nt differe nces bet wee n t he pre dicte d D D A
+a n d o bserve d v ortex activity. H o wever, give n t he several areas of agree me nt, it is p ossi ble t o dig i nt o t he
+m o del res ults t o exa mi ne w hat may be res p o nsi ble f or t he o bserve d v ortex varia bility wit h seas o n, ti me of
+day, a n d l ocati o n o n Mars.
+5.2.1. C o ntr ols o n t h e S e as o n al a n d Y e ar ‐t o‐Y e ar V ari ati o n of D D A
+As disc usse d a b ove a n d s h o w n i n Fig ure 9, Mars W R F ge nerally d oes a g o o d j o b of ca pt uri ng t he
+o bserve d seas o nal variati o n of press ure dr o ps. Fig ure 10 s h o ws t he di ur nal variati o n of eac h releva nt
+varia ble i n Mars W R F f or eac h seas o nal peri o d at t he r over l ocati o n a n d de m o nstrates t he relative c o n-
+tri b uti o n of se nsi ble heat ﬂ ux a n d vertical t her m o dy na mic ef ﬁ cie ncy. T he f or mer ty pically pea ks s h ortly
+bef ore or ar o u n d n o o n, w hereas t he latter pea ks bet wee n ~14:30 a n d 16:00, s hifti ng later as t he seas o n
+s hifts fr o m s pri ng t o s u m mer t o fall. T hese res ults reveal t hat t he pea k D D A occ urs ar o u n d s u m mer s ol-
+stice d ue largely t o a str o nger after n o o n se nsi ble heat ﬂ ux t ha n ar o u n d t he e q ui n oxes, w hic h i n t ur n is
+d ue largely t o a str o nger s urface ‐t o‐air te m perat ure differe nce at t his ti me of year. Fi nally, ar o u n d wi nter
+s olstice, t he s urface‐t o‐air te m perat ure differe nce a n d P B L de pt h are b ot h far l o wer t ha n i n ot her seas o ns
+at m ost ti mes of s ol, wit h n o after n o o n pea k i n pre dicte d P B L t hic k ness, w hic h res ults i n t he l o west
+D D A bei ng pre dicte d f or t his seas o n relative t o ot her ti mes of year.
+Fig ure 10 als o de m o nstrates – as disc usse d i n secti o n 4.3 – t hat a n i ncrease i n se nsi ble heat ﬂ ux fr o m year t o
+year, n ot t her m o dy na mic ef ﬁ cie ncy,is res p o nsi blei n m ost seas o ns f or t he pre dicte di ncreasei n D D A as MS L
+cli m bs u p t he sl o pe of Ae olis M o ns. O nly ar o u n d fall (a n d, t o a lesser exte nt, s pri ng) e q ui n ox is a n a p preci-
+a ble i ncrease pre dicte d i n pea k P B L de pt h ( he nce t her m o dy na mic ef ﬁ cie ncy) i n t he after n o o n fr o m year t o
+year, w hereas pea k se nsi ble heat ﬂ ux is pre dicte d t o i ncrease sig ni ﬁ ca ntly – a n d m o n ot o nically – fr o m year
+t o year i n every seas o n. Differe nces bet wee n years are disc usse d f urt her i n secti o n 5.3.
+Fi g ur e 10. Mars W R F ‐pre dicte d daily variati o n of: D D A; se nsi ble heat ﬂ ux a n dits pri mary c o ntri b ut ors (s urface ‐t o‐air te m perat ure differe nce, drag vel ocity u *, a n d
+air de nsity); a n d vertical t her m o dy na mic ef ﬁ cie ncy a n d its pri mary c o ntri b ut or (t he press ure t hic k ness of t he P B L); calc ulate d f or t he r over l ocati o n a n d seas o n
+c orres p o n di ng t o t he releva nt s ols, f or t he sa me seas o nal peri o ds as i n Fig ure 9.
+10.1029/2019J E 006082 J o ur n al of G e o p h ysic al R es e arc h: Pl a n ets
+N E W M A N E T A L. 34615.2.2. C o ntr ols o n t h e Ti m e ‐of ‐D a y V ari ati o n of D D A
+As s h o w n by e q uati o ns (1) a n d (4), e nergy is availa ble f or v ortex f or mati o n ( he nce n o nzer o D D A val ues
+occ ur) w he n t he se nsi ble heat ﬂ ux is p ositive, i.e., w he n t he s urface is war mer t ha n t he at m os p here a b ove
+it. T he m o deli n fact pre dicts n o D D A bef ore 07:50 or after 17:00 i n a ny seas o n. T hese pre dicte d ti me peri o ds
+of n o nzer o D D A c o ntai n all of t he o bserve d dayti me press ure dr o ps excee di ng 0.6 Pa (see Fig ure 9).
+Fig ure 10 reveals t hat t he pre dicte d d o u ble ‐pea k str uct ure i n s o me seas o ns is s o me w hat d ue t o t he differe nt
+ti mi ngs of t he pea ki n s urface‐t o‐air te m perat ure differe nce a n d t her m o dy na mic ef ﬁ cie ncy b ut pri marily d ue
+t o t he d o u ble‐pea k str uct ure i n drag vel ocity i n s o me seas o ns. S urface ‐t o‐air te m perat ure differe nce pea ks
+eit her i n t he h o ur bef ore n o o n (ar o u n d b ot h e q ui n oxes i n all years a n d ar o u n d s u m mer s olstice i n Y R3)
+or i n t he h o ur after n o o n, w hereas t her m o dy na mic ef ﬁ cie ncy pea ks at ~15:00 ar o u n d s pri ng e q ui n ox a n d
+s u m mer s olstice, u p t o a n h o ur later ar o u n d fall e q ui n ox, a n d is ﬂ at fr o m ~10:30– 15:30 ar o u n d wi nter s ol-
+stice. I n a d diti o n, drag vel ocity pea ks str o nglyi n t he late m or ni ng a n d mi d‐after n o o n, wit h a di p i n t he early
+after n o o n, ar o u n d b ot h e q ui n oxes, partic ularly s pri ng. T he net effectis b ot h alate m or ni ng a n d early t o mi d ‐
+after n o o n pea k i n t he pre dicte d D D A i n ma ny years a n d seas o ns, es pecially ar o u n d s pri ng a n d t o a lesser
+exte nt fall e q ui n ox.
+Fig ure 9 all o ws t he daily ti mi ngs of o bserve d pea ksi n v ortex activity t o be c o m pare d wit h t h ose pre dicte d by
+Mars W R F as a f u ncti o n of seas o n. T he best agree me nt occ urs ar o u n d wi nter s olstice, w he n b ot h t he m o del
+a n d R E MS data s h o w a nearly sy m metric distri b uti o n a b o ut t he n o o n – 13:00 peri o d, es pecially i n Y R3.
+Ar o u n d s u m mer s olstice, by c o ntrast, t he m o del pre dicts a less sy m metric distri b uti o n, wit h D D A pea ki ng
+bet wee n ~12:00 a n d 15:00 a n d a hi nt of a sec o n dary pea k bet wee n ~10:00 a n d 11:00 t hat fa des fr o m year
+t o year a n d is g o ne by Y R3. T his is visi ble i n t he o bservati o ns t o o, alt h o ug h i n Y R3, t he m or ni ng pea k is still
+prese nt, a n d i n Y R1, t he n u m ber of press ure dr o ps >0.6 Pa pea ks i n t he late m or ni ng rat her t ha n after n o o n.
+H o wever, as n ote d i n secti o n 5.1, Y R 1 s uffere d fr o m relatively fe w R E MS meas ure me nts a n d t he r over sit-
+ti ng i n a l ocati o n wit h a n a n o mal o usly hig h t her mal i nertia f or over a h u n dre d s ols, s o t he data set is ha m-
+pere d by l o w statistics a n d p ossi bly biase d by l ocal s urface pr o perties.
+Ar o u n d s pri ng e q ui n ox, t he m or ni ng a n d after n o o n pea ks are pre dicte d t o be rat her si milar i n mag nit u de,
+wit h a disti nct di p bet wee n t he m s h ortly after n o o n. H o wever, t he o bservati o ns s h o w o nly a hi nt of a t w o ‐
+pea k str uct ure, wit h a sec o n dary maxi m u m i n t he after n o o n i n Y R2 b ut n o sig n of t his at all i n Y Rs 1 or
+3. Ar o u n d fall e q ui n ox, t w o pea ks are agai n pre dicte d, b ut wit h a s maller di p bet wee n t he m w hic h
+s hri n ks f urt her wit h p ositi o n u p t he sl o pe (i.e., wit h year). As i n s pri ng, t here is barely a hi nt of t w o‐pea k
+str uct ure i n t he o bservati o ns, a n d t his disa p pears by Y R3. T he net effect ar o u n d b ot h e q ui n oxes is a n
+over pre dicti o n of t he after n o o n D D A, pri marily d ue t o a n a p pare ntly err o ne o us pea k i n u *i n t he after-
+n o o n (see yell o w li nes i n Fig ure 10). I nteresti ngly, des pite usi ng o ut p ut fr o m a differe nt m o del, r u n at
+far l o wer res ol uti o n (5°x5° gri d s paci ng), C ha p ma n et al. (2017) pre dict a si milar d o u ble‐pea k str uct ure
+i n D D A w he n averagi ng over t he w h ole of Y R1. H o wever, give n t he str o ng se nsitivity of wi n ds t o t he cra-
+ter t o p ogra p hy ( w hic h is n ot res olve d i n t heir m o del) a n d t he fact t hat t he d o u ble‐pea k be havi or c ha nges
+w he n Mars W R F is set u p differe ntly (see secti o n 5.4), t his agree me nt is li kely c oi nci de ntal.
+5.3. S e as o n al a n d Y e ar ‐t o‐Y e ar C h a n g es as a F u ncti o n of V ort e x Str e n gt h
+T his secti o n n o w ig n ores di ur nal varia bility a n d f oc uses o n t he t otal n u m ber of press ure dr o ps per s ol. T his
+e na bles easier c o m paris o n wit h Mars W R F pre dicti o ns of seas o nal a n d i ntera n n ual variati o ns b ut als o pr o-
+vi des i m pr ove d statistics f or l o o ki ng at t he matc h as a f u ncti o n of press ure dr o p mag nit u de. Acc or di ng t o
+R98, t he maxi m u m ta nge ntial wi n d vel ocity ar o u n d a c o nvective v ortex is pr o p orti o nal t o t he s q uare r o ot
+of its ce ntral press ure dr o p. T he ce ntral press ure dr o p ca n he nce be use d as a meas ure of v ortex stre ngt h.
+As t he v ortices d o n ot pass directly over MS L, t he detecte d press ure dr o p mag nit u des are s maller t ha n t he
+act ual ce ntral press ure dr o ps of t he v ortices. Nevert heless, t he te m p oral distri b uti o n of t he detecte d press ure
+dr o p mag nit u des re ﬂ ects t he distri b uti o n of t he v ortex stre ngt hs.
+Fig ure 11a s h o ws t he t otal i nferre d n u m ber of v ortex press ure dr o ps >0.6 Pa per s ol a n d Mars W R F pre dic-
+ti o ns of mea n D D A as a f u ncti o n of Ls over t he 3 years use d i n t his w or k, agai n bi n ne d i nt o f o ur br oa d sea-
+s o ns i n eac h year. T his clearly de m o nstrates t he degree t o w hic h t he D D A u n der pre dicts t he year‐t o‐year
+i ncrease i n t he n u m ber of v ortices o bserve d by MS L. H o wever, if t he o bservati o ns a n d t he D D A are pl otte d
+usi ng a mi ni m u m D D A val ue of 0.17, t he matc h is m uc h better ( Fig ure 11 b). T his is es pecially tr ue if t he
+10.1029/2019J E 006082 J o ur n al of G e o p h ysic al R es e arc h: Pl a n ets
+N E W M A N E T A L. 3462s u m mer s olstice peri o d i n Y R1 is disc o u nte d as a n o mal o us, as disc usse d i n secti o n 5.1. T his s uggests t hat a
+t hres h ol d D D A may a p ply bel o w w hic h n o v ortices occ ur ( or at least n o ne str o ng e n o ug h t o be detecte d by
+t he met h o ds use d here) a n d t hat D D A may be better a ble t o pre dict t he t otal n u m ber of v ortices if t he
+existe nce of s uc h a t hres h ol d is ta ke n i nt o c o nsi derati o n. T o exa mi ne t his i n a q ua ntitative ma n ner,
+h o wever, s uc h a D D A t hres h ol d s h o ul d be a p plie d t o eac h s h ort ti me peri o d (e.g. every h o ur of every s ol),
+rat her t ha n bei ng a p plie d t o t he mea n D D A val ue over a peri o d lasti ng >100 s ols (as is effectively
+s h o w n here).
+Fig ure 11 als o s h o ws t he c o m paris o n bet wee n D D A a n d t he i nferre d n u m ber of v ortex press ure dr o ps >1.05
+Pa (sec o n d r o w), >1.83 Pa (t hir d r o w), a n d > 3.2 Pa (f o urt h r o w). T he matc hisi ncreasi ngly p o or as t he pres-
+s ure dr o p mag nit u de – he nce stre ngt h of t he v ortex – i ncreases. T his s uggests t hat a hig her t hres h ol d D D A
+may a p ply t o str o nger v ortices a n d/ or t hat t he relati o ns hi p bet wee n v ortex stre ngt h a n d D D A may n ot be
+li near. C o m pari ng Fig ures 11 d, f, a n d h wit h Fig ure 11 b ( w hic h is d o mi nate d by t he m ost a b u n da nt, i.e.,
+wea kest, v ortices) s uggests t hat i ncreasi ngly hig h t hres h ol ds (s o me w hat e q uivale nt t o starti ng t he y ‐axis at
+a hig her val ue i n Fig ure 11 d, hig her agai n i n Fig ures 11f, a n d still hig her i n Fig ure 11 h) mig ht i m pr ove
+t he matc h t o o bservati o ns ofi ncreasi ngly str o ng v ortices. If o ne ass u mes t hat a str o nger v ortex ( wit h a dee per
+ce ntral press ure dr o p a n d he nce hig her ta nge ntial wi n d s pee ds) is re q uire d t o raise d ust fr o m t he s urface,
+Fi g ur e 11. R E MS t otal dailyi nferre d press ure dr o ps, se parate d acc or di ng t o t he dr o p mag nit u de ( hist ogra ms), c o m pare d t o t he mea n D D A over t he 9 h o urs d uri ng
+w hic h c o nvective v ortices are o bserve d (08:00 –17:00) at MS L's l ocati o n pre dicte d by Mars W R F ( dar k gree n li nes), as a f u ncti o n of Ls over 3 Mars years, averagi ng
+over br oa d (90° –wi de) Ls ba n ds. I n t he left c ol u m n, t he D D A axis starts at 0.0, w hereas i n t he rig ht, it starts at 0.17.
+10.1029/2019J E 006082 J o ur n al of G e o p h ysic al R es e arc h: Pl a n ets
+N E W M A N E T A L. 3463o ne mig ht ex pect t he te m p oral variati o n of i mage d d ust devils t o matc h t hat of larger press ure dr o ps (e.g.,
+Fig ures 11e or 11g, rat her t ha n 11a) a n d t h us t o have a t hres h ol d ‐de pe n de nt a n d/ or n o nli near
+relati o ns hi p wit h D D A als o. T his w o ul d be c o nsiste nt wit h t he ﬁ n di ngs of Ka hre et al. (2006) t hat M E R
+S pirit o bserve d zer o d ust devils i n s o me seas o ns, w hereas t he pre dicte d D D A never dr o p pe d t o zer o at
+t hat l ocati o n. T he relati o ns hi p bet wee n pre dicte d D D A a n d d ust devils i mage d by s urface ca meras will be
+ex pl ore d i n f ut ure w or k.
+5.4. I m p act of Si m ul ati o n S et u p o n R es ults
+Give n s o me of t he mis matc hes bet wee n t he o bserve d a n d m o dele d v ortex activity, o ne may as k w het her t he
+Mars W R F pre dicti o ns or t he t he ory of R98 are res p o nsi ble. As disc usse d i n secti o n 5.3, t he prese nt st u dy
+d oes s uggest t hat a t hres h ol d D D A may be nee de d t o c o n nect R98 t o press ure dr o p statistics, b ut t his st u dy
+is n ot well s uite d t o deter mi ni ng t he acc uracy of R98. A better a p pr oac h w o ul d be t o perf or m terrestrial
+ex peri me nts i n w hic h t he l ocal a n d regi o nal at m os p heric state ca n be meas ure d a n d pre dicte d wit h m uc h
+hig her acc uracy t ha n is availa ble f or Mars, a n d c o m pare d t o m ore c o m plete a n d exte nsive meas ure me nts
+of v ortices a n d d ust devils.
+T his secti o n t heref ore f oc uses o n p ote ntial Mars W R F err ors. As n ote di n secti o n 3.1, all res ults s h o w n a b ove
+use d o ut p utfr o m a si m ulati o nt hat has previ o usly bee n s h o w n t o re prese nt wi n ds a n d ae olia nfeat uresi nsi de
+t he Gale Crater reas o na bly well. H o wever,it d oes s o by usi ng a vertical gri d wit h rat her p o or vertical res ol u-
+ti o ni n t hel o wer b o u n darylayer ( Ne w ma n et al., 2017). It t h us ma kes se nse t o begi ni nvestigati ng t he s o urce
+of t he mis matc hes – es pecially t he ti mi ng of pea k v ortex activity – by exa mi ni ng t he res ults usi ng a differe nt
+vertical gri d i n t he m o del, s peci ﬁ cally, vertical gri d A of Ne w ma n et al. (2017) w hic h has t hree a d diti o nal
+m o del layers ce ntere d bel o w ~150 m. Fig ure 12 s h o ws t he matc h t o o bserve d press ure dr o ps as a f u ncti o n
+of ti me of s ol a n d seas o n usi ng vertical gri d A a n d may be c o m pare d directly t o Fig ure 9 s h o wi ng gri d B
+res ults. T he mai n differe nces are i n t he ti mes of pea k D D A, wit h Fig ure 12 n ot pre dicti ng t he err o ne o us
+Fi g ur e 12. As i n Fig ure 9 b ut n o w usi ng o ut p ut fr o m a Mars W R F si m ulati o n usi ng vertical gri d A ( Ne w ma n et al., 2017). See text f or m ore details.
+10.1029/2019J E 006082 J o ur n al of G e o p h ysic al R es e arc h: Pl a n ets
+N E W M A N E T A L. 3464mi d ‐after n o o n pea k ar o u n d t he e q ui n oxes see ni n Fig ure 9. I n t he origi nal si m ulati o n, as s h o w n by Fig ure 10
+, t he late m or ni ng pea k is largely d ue t o a pea k i n u *( he nce se nsi ble heat ﬂ ux) at t his ti me, w hile t he mi d ‐
+after n o o n pea k is a c o m bi nati o n of a sec o n d pea k i n u *a n d t he gr o wi ng P B L de pt h ( he nce vertical t her m o-
+dy na mic ef ﬁ cie ncy). T he ne w si m ulati o n d oes n ot have t his str o ng d o u ble‐pea k str uct ure i n u *a n d he nce
+d oes n ot pre dict t he err o ne o us mi d ‐after n o o n pea k (see Fig ure S8). H o wever, t he ne w si m ulati o n pre dicts
+pea k D D A at e q ui n ox bet wee n 13:00 a n d 14:00, w hic h is later t ha n t he o bserve d pea k i n n u m ber of v ortices.
+Overall, t here is n o clear i m pr ove me nt i n t he matc h t o di ur nal varia bility w he n usi ng t he ne w si m ulati o n
+a n d n o i m pr ove me nt t o seas o nal or year ‐t o‐year varia bility at all.
+T he next ste p bey o n d w hat has bee n d o ne here w o ul d be t o use d ust o pacity ma ps base d o n regi o nal (e.g.,
+M o nta b o ne et al., 2015) a n d l ocal (e.g., G uze wic h et al., 2018) o bservati o ns of at m os p heric d ust c o nte nt,
+i n or der t o vary Mars W R F's at m os p heric d ust distri b uti o n m ore realistically. W or k o n t his is u n der way,
+i ncl u di ng m o deli ng t he i m pact of t he gl o bal a n d regi o nal d ust st or ms i n M Y 34, t he latter of w hic h was als o
+ex perie nce d by t he I nSig ht la n der a n d rec or de d i n its m ore se nsitive meas ure me nts of press ure. T he res ults
+of t hese Mars W R F si m ulati o ns will be use d t o st u dy t he i m pact of d ust o pacity c ha nges o n t he pre dicte d
+D D A, w hic h will be c o m pare d wit h t he o bserve d v ortex press ure dr o ps a n d d ust devil statistics at b ot h t he
+MS L a n d I nSig ht la n di ng sites d uri ng t he st or m(s).
+I deally, f ut ure w or k w o ul d als o c o m pare o bserve d v ortex press ure dr o ps wit h t he ex plicit si m ulati o n of v or-
+ticesi n a Large E d dy Si m ulati o n ( L ES) of Gale Crater. W hile Mars W R F may als o be r u ni n t his way, t his is a
+dif ﬁ c ult ex peri me nt t o perf or m d ue t o t he nee d f or t he L ES t o i ncl u de t he w h ole of Gale Crater t o pr o perly
+ca pt ure t he l ocal t o p ogra p hic i nﬂ ue nces, a n d yet be r u n at ~50 m gri d s paci ngi n or der t o ca pt ure t he maj or-
+ity of t ur b ule nt str uct ures a n d res olvelarger c o nvective v ortices. I n practice, a n areaf o ur ti mes t he size of t he
+crater w o ul d be nee de d t o av oi d b o u n dary c o n diti o niss ues a n d e dge effects; he nce t his w o ul d re q uire ~6,000
+gri d p oi nts i n l o ngit u de a n d i n latit u de, a very ex pe nsive si m ulati o n. I n a d diti o n, t he L ES w o ul d nee d t o be
+drive n wit h ti me ‐varyi ng regi o nal wi n d pr o ﬁ les ta ke n fr o m a l o wer res ol uti o n Mars W R F neste d mes oscale
+si m ulati o n. Fi nally, eve n at s uc h a hig h res ol uti o n, v ortices s maller t ha n ~200 m dia meter w o ul d n ot be
+pr o perly res olve d. H o wever, t he be ne ﬁ ts of bei ng a ble t o m o del t he P B L m ore ex plicitly t ha n i n a mes oscale
+si m ulati o n (i n w hic h a P B L s u bgri d‐scale para meterizati o n is re q uire d) a n d t o c o m pare MS L o bservati o ns
+directly wit h m o del pre dicti o ns (e.g., t he distri b uti o n of v ortex press ure dr o p mag nit u des, ti mi ngs, etc.)
+ma ke t his i dea very a p peali ng.
+6. C o ncl usi o ns
+T he t her m o dy na mic t he ory of R98is c o m bi ne d wit h o ut p ut fr o m t he Mars W R F at m os p heric m o del, r u n at a
+gri d s paci ng of ~1.4 k m, t o pre dict t he variati o n of d ust devil ( or e q uivale ntly, c o nvective v ortex) activity,
+D D A, f or Gale Crater, Mars. T his is t he n c o m pare d wit h t he statistics of dayti me s urface press ure dr o ps
+>0.6 Pa meas ure d by R E MS o n t he MS L r over over 3 Mars years, w hic h are ass ociate d wit h t he passage of
+c o nvective v ortices. I n t he R98 t he ory, D D A is pr o p orti o nal t o t he se nsi ble heat ﬂ ux, w hic h i ncreases wit h
+t he s urface‐t o‐air te m perat ure differe nce a n d drag vel ocity, a n d t o t he vertical t her m o dy na mic ef ﬁ cie ncy
+of t he P B L, w hic h i ncreases wit h t he press ure t hic k ness of t he P B L.
+MS Lla n de d at ~4.5°S at Ls ~150°, s o eac h Mars yearis br o ke ni nt o f o ur wi de peri o ds ce ntere d o n s o ut her n (i)
+s pri ng e q ui n ox ( Ls = 135– 225°), (ii) s u m mer s olstice ( Ls = 225 –315°), (iii) fall e q ui n ox ( Ls = 315 –45°), a n d
+(iv) wi nter s olstice ( Ls = 45– 135°). Exce pt f or Y R1, w he n t here were large data ga ps a n d t he r over re mai ne d
+i n a n a n o mal o usly hig h t her mali nertia regi o nf or over a h u n dre d s ols, t he greatest n u m ber ofi nferre d v ortex
+occ urre nces a n d largest press ure dr o p mag nit u des were o bserve d i n t he peri o d ar o u n d s u m mer s olstice.
+Mars W R F o ut p ut als o pre dicts pea k D D A ar o u n d s u m mer s olstice, w hic h is attri b ute d t o b ot h hig h
+s urface‐t o‐air te m perat ure differe nces fr o m mi d ‐m or ni ng t hr o ug h mi d ‐after n o o n a n d large b o u n dary layer
+t hic k nesses i n t he mi d‐after n o o n. I n ter ms of di ur nal variati o ns f or t his seas o n, Mars W R F o ut p ut pre dicts
+pea k D D A bet wee n n o o n a n d ~15:00, wit h a s mall sec o n dary pea k bet wee n 10:00 a n d 11:00 i n Y R1 o nly,
+w hereas R E MS press ure dr o ps s uggest m ore of a t w o ‐pea k str uct ure i n all years.
+Sig niﬁ ca nt n u m bers of v ortices are als o o bserve d a n d pre dicte d ar o u n d b ot h e q ui n oxes, b ut w hile o bserva-
+ti o ns s h o w a pea k i n v ortex activity bet wee n 11:00 a n d 13:00, Mars W R F pre dicts b ot h pea k D D A bet wee n
+11:00 a n d 12:00 a n d a sec o n d pea k i n t he mi dafter n o o n after ~14:00, es pecially ar o u n d s pri ng. I n t he m o del,
+10.1029/2019J E 006082 J o ur n al of G e o p h ysic al R es e arc h: Pl a n ets
+N E W M A N E T A L. 3465t he late m or ni ng pea k is largely d ue t o a pea k i n u *( he nce se nsi ble heat ﬂ ux) at t his ti me, w hile t he mi daf-
+ter n o o n pea k is a c o m bi nati o n of a sec o n d pea k i n u *a n d t he gr o wi ng P B L de pt h ( he nce vertical t her m o dy-
+na mic ef ﬁ cie ncy). A n ot her Mars W R F si m ulati o n wit h o ut t he str o ng d o u ble‐pea k str uct ure i n u *d oes n ot
+pre dict t he err o ne o us mi dafter n o o n pea k; h o wever, t he pre dicte d D D A still pea ks ar o u n d e q ui n ox bet wee n
+13:00 a n d 14:00, w hic h is later t ha n t he o bserve d pea k i n n u m ber of v ortices.
+Fi nally, t he peri o d ar o u n d wi nter s olstice has t he fe west d ust devils o bserve d a n d pre dicte d i n Y Rs 1 a n d 2,
+wit h Mars W R F o ut p ut s h o wi ng b ot h t he s mallest se nsi ble heat ﬂ ux (largely d ue t o a s maller s urface ‐t o‐air
+te m perat ure differe nce) a n d P B L de pt h, wit h n o mi dafter n o o n pea k i n t he latter as occ urs i n all ot her sea-
+s o ns. T he wi nter s olstice peri o d has t he m ost sy m metric di ur nal distri b uti o n of press ure dr o ps ar o u n d
+~ n o o n –13:00, as pre dicte d by t he m o del w hic h s h o ws t his bei ng d ue t o t he relative ﬂ at ness of t he P B L de pt h
+wit h l ocal ti me.
+O bservati o ns s h o w a n i ncrease i n n u m ber a n d als o mag nit u de of v ortex press ure dr o ps fr o m year t o year i n
+all seas o ns, as t he r over ma de its way o ut of t he tre nc h a n d u p t he l o wer sl o pes of Ae olis M o ns, wit h a year ‐
+t o‐year i ncrease als o f o u n d i n t he pre dicte d D D A. T he rate of t he year ‐t o‐year i ncrease i n n u m ber of v ortex
+press ure dr o ps >0.6 Pa is u n der pre dicte d by t he m o del if v ortex n u m bers are ass u me d t o be si m ply pr o p or-
+ti o nal t o D D A. H o wever, t he matc h may be far better if a t hres h ol d D D A is c h ose n bel o w w hic h n o press ure
+dr o ps are ex pecte d ( or are t o o s mall i n mag nit u de t o be detecte d by t he met h o ds use d here). T his res ult, as
+well as t he greater mis matc h bet wee n D D A variati o n a n d variati o n i n n u m ber of larger mag nit u de press ure
+dr o ps, s uggests t hat t he relati o ns hi p bet wee n D D A a n d v ortex press ure dr o p statistics is li kely t hres h ol d ‐
+de pe n de nt a n d/ or n o nli near.
+T he m o del d oes n ot ge nerally attri b ute t he year ‐o n ‐year i ncrease i n D D A t o a n i ncrease i n P B L de pt h over
+t he m o u n d (asi n s o me previ o us w or k). I n dee d, a detaile d st u dy of h o w t he P B L de pt his pre dicte d t o c ha nge
+wit h r over p ositi o n s h o ws it o nly i ncreasi ng slig htly ar o u n d t he e q ui n oxes as MS L cli m bs t he sl o pes, a n d
+basically static fr o m year t o year i n t he ot her seas o ns. I nstea d, t he greater D D A a n d v ortex occ urre nce as
+t he r over cli m be d Ae olis M o ns are pri marily attri b ute d t o a n i ncrease i n s urface‐t o‐air te m perat ure a n d
+u *as MS L m ove d hig her o n t he N W sl o pe. B ot h of t hese are f o u n d t o be pri marily a f u ncti o n of t he crater
+t o p ogra p hy. T he s urface‐t o‐air te m perat ure differe nce i ncreases hig her u p t he sl o pe d ue t o c o oler near ‐
+s urface dayti me air te m perat ures ca use d by mixi ng wit h c o oler a djace nt hig h‐altit u de air, wit h a n a d diti o nal
+s mall effect d ue t o l o wer regi o nal t her mal i nertias over t he sl o pes. I n t he case of u *, t he r over ex perie nces
+str o nger pea k dayti me u psl o pe wi n ds as it cli m bs t he sl o pes.
+T he s patial variati o n i n pre dicte d D D A may als o ex plai n w hy n o d ust devils were i mage d f or a b o ut 2
+years at t he start of t he missi o n, w he n i magi ng ca m paig ns were l o o ki ng a way fr o m t he m o u n d t o war d
+a regi o n of l o wer pre dicte d D D A. D ust availa bility may als o have bee n a fact or, b ut t he res ults of t his
+st u dy s uggest t hat seas o nal D D A pre dicti o ns w o ul d be very hel pf ul f or directi ng i magi ng ca m paig ns f or
+f ut ure la n de d missi o ns, partic ularly t h ose la n di ng i n regi o ns wit h str o ng t o p ogra p hy or ot her maj or
+s urface pr o perty c o ntrasts.
+R ef er e nc es
+Ba ker, M. M., Ne w ma n, C. E., La p otre, M. G. A., S ulliva n, R., Bri dges, N. T., & Le wis, K. W. (2018). C oarse se di me nt
+tra ns p ort i n t he m o der n Martia n e nvir o n me nt. Jo ur n al of Geo p hysic al Rese arc h: Pl a nets, 123, 1380– 1394. htt ps:// d oi. org/10.1002/
+2017J E0055 13
+Bal me, M., & Greeley, R. (2006). D ust devils o n Eart h a n d Mars. Revie ws of Geo p hysics ,44, R G3003. htt ps:// d oi. org/10.10 29/2005 R G00 0188
+Bas u, S., Ric har ds o n, M. I., & Wils o n, R. J. (2004). Si m ulati o n of t he Martia n d ust cycle wit h t he G F D L Mars G C M. Jo ur n al of Geo p hysic al
+Rese arc h , 109, E11006. htt ps:// d oi. org/10.1029/2004J E002 243
+Ca nt or, B. A., Ka na k, K. M., & E dgett, K. S. (2006). Mars Or biter Ca mera o bservati o ns of Martia n d ust devils a n d t heir trac ks (Se pte m ber
+1997 t o Ja n uary 2006) a n d eval uati o n of t he oretical v ortex m o dels. Jo ur n al of Geo p hysic al Rese arc h, 111, E12002. htt ps:// d oi. org/
+10.1029/20 06J E002700
+C ha p ma n, R. M., Le wis, S. R., Bal me, M., & Steele, L. J. (2017). Di ur nal variati o ni n martia n d ust devil activity. Ic ar us,292, 154– 167. htt ps://
+d oi. org/10.1016/j.icar us.2017.01.0 03
+C hriste nse n, P. R., Ba n d ﬁ el d, J. L., Ha milt o n, V. E., R uff, S. W., Kieffer, H. H., Tit us, T. N., et al. (2001). Mars Gl o bal S urvey or T her mal
+E missi o n S pectr o meter ex peri me nt: I nvestigati o n descri pti o n a n d s urface scie nce res ults. Jo ur n al of Geo p hysic al Rese arc h, 106( E10),
+23823 –23871. htt ps:// d oi. org/10.10 29/2000J E0 01370
+Elle h oj, M. D., G u n nla ugss o n, H. P., Tayl or, P. A., Ka ha n pää, H., Bea n, K. M., Ca nt or, B. A., et al. (2010). C o nvective v ortices a n d d ust
+devils at t he P h oe nix Mars missi o n la n di ng site. Jo ur n al of Geo p hysic al Rese arc h, 115, E00 E1 6. htt ps:// d oi. org/10.10 29/2009J E0 03413
+Fe nt o n, L., & L ore nz, R. (2015). D ust devil heig ht a n d s paci ng wit h relati o n t o t he martia n pla netary b o u n dary layer t hic k ness. Ic ar us,
+260(1), 246– 262. htt ps:// d oi. org/10.1016/j.icar us.2015.07.028
+10.1029/2019J E 006082 J o ur n al of G e o p h ysic al R es e arc h: Pl a n ets
+N E W M A N E T A L.
+Ac k n o wl e d g m e nts
+T he lea d a ut h or wis hes t o de dicate t his
+w or k t o her late fat her, Alla n F.
+Ne w ma n, w h o al ways pr ovi de d l ovi ng
+s u p p ort f or a n d i nsig htf ul c o m me nts o n
+her researc h, fr o m her t hesis t hr o ug h t o
+t he ﬁ rst draft of t his pa per. C. E.
+Ne w ma n a n d M. I. Ric har ds o n were
+s u p p orte d by MS L gra nt 144999 4. T he
+c o ntri b uti o n of H. Ka ha n pää i n t his
+st u dy was f u n de d by T he Fi n nis h
+C ult ural F o u n dati o n (gra nt 001804 46).
+G. M. Martí nez a n d A. Vice nte ‐
+Ret ortill o were s u p p orte d by Jet
+Pr o p ulsi o n La b orat ory gra nt 1449038,
+L u nar a n d Pla netary I nstit ute ( L PI)
+C o ntri b uti o n 2236; L PI is o perate d by
+U niversities S pace Researc h
+Ass ociati o n u n der a c o o perative
+agree me nt wit h t he Scie nce Missi o n
+Direct orate of t he Nati o nal Aer o na utics
+a n d S pace A d mi nistrati o n ( N AS A). All
+Mars W R F si m ulati o ns were perf or me d
+o n N AS A's Hig h E n d C o m p uti ng
+Pleia des cl uster at N AS A A mes. T he
+R E MS press ure data set s h o w n here
+w o ul d n ot have bee n o btai ne d wit h o ut
+t he eff orts of t he R E MS press ure se ns or
+tea m, as well as t he n u mer o us MS L
+tea m me m bers w h o hel pe d pla n a n d
+carry o ut t hese o bservati o ns a n d ma de
+it p ossi ble f or t he r over t o reac h its
+c urre nt p ositi o n o n Ae olis M o ns. T he
+Mars W R F m o del o ut p ut a n d R E MS
+v ortex press ure dr o p a nalyses use d i n
+t his st u dy have bee n arc hive d o n
+Figs hare.c o m ( Ne w ma n et al., 2019)
+a n d are p u blicly a n d freely availa ble at
+l ocati o n ( htt ps:// d oi. org/10.60 84/ m9.
+ﬁ gs hare.c.4723361.v1).
+3466Fe nt o n, L., Reiss, D., Le m m o n, M., Martic ore na, B., Le wis, S. R., & Ca nt or, B. (2016). Or bital O bservati o ns of d ust l ofte d by dayti me
+c o nvective t ur b ule nce. S p ace Scie nce Revie ws , 203(1‐4), 89–142. htt ps:// d oi. org/10.10 07/s11214 ‐016‐0243‐6
+Fis her, J. A., Ric har ds o n, M. I., Ne w ma n, C. E., Sz wast, M. A., Graf, C., Bas u, S., et al. (2005). A s urvey of Martia n d ust devil activity usi ng
+Mars Gl o bal S urvey or Mars Or biter Ca mera i mages. Jo ur n al of Geo p hysic al Rese arc h, 110, E03004. htt ps:// d oi. org/10.10 29/
+2003J E0021 65
+F o nseca, R. M., Z orza n o ‐Miera, M. ‐P., & Martí n ‐T orres, J. (2017). Pla netary b o u n dary layer a n d circ ulati o n dy na mics at Gale Crater, Mars.
+Ic ar us, 302, 537–559. htt ps:// d oi. org/10.10 16/j.icar us.20 17.11.036
+F orget, F., Wa n her dric k, Y., & Le wis, S. R. (2001). Vali dati o n of t he Mars ge neral circ ulati o n m o del a n d cli mate data base wit h ne w
+s pacecraft o bservati o ns. Work P ack age 7, Tec h. Note 11369/95/ N L/J G, E ur. S p ace Age ncy, P aris , (availa ble at htt p:// w w w‐mars.l m d.
+j ussie u.fr/ mars/esa d oc/l m d/esa d oc. ht ml).
+Garvi n, J. B., Fra wley, J. J., & A bs hire, J. B. (1999). Vertical r o ug h ness of Mars fr o m t he Mars Or biter Laser Alti meter. Geo p hysic al Rese arc h
+Letters , 26, 381– 384. htt ps:// d oi. org/10.10 29/1998gl9 00309
+Gierasc h, P. J., & G o o dy, R. M. (1972). T he effect of d ust o n t he te m perat ure of t he Martia n at m os p here. Jo ur n al oft he At mos p heric Scie nces,
+29(2), 400– 402. htt ps:// d oi. org/1 0.1175/1520 ‐0469(1972) 029 <0400:te o d ot >2.0.c o;2
+G uze wic h, S. D., Le m m o n, M., S mit h, C. L., Martí nez, G., Vice nte ‐Ret ortill o, Á., Ne w ma n, C. E., et al. (2018). Mars Scie nce La b orat ory
+o bservati o ns of t he 2018/ Mars year 34 gl o bal d ust st or m. Geo p hysic al Rese arc h Letters ,46 , 71– 79. htt ps:// d oi. org/10.10 29/2018 G L08 0839
+Harri, A. ‐M., Ge nzer, M., Ke m p pi ne n, O., Ka ha n pää, H., G o mez ‐Elvira, J., R o drig uez ‐Ma nfre di, J. A., et al., & t he R E MS/ MS L Scie nce
+Tea m (2014). Press ure o bservati o ns by t he C uri osity r over: I nitial res ults. Jo ur n al of Geo p hysic al Rese arc h: Pl a nets, 119, 82– 92. htt ps://
+d oi. org/10.1002/2013je004423
+Hi ns o n, D. P., Pätz ol d, M., Tell ma n n, S., Hä usler, B., & Tyler, G. L. (2008). De pt h of t he c o nvective b o u n dary layer o n Mars. Ic ar us, 198,
+57– 66. htt ps:// d oi. org/10.1016/j.icar us.2008.07.003
+Hi ns o n, D. P., Tyler, D. Jr., Le wis, S. R., Pätz ol d, M., Tell ma n n, S., Hä usler, B., & Tyler, G. L. (2019). T he martia n dayti me c o nvective
+b o u n dary layer: Res ults fr o m ra di o occ ultati o n meas ure me nts a n d a mes oscale m o del. Ic ar us, 326, 105– 122. htt ps:// d oi. org/10.1016/j.
+icar us.2019.0 2.028
+H o ng, S. ‐Y., & Pa n, H. ‐L. (1996). N o nl ocal b o u n dary layer vertical diff usi o n i n a me di u m ‐ra nge f orecast m o del. Mo nt hly We at her Revie w ,
+124, 2322– 2339. htt ps:// d oi. org/10.1175/1520 ‐0493(1996)124 <232 2: n blv di >2.0.c o;2
+Jac ks o n, B., L ore nz, R., & Davis, K. (2018). Afra me w or kf or relati ng t he str uct ures a n d rec overy statisticsi n press ure ti me‐series s urveysf or
+d ust devils. Ic ar us, 299, 166– 174. htt ps:// d oi. org/10.1016/j.icar us.2017.07.027
+Ja u ma n n, R., Ne u k u m, G., Be h n ke, T., D ux b ury, T. C., Eic he nt o pf, K., Fl o hrer, J., et al. (2007). T he Hig h Res ol uti o n Stere o Ca mera ( H RS C)
+ex peri me nt o n Mars Ex press: I nstr u me nt as pects a n d ex peri me nt c o n d uct fr o m i nter pla netary cr uise t hr o ug h n o mi nal missi o n.
+Pl a net ary a n d S p ace Scie nce , 55, 928– 952. htt ps:// d oi. org/10.1016/j. pss.2006.12.003
+Ka ha n pää, H., Ne w ma n, C. E., M o ores, J., Z orza n o, M. ‐P., Martí n ‐T orres, J., Navarr o, S., et al. (2016). C o nvective v ortices a n d d ust devils at
+t he MS L la n di ng site: A n n ual varia bility. Jo ur n al of Geo p hysic al Rese arc h: Pl a nets, 121, 1514– 1549. htt ps:// d oi. org/10.1002/
+2016J E0050 27
+Ka hre, M. A., M ur p hy, J. R., & Ha berle, R. M. (2006). M o deli ng t he Martia n d ust cycle a n d s urface d ust reserv oirs wit h t he N AS A A mes
+ge neral circ ulati o n m o del. Jo ur n al of Geo p hysic al Rese arc h, 111, E06008. htt ps:// d oi. org/10.1029/200 5J E002588
+Ka na k, K. M. (2005). N u merical si m ulati o n of d ust devil ‐scale v ortices. Q u arterly Jo ur n al oft he Roy al Meteorologic al Society ,131, 1271– 1292
+. htt ps:// d oi. org/10.1256/ qj.03.172
+K urga ns ky, M. V. (2019). O n t he statistical distri b uti o n of press ure dr o ps i n c o nvective v ortices: A p plicati o ns t o martia n d ust devils. Ic ar us,
+317, 209– 214. htt ps:// d oi. org/10.1016/j.icar us.2018.08.004
+Le m m o n, M. T., W olff, M. J., S mit h, M. D., Cla ncy, R. T., Ba n ﬁ el d, D., La n dis, G. A., et al. (2004). At m os p heric i magi ng res ults fr o m t he
+Mars ex pl orati o n r overs: S pirit a n d o p p ort u nity. Scie nce , 306, 1753– 1756. htt ps:// d oi. org/10.1126/scie nce.1104474
+Le wis, S. R., C olli ns, M., & F orget, F. (2001). Mars Cli mate Data base v3.0 Detaile d Desig n D oc u me nt, ES T E C C o ntract 1136 9/95/ N L/J G.
+14– 16 Retrieve d Fr o m htt p:// w w w- mars.l m d.j ussie u.fr/ mars/esa d oc/l m d/ w p7/ detaile d _ desig n. p df
+L ore nz, R. D. (2016). He uristic esti mati o n of d ust devil v ortex para meters a n d traject ories fr o m si ngle ‐stati o n mete or ol ogical o bservati o ns:
+A p plicati o n t o I nSig ht at Mars. Ic ar us, 271, 326– 337. htt ps:// d oi. org/10.1016/j.icar us.2016.02. 001
+Martí nez, G. M., Re n n ó, N., Fisc her, E., B orli na, C. S., Hallet, B., de la T orre J uárez, M., et al. (2014). S urface e nergy b u dget a n d t her mal
+i nertia at Gale Crater: Calc ulati o ns fr o m gr o u n d‐base d meas ure me nts. Jo ur n al of Geo p hysic al Rese arc h: Pl a nets,119, 1822– 1838. htt ps://
+d oi. org/10.1002/2014J E 004618
+M o nta b o ne, L., F orget, F., Mill o ur, E., Wils o n, R. J., Le wis, S. R., Ca nt or, B., et al. (2015). Eig ht ‐year cli mat ol ogy of d ust o ptical de pt h o n
+Mars. Ic ar us. htt ps:// d oi. org/10.1016/j.icar us.2014.1 2.034
+M ur p hy, J. R., & Nelli, S. (2002). Mars Pat h ﬁ n der c o nvective v ortices: Fre q ue ncy of occ urre nce. Geo p hysic al Rese arc h Letters ,29, 23, 2103.
+htt ps:// d oi. org/10.1029/2002gl015214
+M ur p hy, J. R., Stea kley, K., Bal me, M., De prez, G., Es p osit o, F., Ka ha n pää, H., et al. (2016). Fiel d meas ure me nts of terrestrial a n d martia n
+d ust devils. S p ace Scie nce Revie ws , 203(1‐4), 39– 87. htt ps:// d oi. org/10.1007/s11214 ‐016‐0283‐y
+Nea krase, L. D. V., Bal me, M. R., Es p osit o, F., Kelli ng, T., Kl ose, M., K o k, J. F., et al. (2016). Particle lifti ng pr ocesses i n d ust devils. S p ace
+Scie nce Revie ws , 203(347). htt ps:// d oi. org/10.1007/s11214‐016‐0296‐6
+Ne u k u m, G., Ja u ma n n, R., & t he H RS C C o ‐I nvestigat or a n d Ex peri me nt Tea m (2004). H RS C: T he Hig h Res ol uti o n Stere o Ca mera of Mars
+Ex press. I n A. Wils o n ( E d.), M ars Ex press: T he scie nti ﬁ c p aylo a d, ( p p. 17– 35). N o or d wij k, T he Net herla n ds: ES A.
+Ne w ma n, C., Ka ha n pää, H., Ric har ds o n, M., Martí nez, G., Vice nte ‐Ret ortill o, Á., & Le m m o n, M. (2019). Data fr o m “C o nvective v ortex a n d
+d ust devil pre dicti o ns f or Gale Crater over t hree Mars years a n d c o m paris o n wit h MS L ‐R E MS o bservati o ns ” p u b.i n J G R ‐Pla netsi n 2019.
+Figs h are Collectio n . htt ps:// d oi. org/1 0.6084/ m9.ﬁ gs hare.c.4723361.v1
+Ne w ma n, C. E., G ó mez ‐Elvira, J., Mari n, M., Navarr o, S., T orres, J., Ric har ds o n, M. I., et al. (2017). Wi n ds meas ure d by t he R over
+E nvir o n me ntal M o nit ori ng Stati o n ( R E MS) d uri ng t he Mars Scie nce La b orat ory ( MS L) r over's Bag n ol d D u nes Ca m paig n a n d c o m-
+paris o n wit h n u merical m o deli ng usi ng Mars W R F. Ic ar us, 291, 203– 231. htt ps:// d oi. org/10.1016/j.icar us.2016.12.016
+Ne w ma n, C. E., Le wis, S. R., Rea d, P. L., & F orget, F. (2002a). M o deli ng t he Martia n d ust cycle. 1: Re prese ntati o ns of d ust tra ns p ort pr o-
+cesses. Jo ur n al of Geo p hysic al Rese arc h, Pl a nets, 107( E12), Art. N o. 5123. htt ps:// d oi. org/10.1029/2002J E001 920
+Ne w ma n, C. E., Le wis, S. R., Rea d, P. L., & F orget, F. (2002 b). M o deli ng t he Martia n d ust cycle. 2: M ulti ‐a n n ual ra diatively active d ust
+tra ns p ort si m ulati o ns. Jo ur n al of Geo p hysic al Rese arc h, Pl a nets, 107( E12), Art. N o. 5124. htt ps:// d oi. org/10.1029/2002J E001 910
+Ne w ma n, C. E., Misc h na, M. A., Ric har ds o n, M. I., & S hirley, J. H. (2019). I m pact o n Mars d ust st or m varia bility of p ost ulate d or bit ‐s pi n
+c o u pli ng wit h para meterize d d ust lifti ng a n d ra diatively active d ust tra ns p ort. Ic ar us, 317, 649– 668. htt ps:// d oi. org/10.1016/j.
+icar us.2018.0 7.023
+10.1029/2019J E 006082 J o ur n al of G e o p h ysic al R es e arc h: Pl a n ets
+N E W M A N E T A L. 3467Ne w ma n, C. E., & Ric har ds o n, M. I. (2015). T he i m pact of s urface d ust s o urce ex ha usti o n o n t he Martia n d ust cycle, d ust st or ms a n d
+i ntera n n ual varia bility, as si m ulate d by t he Mars W R F Ge neral Circ ulati o n M o del. Ic ar us, 257, 47– 87. htt ps:// d oi. org/10.10 16/j.
+icar us.2015.0 3.030
+Or d o nez ‐Exte berria, I., H ues o, R., & Sá nc hez ‐Lavega, A. (2018). A syste matic searc h of s u d de n press ure dr o ps o n Gale crater d uri ng t w o
+Martia n years derive d fr o m MS L/ R E MS data. Ic ar us, 299, 309–330. htt ps:// d oi. org/10.10 16/j.icar us.20 17.07.0320 019 ‐1035
+Pla ‐Garcia, J., Raf ki n, S. C. R., Ka hre, M., G o mez ‐Elvira, J., Ha milt o n, V. E., Navarr o, S., et al. (2016). T he mete or ol ogy of Gale crater as
+deter mi ne d fr o m r over e nvir o n me ntal m o nit ori ng stati o n o bservati o ns a n d n u merical m o deli ng. Part I: C o m paris o n of m o del si m ula-
+ti o ns wit h o bservati o ns. Ic ar us, 280, 103– 113. htt ps:// d oi. org/10.1016/j.icar us.2016.0 3.013
+P utzig, N. E., & Mell o n, M. T. (2007). A p pare nt t her mali nertia a n d t he s urface heter oge neity of Mars. Ic ar us,191(1), 68– 94. htt ps:// d oi. org/
+10.1016/j.icar us.2007. 05.013
+Raf ki n, S. C. R., Pla ‐Garcia, J., Ka hre, M., G o mez ‐Elvira, J., Ha milt o n, V. E., Marí n, M., et al. (2016). T he mete or ol ogy of Gale Crater as
+deter mi ne d fr o m R over E nvir o n me ntal M o nit ori ng Stati o n o bservati o ns a n d n u merical m o deli ng. Part II: I nter pretati o n. Ic ar us, 280,
+114– 138. htt ps:// d oi. org/10.1016/j.icar us.2016.01.031
+Re n n ó, N. O., B ur kett, M. L., & Lar ki n, M. P. (1998). A si m ple t her m o dy na mical t he ory f or d ust devils. Jo ur n al of t he At mos p heric Scie nces,
+55, 3244– 3252. htt ps:// d oi. org/10.1175/152 0 ‐0469(1998) 055 <3244:asttf d >2.0.c o; 2
+Ric har ds o n, M. I., & Ne w ma n, C. E. (2018). O n t he relati o ns hi p bet wee n s urface press ure, terrai n elevati o n, a n d air te m perat ure. Part I:
+T he large di ur nal s urface press ure ra nge at Gale Crater, Mars a n d its origi n d ue t o lateral hy dr ostatic a dj ust me nt. Pl a net ary a n d S p ace
+Scie nce , 164, 132– 157. htt ps:// d oi. org/10.1016/j. pss.2018.07.003
+Ric har ds o n, M. I., T oig o, A. D., & Ne w ma n, C. E. (2007). Pla net W R F: A ge neral p ur p ose, l ocal t o gl o bal n u merical m o del f or pla netary
+at m os p heric a n d cli mate dy na mics. Jo ur n al of Geo p hysic al Rese arc h, Pl a nets, 112, E09001. htt ps:// d oi. org/1 0.1029/2006J E0 02825
+Ri ngr ose, T. J., T o w ner, M. C., & Zar nec ki, J. C. (2003). C o nvective v ortices o n Mars: a re ‐ a nalysis of Vi ki ng La n der 2 mete or ol ogical data,
+s ols 1‐60. Ic ar us, 163(1), 78– 87. htt ps:// d oi. org/10.1016/S0019 ‐1035(03)00073 ‐3
+Sc h o ﬁ el d, J. T., Bar nes, J. R., Cris p, D., Ha berle, R. M., Larse n, S., Magal hães, J. A., et al. (1997). T he Mars Pat h ﬁ n der at m os p heric str uct ure
+i nvestigati o n/ mete or ol ogy ( ASI/ M E T) ex peri me nt. Scie nce , 278(5344), 1752–1758. htt ps:// d oi. org/10.1126/scie nce.278.534 4.1752
+S mit h, D. E., & Z u ber, M. T. (1996). T he s ha pe of Mars a n d t he t o p ogra p hic sig nat ure of t he he mis p heric dic h ot o my. Scie nce ,271, 184– 188.
+htt ps:// d oi. org/10.1126/scie nce.271.5 246.184
+S mit h, M. D. (2004). I ntera n n ual varia bility i n T ES at m os p heric o bservati o ns of Mars d uri ng 1999 – 2003. Ic ar us,167, 148–165. htt ps:// d oi.
+org/10.101 6/j.icar us.200 3.09.010
+S piga, A., Bart h, E., G u, Z., H off ma n n, F., It o, J., Je m mett ‐S mit h, B., et al. (2016). Large ‐E d dy Si m ulati o ns of D ust Devils a n d C o nvective
+V ortices. S p ace Scie nce Revie ws , 203(1‐4), 245 – 275. htt ps:// d oi. org/10.10 07/s1121 4 ‐016‐0284‐x
+S piga, A., F orget, F., Ma delei ne, J. ‐B., M o nta b o ne, L., Le wis, S. R., & Mill o ur, E. (2011). T he i m pact of martia n mes oscale wi n ds o n s urface
+te m perat ure a n d o n t he deter mi nati o n of t her mal i nertia. Ic ar us, 212(2), 504– 519. htt ps:// d oi. org/10.10 16/j.icar us.2011.02.00 1
+Stea kley, K., & M ur p hy, J. (2016). A year of c o nvective v ortex activity at Gale crater. Ic ar us, 278, 180–193. htt ps:// d oi. org/10.10 16/j.
+icar us.2016.0 6.010
+T h o mas, N., Cre m o nese, G., Ziet he, R., Ger ber, M., Brä n dli, M., Br u n o, G., et al. (2017). T he C ol o ur a n d Stere o S urface I magi ng Syste m
+( CaSSIS) f or t he Ex o Mars Trace Gas Or biter. S p ace Scie nce Revie ws , 212(1897). htt ps:// d oi. org/10.10 07/s11214‐017‐0421‐1
+T oig o, A. D., Lee, C., Ne w ma n, C. E., & Ric har ds o n, M. I. (2012). T he i m pact of res ol uti o n o n t he dy na mics of t he martia n gl o bal at m o-
+s p here: Varyi ng res ol uti o n st u dies wit h t he Mars W R F G C M. Ic ar us, 221(1), 276– 288. htt ps:// d oi. org/10.1016/j.icar us.2012.0 7.020
+T oig o, A. D., Ric har ds o n, M. I., E wal d, S. P., & Gierasc h, P. J. (2003). N u merical si m ulati o n of Martia n d ust devils. Jo ur n al of Geo p hysic al
+Rese arc h , 108( E6), 5047. htt ps:// d oi. org/10.1029/200 2J E002002
+Tyler, D. Jr., & Bar nes, J. R. (2013). Mes oscale m o deli ng of t he circ ulati o n i n t he Gale Crater Regi o n: A n i nvestigati o n i nt o t he c o m plex
+f orci ng of c o nvective b o u n dary layer de pt hs. M A R S Jo ur n al , 8, 58– 77. htt ps:// d oi. org/10.15 55/ mars.2 013.0003
+Tyler, D. Jr., & Bar nes, J. R. (2015). C o nverge nt crater circ ulati o ns o n Mars: I n ﬂ ue nce o n t he s urface press ure cycle a n d t he de pt h of t he
+c o nvective b o u n dary layer. Geo p hysic al Rese arc h Letters , 42, 7343– 7350. htt ps:// d oi. org/10.10 02/2015 G L0 64957
+Vi ú dez ‐M oreiras, D., G ó mez ‐Elvira, J., Ne w ma n, C. E., Navarr o, S., Mari n, M., & T orres, J. (2019). M. de la T orre ‐J uárez a n d t he R E MS
+tea m, Gale s urface wi n d c haracterizati o n base d o n t he Mars Scie nce La b orat ory R E MS dataset. Part I: Wi n d s pee ds a n d directi o ns.
+Ic ar us, 319, 909–925. htt ps:// d oi. org/10.10 16/j.icar us.20 18.10.011
+Z ha ng, D. L., & A nt hes, R. A. (1982). A hig h ‐res ol uti o n m o del of t he pla netary b o u n dary layer— se nsitivity tests a n d c o m paris o ns wit h
+S ES A M E ‐79 data. Jo ur n al of A p plie d Meteorology, 21 , 1594– 1609. htt ps:// d oi. org/10.1175/1520 ‐0450(1982)021 <159 4:a hr m ot >2.0.c o;2
+10.1029/2019J E 006082 J o ur n al of G e o p h ysic al R es e arc h: Pl a n ets
+N E W M A N E T A L. 3468

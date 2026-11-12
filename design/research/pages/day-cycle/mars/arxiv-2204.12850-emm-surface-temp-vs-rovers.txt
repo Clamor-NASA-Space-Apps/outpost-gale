@@ -1,0 +1,2897 @@
+MNRAS 000, 1–18 (2022)
+
+Preprint 12 August 2022
+
+Compiled using MNRAS LATEX style file v3.0
+
+Diurnal variation of the surface temperature of Mars with the
+Emirates Mars Mission: A comparison with Curiosity and
+Perseverance rover measurements
+Dimitra Atri★ , Nour Abdelmoneim, Dattaraj B. Dhuri, Mathilde Simoni
+
+arXiv:2204.12850v2 [astro-ph.EP] 11 Aug 2022
+
+Center for Space Science, New York University Abu Dhabi, PO Box 129188, Saadiyat Island, Abu Dhabi, UAE
+
+Accepted XXX. Received YYY; in original form ZZZ
+
+ABSTRACT
+
+For the first time, the Emirates Mars Infrared Spectrometer (EMIRS) instrument on board the
+Emirates Mars Mission (EMM) “Hope", is providing us with the temperature measurements
+of Mars at all local times covering most of the planet. As a result, it is now possible to
+compare surface temperature measurements made from orbit with those from the surface by
+rovers during the same time period. We use data of diurnal temperature variation from the
+Rover Environmental Monitoring Station (REMS) suite on board the Mars Science Laboratory
+(MSL) “Curiosity" rover, and the Mars Environmental Dynamics Analyzer (MEDA) suite on
+board the Mars 2020 “Perseverance" rover, between June and August 2021 and compare them
+with EMIRS observations and estimates of the Mars Climate Database (MCD) model. We
+show that although the overall trend of temperature variation is in excellent agreement across
+missions, EMIRS measurements are systematically lower at night compared to Mars 2020.
+The lower spatial resolution of EMIRS compared to the rovers and consequently lower average
+thermal inertia of the observed regions in this particular case primarily contributed to this
+discrepancy, among other factors. We discuss the implications of these results in improving
+our understanding of the Martian climate which would lead to better modeling of local weather
+prediction, useful for future robotic and crewed missions.
+Key words: planets and satellites: terrestrial planets – planets and satellites: surfaces – space
+vehicles
+
+1
+
+INTRODUCTION
+
+The transformation of Mars from a warm, wet planet with potentially
+habitable conditions to a cold and dry planet that we see today is an
+active area of research by space agencies around the globe (Vago
+et al. 2015; Zurbuchen 2017; Bhardwaj 2014; Amiri et al. 2022).
+It is not only important to investigate this in order to understand
+Mars, but for enabling us to better understand the evolution of
+earth and other planets in the Solar system and beyond (Sagan &
+Mullen 1972; Jakosky 2021). A number of atmospheric and surface
+processes occurring on Mars at present provide us with clues to
+this long-term transformation of the planet. Studying the diurnal
+and seasonal variability of the surface temperature of Mars is of
+prime importance because of its key role in governing a number of
+surface, shallow subsurface and lower atmospheric processes of the
+planet and its influence on weather, climate and the eventual escape
+of volatiles from the atmosphere (Petrosyan et al. 2011).
+Surface temperature measurements have been made in the past
+from orbiters, such as the Thermal Emission Spectrometer (TES)
+instrument on board the Mars Global Surveyor (MGS) (Christensen
+
+★ Email: atri@nyu.edu
+
+© 2022 The Authors
+
+et al. 2001), the Planetary Fourier Spectrometer (PFS) instrument
+(Formisano et al. 2005) on board Mars Express (MEX), the Thermal
+InfraRed channel in honor of professor Vassilii Ivanovich Moroz
+(TIRVIM), a part of the Atmospheric Chemistry Suite (ACS) onboard the ExoMars Trace Gas Orbiter (TGO) (Korablev et al. 2018),
+Mars Reconnaissance Orbiter/Compact Reconnaissance Imaging
+Spectrometer for Mars(MRO/CRISM) (He et al. 2022), Mars
+Odyssey/Thermal Emission Imaging System (MO/THEMIS) (Edwards et al. 2018). Such measurements have also been made by
+landers and rovers, such as the Viking landers 1 and 2 (Hess et al.
+1977), Mars Exploration Rovers (MER), Spirit and Opportunity
+(Spanovich et al. 2006)(Mason & Smith 2021), Rover Environmental Monitoring Station (REMS) on board the Mars Science Laboratory (MSL) “Curiosity" (Gómez-Elvira et al. 2012)(Martínez
+et al. 2021), Mars Environmental Dynamics Analyzer (MEDA) on
+board the Mars 2020 “Perseverance" rover (Rodriguez-Manfredi
+et al. 2021)(Martinez et al. 2022), and the Heat flow and Physical Properties Package (HP3) for the InSight mission (Spohn et al.
+2018)(Piqueux et al. 2021). Depending on the orbit, satellite measurements have the advantage of geographical coverage, they suffer
+from a lack of local time coverage. On the other hand, rovers provide
+measurements at all local times, but the measurements are confined
+
+Atri et al.
+Time: 2:00 - 5:00
+
+280
+260
+240
+220
+200
+180
+160
+140
+
+-18
+-150°
+-120°
+-900°
+-60°
+-30°
+°
+0°
+30
+60°
+90°
+12 °
+150°
+180°
+0°
+
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+
+Time: 5:00 - 8:00
+
+280
+260
+240
+220
+200
+180
+160
+140
+
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+
+Time: 8:00 - 11:00
+
+280
+260
+240
+220
+200
+180
+160
+140
+
+-18
+-150°
+-120°
+-900°
+-60°
+-30°
+°
+0°
+30
+60°
+90°
+12 °
+150°
+180°
+0°
+
+geographically. The Emirates Mars Mission (EMM) or “Hope" aims
+to fill-in this gap in observations (Almatroushi et al. 2021).
+One of the main goals of EMM is to provide a global view of
+Mars on diurnal and seasonal timescales. EMM’s unique orbit enables it to observe the spatial distribution of surface and near-surface
+temperature for most of the planet at all local times (Amiri et al.
+2022; Almatroushi et al. 2021; Edwards et al. 2021). It also enables
+measurements of diurnal temperature variations over full Martian
+day with near-complete coverage of the entire planet. Since we are
+able to observe diurnal temperature variations at most locations on
+Mars, it opens an opportunity to directly compare observations from
+the orbit and from the surface of Mars.
+In this letter, we report diurnal temperature variation for the
+most of the planet measured by EMM from orbit and compare it
+with surface measurements made by MSL (Gómez-Elvira et al.
+2012) and Mars 2020 (Rodriguez-Manfredi et al. 2021) rovers over
+the same time period. We describe a number of factors which could
+lead to these differences in measurements and propose solutions. We
+also compare these measurements with the Mars Climate Database
+(MCD) (Millour et al. 2018) and discuss implications for improved
+modeling of Martian weather and climate.
+
+-18
+-150°
+-120°
+-900°
+-60°
+-30°
+°
+0°
+30
+60°
+90°
+12 °
+150°
+180°
+0°
+
+2
+
+-18
+-150°
+-120°
+-900°
+-60°
+-30°
+°
+0°
+30
+60°
+90°
+12 °
+150°
+180°
+0°
+
+280
+260
+240
+220
+200
+180
+160
+140
+
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+
+Time: 14:00 - 17:00
+
+280
+260
+240
+220
+200
+180
+160
+140
+
+-18
+-150°
+-120°
+-900°
+-60°
+-30°
+°
+0°
+30
+60°
+90°
+12 °
+150°
+180°
+0°
+
+The Emirates Mars Infrared Spectrometer (EMIRS) instrument (Edwards et al. 2021) on board EMM is a Fourier Transform Infra Red
+(FTIR) spectrometer observing in 6-100 𝜇m wavelength range. It
+is designed to provide measurements of the lower atmosphere and
+surface of Mars by conducting thermal infrared observations of the
+disk. It provides diurnal measurements over the entire globe on
+sub-seasonal timescales. EMM’s orbital period is ∼ 55 hours with a
+periapsis of 20,000 km and an apoapsis of 43,000 km. It takes ∼ 20
+observations per orbit or ∼ 60 per week with one observation taking
+29 minutes at periapsis and 11 minutes at apoapsis. It takes 4 orbits
+or less than 10 days to obtain the global coverage at all local times.
+The resolution ranges between 100 to 300 km/pixel (diameter) with
+up to 70° emission angle. Level 2 data products (L2) contain calibrated radiance and brightness temperature. Level 3 products (L3),
+used in this study, are derived from L2 and have corrected surface
+temperatures among other quantities. Surface temperatures (L3) are
+obtained using a three-step process (Edwards et al. 2021): first the
+atmospheric temperatures are retrieved from the 15 𝜇m CO2 band,
+then dust optical depth and water-ice aerosol optical depths are fit,
+and finally the water vapor column depth is fit. This retrieval process
+is iterated until convergence, and quality control metrics are used to
+ensure the quality of final retrieved products. A comparison of L2
+and L3 measurements is shown in the appendix figure A1.
+The orbiter was inserted in the Martian orbit on February 9,
+2021 (MY 36, L𝑠 = 0.6) providing 9 sols of EMIRS observations
+for the month from the insertion orbit. The orbiter was in transition
+orbit for the next couple of months, starting the science phase of the
+mission from May 23, 2021 (L𝑠 = 48.7).
+Figure 1 shows the diurnal surface temperature variation over
+30 sols for L𝑠 = 65.8-78.9 (July 2021). The horizontal and vertical axes show latitude and longitude in degrees respectively. The
+surface temperature is color-coded in units of Kelvin and the time
+shown is the Local True Solar Time (LTST). We constructed these
+maps by dividing the planet into 10° × 10° latitude/longitude bins.
+Appendix figure B1 shows the number of samples in each spatial
+
+Time: 11:00 - 14:00
+
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+
+Time: 17:00 - 20:00
+
+280
+260
+240
+220
+200
+180
+160
+140
+
+-18
+-150°
+-120°
+-900°
+-60°
+-30°
+°
+0°
+30
+60°
+90°
+12 °
+150°
+180°
+0°
+
+Orbiter: EMIRS/EMM
+
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+
+Time: 20:00 - 23:00
+
+280
+260
+240
+220
+200
+180
+160
+140
+
+-18
+-150°
+-120°
+-900°
+-60°
+-30°
+°
+0°
+30
+60°
+90°
+12 °
+150°
+180°
+0°
+
+2.1
+
+SPACECRAFT MEASUREMENTS
+
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+
+Time: 23:00 - 2:00
+
+280
+260
+240
+220
+200
+180
+160
+140
+
+-18
+-150°
+-120°
+-900°
+-60°
+-30°
+°
+0°
+30
+60°
+90°
+12 °
+150°
+180°
+0°
+
+2
+
+Figure 1. Global surface temperature map based on EMIRS/EMM observations of 30 sols L𝑠 = 65.8-78.9 (July 2021). MNRAS 000, 1–18 (2022)
+
+Diurnal temperature variation of Mars
+
+3
+
+bin. We then obtained a temperature value for each bin by averaging the surface temperature measurements during each of the
+3-hour time intervals. In both the polar regions, data above 80° is
+scarce. For the northern polar region, the data is very limited between 14:00 - 20:00 hours and for the southern polar region, data
+is very limited between 02:00 - 14:00 hours. One can easily notice
+the large-scale variation in surface temperature across the planet
+in a given time slot, and also global changes in temperature over
+the course of the sol. Temperatures in the northern hemisphere are
+systematically higher corresponding to the summer season. As expected, the daily temperature variability is most noticeable in the
+northern mid-latitudes. Global temperature maps for other months
+are available in the appendix figures B2-B4.
+2.2
+
+Surface rover: REMS/MSL
+
+The Rover Environmental Monitoring Station (REMS) (Sebastián
+et al. 2010) instrument on board MSL provides meteorological measurements at the rover’s location in Gale crater on diurnal and seasonal scales (Gómez-Elvira et al. 2012). Gale crater, the operating
+site of MSL, is located in the Aeolis Quadrangle at the edge of the
+dichotomy boundary. It has a diameter of 154 km, is 4 km below
+datum at the landing site and features Mount Sharp, which is 1.5
+km above datum. Ground and air temperature measurements are
+available over periods overlapping with EMM observations. Measurements are taken by two orthogonally placed booms – Boom 1
+hosts the Air Temperature Sensor (ATS) and the Ground Temperature Sensor (GTS), and Boom 2 hosts another ATS. GTS, which is
+mounted on Boom 1, measures the IR brightness temperature of the
+surface with three thermopiles. REMS measures the ground brightness temperature in the 150-300K range with an accuracy of 1 K
+and a resolution of 2 K (Martínez et al. 2017). The air temperature
+is also measured by both the booms with the same accuracy and
+resolution.
+The initial data was obtained from MODRDR (Models RDR)
+files containing the REMS instrument’s highest level data product
+for every sol. The ground brightness temperature as a function of
+LTST were extracted from sols 3018 to 3224, a total of 207 sols for
+MY 36, L𝑠 = 1.1 - 92.5. An initial cleaning of the dataset revealed
+an average 1959 null values per sol, ranging from 845 to 10246
+rows. This resulted in an average of 23180 readings taken at a rate
+of 1 Hz for each sol. The data points were first grouped by month (to
+be consistent with EMM SDC) and subsequently by hour intervals
+during the day. For each hour interval, the mean, minimum and
+maximum values as well as the standard error were calculated and
+plotted on the following graphs.
+2.3
+
+Surface rover: MEDA/Mars 2020
+
+The Mars Environmental Dynamics Analyzer (MEDA) suit of sensors on board the Mars 2020 rover provides continuous meteorological data from the Jezero crater, including surface temperature
+measurements (Rodriguez-Manfredi et al. 2021). Jezero crater has
+a 49 km diameter and is located in the Isidis basin (1500 km) on
+the dichotomy boundary. The near-surface atmospheric circulation
+is influenced by the local and regional topography (Newman et al.
+2021; Pla-García et al. 2020; Newman et al. 2022). The Thermal InfraRed Sensor (TIRS) (Sebastián et al. 2021) is a part of MEDA and
+is an Infrared (IR) radiometer measuring the brightness temperature
+of the surface. In particular, IR5 provides the ground temperature,
+measuring in the 8-14 𝜇m band, with a dynamic range of 173-293
+K, an accuracy of ± 0.75 K, and a resolution of 0.08 K.
+MNRAS 000, 1–18 (2022)
+
+Figure 2. Comparison of hourly surface temperatures between EMIRS,
+REMS/MSL and MEDA/Mars 2020 over ∼ 30 sols for L𝑠 = 65.8 -78.9
+(July 2021, sols 3164-3194 (REMS/MSL) and sols 128-158 (MEDA/Mars
+2020), top two panels) and for L𝑠 = 79.3-92.5 (August 2021, sols 3194-3224
+(REMS/MSL) and sols 158-188 (MEDA/Mars 2020), bottom two panels).
+Each point corresponds to a single observation and gaps indicate missing
+observations.
+
+The ground brightness temperature as a function of LTST were
+extracted from TIRS between sols 15 to 188, corresponding to MY
+36, L𝑠 = 13-92. While data was available starting February 18 2021,
+TIRS was not deployed for the first few sols, therefore, we started our
+analysis from March 6. We found that data points were missing for 7
+sols: sols 23, 24, 25, 26, and 27 in March, sol 97 in May and sol 183
+in August, leading to a total of 167 sols included in the analysis.
+Time intervals corresponding to sol 168 (14:00-16:30), sol 177
+(14:00-15:00) and sols 159, 161, 163, 167, 169, and 171 (03:00-0400) were then removed from the analysis due to calibration activities
+which resulted in values that are not representative Martínez (2022).
+This initial cleaning revealed an average of 45518 data points per
+sol, ranging from 4207 to 59135 rows and including 0 null values.
+The data points were first grouped by month (to keep it consistent
+with EMM SDC) and subsequently by hour intervals during the day.
+For each hour interval, the mean, minimum and maximum values
+as well as the standard error were calculated and plotted on the
+following graphs.
+
+2.4
+
+The Mars Climate Database MCD
+
+The Mars Climate Database (MCD) provides averaged data on the
+main meteorological variables such as pressure, temperature, atmospheric density and winds Millour et al. (2018). It is a derived from
+Laboratoire de Météorologie Dynamique LMD-GCM Wolfgang &
+Lopez (2015), a Global Climate Model (GCM) of Mars, which includes a water cycle model, a chemistry model, a thermosphere
+model and an ionospheric model. It provides day-to-day variability
+of main meteorological variables and is widely used in the Mars
+community. In addition to the output from GCM, it provides highresolution environmental data, year-to-year variability, dust content
+variations, seasonal and diurnal cycles of key meteorological variables. We obtain the diurnal variability of surface temperatures
+from MCD at the sites of the Curiosity and Perseverance rovers at
+Gale and Jezero crater respectively, in order to compare with the
+temperature observations from EMIRS. Appendix figure C1 shows
+locations of the Curiosity and Perseverance rovers.
+
+Temperature (K)
+
+Atri et al.
+
+275 20°×20°
+260
+245
+230
+215
+200
+185
+170
+0 2 4 6 8 10 12 14 16 18 20 22
+Local Time (hour)
+MCD
+
+Temperature (K)
+
+4
+
+EMIRS
+
+CURIOSITY
+
+275 20°×20°
+260
+245
+230
+215
+200
+185
+170
+0 2 4 6 8 10 12 14 16 18 20 22
+Local Time (hour)
+MCD
+
+EMIRS
+
+CURIOSITY
+
+Figure 3. A comparison of average diurnal temperature variation measured
+by EMIRS/EMM and REMS/MSL with the model prediction from MCD.
+Top panel: Over ∼ 30 sols for L𝑠 = 65.8-78.9 (July 2021, sols 3164-3194).
+Bottom panel: Over ∼ 30 sols for L𝑠 = 79.3-92.5 (August 2021, sols 31943224). The error bars indicate 3-𝜎 standard errors. Local dawn and dusk
+are marked by vertical lines.
+
+3
+3.1
+
+COMPARISON OF MEASUREMENTS
+EMM, MSL and MCD
+
+Figure 2 shows the hourly surface temperature measurement comparisons from REMS and EMIRS at the MSL rover site over (Gale
+crater) ∼ 30 sols for L𝑠 = 65.8-78.9 (July 2021) and 79.3-92.5
+(August 2021) respectively. We sample the EMIRS temperature
+measurements from 2° × 2°, 3° × 3°, 5° × 5°, 7° × 7°, 10° × 10°,
+15° × 15° and 20° × 20° region centered at the MSL location. Wherever EMIRS observations are available, the peak temperatures show
+a good match, while the lowest temperatures recorded by REMS are
+slightly higher. Figure 3 shows the corresponding average diurnal
+temperatures, along with the temperatures predicted by the MCD
+model at the MSL rover site. The average diurnal variation pattern
+is identical in both EMIRS and REMS temperature measurements
+and consistent with the MCD model predictions. The average daily
+temperatures start rising at 05 hrs and reach a peak value of approxMNRAS 000, 1–18 (2022)
+
+Temperature (K)
+
+Diurnal temperature variation of Mars
+
+275 20°×20°
+260
+245
+230
+215
+200
+185
+170
+0 2 4 6 8 10 12 14 16 18 20 22
+Local Time (hour)
+
+Temperature (K)
+
+MCD
+
+EMIRS
+
+PERSEVERANCE
+
+275 20°×20°
+260
+245
+230
+215
+200
+185
+170
+0 2 4 6 8 10 12 14 16 18 20 22
+Local Time (hour)
+MCD
+
+EMIRS
+
+PERSEVERANCE
+
+Figure 4. A comparison of average diurnal temperature variation measured
+by EMIRS/EMM and MEDA/Mars 2020 with the model prediction from
+MCD. Top panel: Over ∼ 30 sols for L𝑠 = 65.8-78.9 (July 2021, sols 128158). Bottom panel: Over ∼ 30 sols for L𝑠 = 79.3-92.5 (August 2021, sols
+158-188). The error bars indicate 3-𝜎 standard errors. Local dawn and dusk
+are marked by vertical lines.
+
+imately 250K at around 13 hrs in all cases. The EMIRS temperature measurements fall more rapidly after the peak and, in general,
+the afternoon, evening and night time temperatures are markedly
+lower compared to measurements by REMS and the MCD model.
+The temperatures recorded by REMS are generally consistent with
+the MCD model predictions for the morning and the afternoon.
+However, they are systematically higher than the MCD model predictions for the night time. The average lowest temperatures vary
+significantly and are 170 K, 180 K, and 190 K for EMIRS, MCD
+and REMS respectively.
+3.2
+
+EMM, Mars 2020 and MCD
+
+Figure 2 shows hourly surface temperature measurement comparisons from MEDA and EMIRS at the Perseverance rover site (Jezero
+crater) over ∼ 30 sols for L𝑠 = 65.8-78.9 (July 2021) and 79.3-92.5
+(August 2021) respectively. Compared to EMIRS, the Perseverance
+temperature measurements show low maximum to minimum daily
+temperature variability, and this variability is particularly low for
+MNRAS 000, 1–18 (2022)
+
+5
+
+sols 10-25 in July. Figure 4 shows the corresponding average diurnal temperature variation, along with the temperatures predicted by
+the MCD model at the Perseverance rover site. The average diurnal
+variation pattern is identical in both the EMIRS and the Curiosity
+temperature measurements and consistent with the MCD model predictions. The average daily temperatures start rising from 04 hrs and
+reach a peak value at around 13 hrs in all cases. The peak temperature values recorded by EMIRS and Perseverance are approximately
+equal and are ∼ 10 K lower than the MCD model peak temperature of
+∼ 270 K. The MCD model predicts afternoon temperatures that are
+systematically higher by ∼ 10K compared to EMIRS, with temperatures obtained by Perseverance falling in between. The night-time
+temperatures recorded by EMIRS remain lower compared to the
+MCD model, whereas the Perseverance temperature measurements
+are slightly higher. The lowest temperatures recorded by EMIRS,
+MCD, and Perseverance are ∼ 180 K, ∼ 190 K, and ∼ 200 K respectively. Appendix figures C2-C5 show hourly EMIRS surface
+temperature comparisons with Curiosity and Perseverance observations for other months as well as smaller field of views (FOV) of
+EMIRS about the rover locations. Appendix figures D2-D5 show
+corresponding comparisons for average diurnal temperatures.
+
+4
+
+CONCLUSION AND DISCUSSION
+
+EMM observations, for the first time have enabled us to study the
+surface temperatures at all local times for most locations on Mars.
+This has enabled us to compare EMM/EMIRS observations taken
+from the orbit at overlapping times with surface rovers MSL and
+Mars 2020. We find that the overall trend in daily temperature
+variability is consistent between different missions and also with
+MCD estimates. Hourly temperature variability of EMIRS is in
+good agreement with MSL. However, EMIRS measurements are
+systematically lower, especially at night-times at lowest temperatures. There could be several reasons leading to this discrepancy
+in measurements. One potential issue with this analysis is the vast
+difference between the FOV of EMIRS (as discussed earlier) and
+rovers. Although measurements from rovers are sensitive to variability arising from both small-scale local and large-scale regional
+features, EMIRS is sensitive to only large-scale regional features.
+Within the FOV of EMIRS, a number of geological units with varying thermal inertia and surface roughness could exist (see appendix
+figures E1-E3). Different thermal inertia of rocks, dust and sand
+would result in uneven rate of change of temperature, influencing the diurnal temperature variation. Also, brightness temperature
+obtained from observations is highly sensitive to rock abundance,
+especially at night (Wolfe et al. 2022). Preliminary work by Wolfe
+et al. (2022) found that EMIRS observations are sensitive to rock
+abundance, especially near the equator and mid-latitude regions.
+The surface scattering and emission also depends on the roughness
+of the surface, which in turn would lead to differences in estimated
+values of surface temperature. The seemingly odd kinks in EMIRS
+averaged data (Figures 3 and 4) are an artefact of the non-uniform
+spatial sampling from the larger FOV, and go away at smaller FOV
+as seen in figures D4 and D5 in the appendix. The corresponding
+number of observations are lower and error bars are larger, and hence
+these apparent peaks are not significant for the diurnal temperature
+variation trends discussed.
+EMIRS observations with smaller grid size are taken in a similar thermal environment as rovers averaged over a period of time.
+Being an instrument on board an orbiter, having a low spatial resolution is a limitation of EMIRS. With more observations made by
+
+6
+
+Atri et al.
+
+the orbiter, we hope to create a better picture of the thermal environment of Mars, which will also enable better comparison with
+rover measurements. More work needs to be done in order to disentangle the influence of regional versus local features, between
+different rock units and other factors such as surface roughness
+which might influence the estimates of surface temperature, and
+this analysis is an important first step in that direction. Additionally,
+estimates from climate models too vary significantly, for example,
+up to 10 K difference in surface temperature was seen across nine
+different models in the Jezero crater region (Newman et al. 2021).
+With this work of comparing observations made from the orbit with
+those from the surface, we hope to better constrain models leading to advancements in weather and climate modeling, especially
+model-to-model differences. We plan to compare seasonal changes
+observed between different missions though one Mars-year, which
+is also the duration of EMM’s primary mission. This effort will also
+assist with improved planning of future robotic missions (Fonseca
+et al. 2019) as well as crewed missions to the planet (Drake et al.
+2010).
+
+DATA AVAILABILITY
+EMM data was obtained from the EMM Science Data Center (SDC),
+and MSL and Mars 2020 data from NASA’s Planetary Data System
+(PDS), both are open access repositories.
+
+Martinez G., et al., 2022, LPI Contributions, 2678, 2024
+Martínez G., 2022, Personal communication
+Mason E. L., Smith M. D., 2021, Icarus, 360, 114350
+Millour E., Forget F., Spiga A., Vals M., Zakharov V., Montabone L., 2018,
+in , From Mars Express to ExoMars, 27-28 February 2018, Madrid,
+Spain
+Newman C., et al., 2021, Space science reviews, 217, 1
+Newman C. E., et al., 2022, Science Advances, 8, eabn3783
+Petrosyan A., et al., 2011, Reviews of Geophysics, 49
+Piqueux S., et al., 2021, Journal of Geophysical Research: Planets, 126,
+e2021JE006859
+Pla-García J., et al., 2020, Space science reviews, 216, 1
+Rodriguez-Manfredi J. A., et al., 2021, Space science reviews, 217, 1
+Sagan C., Mullen G., 1972, Science, 177, 52
+Sebastián E., Armiens C., Gómez-Elvira J., Zorzano M. P., Martinez-Frias
+J., Esteban B., Ramos M., 2010, Sensors, 10, 9211
+Sebastián E., Martínez G., Ramos M., Pérez-Grande I., Sobrado J., Manfredi
+J. A. R., 2021, Acta Astronautica, 182, 144
+Spanovich N., Smith M., Smith P., Wolff M., Christensen P., Squyres S.,
+2006, Icarus, 180, 314
+Spohn T., et al., 2018, Space Science Reviews, 214, 1
+Vago J., et al., 2015, Solar System Research, 49, 518
+Wolfe C. A., Edwards C. S., Smith M. D., Christensen P. R., Smith N. M.,
+Badri K., Anwar S., 2022, in LPI Contributions. p. 2804
+Wolfgang A., Lopez E., 2015, The Astrophysical Journal, 806
+Zurbuchen T. H., 2017, Presentation to the National Academies, 28
+
+ACKNOWLEDGMENTS
+This work was supported by the New York University Abu Dhabi
+(NYUAD) Institute Research Grant G1502 and the ASPIRE Award
+for Research Excellence (AARE) Grant S1560 by the Advanced
+Technology Research Council (ATRC). This work utilized the High
+Performance Computing (HPC) resources of NYUAD. We thank
+Prof. K. R. Sreenivasan for his constant encouragement and support
+for the project.
+
+REFERENCES
+Almatroushi H., et al., 2021, Space Science Reviews, 217, 1
+Amiri H., et al., 2022, Space Science Reviews, 218, 1
+Bhardwaj A., 2014, 40th COSPAR Scientific Assembly, 40, C3
+Christensen P. R., et al., 2001, Journal of Geophysical Research: Planets,
+106, 23823
+Drake B. G., Hoffman S. J., Beaty D. W., 2010, in 2010 IEEE Aerospace
+Conference. pp 1–24
+Edwards C. S., et al., 2018, Journal of Geophysical Research: Planets, 123,
+1307
+Edwards C. S., et al., 2021, Space science reviews, 217, 1
+Fonseca R. M., Zorzano M.-P., Martín-Torres J., 2019, Earth and Space
+Science, 6, 1440
+Formisano V., et al., 2005, Planetary and Space Science, 53, 963
+Gómez-Elvira J., et al., 2012, Space science reviews, 170, 583
+He L., Arvidson R., O’Sullivan J., Morris R., Condus T., Hughes M., Powell
+K., 2022, Journal of Geophysical Research: Planets, p. e2021JE007092
+Hess S., Henry R., Leovy C. B., Ryan J., Tillman J. E., 1977, Journal of
+Geophysical Research, 82, 4559
+Jakosky B. M., 2021, Annual Review of Earth and Planetary Sciences, 49,
+71
+Korablev O., et al., 2018, Space Science Reviews, 214, 1
+Martínez G., et al., 2017, Space Science Reviews, 212, 295
+Martínez G., et al., 2021, Journal of Geophysical Research: Planets, 126,
+e2020JE006804
+MNRAS 000, 1–18 (2022)
+
+Diurnal temperature variation of Mars
+APPENDIX A: EMIRS L2 AND L3 SURFACE TEMPERATURE COMPARISON
+
+Latitiudes -14.5 to 6.5, Longitudes 127.5 to 147.5
+
+313
+
+L3
+L2
+
+293
+273
+253
+233
+213
+193
+173
+153
+133
+113
+93
+
+0
+
+2
+
+4
+
+6
+
+8
+
+10
+
+12
+
+14
+
+16
+
+18
+
+20
+
+22
+
+Figure A1: L2 vs L3 surface temperature measurements by EMIRS/EMM during the month of July 2021 (starting L𝑠 = 65.8)
+
+MNRAS 000, 1–18 (2022)
+
+7
+
+8
+
+Atri et al.
+APPENDIX B: GLOBAL SURFACE TEMPERATURE MEASUREMENTS
+
+Time: 2:00 - 5:00
+
+1 1 0 0 0 0 1 1 0 1 0 1 2 1 0 1 2 0 0 1 2 1 0 1 1 1 0 0 1 0 0 3 2 0 0 1
+-80 0 3 2 0 3 2 2 4 2 3 4 3 2 5 3 3 1 1 2 3 4 4 2 2 4 2 4 1 2 2 2 4 3 1 2 6
+4 4 5 7 5 5 6 5 9 4 8 7 7 6 5 6 7 5 6 7 6 7 6 6 7 4 6 7 7 4 4 6 3 7 7 11
+-60 6 9 5 5 7 8 8 12 9 10 9 10 10 8 10 7 11 4 9 10 9 9 10 8 10 7 9 10 6 8 5 8 13 4 8 12
+9 13 6 14 9 12 11 15 12 11 14 14 10 9 9 15 13 12 14 17 16 9 16 13 11 14 12 16 6 10 8 8 16 12 15 17
+-40 16 12 15 11 13 10 15 19 16 16 12 20 15 16 16 22 17 12 16 16 18 13 20 15 17 15 18 17 16 9 12 14 18 16 21 20
+12 16 20 11 16 14 17 21 12 19 21 18 20 16 22 21 17 15 22 26 21 19 21 23 17 18 20 24 15 13 14 18 14 23 20 27
+-20 18 18 10 19 15 14 20 21 20 19 22 22 18 15 23 23 16 18 23 21 21 18 20 23 21 15 19 19 21 16 16 17 23 17 22 23
+18 9 16 13 16 19 18 21 17 23 20 20 20 18 19 21 20 17 21 18 27 17 23 21 20 16 19 26 17 13 18 10 22 20 21 29
+0 15 20 15 15 16 10 18 19 23 17 18 17 17 16 16 25 15 20 19 21 18 13 18 25 17 16 25 17 16 13 13 18 19 21 19 24
+15 7 12 11 10 14 13 22 12 15 15 15 12 13 18 14 16 17 13 15 18 17 17 20 13 11 17 17 14 9 8 15 12 17 20 23
+20 6 8 10 10 9 7 14 13 12 14 13 15 10 13 11 12 12 9 16 14 12 11 14 13 12 10 13 13 12 9 16 11 11 11 14 14
+10 8 5 6 4 8 7 14 7 10 9 7 6 4 8 9 6 10 7 9 11 7 10 7 6 12 9 7 8 8 4 11 7 13 9 9
+40 4 4 5 2 6 2 5 4 7 3 7 6 5 4 6 6 4 7 7 4 6 3 6 5 6 5 7 7 6 5 6 6 6 3 5 7
+2 1 1 2 0 2 2 3 2 4 3 2 2 0 3 2 3 1 4 4 3 3 1 6 1 3 2 5 2 2 1 3 4 2 2 2
+60 0 0 1 2 0 3 0 3 2 1 3 1 2 2 0 3 1 0 2 1 2 2 2 2 0 0 1 0 1 0 1 4 1 1 2 2
+1 0 0 0 1 0 0 0 1 0 1 1 0 0 1 0 0 1 0 0 0 0 0 1 0 1 0 1 0 0 0 0 0 1 0 1
+80 0 1 0 0 0 0 1 0 2 0 0 0 0 0 1 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1 0 0 1 0 0 0
+-180
+-150
+-120
+-90
+-60
+-30
+0
+30
+60
+90
+120
+150
+
+Time: 5:00 - 8:00
+
+1 0 0 0 1 0 1 0 0 1 1 0 1 1 0 0 1 1 1 1 1 0 0 0 0 2 2 1 2 0 1 1 2 0 0 0
+-80 2 3 2 2 3 1 2 1 2 2 1 4 2 1 2 6 4 0 5 4 4 2 5 4 4 1 2 4 5 1 1 4 4 0 2 3
+5 4 7 6 6 5 4 6 6 3 7 4 6 6 4 7 7 4 8 9 7 5 4 6 10 7 4 7 5 5 6 6 6 3 3 3
+-60 8 7 11 10 8 7 4 8 7 10 7 8 12 7 15 9 13 12 10 8 15 10 10 6 10 12 7 11 7 9 9 9 11 6 2 6
+11 13 11 16 13 14 8 10 14 8 9 13 12 13 16 12 15 12 17 12 16 14 7 14 20 13 10 15 16 12 11 13 14 9 4 9
+-40 16 16 14 19 16 11 11 14 13 16 12 20 16 14 18 19 18 16 18 22 15 15 15 21 20 17 16 18 19 16 14 17 16 9 6 12
+18 16 19 21 22 14 10 16 17 16 14 19 17 18 18 18 26 16 23 20 20 19 12 22 23 20 17 18 18 17 17 21 28 8 9 14
+-20 20 17 20 23 18 12 20 13 17 17 14 19 19 19 19 23 23 22 18 18 24 21 17 18 26 23 18 18 20 20 15 19 22 12 9 10
+20 21 15 25 15 14 14 11 16 19 17 16 18 17 21 22 17 21 17 31 20 17 17 21 22 19 17 22 18 19 17 26 16 13 10 7
+0 14 17 17 16 18 13 10 15 15 14 12 21 15 18 14 15 23 14 19 21 21 13 12 22 20 16 17 18 23 11 17 16 19 8 5 11
+15 13 15 15 13 11 12 8 13 11 11 12 14 14 12 18 13 16 14 16 12 14 10 12 19 15 12 17 15 14 11 17 14 9 7 5
+20 13 12 5 10 10 8 8 8 9 12 4 7 12 8 9 9 11 9 7 15 12 11 12 12 15 8 10 9 12 9 9 10 13 5 6 4
+5 4 10 6 9 5 4 4 8 2 9 9 4 4 5 9 6 8 7 8 6 5 3 12 9 6 4 9 9 6 5 7 6 7 3 5
+40 3 6 2 6 5 1 3 4 1 6 2 3 4 1 5 2 8 1 3 8 1 3 7 2 4 2 6 6 4 2 3 3 6 1 2 2
+1 1 1 0 1 0 1 1 3 0 0 1 1 2 3 1 1 1 0 0 2 2 1 2 3 1 2 1 1 1 4 0 0 1 1 3
+60 1 0 0 0 0 0 0 1 1 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 1 2
+0 1 1 0 0 0 0 0 1 1 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 1 0 0
+80 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 1 0 0 1 0 0 0 1 0 0 0 0 0 0 1 0 0 0 0 0
+-180
+-150
+-120
+-90
+-60
+-30
+0
+30
+60
+90
+120
+150
+
+Figure B1: A representative figure showing the number of EMIRS observations available in each spatial bin to calculate the global average
+surface temperature maps in Figure 1.
+MNRAS 000, 1–18 (2022)
+
+-
+
+Time: 11:00 - 14:00
+
+280
+250
+220
+190
+160
+
+130 of Mars
+Diurnal temperature variation
+
+-18
+0
+-15 °
+0
+-12 °
+0°
+-90
+°
+-60
+°
+-30
+°
+0°
+30
+°
+60
+°
+90
+°
+12
+0°
+15
+0°
+18
+0°
+
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+Time: 2:00 - 5:00
+
+280
+250
+220
+190
+160
+130
+
+Time: 5:00 - 8:00
+
+280
+250
+220
+190
+160
+130
+
+Time: 8:00 - 11:00
+
+280
+250
+220
+190
+160
+130
+
+Time: 11:00 - 14:00
+
+280
+250
+220
+190
+160
+130
+
+90°
+
+Time: 14:00 - 17:00
+
+250
+220
+190
+160
+130
+
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+
+Time: 17:00 - 20:00
+
+280
+250
+220
+190
+160
+130
+
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+
+Time: 20:00 - 23:00
+
+280
+250
+220
+190
+160
+130
+
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+
+Time: 23:00 - 2:00
+
+280
+250
+220
+190
+160
+130
+
+-18
+0
+-15 °
+0
+-12 °
+0°
+-90
+°
+-60
+°
+-30
+°
+0°
+30
+°
+60
+°
+90
+°
+12
+0°
+15
+0°
+18
+0°
+
+-18
+0
+-15 °
+0
+-12 °
+0°
+-90
+°
+-60
+°
+-30
+°
+0°
+30
+°
+60
+°
+90
+°
+12
+0°
+15
+0°
+18
+0°
+
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+
+280
+
+-18
+0
+-15 °
+0
+-12 °
+0°
+-90
+°
+-60
+°
+-30
+°
+0°
+30
+°
+60
+°
+90
+°
+12
+0°
+15
+0°
+18
+0°
+
+-18
+0
+-15 °
+0
+-12 °
+0°
+-90
+°
+-60
+°
+-30
+°
+0°
+30
+°
+60
+°
+90
+°
+12
+0°
+15
+0°
+18
+0°
+
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+
+Time: 14:00 - 17:00
+
+-18
+0
+-15 °
+0
+-12 °
+0°
+-90
+°
+-60
+°
+-30
+°
+0°
+30
+°
+60
+°
+90
+°
+12
+0°
+15
+0°
+18
+0°
+
+-18
+0
+-15 °
+0
+-12 °
+0°
+-90
+°
+-60
+°
+-30
+°
+0°
+30
+°
+60
+°
+90
+°
+12
+0°
+15
+0°
+18
+0°
+
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+
+-18
+0
+-15 °
+0
+-12 °
+0°
+-90
+°
+-60
+°
+-30
+°
+0°
+30
+°
+60
+°
+90
+°
+12
+0°
+15
+0°
+18
+0°
+
+-18
+0°
+-15
+0°
+-12
+0°
+-90
+°
+-60
+°
+-30
+°
+0°
+30
+°
+60
+°
+90
+°
+12
+0°
+15
+0°
+18
+0°
+
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+
+280
+
+Figure B2:60°Global surface temperature measurements by EMIRS/EMM during the month of May 2021 (starting L𝑠 = 38.8)
+250
+
+30°
+0°
+-30°
+-60°
+-90°
+
+220
+190
+160
+
+-18
+0
+-15 °
+0
+-12 °
+0°
+-90
+°
+-60
+°
+-30
+°
+0°
+30
+°
+60
+°
+90
+°
+12
+0°
+15
+0°
+18
+0°
+
+130
+Time: 17:00 - 20:00
+
+280
+250
+220
+190
+160
+130
+
+-18
+0
+-15 °
+0
+-12 °
+0°
+-90
+°
+-60
+°
+-30
+°
+0°
+30
+°
+60
+°
+90
+°
+12
+0°
+15
+0°
+18
+0°
+
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+
+Time: 20:00 - 23:00
+
+280
+250
+220
+190
+160
+130
+
+-18
+0
+-15 °
+0
+-12 °
+0°
+-90
+°
+-60
+°
+-30
+°
+0°
+30
+°
+60
+°
+90
+°
+12
+0°
+15
+0°
+18
+0°
+
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+
+Time: 23:00 - 2:00
+
+280
+250
+220
+190
+160
+
+°
+°
+°
+
+130
+
+°
+°
+°
+
+°
+°
+°
+°
+°
+°
+°
+
+90°
+60°
+30°
+MNRAS 000, 1–18 0°
+(2022)
+-30°
+-60°
+-90°
+
+9
+
+Time: 2:00 - 5:00
+
+280
+260
+240
+220
+200
+180
+160
+140
+
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+
+280
+260
+240
+220
+200
+180
+160
+140
+
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+
+280
+260
+240
+220
+200
+180
+160
+140
+
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+
+280
+260
+240
+220
+200
+180
+160
+140
+
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+
+Time: 5:00 - 8:00
+
+Time: 8:00 - 11:00
+
+Time: 11:00 - 14:00
+
+280
+260
+240
+220
+200
+180
+160
+140
+
+Time: 20:00 - 23:00
+
+280
+260
+240
+220
+200
+180
+160
+140
+
+Time: 23:00 - 2:00
+
+280
+260
+240
+220
+200
+180
+160
+140
+
+-18
+-150°
+-120°
+-900°
+-60°
+-30°
+°
+0°
+30
+60°
+90°
+12 °
+150°
+180°
+0°
+
+-18
+-150°
+-120°
+-900°
+-60°
+-30°
+°
+0°
+30
+60°
+90°
+12 °
+150°
+180°
+0°
+
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+
+Time: 17:00 - 20:00
+
+-18
+-150°
+-120°
+-900°
+-60°
+-30°
+°
+0°
+30
+60°
+90°
+12 °
+150°
+180°
+0°
+
+-18
+-150°
+-120°
+-900°
+-60°
+-30°
+°
+0°
+30
+60°
+90°
+12 °
+150°
+180°
+0°
+
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+
+280
+260
+240
+220
+200
+180
+160
+140
+
+-18
+-150°
+-120°
+-900°
+-60°
+-30°
+°
+0°
+30
+60°
+90°
+12 °
+150°
+180°
+0°
+
+-18
+-150°
+-120°
+-900°
+-60°
+-30°
+°
+0°
+30
+60°
+90°
+12 °
+150°
+180°
+0°
+
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+
+Time: 14:00 - 17:00
+
+-18
+-150°
+-120°
+-900°
+-60°
+-30°
+°
+0°
+30
+60°
+90°
+12 °
+150°
+180°
+0°
+
+-18
+-150°
+-120°
+-900°
+-60°
+-30°
+°
+0°
+30
+60°
+90°
+12 °
+150°
+180°
+0°
+
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+
+280
+260
+240
+220
+200
+180
+160
+140
+
+-18
+-150°
+-120°
+-900°
+-60°
+-30°
+°
+0°
+30
+60°
+90°
+12 °
+150°
+180°
+0°
+
+Atri et al.
+
+Time: 11:00 - 14:00
+
+Time: 14:00 - 17:00
+
+Figure90°
+B3. Global surface temperature measurements280
+by EMIRS/EMM during the month of June 2021 (starting L𝑠 = 52.6)
+
+260
+240
+220
+200
+180
+160
+140
+
+-18
+-150°
+-120°
+-900°
+-60°
+-30°
+°
+0°
+30
+60°
+90°
+12 °
+150°
+180°
+0°
+
+60°
+30°
+0°
+-30°
+-60°
+-90°
+
+Time: 17:00 - 20:00
+
+280
+260
+240
+220
+200
+180
+160
+140
+
+-18
+-150°
+-120°
+-900°
+-60°
+-30°
+°
+0°
+30
+60°
+90°
+12 °
+150°
+180°
+0°
+
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+
+Time: 20:00 - 23:00
+
+280
+260
+240
+220
+200
+180
+160
+140
+
+-18
+-150°
+-120°
+-900°
+-60°
+-30°
+°
+0°
+30
+60°
+90°
+12 °
+150°
+180°
+0°
+
+10
+
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+
+90°
+60°
+30°
+0°
+-30°
+-60°
+
+Time: 23:00 - 2:00
+
+280
+260
+240
+220
+200
+180
+160
+
+MNRAS 000, 1–18 (2022)
+
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+
+Time: 11:00 - 14:00
+
+280
+260
+240
+220
+200
+180
+160
+140
+
+-18
+-150°
+-120°
+-900°
+-60°
+-30°
+°
+0°
+30
+60°
+90°
+12 °
+150°
+180°
+0°
+
+Diurnal temperature variation of Mars
+
+Time: 2:00 - 5:00
+
+280
+260
+240
+220
+200
+180
+160
+140
+
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+
+280
+260
+240
+220
+200
+180
+160
+140
+
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+
+280
+260
+240
+220
+200
+180
+160
+140
+
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+
+280
+260
+240
+220
+200
+180
+160
+140
+
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+
+Time: 5:00 - 8:00
+
+Time: 8:00 - 11:00
+
+Time: 11:00 - 14:00
+
+280
+260
+240
+220
+200
+180
+160
+140
+
+Time: 20:00 - 23:00
+
+280
+260
+240
+220
+200
+180
+160
+140
+
+Time: 23:00 - 2:00
+
+280
+260
+240
+220
+200
+180
+160
+140
+
+-18
+-150°
+-120°
+-900°
+-60°
+-30°
+°
+0°
+30
+60°
+90°
+12 °
+150°
+180°
+0°
+
+-18
+-150°
+-120°
+-900°
+-60°
+-30°
+°
+0°
+30
+60°
+90°
+12 °
+150°
+180°
+0°
+
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+
+Time: 17:00 - 20:00
+
+-18
+-150°
+-120°
+-900°
+-60°
+-30°
+°
+0°
+30
+60°
+90°
+12 °
+150°
+180°
+0°
+
+-18
+-150°
+-120°
+-900°
+-60°
+-30°
+°
+0°
+30
+60°
+90°
+12 °
+150°
+180°
+0°
+
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+
+280
+260
+240
+220
+200
+180
+160
+140
+
+-18
+-150°
+-120°
+-900°
+-60°
+-30°
+°
+0°
+30
+60°
+90°
+12 °
+150°
+180°
+0°
+
+-18
+-150°
+-120°
+-900°
+-60°
+-30°
+°
+0°
+30
+60°
+90°
+12 °
+150°
+180°
+0°
+
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+
+Time: 14:00 - 17:00
+
+-18
+-150°
+-120°
+-900°
+-60°
+-30°
+°
+0°
+30
+60°
+90°
+12 °
+150°
+180°
+0°
+
+-18
+-150°
+-120°
+-900°
+-60°
+-30°
+°
+0°
+30
+60°
+90°
+12 °
+150°
+180°
+0°
+
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+
+Time: 14:00 - 17:00
+
+280EMIRS/EMM during the month of August 2021 (starting L𝑠 = 79.3).
+Figure 90°
+B4. Global surface temperature measurements by
+260
+240
+220
+200
+180
+160
+140
+
+-18
+-150°
+-120°
+-900°
+-60°
+-30°
+°
+0°
+30
+60°
+90°
+12 °
+150°
+180°
+0°
+
+60°
+30°
+0°
+-30°
+-60°
+-90°
+
+Time: 17:00 - 20:00
+
+280
+260
+240
+220
+200
+180
+160
+140
+
+-18
+-150°
+-120°
+-900°
+-60°
+-30°
+°
+0°
+30
+60°
+90°
+12 °
+150°
+180°
+0°
+
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+
+Time: 20:00 - 23:00
+
+280
+260
+240
+220
+200
+180
+160
+140
+
+-18
+-150°
+-120°
+-900°
+-60°
+-30°
+°
+0°
+30
+60°
+90°
+12 °
+150°
+180°
+0°
+
+90°
+60°
+30°
+0°
+-30°
+-60°
+-90°
+90°
+60°
+MNRAS 000, 1–18 (2022)
+30°
+0°
+-30°
+-60°
+
+Time: 23:00 - 2:00
+
+280
+260
+240
+220
+200
+180
+160
+
+11
+
+12
+
+Atri et al.
+APPENDIX C: HOURLY TEMPERATURE COMPARISONS
+
+Figure C1: The Perseverance and Curiosity roves sites on Mars surface.
+
+Figure C2: Hourly surface temperature measurement from REMS/MSL and EMIRS starting L𝑠 = 52.6 (June 2021)
+
+Figure C3: Hourly surface temperature measurement from MEDA/M2020 and EMIRS starting L𝑠 = 52.6 (June 2021)
+
+MNRAS 000, 1–18 (2022)
+
+Diurnal temperature variation of Mars
+
+13
+
+Figure C4. Comparison of hourly Curiosity and EMIRS surface temperature observations of various grid sizes — 2° × 2° (top left), 3° × 3° (top right), 5° × 5°
+(middle left), 7° × 7° (middle right), 10° × 10° (bottom left), 15° × 15° (bottom right) in July 2021.
+
+Figure C5. Comparison of hourly Perseverance and EMIRS surface temperature observations of various grid sizes — 2° × 2° (top left), 3° × 3° (top right),
+5° × 5° (middle left), 7° × 7° (middle right), 10° × 10° (bottom left), 15° × 15° (bottom right) in July 2021.
+
+MNRAS 000, 1–18 (2022)
+
+14
+
+Atri et al.
+
+24
+22
+20
+18
+16
+14
+12
+10
+8
+6
+4
+2
+0
+24
+22
+20
+18
+16
+14
+12
+10
+8
+6
+4
+2
+0
+
+CURIOSITY
+PERSEVERANCE
+
+2
+
+4
+
+6
+
+8 10 12 14 16 18 20
+Grid Size (degree)
+
+CURIOSITY
+PERSEVERANCE
+
+2
+
+4
+
+6
+
+8 10 12 14 16 18 20
+Grid Size (degree)
+
+Diurnal Coverage (number of hours) Diurnal Coverage (number of hours)
+
+Diurnal Coverage (number of hours)
+
+Diurnal Coverage (number of hours)
+
+APPENDIX D: DIURNAL COVERAGE AS A FUNCTION OF SPATIAL GRID SIZE FOR SELECTING EMIRS
+OBSERVATIONS ABOUT THE LOCATION OF THE CURIOSITY AND PERSEVERANCE ROVERS’ LANDING SITES.
+
+24
+22
+20
+18
+16
+14
+12
+10
+8
+6
+4
+2
+0
+
+CURIOSITY
+PERSEVERANCE
+
+2 4 6 8 10 12 14 16 18 20
+Grid Size (degree)
+24
+22
+20
+18
+16
+14
+12
+10
+8
+6
+4
+CURIOSITY
+2
+PERSEVERANCE
+0 2 4 6 8 10 12 14 16 18 20
+Grid Size (degree)
+
+Temperature (K)
+
+Figure D1: Diurnal coverage of EMIRS observations for various grid sizes at the location of Curiosity and Perseverance rovers — May 2021
+(top left), June 2021 (top right), July 2021 (bottom left), August 2021 (bottom right).
+
+275 20°×20°
+260
+245
+230
+215
+200
+185
+170
+0 2 4 6 8 10 12 14 16 18 20 22
+Local Time (hour)
+MCD
+
+EMIRS
+
+CURIOSITY
+
+Figure D2: A comparison of average diurnal temperature variation over 30 sols measured by EMIRS and the MSL in starting L𝑠 = 52.6 (June
+2021) with the model prediction from MCD. The MCD temperatures are obtained at the MSL rover site.
+MNRAS 000, 1–18 (2022)
+
+Temperature (K)
+
+Diurnal temperature variation of Mars
+
+15
+
+275 20°×20°
+260
+245
+230
+215
+200
+185
+170
+0 2 4 6 8 10 12 14 16 18 20 22
+Local Time (hour)
+MCD
+
+EMIRS
+
+PERSEVERANCE
+
+Figure D3: A comparison of average diurnal temperature variation over 30 sols measured by EMIRS and the Mars 2020 rover starting L𝑠 =
+52.6 (June 2021) with the model prediction from MCD. The MCD temperatures are obtained at the Mars 2020 rover site.
+
+MNRAS 000, 1–18 (2022)
+
+275 2°×2°
+260
+245
+230
+215
+200
+185
+170
+0 2 4 6 8 10 12 14 16 18 20 22
+Local Time (hour)
+
+CURIOSITY
+
+275 3°×3°
+260
+245
+230
+215
+200
+185
+170
+0 2 4 6 8 10 12 14 16 18 20 22
+Local Time (hour)
+MCD
+
+EMIRS
+
+CURIOSITY
+
+0 2 4 6 8 10 12 14 16 18 20 22
+Local Time (hour)
+
+275 7°×7°
+260
+245
+230
+215
+200
+185
+170
+0 2 4 6 8 10 12 14 16 18 20 22
+Local Time (hour)
+
+275 10°×10°
+260
+245
+230
+215
+200
+185
+170
+0 2 4 6 8 10 12 14 16 18 20 22
+Local Time (hour)
+
+275 15°×15°
+260
+245
+230
+215
+200
+185
+170
+0 2 4 6 8 10 12 14 16 18 20 22
+Local Time (hour)
+
+MCD
+
+Temperature (K)
+
+275 5°×5°
+260
+245
+230
+215
+200
+185
+170
+MCD
+
+Temperature (K)
+
+EMIRS
+
+EMIRS
+
+EMIRS
+
+CURIOSITY
+
+CURIOSITY
+
+MCD
+
+Temperature (K)
+
+Temperature (K)
+
+MCD
+
+Temperature (K)
+
+Atri et al.
+
+Temperature (K)
+
+16
+
+MCD
+
+EMIRS
+
+EMIRS
+
+CURIOSITY
+
+CURIOSITY
+
+Figure D4. Average hourly surface temperature comparison as a function of EMIRS grid size at the MSL location — 2° × 2° (top left), 3° × 3° (top right),
+5° × 5° (middle left), 7° × 7° (middle right), 10° × 10° (bottom left), 15° × 15° (bottom right).
+
+MNRAS 000, 1–18 (2022)
+
+PERSEVERANCE
+
+275 5°×5°
+260
+245
+230
+215
+200
+185
+170
+0 2 4 6 8 10 12 14 16 18 20 22
+Local Time (hour)
+MCD
+
+Temperature (K)
+
+EMIRS
+
+EMIRS
+
+PERSEVERANCE
+
+275 10°×10°
+260
+245
+230
+215
+200
+185
+170
+0 2 4 6 8 10 12 14 16 18 20 22
+Local Time (hour)
+MCD
+
+EMIRS
+
+PERSEVERANCE
+
+17
+
+275 3°×3°
+260
+245
+230
+215
+200
+185
+170
+0 2 4 6 8 10 12 14 16 18 20 22
+Local Time (hour)
+MCD
+
+Temperature (K)
+
+Temperature (K)
+
+MCD
+
+Temperature (K)
+
+275 2°×2°
+260
+245
+230
+215
+200
+185
+170
+0 2 4 6 8 10 12 14 16 18 20 22
+Local Time (hour)
+
+EMIRS
+
+PERSEVERANCE
+
+275 7°×7°
+260
+245
+230
+215
+200
+185
+170
+0 2 4 6 8 10 12 14 16 18 20 22
+Local Time (hour)
+MCD
+
+Temperature (K)
+
+Temperature (K)
+
+Diurnal temperature variation of Mars
+
+EMIRS
+
+PERSEVERANCE
+
+275 15°×15°
+260
+245
+230
+215
+200
+185
+170
+0 2 4 6 8 10 12 14 16 18 20 22
+Local Time (hour)
+MCD
+
+EMIRS
+
+PERSEVERANCE
+
+Figure D5. Average hourly surface temperature comparison as a function of EMIRS grid size at the Mars 2020 location — 2° × 2° (top left), 3° × 3° (top right),
+5° × 5° (middle left), 7° × 7° (middle right), 10° × 10° (bottom left), 15° × 15° (bottom right).
+
+MNRAS 000, 1–18 (2022)
+
+18
+
+Atri et al.
+
+THEMIS Thermal Inertia (TI Units)
+
+APPENDIX E: THERMAL INERTIA COMPARISONS
+
+Curiosity
+Perseverance
+
+400
+350
+300
+250
+2° 3°
+
+5°
+
+7°
+
+10° 12°
+15°
+Spatial Extent (°)
+
+THEMIS Thermal Inertia (TI Units)
+
+300
+
+July'21
+
+290
+
+20°
+
+August'21
+
+280
+270
+260
+250
+230
+
+Curiosity
+EMIRS 2° × 2°
+EMIRS 5° × 5°
+EMIRS 20° × 20°
+
+220
+3100
+
+3120
+
+240
+
+3140
+
+3160
+3180
+Curiosity Sol
+
+3200
+
+3220
+
+THEMIS Thermal Inertia (TI Units)
+
+440
+420
+
+Perseverance
+EMIRS 2° × 2°
+EMIRS 7° × 7°
+EMIRS 20° × 20°
+
+400
+380
+360
+340
+320
+300
+280
+
+80
+
+100
+
+July'21
+120
+140
+Perseverance Sol
+
+August'21
+160
+180
+
+Figure E1: Comparison of Thermal Inertia (TI) obtained from THerMal Emission Imaging System (THEMIS) at the locations covered by the
+Curiosity and Perseverance rovers between May - August 2021 and the average TI obtained for the various EMIRS grid sizes centered at the
+landing sites of Curiosity and Perseverance. The dashed lines in the bottom two panels show the average TI values for the respective months
+for the locations covered by the respective rovers.
+This paper has been typeset from a TEX/LATEX file prepared by the author.
+
+MNRAS 000, 1–18 (2022)
+
+
