@@ -295,9 +295,9 @@ def export(path):
 if __name__ == "__main__":
     suit, arm, src = build()
     hero_clips.make_all(arm, src, os.path.join(HERE, "..", "data", "clips.json"))
-    path = os.path.join(OUT, "character_astronaut.glb")
+    path = os.path.join(OUT, "character_suited.glb")
     export(path)
     if not os.environ.get("FORGE_NO_RENDER"):
         arm.animation_data_clear()  # previews show the rest pose
-        render_views("character_astronaut", {"front": (0.3, -1, 0.15), "side": (1, 0.05, 0.15), "back": (-0.3, 1, 0.15)}, 640, 640, 1.3)
+        render_views("character_suited", {"front": (0.3, -1, 0.15), "side": (1, 0.05, 0.15), "back": (-0.3, 1, 0.15)}, 640, 640, 1.3)
     print("FORGE_DONE", path)

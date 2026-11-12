@@ -89,19 +89,33 @@ func no_sinking() -> void:
 		check(worst < 0.02, "walking from %s: the feet sank %.3f m below the floor" % [spot[0], worst])
 
 
-## Feet plant in turn while walking, both come down on a landing, and each mark is under the body.
+## Feet plant in turn while walking and hurrying, each on the frame its boot is down (skills/suited-locomotion
+## section 4: the drawn ankle at its planted height, within the sheet's contact height), both come down on a
+## landing, and each mark is under the body.
 func footsteps() -> void:
+	var clips: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/clips.json"))
+	var planted: float = clips.feet.ankle_height_planted - player.tuning.hero.sink
 	var marks: Array = []
-	var log_step := func(pos: Vector3, _yaw: float, foot: String) -> void: marks.append([foot, pos])
+	var worst := [0.0]
+	var log_step := func(pos: Vector3, _yaw: float, foot: String) -> void:
+		marks.append([foot, pos])
+		var f: Vector3 = player.model.feet()[player.FEET.find(foot)]
+		worst[0] = maxf(worst[0], absf(f.y - pos.y - planted))
 	player.footstep.connect(log_step)
-	game.place(Vector3(OPEN.x, 0, OPEN.y + 6.0), 180)
-	await frames(30)
-	marks.clear()
-	await hold([&"move_forward"], 180, "walk in the open")
-	var alternate := true
-	for i in range(1, marks.size()):
-		alternate = alternate and marks[i][0] != marks[i - 1][0]
-	check(marks.size() >= 3 and alternate, "a 3 s walk plants feet in turn (%s)" % [marks.map(func(m: Array) -> String: return m[0])])
+	for keys: Array in [[&"move_forward"], [&"move_forward", &"hurry"]]:
+		game.place(Vector3(OPEN.x, 0, OPEN.y + 6.0), 180)
+		await frames(30)
+		marks.clear()
+		await hold(keys, 180, "walk in the open")
+		var alternate := true
+		for i in range(1, marks.size()):
+			alternate = alternate and marks[i][0] != marks[i - 1][0]
+		check(marks.size() >= 3 and alternate, "%s: 3 s plant feet in turn (%s)" % [keys, marks.map(func(m: Array) -> String: return m[0])])
+	var contact: float = 0.02
+	for r: Dictionary in JSON.parse_string(FileAccess.get_file_as_string("res://data/reality.json")).rows:
+		if r.id == "hero.contact.height":
+			contact = r.value
+	check(worst[0] <= contact, "every footstep fires with its boot down (worst %.3f m off the planted height)" % worst[0])
 	var far := 0.0
 	for m: Array in marks:
 		var b: Vector3 = player.body.global_position
@@ -173,8 +187,8 @@ func step_up() -> void:
 	var world: Node3D = game.get_node("World")
 	var step: float = player.step
 	for k: float in [0.9, 1.3]:
-		# measured from the ground at its near face, where the hero meets it: the patch is not flat
-		var top: float = world.height_at(STEPS.x, STEPS.y + 1.0) + step * k
+		# measured from the ground under the body when its cylinder meets the near face: the patch is not flat
+		var top: float = world.height_at(STEPS.x, STEPS.y + 1.0 + radius) + step * k
 		var b := box(STEPS, Vector3(2, step * k, 2))
 		b.position.y = top - (step * k + 0.2) / 2.0
 		game.place(Vector3(STEPS.x, 0, STEPS.y + 3.0), 0)
@@ -195,10 +209,10 @@ func restyle() -> void:
 	var matched := 0
 	for mi: MeshInstance3D in player.meshes:
 		for i in mi.mesh.get_surface_count():
-			var m := mi.get_surface_override_material(i) as BaseMaterial3D
-			faded += int(m != null and m.distance_fade_mode == BaseMaterial3D.DISTANCE_FADE_PIXEL_DITHER)
+			var m := mi.get_surface_override_material(i) as ShaderMaterial
+			faded += int(m != null and m.shader == player.HeroShader)
 			var role: Dictionary = night.materials.get(m.resource_name, {}) if m else {}
-			matched += int(role.has("color") and m.albedo_color.is_equal_approx(Color.html(role.color)))
+			matched += int(role.has("color") and (m.get_shader_parameter("albedo") as Color).is_equal_approx(Color.html(role.color)))
 	var total: int = player.meshes.reduce(func(n: int, mi: MeshInstance3D) -> int: return n + mi.mesh.get_surface_count(), 0)
 	check(faded == total and matched == total, "restyle: %d of %d hero surfaces fade, %d carry the night colours" % [faded, total, matched])
 	player.restyle(HouseStyle.load_design("res://design.json"))
@@ -231,13 +245,15 @@ func drive() -> void:
 	await frames(10)
 	action(&"move_forward", false)
 	var s: Dictionary = player.state()
-	check(s.vehicle.driving and not player.model.visible, "driving hides the hero")
+	check(s.vehicle.driving and player.model.visible and player.model.state == &"drive_sit", "driving seats the hero (%s)" % player.model.state)
+	var hips: Vector3 = player.body.global_transform * player.model.hip_sit
+	check(hips.distance_to(v.seat().origin) < 0.01, "the drawn hips sit on the seat (%.3f m off)" % hips.distance_to(v.seat().origin))
 	check(v.last.y > 0.5, "the forward key reaches drive() as input.y")
 	check(is_equal_approx(player.cam.distance, player.tuning.camera.vehicle_distance), "the camera keeps the vehicle distance")
 	player.exit()
 	await frames(5)
 	s = player.state()
-	check(not s.vehicle.driving and player.model.visible, "leaving shows the hero")
+	check(not s.vehicle.driving and player.model.state != &"drive_sit", "leaving stands the hero up")
 	var out: Vector3 = s.player.pos
 	check(Vector2(out.x, out.z).distance_to(Vector2(v.exit_point().x, v.exit_point().z)) < 0.1, "the hero steps out at exit_point()")
 	v.free()

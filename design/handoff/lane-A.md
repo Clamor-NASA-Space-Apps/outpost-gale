@@ -1,4 +1,20 @@
-# Lane A (player): handoff, paused 12 Nov 2026 for a reboot
+# Lane A (player): handoff
+
+**12 Nov 2026, suited hero pass (newest first; older notes below are history).**
+- `player/hero_model.gd`: `models/character_suited.glb` with `data/clips.json` (loops set in code). Gait blend walk/lope,
+  `SYNC_MODE_CYCLIC_MUTABLE`, speeds measured from the feet (median stance speed: walk 0.999, lope 1.599 m/s). Footsteps
+  fire on the clips' touchdown phases (the drawn ankle sits at its planted height on every event). Hop: the last
+  `hop.anticipation` s of hop_start, hop_air, hop_land. carry_idle/carry_walk with the bag on spine_03, drive_sit with
+  the drawn hips on `vehicle.seat()`, interact on the interact key. The Fold modifier is gone.
+- `player/hero.gdshader`: the hero's own role copies: pixel dither fade + dust on the boots (tuning `hero`). The model
+  sits `hero.sink` lower than the collider.
+- `player/player.gd`: collider radius = `hero.width` / 2 (the drawn box made it 1.35 m round, wider than the 1.2 m
+  hatches); `inside()` checks that torso cylinder. Gait bands from `hero.froude.walk_run`; gait `lope`.
+- `player/follow_cam.gd`: critically damped spring with a limit, slower floor-following height, lead on the lens,
+  yaw leash from the real velocity (third-person-camera rule 14 additions).
+- Old `models/character_astronaut.glb` deleted; `forge/hero_astronaut.py` still writes that name (lane B/H to rename).
+
+## History: paused 12 Nov 2026 for a reboot
 
 **Update after the reboot: lane A is complete.**
 - Contract items done: probe rows at [0,0,16], drive axes, `player.restyle(design)`, footstep kept, `floor_max_angle` from `hero.slope.max`, the hop feel moved to the tuning.json `hop` block.

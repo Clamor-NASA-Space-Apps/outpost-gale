@@ -5,6 +5,7 @@ extends Node3D
 
 const Controls := preload("res://player/controls.gd")
 const Interactions := preload("res://sandbox/interactions.gd")
+const Audio := preload("res://audio/audio.gd")
 # sky states: DESIGN.md and its DESIGN.<state>.md siblings, as token files
 const SKIES := ["design", "design.sunset", "design.night", "design.storm"]
 const QUALITIES := ["low", "medium", "high"]
@@ -20,6 +21,7 @@ const VIEWS := {
 @onready var world: Node3D = $World
 @onready var player: Node3D = $Player
 var interactions: Node3D
+var audio := Audio.new()
 var fps_label: Label  # the frame rate on screen, to read off a phone (game-feel-gate row 16)
 var tuning: Dictionary
 var design: Dictionary
@@ -43,6 +45,9 @@ func _ready() -> void:
 	interactions.name = "Interactions"
 	add_child(interactions)
 	interactions.setup(world, player, tuning, JSON.parse_string(FileAccess.get_file_as_string("res://data/reality.json")))
+	add_child(audio)
+	audio.setup(world, player, tuning.audio)
+	interactions.used.connect(audio.used)
 	var layer := CanvasLayer.new()
 	add_child(layer)
 	fps_label = Label.new()
@@ -102,6 +107,7 @@ func _restyle() -> void:
 func render_game_to_text() -> Dictionary:
 	var s: Dictionary = player.state()
 	s.merge(interactions.state(), true)
+	s.merge(audio.state())
 	s.merge({"sky": SKIES[sky], "quality": quality, "fps": Engine.get_frames_per_second(), "view": view})
 	return s
 

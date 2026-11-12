@@ -10,17 +10,21 @@
   "pitch_max": 35,
   "hold_time": 0.3,
   "ease_rate": 4.0,
-  "follow_rate": 8.0,
+  "follow_rate": 6.0,
   "follow_limit": 0.6,
   "recentre_after": 2.0,
-  "recentre_rate": 1.2,
   "fade_near": 0.5,
   "fade_far": 0.9,
   "mouse_deg_per_px": 0.15,
   "touch_deg_per_half_window": 120,
   "stick_deg_per_s": 140,
   "vehicle_distance": 9.0,
-  "vehicle_pivot_height": 2.4
+  "vehicle_pivot_height": 2.4,
+  "rise_rate": 3.0,
+  "lead_time": 0.45,
+  "lead_rate": 1.2,
+  "recentre_per_m": 0.9,
+  "note_follow": "follow_rate: 1/s, the pivot's critically damped spring (it trails a steady walk by 2 v / rate); follow_limit: m it may trail; rise_rate: 1/s, the pivot's height toward the floor, slower than across; lead_time: s of velocity the aim looks ahead in a steady run; lead_rate: 1/s, how slowly that lead builds and goes; recentre_after: s of no look input before the yaw drifts behind the real travel; recentre_per_m: rad of drift per rad of error per metre travelled (a leash, so it never turns while the hero stands or pushes a wall)"
  },
  "input": {
   "coyote": 0.1,
@@ -48,10 +52,35 @@
  "hop": {
   "xfade": 0.2,
   "anticipation": 0.12,
-  "crouch": 0.12,
-  "tuck": 0.06,
-  "squash": 0.06,
-  "fold_rate": 18.0,
-  "note": "code-posed hop over the idle clip: s of blend, s of crouch before take-off, m the hips drop, m the feet tuck on the way down, m of landing crouch per m/s of impact, 1/s the legs follow"
+  "note": "xfade: s of blend between clips; anticipation: s of crouch before take-off, the last part of hop_start plays in it (all 0.34 s of it would delay every press); xfade_hop: s of blend into and out of the hop clips, short so the arc keeps its timing",
+  "xfade_hop": 0.06
+ },
+ "hero": {
+  "note": "sink: m the drawn boots sit in the dust below the collider (move to reality.json once sourced: suggested row hero.sink); dust_height: m up the boots the dust tint reaches (grit lands within about 7 cm, design/research/dust.md, plus what a step scuffs on); dust_share: how far toward the dust colour at the sole; gait_hysteresis: Froude the hurry-to-walk change sits below hero.froude.walk_run",
+  "sink": 0.02,
+  "dust_height": 0.2,
+  "dust_share": 0.6,
+  "gait_hysteresis": 0.05
+ },
+ "audio": {
+  "note": "The mix (audio/audio.gd). dB on top of the files, which are normalised (loops -20 LUFS, one-shots -3 dBFS peak). range: m, a 3D sound's cut-off, Mars sound 'falters at just 26 feet (8 meters)' (NASA/JPL 2022); unit_size: m where a 3D sound starts to fall away. fade_s: s of the inside/outside crossfade. breath: rest in breaths a minute, a resting adult takes 12 to 18 (MedlinePlus, Vital signs); hard (at the sheet's hurry speed), rise_s and fall_s (time constants: up fast, settling back slowly) and inhale_share (where in a breath the exhale starts) are art direction, never shown to players. wind: ref_speed m/s that plays at wind.db (sky states blow 4 to 6, world.json weather); gust: the swell's share; gust_hz: its slow noise frequency. habitat and machines: world.json item ids. pitch: random spread on one-shots",
+  "fade_s": 1.0,
+  "bus_db": {"Suit": 0, "Outside": 0, "Habitat": 0, "UI": 0},
+  "suit_inside_db": -6,
+  "range": 8,
+  "unit_size": 1.5,
+  "ear_height": 1.6,
+  "pitch": 0.05,
+  "fan_db": -8,
+  "breath": {"rest": 15, "hard": 30, "rise_s": 3, "fall_s": 15, "inhale_share": 0.4, "db_rest": -10, "db_hard": -3},
+  "step": {"db_soft": -10, "db_loud": -4, "pitch": 0.08},
+  "wind": {"db": -12, "ref_speed": 4, "gust": 0.35, "gust_hz": 0.05},
+  "habitat": "hab1",
+  "machines": ["oxygen", "water"],
+  "hum_db": -6,
+  "rover": {"motor_db": -8, "wheels_db": -10, "pitch_min": 0.7, "pitch_max": 1.3},
+  "sounds": {"door_open": 0, "door_close": 0, "hiss": -6, "servo": -4, "bag_lift": -6, "bag_drop": 0},
+  "hiss_after": 0.6,
+  "chirp_db": -12
  }
 }

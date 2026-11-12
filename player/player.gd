@@ -7,21 +7,19 @@ const HeroModel := preload("res://player/hero_model.gd")
 const FollowCam := preload("res://player/follow_cam.gd")
 const Touch := preload("res://player/touch.gd")
 const Controls := preload("res://player/controls.gd")
+const HeroShader := preload("res://player/hero.gdshader")
 const HERO_LAYER := 8
 const MASK := 1 | 2 | 4 | 16 | 64  # ground, statics, thin, vehicles, carriables (CONTRACTS.md)
 const OVERLAP := 2 | 4 | 16 | 64  # what the drawn body must never be inside; the step lift keeps the floor out
-# The model and the names in its rig. Another hero swaps these and nothing else.
-const MODEL := "res://models/character_astronaut.glb"
-const RIG := {
-	"idle": "Idle", "walk": "Walk", "run": "Run", "feet": ["Foot.L", "Foot.R"], "hips": "Hips",
-	"legs": [["UpperLeg.L", "LowerLeg.L", "Foot.L"], ["UpperLeg.R", "LowerLeg.R", "Foot.R"]],
-}
+# The model and its clips (names, loops, foot contacts). Another hero swaps these and nothing else.
+const MODEL := "res://models/character_suited.glb"
+const CLIPS := "res://data/clips.json"
 
 ## A foot pressed onto the ground: each plant of a walk or run, and both feet on landing. `pos` is under the
 ## foot at the floor, `yaw_deg` the heading (CONTRACTS.md), `foot` is "foot_l" or "foot_r".
 signal footstep(pos: Vector3, yaw_deg: float, foot: String)
 
-const FEET := ["foot_l", "foot_r"]  # in the order of RIG.feet
+const FEET := ["foot_l", "foot_r"]  # in the order of clips.json feet: left, right
 
 var body: CharacterBody3D
 var model: HeroModel
@@ -30,6 +28,7 @@ var touch: Touch
 var tuning: Dictionary
 var meshes: Array[MeshInstance3D] = []
 var vehicle: Node3D = null
+var design: Dictionary
 var gait := "idle"
 # from the sheet, read once
 var gravity: float
@@ -38,6 +37,7 @@ var hurry: float
 var brake: float  # m/s2: the sheet's stop distance from a hurry
 var hop_speed: float
 var step: float
+var breadth: float  # m, the suited body side to side (hero.width)
 var pivot: float  # rad/s standing turn rate
 var run_from: float  # walk to run and back, with hysteresis
 var walk_from: float
@@ -50,7 +50,7 @@ var buffer := 0.0
 var launch := -1.0  # seconds of crouch left before take-off, negative when no hop is coming
 var last_pos := Vector3.ZERO
 var moved := 0.0  # horizontal speed from the change of position
-var lower := -1  # which foot is drawn lower, the one bearing the body
+var carried: Node3D = null  # a bag the interactions hung on the body; it rides on the chest
 var on_floor := false  # the body's floor contact, or a floor it was snapped down onto this frame
 
 
@@ -70,11 +70,14 @@ func _ready() -> void:
 	brake = hurry * hurry / (2.0 * row.call("hero.stop"))  # v^2 / 2d
 	hop_speed = sqrt(2.0 * gravity * row.call("hero.jump.hop"))  # rise v^2 / 2g
 	step = row.call("hero.step")
+	breadth = row.call("hero.width")
 	var leg: float = row.call("hero.leg")
 	pivot = sqrt(gravity / leg)  # a leg swings as a pendulum: about one step's turn per swing
-	# Froude number v^2 / (g leg): people leave the walk between 0.4 and 0.6 (Alexander and Jayes 1983)
-	run_from = sqrt(0.6 * gravity * leg)
-	walk_from = sqrt(0.4 * gravity * leg)
+	# Froude number v^2 / (g leg): suited crews left the walk at the sheet's value; back to a walk a little lower,
+	# so a speed on the edge does not flicker
+	var froude: float = row.call("hero.froude.walk_run")
+	run_from = sqrt(froude * gravity * leg)
+	walk_from = sqrt((froude - tuning.hero.gait_hysteresis) * gravity * leg)
 	idle_below = brake / Engine.physics_ticks_per_second  # less than one frame of speed change
 
 	body = CharacterBody3D.new()
@@ -86,10 +89,11 @@ func _ready() -> void:
 	body.floor_snap_length = 0.0
 	body.floor_max_angle = deg_to_rad(row.call("hero.slope.max"))
 	add_child(body)
-	var design := Forge.HouseStyle.load_design("res://design.json")
+	design = Forge.HouseStyle.load_design("res://design.json")
 	model = HeroModel.new()
 	body.add_child(model)
-	model.setup(load(MODEL).instantiate(), design, RIG, tuning.hop)
+	var clips: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CLIPS))
+	model.setup(load(MODEL).instantiate(), design, clips, tuning.hop, tuning.hero.sink, row.call("hero.contact.height"))
 	meshes.assign(model.find_children("*", "MeshInstance3D", true, false))
 	_fading()
 	_collider()
@@ -103,18 +107,20 @@ func _ready() -> void:
 	touch.setup(tuning, design.colors, cam.look)
 
 
-## One cylinder round the drawn body, lifted by the step height, and a ray from it to the feet that walks the
+## One cylinder round the suited body, lifted by the step height, and a ray from it to the feet that walks the
 ## body up anything lower than the lift. A cylinder, not a capsule: a capsule's round bottom met a step a
-## little over the lift at a floor-like slope and rode up it. The radius is the drawn box's half-diagonal, so
-## no corner of the box leaves the cylinder at any heading.
+## little over the lift at a floor-like slope and rode up it. The radius is half the sheet's suited breadth,
+## not the drawn box: the box's corners (hands held out, the pack) made it 1.35 m round, wider than a real
+## 1.2 m hatch, so the arms and the pack may graze a wall the torso cannot reach.
 func _collider() -> void:
 	var b := model.bounds
 	var cyl := CylinderShape3D.new()
 	# Jolt lets a body rest this far inside what it touches (its margin is a share of the shape's size): the
-	# skin keeps the drawn body out of a wall, and out of a sloping underside over the head
-	var half := Vector2(b.size.x, b.size.z).length() / 2.0
+	# skin keeps the head out of a sloping underside. Not on the radius: the breadth is shoulder to elbow, the
+	# torso is narrower, and a skin there shut the greenhouse's door (0.513 m blocked, 0.475 m walked in).
+	var half := breadth / 2.0
 	var skin: float = half * ProjectSettings.get_setting("physics/jolt_physics_3d/collisions/collision_margin_fraction")
-	cyl.radius = half + skin
+	cyl.radius = half
 	cyl.height = b.end.y + skin - step
 	var shape := CollisionShape3D.new()
 	shape.shape = cyl
@@ -129,31 +135,36 @@ func _collider() -> void:
 	body.add_child(feet)
 
 
-## The hero's own copies of its materials, which dither away when the lens comes close. House-style materials
-## are shared by every model with that role, so changing them in place would fade the whole base.
+## The hero's own copies of its role materials (house-style materials are shared by every model with that
+## role, so changing them in place would change the whole base): they dither away when the lens comes close,
+## and the boots carry dust. A role with `detail` gives only its plain values: its detail is laid in world space.
 func _fading() -> void:
+	var t: Dictionary = tuning.hero
 	for mi in meshes:
 		for i in mi.mesh.get_surface_count():
 			var m := mi.get_active_material(i)
-			var f: BaseMaterial3D
+			var f := ShaderMaterial.new()
+			f.shader = HeroShader
 			if m is BaseMaterial3D:
-				f = m.duplicate()
+				f.set_shader_parameter("albedo", m.albedo_color)
+				f.set_shader_parameter("roughness", m.roughness)
+				f.set_shader_parameter("metallic", m.metallic)
 			else:
-				# a role with `detail` is a ShaderMaterial with no distance fade: the hero takes its plain values
-				f = StandardMaterial3D.new()
-				f.albedo_color = m.get_shader_parameter("albedo")
-				f.roughness = m.get_shader_parameter("roughness")
-				f.metallic = m.get_shader_parameter("metallic")
+				for k: String in ["albedo", "roughness", "metallic"]:
+					f.set_shader_parameter(k, m.get_shader_parameter(k))
+			f.set_shader_parameter("dust", Color.html(design.materials.dust.color))
+			f.set_shader_parameter("dust_height", t.dust_height)
+			f.set_shader_parameter("dust_share", t.dust_share)
+			f.set_shader_parameter("fade_near", tuning.camera.fade_near)
+			f.set_shader_parameter("fade_far", tuning.camera.fade_far)
 			f.resource_name = m.resource_name  # the house style finds the role by this name on the next restyle
-			f.distance_fade_mode = BaseMaterial3D.DISTANCE_FADE_PIXEL_DITHER
-			f.distance_fade_min_distance = tuning.camera.fade_near
-			f.distance_fade_max_distance = tuning.camera.fade_far
 			mi.set_surface_override_material(i, f)
 
 
 ## A sky or quality switch: the hero takes the new role materials (and its own fading copies of them), and
 ## the touch controls the new colours.
-func restyle(design: Dictionary) -> void:
+func restyle(d: Dictionary) -> void:
+	design = d
 	Forge.HouseStyle.apply(model, design)
 	_fading()
 	touch.restyle(design.colors)
@@ -185,6 +196,8 @@ func _walk(delta: float) -> void:
 	body.velocity.x = -sin(yaw) * speed
 	body.velocity.z = -cos(yaw) * speed
 
+	if Input.is_action_just_pressed(&"interact") and carried == null:
+		model.act()  # a reach for what is in front; the interactions decide what it does
 	coyote = tuning.input.coyote if on_floor else coyote - delta
 	buffer = tuning.input.jump_buffer if Input.is_action_just_pressed(&"jump") else buffer - delta
 	if buffer > 0.0 and coyote > 0.0 and launch < 0.0:
@@ -203,7 +216,6 @@ func _walk(delta: float) -> void:
 	# floor contact real and lets move_and_slide() step it up with the cylinder checked. On the take-off frame
 	# it puts the arc's peak just under the sheet's rise, never over it.
 	body.velocity.y -= gravity * delta
-	var falling := maxf(0.0, -body.velocity.y)
 	var was_on_floor := on_floor
 	var before := body.global_position
 	body.move_and_slide()
@@ -212,9 +224,16 @@ func _walk(delta: float) -> void:
 	var real := body.get_real_velocity()
 	var flat := Vector2(real.x, real.z).length()
 	gait = _gait(flat)
-	model.update(flat, idle_below, on_floor, body.velocity.y > 0.0, falling, delta)
-	_steps(flat > idle_below, on_floor and not was_on_floor)
-	cam.follow(delta, yaw, flat > idle_below, on_floor)
+	carried = null
+	for c in body.get_children():
+		if c.is_in_group("carriable"):
+			carried = c
+	var steps := model.update(flat, idle_below, on_floor, carried != null, delta)
+	if carried:
+		_carry()
+	# a landing after real air time: a teleport's settle or a curb's single frame off the floor is not one
+	_steps(steps, on_floor and not was_on_floor and coyote <= 0.0)
+	cam.follow(delta, Vector3(real.x, 0.0, real.z), yaw, on_floor)
 
 
 ## Puts the feet on the floor under them, if it is within a step: up at once, when the body fits there (the
@@ -243,19 +262,28 @@ func _settle(before: Vector3, may_drop: bool) -> bool:
 	return true
 
 
-## A foot plants when it becomes the lower of the two: heel strike in a walk, touchdown after the flight in a
-## run. Read from the drawn clip, so the marks fall where the feet do at any blend and cadence.
-func _steps(moving: bool, landed: bool) -> void:
+## A boot lands on its clip's measured touchdown (clips.json, low and still: skills/suited-locomotion section
+## 4), and both land with the body on a hop. The mark goes under the drawn foot on that frame.
+func _steps(feet_down: Array[int], landed: bool) -> void:
 	var f := model.feet()
-	var low := 0 if f[0].y <= f[1].y else 1
 	var heading := -rad_to_deg(yaw)
 	var floor_y := body.global_position.y
 	if landed:
-		for i in f.size():
-			footstep.emit(Vector3(f[i].x, floor_y, f[i].z), heading, FEET[i])
-	elif low != lower and moving and on_floor:
-		footstep.emit(Vector3(f[low].x, floor_y, f[low].z), heading, FEET[low])
-	lower = low
+		feet_down.assign([0, 1])
+	elif not on_floor:
+		return
+	for i in feet_down:
+		footstep.emit(Vector3(f[i].x, floor_y, f[i].z), heading, FEET[i])
+
+
+## The bag rides on the chest bone in the carry clip's hold, its centre where clips.json puts it.
+func _carry() -> void:
+	var centre := Vector3.ZERO
+	for mi: MeshInstance3D in carried.find_children("*", "MeshInstance3D", true, false):
+		centre = carried.global_transform.affine_inverse() * mi.global_transform * mi.get_aabb().get_center()
+		break
+	var at := model.bag_transform()
+	carried.global_transform = Transform3D(at.basis, at.origin - at.basis * centre)
 
 
 func _gait(v: float) -> String:
@@ -264,8 +292,8 @@ func _gait(v: float) -> String:
 	if v < idle_below:
 		return "idle"
 	if v > run_from:
-		return "run"
-	if v < walk_from or gait != "run":
+		return "lope"  # the suited gait past the walk (Apollo's lope), as the clip is named
+	if v < walk_from or gait != "lope":
 		return "walk"
 	return gait
 
@@ -274,11 +302,12 @@ func _drive(delta: float) -> void:
 	var input := Vector2(Input.get_axis(&"move_left", &"move_right"), Input.get_axis(&"move_back", &"move_forward"))
 	vehicle.drive(input, Input.is_action_pressed(&"hurry"), delta)
 	var seat: Transform3D = vehicle.seat()
-	body.global_position = seat.origin  # the hero rides along, so its position stays true
+	# the hero rides along with its drawn hips on the seat, so its position stays true
+	body.global_transform = Transform3D(seat.basis, seat.origin - seat.basis * model.hip_sit)
 	yaw = vehicle.global_rotation.y
-	body.rotation.y = yaw
 	gait = "idle"
-	cam.follow(delta, yaw, absf(vehicle.speed()) > idle_below, true)
+	model.update(0.0, idle_below, true, false, delta)
+	cam.follow(delta, -vehicle.global_basis.z * vehicle.speed(), yaw, true)
 
 
 func place(pos: Vector3, yaw_deg: float) -> void:
@@ -286,7 +315,7 @@ func place(pos: Vector3, yaw_deg: float) -> void:
 		_leave()
 	body.global_position = pos
 	yaw = -deg_to_rad(yaw_deg)
-	body.rotation.y = yaw
+	body.rotation = Vector3(0, yaw, 0)  # a seat may have tilted it
 	body.velocity = Vector3.ZERO
 	on_floor = false  # put down, not snapped: it settles onto whatever is under it
 	speed = 0.0
@@ -298,10 +327,12 @@ func place(pos: Vector3, yaw_deg: float) -> void:
 	cam.snap(yaw)
 
 
-## Drive `v` (group `vehicle`): the hero hides and stops colliding, the camera follows the vehicle.
+## Drive `v` (group `vehicle`): the hero sits on its seat and stops colliding, the camera follows the vehicle.
 func enter(v: Node3D) -> void:
 	vehicle = v
-	model.visible = false
+	model.sit(true)
+	for m in meshes:
+		m.visible = true  # the lens may have hidden it close up; the vehicle's camera never comes that close
 	body.collision_layer = 0
 	body.collision_mask = 0
 	var rids: Array[RID] = []
@@ -321,20 +352,22 @@ func exit() -> void:
 
 func _leave() -> void:
 	vehicle = null
-	model.visible = true
+	model.sit(false)
 	body.collision_layer = HERO_LAYER
 	body.collision_mask = MASK
 	cam.follow_target(body, [body.get_rid()], meshes, tuning.camera.distance, tuning.camera.pivot_height)
 
 
-## The solids the drawn body is inside (skills/world-collision). Empty means what you see is what you hit.
+## The solids the suited torso is inside (skills/world-collision). Empty means the body never went into a wall.
 func inside() -> Array:
-	var b := model.bounds
-	var box := BoxShape3D.new()
-	box.size = b.size - Vector3(0, step, 0)
+	var cyl := CylinderShape3D.new()
+	# the torso the collider guards (arms and pack may graze, see _collider), less the depth Jolt lets a resting
+	# contact sink, which is no one walking into a wall
+	cyl.radius = breadth / 2.0 * (1.0 - ProjectSettings.get_setting("physics/jolt_physics_3d/collisions/collision_margin_fraction"))
+	cyl.height = model.bounds.end.y - step
 	var q := PhysicsShapeQueryParameters3D.new()
-	q.shape = box
-	q.transform = body.global_transform * Transform3D(Basis(), b.get_center() + Vector3(0, step / 2.0, 0))
+	q.shape = cyl
+	q.transform = body.global_transform * Transform3D(Basis(), Vector3(0, step + cyl.height / 2.0, 0))
 	q.collision_mask = OVERLAP
 	q.exclude = [body.get_rid()]
 	return body.get_world_3d().direct_space_state.intersect_shape(q).map(

@@ -7,6 +7,8 @@ extends Node3D
 const Rover := preload("res://sandbox/rover.gd")
 const CARRIABLES := 64
 
+signal used(what: String, pos: Vector3)  # for the sound: "door_open", "door_close", "panel", "bag", "rover", "put_down"
+
 
 class Interactable extends Node3D:
 	var kind: String
@@ -138,6 +140,7 @@ func use(it: Interactable) -> void:
 			carried.rotation = Vector3.ZERO
 		"rover":
 			player.enter(it.thing)
+	used.emit(("door_open" if it.open else "door_close") if it.kind == "door" else it.kind, it.thing.global_position)
 
 
 ## Hands at the suited work zone (reality.json hero.reach.work), less half the bag so it rests on them.
@@ -156,6 +159,7 @@ func _put_down() -> void:
 	carried.global_position = Vector3(at.x, world.height_at(at.x, at.z), at.z)
 	carried.global_rotation = Vector3(0, hero.global_rotation.y, 0)
 	world.rest(carried)  # in the dust under all of it, not on the height at its middle
+	used.emit("put_down", carried.global_position)
 	(carried as CollisionObject3D).collision_layer = CARRIABLES
 	carried = null
 

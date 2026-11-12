@@ -245,16 +245,16 @@ func watch() -> Vector3:
 	return p
 
 
-## The drawn parts ("item/mesh") the hero's drawn body overlaps: the box player.inside() asks physics about,
-## GRAZE narrower. The hero's cylinder is exactly as wide as the box's diagonal and Jolt lets a contact sink a
-## centimetre or two, so a corner grazed every face that sat on its collision; player.inside() still reports those.
+## The drawn parts ("item/mesh") the hero's torso overlaps: the cylinder player.inside() asks physics about
+## (less Jolt's resting sink), GRAZE narrower, since a drawn face may sit that far proud of its collision. The suited arms and pack are
+## left out on purpose: the collider is the sheet's breadth, so they may graze a wall (a 1.2 m hatch needs it).
 func _drawn_overlaps() -> Array:
-	var bounds: AABB = player.model.bounds
-	var box := BoxShape3D.new()
-	box.size = bounds.size - Vector3(2.0 * GRAZE, player.step, 2.0 * GRAZE)
+	var cyl := CylinderShape3D.new()
+	cyl.radius = radius * (1.0 - ProjectSettings.get_setting("physics/jolt_physics_3d/collisions/collision_margin_fraction")) - GRAZE
+	cyl.height = player.model.bounds.end.y - player.step
 	var q := PhysicsShapeQueryParameters3D.new()
-	q.shape = box
-	q.transform = player.body.global_transform * Transform3D(Basis(), bounds.get_center() + Vector3(0, player.step / 2.0, 0))
+	q.shape = cyl
+	q.transform = player.body.global_transform * Transform3D(Basis(), Vector3(0, player.step + cyl.height / 2.0, 0))
 	q.collision_mask = GHOST
 	var out := {}
 	for h: Dictionary in space.intersect_shape(q, 64):

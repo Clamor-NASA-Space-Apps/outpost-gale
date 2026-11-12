@@ -42,7 +42,7 @@ func build(design: Dictionary) -> void:
 		for j in range(0, cols - 1, CHUNK):
 			_chunk(i, j)
 	_collision()
-	var back := Forge.load_glb(ProjectSettings.globalize_path("res://models/terrain_backdrop.glb"))
+	var back: Node3D = load("res://models/terrain_backdrop.glb").instantiate()  # a web build has no file paths, only res://
 	for mi: MeshInstance3D in back.find_children("*", "MeshInstance3D", true, false):
 		mi.material_override = material
 		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF  # too far out to shade anything we see

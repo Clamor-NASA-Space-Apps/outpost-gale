@@ -1,73 +1,129 @@
 extends Node3D
-## The drawn hero: a rigged model through the house style, its gait clips blended by the speed the body really
-## has, and a hop posed from code over the idle clip for a model that ships no jump clip
-## (skills/character-life sections 1 to 3, skills/contextual-traversal rule 9).
+## The drawn hero: a rigged model through the house style, its clips (data/clips.json) in an AnimationTree. Gaits
+## blend by the speed the body really has, footsteps fire on each clip's measured touchdown, the hop plays its
+## three clips timed to the body's arc, and a carried bag rides on the chest (skills/character-life sections 1 to
+## 3, skills/suited-locomotion section 4, skills/contextual-traversal rule 9).
 
-var feel: Dictionary  # tuning.json `hop`: the feel numbers of the code-posed hop, judged on film
+const GAITS := ["walk", "lope"]  # the move blend, slowest first
+const CARRY := "carry_walk"
+
 var anim: AnimationPlayer
 var tree: AnimationTree
+var playback: AnimationNodeStateMachinePlayback
 var skeleton: Skeleton3D
-var fold: Fold
 var bounds: AABB  # the drawn body in the idle pose, in this node's space (feet at y = 0, centred on the axis)
-var clip_speed := {}  # "walk" and "run": the ground speed each stride was made for, m/s
-var clips := {}  # "idle", "walk", "run": names in the player's library
+var clip_speed := {}  # gait clip -> the ground speed its stride was made for, m/s, measured from the feet
+var touchdown := {}  # gait clip -> [left, right] phase (0..1) where each boot lands, from clips.json
 var foot_bones: Array[int] = []
-var phase := ""  # "", "crouch", "air"
-var fold_target := 0.0
+var chest := -1  # the bone a carried bag rides on
+var bag_at: Transform3D  # the bag's centre in the chest bone's space, in the carry pose
+var hip_sit: Vector3  # the drawn hips in drive_sit, in the hero's space: what goes on a seat
+var state := &"idle"
+var phase := ""  # "", "crouch", "air", "land", "act", "sit"
+var timer := 0.0  # seconds left in a timed phase (landing, interacting)
+var last_phase := -1.0  # where the gait cycle was last frame, 0..1, negative outside a gait
+var clips: Dictionary
+var feel: Dictionary
 
 
-## `rig` names the clips and bones of this model: {idle, walk, run, feet: [l, r], hips, legs: [[thigh, shin, foot], ...]}.
-func setup(model: Node3D, design: Dictionary, rig: Dictionary, hop: Dictionary) -> void:
+## `info` is data/clips.json, `hop` tuning.json `hop`, `sink` how far the drawn boots sit in the dust and
+## `contact` how close to its lowest a foot counts as down (m).
+func setup(model: Node3D, design: Dictionary, info: Dictionary, hop: Dictionary, sink: float, contact: float) -> void:
+	clips = info.clips
 	feel = hop
 	Forge.HouseStyle.apply(model, design)
 	add_child(model)
 	anim = model.find_children("*", "AnimationPlayer", true, false)[0]
 	skeleton = model.find_children("*", "Skeleton3D", true, false)[0]
-	for k: String in ["idle", "walk", "run"]:
-		clips[k] = _find_clip(rig[k])
-		anim.get_animation(clips[k]).loop_mode = Animation.LOOP_LINEAR  # the import leaves gait clips playing once
-	for f: String in rig.feet:
+	for c: String in clips:
+		# loops are not in the file: the import leaves every clip playing once
+		anim.get_animation(c).loop_mode = Animation.LOOP_LINEAR if clips[c].loop else Animation.LOOP_NONE
+	var feet: Array = [info.feet.left, info.feet.right]
+	for f: String in feet:
 		foot_bones.append(skeleton.find_bone(f))
-	for k: String in ["walk", "run"]:
-		clip_speed[k] = _ground_speed(model, clips[k], rig.feet)
-	anim.play(clips.idle)
+	for g: String in GAITS + [CARRY]:
+		clip_speed[g] = _ground_speed(model, g, feet, contact)
+		touchdown[g] = [clips[g].foot_l.touchdown[0], clips[g].foot_r.touchdown[0]]
+	anim.play(&"idle")
 	anim.seek(0.0, true)
-	var raw := _skinned_bounds(model)
+	var points := _skinned_points(model)
+	var raw := AABB(points[0], Vector3.ZERO)
+	for p in points:
+		raw = raw.expand(p)
 	# glTF models face +Z, the game's front is -Z at yaw 0; centring the drawn body on the axis keeps a turn
-	# from swinging it out of the collider
+	# from swinging it out of the collider. The drawn body sinks into the dust; the collider stays on top.
 	var flip := Transform3D(Basis(Vector3.UP, PI), Vector3.ZERO)
 	var c := (flip * raw).get_center()
-	model.transform = Transform3D(flip.basis, Vector3(-c.x, 0, -c.z))
-	bounds = model.transform * raw
+	model.transform = Transform3D(flip.basis, Vector3(-c.x, -sink, -c.z))
+	bounds = Transform3D(flip.basis, Vector3(-c.x, 0, -c.z)) * raw
+	var to_hero := global_transform.affine_inverse() * skeleton.global_transform
+	chest = skeleton.find_bone(clips.carry_idle.bag_bone)
+	anim.play(&"carry_idle")
+	anim.seek(0.0, true)
+	var bag: Array = clips.carry_idle.bag_center_godot  # in the model's own space, facing +Z
+	var model_to_skel := skeleton.global_transform.affine_inverse() * model.global_transform
+	bag_at = skeleton.get_bone_global_pose(chest).affine_inverse() * Transform3D(model_to_skel.basis, model_to_skel * Vector3(bag[0], bag[1], bag[2]))
+	anim.play(&"drive_sit")
+	anim.seek(0.0, true)
+	hip_sit = to_hero * skeleton.get_bone_global_pose(skeleton.find_bone(&"pelvis")).origin  # as drawn, sink included
 	anim.stop()
 	_build_tree(model)
-	fold = Fold.new()
-	skeleton.add_child(fold)
-	fold.setup(skeleton, model, rig)
 
 
-## Called every physics frame by the body. `speed` is the real horizontal speed, `idle` the speed under which it stands.
-func update(speed: float, idle: float, on_floor: bool, rising: bool, impact: float, delta: float) -> void:
+## Called every physics frame by the body. `speed` is the real horizontal speed, `idle` the speed under which it
+## stands. Returns the feet (0 left, 1 right) that touched down this frame.
+func update(speed: float, idle: float, on_floor: bool, carrying: bool, delta: float) -> Array[int]:
+	var gait := CARRY if carrying else ""
 	tree.set(&"parameters/move/gait/blend_position", speed)
+	tree.set(&"parameters/carry_move/pace/scale", speed / clip_speed[CARRY])
 	# below the slowest clip or above the fastest the stride stays and the cadence changes, so no foot slides
-	var slow: float = clip_speed.walk
-	var fast: float = clip_speed.run
+	var slow: float = clip_speed[GAITS[0]]
+	var fast: float = clip_speed[GAITS[-1]]
 	tree.set(&"parameters/move/pace/scale", speed / clampf(speed, slow, fast) if speed > 0.0 else 1.0)
-	if phase == "air" and on_floor:
-		phase = ""
-		fold.amount = maxf(fold.amount, impact * feel.squash)  # the landing squash, then it eases out
-		fold_target = 0.0
-	elif phase == "air":
-		fold_target = 0.0 if rising else feel.tuck
-	elif phase == "" and not on_floor and not rising:
-		phase = "air"  # stepped off something: no anticipation, just the fall
-	fold.grounded = on_floor
-	fold.amount = lerpf(fold.amount, fold_target, 1.0 - exp(-feel.fold_rate * delta))
-	var playback: AnimationNodeStateMachinePlayback = tree.get(&"parameters/playback")
-	playback.travel(&"hop" if phase != "" else (&"move" if speed > idle else &"idle"))
+	timer -= delta
+	match phase:
+		"air":
+			if on_floor:
+				phase = "land"
+				timer = clips.hop_land.length
+		"land", "act":
+			if timer <= 0.0 or speed > idle:
+				phase = ""  # walking off cuts the landing or the reach short: an in-place clip would skate
+		"":
+			if not on_floor:
+				phase = "air"  # stepped off something: no anticipation, just the fall
+	var next: StringName
+	match phase:
+		"crouch": next = &"hop_start"
+		"air": next = &"hop_air"
+		"land": next = &"hop_land"
+		"act": next = &"interact"
+		"sit": next = &"drive_sit"
+		_:
+			if speed > idle:
+				next = &"carry_move" if carrying else &"move"
+			else:
+				next = &"carry_idle" if carrying else &"idle"
+	if next != state:
+		state = next
+		playback.travel(state)
+	# a gait cycle's phase, where touchdowns are measured; every gait clip starts on the left boot's touchdown
+	var out: Array[int] = []
+	var cycle := -1.0
+	if state in [&"move", &"carry_move"] and playback.get_current_node() == state and playback.get_current_length() > 0.0:
+		cycle = fposmod(playback.get_current_play_position() / playback.get_current_length(), 1.0)
+	if cycle >= 0.0 and last_phase >= 0.0:
+		var td: Array = touchdown[gait if gait != "" else GAITS[0]]
+		for i in 2:
+			var t: float = td[i]
+			var crossed := (last_phase < t and t <= cycle) if cycle >= last_phase else (t > last_phase or t <= cycle)
+			if crossed:
+				out.append(i)
+	last_phase = cycle
+	return out
 
 
-## Where each foot is drawn now, in world space (the pose the tree last gave, before Fold).
+## Where each foot is drawn now, in world space.
 func feet() -> Array[Vector3]:
 	var out: Array[Vector3] = []
 	for b in foot_bones:
@@ -75,37 +131,41 @@ func feet() -> Array[Vector3]:
 	return out
 
 
+## Where a carried bag's centre goes this frame, in world space (it rides on the chest bone).
+func bag_transform() -> Transform3D:
+	return skeleton.global_transform * skeleton.get_bone_global_pose(chest) * bag_at
+
+
 func crouch() -> void:
 	phase = "crouch"
-	fold_target = feel.crouch
 
 
 func take_off() -> void:
 	phase = "air"
-	fold_target = 0.0
+
+
+func act() -> void:
+	if phase == "":
+		phase = "act"
+		timer = clips.interact.length
+
+
+func sit(on: bool) -> void:
+	phase = "sit" if on else ""
 
 
 func reset() -> void:
 	phase = ""
-	fold_target = 0.0
-	fold.amount = 0.0
-	var playback: AnimationNodeStateMachinePlayback = tree.get(&"parameters/playback")
+	state = &"idle"
+	last_phase = -1.0
 	playback.start(&"idle")
 
 
-func _find_clip(name: String) -> StringName:
-	for c: StringName in anim.get_animation_list():
-		if c == name or c.ends_with("|" + name):  # kit clips arrive as Armature|Name
-			return c
-	push_error("hero model has no clip %s" % name)
-	return &""
-
-
-## The ground speed a gait clip was made for: how fast a planted foot moves back under the body, read at
-## mid-stance (the foot's lowest frame) of each foot and averaged. Assumes the clip runs in place facing +Z.
-func _ground_speed(model: Node3D, clip: StringName, feet: Array) -> float:
+## The ground speed a gait clip was made for: how fast a planted foot moves back under the body, over the
+## stance of each foot. Assumes the clip runs in place facing +Z.
+func _ground_speed(model: Node3D, clip: StringName, feet: Array, contact: float) -> float:
 	var a := anim.get_animation(clip)
-	var n := 40
+	var n := 60
 	var dt := a.length / n
 	var to_model := model.global_transform.affine_inverse() * skeleton.global_transform
 	anim.play(clip)
@@ -116,23 +176,24 @@ func _ground_speed(model: Node3D, clip: StringName, feet: Array) -> float:
 		anim.seek(i * dt, true)
 		for f: String in feet:
 			track[f].append(to_model * skeleton.get_bone_global_pose(skeleton.find_bone(f)).origin)
-	var total := 0.0
-	var k := n / 20  # a tenth of the stride around mid-stance
+	# a foot is planted while it is within the contact height of its lowest and moving back (a suited boot rolls
+	# little, so the ankle stands for the sole; a low swing moves forward); its typical speed over those frames
+	var speeds: Array[float] = []
 	for f: String in feet:
 		var p: Array = track[f]
-		var low := 0
+		var low: float = p.map(func(v: Vector3) -> float: return v.y).min()
 		for i in n:
-			if p[i].y < p[low].y:
-				low = i
-		total += (p[(low - k + n) % n].z - p[(low + k) % n].z) / (2 * k * dt)
-	return total / feet.size()
+			var j := (i + 1) % n
+			if p[i].y < low + contact and p[j].y < low + contact and p[j].z < p[i].z:
+				speeds.append((p[i].z - p[j].z) / dt)
+	speeds.sort()
+	return speeds[speeds.size() / 2]  # the median: a boot still settling as it lands would drag a mean down
 
 
 ## The drawn body as the GPU skins it in the current pose, in the model's own space. A skinned mesh's get_aabb()
 ## is its bind pose (arms out) in file units, which says nothing about the body the player sees.
-func _skinned_bounds(model: Node3D) -> AABB:
-	var out := AABB()
-	var first := true
+func _skinned_points(model: Node3D) -> PackedVector3Array:
+	var out := PackedVector3Array()
 	var to_model := model.global_transform.affine_inverse() * skeleton.global_transform
 	for mi: MeshInstance3D in skeleton.find_children("*", "MeshInstance3D", true, false):
 		var binds: Array[Transform3D] = []
@@ -153,87 +214,59 @@ func _skinned_bounds(model: Node3D) -> AABB:
 					var w := weights[i * per + j]
 					if w > 0.0:
 						p += w * (binds[bones[i * per + j]] * verts[i])
-				if first:
-					out = AABB(p, Vector3.ZERO)
-					first = false
-				else:
-					out = out.expand(p)
+				out.append(p)
 	return out
 
 
 func _build_tree(model: Node3D) -> void:
 	var sm := AnimationNodeStateMachine.new()
-	sm.add_node(&"idle", _clip_node(clips.idle))
-	sm.add_node(&"hop", _clip_node(clips.idle))  # no jump clip: the hop is the idle pose folded by Fold
+	for c: StringName in [&"idle", &"carry_idle", &"hop_air", &"hop_land", &"interact", &"drive_sit"]:
+		sm.add_node(c, _clip(c))
+	# hop_start ends at take-off: start it late, so its last part fills the body's short crouch
+	var start := _clip(&"hop_start")
+	start.use_custom_timeline = true
+	start.stretch_time_scale = false
+	start.start_offset = maxf(clips.hop_start.takeoff_at - feel.anticipation, 0.0)
+	start.timeline_length = minf(feel.anticipation, clips.hop_start.takeoff_at)
+	sm.add_node(&"hop_start", start)
 	var gait := AnimationNodeBlendSpace1D.new()
-	gait.min_space = clip_speed.walk
-	gait.max_space = clip_speed.run
-	gait.sync = true  # feet stay in step through the blend
-	gait.add_blend_point(_clip_node(clips.walk), clip_speed.walk, -1, &"walk")
-	gait.add_blend_point(_clip_node(clips.run), clip_speed.run, -1, &"run")
-	var move := AnimationNodeBlendTree.new()
-	move.add_node(&"gait", gait)
-	move.add_node(&"pace", AnimationNodeTimeScale.new())
-	move.connect_node(&"pace", 0, &"gait")
-	move.connect_node(&"output", 0, &"pace")
-	sm.add_node(&"move", move)
-	var start := AnimationNodeStateMachineTransition.new()
-	start.advance_mode = AnimationNodeStateMachineTransition.ADVANCE_MODE_AUTO  # or the tree sits in Start
-	sm.add_transition(&"Start", &"idle", start)
-	for a: StringName in [&"idle", &"move", &"hop"]:
-		for b: StringName in [&"idle", &"move", &"hop"]:
+	gait.min_space = clip_speed[GAITS[0]]
+	gait.max_space = clip_speed[GAITS[-1]]
+	gait.sync_mode = AnimationNodeBlendSpace1D.SYNC_MODE_CYCLIC_MUTABLE  # feet stay in step through the blend
+	for g: String in GAITS:
+		gait.add_blend_point(_clip(g), clip_speed[g], -1, g)
+	sm.add_node(&"move", _paced(gait))
+	sm.add_node(&"carry_move", _paced(_clip(CARRY)))
+	var first := AnimationNodeStateMachineTransition.new()
+	first.advance_mode = AnimationNodeStateMachineTransition.ADVANCE_MODE_AUTO  # or the tree sits in Start
+	sm.add_transition(&"Start", &"idle", first)
+	var states := [&"idle", &"move", &"carry_idle", &"carry_move", &"hop_start", &"hop_air", &"hop_land", &"interact", &"drive_sit"]
+	for a: StringName in states:
+		for b: StringName in states:
 			if a != b:
 				var t := AnimationNodeStateMachineTransition.new()
-				t.xfade_time = feel.xfade
+				# into and through a hop the clips are short and timed to the arc: a long blend would eat them
+				t.xfade_time = feel.xfade_hop if String(b).begins_with("hop") or String(a).begins_with("hop") else feel.xfade
 				sm.add_transition(a, b, t)
 	tree = AnimationTree.new()
 	tree.tree_root = sm
 	model.add_child(tree)
 	tree.anim_player = tree.get_path_to(anim)
 	tree.active = true
+	playback = tree.get(&"parameters/playback")
 
 
-func _clip_node(clip: StringName) -> AnimationNodeAnimation:
+func _clip(clip: StringName) -> AnimationNodeAnimation:
 	var a := AnimationNodeAnimation.new()
 	a.animation = clip
 	return a
 
 
-## Bends both legs by `amount` metres: on the floor the hips come down and the feet stay planted (a crouch), in
-## the air the hips stay and the feet come up (a tuck). Runs after the AnimationTree, over whatever it posed.
-class Fold extends SkeletonModifier3D:
-	var amount := 0.0
-	var grounded := true
-	var legs: Array = []  # [thigh, shin, foot] bone indices per leg
-	var hips := -1
-	var leg_length := 1.0  # m, thigh plus shin
-	var right := Vector3.RIGHT  # the body's side axis, in skeleton space
-	var up := Vector3.UP  # one metre up, in skeleton space
-
-	func setup(s: Skeleton3D, model: Node3D, rig: Dictionary) -> void:
-		var to_skel := s.global_transform.affine_inverse() * model.global_transform
-		var to_model := to_skel.affine_inverse()
-		hips = s.find_bone(rig.hips)
-		for names: Array in rig.legs:
-			legs.append(names.map(func(n: String) -> int: return s.find_bone(n)))
-		var leg: Array = legs[0]
-		var at := func(b: int) -> Vector3: return to_model * s.get_bone_global_pose(b).origin
-		leg_length = at.call(leg[0]).distance_to(at.call(leg[1])) + at.call(leg[1]).distance_to(at.call(leg[2]))
-		# the model's own axes (before the flip to -Z): +X is the side the knees bend about, +Z the front
-		right = (to_skel.basis * Vector3.RIGHT).normalized()
-		up = to_skel.basis * Vector3.UP
-
-	func _process_modification_with_delta(_delta: float) -> void:
-		if amount <= 0.0:
-			return
-		var s := get_skeleton()
-		var a := acos(clampf(1.0 - amount / leg_length, -1.0, 1.0))
-		if grounded:
-			var h := s.get_bone_global_pose(hips)
-			s.set_bone_global_pose(hips, Transform3D(h.basis, h.origin - up * amount))
-		for leg: Array in legs:
-			# knee forward, shin back, foot level again: the thigh and shin each lean `a` from upright
-			for i in 3:
-				var b: int = leg[i]
-				var g := s.get_bone_global_pose(b)
-				s.set_bone_global_pose(b, Transform3D(Basis(right, [-a, 2.0 * a, -a][i]) * g.basis, g.origin))
+## A clip or blend followed by a time scale named `pace`, so the cadence can change while the stride stays.
+func _paced(node: AnimationRootNode) -> AnimationNodeBlendTree:
+	var bt := AnimationNodeBlendTree.new()
+	bt.add_node(&"gait", node)
+	bt.add_node(&"pace", AnimationNodeTimeScale.new())
+	bt.connect_node(&"pace", 0, &"gait")
+	bt.connect_node(&"output", 0, &"pace")
+	return bt

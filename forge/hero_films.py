@@ -1,6 +1,6 @@
 # Side-view films of the hero's clips: 8 frames per clip in one strip, camera at the side looking a little down, the hero carried forward at the clip's ground speed over a floor ruled every 0.25 m, so a planted
 # boot stays on one mark and a sliding one does not. The hop strip flies the body on a Mars-gravity arc.
-#   blender -b --python-exit-code 1 -P forge/hero_films.py -- models/character_astronaut.glb data/clips.json <out dir>
+#   blender -b --python-exit-code 1 -P forge/hero_films.py -- models/character_suited.glb data/clips.json <out dir>
 import json
 import os
 import subprocess

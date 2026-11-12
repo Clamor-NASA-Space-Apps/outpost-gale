@@ -23,6 +23,8 @@ var dist := 0.0  # where the lens is now
 var hold := 0.0
 var idle := 0.0  # seconds since the player last looked
 var floor_y := 0.0
+var vel := Vector3.ZERO  # the pivot's own speed across the ground, for its spring
+var ahead := Vector3.ZERO  # where the lens aims past the pivot, along the travel
 
 
 func setup(tuning: Dictionary) -> void:
@@ -58,6 +60,8 @@ func snap(heading: float) -> void:
 	lift = 0.0
 	hold = 0.0
 	idle = 0.0
+	vel = Vector3.ZERO
+	ahead = Vector3.ZERO
 	floor_y = target.global_position.y
 	global_position = target.global_position + Vector3.UP * height
 	dist = _wanted()
@@ -77,22 +81,37 @@ func ground_basis() -> Basis:
 	return Basis(Vector3.UP, yaw)
 
 
-## Called by the player after the target moved this physics frame. `heading` is where the target travels,
-## `on_floor` keeps hops out of the pivot's height.
-func follow(delta: float, heading: float, moving: bool, on_floor: bool) -> void:
+## Called by the player after the target moved this physics frame (skills/third-person-camera rule 14: a calm
+## frame, a lively hero). `travel` is the target's real ground velocity, `facing` its heading as rotation.y
+## (the way a vehicle points, which may be backing up), `on_floor` keeps hops out of the pivot's height.
+func follow(delta: float, travel: Vector3, facing: float, on_floor: bool) -> void:
 	var stick := Input.get_vector(&"look_left", &"look_right", &"look_up", &"look_down")
 	if stick != Vector2.ZERO:
 		look(stick.x * t.stick_deg_per_s * delta, stick.y * t.stick_deg_per_s * delta)
 	idle += delta
-	# a phone player has no thumb free to look: left alone, the view swings back behind the travel
-	if idle > t.recentre_after and moving:
-		yaw = lerp_angle(yaw, heading, 1.0 - exp(-t.recentre_rate * delta))
+	var speed := travel.length()
+	# a phone player has no thumb free to look: left alone, the view drifts behind the real travel like a towed
+	# leash, by distance covered, so it never turns while the target stands or pushes into a wall (Nesky #23)
+	if idle > t.recentre_after and speed > 0.0:
+		var heading := facing if travel.dot(Vector3(-sin(facing), 0, -cos(facing))) < 0.0 else atan2(-travel.x, -travel.z)
+		yaw = lerp_angle(yaw, heading, 1.0 - exp(-t.recentre_per_m * speed * delta))
 	var at := target.global_position
 	if on_floor:
 		floor_y = at.y
-	var want := Vector3(at.x, floor_y + height, at.z)
-	var p := global_position.lerp(want, 1.0 - exp(-t.follow_rate * delta))
-	global_position = want + (p - want).limit_length(t.follow_limit)  # an elastic band with a limit
+	# across: a critically damped spring with a limit, so the hero pulls ahead at a start and the camera
+	# arrives late at a stop, never overshooting; up: slower, toward the floor under the hero, not the hop
+	var want := Vector3(at.x, global_position.y, at.z)
+	var w: float = t.follow_rate
+	var off := global_position - want
+	var push := (vel + w * off) * delta
+	var decay := exp(-w * delta)
+	vel = (vel - w * push) * decay
+	off = ((off + push) * decay).limit_length(t.follow_limit)
+	var y := lerpf(global_position.y, floor_y + height, 1.0 - exp(-t.rise_rate * delta))
+	global_position = Vector3(want.x + off.x, y, want.z + off.z)
+	# once the travel is steady the lens looks a little ahead along it; the lead builds and goes slowly, so a
+	# start or a stop shows only the spring
+	ahead = ahead.lerp(travel * t.lead_time, 1.0 - exp(-t.lead_rate * delta))
 	var wanted := _wanted()
 	# lift over a wall behind the target: measured at the player's own pitch, so the lift cannot feed itself
 	var back := Basis.from_euler(Vector3(pitch, yaw, 0)).z * wanted
@@ -171,5 +190,8 @@ class Lens extends Camera3D:
 		else:
 			rig.dist = lerpf(rig.dist, safe, 1.0 - exp(-rig.t.ease_rate * delta))
 		position = Vector3(0, 0, rig.dist)  # the arm casts along its +Z, the lens looks back down -Z
+		rotation = Vector3.ZERO
+		if rig.ahead.length() > 0.01:
+			look_at(rig.global_position + rig.ahead)  # aim only: the lens stays where the arm put it
 		for m: MeshInstance3D in rig.faded:
 			m.visible = rig.dist > rig.t.fade_near  # never show the inside of the hero's head
