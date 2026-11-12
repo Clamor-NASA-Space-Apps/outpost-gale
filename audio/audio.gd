@@ -176,10 +176,12 @@ func _breathe(delta: float) -> void:
 	breath_phase = fmod(breath_phase + delta * breath_rate / 60.0, 1.0)
 	var hard := inverse_lerp(t.breath.rest, t.breath.hard, breath_rate)
 	var db: float = lerpf(t.breath.db_rest, t.breath.db_hard, clampf(hard, 0.0, 1.0))
+	# a recorded breath is one resting breath long: a faster one plays it quicker, or the inhale ran into the exhale
+	var quick := sqrt(maxf(breath_rate / float(t.breath.rest), 1.0))
 	if breath_phase < before:
-		_one_shot("breath_in", "Suit", db, 1.0 + randf_range(-t.pitch, t.pitch))
+		_one_shot("breath_in", "Suit", db, quick + randf_range(-t.pitch, t.pitch))
 	elif before < t.breath.inhale_share and breath_phase >= t.breath.inhale_share:
-		_one_shot("breath_out", "Suit", db, 1.0 + randf_range(-t.pitch, t.pitch))
+		_one_shot("breath_out", "Suit", db, quick + randf_range(-t.pitch, t.pitch))
 
 
 func _drive() -> void:

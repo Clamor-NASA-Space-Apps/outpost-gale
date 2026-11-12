@@ -78,7 +78,7 @@ func play() -> bool:
 	for q: Node in shots:
 		check(not q.stream.loop, "%s is not a loop" % q.stream.resource_path.get_file())
 	await seconds(3.5)
-	var left := shots.filter(func(q: Node) -> bool: return is_instance_valid(q))
+	var left := shots.filter(func(q: Variant) -> bool: return is_instance_valid(q))
 	check(left.is_empty(), "every one-shot is freed after it played (left: %s)" % [left.map(func(q: Node) -> String: return q.stream.resource_path.get_file())])
 	var loops := audio.find_children("*", "", true, false).filter(func(n: Node) -> bool:
 		return (n is AudioStreamPlayer or n is AudioStreamPlayer3D) and n.playing and not n.is_in_group("one_shot"))

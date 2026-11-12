@@ -74,11 +74,11 @@ ffmpeg -v error -y -f lavfi -i "anoisesrc=c=brown:d=6:a=0.6:seed=3" -f lavfi -i 
 [n][p][s1][s2]amix=inputs=4:normalize=0,tremolo=f=0.4:d=0.08" -ac 1 -ar 32000 "$T/f.wav"
 loop "$T/f.wav" 1 suit_fan.ogg
 
-# Breath inside a helmet: shaped pink noise, a short echo for the visor close to the mouth.
-HELMET="aecho=0.8:0.5:4|9:0.35|0.25"
-shot_lavfi() { ffmpeg -v error -y -f lavfi -i "$1" -ac 1 -ar 32000 "$T/b.wav"; shot "$T/b.wav" "$2" "$3"; }
-shot_lavfi "anoisesrc=c=pink:d=1.2:seed=5" "highpass=f=250,bandpass=f=1100:width_type=h:w=1500,afade=t=in:d=0.55:curve=qsin,afade=t=out:st=0.6:d=0.6:curve=qsin,$HELMET" breath_in.ogg
-shot_lavfi "anoisesrc=c=pink:d=1.6:seed=6" "highpass=f=150,bandpass=f=650:width_type=h:w=900,afade=t=in:d=0.2:curve=qsin,afade=t=out:st=0.4:d=1.2:curve=exp,$HELMET" breath_out.ogg
+# Breath inside a helmet: Kodack's "mask breathing" (Freesound 256519, CC0), one breath of its second cycle, the
+# loud valve pull as the inhale and the softer push after it as the exhale (cut by its loudness envelope).
+B="$S/freesound-kodack-256519/256519__kodack__mask-breathing-sound.wav"
+shot "$B" "atrim=3.25:4.7,asetpts=N/SR/TB,afade=t=in:d=0.08,afade=t=out:st=1.25:d=0.2" breath_in.ogg
+shot "$B" "atrim=4.7:5.8,asetpts=N/SR/TB,afade=t=in:d=0.05,afade=t=out:st=0.8:d=0.3" breath_out.ogg
 
 # Panel servo: a motor whine that speeds up and slows down over the tween (0.6 s, ease in and out), then the end
 # stop clunks (Kenney impactMetal_000, CC0).
@@ -95,15 +95,20 @@ loop "$T/m.wav" 1 motor.ogg
 ffmpeg -v error -y -i "$T/m.wav" -af "$OUT" "$T/mo.wav"
 loop "$T/mo.wav" 1 motor_out.ogg
 
-# Airlock door motor (Kenney doorOpen/doorClose_000), the pressure hiss (bart's steam hiss #1), bag lift and set-down
+# Airlock door close motor (Kenney doorClose_000), bag lift and set-down
 # (a Fantozzi sand scuff slowed down, rubberduck's hit_01 slowed down for the weight), the suit chirp (Kenney
 # Interface confirmation_001). Clear and outside copies.
-for pair in "doorOpen_000:door_open" "doorClose_000:door_close"; do
+# the airlock opening: NeoSpica's pressurised door (Freesound 425090, CC0)
+shot "$S/freesound-neospica-425090/425090__neospica__pressurized-door-opening.wav" "anull" door_open.ogg
+shot "$S/freesound-neospica-425090/425090__neospica__pressurized-door-opening.wav" "$OUT" door_open_out.ogg
+for pair in "doorClose_000:door_close"; do
 	shot "$K/sci-fi-sounds/Audio/${pair%%:*}.ogg" "anull" "${pair##*:}.ogg"
 	shot "$K/sci-fi-sounds/Audio/${pair%%:*}.ogg" "$OUT" "${pair##*:}_out.ogg"
 done
-shot "$S/oga-bart-steam-hisses/steam hisses - Marker #1.wav" "afade=t=out:st=1.2:d=0.6" hiss.ogg
-shot "$S/oga-bart-steam-hisses/steam hisses - Marker #1.wav" "afade=t=out:st=1.2:d=0.6,$OUT" hiss_out.ogg
+# the pressure hiss: unfa's (Freesound 211096, CC0), its first 2 s
+H="$S/freesound-unfa-211096/211096__unfa__pressure-hiss.flac"
+shot "$H" "atrim=0:2,afade=t=in:d=0.05,afade=t=out:st=1.4:d=0.6" hiss.ogg
+shot "$H" "atrim=0:2,afade=t=in:d=0.05,afade=t=out:st=1.4:d=0.6,$OUT" hiss_out.ogg
 LIFT="aresample=44100,asetrate=44100*0.75,aresample=44100"
 shot "$S/oga-fantozzi-footsteps/Fantozzi-footsteps/flac/Fantozzi-SandR2.flac" "$LIFT" bag_lift.ogg
 shot "$S/oga-fantozzi-footsteps/Fantozzi-footsteps/flac/Fantozzi-SandR2.flac" "$LIFT,$OUT" bag_lift_out.ogg
