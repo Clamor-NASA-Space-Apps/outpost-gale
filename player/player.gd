@@ -411,7 +411,7 @@ func enter(v: Node3D) -> void:
 	for c: Node in [v] + v.find_children("*", "CollisionObject3D", true, false):
 		if c is CollisionObject3D:
 			rids.append((c as CollisionObject3D).get_rid())
-	cam.follow_target(v, rids, [], tuning.camera.vehicle_distance, tuning.camera.vehicle_pivot_height)
+	cam.follow_target(v, rids, [], tuning.camera.vehicle_distance, tuning.camera.vehicle_pivot_height, AABB(), float(v.top) if "top" in v else 0.0)  # a vehicle's top speed, m/s: the speed framing
 
 
 func exit() -> void:

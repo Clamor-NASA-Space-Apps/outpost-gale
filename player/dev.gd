@@ -9,7 +9,7 @@ var side: Camera3D
 func _ready() -> void:
 	var design := Forge.HouseStyle.load_design("res://design.json")
 	Forge.HouseStyle.apply_lighting(self, design)
-	Forge.HouseStyle.set_quality(self, design, "low")
+	Forge.HouseStyle.set_quality(self, design, "phone")
 	var ground := StaticBody3D.new()
 	ground.collision_layer = 1  # CONTRACTS.md: ground
 	var shape := CollisionShape3D.new()

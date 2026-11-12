@@ -29,6 +29,8 @@ var vel := Vector3.ZERO  # the pivot's own speed across the ground, for its spri
 var ahead := Vector3.ZERO  # where the lens aims past the pivot, along the travel
 var steady := Vector3.ZERO  # the travel, slowly averaged: what the spring may lead by
 var slope := 0.0  # rad of extra pitch for the ground ahead
+var fast := 0.0  # m/s at which the shot is all the way into its speed framing (rush_*); 0 for none (on foot)
+var rush := 0.0  # 0 to 1: how far into it, eased by lead_rate so a start or a stop never jerks the lens
 
 
 func setup(tuning: Dictionary) -> void:
@@ -44,8 +46,9 @@ func setup(tuning: Dictionary) -> void:
 
 
 ## Follow `node`. `bodies` are left out of every cast (the hero, or the vehicle), `meshes` fade when the lens
-## comes within the camera's fade range of `drawn`, the body's box in the node's space.
-func follow_target(node: Node3D, bodies: Array[RID], meshes: Array[MeshInstance3D], dist_wanted: float, pivot_height: float, drawn := AABB()) -> void:
+## comes within the camera's fade range of `drawn`, the body's box in the node's space. `top_speed` (m/s, a
+## vehicle's) brings the lens lower, closer and looking further ahead as the real speed nears it.
+func follow_target(node: Node3D, bodies: Array[RID], meshes: Array[MeshInstance3D], dist_wanted: float, pivot_height: float, drawn := AABB(), top_speed := 0.0) -> void:
 	for r in excluded:
 		arm.remove_excluded_object(r)
 	excluded = bodies
@@ -56,6 +59,7 @@ func follow_target(node: Node3D, bodies: Array[RID], meshes: Array[MeshInstance3
 	shell = drawn
 	distance = dist_wanted
 	height = pivot_height
+	fast = top_speed
 	snap(-node.global_rotation.y)
 
 
@@ -70,6 +74,7 @@ func snap(heading: float) -> void:
 	ahead = Vector3.ZERO
 	steady = Vector3.ZERO
 	slope = 0.0
+	rush = 0.0
 	floor_y = target.global_position.y
 	global_position = target.global_position + Vector3.UP * height
 	dist = _wanted()
@@ -121,11 +126,14 @@ func follow(delta: float, travel: Vector3, facing: float, on_floor: bool) -> voi
 	var decay := exp(-w * delta)
 	vel = (vel - w * push) * decay
 	off = ((off + push) * decay).limit_length(t.follow_limit)
-	var y := lerpf(global_position.y, floor_y + height, 1.0 - exp(-t.rise_rate * delta))
+	# speed you can feel without faking it: the ground nearer the lens streams past faster (Need for Speed and Forza
+	# chase cams sit lower and closer as speed builds); the field of view stays fixed (rule 14)
+	rush = lerpf(rush, clampf(speed / fast, 0.0, 1.0) if fast > 0.0 else 0.0, 1.0 - exp(-t.lead_rate * delta))
+	var y := lerpf(global_position.y, floor_y + height * lerpf(1.0, t.rush_height, rush), 1.0 - exp(-t.rise_rate * delta))
 	global_position = Vector3(want.x + off.x, y, want.z + off.z)
 	# once the travel is steady the lens looks a little ahead along it; the lead builds and goes slowly, so a
 	# start or a stop shows only the spring
-	ahead = ahead.lerp(travel * t.lead_time, 1.0 - exp(-t.lead_rate * delta))
+	ahead = ahead.lerp(travel * lerpf(t.lead_time, t.rush_lead, rush), 1.0 - exp(-t.lead_rate * delta))
 	var wanted := _wanted()
 	# lift over a wall behind the target: measured at the player's own pitch, so the lift cannot feed itself
 	var back := Basis.from_euler(Vector3(pitch, yaw, 0)).z * wanted
@@ -155,7 +163,7 @@ func follow(delta: float, travel: Vector3, facing: float, on_floor: bool) -> voi
 ## Closer when looking up, a little farther when looking down, so the target keeps its size on screen.
 func _wanted() -> float:
 	var pd := deg_to_rad(t.pitch_default)
-	var k: float = distance / t.distance
+	var k: float = distance * lerpf(1.0, t.rush_distance, rush) / t.distance
 	if pitch >= pd:
 		return k * lerpf(t.distance, t.distance_up, inverse_lerp(pd, deg_to_rad(t.pitch_max), pitch))
 	return k * lerpf(t.distance, t.distance_down, inverse_lerp(pd, deg_to_rad(t.pitch_min), pitch))
@@ -193,12 +201,21 @@ func on_screen(feet: Vector3, tall: float) -> float:
 	return absf(a.y - b.y) / get_viewport().get_visible_rect().size.y
 
 
+## The cursor is captured only by a left click that reached the 3D view: a HUD control, the settings screen and the
+## cover take their own clicks first (MOUSE_FILTER_STOP). Any button used to capture, and a touchpad's two-finger
+## scroll is a stream of wheel "presses", so the cursor vanished while the player only scrolled (13 Nov playtest).
 func _unhandled_input(e: InputEvent) -> void:
 	# the browser allows a capture only from inside an input event; a touch's made-up click never captures
-	if e is InputEventMouseButton and e.pressed and e.device != InputEvent.DEVICE_ID_EMULATION:
+	if e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_LEFT and e.device != InputEvent.DEVICE_ID_EMULATION:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	elif e is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		look(e.screen_relative.x * t.mouse_deg_per_px, e.screen_relative.y * t.mouse_deg_per_px)
+
+
+## Another window took the keyboard: give the cursor back, or it stays hidden over the desktop.
+func _notification(what: int) -> void:
+	if what in [NOTIFICATION_APPLICATION_FOCUS_OUT, NOTIFICATION_WM_WINDOW_FOCUS_OUT]:
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 
 ## Sits beside the arm, not under it: the arm would snap a child both ways, and the lens must ease out.

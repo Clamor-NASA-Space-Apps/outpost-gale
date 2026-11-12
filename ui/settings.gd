@@ -1,54 +1,54 @@
 extends CanvasLayer
-## The settings screen, opened by the gear or Esc: a preset, then one row per graphics knob, built from
-## HouseStyle.knobs() so a knob added there shows up here, and the sound levels. Kept per device in user://.
-## A knob that compiles shaders waits for Apply (or Done), so the cover hides the compile once; the rest apply at
-## once. It changes how the game looks and sounds, never anything the game counts (hard rule 1).
-## The game it drives (the sandbox) has `design`, `quality`, `overrides`, `audio` and
+## The settings screen, opened by the gear or Esc. The main page: five graphics presets named for the hardware they
+## suit, a frame-rate switch and the sound levels. "Advanced" folds out six plain choices (ADVANCED), each a bundle
+## of HouseStyle knobs; the preset decides every other knob (13 Nov playtest: a row per knob was "too much").
+## A preset card applies at once. An Advanced choice waits for Apply (or Done), which puts it on behind the cover,
+## where any new shaders compile. Every save shows "Saved". Kept per device in user://.
+## It changes how the game looks and sounds, never anything the game counts (hard rule 1).
+## The game it drives (the sandbox) has `design`, `quality`, `overrides`, `audio`, `fps_label` and
 ## `set_graphics(level, overrides, restyle := true, warm := true)`.
 
 const Hud := preload("res://ui/hud.gd")
 const HouseStyle := preload("res://addons/forge/house_style.gd")
-# knob -> [group, plain label]. A knob missing here still gets a row, under "Other", by its own name.
-const ROWS := {
-	"detail": ["Picture", "Surface detail"],
-	"ground": ["Picture", "Ground look"],
-	"msaa": ["Picture", "Smooth edges"],
-	"aniso": ["Picture", "Far ground sharpness"],
-	"pixels": ["Picture", "Pixel budget"],
-	"scale": ["Picture", "Resolution"],
-	"shadows": ["Shadows", "Shadows"],
-	"shadowMap": ["Shadows", "Shadow sharpness"],
-	"shadowFilter": ["Shadows", "Shadow softness"],
-	"shadowRange": ["Shadows", "Shadow distance"],
-	"normalBias": ["Shadows", "Shadow offset"],
-	"glow": ["Effects", "Glow"],
-	"fog": ["Effects", "Dust haze"],
-	"ssao": ["Effects", "Corner shade"],
-	"lamps": ["Effects", "Lamps lit"],
-	"particles": ["Effects", "Dust puffs"],
-	"trail": ["Effects", "Footprint detail"],
-	"vsync": ["Performance", "V-Sync"],
-	"maxFps": ["Performance", "Frame cap"],
+# DESIGN.md quality id -> [name, icon, one line]. Ids missing here still get a card, by their own name.
+const PRESETS := {
+	"phone": ["Phone", "device_phone", "Smooth on budget phones"],
+	"older": ["Older laptop", "device_older", "Laptops from 2015 to 2018"],
+	"laptop": ["Laptop", "device_laptop", "Newer laptops, no graphics card"],
+	"gaming": ["Gaming PC", "device_gaming", "Computers with a graphics card"],
+	"max": ["Max", "device_max", "Everything on, for strong cards"],
 }
-const GROUPS := ["Picture", "Shadows", "Effects", "Performance", "Other"]
-const LEVELS := ["low", "medium", "high"]
+const OLD := {"low": "phone", "medium": "laptop", "high": "gaming"}  # levels saved before 13 Nov
+# Advanced: row -> [[shown, {knob: value}], ...]. An option that leaves a knob out keeps the preset's ("Auto"). The
+# DESIGN.md presets are built from these same bundles, so each row names the preset's own choice
+# (tests/settings_test.gd checks it); a mix that matches none reads "Custom".
+const ADVANCED := {
+	"Anti-aliasing": [["Off", {"msaa": 0}], ["2x", {"msaa": 2}], ["4x", {"msaa": 4}], ["8x", {"msaa": 8}]],
+	"Resolution": [["Auto", {}], ["50%", {"pixels": 0.0, "scale": 0.5}], ["60%", {"pixels": 0.0, "scale": 0.6}],
+		["75%", {"pixels": 0.0, "scale": 0.75}], ["85%", {"pixels": 0.0, "scale": 0.85}],
+		["100%", {"pixels": 0.0, "scale": 1.0}]],
+	"Shadows": [["Off", {"shadows": 0}],
+		["Low", {"shadows": 1, "shadowMap": 1024, "shadowRange": 25, "shadowFilter": 2, "normalBias": 2.0}],
+		["Medium", {"shadows": 2, "shadowMap": 2048, "shadowRange": 60, "shadowFilter": 3, "normalBias": 6.0}],
+		["High", {"shadows": 2, "shadowMap": 4096, "shadowRange": 60, "shadowFilter": 4, "normalBias": 4.0}],
+		["Ultra", {"shadows": 4, "shadowMap": 4096, "shadowRange": 60, "shadowFilter": 5, "normalBias": 4.0}]],
+	"Effects": [["Low", {"glow": 0.0, "particles": 0.5, "lamps": 2}],
+		["Medium", {"glow": 0.4, "particles": 0.75, "lamps": 4}],
+		["High", {"glow": 0.5, "particles": 1.0, "lamps": -1}]],
+	"V-Sync": [["On", {"vsync": true}], ["Off", {"vsync": false}]],
+	"Frame cap": [["None", {"maxFps": 0}], ["30 fps", {"maxFps": 30}], ["60 fps", {"maxFps": 60}],
+		["120 fps", {"maxFps": 120}]],
+}
 const VOLUMES := {"master": "All sound", "music": "Music", "effects": "Suit and world"}
-const NAMES := {
-	"detail": {"off": "Plain", "code": "Pattern", "texture": "Photo"},
-	"ground": {"flat": "Flat", "cheap": "Simple", "full": "Full"},
-	"shadows": {0: "Off", 1: "Simple", 2: "Good", 4: "Best"},
-	"shadowFilter": {0: "Hard", 1: "Very low", 2: "Low", 3: "Medium", 4: "High", 5: "Ultra"},
-	"aniso": {0: "Off", 1: "2x", 2: "4x", 3: "8x", 4: "16x"},
-}
 
 # "" until first asked: user://settings.cfg in the game, "-" (none) in a test or tool run, so a player's saved
 # choices never change what a check measures. A test that checks saving sets its own file first.
 static var file := ""
 
 var game: Node
-var pending := {}  # knobs that compile shaders, chosen but not applied yet
-var rows := {}  # knob -> {mark, wait, value, minus, plus} or {mark, wait, toggle}
-var presets := {}  # level -> Button
+var draft := {}  # the Advanced choices as knob overrides, put on by Apply
+var rows := {}  # Advanced row name -> {value: Label, minus, plus, wait}
+var cards := {}  # preset id -> Button
 var sliders := {}  # volume name -> HSlider
 var phone := DisplayServer.is_touchscreen_available()  # drawn larger, with margins clear of the back swipe
 var root := Control.new()  # the screen, scaled for the device (_fit)
@@ -57,6 +57,11 @@ var shade := ColorRect.new()
 var panel: PanelContainer
 var apply_button: Button
 var reset_button: Button
+var fps_button: Button
+var fold_button: Button
+var advanced: Control  # the fold-out
+var saved_tag: Control
+var _flash: Tween
 
 
 static func _path() -> String:
@@ -67,16 +72,19 @@ static func _path() -> String:
 	return file
 
 
-## What this device chose last time: {level, overrides, volume}, each checked; {} when nothing was saved.
+## What this device chose last time: {level, overrides, volume, fps}, each checked; {} when nothing was saved. Only the
+## knobs Advanced can set come back, so a knob the screen no longer shows can never stay changed out of sight.
 static func saved() -> Dictionary:
 	var c := ConfigFile.new()
 	if _path() == "-" or c.load(_path()) != OK:
 		return {}
-	var out := {"level": str(c.get_value("graphics", "level", "")), "overrides": {}, "volume": {}}
+	var level := str(c.get_value("graphics", "level", ""))
+	var out := {"level": OLD.get(level, level), "overrides": {}, "volume": {}, "fps": c.get_value("hud", "fps", true) == true}
 	var o: Variant = c.get_value("graphics", "overrides", {})
-	if o is Dictionary:
+	if o is Dictionary and not OLD.has(level):
+		var shown := _knobs()
 		for k: Variant in o:
-			if HouseStyle.KNOBS.has(k) and _find(HouseStyle.KNOBS[k].values, o[k]) >= 0:
+			if k in shown and HouseStyle.KNOBS.has(k) and _find(HouseStyle.KNOBS[k].values, o[k]) >= 0:
 				out.overrides[k] = o[k]
 	for k: String in VOLUMES:
 		var v: Variant = c.get_value("sound", k, 1.0)
@@ -85,15 +93,32 @@ static func saved() -> Dictionary:
 	return out
 
 
+## Every knob an Advanced row sets.
+static func _knobs() -> Array:
+	var out := []
+	for r: String in ADVANCED:
+		for o: Array in ADVANCED[r]:
+			for k: String in o[1]:
+				if k not in out:
+					out.append(k)
+	return out
+
+
 func save() -> void:
-	if _path() == "-":
-		return
-	var c := ConfigFile.new()
-	c.set_value("graphics", "level", game.quality)
-	c.set_value("graphics", "overrides", game.overrides)
-	for k: String in VOLUMES:
-		c.set_value("sound", k, game.audio.volume[k])
-	c.save(_path())  # ponytail: a failure (a private window's storage) only forgets the choice for next time
+	if _path() != "-":
+		var c := ConfigFile.new()
+		c.set_value("graphics", "level", game.quality)
+		c.set_value("graphics", "overrides", game.overrides)
+		c.set_value("hud", "fps", game.fps_label.visible)
+		for k: String in VOLUMES:
+			c.set_value("sound", k, game.audio.volume[k])
+		c.save(_path())  # ponytail: a failure (a private window's storage) only forgets the choice for next time
+	saved_tag.visible = true
+	if _flash:
+		_flash.kill()
+	_flash = create_tween()
+	_flash.tween_interval(2.0)
+	_flash.tween_callback(func() -> void: saved_tag.visible = false)
 
 
 func setup(g: Node) -> void:
@@ -102,6 +127,8 @@ func setup(g: Node) -> void:
 	var s := saved()
 	for k: String in s.get("volume", {}):
 		game.audio.set_volume(k, s.volume[k])
+	game.fps_label.visible = s.get("fps", true)
+	draft = game.overrides.duplicate()
 	root.theme = Hud.THEME
 	root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(root)
@@ -142,6 +169,7 @@ func open() -> void:
 	shade.visible = true
 	panel.visible = true
 	gear.visible = false  # Done closes it; the gear sat under the panel's corner on a phone
+	draft = game.overrides.duplicate()
 	_refresh()
 
 
@@ -159,69 +187,84 @@ func _input(e: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 
-## Every row as one knob's value, with "Changed" where it differs from the preset and "On Apply" while it waits.
+func waiting() -> bool:
+	return not _same_dict(draft, game.overrides)
+
+
 func _refresh() -> void:
-	var kn := HouseStyle.knobs(game.design)
-	for k: String in rows:
-		var r: Dictionary = rows[k]
-		var v: Variant = pending.get(k, kn[k].value)
-		r.mark.visible = not _same(v, kn[k].preset)
-		r.wait.visible = pending.has(k)
-		if r.has("toggle"):
-			r.toggle.text = "On" if v else "Off"
-			continue
-		var i := _find(kn[k].values, v)
-		r.value.text = _text(k, v)
-		r.minus.disabled = i == 0
-		r.plus.disabled = i == kn[k].values.size() - 1
-	for level: String in presets:
-		var b: Button = presets[level]
-		b.icon = load("res://ui/icons/check.svg") if level == game.quality else null  # a shape, not only a colour
-	apply_button.disabled = pending.is_empty()
-	reset_button.disabled = pending.is_empty() and game.overrides.is_empty()
-	# only when there is something to apply or undo: a phone in landscape has room for two rows besides
-	apply_button.get_parent().visible = not (apply_button.disabled and reset_button.disabled)
+	for id: String in cards:
+		var b: Button = cards[id]
+		b.set_pressed_no_signal(id == game.quality)
+		b.get_meta("check").visible = id == game.quality  # a shape, not only a colour
+	for r: String in rows:
+		var i := current(r)
+		var n: int = ADVANCED[r].size()
+		rows[r].value.text = "Custom" if i < 0 else ADVANCED[r][i][0]
+		rows[r].minus.disabled = i == 0
+		rows[r].plus.disabled = i == n - 1
+		rows[r].wait.visible = not _same_dict(_values(r, draft), _values(r, game.overrides))
+	apply_button.disabled = not waiting()
+	reset_button.disabled = draft.is_empty() and game.overrides.is_empty()
+	fps_button.text = "On" if game.fps_label.visible else "Off"
+	fold_button.text = "Hide advanced" if advanced.visible else "Advanced"
 	for k: String in sliders:
 		sliders[k].set_value_no_signal(game.audio.volume[k] * 100.0)
 		sliders[k].get_meta("label").text = "%d%%" % roundi(game.audio.volume[k] * 100.0)
 
 
-## One step along a knob's values (or the other value of an on/off knob).
-func step(k: String, by: int) -> void:
-	var row: Dictionary = HouseStyle.knobs(game.design)[k]
-	var values: Array = row.values
-	choose(k, values[clampi(_find(values, pending.get(k, row.value)) + by, 0, values.size() - 1)])
+## Which option of row `r` the draft is on, -1 for none.
+func current(r: String) -> int:
+	var now := _values(r, draft)
+	for i: int in ADVANCED[r].size():
+		if _same_dict(now, _values(r, _option(r, i))):
+			return i
+	return -1
 
 
-func choose(k: String, v: Variant) -> void:
-	var row: Dictionary = HouseStyle.knobs(game.design)[k]
-	if row.recompile:
-		if _same(v, row.value):
-			pending.erase(k)
+## Row `r`'s knobs as they would be with `over` on the preset.
+func _values(r: String, over: Dictionary) -> Dictionary:
+	var kn := HouseStyle.knobs(game.design)
+	var out := {}
+	for o: Array in ADVANCED[r]:
+		for k: String in o[1]:
+			out[k] = over.get(k, kn[k].preset)
+	return out
+
+
+## Option `i` of row `r` as overrides: a knob it leaves out is the preset's.
+func _option(r: String, i: int) -> Dictionary:
+	return ADVANCED[r][i][1]
+
+
+## One step along row `r`'s options; from "Custom" the first step lands on the first option.
+func step(r: String, by: int) -> void:
+	choose(r, clampi(current(r) + by, 0, ADVANCED[r].size() - 1) if current(r) >= 0 else 0)
+
+
+func choose(r: String, i: int) -> void:
+	var kn := HouseStyle.knobs(game.design)
+	var o := _option(r, i)
+	for k: String in _values(r, {}):
+		var v: Variant = o.get(k, kn[k].preset)
+		if _same(v, kn[k].preset):
+			draft.erase(k)
 		else:
-			pending[k] = v
-	else:
-		_override(k, v, row.preset)
-		game.set_graphics(game.quality, game.overrides, row.game, false)  # a game knob is read by the world's restyle
-		save()
+			draft[k] = v
 	_refresh()
 
 
+## The Advanced choices on, behind the cover (a shader knob compiles there), and saved.
 func apply() -> void:
-	if pending.is_empty():
+	if not waiting():
 		return
-	var kn := HouseStyle.knobs(game.design)
-	for k: String in pending:
-		_override(k, pending[k], kn[k].preset)
-	pending.clear()
-	game.set_graphics(game.quality, game.overrides)
+	game.set_graphics(game.quality, draft.duplicate())
 	save()
 	_refresh()
 
 
-## A preset, every knob back to it.
+## A preset card: every knob back to it, at once.
 func preset(level: String) -> void:
-	pending.clear()
+	draft.clear()
 	game.set_graphics(level, {})
 	save()
 	_refresh()
@@ -233,37 +276,36 @@ func volume(k: String, percent: float) -> void:
 	_refresh()
 
 
-func _override(k: String, v: Variant, preset_value: Variant) -> void:
-	if _same(v, preset_value):
-		game.overrides.erase(k)
-	else:
-		game.overrides[k] = v
-
-
 func _build() -> Control:
 	var list := Hud.col([], 14)
 	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	var quick := HFlowContainer.new()
-	quick.add_theme_constant_override("h_separation", 10)
-	quick.add_theme_constant_override("v_separation", 10)
-	for level: String in LEVELS:
-		var b := _button(level.capitalize(), preset.bind(level), &"ChoiceButton")
-		b.custom_minimum_size.x = 150
-		presets[level] = b
-		quick.add_child(b)
-	list.add_child(Hud.label("Quick", "Heading"))
-	list.add_child(quick)
-	var kn := HouseStyle.knobs(game.design)
-	for g: String in GROUPS:
-		var mine := kn.keys().filter(func(k: String) -> bool: return ROWS.get(k, ["Other"])[0] == g)
-		if mine.is_empty():
-			continue
-		list.add_child(Hud.label(g, "Heading"))
-		for k: String in mine:
-			list.add_child(_row(k, kn[k]))
+	var deck := HFlowContainer.new()
+	deck.add_theme_constant_override("h_separation", 8)
+	deck.add_theme_constant_override("v_separation", 8)
+	for id: String in game.design.quality:
+		deck.add_child(_card(id))
+	list.add_child(Hud.label("Graphics", "Heading"))
+	list.add_child(deck)
+	fps_button = _button("", func() -> void:
+		game.fps_label.visible = not game.fps_label.visible
+		save()
+		_refresh(), &"ChoiceButton")
+	fps_button.custom_minimum_size.x = 2 * Hud.BUTTON_H + 130
+	list.add_child(_flow([Hud.label("Show FPS", "", true), fps_button]))
 	list.add_child(Hud.label("Sound", "Heading"))
 	for k: String in VOLUMES:
 		list.add_child(_slider(k))
+	advanced = Hud.col([], 14)
+	advanced.visible = false
+	for r: String in ADVANCED:
+		advanced.add_child(_row(r))
+	fold_button = _button("", func() -> void:
+		advanced.visible = not advanced.visible
+		_refresh(), &"ChoiceButton")
+	fold_button.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	fold_button.custom_minimum_size.x = 260
+	list.add_child(fold_button)
+	list.add_child(advanced)
 	var scroll := ScrollContainer.new()
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -273,31 +315,49 @@ func _build() -> Control:
 	var head := Hud.row([Hud.icon("settings", 40), title, _button("Done", close)], 12)
 	reset_button = _button("Reset to preset", func() -> void: preset(game.quality), &"ChoiceButton")
 	apply_button = _button("Apply", apply)
-	var foot := Hud.row([reset_button, Hud.spacer(), apply_button], 12)
+	saved_tag = Hud.tag("TagLive", "check", "Saved")
+	saved_tag.visible = false
+	var foot := Hud.row([reset_button, Hud.spacer(), saved_tag, apply_button], 12)
 	return Hud.col([head, scroll, foot], 14)
 
 
-## A knob's row: its name (and marks) then its control; on a narrow screen the control wraps under the name.
-func _row(k: String, knob: Dictionary) -> Control:
-	var r := {"mark": Hud.tag("Tag", "", "Changed"), "wait": Hud.tag("TagLive", "", "On Apply")}
-	var name := Hud.label(ROWS.get(k, ["", k])[1], "", true)
-	var about := Hud.col([name, Hud.row([r.mark, r.wait], 6)], 4)
+## A preset as a big card: its icon, its name, one line, and a check when it is in force.
+func _card(id: String) -> Button:
+	var about: Array = PRESETS.get(id, [id.capitalize(), "settings", ""])
+	var b := _button("", preset.bind(id), &"ChoiceButton")
+	b.toggle_mode = true
+	b.custom_minimum_size = Vector2(168, 176)
+	var check := Hud.icon("check", 28, "accent")
+	b.set_meta("check", check)
+	var name := Hud.label(about[0], "TagText", true)
+	var line := Hud.label(about[2], "Caption", true)
+	line.vertical_alignment = VERTICAL_ALIGNMENT_TOP
+	var inside := Hud.col([Hud.row([Hud.icon(about[1], 44, "accent"), Hud.spacer(), check]), name, line], 6)
+	var pad := MarginContainer.new()
+	pad.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	for side: String in ["left", "right", "top", "bottom"]:
+		pad.add_theme_constant_override("margin_" + side, 12)
+	pad.add_child(inside)
+	for c: Control in [pad, inside] + inside.find_children("*", "Control", true, false):
+		c.mouse_filter = Control.MOUSE_FILTER_IGNORE  # the card takes the click
+	b.add_child(pad)
+	cards[id] = b
+	return b
+
+
+## An Advanced row: its name (and "On Apply" while it waits) then < value >; on a narrow screen the control wraps.
+func _row(r: String) -> Control:
+	var row := {"wait": Hud.tag("TagLive", "", "On Apply")}
+	var about := Hud.col([Hud.label(r, "", true), row.wait], 4)
 	about.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	about.custom_minimum_size.x = 230
-	var control: Control
-	if knob.values.size() == 2 and knob.values[0] is bool:
-		r.toggle = _button("", func() -> void: choose(k, r.toggle.text == "Off"), &"ChoiceButton")
-		r.toggle.custom_minimum_size.x = 2 * Hud.BUTTON_H + 130
-		control = r.toggle
-	else:
-		r.minus = _button("<", step.bind(k, -1), &"ChoiceButton")
-		r.plus = _button(">", step.bind(k, 1), &"ChoiceButton")
-		r.value = Hud.label("", "SmallNumber")
-		r.value.custom_minimum_size.x = 130
-		r.value.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		control = Hud.row([r.minus, r.value, r.plus], 8)
-	rows[k] = r
-	return _flow([about, control])
+	row.minus = _button("<", step.bind(r, -1), &"ChoiceButton")
+	row.plus = _button(">", step.bind(r, 1), &"ChoiceButton")
+	row.value = Hud.label("", "SmallNumber")
+	row.value.custom_minimum_size.x = 130
+	row.value.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	rows[r] = row
+	return _flow([about, Hud.row([row.minus, row.value, row.plus], 8)])
 
 
 func _slider(k: String) -> Control:
@@ -363,31 +423,8 @@ func _fit() -> void:
 	panel.position = Vector2((root.size.x - panel.size.x) / 2.0, m.y)
 
 
-func _text(k: String, v: Variant) -> String:
-	if NAMES.has(k):
-		for key: Variant in NAMES[k]:
-			if _same(key, v):
-				return NAMES[k][key]
-	match k:
-		"msaa":
-			return "Off" if v == 0 else "%dx" % v
-		"pixels":
-			return "No limit" if v == 0 else "%s MP" % _num(v)
-		"scale", "particles", "glow":
-			return "Off" if v == 0 else "%d%%" % roundi(v * 100)
-		"shadowMap", "trail":
-			return "%d px" % v
-		"shadowRange":
-			return "%d m" % v
-		"lamps":
-			return "All" if v < 0 else ("None" if v == 0 else str(int(v)))
-		"maxFps":
-			return "No cap" if v == 0 else "%d fps" % v
-	return _num(v) if v is float else str(v)
-
-
-static func _num(v: float) -> String:
-	return str(int(v)) if is_equal_approx(v, roundf(v)) else str(snappedf(v, 0.01))
+static func _same_dict(a: Dictionary, b: Dictionary) -> bool:
+	return a.size() == b.size() and a.keys().all(func(k: Variant) -> bool: return b.has(k) and _same(a[k], b[k]))
 
 
 ## Equal, with JSON's floats and the knob table's ints counted the same.

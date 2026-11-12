@@ -10,7 +10,6 @@ const Pip := preload("res://sandbox/pip.gd")
 const Settings := preload("res://ui/settings.gd")
 # sky states: DESIGN.md and its DESIGN.<state>.md siblings, as token files
 const SKIES := ["design", "design.sunset", "design.night", "design.storm"]
-const QUALITIES := ["low", "medium", "high"]
 const VIEWS := {
 	# [from, at] in metres from the patch centre; heights are added from the ground
 	"base": [Vector3(-26, 16, 24), Vector3(4, 0, -2)],
@@ -44,11 +43,11 @@ func _ready() -> void:
 	Controls.register(tuning.input.stick_deadzone)
 	design = _design(SKIES[0])
 	Forge.HouseStyle.apply_lighting(self, design)
-	# this device's last choice (ui/settings.gd), else the preset for it: `low` on a phone (the A16)
+	# this device's last choice (ui/settings.gd), else the preset for it: `phone` on a phone (the A16)
 	var saved := Settings.saved()
 	quality = saved.get("level", "")
 	if not design.quality.has(quality):
-		quality = Forge.HouseStyle.default_quality()
+		quality = Forge.HouseStyle.default_quality(design)
 	overrides = saved.get("overrides", {})
 	Forge.HouseStyle.set_quality(self, design, quality, overrides)
 	world.build(design)
@@ -89,7 +88,7 @@ func _ready() -> void:
 	add_child(top)
 	cover = ColorRect.new()
 	cover.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	cover.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	cover.mouse_filter = Control.MOUSE_FILTER_STOP  # a click while it is up is not a click on the world
 	top.add_child(cover)
 	settings = Settings.new()
 	add_child(settings)
@@ -108,7 +107,8 @@ func _unhandled_input(e: InputEvent) -> void:
 	elif e.is_action_pressed("debug_sky"):
 		_sky(sky + 1)
 	elif e.is_action_pressed("debug_quality"):
-		set_graphics(QUALITIES[(QUALITIES.find(quality) + 1) % QUALITIES.size()], {})
+		var levels: Array = design.quality.keys()
+		set_graphics(levels[(levels.find(quality) + 1) % levels.size()], {})
 	elif e.is_action_pressed("debug_teleport"):
 		var names: Array = world.data.landmarks.keys()
 		hop = (hop + 1) % names.size()
@@ -149,6 +149,7 @@ func set_graphics(level: String, over: Dictionary, restyle := true, warm := true
 func _warm() -> void:
 	cover.color = Color.html(design.colors.surface)
 	cover.visible = true
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE  # nothing to look at behind it
 	if _warming:
 		_rewarm = true  # a second switch while the first warms: once more when it ends
 		return

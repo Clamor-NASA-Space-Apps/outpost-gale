@@ -35,8 +35,8 @@ func _ready() -> void:
 		game.player.enter(rover)
 		Input.action_press(&"move_forward")
 	if mode != "park":
-		# the run-up on the low preset (llvmpipe drew a frame in 3 s on high), the shots on the game's own
-		Forge.HouseStyle.set_quality(game, game.design, "low")
+		# the run-up on the phone preset (llvmpipe drew a frame in 3 s on high), the shots on the game's own
+		Forge.HouseStyle.set_quality(game, game.design, "phone")
 		game._restyle()
 
 

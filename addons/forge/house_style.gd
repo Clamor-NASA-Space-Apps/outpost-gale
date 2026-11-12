@@ -9,8 +9,9 @@ extends RefCounted
 ## Materials are shared per role: duplicate one before changing it on a single object (hover, fade),
 ## or every model with that role changes too.
 ##
-## Quality: DESIGN.md `quality` holds named presets (low, medium, high), and set_quality() puts one on
-## the running scene. A game offers them in its settings and starts from default_quality().
+## Quality: DESIGN.md `quality` holds named presets (low, medium, high, or names of the game's own, weakest
+## first), and set_quality() puts one on the running scene. A game offers them in its settings and starts from
+## default_quality().
 
 const SURFACE := preload("surface.gdshader")
 const LampPool := preload("lamp_pool.gd")
@@ -86,7 +87,7 @@ static func _coat(design: Dictionary, t: Dictionary) -> float:
 	return float(design.get("weathering", {}).get("amount", 0)) * float(t.get("weathering", 1))
 
 
-## The coat's defines and values on `s`, at the quality in force: `low` (detail off) is the plain coat,
+## The coat's defines and values on `s`, at the quality in force: detail `off` is the plain coat,
 ## `code` breaks it into patches, `texture` adds the coat's photo (skills/surface-weathering).
 static func _dress_coat(design: Dictionary, amount: float, s: ShaderMaterial, defines: PackedStringArray) -> void:
 	var w: Dictionary = design.get("weathering", {})
@@ -533,9 +534,15 @@ static func make_lamp(design: Dictionary) -> OmniLight3D:
 	return lamp
 
 
-## The preset a game starts on before the player has chosen: a phone gets the light one.
-static func default_quality() -> String:
-	return "low" if ["mobile", "web_android", "web_ios"].any(OS.has_feature) else "high"
+## The preset a game starts on before the player has chosen: the one DESIGN.md marks `start: phone` on a phone,
+## `start: desktop` elsewhere. A design without marks names its presets low, medium and high.
+static func default_quality(design := {}) -> String:
+	var phone := ["mobile", "web_android", "web_ios"].any(OS.has_feature)
+	var q: Dictionary = design.get("quality", {})
+	for level: String in q:
+		if q[level].get("start", "") == ("phone" if phone else "desktop"):
+			return level
+	return "low" if phone else "high"
 
 
 ## Every knob a settings screen may set on its own (set_quality() `overrides`), so the screen is built from data:
@@ -604,11 +611,14 @@ static func set_quality(root: Node, design: Dictionary, level: String, overrides
 		view.size_changed.connect(func() -> void: _fit_pixels(view, view.get_meta("forge_quality")))
 	view.set_meta("forge_quality", q)
 	_fit_pixels(view, q)
-	# frame pacing only when asked for: a preset without it leaves the window as the tools set it
-	if q.has("vsync"):
-		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED if q.vsync else DisplayServer.VSYNC_DISABLED)
-	if q.has("maxFps"):
-		Engine.max_fps = int(q.maxFps)
+	# frame pacing only when asked for, or to undo an earlier call's: a preset without it leaves the window as the
+	# tools set it, but a player's "V-Sync off" must not outlive the next preset
+	if q.has("vsync") or view.has_meta("forge_vsync"):
+		view.set_meta("forge_vsync", true)
+		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED if q.get("vsync", KNOBS.vsync.default) else DisplayServer.VSYNC_DISABLED)
+	if q.has("maxFps") or view.has_meta("forge_max_fps"):
+		view.set_meta("forge_max_fps", true)
+		Engine.max_fps = int(q.get("maxFps", KNOBS.maxFps.default))
 	var splits := int(q.get("shadows", 2))
 	var map := int(q.get("shadowMap", 2048))
 	RenderingServer.directional_shadow_atlas_set_size(map, true)

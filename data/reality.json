@@ -316,9 +316,10 @@
     0.3,
     1.0
    ],
-   "value": 0.6,
+   "value": 1.0,
    "unit": "m/s2",
-   "source": "estimate: no NASA number found; a heavy electric vehicle on loose ground reaching the SEV's ~2.8 m/s (10 km/h, https://www.nasa.gov/wp-content/uploads/2015/08/464826main_sev_factsheet_508.pdf) in 3 to 9 s"
+   "source": "estimate: no NASA number found; a heavy electric vehicle on loose ground reaching the SEV's ~2.8 m/s (10 km/h, https://www.nasa.gov/wp-content/uploads/2015/08/464826main_sev_factsheet_508.pdf) in about 3 to 9 s",
+   "note": "value at the top of the range (Ravindu's playtest of 13 Nov 2026: \"I felt the rover is slow\"): 0 to top speed in 2.8 s. Still an estimate, not a measured rover number"
   },
   {
    "id": "rover.turn",

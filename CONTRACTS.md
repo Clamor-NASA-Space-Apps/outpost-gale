@@ -46,6 +46,11 @@ The composition root is `sandbox/sandbox.gd`. It calls only these:
   breath you hear.
 - `player.footstep(pos: Vector3, yaw_deg: float, foot: String)` signal; the root connects it to `world.mark()` and
   `world.puff()`. `world.mark(pos, yaw_deg, kind, width := 0.3)`: `foot_l`, `foot_r` or `wheel`.
+- A vehicle may have `top` (m/s): the camera then sits lower and closer, and looks further ahead, as the real
+  speed nears it (`tuning.json` camera `rush_*`).
+- The mouse cursor: captured only by a left click that reaches the 3D view (`player/follow_cam.gd`); every HUD
+  control, the settings screen and the cover stop clicks (`MOUSE_FILTER_STOP`). Shown again by Esc (the settings),
+  the cover, and a lost window focus. `tests/cursor_test.gd` (under xvfb-run) walks it.
 - `world.puff(pos: Vector3, vel: Vector3, strength: float, kind := "foot")`: ground-contact dust at the real contact
   frame (skills/ground-contact-fx): `vel` is the foot's or wheel rim's world velocity at contact, `kind` `foot` or
   `wheel`.
@@ -65,8 +70,8 @@ The composition root is `sandbox/sandbox.gd`. It calls only these:
 Groups: `floor` (anything walkable on top), `wall` (blocks), `thin` (layer 3), `interactable`, `vehicle`, `carriable`.
 
 ## Graphics settings (quality knobs; owner: `addons/forge/house_style.gd`, presets in DESIGN.md `quality`)
-- `Forge.HouseStyle.set_quality(root, design, level, overrides := {})`: a preset (`low`, `medium`, `high`) with
-  any knobs on top (`{"msaa": 4, "shadows": 0}`). Then `sandbox._restyle()` (the world reads `trail`, `particles`,
+- `Forge.HouseStyle.set_quality(root, design, level, overrides := {})`: a preset (`phone`, `older`, `laptop`,
+  `gaming`, `max`, weakest first, named for the hardware they suit) with any knobs on top (`{"msaa": 4, "shadows": 0}`). Then `sandbox._restyle()` (the world reads `trail`, `particles`,
   `ground`), then `sandbox._warm()`: a knob marked `recompile` compiles shaders, which the web build cannot cache,
   so the cover goes up while they compile. The sandbox's `G` key does all three.
 - `Forge.HouseStyle.knobs(design) -> {name: {values, default, recompile, game, value, preset}}`: the list a settings
@@ -74,9 +79,14 @@ Groups: `floor` (anything walkable on top), `wall` (blocks), `thin` (layer 3), `
 - Knobs: `msaa` 0/2/4/8; `pixels` 3D budget in Mpx (0 = none), `scale` a cap under it; `shadows` 0/1/2/4 splits
   (recompile), `shadowMap`, `shadowRange`, `shadowFilter` (recompile), `normalBias`; `glow` (recompile); `fog`,
   `ssao` (recompile); `aniso` 0 to 4; `detail` off/code/texture (recompile); `lamps` nearest lit, -1 all
-  (recompile); `vsync`, `maxFps` (set only when given); game knobs `trail` (print map px), `particles` (dust
+  (recompile); `vsync`, `maxFps` (set only when given, and back to the default once given before); game knobs `trail` (print map px), `particles` (dust
   share), `ground` flat/cheap/full (recompile). No FXAA or SMAA: Compatibility has neither (renderers.rst).
-- Defaults: `HouseStyle.default_quality()`, `low` on a phone browser (the A16), `high` elsewhere.
+- Defaults: `HouseStyle.default_quality(design)`, the preset DESIGN.md marks `start: phone` on a phone browser (`phone`,
+  the A16), `start: desktop` elsewhere (`laptop`). A level saved before 13 Nov maps low, medium, high to phone,
+  laptop, gaming (`ui/settings.gd` OLD).
+- The settings screen shows the presets as cards and, under Advanced, six bundles (`ui/settings.gd` ADVANCED:
+  anti-aliasing, resolution, shadows, effects, V-Sync, frame cap). The presets are built from those bundles, so
+  each row names the preset's choice; only the knobs a bundle sets are saved as the player's own.
 - `sandbox.busy() -> bool`: true while the cover is up (Forge waits for it before a picture).
 
 ## Which inits await
@@ -84,8 +94,8 @@ None. `world.build()` is synchronous (it loads everything it needs before return
 
 ## Settings, music and PIP (12 Nov 2026)
 - `sandbox.set_graphics(level, overrides, restyle := true, warm := true)`: the one way to change graphics (G key and
-  `ui/settings.gd`); `sandbox.overrides` holds the player's per-knob choices (saved to `user://settings.cfg`). G resets
-  to a plain preset and does not save.
+  `ui/settings.gd`); `sandbox.overrides` holds the player's per-knob choices (saved to `user://settings.cfg`, with the
+  `Show FPS` switch, `sandbox.fps_label.visible`). G steps to the next preset, plain, and does not save.
 - `audio.music(name) -> bool` (rare cues on the Music bus: first_step, airlock_sealed, sunset, discovery, mission_lost),
   `audio.sky(name)`, `audio.set_volume(which, v)`. `render_game_to_text()` gains `audio.music` (the cue playing).
 - PIP (`sandbox/pip.gd`) wanders the base; `render_game_to_text()` gains a `pip` key (its position, goal, mode).

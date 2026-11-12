@@ -31,6 +31,10 @@
   "slope_ahead": 3.0,
   "slope_share": 0.5,
   "slope_max_deg": 12,
+  "rush_distance": 0.8,
+  "rush_height": 0.8,
+  "rush_lead": 1.0,
+  "note_rush": "a vehicle's speed framing (follow_cam.gd), reached at its top speed and eased by lead_rate: rush_distance and rush_height are shares of the vehicle distance and pivot height (9 m and 2.4 m become 7.2 m and 1.9 m), rush_lead s of velocity the aim looks ahead (lead_time on foot). The field of view never changes (skills/third-person-camera rule 14). Our choice, 13 Nov playtest: \"I felt the rover is slow\"",
   "note_frame": "frame_low: share of the frame height the pivot sits below centre when looking level (1/6 is the lower-third line), easing to centred at pitch_min; slope_ahead: m ahead along the view where a ray reads the ground; slope_share: share of that slope the view pitches by; slope_max_deg: the most it pitches. follow_rate and lead_rate also set the lead that cancels the spring's lag in a steady walk (2 v / follow_rate, built at lead_rate)"
  },
  "input": {

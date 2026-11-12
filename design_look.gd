@@ -21,7 +21,7 @@ func _ready() -> void:
 		opt[kv[0]] = kv[1] if kv.size() > 1 else ""
 	design = Forge.HouseStyle.load_design(str(opt.get("design", "res://design.json")))
 	Forge.HouseStyle.apply_lighting(self, design)
-	Forge.HouseStyle.set_quality(self, design, Forge.HouseStyle.default_quality())
+	Forge.HouseStyle.set_quality(self, design, Forge.HouseStyle.default_quality(design))
 	$Terrain.build(design)
 	var along := 0.0
 	for f: String in str(opt.get("glb", "")).split(",", false):

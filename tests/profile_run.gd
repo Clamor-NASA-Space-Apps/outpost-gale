@@ -387,7 +387,7 @@ func _warmed() -> void:
 		await process_frame
 
 
-## One knob at a time from the high preset, at the play camera over the base; vsync off reads best.
+## Every preset, then one knob at a time from the gaming preset, at the play camera over the base; vsync off reads best.
 func sweep() -> PackedStringArray:
 	phase = "sweep"
 	var out := PackedStringArray(["knob,gpu_median_ms,gpu_p90_ms,frame_median_ms,draw_calls,primitives"])
@@ -397,25 +397,26 @@ func sweep() -> PackedStringArray:
 			env = n.environment
 	var q: Dictionary = game.design.quality
 	var knobs: Array = []
-	for level: String in ["high", "medium", "low"]:
+	for level: String in q:
 		knobs.append([level + " preset", level, null])
 	for change: Array in [["msaa", 0], ["msaa", 2], ["scale", 0.75], ["scale", 0.5], ["shadows", 0], ["shadows", 1],
 			["shadowMap", 2048], ["shadowMap", 1024], ["shadowFilter", 0], ["shadowFilter", 2], ["glow", 0],
 			["detail", "code"], ["detail", "off"], ["aniso", 0], ["aniso", 1], ["aniso", 3], ["ground", "cheap"],
-			["ground", "flat"], ["pixels", 0.6], ["pixels", 1.0], ["particles", 0.5]]:
-		var k: Dictionary = q.high.duplicate()
+			["ground", "flat"], ["pixels", 0.6], ["pixels", 1.0], ["pixels", 1.4], ["particles", 0.5], ["msaa", 8],
+			["shadows", 4], ["shadowFilter", 5], ["ssao", true], ["aniso", 4]]:
+		var k: Dictionary = q.gaming.duplicate()
 		k[change[0]] = change[1]
 		q["sweep"] = k
-		knobs.append(["high, %s=%s" % change, "sweep", null])
+		knobs.append(["gaming, %s=%s" % change, "sweep", null])
 		knobs[-1][2] = k
 	var hide := {"terrain hidden": world.terrain, "dust hidden": world.dust, "rocks hidden": world.rocks,
 		"hero hidden": player.model}
 	for name: String in hide:
-		knobs.append([name, "high", hide[name]])
-	knobs.append(["base cells hidden", "high", "cells"])
-	knobs.append(["fog off", "high", "fog"])
-	knobs.append(["sky off (clear colour)", "high", "sky"])
-	knobs.append(["ground detail_strength 0", "high", "ground"])
+		knobs.append([name, "gaming", hide[name]])
+	knobs.append(["base cells hidden", "gaming", "cells"])
+	knobs.append(["fog off", "gaming", "fog"])
+	knobs.append(["sky off (clear colour)", "gaming", "sky"])
+	knobs.append(["ground detail_strength 0", "gaming", "ground"])
 	game.place(world.landmark("spawn").pos, world.landmark("spawn").yaw)
 	await secs(3)
 	var vp := root.get_viewport_rid()
@@ -465,7 +466,7 @@ func sweep() -> PackedStringArray:
 		elif mode == "ground":
 			world.terrain.material.set_shader_parameter("detail_strength", 1.0)
 	q.erase("sweep")
-	HouseStyle.set_quality(game, game.design, "high")
+	HouseStyle.set_quality(game, game.design, "gaming")
 	game._restyle()
 	return out
 
@@ -489,7 +490,7 @@ func benchmarks() -> PackedStringArray:
 	out.append(_time("audio._one_shot", 10, func() -> void: game.audio._one_shot("chirp", "UI", -80.0)))
 	out.append(_time("world.restyle(design)", 3, func() -> void: world.restyle(game.design)))
 	out.append(_time("player.restyle(design)", 3, func() -> void: player.restyle(game.design)))
-	out.append(_time("HouseStyle.set_quality(high)", 3, func() -> void: HouseStyle.set_quality(game, game.design, "high")))
+	out.append(_time("HouseStyle.set_quality(gaming)", 3, func() -> void: HouseStyle.set_quality(game, game.design, "gaming")))
 	out.append(_time("HouseStyle.apply_lighting", 3, func() -> void: HouseStyle.apply_lighting(game, game.design)))
 	out.append(_time("render_game_to_text", 5, func() -> void: game.render_game_to_text()))
 	await frames(5)
