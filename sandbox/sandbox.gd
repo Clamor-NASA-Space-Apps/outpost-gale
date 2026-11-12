@@ -164,6 +164,8 @@ func _unhandled_input(e: InputEvent) -> void:
 		interactions.interact()  # out of the rover, put down the bag, or use what is in reach
 	elif e.is_action_pressed("debug_sky"):
 		_sky(sky + 1)
+	elif e.is_action_pressed("fullscreen"):
+		settings.full_screen()
 	elif e.is_action_pressed("debug_quality"):
 		var levels: Array = design.quality.keys()
 		set_graphics(levels[(levels.find(quality) + 1) % levels.size()], {})
@@ -262,6 +264,12 @@ func set_view(v: String) -> void:
 		$ViewCam.current = false
 		player.place(item.to_global(f[1]), -rad_to_deg(item.global_rotation.y) + float(f[2]))
 		player.cam.pitch = deg_to_rad(f[3])
+		return
+	if v in world.data.views and v != "_note":  # [item, from, at] in the item's own space (data/world.json views)
+		var r: Array = world.data.views[v]
+		var item: Node3D = world.items[r[0]]
+		$ViewCam.look_at_from_position(item.to_global(Vector3(r[1][0], r[1][1], r[1][2])), item.to_global(Vector3(r[2][0], r[2][1], r[2][2])))
+		$ViewCam.current = true
 		return
 	if v == "storm":
 		_sky(SKIES.find("design.storm"))

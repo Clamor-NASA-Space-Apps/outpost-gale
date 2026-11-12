@@ -64,3 +64,7 @@ Its own repo. Commits signed off (`git commit -s`), prefixed by area, ending wit
   copy named so became a seventh wheel; world_test caught it).
 - Anything made during play (a dust stream, a spawned prop) must take the render layer its family uses (ground and
   dust are layer 2, which the reflection probe does not shade): wheel grit made late on layer 1 glowed at night.
+- `frames(1)` in a test waits one physics step, not a `_process`: after a heavy frame (a sky switch) several physics
+  steps run first, so await `process_frame` twice before reading what `_process` sets (audio_test, 12 Nov).
+- At `_ready` the physics space still holds bodies at the transforms they were added with (items at the origin):
+  build anything that queries physics (PIP's route graph) on the first physics tick (pip_test, 13 Nov).

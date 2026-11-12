@@ -403,9 +403,7 @@
  "shadow_min": 0.6,
  "_swept_range_m": "metres from the camera to a ground cell's centre (the patch centre for the base) beyond which its swept surfaces (floors, HAB 1's fit-out: DESIGN.md weathering.clean) are not drawn: seen only through doorways, they cost a draw call each from anywhere (world.gd _merge). Art direction",
  "swept_range_m": 30,
- "moving": "^(door|dish|tell|head|status_bar)$|^(panel|wheel)_[0-9]+$",
- "lit_roles": ["glass"],
- "_lit_roles": "roles a sky state lights pane by pane (DESIGN.<state>.md `lit`, house_style): their panes are numbered when the meshes merge at load, whichever sky is up then",
+ "moving": "^(door|dish|tell|head|status_bar|curtain)$|^(panel|wheel)_[0-9]+$",
  "blink": {
   "_note": "status lights that flash on their own (world/machines.gd): nodes named by `nodes` keep their own mesh and a copy of the light role. hz and duty: an obstruction beacon flashes 20 to 40 times a minute (FAA L-864 red 20 to 40, L-865 white 40, https://www.faa.gov/documentLibrary/media/Advisory_Circular/150-5345-43GH.pdf, from a search summary); WCAG 2.3.1 allows at most 3 flashes in any second. off: the share of the light left when it is dark",
   "nodes": "^(cap|beacon)$",
@@ -616,10 +614,13 @@
   "speed": 3.0
  },
  "probe": {
-  "_note": "one reflection probe over the base: centre [x, z], size [x, y, z]. The sandbox redraws every probe from this centre looking north after a sky switch (HouseStyle.warm()), and a probe is drawn only once a camera sees it: the centre sits 10 m south of HAB 1 so the room probes are in view. rooms: an item's own probe, centre `at` and `size` in its space (HAB 1: the room between the deck at 0.40 m and the ceiling at 2.72 m)",
+  "_note": "one reflection probe over the base: centre [x, z], size [x, y, z]. The sandbox redraws every probe from this centre looking north after a sky switch (HouseStyle.warm()), and a probe is drawn only once a camera sees it: the centre sits 10 m south of HAB 1 so the room probes are in view. rooms: an item's own probe, centre `at` and `size` in its space (HAB 1: the room between the deck at 0.40 m and the ceiling at 2.72 m; the greenhouse: the dome, `interior` false so its glass shows the sky). light: the room's own light (world.gd restyle(), DESIGN.md lighting.room), at `at` in the item's space with its `range` in m and `color` a DESIGN.md colour name (default lighting.room.color), `share` of lighting.room.intensity (default 1; the grow light at full strength turned the greenhouse floor magenta by day): HAB 1's at the ceiling's middle, the greenhouse's the grow light at the rack tops in the `grow` magenta",
   "pos": [4, 10],
   "size": [80, 30, 80],
-  "rooms": {"hab1": {"at": [0, 1.56, 0], "size": [4.8, 2.36, 4.8]}}
+  "rooms": {
+   "hab1": {"at": [0, 1.56, 0], "size": [4.8, 2.36, 4.8], "light": {"at": [0, 2.55, 0], "range": 4.0}},
+   "greenhouse": {"at": [0, 2.0, 0], "size": [6.8, 3.8, 6.8], "interior": false, "light": {"at": [0, 2.1, 0], "range": 3.5, "color": "grow", "share": 0.6}}
+  }
  },
  "pip": {
   "_note": "PIP's wandering (sandbox/pip.gd): ambient life, no game state. Speed, acceleration and turn: reality.json pip.*. Everything here is art direction. stops: where it parks [x, z] and what it looks at [x, z, height above the ground], weight how often it picks one; via: open ground it may drive through, so the route graph (every straight, clear line between stops and via points, `clearance` m clear either side) gets round the buildings; via_m: how near a via point counts as passed;  (the lander is a long trip), divided by near_m plus the distance so near stops come up more; never one of the last two. notice_m: the hero this close gets a look, a beep and two flashes (flash_hz under the 3 a second limit), at most every hello_cool_s. A hero standing still (below still_speed m/s for still_s) within greet_m gets a visit: PIP parks greet_stand_m away, looks up with its head tilted, wiggles, for greet_s, then not again for greet_cool_s. yield_m, yield_deg: a hero this close inside this cone ahead stops it for wait_s, then it drives round for patience_s. feeler_m: how far ahead it checks, every feel_s; stuck_s without getting 0.3 m closer and it goes elsewhere. door_clear_m round every door and rooms (prefabs, grown by room_margin) it never drives into. flee_m: a moving rover this close sends it aside. Head: yaw and pitch limits, turn rate, tilt; blinks every blink_s, double_blink share; status bar glows at glow_hz. track_every, track_width: m between wheel prints (a print is 0.12 m long, world/terrain.gd, so under that they join into a band) and their width (the wheel is 8 cm wide, forge/vehicle_pip.py); shade: contact shadow radius and strength",
@@ -648,13 +649,15 @@
   "track_every": 0.1, "track_width": 0.08, "shade": [0.35, 0.6]
  },
  "views": {
-  "_note": "eye-height capture views at 1.6 m over the floor (lane B, interiors): [from, at], heights over the ground like sandbox.gd VIEWS",
-  "hab_eye_n": [[0, 1.7, 1.3], [0, 1.64, -2.0]],
-  "hab_eye_s": [[0, 1.84, -1.3], [0, 1.43, 2.0]],
-  "hab_eye_e": [[-1.3, 1.75, 0], [2.0, 1.55, 0]],
-  "hab_eye_w": [[1.3, 1.78, 0], [-2.0, 1.51, 0]],
-  "gh_eye_a": [[-11.88, 1.67, -3.88], [-15.98, 1.46, -7.98]],
-  "gh_eye_b": [[-15.63, 1.7, -7.63], [-11.74, 1.42, -3.74]]
+  "_note": "eye-height capture views inside rooms (sandbox.gd set_view): [item id, from, at], both in the item's own space (its front, the door, toward -Z; y over the model's lowest point), so they follow the item if it moves. The eye is 1.6 m over the floor (HAB 1's deck at 0.40 m, the greenhouse floor at 0.20 m). n, e, s, w: the compass way the view looks (HAB 1 stands at yaw 180, so its own +Z is north). hab_eye_bed and hab_eye_wc look straight at the berths and into the toilet. gh_eye_a looks in from the vestibule down the aisle, gh_eye_b back from the far end",
+  "hab_eye_n": ["hab1", [0, 2.0, -1.3], [0, 1.75, 2.38]],
+  "hab_eye_s": ["hab1", [0, 2.0, 1.3], [0, 1.6, -2.38]],
+  "hab_eye_e": ["hab1", [1.3, 2.0, 0], [-2.38, 1.6, 0]],
+  "hab_eye_w": ["hab1", [-0.5, 2.0, 0.3], [2.38, 1.6, 0]],
+  "hab_eye_bed": ["hab1", [0.5, 2.0, -0.3], [-1.9, 1.35, 1.3]],
+  "hab_eye_wc": ["hab1", [0.4, 2.0, 0.1], [-2.0, 1.1, -0.1]],
+  "gh_eye_a": ["greenhouse", [0, 1.8, -3.6], [0, 1.2, 3.0]],
+  "gh_eye_b": ["greenhouse", [0, 1.8, 2.4], [0, 1.2, -3.0]]
  },
  "rooms": {
   "_note": "the buildings whose inside puts the view in first person (player.gd _room, skills/third-person-camera Into first person indoors): each item id's floor plan in its own space, circles [x, z, r] and rects [x0, z0, x1, z1], measured from the models (12 Nov). hab1: building_habitat.glb floor x and z +-2.40, the door's inner face at z -2.16. greenhouse: building_greenhouse.glb floor +-3.28 (the dome), and the vestibule x +-1.0 from the door's inner face at z -4.46 to the dome. The doorway band is the hero's own radius either side of these lines",

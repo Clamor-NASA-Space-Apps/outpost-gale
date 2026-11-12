@@ -8,7 +8,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from base_kit import *  # noqa: E402,F403
-from hab_interior import deck, fit_out  # noqa: E402
+from hab_interior import deck, fit_out, liner  # noqa: E402
 
 # The floor sits 0.40 m up: the ground under the drum rises up to 0.31 m toward the hatch (the HiRISE patch at the
 # base), and a 0.28 m floor let the sand show through the deck. The wall and roof went up with it, so the room
@@ -45,7 +45,7 @@ for s in (-1, 1):
 status_light("hatch_light", (0, R + 0.15, SILL + HH + 0.05), (0.3, 0.05, 0.06))
 
 # the door leaf, behind the collar on the room side, opening inward like a real pressure hatch
-inner_leaf(HW, HH, R - 0.07 - CD / 2, SILL, [box("door_seam", (HW - 0.1, 0.07, 0.03), (0, R - 0.07 - CD / 2 - 0.032, SILL + 0.6), mat("trim"))])
+inner_leaf(HW, HH, R - 0.07 - CD / 2, SILL)
 
 # ramp from the ground to the sill: 0.40 m over 1.6 m (14 degrees), a slope no suited crew finds hard
 RW, RL = HW + 0.2, 1.6
@@ -55,14 +55,14 @@ for s in (-1, 1):
 
 # hull detail: base skirt, a seam band under the roof, vertical panel seams, roof hatch and mast
 smooth(cyl("skirt", R + 0.05, 0.2, (0, 0, 0.1), mat("trim"), 64))
-band = cyl("mid_band", R + 0.03, 0.08, (0, 0, 0.8), mat("trim"), 64)
-cut(band, cyl("band_in", R - 0.05, 0.2, (0, 0, 0.8), None, 64))  # a ring, not a disc across the room
+band = cyl("mid_band", R + 0.03, 0.08, (0, 0, 0.8), mat("trim"), 48)  # 48 sides: 2.4 cm proud of the 64-sided wall still
+cut(band, cyl("band_in", R - 0.05, 0.2, (0, 0, 0.8), None, 48))  # a ring, not a disc across the room
 smooth(cut(band, box("band_cut", (HW + 0.34, 1.0, 1.0), (0, R, 0.8))))
 for r in (1.0, 1.85):  # seam rings on the roof, sitting on its curve
     smooth(cyl(f"roof_ring{r}-convcol", r, 0.05, (0, 0, H - cap + math.sqrt(cap * cap - r * r)), mat("trim"), 48))
-rb = cyl("roof_band", R + 0.04, 0.14, (0, 0, TOP), mat("trim"), 64)
-smooth(cut(rb, cyl("roof_band_in", R - 0.05, 0.3, (0, 0, TOP), None, 64)))  # else it lowers the ceiling
-LABEL, WINDOWS = FRONT + 52, (0, 250, 328)  # over the galley, beside the berths, beside the racks
+rb = cyl("roof_band", R + 0.04, 0.14, (0, 0, TOP), mat("trim"), 48)
+smooth(cut(rb, cyl("roof_band_in", R - 0.05, 0.3, (0, 0, TOP), None, 48)))  # else it lowers the ceiling
+LABEL, WINDOWS = FRONT + 52, (0, 253, 328)  # over the galley, beside the berths, beside the racks
 WZ, WR, WO = SILL + 1.45, 0.34, 0.25  # window centre (eye height in the room), frame radius, opening radius
 for d in range(0, 360, 30):
     a = FRONT + 15 + d
@@ -74,11 +74,12 @@ for d in range(0, 360, 30):
 # (a flat ring laid on the inside clipped into the curve at its sides: 12 Nov playtest). The hole is cut wider
 # than the opening, so its faces end inside the frame; the pane's edge sits inside the frame too.
 r_in, r_out = R - WALL - 0.05, R + 0.07
+frames = []  # they join the swept fit-out: dusty, their inside half read brown in the clean white room (13 Nov)
 for i, a in enumerate(WINDOWS):
     rot = (0, math.pi / 2, math.radians(a))
     cut(wall, cyl("window_hole", (WO + WR) / 2, 0.6, at(R - WALL / 2, a, WZ), None, 24, rot))
     ring = cyl(f"window_frame{i}", WR, r_out - r_in, at((r_in + r_out) / 2, a, WZ), mat("trim"), 24, rot)
-    smooth(bevel(cut(ring, cyl("window_open", WO, 1.0, at((r_in + r_out) / 2, a, WZ), None, 24, rot)), width=0.012, segments=1))
+    frames.append(smooth(bevel(cut(ring, cyl("window_open", WO, 1.0, at((r_in + r_out) / 2, a, WZ), None, 24, rot)), width=0.012, segments=1)))
     smooth(cyl(f"window{i}", WO + 0.02, 0.02, at(R - WALL / 2, a, WZ), mat("glass"), 24, rot))
 smooth(cyl("roof_hatch-convcol", 0.5, 0.14, (0, 0, H - 0.02), mat("trim"), 32))
 smooth(cyl("roof_hatch_lid-convcol", 0.38, 0.1, (0, 0, H + 0.06), mat("body"), 32))
@@ -101,10 +102,12 @@ status_light("utility_light", (R + 0.12, 0, 1.42), (0.05, 0.16, 0.05))
 
 # the fit-out for a crew of 2 (forge/hab_interior.py), clear of the hatch and its door's swing (65 to 115 degrees)
 U, _, slots = fit_out(SILL, R - WALL, TOP)
+U += frames
+liner(SILL, R - WALL, TOP, WINDOWS, WZ, WR, HW, SILL + HH + 0.1)  # the collar's top
 deck(SILL, R - WALL, box("deck_hatch", (HW + 0.36, CD + 0.006, 1.0), (0, R - 0.07, SILL)))  # 3 mm short of the collar
 if os.environ.get("FORGE_TRIS"):
     dg = bpy.context.evaluated_depsgraph_get()
-    for o in sorted(U, key=lambda o: -sum(len(p.vertices) - 2 for p in o.evaluated_get(dg).data.polygons)):
+    for o in sorted([o for o in bpy.data.objects if o.type == "MESH"], key=lambda o: -sum(len(p.vertices) - 2 for p in o.evaluated_get(dg).data.polygons)):
         print("TRIS", o.name, sum(len(p.vertices) - 2 for p in o.evaluated_get(dg).data.polygons))
 inside = join("interior-col", U)
 bpy.context.view_layer.update()

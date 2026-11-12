@@ -86,7 +86,8 @@ for s in (-1, 1):
 status_light("door_light", (0, FY + 0.08, FL + HH + 0.15), (0.3, 0.04, 0.06))
 inner_leaf(HW, HH, FY - 0.07, FL)
 
-# Two grow racks either side of a 1.9 m aisle, standing on the floor: steel shelving with three tiers of trays, an
+# Two grow racks either side of a 1.9 m aisle, standing on the floor: white-painted steel shelving (`panel`: in `metal`
+# the posts mirrored the warm dome and read copper, 13 Nov captures) with three tiers of trays, an
 # LED bar pair under each shelf (the `grow` magenta of red and blue diodes, Veggie's recipe) lighting the tier
 # below, as NASA's ground plant racks and commercial vertical farms stack them. 2.4 x 0.6 m each, 4.3 m2 of
 # trays for a 2-crew salad garden (NASA: 0.81 m2 grows 36 plants for 2, design/research/missing-assets.md 5).
@@ -104,31 +105,33 @@ def keep(o):
 
 
 slot = 0
+slots = []
 for s in (-1, 1):
     x = s * 1.25
     y0 = -0.35
     for sx in (-1, 1):
         for sy in (-1, 1):  # square posts, their feet 5 mm into the floor so no face lies on it
-            keep(box(f"post{s}{sx}{sy}", (0.035, 0.035, H - 0.005), (x + sx * (DP / 2 - 0.02), y0 + sy * (L / 2 - 0.02), FL + (H - 0.015) / 2), mat("metal")))  # top inside the top plate
-    keep(bevel(box(f"top{s}", (DP, L, 0.025), (x, y0, FL + H - 0.0125), mat("metal")), width=0.004, segments=1))
+            keep(box(f"post{s}{sx}{sy}", (0.035, 0.035, H - 0.005), (x + sx * (DP / 2 - 0.02), y0 + sy * (L / 2 - 0.02), FL + (H - 0.015) / 2), mat("panel")))  # top inside the top plate
+    keep(bevel(box(f"top{s}", (DP, L, 0.025), (x, y0, FL + H - 0.0125), mat("panel")), width=0.004, segments=1))
     for k, t in enumerate(TIERS):
-        tray = box(f"tray{s}{k}", (DP - 0.06, L - 0.06, TRAY), (x, y0, FL + t - TRAY / 2), mat("body"))
+        tray = box(f"tray{s}{k}", (DP - 0.06, L - 0.06, TRAY), (x, y0, FL + t - TRAY / 2), mat("panel"))
         cut(tray, box("tray_in", (DP - 0.1, L - 0.1, TRAY), (x, y0, FL + t + 0.01 - TRAY / 2)))
         keep(tray)
         keep(box(f"medium{s}{k}", (DP - 0.08, L - 0.08, 0.03), (x, y0, FL + t - MED - 0.015), mat("trim")))  # rock wool
         for sx in (-1, 1):  # rails under the tray, along the rack, into the posts
-            keep(box(f"rail{s}{k}{sx}", (0.025, L - 0.02, 0.03), (x + sx * (DP / 2 - 0.02), y0, FL + t - TRAY - 0.012), mat("metal")))  # 3 mm into the tray
+            keep(box(f"rail{s}{k}{sx}", (0.025, L - 0.02, 0.03), (x + sx * (DP / 2 - 0.02), y0, FL + t - TRAY - 0.012), mat("panel")))  # 3 mm into the tray
         # the LED bars over this tier: under the next tray up, or under the top
         roof = (TIERS[k + 1] - TRAY) if k + 1 < len(TIERS) else (H - 0.025)
         for bx in (-0.13, 0.13):
-            keep(box(f"led_housing{s}{k}{bx}", (0.05, L - 0.2, 0.025), (x + bx, y0, FL + roof - 0.0125 + 0.003), mat("trim")))
-            box(f"growlight{s}{k}{bx}", (0.03, L - 0.24, 0.008), (x + bx, y0, FL + roof - 0.024), mat("grow"))  # its top inside the housing
+            keep(box(f"led_housing{s}{k}{bx}", (0.07, L - 0.2, 0.025), (x + bx, y0, FL + roof - 0.0125 + 0.003), mat("trim")))
+            box(f"growlight{s}{k}{bx}", (0.05, L - 0.24, 0.008), (x + bx, y0, FL + roof - 0.024), mat("grow"))  # its top inside the housing
     for k in (1, 2):  # lettuce in the upper two tiers, four heads a tier
         for i in range(4):
             slot += 1
             e = bpy.data.objects.new(f"slot_{slot}", None)
             e.location = (x, y0 - L / 2 + 0.3 + i * 0.6, FL + TIERS[k] - MED)
             bpy.context.scene.collection.objects.link(e)
+            slots.append(e)
     rng = random.Random(s)  # microgreens: a dense mat of seedlings on the bottom tier
     for k in range(60):
         px, py = x + rng.uniform(-0.22, 0.22), y0 + rng.uniform(-1.05, 1.05)
@@ -140,5 +143,10 @@ for s in (-1, 1):
 # the aisle: a deck plate down the middle, from the vestibule's floor to the far side, 1 cm proud of the floor
 AY, VY = math.sqrt((RD - 0.2) ** 2 - 0.6 ** 2), RD - TL / 2 - 0.02
 keep(box("aisle", (1.2, AY + VY, 0.015), (0, (VY - AY) / 2, FL + 0.0025), mat("deck")))
-join("interior-col", inside)
+racks = join("interior-col", inside)
+bpy.context.view_layer.update()
+for e in slots:  # under the racks, so the lettuce in them is swept with the room and its light reaches it (world.gd)
+    mw = e.matrix_world.copy()
+    e.parent = racks
+    e.matrix_world = mw
 done("building_greenhouse")

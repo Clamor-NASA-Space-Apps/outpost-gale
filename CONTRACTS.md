@@ -23,7 +23,7 @@ Change it only through the session that merges the lanes.
 ## Input actions (registered in code by `player/controls.gd`, keys and touch feed the same actions)
 `move_forward` W/Up, `move_back` S/Down, `move_left` A/Left, `move_right` D/Right, `hurry` Shift,
 `jump` Space, `interact` E, `look_left/right/up/down` (stick and keys J L I K), `debug_sky` B,
-`debug_teleport` T, `debug_quality` G. Never a browser-owned key (Ctrl+W/T/N, F5, F11, F12, Alt+arrows), except `settings` on Esc: in a browser the first Esc frees the captured mouse, the second opens the settings screen.
+`debug_teleport` T, `debug_quality` G, `fullscreen` F. Never a browser-owned key (Ctrl+W/T/N, F5, F11, F12, Alt+arrows), except `settings` on Esc: in a browser the first Esc frees the captured mouse, the second opens the settings screen.
 Mouse look while captured (`screen_relative`); touch look by finger index, never `relative` (character-body).
 
 ## How the parts plug together
@@ -150,3 +150,12 @@ None. `world.build()` is synchronous (it loads everything it needs before return
   once the lens is clear of that box by the arm's sphere radius, faded in over `camera.fp_reveal_s`
   (`follow_cam.reveal` caps `fade`). No shadow of the hero indoors: it is hidden, not culled by layer.
 - The interaction target in a room is the usable thing nearest the view's centre within reach (`interact.aim_deg`).
+
+## Room light and the toilet curtain (13 Nov 2026)
+- Each room in `data/world.json` `probe.rooms.<id>` has its own reflection probe (`interior` false for a glass dome)
+  and an optional `light` (`at`, `range`, `share`, `color`: a DESIGN.md colour name, else `lighting.room`'s). It is an
+  unshadowed OmniLight3D on in every sky (DESIGN.md `lighting.room`), lighting render layer 4 only (`world.gd ROOMS`:
+  swept interior meshes, a door's room side `interior`, the toilet `curtain`), and in the lamp pool, so a preset's
+  `lamps` limit holds.
+- Interactable `curtain` (HAB 1's toilet): closed at start, E gathers it along its rail to
+  `tuning.json interact.curtain_gather` of its width over `move_s` and back; motion and the sound `curtain` only.

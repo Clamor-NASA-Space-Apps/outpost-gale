@@ -86,7 +86,7 @@ materials:
   deck: { color: "{colors.deck}", roughness: 0.7, metalness: 0, weathering: 0, detail: { texture: "textures/metal_albedo.jpg", normal: "textures/metal_normal.jpg", roughness: "textures/metal_rough.jpg", textureSize: 1.0, strength: 0.6, pattern: grain, size: 1.0 } }
   panel: { color: "{colors.panel}", roughness: 0.5, metalness: 0, weathering: 0 }
   bedding: { color: "{colors.bedding}", roughness: 0.9, metalness: 0, weathering: 0, detail: { texture: "textures/suit_albedo.jpg", normal: "textures/suit_normal.jpg", roughness: "textures/suit_rough.jpg", textureSize: 0.4, strength: 0.7, pattern: grain, size: 0.4 } }
-  glass: { color: "{colors.glass}", roughness: 0.08, metalness: 0, opacity: 0.5, weathering: 0.35 }
+  glass: { color: "{colors.glass}", roughness: 0.08, metalness: 0, opacity: 0.15, weathering: 0.35 }
   rock: { color: "{colors.rock}", roughness: 0.95, metalness: 0, detail: { texture: "textures/rock_albedo.jpg", normal: "textures/rock_normal.jpg", roughness: "textures/rock_rough.jpg", textureSize: 1.83, strength: 1.0, pattern: grain, size: 1.83 }, weathering: 0 }
   dust: { color: "{colors.dust}", roughness: 1, metalness: 0, detail: { texture: "textures/dust_albedo.jpg", normal: "textures/dust_normal.jpg", roughness: "textures/dust_rough.jpg", textureSize: 3.1, strength: 1.0, pattern: grain, size: 3.1, gravel: { texture: "textures/gravel_albedo.jpg", normal: "textures/gravel_normal.jpg", textureSize: 2.48, share: 0.3 }, ripple: { normal: "textures/ripple_normal.jpg", textureSize: 12 } }, weathering: 0 }
   hazard: { color: "{colors.hazard}", roughness: 0.5, metalness: 0 }
@@ -126,6 +126,7 @@ lighting:
   sunDisc: 1.2
   toneMapping: aces
   fog: { color: "{colors.horizon}", near: 25, far: 3500, sky: 0.25, curve: 1.0, density: 0.75, sun: 0.4 }
+  room: { color: "#f4efe6", intensity: 6, distance: 4.5 }
 quality:
   phone: { start: phone, msaa: 0, pixels: 0.6, shadows: 1, shadowMap: 1024, shadowRange: 25, shadowFilter: 2, normalBias: 2, glow: 0, detail: off, aniso: 1, ground: flat, particles: 0.5, trail: 1024, lamps: 2 }
   older: { msaa: 0, pixels: 0.8, shadows: 1, shadowMap: 1024, shadowRange: 25, shadowFilter: 2, normalBias: 2, glow: 0, detail: off, aniso: 1, ground: cheap, particles: 0.5, trail: 1024, lamps: 2 }
@@ -205,7 +206,13 @@ always with an icon, pulsing no faster than 3 times a second.
 
 ## Materials
 
-Eighteen roles: `deck` (the swept floor plates inside HAB 1 and the greenhouse aisle, a warm grey without shine: as `metal` it mirrored the warm sky and read as sand in first person, 13 Nov 2026), `panel` (the painted face of indoor cabinets, racks and cubicle walls: in `body` they wore the hull's metal plates, 12 Nov playtest), `bedding` (the sleeping bags' muted blue, so a bed reads as a bed at a glance; art direction), `visor` (an EVA helmet's gold sun visor: opaque, so no face ever shows), plus the seven core ones and `dust` (the ground), `hazard`, `suit` (the astronauts' fabric, so they never wear hull panels), `stripe` (the suit's bands), `plant` (lettuce green, Ravindu's pick on 12 Nov), `romaine` (the red leaf of 'Outredgeous', the first lettuce eaten in space, and a radish's red root) and `grow` (the magenta glow of Veggie's red 630 nm and blue 455 nm LEDs, NTRS 20160005059; both roles approved by Ravindu on 12 Nov 2026). Kit models map by material name (`kit`).
+Eighteen roles: `deck` (the swept floor plates inside HAB 1 and the greenhouse aisle, a warm grey without shine: as `metal` it mirrored the warm sky and read as sand in first person, 13 Nov 2026), `panel` (the painted face of indoor cabinets, racks, cubicle walls, HAB 1's wall liner and a hatch's room side: in `body` they wore the hull's metal plates, 12 Nov playtest, and the hull's inside took the dust coat and read peach), `bedding` (the sleeping bags' and the curtains' muted blue, so a bed reads as a bed at a glance and a curtain shows against the white walls; art direction; `deck`, `panel` and `bedding` approved by Ravindu on 13 Nov 2026), `visor` (an EVA helmet's gold sun visor: opaque, so no face ever shows), plus the seven core ones and `dust` (the ground), `hazard`, `suit` (the astronauts' fabric, so they never wear hull panels), `stripe` (the suit's bands), `plant` (lettuce green, Ravindu's pick on 12 Nov), `romaine` (the red leaf of 'Outredgeous', the first lettuce eaten in space, and a radish's red root) and `grow` (the magenta glow of Veggie's red 630 nm and blue 455 nm LEDs, NTRS 20160005059; both roles approved by Ravindu on 12 Nov 2026). Kit models map by material name (`kit`).
+
+Glass (`opacity` 0.15 per surface, Ravindu's 12 Nov playtest asking for clear greenhouse panes): the greenhouse dome
+is a 4 cm shell, so a look through it crosses four surfaces, and 0.5 each let only 6% of the far side through. No
+sky state lights the glass pane by pane (`lit`): HAB 1 and the greenhouse have their rooms modelled behind it, and the
+dome is one pane, so it glowed as one cream lantern at night and flipped clear every 90 s at sunset. Their own lights
+(HAB 1's ceiling strips, the magenta grow bars) show through instead.
 
 Photo sets (CC0, `textures/README.md`): body MetalPlates009, metal Metal011, trim Rubber004, suit
 Fabric061, rock cliff_side, dust moon_02 (fine powder, after Ravindu asked for a soft Sahara / *The Martian*
@@ -234,6 +241,9 @@ anything else on `laptop` (`start`). Each value and its measured cost: `design/r
 
 One sun, warm, at the elevation token. Cool ambient. Depth fog in the horizon colour, light on the
 sky so the gradient stays. ACES. Night, sunset and dust storm are `DESIGN.<state>.md` files.
+Indoors, one unshadowed ceiling light per room (`lighting.room`, the same in every sky): always on, like the
+ISS's LED panels, so HAB 1 and the greenhouse look by day as they do at night. It lights only the rooms' own render
+layer, never the ground outside through a wall (approved by Ravindu on 13 Nov 2026).
 
 ## Kit adaptation
 

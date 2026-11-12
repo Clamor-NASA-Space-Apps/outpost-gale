@@ -86,7 +86,7 @@ materials:
   deck: { color: "{colors.deck}", roughness: 0.7, metalness: 0, weathering: 0, detail: { texture: "textures/metal_albedo.jpg", normal: "textures/metal_normal.jpg", roughness: "textures/metal_rough.jpg", textureSize: 1.0, strength: 0.6, pattern: grain, size: 1.0 } }
   panel: { color: "{colors.panel}", roughness: 0.5, metalness: 0, weathering: 0 }
   bedding: { color: "{colors.bedding}", roughness: 0.9, metalness: 0, weathering: 0, detail: { texture: "textures/suit_albedo.jpg", normal: "textures/suit_normal.jpg", roughness: "textures/suit_rough.jpg", textureSize: 0.4, strength: 0.7, pattern: grain, size: 0.4 } }
-  glass: { color: "{colors.glass}", roughness: 0.08, metalness: 0, opacity: 0.5, lit: { color: "#ffbe72", emissive: 1.5, share: 0.85, period: 90 }, weathering: 0.35 }
+  glass: { color: "{colors.glass}", roughness: 0.08, metalness: 0, opacity: 0.15, weathering: 0.35 }
   rock: { color: "{colors.rock}", roughness: 0.95, metalness: 0, detail: { texture: "textures/rock_albedo.jpg", normal: "textures/rock_normal.jpg", roughness: "textures/rock_rough.jpg", textureSize: 1.83, strength: 1.0, pattern: grain, size: 1.83 }, weathering: 0 }
   dust: { color: "{colors.dust}", roughness: 1, metalness: 0, detail: { texture: "textures/dust_albedo.jpg", normal: "textures/dust_normal.jpg", roughness: "textures/dust_rough.jpg", textureSize: 3.1, strength: 1.0, pattern: grain, size: 3.1, gravel: { texture: "textures/gravel_albedo.jpg", normal: "textures/gravel_normal.jpg", textureSize: 2.48, share: 0.3 }, ripple: { normal: "textures/ripple_normal.jpg", textureSize: 12 } }, weathering: 0 }
   hazard: { color: "{colors.hazard}", roughness: 0.5, metalness: 0 }
@@ -127,6 +127,7 @@ lighting:
   twilight: { color: "#3c4a7a", azimuth: 270, height: 10, strength: 0.4 }
   toneMapping: aces
   fog: { color: "{colors.horizon}", near: 20, far: 2600, sky: 0.15, curve: 1.4, density: 0.75, sun: 0 }
+  room: { color: "#f4efe6", intensity: 6, distance: 4.5 }
   lamp: { color: "#dff6f0", intensity: 14, distance: 14 }
   celestial:
     pole: [317.681, 52.887]

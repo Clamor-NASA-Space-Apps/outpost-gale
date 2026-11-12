@@ -193,13 +193,7 @@
    "color": "#5b7182",
    "roughness": 0.08,
    "metalness": 0,
-   "opacity": 0.5,
-   "lit": {
-    "color": "#ffbe72",
-    "emissive": 1.5,
-    "share": 0.6,
-    "period": 90
-   },
+   "opacity": 0.15,
    "weathering": 0.35
   },
   "rock": {
@@ -398,6 +392,11 @@
    "curve": 1.6,
    "density": 0.7,
    "sun": 0.35
+  },
+  "room": {
+   "color": "#f4efe6",
+   "intensity": 6,
+   "distance": 4.5
   }
  },
  "quality": {

@@ -114,8 +114,6 @@ func setup(w: Node3D, hero: Node3D) -> void:
 		_nodes.append(_ground(s.at))
 	for v: Array in p.via:
 		_nodes.append(_ground(v))
-	for i in _nodes.size():
-		_links.append(_reach(_nodes[i]))
 	yaw = rotation.y
 	_steer = yaw
 	_was = global_position
@@ -127,6 +125,11 @@ func setup(w: Node3D, hero: Node3D) -> void:
 
 
 func _physics_process(delta: float) -> void:
+	# the route graph on the first tick, not in setup(): during the sandbox's _ready the physics space still has the
+	# items where world.gd first added them, at the origin, and Mont Mercou's hull there cut a via point off (13 Nov)
+	if _links.is_empty():
+		for i in _nodes.size():
+			_links.append(_reach(_nodes[i]))
 	_time += delta
 	_greet_cool -= delta
 	_hello_cool -= delta

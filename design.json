@@ -193,7 +193,7 @@
    "color": "#5b7182",
    "roughness": 0.08,
    "metalness": 0,
-   "opacity": 0.5,
+   "opacity": 0.15,
    "weathering": 0.35
   },
   "rock": {
@@ -382,6 +382,11 @@
    "curve": 1,
    "density": 0.75,
    "sun": 0.4
+  },
+  "room": {
+   "color": "#f4efe6",
+   "intensity": 6,
+   "distance": 4.5
   }
  },
  "quality": {

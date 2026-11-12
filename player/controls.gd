@@ -9,6 +9,7 @@ const KEYS := {
 	"hurry": [KEY_SHIFT], "jump": [KEY_SPACE], "interact": [KEY_E],
 	"look_left": [KEY_J], "look_right": [KEY_L], "look_up": [KEY_I], "look_down": [KEY_K],
 	"debug_sky": [KEY_B], "debug_teleport": [KEY_T], "debug_quality": [KEY_G],
+	"fullscreen": [KEY_F],  # F11 is the browser's; a web page may go full screen only from a key or a tap
 	"settings": [KEY_ESCAPE],
 }
 const PADS := {

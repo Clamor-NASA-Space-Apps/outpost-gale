@@ -38,11 +38,11 @@ var _blink: RegEx
 var _built := false
 var _time := 0.0
 var _gust := FastNoiseLite.new()
-var _pane_mark := Material.new()  # only tells HouseStyle.merge() to number the panes
 var _resting: Dictionary = {}  # carriable -> resting on the ground (parent is the world), to redraw contacts on a change
 var _drawn: Dictionary = {}  # carriable -> Rect2 (x, z) of the feet drawn into the contact map
 var _probe: ReflectionProbe
 var _rooms: Array[ReflectionProbe] = []  # one probe per room (data/world.json probe.rooms), made with _probe
+var _room_lights: Dictionary = {}  # OmniLight3D -> its world.json probe.rooms entry
 const ROOMS := 1 << 3  # render layer 4: indoor swept surfaces, which only the room probes reflect onto
 var _cells: Array[Node3D] = []
 var _touch: Dictionary = {}  # mover -> PackedVector4Array of its contact discs (touch())
@@ -66,7 +66,6 @@ func build(design: Dictionary) -> void:
 			hero_height = r.value
 	_moving = RegEx.create_from_string(data.moving)
 	_blink = RegEx.create_from_string(data.blink.nodes)
-	_pane_mark.set_meta("lit", true)
 	_gust.frequency = float(data.wind.gust_hz)
 	terrain = Terrain.new()
 	terrain.name = "Terrain"
@@ -226,14 +225,33 @@ func restyle(design: Dictionary) -> void:
 			room.size = Vector3(r.size[0], r.size[1], r.size[2])
 			room.position = Vector3(r.at[0], r.at[1], r.at[2])
 			room.box_projection = true  # a closed room: reflections land on its walls, not at infinity
-			room.interior = true
+			room.interior = r.get("interior", true)  # a glass dome sees the sky
 			room.reflection_mask = ROOMS
 			room.ambient_mode = ReflectionProbe.AMBIENT_COLOR
 			items[id].add_child(room)
 			_rooms.append(room)
-		for cell: Node3D in _cells:
-			for mi: MeshInstance3D in cell.find_children("merged_swept", "MeshInstance3D", false, false):
+			if r.has("light"):
+				# the room's own light, on in every sky (DESIGN.md lighting.room): unshadowed, and only on the rooms' layer,
+				# so it never lights the ground outside through a wall. In the lamp pool, so a preset's `lamps` limit holds
+				var l := OmniLight3D.new()
+				l.name = "RoomLight"
+				l.position = Vector3(r.light.at[0], r.light.at[1], r.light.at[2])
+				l.light_cull_mask = ROOMS
+				l.add_to_group(Forge.HouseStyle.LampPool.GROUP)
+				items[id].add_child(l)
+				_room_lights[l] = r.light
+		# in the ground cells and in the items kept out of them (HAB 1, with its door, merges on its own), and the
+		# moving parts indoors: a door's room side, the toilet curtain
+		for n: String in ["merged_swept", "interior", "curtain"]:
+			for mi: MeshInstance3D in find_children(n, "MeshInstance3D", true, false):
 				mi.layers = ROOMS
+	var lit: Dictionary = design.lighting.get("room", {})
+	for l: OmniLight3D in _room_lights:
+		var c: String = _room_lights[l].get("color", "")  # a DESIGN.md colour name (the greenhouse: `grow`)
+		l.light_color = Color.html(design.colors[c] if c else lit.get("color", "#ffffff"))
+		l.light_energy = float(lit.get("intensity", 0)) * Forge.HouseStyle.UNIT * float(_room_lights[l].get("share", 1.0))
+		l.omni_range = float(_room_lights[l].get("range", lit.get("distance", 4)))
+		l.set_meta("energy", l.light_energy)  # what the lamp pool fades it back up to
 	for p: ReflectionProbe in [_probe] + _rooms:
 		p.ambient_color = Color.html(design.lighting.get("ambientColor", design.lighting.sky))
 		p.ambient_color_energy = float(design.lighting.get("ambient", 1)) / PI  # the rig's units (house_style UNIT)
@@ -633,8 +651,7 @@ func _merge(meshes: Array, parent: Node3D) -> MeshInstance3D:
 			var m := mi.get_active_material(s)
 			if not tools.has(m):
 				tools[m] = SurfaceTool.new()
-			# panes of a role some sky state lights (`lit_roles`) are numbered now, whatever the sky at load
-			Forge.HouseStyle.merge(tools[m], mi.mesh, s, to_parent * mi.global_transform, _pane_mark if m and m.resource_name in data.lit_roles else m)
+			Forge.HouseStyle.merge(tools[m], mi.mesh, s, to_parent * mi.global_transform, m)
 	# surfaces kept swept (DESIGN.md weathering.clean: floors, HAB 1's fit-out) are indoors or underfoot, so they go
 	# in a second mesh that casts no shadow: each shadowed surface is drawn again per shadow split (skills/frame-budget)
 	var out: MeshInstance3D
@@ -671,7 +688,12 @@ func _still(n: Node3D) -> Array:
 func _merge_cells() -> void:
 	var cells: Dictionary = {}  # Vector2i -> meshes
 	for n: Node3D in items.values():
-		if n.get_meta("still"):
+		if str(data.prefabs.get(n.get_meta("prefab"), "")).get_file().begins_with("rock_"):
+			# an outcrop is rock: on the ground's render layer like the scattered rocks (build()), or the base's probe
+			# lit it and Mont Mercou glowed at night. Its photo material is its own, so merging saved no draw call
+			for mi: MeshInstance3D in _still(n):
+				mi.layers = 2
+		elif n.get_meta("still"):
 			cells.get_or_add(Vector2i(floori(n.position.x / CELL + 0.5), floori(n.position.z / CELL + 0.5)), []).append_array(_still(n))
 	for key: Vector2i in cells:
 		var holder := Node3D.new()

@@ -65,6 +65,8 @@
    -15
   ],
   "move_s": 0.6,
+  "curtain_gather": 0.22,
+  "note_curtain": "curtain_gather: an open curtain's width as a share of its closed width, gathered at its jamb (HAB 1's toilet). Art direction",
   "aim_deg": 30,
   "note_aim": "aim_deg: in first person the target is the usable thing nearest the view's centre within reach, inside a cone this wide (degrees, both sides together): point at the hatch or a rack. Art direction: narrow enough that two things a metre apart at arm's length are told apart, wide enough for a thumb on a phone"
  },

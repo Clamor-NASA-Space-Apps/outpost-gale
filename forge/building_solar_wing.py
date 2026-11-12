@@ -22,9 +22,11 @@ reset()
 face = [bevel(box("backsheet", (N * W, L, 0.03), (0, 0, AX + FACE + 0.015), mat("trim")), width=0.01, segments=1)]
 for k in range(N):  # the glass 5 mm over the backsheet, 3 cm apart: the gaps show the dark backsheet
     face.append(box(f"glass{k}", (W - 0.03, L - 0.1, 0.008), (-HALF + (k + 0.5) * W, 0, AX + FACE + 0.039), mat("glass")))
-for s in (-1, 1):  # aluminium rails along both long edges and across both ends, wider than the backsheet
-    face.append(box(f"rail{s}", (N * W + 0.08, 0.05, 0.05), (0, s * (L / 2 - 0.015), AX + FACE + 0.03), mat("metal")))
-    face.append(box(f"end{s}", (0.05, L - 0.1, 0.05), (s * (HALF + 0.02), 0, AX + FACE + 0.03), mat("metal")))
+# aluminium frame rails along both long edges and across both ends, wrapping the backsheet's edge (no strip of it
+# left showing under them), the ends buried in the rails
+for s in (-1, 1):
+    face.append(box(f"rail{s}", (N * W + 0.08, 0.05, 0.06), (0, s * (L / 2 - 0.015), AX + FACE + 0.025), mat("metal")))
+    face.append(box(f"end{s}", (0.05, L - 0.06, 0.06), (s * (HALF + 0.02), 0, AX + FACE + 0.025), mat("metal")))
     face.append(box(f"rib{s}", (N * W - 0.1, 0.05, 0.05), (0, s * 0.6, AX + FACE - 0.015), mat("trim")))  # into the backsheet
 for i, x in enumerate(POSTS):
     face.append(box(f"clamp{i}", (0.5, 0.18, FACE + 0.02), (x, 0, AX + FACE / 2), mat("metal")))  # tube to backsheet

@@ -47,7 +47,8 @@ static func role(design: Dictionary, name: String, still := false, clean := fals
 	color.a = float(t.get("opacity", 1.0))
 	var glow := float(t.get("emissive", 0))
 	var m: Material
-	if still or moving_detail or _flat(design):
+	# glass too: the shader adds its reflections whole (surface.gdshader SEE), a StandardMaterial3D dims them by alpha
+	if still or moving_detail or _flat(design) or color.a < 1.0:
 		# forge models bake their normals, but kit models and built-in meshes only facet here
 		var s := ShaderMaterial.new()
 		s.set_shader_parameter("albedo", color)
@@ -61,9 +62,6 @@ static func role(design: Dictionary, name: String, still := false, clean := fals
 	else:
 		var s := StandardMaterial3D.new()
 		s.albedo_color = color
-		if color.a < 1.0:
-			s.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-			s.cull_mode = BaseMaterial3D.CULL_DISABLED  # a pane is one sheet: seen from both sides
 		s.roughness = float(t.get("roughness", 0.6))
 		s.metallic = float(t.get("metalness", 0))
 		if glow > 0:
@@ -572,6 +570,21 @@ const KNOBS := {
 }
 
 
+## Frame pacing that differs from KNOBS by platform. On Wayland (Godot 4.7.2, GNOME) V-Sync held a game that drew
+## 100 to 120 fps with it off to 30 to 38 (measured), and the compositor only ever shows whole frames, so it cannot
+## tear: V-Sync off, and frames capped at the screen's rate, or the GPU drew twice what the screen shows.
+static func _pacing() -> Dictionary:
+	if DisplayServer.get_name() != "Wayland":
+		return {}
+	# the settings list's own steps: the first at or over the screen's rate, else no cap (a 144 Hz screen)
+	var hz := DisplayServer.screen_get_refresh_rate()
+	var cap := 0
+	for v: int in KNOBS.maxFps.values:
+		if v >= hz - 1.0 and (cap == 0 or v < cap):
+			cap = v
+	return {"vsync": false, "maxFps": cap if hz > 0.0 else 60}
+
+
 ## The knobs as a settings screen shows them: name -> {values, recompile, game, value (in force), preset (the
 ## preset's own)}. Knobs the design never mentions report their default.
 static func knobs(design: Dictionary) -> Dictionary:
@@ -580,6 +593,8 @@ static func knobs(design: Dictionary) -> Dictionary:
 	var out := {}
 	for k: String in KNOBS:
 		var row: Dictionary = KNOBS[k].duplicate()
+		if _pacing().has(k):
+			row.default = _pacing()[k]
 		row.value = q.get(k, row.default)
 		row.preset = preset.get(k, row.default)
 		row.game = row.get("game", false)
@@ -613,12 +628,13 @@ static func set_quality(root: Node, design: Dictionary, level: String, overrides
 	_fit_pixels(view, q)
 	# frame pacing only when asked for, or to undo an earlier call's: a preset without it leaves the window as the
 	# tools set it, but a player's "V-Sync off" must not outlive the next preset
-	if q.has("vsync") or view.has_meta("forge_vsync"):
+	var pace := _pacing()
+	if q.has("vsync") or view.has_meta("forge_vsync") or pace.has("vsync"):
 		view.set_meta("forge_vsync", true)
-		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED if q.get("vsync", KNOBS.vsync.default) else DisplayServer.VSYNC_DISABLED)
-	if q.has("maxFps") or view.has_meta("forge_max_fps"):
+		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED if q.get("vsync", pace.get("vsync", KNOBS.vsync.default)) else DisplayServer.VSYNC_DISABLED)
+	if q.has("maxFps") or view.has_meta("forge_max_fps") or pace.has("maxFps"):
 		view.set_meta("forge_max_fps", true)
-		Engine.max_fps = int(q.get("maxFps", KNOBS.maxFps.default))
+		Engine.max_fps = int(q.get("maxFps", pace.get("maxFps", KNOBS.maxFps.default)))
 	var splits := int(q.get("shadows", 2))
 	var map := int(q.get("shadowMap", 2048))
 	RenderingServer.directional_shadow_atlas_set_size(map, true)

@@ -9,7 +9,9 @@ shader_type spatial;
 //             or TEXTURE (a photo). Detail only ever shades the role's colour, it never replaces it.
 //             NORMALMAP and ROUGHMAP add the photo set's normal (OpenGL) and roughness maps.
 //   LIT       the role's `lit`: panes that light up one by one. COLOR.r is a pane's own number.
-//   SEE       the role's `opacity` below 1: glass you see through (alpha blended, so it sorts and costs more).
+//   SEE       the role's `opacity` below 1: glass you see through. What it lets through is 1 - ALPHA of what lies
+//             behind it, and what it reflects is added on top (premultiplied), so it stays clear head-on and turns
+//             to a mirror at a grazing angle, like real glass. Blended, so it sorts and costs more.
 //   COAT      DESIGN.md `weathering`: settled dust (or snow, ash, grime) over the role, thickest on level tops, thin
 //             on walls, none underneath, by the face's own direction (skills/surface-weathering). Thin, it tints
 //             the surface and leaves its texture and bumps showing; it always takes the shine away. In the mesh's
@@ -17,7 +19,9 @@ shader_type spatial;
 //             COAT_GRAIN adds the coat's own photo. KEEP: an official model's own textures under the coat.
 // VARIANT
 #ifdef SEE
-render_mode blend_mix, depth_draw_always, cull_disabled;
+// no depth write: a blended pane that wrote depth hid any blended surface drawn after it behind it (its own far
+// side by triangle order, other glass, a body fading out), and the draw order of blended things follows the camera
+render_mode blend_premul_alpha, cull_disabled;
 #endif
 uniform vec4 albedo : source_color = vec4(1.0);
 uniform float roughness = 0.6;
@@ -203,6 +207,10 @@ void fragment() {
 #else
 	NORMAL = normalize((VIEW_MATRIX * vec4(bent, 0.0)).xyz);
 #endif
+	// A bent normal turned away from the eye (a thin rail seen edge-on) reflects into the surface itself, and the
+	// engine darkens that reflection (scene.glsl `horizon`): pixel by pixel, a two-tone speckle that crawled along
+	// rails at sunset. Leaned back until it faces the eye a little, it reflects the sky like its neighbours.
+	NORMAL = normalize(NORMAL + VIEW * max(0.0, 0.1 - dot(NORMAL, VIEW)));
 #endif
 #ifdef KEEP_NORMAL
 	NORMAL_MAP = texture(base_normal, UV).rgb;
@@ -210,6 +218,21 @@ void fragment() {
 #endif
 	METALLIC = metallic * (1.0 - cov);  // dust on metal is dust
 	EMISSION = emission;
+#ifdef SEE
+	// Blended, the engine dims reflections by ALPHA too, so a half-opaque pane read as a milky film. Here the
+	// engine's reflection, with its own Fresnel, is added whole, and the pane lets less through at a grazing angle
+	// (Schlick, glass F0 0.04).
+	float fres = pow(1.0 - abs(dot(NORMAL, VIEW)), 5.0);
+	ALPHA = mix(ALPHA, 1.0, 0.04 + 0.96 * fres);
+	// Clean glass scatters next to no light of its own: lit by the sun, a body at the role's colour put a pale veil
+	// over everything behind a dome (four surfaces). ALBEDO is still sRGB here (Compatibility makes it linear after
+	// this shader), so this scales the body by about ALPHA^2.2: nothing head-on, a dust film where the coat is thick.
+	ALBEDO *= ALPHA;
+	EMISSION *= ALPHA;
+	// Compatibility's environment BRDF (Lazarov's fit, scene.glsl) gives a smooth dielectric 12% head-on at the
+	// default F0 0.04, three times real glass; 0.225 (F0 0.008) brings it back to about 4% per surface
+	SPECULAR = 0.225;
+#endif
 #ifdef LIT
 	// a pane decides again every lit_period seconds, each at its own moment
 	float turn = floor(TIME / lit_period + pane * 7.0);

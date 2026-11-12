@@ -28,7 +28,7 @@ Ravindu asked for *Journey* (2012) as the vibe, a red-yellow Mars, a cyberpunk H
 - **The assets on disk are already this style.** Kenney's Space Kit is low-poly in flat colours (2 to 876 triangles per model). A realistic look would need painted PBR textures for every model. An agent cannot author those, and the research found that photo-textured models beside flat kit models clash (`research/godot-build/README.md`, section 5, decision 2). Ravindu's *Journey* ask settles that decision on the stylised side.
 - **The look lives in numbers.** Palette, fog distance, sun angle, glow and bevel are DESIGN.md tokens. An agent tunes numbers well and paints badly, so put the effort where the agent is strong.
 - **The web renderer can draw all of it.** Godot's Compatibility renderer has fog by distance and height, glow, sky shaders, one shadowed sun and GPU particles. It cannot do volumetric light shafts, screen-space reflections or real-time bounce light (`research/godot-build/engine-limits.md`). Haze plus flat shading needs none of those.
-- **Small download, phone-friendly.** Flat colours need almost no textures. The engine alone is about 10 MB compressed, and the game data budget is 15 MB.
+- **Small download, phone-friendly.** Flat colours need almost no textures. The engine alone is about 10 MB compressed. No game data cap (Ravindu, 12 Nov 2026): native builds (EXE, APK, Linux) ship too, and the web build shows a loading bar; run `web-check --budget-mb 100` to catch accidents only.
 - **Real in shape, stylised in surface.** Use real Gale terrain heights, real sizes, real colours (`research/godot-build/movement-and-look.md`, section 5), and the real mountain. *Journey* pulls the player toward a far mountain. Gale has one: Mount Sharp, about 5 km high, in the middle of the crater. Keep it on the horizon of every frame.
 - **Characters:** a stylised, visored astronaut with authored clips looks alive. A realistic one with the same clips looks wrong. Visors also mean no faces (workspace rule 8, and `plan.md` asks for "cartoon astronauts with visors").
 
@@ -159,7 +159,7 @@ The factory workflow applies in full from here: `reality.json` first, then the p
 ## 9. Ask Ravindu, don't guess
 - The take and avoid notes on every reference image, and whether ref 8 is really the "avoid" example.
 - The variant pick or mix.
-- Which phone is the weakest, and the game data budget (15 MB was set for three.js).
+- Which phone is the weakest, (the data budget is decided: no cap, 12 Nov 2026).
 - The size of the play area.
 - Every download over a few MB (the HiRISE crop, the Quaternius packs, fonts).
 - Crew size (2 or 4) and the ending vehicle (resupply ship or ride home): make assets that work for either, and flag where they don't.

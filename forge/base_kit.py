@@ -98,15 +98,31 @@ def inner_leaf(hw, hh, y_in, z0, extra=()):
     leaf.append(cyl("door_window_ring", 0.17, t + 0.01, (0, y, z0 + 1.55), mat("trim"), 24, rot=(math.pi / 2, 0, 0)))
     leaf.append(smooth(bar("door_handle", (-hw / 2 + 0.12, y + t / 2 + 0.06, z0 + 0.95), (-hw / 2 + 0.12, y + t / 2 + 0.06, z0 + 1.25), 0.02, mat("metal"))))
     leaf += list(extra)
-    return settle(join("door", leaf), (w / 2, y - t / 2, z0))
+    door = settle(join("door", leaf), (w / 2, y - t / 2, z0))
+    # the room side: a painted panel round the window and a handle, as a child named `interior` so it stays clean of
+    # the dust coat (DESIGN.md weathering.clean) while the outside face keeps it; dusty, the inside read salmon
+    fy = y - t / 2 - 0.005  # 5 mm off the leaf's room face
+    zw, hole = z0 + 1.55, 0.19
+    x0, x1, zb, zt = -w / 2 + 0.06, w / 2 - 0.06, z0 + 0.065, z0 + hh - 0.01
+    panes = [((x0 + x1) / 2, x1 - x0, zb, zw - hole), ((x0 + x1) / 2, x1 - x0, zw + hole, zt)]
+    panes += [(s * (hole + x1) / 2, x1 - hole, zw - hole, zw + hole) for s in (-1, 1)]
+    lining = [box(f"lining{i}", (pw, 0.003, z1 - z0_), (px, fy - 0.0015, (z0_ + z1) / 2), mat("panel")) for i, (px, pw, z0_, z1) in enumerate(panes)]
+    lining.append(smooth(bar("inner_handle", (-hw / 2 + 0.12, fy - 0.06, z0 + 0.95), (-hw / 2 + 0.12, fy - 0.06, z0 + 1.25), 0.02, mat("metal"))))
+    lining = join("interior", lining)
+    bpy.context.view_layer.update()
+    mw = lining.matrix_world.copy()
+    lining.parent = door
+    lining.matrix_world = mw
+    return door
 
 
 COL = ("-col", "-convcol", "-colonly", "-convcolonly")
 
 
 def moves(o):
-    """Parts the game moves get their own bodies in the engine, so they carry no collision suffix."""
-    return o.name in ("door", "dish", "tell") or o.name.startswith("panel_")
+    """Parts the game moves get their own bodies in the engine, so they carry no collision suffix; their children
+    move with them."""
+    return o.name in ("door", "dish", "tell", "curtain") or o.name.startswith("panel_") or (o.parent is not None and moves(o.parent))
 
 
 def done(name, solid=True):

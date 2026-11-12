@@ -36,7 +36,65 @@ func play() -> bool:
 	await frames(int(60 * (0.2 + float(game.tuning.interact.move_s))))
 	for id: String in ROOMS:
 		await room(id)
+	probes()
+	await curtain()
 	return true
+
+
+## HAB 1's toilet: a privacy curtain, closed at the start, that E gathers open at its jamb and draws closed again,
+## aimed at from the room like a player would. Motion only: nothing else changes.
+func curtain() -> void:
+	var box: Node = game.get_node("Interactions")
+	var it: Node3D = null
+	for n: Node in get_nodes_in_group("interactable"):
+		if n.kind == "curtain":
+			it = n
+	if not check(it != null, "HAB 1's toilet curtain is something to use"):
+		return
+	var c: Node3D = it.thing
+	var axis: int = c.get_meta("rail")
+	check(not it.open and is_equal_approx(c.scale[axis], 1.0), "the toilet curtain starts closed")
+	# stand in the room 0.9 m in front of it, facing it, the view on it
+	var hab: Node3D = world.items["hab1"]
+	var into := (hab.global_position - it.global_position) * Vector3(1, 0, 1)
+	var at := it.global_position + into.normalized() * 0.9
+	at.y = hab.to_global(Vector3(0, 0.45, 0)).y
+	var to := it.global_position - at
+	player.place(at, rad_to_deg(atan2(to.x, -to.z)))
+	await frames(40)
+	var lens: Camera3D = player.cam.lens
+	var down := (it.global_position - lens.global_position)
+	player.cam.pitch = -atan2(-down.y, Vector2(down.x, down.z).length())
+	await frames(5)
+	check(box.target == it and it.prompt() == "Open curtain", "aimed at from the room, it offers Open curtain (%s)" % [box.target.prompt() if box.target else "nothing"])
+	var wait := int(60 * (0.2 + float(game.tuning.interact.move_s)))
+	box.interact()
+	await frames(wait)
+	check(it.open and c.scale[axis] < 0.5 and it.prompt() == "Close curtain", "E gathers it open at the jamb (scale %.2f)" % c.scale[axis])
+	box.interact()
+	await frames(wait)
+	check(not it.open and is_equal_approx(c.scale[axis], 1.0), "E draws it closed again")
+
+
+## HAB 1's own reflection probe (data/world.json probe.rooms): glass and metal inside reflect the room. With only the
+## base's probe they showed the rover and the sky (12 Nov playtest).
+func probes() -> void:
+	var hab: Node3D = world.items["hab1"]
+	var probe := hab.get_node_or_null("Probe_hab1") as ReflectionProbe
+	if not check(probe != null and probe.interior, "HAB 1 has its own interior reflection probe"):
+		return
+	var box := AABB(probe.global_position - probe.size / 2.0, probe.size)
+	var eye := hab.to_global(Vector3(0, 2.0, 0))  # 1.6 m over the deck, mid-room
+	check(box.has_point(eye), "the room probe's box holds the room at eye height")
+	var base := world.get_node("Probe") as ReflectionProbe
+	var swept := 0
+	for mi: MeshInstance3D in world.find_children("merged_swept", "MeshInstance3D", true, false):
+		var b: AABB = mi.global_transform * mi.get_aabb()
+		if mi.is_visible_in_tree() and b.intersects(box):
+			swept += 1
+			check(mi.layers & probe.reflection_mask and not mi.layers & base.reflection_mask,
+				"the swept fit-out (%s) takes the room's reflections, not the base's (layers %d)" % [mi.get_parent().name, mi.layers])
+	check(swept > 0, "the fit-out is merged into a swept mesh the room probe reflects onto")
 
 
 func room(id: String) -> void:

@@ -1,6 +1,6 @@
 extends Node3D
 ## The sandbox's physical interactions (BRIEF.md 7b): open the airlock door, tilt a solar panel, pick up and put
-## down a cargo bag, get in the rover. Each does one physical thing and changes no game state (hard rule 1).
+## down a cargo bag, get in the rover, draw the toilet's curtain. Each does one physical thing and changes no game state (hard rule 1).
 ## Every usable thing is an Interactable node in group `interactable` (CONTRACTS.md); the target is the nearest
 ## one within reach and inside a cone ahead of the hero.
 
@@ -20,6 +20,7 @@ class Interactable extends Node3D:
 	func prompt() -> String:
 		match kind:
 			"door": return "Close door" if open else "Open door"
+			"curtain": return "Close curtain" if open else "Open curtain"
 			"panel": return "Tilt panel"
 			"bag": return "Pick up bag"
 			"rover": return "Drive rover"
@@ -49,6 +50,13 @@ func setup(w: Node3D, p: Node3D, t: Dictionary, sheet: Dictionary) -> void:
 		for part: Node3D in item.get_meta("parts"):
 			if part.name == "door":
 				_add("door", part, item.to_local(part.global_position) + Vector3(0.5, 1.0, -0.6))
+			elif part.name == "curtain":
+				# its origin is on the rail at the jamb; it gathers there along the rail, its longest level axis
+				var aabb: AABB = (part as MeshInstance3D).get_aabb()
+				part.set_meta("rail", Vector3.AXIS_X if aabb.size.x > aabb.size.z else Vector3.AXIS_Z)
+				var mid: Vector3 = part.global_transform * aabb.get_center()
+				var into: Vector3 = (item.global_position - mid) * Vector3(1, 0, 1)
+				_add("curtain", part, item.to_local(mid + into.normalized() * 0.4))
 			elif str(part.name).begins_with("panel_"):
 				part.set_meta("rest", part.rotation.x)
 				_add("panel", part, item.to_local(part.global_position) + Vector3(0, -0.6, 0.9))
@@ -138,6 +146,12 @@ func use(it: Interactable) -> void:
 		"door":
 			it.open = not it.open
 			create_tween().tween_property(it.thing, "rotation:y", deg_to_rad(tuning.interact.door_open_deg) if it.open else 0.0, s)
+		"curtain":  # slides along its rail, motion only (hard rule 1)
+			it.open = not it.open
+			var axis: int = it.thing.get_meta("rail")
+			var to: Vector3 = it.thing.scale
+			to[axis] = float(tuning.interact.curtain_gather) if it.open else 1.0
+			create_tween().tween_property(it.thing, "scale", to, s)
 		"panel":
 			var tilts: Array = tuning.interact.panel_tilts
 			it.step = (it.step + 1) % tilts.size()

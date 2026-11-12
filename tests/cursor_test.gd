@@ -15,11 +15,14 @@ func _init() -> void:
 
 
 func settle() -> void:
-	for i in 600:
-		if not game.busy():
+	# by the clock, not by frames: the cover fades over 0.25 s, and with the render loop off a frame takes 0.3 ms here
+	# (two room probes made the warm-up 800 frames, past a 600-frame budget, in 0.27 s)
+	var end := Time.get_ticks_msec() + 10000
+	while game.busy():
+		if Time.get_ticks_msec() > end:
+			check(false, "the cover came down")
 			return
 		await process_frame
-	check(false, "the cover came down")
 
 
 func press(button: MouseButton, pos: Vector2) -> void:

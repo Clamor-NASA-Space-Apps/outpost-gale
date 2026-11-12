@@ -58,6 +58,7 @@ var panel: PanelContainer
 var apply_button: Button
 var reset_button: Button
 var fps_button: Button
+var full_button: Button  # null where a page cannot go full screen (iPhone Safari)
 var fold_button: Button
 var advanced: Control  # the fold-out
 var saved_tag: Control
@@ -206,6 +207,7 @@ func _refresh() -> void:
 	apply_button.disabled = not waiting()
 	reset_button.disabled = draft.is_empty() and game.overrides.is_empty()
 	fps_button.text = "On" if game.fps_label.visible else "Off"
+	_full_text()
 	fold_button.text = "Hide advanced" if advanced.visible else "Advanced"
 	for k: String in sliders:
 		sliders[k].set_value_no_signal(game.audio.volume[k] * 100.0)
@@ -292,6 +294,10 @@ func _build() -> Control:
 		_refresh(), &"ChoiceButton")
 	fps_button.custom_minimum_size.x = 2 * Hud.BUTTON_H + 130
 	list.add_child(_flow([Hud.label("Show FPS", "", true), fps_button]))
+	if not OS.has_feature("web_ios"):  # iPhone Safari has no full screen for a page; Add to Home Screen is the way
+		full_button = _button("", full_screen, &"ChoiceButton")
+		full_button.custom_minimum_size.x = fps_button.custom_minimum_size.x
+		list.add_child(_flow([Hud.label("Full screen", "", true), full_button]))
 	list.add_child(Hud.label("Sound", "Heading"))
 	for k: String in VOLUMES:
 		list.add_child(_slider(k))
@@ -396,6 +402,21 @@ func _flow(kids: Array) -> HFlowContainer:
 	return f
 
 
+## The F key and the settings button. On the web it asks the browser, which allows it only right after a press.
+func full_screen() -> void:
+	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED if _full() else DisplayServer.WINDOW_MODE_FULLSCREEN)
+	_full_text()  # a desktop window switches at once; the web's switch lands later, through _fit()
+
+
+func _full() -> bool:
+	return DisplayServer.window_get_mode() in [DisplayServer.WINDOW_MODE_FULLSCREEN, DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN]
+
+
+func _full_text() -> void:
+	if full_button:
+		full_button.text = "On" if _full() else "Off"
+
+
 func _button(text: String, on: Callable, variation := &"") -> Button:
 	var b := Button.new()
 	b.text = text
@@ -409,6 +430,7 @@ func _button(text: String, on: Callable, variation := &"") -> Button:
 ## Sized for the device: a phone draws it PHONE_SCALE larger, and in portrait (where the canvas is wider than 720 px
 ## of the 1280 x 720 base) larger still, so a button stays a 48 dp target.
 func _fit() -> void:
+	_full_text()  # the window changes size when it enters or leaves full screen, also by the browser's own Esc
 	var s := get_viewport().get_visible_rect().size
 	var k := maxf(1.0, minf(s.x, s.y) / 720.0) * (Hud.PHONE_SCALE if phone else 1.0)
 	root.scale = Vector2(k, k)

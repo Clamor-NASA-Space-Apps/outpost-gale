@@ -135,8 +135,11 @@ func play() -> bool:
 	check(audio.cue == "sunset", "the sky turning to sunset plays sunset (%s)" % audio.cue)
 	audio._cue_end = -1e9
 	game._sky(game.SKIES.find("design.sunset"))
-	await frames(1)
-	check(audio.cue == "", "once per change into sunset, not on every switch")
+	# a cue ends in audio._process(): after a heavy sky switch the next frame runs several physics steps first, and
+	# frames(1) (one physics step) came back before any _process (flaky, 12 Nov)
+	await process_frame
+	await process_frame
+	check(audio.cue == "", "once per change into sunset, not on every switch (%s)" % audio.cue)
 	check(audio.music("discovery") and audio.cue == "discovery", "discovery plays when called (no event calls it yet)")
 	for q: AudioStreamPlayer in playing_music():
 		check(q.bus == "Music", "music plays on the Music bus")

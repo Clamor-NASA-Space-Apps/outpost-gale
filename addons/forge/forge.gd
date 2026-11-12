@@ -24,6 +24,16 @@ var hooks: Object
 
 func register(game: Object) -> void:
 	hooks = game
+	if OS.has_feature("web"):
+		_ready_line.call_deferred()
+
+
+# tools/web-check.mjs times the load by this line: the first frame the player sees the game, not its cover
+func _ready_line() -> void:
+	while hooks and hooks.has_method("busy") and hooks.busy():
+		await get_tree().process_frame
+	await RenderingServer.frame_post_draw
+	print("Forge: ready")
 
 
 ## A .glb from anywhere on disk, for tools that show models the project has not imported.
