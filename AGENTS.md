@@ -48,3 +48,15 @@ Its own repo. Commits signed off (`git commit -s`), prefixed by area, ending wit
 
 ## Gotchas
 (Add one line per thing that took more than two tries, with its why.)
+- `Performance.TIME_PROCESS` and `TIME_PHYSICS_PROCESS` report the worst of the last second, not this frame
+  (4.7.2): time a frame with `Time.get_ticks_usec()` hooks (tests/profile_run.gd), never with those monitors.
+- "Texture with GL ID ... leaked" at exit after a run with the sandbox is known (engine-side, profile of 12 Nov);
+  read the errors before it, not it.
+- Natively the Godot and Mesa shader caches hide compile hitches after the first run: profile cold with
+  `MESA_SHADER_CACHE_DISABLE=true` and the app's `user://shader_cache` moved away, or in the web build.
+- Runs of exactly 1000 ms frames showed up twice in native profiles on 12 Nov, in different phases, with process,
+  physics and render all under 2 ms on them: outside the game (the window or the desktop), so rerun before chasing them.
+- Hero recipe: small separate pieces (a patch, lettering) joined into the suit before `ARMATURE_AUTO` made the heat
+  solve fail (2,889 unweighted vertices, a crumpled sleeve in play): join them after skin() and make them rigid.
+- `feel-probe --film` draws every row of the run under xvfb, and the sandbox timed out at 300 s: film one row with
+  `--only <id> --film <id>`, and check pass/fail headless without `--film`.

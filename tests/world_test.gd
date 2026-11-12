@@ -216,7 +216,8 @@ func _rocks_clear(world: Node3D) -> void:
 func _no_leftovers(game: Node3D, world: Node3D, sky: String) -> void:
 	var design: Dictionary = game.design
 	var rigs := game.get_children().filter(func(c: Node) -> bool: return c.has_meta("house_rig"))
-	check(rigs.size() == 2, "%s: one environment and one sun, found %d rig nodes" % [sky, rigs.size()])
+	var rig_n := 3 if design.lighting.has("celestial") else 2  # a night sky adds its clock (house_style SkyClock)
+	check(rigs.size() == rig_n, "%s: one environment, one sun (and a sky clock), found %d rig nodes" % [sky, rigs.size()])
 	check(world.find_children("*", "ReflectionProbe", true, false).size() == 1, "%s: one reflection probe" % sky)
 	var lamps := world.get_tree().get_nodes_in_group("world_lamp").size()
 	var want: int = world.data.items.filter(func(it: Dictionary) -> bool: return it.prefab in world.data.lamps).size() if design.lighting.has("lamp") else 0

@@ -7,6 +7,9 @@ shader_type spatial;
 // Inside the walkable patch the surface direction comes from data/terrain_normal.png (the 1 m HiRISE
 // heights), and a trail map holds the footprints and wheel tracks pressed into the dust (terrain.gd).
 // Each photo is divided by its own average colour, so it only adds light and dark to its role's colour.
+// terrain.gd puts a line in place of the marker below for DESIGN.md quality `ground`: GROUND_FLAT (no photos) or
+// GROUND_CHEAP (one scale per photo, no roughness or ripple maps); none is the full ground.
+// VARIANT
 
 uniform vec3 dust_color : source_color = vec3(0.79, 0.54, 0.35);
 uniform vec3 rock_color : source_color = vec3(0.53, 0.44, 0.42);
@@ -34,7 +37,8 @@ uniform float rock_from = 0.80;  // cos of the slope where rock starts to show
 uniform float rock_full = 0.62;  // and where it has taken over
 uniform float gravel_share = 0.3;  // about this much of the open ground is gravel
 
-uniform sampler2D trail_map : filter_linear, repeat_disable, hint_default_black;
+// the map wraps (terrain.gd mark()): world point p is at p / size, repeated; trail_rect is the square in use
+uniform sampler2D trail_map : filter_linear, repeat_enable, hint_default_black;
 uniform vec4 trail_rect = vec4(-32.0, -32.0, 64.0, 64.0);
 // where things rest on the ground (terrain.gd contacts()): 1 under a foot, falling to 0 a little way out
 uniform sampler2D contact_map : filter_linear, repeat_disable, hint_default_black;
@@ -63,8 +67,12 @@ float noise(vec2 p) {
 vec3 shade(sampler2D t, vec2 uv) {
 	vec3 avg = max(textureLod(t, vec2(0.5), 12.0).rgb, vec3(0.02));
 	vec3 a = texture(t, uv).rgb / avg;
+#ifdef GROUND_CHEAP
+	return mix(vec3(1.0), a, detail_strength);  // one scale: the repeat may show
+#else
 	vec3 b = texture(t, uv * 0.237 + 0.31).rgb / avg;
 	return mix(vec3(1.0), a * mix(vec3(1.0), b, 0.5), detail_strength);
+#endif
 }
 
 vec3 tnormal(sampler2D t, vec2 uv) {
@@ -89,37 +97,75 @@ void fragment() {
 	// photo detail fades out with distance: past a few hundred metres it only sparkles. Broad light and dark
 	// zones take over there, about a kilometre across on the (squeezed) skyline
 	float dist = length(wpos - CAMERA_POSITION_WORLD);
+#ifdef GROUND_FLAT
+	float near = 0.0;  // no photos at all (quality `ground: flat`)
+#else
 	float near = (1.0 - smoothstep(60.0, 350.0, dist)) * detail_strength;
+#endif
 	float zones = 0.8 + 0.4 * (0.65 * noise(wpos.xz / 900.0) + 0.35 * noise(wpos.xz / 260.0 + 5.0));
 	// metres-wide patches of lighter and darker dust, the way wind sorts it
 	float drift = 0.9 + 0.2 * (0.6 * noise(wpos.xz / 23.0) + 0.4 * noise(wpos.xz / 7.0 + 13.0));
-	// gravel lies in patches; ripples cover the open sand between them
-	float g = 0.7 * noise(wpos.xz / 9.0 + 3.0) + 0.3 * noise(wpos.xz / 2.7);
-	float gravel = smoothstep(1.0 - gravel_share - 0.08, 1.0 - gravel_share + 0.08, g) * (1.0 - rock);
-	float ripples = smoothstep(0.5, 0.7, noise(wpos.xz / 37.0 + 41.0)) * (1.0 - gravel) * (1.0 - rock);
-
-	vec2 du = wpos.xz / dust_size;
-	vec2 gu = wpos.xz / gravel_size;
-	vec2 ru = wpos.xz / rock_size;
-	vec3 ground = mix(shade(dust_albedo, du), shade(gravel_albedo, gu) * 0.93, gravel);
-	vec3 albedo = mix(dust_color * mix(vec3(1.0), ground, near) * drift, rock_color * mix(vec3(1.0), shade(rock_albedo, ru), near), rock);
-	albedo *= mix(zones, 1.0, near);
-
-	vec3 tn = mix(tnormal(dust_normal, du), tnormal(gravel_normal, gu), gravel);
-	vec3 rp = tnormal(ripple_normal, wpos.xz / ripple_size);
-	tn.xy += rp.xy * ripples * 0.45;
-	tn = mix(tn, tnormal(rock_normal, ru), rock);
+	vec3 albedo = mix(dust_color * drift, rock_color, rock) * zones;
+	vec3 tn = vec3(0.0, 0.0, 1.0);
+	float rough = mix(dust_roughness, rock_roughness, rock);
+	// the photos only where they show (near), and each layer only where it lies: a texture fetch costs more
+	// than anything else here, and the shadowed sun runs this twice (skills/frame-budget). Skipping a layer
+	// whose share is exactly 0 leaves the picture as it was.
+	if (near > 0.0) {
+		// gravel lies in patches; ripples cover the open sand between them
+		float g = 0.7 * noise(wpos.xz / 9.0 + 3.0) + 0.3 * noise(wpos.xz / 2.7);
+		float gravel = smoothstep(1.0 - gravel_share - 0.08, 1.0 - gravel_share + 0.08, g) * (1.0 - rock);
+		vec2 du = wpos.xz / dust_size;
+		vec2 gu = wpos.xz / gravel_size;
+		vec2 ru = wpos.xz / rock_size;
+		vec3 ground = vec3(1.0);
+		vec3 rocky = vec3(1.0);
+		vec3 dn = vec3(0.0, 0.0, 1.0);
+		vec3 gn = vec3(0.0, 0.0, 1.0);
+		if (gravel < 1.0) {
+			ground = shade(dust_albedo, du);
+			dn = tnormal(dust_normal, du);
+		}
+		if (gravel > 0.0) {
+			ground = mix(ground, shade(gravel_albedo, gu) * 0.93, gravel);
+			gn = tnormal(gravel_normal, gu);
+		}
+		if (rock > 0.0) {
+			rocky = shade(rock_albedo, ru);
+		}
+		albedo = mix(dust_color * mix(vec3(1.0), ground, near) * drift, rock_color * mix(vec3(1.0), rocky, near), rock);
+		albedo *= mix(zones, 1.0, near);
+		tn = mix(dn, gn, gravel);
+#ifndef GROUND_CHEAP
+		float ripples = smoothstep(0.5, 0.7, noise(wpos.xz / 37.0 + 41.0)) * (1.0 - gravel) * (1.0 - rock);
+		if (ripples > 0.0) {
+			vec3 rp = tnormal(ripple_normal, wpos.xz / ripple_size);
+			tn.xy += rp.xy * ripples * 0.45;
+		}
+		float r = dust_roughness * texture(dust_rough, du).r;
+		if (rock > 0.0) {
+			r = mix(r, rock_roughness * texture(rock_rough, ru).r, rock);
+		}
+		rough = mix(rough, r, near);
+#endif
+		if (rock > 0.0) {
+			tn = mix(tn, tnormal(rock_normal, ru), rock);
+		}
+	}
 
 	// footprints and tracks: a dent in the dust, a little darker where it is pressed
 	vec2 tu = (wpos.xz - trail_rect.xy) / trail_rect.zw;
 	if (tu.x > 0.0 && tu.y > 0.0 && tu.x < 1.0 && tu.y < 1.0) {
 		vec2 e = vec2(1.0 / float(textureSize(trail_map, 0).x), 0.0);
-		float d = texture(trail_map, tu).r;
-		float dx = texture(trail_map, tu + e.xy).r - texture(trail_map, tu - e.xy).r;
-		float dz = texture(trail_map, tu + e.yx).r - texture(trail_map, tu - e.yx).r;
+		vec2 tw = wpos.xz / trail_rect.zw;
+		float d = texture(trail_map, tw).r;
 		float soft = 1.0 - rock;
 		albedo *= 1.0 - 0.04 * d * soft;  // a fresh print darkens Mars dust 2 to 4% (design/research/dust.md); the dent does the rest
-		tn.xy += vec2(dx, dz) * 2.5 * soft;
+		if (near > 0.0) {  // the dent is a normal, and normals fade out with `near`
+			float dx = texture(trail_map, tw + e.xy).r - texture(trail_map, tw - e.xy).r;
+			float dz = texture(trail_map, tw + e.yx).r - texture(trail_map, tw - e.yx).r;
+			tn.xy += vec2(dx, dz) * 2.5 * soft;
+		}
 	}
 
 	// where something rests: the sky is blocked (AO, which Compatibility applies to the ambient light only,
@@ -129,9 +175,11 @@ void fragment() {
 	if (cu.x > 0.0 && cu.y > 0.0 && cu.x < 1.0 && cu.y < 1.0) {
 		vec2 e = vec2(1.0 / float(textureSize(contact_map, 0).x), 0.0);
 		contact = texture(contact_map, cu).r;
-		float cx = texture(contact_map, cu + e.xy).r - texture(contact_map, cu - e.xy).r;
-		float cz = texture(contact_map, cu + e.yx).r - texture(contact_map, cu - e.yx).r;
-		tn.xy -= vec2(cx, cz) * contact_pile * (1.0 - rock);
+		if (near > 0.0) {
+			float cx = texture(contact_map, cu + e.xy).r - texture(contact_map, cu - e.xy).r;
+			float cz = texture(contact_map, cu + e.yx).r - texture(contact_map, cu - e.yx).r;
+			tn.xy -= vec2(cx, cz) * contact_pile * (1.0 - rock);
+		}
 	}
 	for (int i = 0; i < 12; i++) {
 		float d = 1.0 - length(wpos.xz - movers[i].xy) / max(movers[i].z, 0.001);
@@ -146,8 +194,7 @@ void fragment() {
 	vec3 wn = normalize(tx * tn.x + tz * tn.y + n * tn.z);
 	NORMAL = normalize((VIEW_MATRIX * vec4(wn, 0.0)).xyz);
 	ALBEDO = albedo;
-	float r = mix(dust_roughness * texture(dust_rough, du).r, rock_roughness * texture(rock_rough, ru).r, rock);
-	ROUGHNESS = mix(mix(dust_roughness, rock_roughness, rock), r, near);
+	ROUGHNESS = rough;
 	METALLIC = 0.0;
 	SPECULAR = 0.3;
 	AO = 1.0 - contact_ao * contact;

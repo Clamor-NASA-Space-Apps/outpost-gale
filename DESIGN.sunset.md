@@ -117,9 +117,9 @@ lighting:
   toneMapping: aces
   fog: { color: "{colors.horizon}", near: 25, far: 4200, sky: 0.25, curve: 1.6, density: 0.7, sun: 0.35 }
 quality:
-  low: { msaa: 0, scale: 0.75, shadows: 1, shadowMap: 1024, shadowRange: 25, shadowFilter: 2, normalBias: 2, glow: 0, detail: off }
-  medium: { msaa: 2, scale: 1, shadows: 2, shadowMap: 2048, shadowRange: 60, shadowFilter: 4, normalBias: 6, glow: 0.4, detail: code }
-  high: { msaa: 4, scale: 1, shadows: 2, shadowMap: 4096, shadowRange: 60, shadowFilter: 4, normalBias: 4, glow: 0.5, detail: texture }
+  low: { msaa: 0, pixels: 0.6, shadows: 1, shadowMap: 1024, shadowRange: 25, shadowFilter: 2, normalBias: 2, glow: 0, detail: off, aniso: 1, ground: flat, particles: 0.5, trail: 1024, lamps: 2 }
+  medium: { msaa: 2, pixels: 1.0, shadows: 2, shadowMap: 2048, shadowRange: 60, shadowFilter: 4, normalBias: 6, glow: 0.4, detail: code, aniso: 2, ground: full, particles: 0.75, trail: 2048, lamps: 4 }
+  high: { msaa: 2, scale: 1, shadows: 2, shadowMap: 4096, shadowRange: 60, shadowFilter: 4, normalBias: 4, glow: 0.5, detail: texture, aniso: 2, ground: full, particles: 1, trail: 2048 }
 kit:
   "^(tex_0[1-5]|wheels|parts_AO)$": keep
   "^internals$": body

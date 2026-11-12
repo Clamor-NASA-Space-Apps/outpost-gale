@@ -38,6 +38,7 @@ var _time := 0.0
 var _gust := FastNoiseLite.new()
 var _pane_mark := Material.new()  # only tells HouseStyle.merge() to number the panes
 var _resting: Dictionary = {}  # carriable -> resting on the ground (parent is the world), to redraw contacts on a change
+var _drawn: Dictionary = {}  # carriable -> Rect2 (x, z) of the feet drawn into the contact map
 var _probe: ReflectionProbe
 var _cells: Array[Node3D] = []
 var _touch: Dictionary = {}  # mover -> PackedVector4Array of its contact discs (touch())
@@ -96,13 +97,10 @@ func build(design: Dictionary) -> void:
 
 func _process(delta: float) -> void:
 	_time += delta
-	var changed := false
 	for n: Node3D in _resting:
-		var now := n.get_parent() == self
-		changed = changed or now != _resting[n]
-		_resting[n] = now
-	if changed:
-		_contacts()  # a bag picked up leaves the dust bare; put down, rest() draws it again
+		_resting[n] = n.get_parent() == self
+		if _resting[n] != _drawn.has(n):
+			_contacts(n)  # a bag picked up leaves the dust bare; put down, rest() draws it again
 	if _touch_dirty:
 		_touch_dirty = false
 		var all := PackedVector4Array()
@@ -259,18 +257,31 @@ func rest(root: Node3D) -> void:
 		var g: Dictionary = data.grounding
 		var at := root.global_position
 		puff(Vector3(at.x, height_at(at.x, at.z), at.z), Vector3.DOWN * float(g.set_down_speed), float(g.set_down_strength))
-		_contacts()
+		_contacts(root)
 
 
-## Every resting item's feet and the solid rocks' into the ground's contact map (terrain.gd).
-func _contacts() -> void:
+## Every resting item's feet and the solid rocks' into the ground's contact map (terrain.gd). With `moved` (a carriable
+## picked up or put down) only the ground where its feet were and are now is drawn again.
+func _contacts(moved: Node3D = null) -> void:
 	var feet := PackedVector2Array()
+	var now: Dictionary = {}  # carriable -> the box (x, z) round its feet
 	for n: Node3D in items.values():
 		if n.has_meta("feet") and n.get_parent() == self:
-			feet.append_array(n.get_meta("feet"))
+			var f: PackedVector2Array = n.get_meta("feet")
+			feet.append_array(f)
+			if _resting.has(n):
+				var b := Rect2(f[0], Vector2.ZERO)
+				for p in f:
+					b = b.expand(p)
+				now[n] = b
 	if rocks:
 		feet.append_array(rocks.feet)
-	terrain.contacts(feet, data.grounding, float(data.play_half))
+	var spots: Array = [_drawn.get(moved), now.get(moved)].filter(func(r: Variant) -> bool: return r != null)
+	var area := Rect2()
+	if moved and spots.size():
+		area = spots[0].merge(spots[-1]).grow(0.01)
+	_drawn = now
+	terrain.contacts(feet, data.grounding, float(data.play_half), area)
 
 
 ## Turns `root` about its origin so its feet (world space) lie along the ground's plane under them (a least-squares

@@ -2,7 +2,7 @@ extends "res://addons/forge/test.gd"
 ## The sandbox's headless checks: godot --headless --path . -s tests/run.gd
 
 # What render_game_to_text() may hold. A meter, a resource or a clock here breaks hard rule 1 before 14 Nov.
-const ALLOWED := ["player", "cam", "heroScreen", "interaction", "carry", "vehicle", "sky", "quality", "fps", "view", "audio"]
+const ALLOWED := ["player", "cam", "heroScreen", "interaction", "carry", "vehicle", "sky", "quality", "fps", "view", "audio", "pip"]
 
 
 func play() -> bool:

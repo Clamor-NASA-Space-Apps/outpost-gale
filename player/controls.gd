@@ -1,6 +1,7 @@
 class_name Controls
 ## The input actions named in CONTRACTS.md, registered in code so the keys live in one place.
-## Touch controls feed these same actions. No key the browser owns (Ctrl+W/T/N, F5, F11, F12, Esc).
+## Touch controls feed these same actions. No key the browser owns (Ctrl+W/T/N, F5, F11, F12), except Esc for
+## settings: in a browser the first Esc only frees a captured mouse, the next one reaches the game.
 
 const KEYS := {
 	"move_forward": [KEY_W, KEY_UP], "move_back": [KEY_S, KEY_DOWN],
@@ -8,6 +9,7 @@ const KEYS := {
 	"hurry": [KEY_SHIFT], "jump": [KEY_SPACE], "interact": [KEY_E],
 	"look_left": [KEY_J], "look_right": [KEY_L], "look_up": [KEY_I], "look_down": [KEY_K],
 	"debug_sky": [KEY_B], "debug_teleport": [KEY_T], "debug_quality": [KEY_G],
+	"settings": [KEY_ESCAPE],
 }
 const PADS := {
 	"move_forward": [JOY_AXIS_LEFT_Y, -1.0], "move_back": [JOY_AXIS_LEFT_Y, 1.0],

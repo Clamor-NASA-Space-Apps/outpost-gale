@@ -12,11 +12,13 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import bmesh  # noqa: E402
 import bpy  # noqa: E402
-from mathutils import Vector, kdtree  # noqa: E402
+from mathutils import Matrix, Vector, kdtree  # noqa: E402
 
 import hero_clips  # noqa: E402
 from hero_rig import Rig  # noqa: E402
-from shapes import OUT, mat, render_views, reset, smooth  # noqa: E402
+from base_kit import EXO2  # noqa: E402
+from shapes import OUT, bevel, box, mat, render_views, reset, smooth  # noqa: E402
+from lib import label  # noqa: E402  (the factory one: it takes a font)
 
 CACHE = os.path.join(HERE, "..", "..", "..", "..", "assets-cache")
 NASA = os.path.join(CACHE, "nasa-3d", "astronaut.glb")  # Draco: Blender reads it, Godot never sees it
@@ -169,6 +171,47 @@ def band(suit, name, c, axis, width, m, pad=0.007, n=24):
     return o
 
 
+def patch(suit, name, sh, el, at, plate_m, text_m, text="CLAMOR"):
+    """The team's mission patch, 8.5 x 5 cm (the size of a crew's arm patch), on the outside of the upper arm `at`
+    metres down from the shoulder: a dark plate with lettering painted on, made flat and then bent round the sleeve,
+    on a cylinder as wide as the sleeve there (from the suit's own vertices, as band() does). In the
+    rest T-pose the outside of the arm faces up (+Z); hanging, it faces out. The text runs front to back across
+    the sleeve, its top toward the shoulder, so it reads level from the side when the arm hangs."""
+    axis = (el - sh).normalized()
+    out = Vector((0, 0, 1))
+    out = (out - axis * out.dot(axis)).normalized()
+    u = axis.cross(out).normalized() * -1  # across the sleeve, toward the back (+Y)
+    c = sh + axis * at
+    pts = [p.co - c for p in suit.data.vertices if abs((p.co - c).dot(axis)) < 0.06 and (p.co - c).length < 0.2]
+    mid = sum(((p - axis * p.dot(axis)) for p in pts), Vector()) / len(pts)
+    c, pts = c + mid, [(p - mid) for p in pts]
+    # one cylinder for plate and letters, as wide as the sleeve under the patch, so the letters never dip into the
+    # plate (a radius sampled per vertex was noisy enough to sink half of each letter)
+    R = max((p - axis * p.dot(axis)).length for p in pts
+            if abs(p.dot(axis)) < 0.03 and abs(math.atan2(p.dot(u), p.dot(out))) < 0.7)
+
+    parts = [bevel(box(name + "_plate", (0.085, 0.05, 0.003), (0, 0, 0.0015), plate_m), width=0.008, segments=3)]
+    parts.append(label(name + "_text", text, 0.02, (0, 0, 0.0045), (0, 0, 0), text_m, depth=0.0, font=EXO2, bold=0.02))  # painted on: no side walls
+    for o in parts:
+        bpy.context.view_layer.objects.active = o
+        for m in list(o.modifiers):
+            bpy.ops.object.modifier_apply(modifier=m.name)
+        bm = bmesh.new()
+        bm.from_mesh(o.data)
+        if o is parts[0]:  # the plate bends round the sleeve; letters are small enough to bend vertex by vertex
+            long = [e for e in bm.edges if abs((e.verts[0].co - e.verts[1].co).x) > 0.01]
+            bmesh.ops.subdivide_edges(bm, edges=long, cuts=4, use_grid_fill=True)
+        bmesh.ops.triangulate(bm, faces=[f for f in bm.faces if len(f.verts) > 4])
+        bm.to_mesh(o.data)
+        bm.free()
+        for v in o.data.vertices:
+            x, y, z = o.matrix_world @ v.co
+            ang = x / R
+            v.co = c + axis * -y + (out * math.cos(ang) + u * math.sin(ang)) * (R + 0.002 + z)
+        o.matrix_world = Matrix.Identity(4)
+    return parts
+
+
 def fit_rig():
     """UAL's armature (its mannequin dropped), joints moved onto the suit. Returns (armature, source rig)."""
     objs = import_glb(UAL1)
@@ -278,6 +321,16 @@ def build():
     suit.name = "astronaut"
     smooth(suit, 40)
     bare = skin(suit, arm)
+    # the team's patch on the left arm, between the shoulder and the teal band; no insignia (AGENTS.md). Joined after
+    # the automatic weights: its small separate pieces made the heat solve fail and crumpled the sleeve
+    sh, el = joint("shoulder", "l"), joint("elbow", "l")
+    for o in patch(suit, "patch", sh, el, 0.105, roles[1], roles[5]):
+        marks["upperarm_l"] = marks.get("upperarm_l", []) + [len(suit.data.vertices) + i for i in range(len(o.data.vertices))]
+        bpy.ops.object.select_all(action="DESELECT")
+        o.select_set(True)
+        suit.select_set(True)
+        bpy.context.view_layer.objects.active = suit
+        bpy.ops.object.join()
     rigid(suit, arm, marks)
     bpy.context.view_layer.objects.active = suit
     bpy.ops.object.vertex_group_normalize_all(lock_active=False)

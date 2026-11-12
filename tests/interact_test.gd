@@ -78,7 +78,7 @@ func play() -> bool:
 	check(out.distance_to(rover.thing.exit_point()) < 1.0, "the hero is at the rover's hatch")
 	await frames(3)
 	var dust: Node3D = game.world.dust
-	check(dust._streams.size() > 0, "the wheels threw dust while driving")
+	check(dust._streams.keys().any(func(k: String) -> bool: return k != "_warm"), "the wheels threw dust while driving")
 	check(dust._streams.values().all(func(st: Dictionary) -> bool: return not st.grit.emitting and not st.haze.emitting), "no new dust once the driver is out")
 
 	# rocks (reality.json rover.climb): a small one under a wheel is rolled over, a tall one stops it smoothly

@@ -162,6 +162,8 @@ func build() -> Theme:
 	t.set_font_size("font_size", "ChoiceButton", label + 2)
 	for state: String in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
 		t.set_color(state, "ChoiceButton", c("on-surface"))
+	for state: String in ["icon_normal_color", "icon_hover_color", "icon_pressed_color", "icon_focus_color"]:
+		t.set_color(state, "ChoiceButton", c("accent"))  # a mark on a choice (the preset in use) is teal, "on"
 	t.set_stylebox("normal", "ChoiceButton", box(c("surface-container", 0.96), c("accent"), c("accent", 0.12)))
 	t.set_stylebox("hover", "ChoiceButton", box(c("surface-container").lerp(c("accent"), 0.12), c("light"), c("accent", 0.3)))
 	t.set_stylebox("pressed", "ChoiceButton", box(c("surface-container").lerp(c("accent"), 0.22), c("light")))
@@ -174,8 +176,9 @@ func build() -> Theme:
 	t.set_font("font", "TouchButton", font(exo, 700))
 	t.set_constant("icon_max_width", "TouchButton", 44)
 	t.set_font_size("font_size", "TouchButton", label)
-	for state: String in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
-		t.set_color(state, "TouchButton", c("on-surface"))
+	for state: String in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color",
+			"icon_normal_color", "icon_hover_color", "icon_pressed_color", "icon_focus_color"]:
+		t.set_color(state, "TouchButton", c("on-surface"))  # the icon too: Button's on-primary was dark on dark
 	t.set_type_variation("StickBase", "Panel")
 	t.set_stylebox("panel", "StickBase", circle(c("surface", 0.4), c("accent", 0.6), 2))
 	t.set_type_variation("StickKnob", "Panel")

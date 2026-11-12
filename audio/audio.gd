@@ -5,8 +5,10 @@ extends Node
 ## A web build plays audio in Sample mode, where bus effects do not run, so every muffle is baked into the files
 ## (audio/make.sh: `<name>.ogg` clear for the Habitat bus, `<name>_out.ogg` muffled for the Outside bus) and going
 ## in or out is a crossfade of bus volumes.
+## Music is rare (skills/living-atmosphere): a cue at a few earned moments (music()), on its own clear bus, never two at
+## once and never soon after the last one; nothing ducks for it, so the suit stays loudest.
 
-const BUSES := ["Suit", "Outside", "Habitat", "UI"]
+const BUSES := ["Suit", "Outside", "Habitat", "UI", "Music"]
 const SOLIDS := 2  # collision layer 2, statics: a boot on one is on rock or a pad, not in the dust
 
 var world: Node3D
@@ -29,6 +31,12 @@ var _listener := AudioListener3D.new()
 var _wind: AudioStreamPlayer
 var _rover_loops: Dictionary = {}  # "motor" or "wheels" -> its players
 var _streams: Dictionary = {}
+var volume := {"master": 1.0, "music": 1.0, "effects": 1.0}  # the player's own levels (ui/settings.gd), 0 to 1
+var cue := ""  # the music cue playing now, "" in silence
+var _cue_end := -1e9  # _time the last cue ends; the next may start tuning `music.gap_s` after it
+var _was_inside := false
+var _stepped_out := false  # first_step has played this session
+var _sky := ""
 
 
 func setup(w: Node3D, p: Node3D, tuning: Dictionary) -> void:
@@ -72,6 +80,7 @@ func start() -> void:
 	started = true
 	# loops loop by their import files (loop=true). A web build loops a sample by restarting it when it ends
 	# (library_godot_audio.js, 4.7.2), so make.sh crossfades each loop's ends to hide the seam
+	_was_inside = _inside_now()
 	_flat("suit_fan", "Suit", t.fan_db).play()
 	_wind = _flat("wind_out", "Outside", t.wind.db)
 	_wind.play()
@@ -90,12 +99,18 @@ func _process(delta: float) -> void:
 		return
 	_time += delta
 	var into := 1.0 if _inside_now() else 0.0
+	if _was_inside and into == 0.0 and not _stepped_out:
+		_stepped_out = music("first_step")  # out of the airlock or the cab, the first time
+	_was_inside = into == 1.0
+	if _time >= _cue_end:
+		cue = ""
 	inside = move_toward(inside, into, delta / t.fade_s)
 	# equal power, so the doorway does not dip
 	_bus("Outside", cos(inside * PI / 2.0))
 	_bus("Habitat", sin(inside * PI / 2.0))
 	_bus("Suit", lerpf(1.0, db_to_linear(t.suit_inside_db), inside))
 	_bus("UI", 1.0)
+	_bus("Music", 1.0)
 	# hear from the hero's helmet, facing where the camera looks (the camera may be 9 m back from the rover)
 	var cam := get_viewport().get_camera_3d()
 	_listener.global_transform = Transform3D(cam.global_basis if cam else Basis(), player.body.global_position + Vector3.UP * t.ear_height)
@@ -118,6 +133,8 @@ func used(what: String, pos: Vector3) -> void:
 			play("door_open", pos)
 		"door_close":
 			play("door_close", pos)
+			if _in_habitat():
+				music("airlock_sealed")  # shut in, safe
 			get_tree().create_timer(t.hiss_after).timeout.connect(play.bind("hiss", pos))
 		"panel":
 			play("servo", pos)
@@ -125,6 +142,35 @@ func used(what: String, pos: Vector3) -> void:
 			play("bag_lift", pos)
 		"put_down":
 			play("bag_drop", pos)
+
+
+## A music cue from audio/music/<name>.ogg, faded in. False when it does not play: before the first press, while
+## another cue plays, or within `music.gap_s` of the last one's end (rare by design).
+func music(name: String) -> bool:
+	var m: Dictionary = t.music
+	var s := _stream("music/" + name)
+	if not started or s == null or _time < _cue_end + float(m.gap_s):
+		return false
+	var q := _flat("music/" + name, "Music", -60.0)
+	q.play()
+	create_tween().tween_property(q, "volume_db", float(m.db), float(m.fade_s))
+	_free_after(q)
+	cue = name
+	_cue_end = _time + s.get_length()
+	return true
+
+
+## The sky state's name (sandbox SKIES): the sun going down plays its cue, once per change into it.
+func sky(name: String) -> void:
+	if name == "design.sunset" and _sky != name:
+		music("sunset")
+	_sky = name
+
+
+## A level from the settings screen, 0 to 1: `master`, `music` or `effects` (the suit and the world).
+func set_volume(which: String, v: float) -> void:
+	volume[which] = clampf(v, 0.0, 1.0)
+	AudioServer.set_bus_volume_db(0, linear_to_db(maxf(volume.master, 0.0001)))
 
 
 ## A world sound at `pos`: the clear copy on Habitat and the muffled one on Outside, so the crossfade picks.
@@ -145,7 +191,7 @@ func state() -> Dictionary:
 	for b: String in BUSES:
 		buses[b] = snappedf(AudioServer.get_bus_volume_db(AudioServer.get_bus_index(b)), 0.1)
 	return {"audio": {"started": started, "inside": snappedf(inside, 0.01), "buses": buses, "breath": snappedf(breath_rate, 0.1),
-		"gust": snappedf(gust, 0.01), "steps": steps, "lastStep": last_step}}
+		"gust": snappedf(gust, 0.01), "steps": steps, "lastStep": last_step, "music": cue}}
 
 
 func _step(pos: Vector3, _yaw: float, foot: String) -> void:
@@ -235,7 +281,7 @@ func _enclosure(item: Node3D) -> AABB:
 
 
 func _bus(b: String, gain: float) -> void:
-	AudioServer.set_bus_volume_db(AudioServer.get_bus_index(b), t.bus_db[b] + linear_to_db(maxf(gain, 0.0001)))
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index(b), t.bus_db[b] + linear_to_db(maxf(gain * (volume.music if b == "Music" else volume.effects), 0.0001)))
 
 
 func _stream(sound: String) -> AudioStream:

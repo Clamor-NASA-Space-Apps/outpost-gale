@@ -23,7 +23,7 @@ Change it only through the session that merges the lanes.
 ## Input actions (registered in code by `player/controls.gd`, keys and touch feed the same actions)
 `move_forward` W/Up, `move_back` S/Down, `move_left` A/Left, `move_right` D/Right, `hurry` Shift,
 `jump` Space, `interact` E, `look_left/right/up/down` (stick and keys J L I K), `debug_sky` B,
-`debug_teleport` T, `debug_quality` G. Never a browser-owned key (Ctrl+W/T/N, F5, F11, F12, Alt+arrows, Esc).
+`debug_teleport` T, `debug_quality` G. Never a browser-owned key (Ctrl+W/T/N, F5, F11, F12, Alt+arrows), except `settings` on Esc: in a browser the first Esc frees the captured mouse, the second opens the settings screen.
 Mouse look while captured (`screen_relative`); touch look by finger index, never `relative` (character-body).
 
 ## How the parts plug together
@@ -64,5 +64,28 @@ The composition root is `sandbox/sandbox.gd`. It calls only these:
 `dish`, `build_pad`, `lander`, `rover`, `curiosity`, `cargo_bag`, `pip`, `lamp`, `beacon`, `rock_*`.
 Groups: `floor` (anything walkable on top), `wall` (blocks), `thin` (layer 3), `interactable`, `vehicle`, `carriable`.
 
+## Graphics settings (quality knobs; owner: `addons/forge/house_style.gd`, presets in DESIGN.md `quality`)
+- `Forge.HouseStyle.set_quality(root, design, level, overrides := {})`: a preset (`low`, `medium`, `high`) with
+  any knobs on top (`{"msaa": 4, "shadows": 0}`). Then `sandbox._restyle()` (the world reads `trail`, `particles`,
+  `ground`), then `sandbox._warm()`: a knob marked `recompile` compiles shaders, which the web build cannot cache,
+  so the cover goes up while they compile. The sandbox's `G` key does all three.
+- `Forge.HouseStyle.knobs(design) -> {name: {values, default, recompile, game, value, preset}}`: the list a settings
+  screen is built from. `value` is in force, `preset` is the preset's own. `HouseStyle.KNOBS` holds the table.
+- Knobs: `msaa` 0/2/4/8; `pixels` 3D budget in Mpx (0 = none), `scale` a cap under it; `shadows` 0/1/2/4 splits
+  (recompile), `shadowMap`, `shadowRange`, `shadowFilter` (recompile), `normalBias`; `glow` (recompile); `fog`,
+  `ssao` (recompile); `aniso` 0 to 4; `detail` off/code/texture (recompile); `lamps` nearest lit, -1 all
+  (recompile); `vsync`, `maxFps` (set only when given); game knobs `trail` (print map px), `particles` (dust
+  share), `ground` flat/cheap/full (recompile). No FXAA or SMAA: Compatibility has neither (renderers.rst).
+- Defaults: `HouseStyle.default_quality()`, `low` on a phone browser (the A16), `high` elsewhere.
+- `sandbox.busy() -> bool`: true while the cover is up (Forge waits for it before a picture).
+
 ## Which inits await
 None. `world.build()` is synchronous (it loads everything it needs before returning); the player is placed after it.
+
+## Settings, music and PIP (12 Nov 2026)
+- `sandbox.set_graphics(level, overrides, restyle := true, warm := true)`: the one way to change graphics (G key and
+  `ui/settings.gd`); `sandbox.overrides` holds the player's per-knob choices (saved to `user://settings.cfg`). G resets
+  to a plain preset and does not save.
+- `audio.music(name) -> bool` (rare cues on the Music bus: first_step, airlock_sealed, sunset, discovery, mission_lost),
+  `audio.sky(name)`, `audio.set_volume(which, v)`. `render_game_to_text()` gains `audio.music` (the cue playing).
+- PIP (`sandbox/pip.gd`) wanders the base; `render_game_to_text()` gains a `pip` key (its position, goal, mode).

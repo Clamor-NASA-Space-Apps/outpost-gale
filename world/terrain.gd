@@ -5,10 +5,10 @@ extends Node3D
 const SHADER := preload("res://world/terrain.gdshader")
 const CHUNK := 50  # cells per side of one patch mesh: 100 m pieces the camera can cull one by one
 # The trail map: footprints and wheel tracks pressed into the dust, in a square that follows the camera.
-# 2048 px over 64 m is 3 cm a pixel: a boot print (about 30 x 12 cm) is 10 x 4 px, enough for its tread.
-const TRAIL_PX := 2048
-const TRAIL_M := 64.0
-const TRAIL_SHIFT := 16.0  # metres the camera may wander from the square's centre before it moves
+# 3 cm a pixel: a boot print (about 30 x 12 cm) is 10 x 4 px, enough for its tread. The square is DESIGN.md
+# quality `trail` pixels wide (2048 is 64 m).
+const TRAIL_MPX := 0.03125
+const TILE := 64  # pixels: a print uploads the tiles it touched, never the whole map
 const MOVERS := 12  # contact discs for things that move (terrain.gdshader `movers`)
 
 var step: float
@@ -17,10 +17,19 @@ var rows: int
 var origin: Vector2
 var heights: PackedFloat32Array
 var material: ShaderMaterial
-var trail: Image
-var trail_tex: ImageTexture
-var trail_centre := Vector2.ZERO
-var trail_dirty := false
+var trail: Image  # the prints, on the CPU; the GPU's copy is trail_view's texture
+var trail_view: SubViewport
+var trail_px := 0
+var trail_win := Vector2i.ZERO  # the square's corner, in pixels from the world origin
+var trail_centre := Vector2.ZERO  # its middle, metres
+var trail_dirty := false  # tiles or clears wait for the GPU
+var _tiles: Dictionary[Vector2i, bool] = {}  # tiles of the map changed since the last upload
+var _clears: Array[Rect2i] = []  # map rects zeroed since the last upload
+var _patches: Array[Sprite2D] = []
+var _wipes: Array[ColorRect] = []
+static var _shaders: Dictionary = {}  # terrain.gdshader per `ground` variant
+var _cmap := PackedByteArray()  # the contact map (contacts())
+var _ctex: ImageTexture
 
 
 func build(design: Dictionary) -> void:
@@ -34,10 +43,6 @@ func build(design: Dictionary) -> void:
 	material.shader = SHADER
 	material.set_shader_parameter("macro_normal", load("res://data/terrain_normal.png"))
 	material.set_shader_parameter("macro_rect", Vector4(origin.x, origin.y, (cols - 1) * step, (rows - 1) * step))
-	trail = Image.create_empty(TRAIL_PX, TRAIL_PX, false, Image.FORMAT_R8)
-	trail_tex = ImageTexture.create_from_image(trail)
-	material.set_shader_parameter("trail_map", trail_tex)
-	_trail_rect()
 	restyle(design)
 	for i in range(0, rows - 1, CHUNK):
 		for j in range(0, cols - 1, CHUNK):
@@ -75,6 +80,15 @@ func restyle(design: Dictionary) -> void:
 	material.set_shader_parameter("gravel_share", float(dd.get("gravel", {}).get("share", 0.3)))
 	var level: String = design.get("_quality", {}).get("detail", "texture")
 	material.set_shader_parameter("detail_strength", 0.0 if level == "off" else 1.0)
+	# DESIGN.md quality `ground`: full, cheap or flat (no photo fetched at all); without it, the role detail decides
+	var kind: String = design.get("_quality", {}).get("ground", "flat" if level == "off" else "full")
+	if not _shaders.has(kind):
+		_shaders[kind] = Shader.new()
+		_shaders[kind].code = SHADER.code.replace("// VARIANT\n", {"flat": "#define GROUND_FLAT\n", "cheap": "#define GROUND_CHEAP\n"}.get(kind, ""))
+	material.shader = _shaders[kind]
+	var px := int(design.get("_quality", {}).get("trail", 2048))
+	if px != trail_px:
+		_trail_setup(px)
 
 
 ## Ground height at x, z (metres, world) on the same triangle the mesh draws and the collision uses (both split
@@ -152,27 +166,41 @@ func _collision() -> void:
 
 ## The ground's answer under everything resting on it: each foot (x, z) darkens a soft disc `radius` wide into a map
 ## over the play area, which the shader turns into ambient occlusion, a little darker dust and a faint rim of dust
-## pushed up (data/world.json `grounding`). Feet within one pixel are drawn once. Redrawn whole when a bag moves.
-func contacts(feet: PackedVector2Array, g: Dictionary, half: float) -> void:
+## pushed up (data/world.json `grounding`). Feet within one pixel are drawn once. With `area` (world x, z) only that
+## part is drawn again: a whole redraw in a script loop took 12 ms, a frame lost on every bag picked up.
+func contacts(feet: PackedVector2Array, g: Dictionary, half: float, area := Rect2()) -> void:
 	var px := int(g.px)
 	var m := 2.0 * half / px
 	var r := float(g.radius)
 	var reach := int(ceil(r / m))
-	var map := PackedByteArray()
-	map.resize(px * px)
+	var box := Rect2i(0, 0, px, px)
+	if _cmap.size() != px * px or not area.has_area():
+		_cmap.resize(px * px)
+		_cmap.fill(0)
+	else:
+		var a := area.grow(r)
+		box = Rect2i(Vector2i(floori((a.position.x + half) / m), floori((a.position.y + half) / m)), Vector2i(ceili(a.size.x / m) + 1, ceili(a.size.y / m) + 1)).intersection(box)
+		for y in range(box.position.y, box.end.y):
+			for x in range(box.position.x, box.end.x):
+				_cmap[y * px + x] = 0
 	var seen: Dictionary = {}
+	var near := box.grow(reach)
 	for f in feet:
 		var c := Vector2i(int((f.x + half) / m), int((f.y + half) / m))
-		if seen.has(c):
+		if seen.has(c) or not near.has_point(c):
 			continue
 		seen[c] = true
-		for y in range(maxi(c.y - reach, 0), mini(c.y + reach + 1, px)):
-			for x in range(maxi(c.x - reach, 0), mini(c.x + reach + 1, px)):
+		for y in range(maxi(c.y - reach, box.position.y), mini(c.y + reach + 1, box.end.y)):
+			for x in range(maxi(c.x - reach, box.position.x), mini(c.x + reach + 1, box.end.x)):
 				var d := Vector2(x - c.x, y - c.y).length() * m / r
 				if d < 1.0:
-					map[y * px + x] = maxi(map[y * px + x], int(255.0 * (1.0 - d) * (1.0 - d)))
-	var img := Image.create_from_data(px, px, false, Image.FORMAT_R8, map)
-	material.set_shader_parameter("contact_map", ImageTexture.create_from_image(img))
+					_cmap[y * px + x] = maxi(_cmap[y * px + x], int(255.0 * (1.0 - d) * (1.0 - d)))
+	var img := Image.create_from_data(px, px, false, Image.FORMAT_R8, _cmap)
+	if _ctex and _ctex.get_size() == Vector2(px, px):
+		_ctex.update(img)
+	else:
+		_ctex = ImageTexture.create_from_image(img)
+	material.set_shader_parameter("contact_map", _ctex)
 	material.set_shader_parameter("contact_rect", Vector4(-half, -half, 2.0 * half, 2.0 * half))
 	material.set_shader_parameter("contact_ao", float(g.ao))
 	material.set_shader_parameter("contact_albedo", float(g.albedo))
@@ -187,17 +215,20 @@ func movers(discs: PackedVector4Array) -> void:
 
 ## A print pressed into the dust: `foot_l` / `foot_r` (a boot with tread) or `wheel` (`width` wide, along `yaw`).
 ## Prints stay where they are made; they only fade when the square moves away from them.
+## The map wraps (toroidal addressing, GPU Gems 2 ch. 2): world pixel g lives at g mod trail_px, so the square
+## follows the camera without moving a byte, and only the strip that wraps in is cleared.
 func mark(pos: Vector3, yaw_deg: float, kind: String, width := 0.3) -> void:
-	var px := TRAIL_M / TRAIL_PX
+	var px := TRAIL_MPX
 	var fwd := Vector2(sin(deg_to_rad(yaw_deg)), -cos(deg_to_rad(yaw_deg)))  # x, z of the heading
 	var side := Vector2(-fwd.y, fwd.x)
 	var long := 0.30 if kind != "wheel" else 0.12
 	var wide := 0.12 if kind != "wheel" else width
-	var c := (Vector2(pos.x, pos.z) - trail_centre) / px + Vector2.ONE * TRAIL_PX / 2.0
+	var c := Vector2(pos.x, pos.z) / px
 	var r := int(ceil(maxf(long, wide) / px)) + 1
-	for y in range(int(c.y) - r, int(c.y) + r + 1):
-		for x in range(int(c.x) - r, int(c.x) + r + 1):
-			if x < 0 or y < 0 or x >= TRAIL_PX or y >= TRAIL_PX:
+	var win := Rect2i(trail_win, Vector2i(trail_px, trail_px))
+	for y in range(floori(c.y) - r, floori(c.y) + r + 1):
+		for x in range(floori(c.x) - r, floori(c.x) + r + 1):
+			if not win.has_point(Vector2i(x, y)):
 				continue
 			var d := (Vector2(x, y) - c) * px
 			var u := d.dot(fwd) / (long / 2.0)  # -1 heel to 1 toe
@@ -213,7 +244,10 @@ func mark(pos: Vector3, yaw_deg: float, kind: String, width := 0.3) -> void:
 				var e := u * u + pow(v / arch, 2.0)
 				depth = clampf((1.0 - e) * 4.0, 0.0, 1.0) * (0.75 + (0.25 if fposmod(d.dot(fwd) / 0.03, 1.0) >= 0.5 else 0.0))
 			if depth > 0.0:
-				trail.set_pixel(x, y, Color(maxf(trail.get_pixel(x, y).r, depth), 0, 0))
+				var tx := posmod(x, trail_px)
+				var ty := posmod(y, trail_px)
+				trail.set_pixel(tx, ty, Color(maxf(trail.get_pixel(tx, ty).r, depth), 0, 0))
+				_tiles[Vector2i(tx / TILE, ty / TILE)] = true
 	trail_dirty = true
 
 
@@ -221,24 +255,105 @@ func _process(_delta: float) -> void:
 	var cam := get_viewport().get_camera_3d()
 	if cam and trail:
 		var at := Vector2(cam.global_position.x, cam.global_position.z)
-		if at.distance_to(trail_centre) > TRAIL_SHIFT:
+		if at.distance_to(trail_centre) > trail_px * TRAIL_MPX / 4.0:
 			_move_trail(at)
 	if trail_dirty:
-		trail_tex.update(trail)
-		trail_dirty = false
+		_upload()
 
 
-## Moves the square to `at` in whole pixels, so the prints that stay inside keep their place exactly.
+## The prints changed since the last frame, to the GPU: each changed tile drawn over its place in trail_view, wrapped-in
+## strips wiped first. A whole-map ImageTexture.update() sent 4 MB per print and missed vsync (profile of 12 Nov).
+func _upload() -> void:
+	for i in _wipes.size():
+		_wipes[i].visible = i < _clears.size()
+		if i < _clears.size():
+			_wipes[i].position = _clears[i].position
+			_wipes[i].size = _clears[i].size
+	_clears = _clears.slice(_wipes.size())
+	var n := 0
+	for t: Vector2i in _tiles.keys():
+		if n == _patches.size():
+			break  # the rest go next frame
+		var patch := _patches[n]
+		(patch.texture as ImageTexture).update(trail.get_region(Rect2i(t * TILE, Vector2i(TILE, TILE))))
+		patch.position = Vector2(t * TILE)
+		patch.visible = true
+		_tiles.erase(t)
+		n += 1
+	for i in range(n, _patches.size()):
+		_patches[i].visible = false
+	trail_dirty = not (_tiles.is_empty() and _clears.is_empty())
+	trail_view.render_target_update_mode = SubViewport.UPDATE_ONCE
+
+
+## A new, empty map `px` wide (a quality switch to another size drops the prints).
+func _trail_setup(px: int) -> void:
+	trail_px = px
+	trail = Image.create_empty(px, px, false, Image.FORMAT_R8)
+	if trail_view:
+		trail_view.free()
+	_patches.clear()
+	_wipes.clear()
+	_tiles.clear()
+	_clears.clear()
+	trail_view = SubViewport.new()
+	trail_view.name = "Trail"
+	trail_view.size = Vector2i(px, px)
+	trail_view.disable_3d = true
+	trail_view.transparent_bg = true  # cleared to 0: no print
+	trail_view.render_target_clear_mode = SubViewport.CLEAR_MODE_NEVER
+	trail_view.render_target_update_mode = SubViewport.UPDATE_ONCE  # the first draw clears it
+	add_child(trail_view)
+	# made now, not while playing: nothing is allocated per print
+	for i in 8:
+		var w := ColorRect.new()
+		w.color = Color(0, 0, 0, 1)
+		w.visible = false
+		trail_view.add_child(w)
+		_wipes.append(w)
+	for i in 48:  # a rover's frame touches a few tiles; a burst over this waits a frame
+		var p := Sprite2D.new()
+		p.centered = false
+		p.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		p.z_index = 1  # over the wipes
+		p.texture = ImageTexture.create_from_image(Image.create_empty(TILE, TILE, false, Image.FORMAT_R8))
+		p.visible = false
+		trail_view.add_child(p)
+		_patches.append(p)
+	material.set_shader_parameter("trail_map", trail_view.get_texture())
+	var at := trail_centre
+	trail_win = Vector2i(roundi(at.x / TRAIL_MPX), roundi(at.y / TRAIL_MPX)) - Vector2i(px, px) / 2
+	_trail_rect()
+
+
+## Moves the square to `at` in whole pixels. Prints inside both squares stay put; the strip that wraps in is zeroed.
 func _move_trail(at: Vector2) -> void:
-	var px := TRAIL_M / TRAIL_PX
-	var shift := Vector2i(roundi((at.x - trail_centre.x) / px), roundi((at.y - trail_centre.y) / px))
-	var moved := Image.create_empty(TRAIL_PX, TRAIL_PX, false, Image.FORMAT_R8)
-	moved.blit_rect(trail, Rect2i(shift, Vector2i(TRAIL_PX, TRAIL_PX)), Vector2i.ZERO)
-	trail = moved
-	trail_centre += Vector2(shift) * px
+	var old := Rect2i(trail_win, Vector2i(trail_px, trail_px))
+	trail_win = Vector2i(roundi(at.x / TRAIL_MPX), roundi(at.y / TRAIL_MPX)) - Vector2i(trail_px, trail_px) / 2
+	var now := Rect2i(trail_win, Vector2i(trail_px, trail_px))
+	var keep := now.intersection(old)
+	var fresh: Array[Rect2i] = [now]
+	if keep.has_area():
+		fresh = [Rect2i(now.position.x, now.position.y, keep.position.x - now.position.x, trail_px),
+			Rect2i(keep.end.x, now.position.y, now.end.x - keep.end.x, trail_px),
+			Rect2i(keep.position.x, now.position.y, keep.size.x, keep.position.y - now.position.y),
+			Rect2i(keep.position.x, keep.end.y, keep.size.x, now.end.y - keep.end.y)]
+	for r in fresh:
+		if not r.has_area():
+			continue
+		# a rect no wider than the map falls in at most two pieces along each axis once wrapped
+		var x0 := posmod(r.position.x, trail_px)
+		var y0 := posmod(r.position.y, trail_px)
+		for xs: Vector2i in [Vector2i(x0, mini(r.size.x, trail_px - x0)), Vector2i(0, r.size.x - (trail_px - x0))]:
+			for ys: Vector2i in [Vector2i(y0, mini(r.size.y, trail_px - y0)), Vector2i(0, r.size.y - (trail_px - y0))]:
+				if xs.y > 0 and ys.y > 0:
+					var piece := Rect2i(xs.x, ys.x, xs.y, ys.y)
+					trail.fill_rect(piece, Color(0, 0, 0))
+					_clears.append(piece)
 	_trail_rect()
 	trail_dirty = true
 
 
 func _trail_rect() -> void:
-	material.set_shader_parameter("trail_rect", Vector4(trail_centre.x - TRAIL_M / 2.0, trail_centre.y - TRAIL_M / 2.0, TRAIL_M, TRAIL_M))
+	trail_centre = (Vector2(trail_win) + Vector2.ONE * trail_px / 2.0) * TRAIL_MPX
+	material.set_shader_parameter("trail_rect", Vector4(trail_win.x * TRAIL_MPX, trail_win.y * TRAIL_MPX, trail_px * TRAIL_MPX, trail_px * TRAIL_MPX))

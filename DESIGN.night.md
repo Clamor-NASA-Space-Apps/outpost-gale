@@ -116,10 +116,28 @@ lighting:
   toneMapping: aces
   fog: { color: "{colors.horizon}", near: 20, far: 2600, sky: 0.15, curve: 1.4, density: 0.75, sun: 0 }
   lamp: { color: "#dff6f0", intensity: 14, distance: 14 }
+  celestial:
+    pole: [317.681, 52.887]
+    latitude: -4.59
+    radius: 3389.5
+    day: 88642.4
+    sun: [288.17, -23.95]
+    hour: 19.5
+    timeScale: 10
+    tau: 0.5
+    stars: { map: textures/sky/stars.png, list: textures/sky/star_list.png, brightness: 2.0, milkyWay: 0.6, milkyColor: "#dfe3f0" }
+    planets:
+      - { name: Earth, ra: 327.44, dec: -15.14, mag: -2.3, color: "#a9c8ff" }
+      - { name: Venus, ra: 314.21, dec: -19.93, mag: -2.7, color: "#fff4dc" }
+      - { name: Jupiter, ra: 148.02, dec: 13.31, mag: -2.8, color: "#ffe8c8" }
+      - { name: Saturn, ra: 3.65, dec: -1.29, mag: 0.9, color: "#ffe0a0" }
+    moons:
+      - { name: Phobos, radius: 11.08, orbit: 9375, period: 27554, start: -25, color: "#8c8780", brightness: 6.0 }
+      - { name: Deimos, radius: 6.2, orbit: 23457, period: 109075, start: 20, color: "#8c8780", brightness: 6.0 }
 quality:
-  low: { msaa: 0, scale: 0.75, shadows: 1, shadowMap: 1024, shadowRange: 25, shadowFilter: 2, normalBias: 2, glow: 0, detail: off }
-  medium: { msaa: 2, scale: 1, shadows: 2, shadowMap: 2048, shadowRange: 60, shadowFilter: 4, normalBias: 6, glow: 0.4, detail: code }
-  high: { msaa: 4, scale: 1, shadows: 2, shadowMap: 4096, shadowRange: 60, shadowFilter: 4, normalBias: 4, glow: 0.5, detail: texture }
+  low: { msaa: 0, pixels: 0.6, shadows: 1, shadowMap: 1024, shadowRange: 25, shadowFilter: 2, normalBias: 2, glow: 0, detail: off, aniso: 1, ground: flat, particles: 0.5, trail: 1024, lamps: 2 }
+  medium: { msaa: 2, pixels: 1.0, shadows: 2, shadowMap: 2048, shadowRange: 60, shadowFilter: 4, normalBias: 6, glow: 0.4, detail: code, aniso: 2, ground: full, particles: 0.75, trail: 2048, lamps: 4 }
+  high: { msaa: 2, scale: 1, shadows: 2, shadowMap: 4096, shadowRange: 60, shadowFilter: 4, normalBias: 4, glow: 0.5, detail: texture, aniso: 2, ground: full, particles: 1, trail: 2048 }
 kit:
   "^(tex_0[1-5]|wheels|parts_AO)$": keep
   "^internals$": body

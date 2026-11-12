@@ -293,12 +293,19 @@ static func apply_lighting(parent: Node, design: Dictionary) -> Dictionary:
 	# without it they render black
 	# `sunDisc` is the sun's size in degrees, drawn with a haze around it (`halo`: colour, size in degrees, strength;
 	# by default the sun's colour, ten discs wide); 0 draws no sun. `twilight` (colour, azimuth, height in degrees,
-	# strength) is a glow along the horizon toward an azimuth, the sun's by default, and needs no disc
+	# strength) is a glow along the horizon toward an azimuth, the sun's by default, and needs no disc. `celestial`
+	# is a planet's real night sky (_celestial())
 	var disc := float(L.get("sunDisc", 0))
 	var sky_mat: Material
-	if disc > 0.0 or L.has("twilight"):
+	var clock: SkyClock = null
+	if disc > 0.0 or L.has("twilight") or L.has("celestial"):
 		var sm := ShaderMaterial.new()
-		sm.shader = preload("sky.gdshader")
+		# the shader names the global clock, and compiles when it loads: the global must exist first
+		# (the list of globals leaves out ones added at run time, so a flag remembers it)
+		if not Engine.has_meta(&"forge_sky_clock"):
+			RenderingServer.global_shader_parameter_add(&"forge_sky_clock", RenderingServer.GLOBAL_VAR_TYPE_FLOAT, 0.0)
+			Engine.set_meta(&"forge_sky_clock", true)
+		sm.shader = load("res://addons/forge/sky.gdshader")
 		var sun_color := Color.html(L.get("sunColor", "#ffffff"))
 		var halo: Dictionary = L.get("halo", {})
 		var dusk: Dictionary = L.get("twilight", {})
@@ -315,6 +322,9 @@ static func apply_lighting(parent: Node, design: Dictionary) -> Dictionary:
 		sm.set_shader_parameter("twilight_dir", Vector3(sin(az), 0.0, cos(az)))  # azimuth as the sun's, below
 		sm.set_shader_parameter("twilight_height", deg_to_rad(float(dusk.get("height", 10))))
 		sm.set_shader_parameter("twilight_strength", float(dusk.get("strength", 0.0)))
+		if L.has("celestial"):
+			_celestial(sm, L.celestial)
+			clock = SkyClock.new()
 		sky_mat = sm
 	else:
 		var ps := ProceduralSkyMaterial.new()
@@ -401,11 +411,87 @@ static func apply_lighting(parent: Node, design: Dictionary) -> Dictionary:
 	# a preset that turns the shadow off (set_quality) needs the plain energy back, or the scene goes dim
 	sun.set_meta("energy", {false: sun.light_energy, true: shadowed})
 	sun.light_energy = shadowed
-	for n: Node in [world, sun]:
-		n.set_meta("house_rig", true)
-		parent.add_child(n)
+	for n: Node in [world, sun, clock]:
+		if n:
+			n.set_meta("house_rig", true)
+			parent.add_child(n)
 	sun.look_at(Vector3.ZERO)
 	return {"world": world, "sun": sun}
+
+
+## Counts the seconds sky.gdshader turns its night sky by, from when the rig was built: a global shader uniform, as a
+## material parameter set every frame would re-render the sky's reflection cubemap over and over.
+class SkyClock extends Node:
+	var t := 0.0
+
+	func _process(delta: float) -> void:
+		t += delta
+		RenderingServer.global_shader_parameter_set(&"forge_sky_clock", t)
+
+
+## A planet's real night sky from DESIGN.md `lighting.celestial` (sky.gdshader, tools/sky-stars.mjs):
+##   pole: [RA, Dec] of the planet's north pole (deg, J2000)   latitude: the place (deg, north +)   day: sidereal day (s)
+##   radius: the planet's (km)   sun: [RA, Dec] of the sun on the chosen date   hour: local solar hour of the scene
+##   timeScale: how many times faster the sky turns than the real one   tau: dust optical depth (horizon dimming)
+##   stars: {map, list (from tools/sky-stars.mjs, paths from the project), brightness, milkyWay, milkyColor}
+##   planets: [{ra, dec, mag, color}]   moons: [{radius, orbit (km), period (s), start (deg east of the meridian
+##   along its orbit at the start; negative rises in the west for a moon faster than the sky), color, brightness}]
+## Stars come out with the sun's real elevation at that hour: planets and moons from sunset to civil dusk (-6 deg),
+## stars to nautical (-12), the Milky Way to astronomical (-18) (US Naval Observatory twilight definitions).
+static func _celestial(sm: ShaderMaterial, C: Dictionary) -> void:
+	var dir := func(ra_dec: Array) -> Vector3:
+		var ra := deg_to_rad(float(ra_dec[0]))
+		var de := deg_to_rad(float(ra_dec[1]))
+		return Vector3(cos(de) * cos(ra), cos(de) * sin(ra), sin(de))
+	var pole: Vector3 = dir.call(C.pole)
+	var node := Vector3(0, 0, 1).cross(pole).normalized()  # where the planet's equator crosses Earth's
+	var frame := Basis(node, pole.cross(node), pole)
+	var to_eq := frame.transposed()
+	var lat := deg_to_rad(float(C.latitude))
+	var sun_eq: Vector3 = to_eq * dir.call(C.sun)
+	# the sun is on the meridian at noon, and the sky turns 15 degrees a planet hour
+	var lst0 := atan2(sun_eq.y, sun_eq.x) + deg_to_rad((float(C.hour) - 12.0) * 15.0)
+	var zen := Vector3(cos(lat) * cos(lst0), cos(lat) * sin(lst0), sin(lat))
+	var sun_el := rad_to_deg(asin(sun_eq.dot(zen)))
+	var scale := float(C.get("timeScale", 1))
+	var R := float(C.radius)
+	var stars: Dictionary = C.get("stars", {})
+	sm.set_shader_parameter("celestial", true)
+	sm.set_shader_parameter("frame", frame)
+	sm.set_shader_parameter("latitude", lat)
+	sm.set_shader_parameter("lst0", lst0)
+	sm.set_shader_parameter("spin", TAU / float(C.day) * scale)
+	sm.set_shader_parameter("planet_radius", 1.0)
+	sm.set_shader_parameter("tau", float(C.get("tau", 0.5)))
+	sm.set_shader_parameter("sun_eq", sun_eq)
+	sm.set_shader_parameter("moon_fade", clampf(-sun_el / 6.0, 0.0, 1.0))
+	sm.set_shader_parameter("star_fade", clampf((-sun_el - 6.0) / 6.0, 0.0, 1.0))
+	sm.set_shader_parameter("star_gain", float(stars.get("brightness", 1)))
+	sm.set_shader_parameter("milky_gain", float(stars.get("milkyWay", 0.5)) * clampf((-sun_el - 12.0) / 6.0, 0.0, 1.0))
+	sm.set_shader_parameter("milky_color", Color.html(stars.get("milkyColor", "#ffffff")))
+	for k: String in ["map", "list"]:
+		if stars.has(k) and ResourceLoader.exists("res://" + str(stars[k])):
+			sm.set_shader_parameter({"map": "star_map", "list": "star_list"}[k], load("res://" + str(stars[k])))
+	var dirs := PackedVector4Array()
+	var colors := PackedColorArray()
+	for p: Dictionary in C.get("planets", []).slice(0, 4):
+		var d: Vector3 = to_eq * dir.call([p.ra, p.dec])
+		dirs.append(Vector4(d.x, d.y, d.z, float(p.mag)))
+		colors.append(Color.html(p.get("color", "#ffffff")))
+	dirs.resize(4)  # unused slots are zero: the shader skips them
+	colors.resize(4)
+	sm.set_shader_parameter("planet_dir", dirs)
+	sm.set_shader_parameter("planet_color", colors)
+	var orbits := PackedVector4Array()
+	var looks := PackedVector4Array()
+	for m: Dictionary in C.get("moons", []).slice(0, 2):
+		orbits.append(Vector4(float(m.radius) / R, float(m.orbit) / R, lst0 + deg_to_rad(float(m.start)), TAU / float(m.period) * scale))
+		var c := Color.html(m.get("color", "#808080")).srgb_to_linear()
+		looks.append(Vector4(c.r, c.g, c.b, float(m.get("brightness", 1))))
+	orbits.resize(2)
+	looks.resize(2)
+	sm.set_shader_parameter("moon_orbit", orbits)
+	sm.set_shader_parameter("moon_look", looks)
 
 
 ## How bright a linear value ends up on screen, 0 to 1, by the engine's own tone curves
@@ -452,21 +538,77 @@ static func default_quality() -> String:
 	return "low" if ["mobile", "web_android", "web_ios"].any(OS.has_feature) else "high"
 
 
-## Puts one DESIGN.md `quality` preset on the running scene under `root`, the node apply_lighting() was given.
-##   msaa: 0, 2, 4 or 8        scale: the 3D picture's size as a share of the window
+## Every knob a settings screen may set on its own (set_quality() `overrides`), so the screen is built from data:
+## `values` it offers (a number knob takes anything in [first, last]), `default` when a preset leaves it out, and
+## `recompile`: a change compiles new shader variants, so warm() behind a cover before showing it (no shader cache
+## on the web). `game` knobs are read by the game's own restyle from design["_quality"], not here.
+const KNOBS := {
+	"msaa": {"values": [0, 2, 4, 8], "default": 0, "recompile": false},
+	"pixels": {"values": [0.0, 0.4, 0.6, 1.0, 1.5, 2.1, 4.0], "default": 0.0, "recompile": false},  # 3D Mpx budget, 0 = no cap
+	"scale": {"values": [0.5, 0.6, 0.75, 0.85, 1.0], "default": 1.0, "recompile": false},  # under the budget
+	"shadows": {"values": [0, 1, 2, 4], "default": 2, "recompile": true},
+	"shadowMap": {"values": [512, 1024, 2048, 4096], "default": 2048, "recompile": false},
+	"shadowRange": {"values": [15, 25, 40, 60], "default": 60, "recompile": false},
+	"shadowFilter": {"values": [0, 1, 2, 3, 4, 5], "default": 2, "recompile": true},
+	"normalBias": {"values": [0.0, 2.0, 4.0, 6.0], "default": 4.0, "recompile": false},
+	"glow": {"values": [0.0, 0.2, 0.4, 0.5, 0.8], "default": 0.0, "recompile": true},
+	"fog": {"values": [true, false], "default": true, "recompile": true},
+	"ssao": {"values": [false, true], "default": false, "recompile": true},
+	"aniso": {"values": [0, 1, 2, 3, 4], "default": 2, "recompile": false},  # off, 2x, 4x, 8x, 16x
+	"detail": {"values": ["off", "code", "texture"], "default": "off", "recompile": true},
+	"lamps": {"values": [0, 1, 2, 4, 8, -1], "default": -1, "recompile": true},  # nearest lamps lit, -1 all
+	"vsync": {"values": [true, false], "default": true, "recompile": false},
+	"maxFps": {"values": [0, 30, 60, 120], "default": 0, "recompile": false},  # 0 = no cap
+	"trail": {"values": [512, 1024, 2048], "default": 2048, "recompile": false, "game": true},  # print map pixels
+	"particles": {"values": [0.25, 0.5, 0.75, 1.0], "default": 1.0, "recompile": false, "game": true},  # share of dust
+	"ground": {"values": ["flat", "cheap", "full"], "default": "full", "recompile": true, "game": true},  # ground shader
+}
+
+
+## The knobs as a settings screen shows them: name -> {values, recompile, game, value (in force), preset (the
+## preset's own)}. Knobs the design never mentions report their default.
+static func knobs(design: Dictionary) -> Dictionary:
+	var q: Dictionary = design.get("_quality", {})
+	var preset: Dictionary = design.get("quality", {}).get(design.get("_quality_level", ""), {})
+	var out := {}
+	for k: String in KNOBS:
+		var row: Dictionary = KNOBS[k].duplicate()
+		row.value = q.get(k, row.default)
+		row.preset = preset.get(k, row.default)
+		row.game = row.get("game", false)
+		out[k] = row
+	return out
+
+
+## Puts one DESIGN.md `quality` preset on the running scene under `root`, the node apply_lighting() was given, with
+## `overrides` (knob -> value, KNOBS) on top: a settings screen passes the player's own choices.
+##   msaa: 0, 2, 4 or 8        pixels: the 3D picture's budget in millions of pixels, so a 3x phone and a laptop shade
+##   a similar count (scale = min(scale, sqrt(budget / window pixels)), A3 in frame-budget)        scale: a cap under it
 ##   shadows: 0 for none, else the sun's splits (1, 2 or 4)        shadowMap: its map, in pixels
 ##   glow: 0 for none, else its strength        lamps: how many lamps shine at once, the nearest ones (absent: all)
 ##   detail: off, code (each role's `detail` pattern) or texture (its photo, where it names one)
+##   aniso: anisotropic filtering level        fog, ssao: on or off        vsync, maxFps: the frame pacing
 ## Every key is set on every call, so nothing of the preset before is left behind.
-static func set_quality(root: Node, design: Dictionary, level: String) -> void:
-	var q: Dictionary = design.get("quality", {}).get(level, {})
+static func set_quality(root: Node, design: Dictionary, level: String, overrides := {}) -> void:
+	var q: Dictionary = design.get("quality", {}).get(level, {}).duplicate()
 	if q.is_empty():
 		push_error("house-style: DESIGN.md quality has no preset \"%s\"" % level)
 		return
+	q.merge(overrides, true)
 	design["_quality"] = q  # a role first used after this call takes the same detail
+	design["_quality_level"] = level
 	var view := root.get_viewport()
 	view.msaa_3d = {2: Viewport.MSAA_2X, 4: Viewport.MSAA_4X, 8: Viewport.MSAA_8X}.get(int(q.get("msaa", 0)), Viewport.MSAA_DISABLED)
-	view.scaling_3d_scale = float(q.get("scale", 1))
+	view.anisotropic_filtering_level = int(q.get("aniso", KNOBS.aniso.default)) as Viewport.AnisotropicFiltering
+	if not view.has_meta("forge_quality"):
+		view.size_changed.connect(func() -> void: _fit_pixels(view, view.get_meta("forge_quality")))
+	view.set_meta("forge_quality", q)
+	_fit_pixels(view, q)
+	# frame pacing only when asked for: a preset without it leaves the window as the tools set it
+	if q.has("vsync"):
+		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED if q.vsync else DisplayServer.VSYNC_DISABLED)
+	if q.has("maxFps"):
+		Engine.max_fps = int(q.maxFps)
 	var splits := int(q.get("shadows", 2))
 	var map := int(q.get("shadowMap", 2048))
 	RenderingServer.directional_shadow_atlas_set_size(map, true)
@@ -474,6 +616,11 @@ static func set_quality(root: Node, design: Dictionary, level: String) -> void:
 		if rig is WorldEnvironment and rig.has_meta("house_rig"):
 			rig.environment.glow_enabled = float(q.get("glow", 0)) > 0.0
 			rig.environment.glow_intensity = float(q.get("glow", 0))
+			rig.environment.ssao_enabled = bool(q.get("ssao", false))
+			# the design's fog, unless the player turned it off (apply_lighting() makes a new environment each time)
+			if not rig.environment.has_meta("fog"):
+				rig.environment.set_meta("fog", rig.environment.fog_enabled)
+			rig.environment.fog_enabled = rig.environment.get_meta("fog") and q.get("fog", true)
 		elif rig is DirectionalLight3D and rig.has_meta("house_rig"):
 			rig.shadow_enabled = splits > 0
 			rig.directional_shadow_mode = {1: DirectionalLight3D.SHADOW_ORTHOGONAL, 4: DirectionalLight3D.SHADOW_PARALLEL_4_SPLITS}.get(
@@ -497,7 +644,7 @@ static func set_quality(root: Node, design: Dictionary, level: String) -> void:
 	for m: Material in design.get("_kept", {}).values():
 		_kept(design, m.get_meta("kept"), m.get_meta("still"))
 	var pool: Node = root.get_node_or_null("LampPool")
-	if not q.has("lamps"):
+	if int(q.get("lamps", -1)) < 0:
 		if pool:
 			pool.free()  # on its way out it turns every lamp back on
 		return
@@ -506,3 +653,122 @@ static func set_quality(root: Node, design: Dictionary, level: String) -> void:
 		pool.name = "LampPool"
 		root.add_child(pool)
 	pool.count = int(q.lamps)
+
+
+## The 3D picture's scale from the `pixels` budget and the window's real pixels (a phone's canvas has its full
+## density on the web), capped by `scale`.
+static func _fit_pixels(view: Viewport, q: Dictionary) -> void:
+	var scale := float(q.get("scale", 1))
+	var budget := float(q.get("pixels", 0)) * 1e6
+	var size := Vector2(view.get_window().size) if view.get_window() else view.get_visible_rect().size
+	if budget > 0.0 and size.x * size.y > 0.0:
+		scale = minf(scale, sqrt(budget / (size.x * size.y)))
+	view.scaling_3d_scale = clampf(scale, 0.25, 1.0)
+
+
+## Draws one of every material under `root` (plus `extra`, materials that are swapped in later, like a fade) in front
+## of a camera at `at` for a few frames, under the lights and quality in force, and every particle emitter once:
+## Compatibility compiles a shader variant on first sight, and the web build keeps no cache between visits (skills/
+## frame-budget section 1). Call it behind a cover at load and after a quality or sky switch, and await it. Each
+## distinct render `layers` value seen gets its own copy (a reflection probe's mask makes another variant), and a
+## design with lamps gets a lamp over half the stage (a lamp in reach is another variant). Put `at` inside any
+## reflection probe the game has.
+static func warm(root: Node, design: Dictionary, at: Transform3D, extra: Array = [], frames := 3) -> void:
+	if Array(OS.get_cmdline_user_args()).any(func(a: String) -> bool: return a.begins_with("--forge-job=")):
+		return  # a tool run wants pictures and state, not hitches; every variant on the tools' software GL took minutes
+	# each material with what its instances use: the render layers (a probe's reflection mask picks a variant), whether
+	# it is drawn instanced (MultiMesh, particles) and whether it casts (a depth variant). Copies of the same variant
+	# cost a draw, not a compile; an unused variant costs a compile (seconds on the web), so only these are drawn.
+	var mats: Dictionary = {}  # Material -> {layers: {int: true}, inst: {bool: true}, cast: bool}
+	var masks := 0
+	for p: ReflectionProbe in root.find_children("*", "ReflectionProbe", true, false):
+		masks |= p.reflection_mask
+	var emitters: Array[GPUParticles3D] = []
+	var use := func(m: Material, g: GeometryInstance3D, inst: bool) -> void:
+		if m == null:
+			return
+		var u: Dictionary = mats.get_or_add(m, {"layers": {}, "inst": {}, "cast": false})
+		u.layers[g.layers] = true
+		if g.layers & masks:
+			u.layers[1 << 19] = true  # the same thing outside every probe's box: drawn on a layer no probe reflects
+		u.inst[inst] = true
+		u.cast = u.cast or g.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	for g: GeometryInstance3D in root.find_children("*", "GeometryInstance3D", true, false):
+		use.call(g.material_override, g, false)
+		use.call(g.material_overlay, g, false)
+		if g is MeshInstance3D and (g as MeshInstance3D).mesh:
+			var mi := g as MeshInstance3D
+			for i in mi.mesh.get_surface_count():
+				use.call(mi.get_surface_override_material(i) if mi.get_surface_override_material(i) else mi.mesh.surface_get_material(i), g, false)
+		elif g is MultiMeshInstance3D and (g as MultiMeshInstance3D).multimesh and (g as MultiMeshInstance3D).multimesh.mesh:
+			var mesh := (g as MultiMeshInstance3D).multimesh.mesh
+			for i in mesh.get_surface_count():
+				use.call(mesh.surface_get_material(i), g, true)
+		elif g is GPUParticles3D:
+			emitters.append(g)
+	for m: Material in extra:
+		mats[m] = {"layers": {1: true}, "inst": {false: true}, "cast": false}
+	var cam := Camera3D.new()
+	var was := root.get_viewport().get_camera_3d()
+	if was:
+		cam.fov = was.fov
+		cam.near = was.near
+		cam.far = was.far
+	var stage := Node3D.new()
+	stage.name = "WarmStage"
+	root.add_child(stage)
+	stage.global_transform = at
+	stage.add_child(cam)
+	cam.make_current()
+	var box := BoxMesh.new()
+	box.size = Vector3.ONE * 0.05
+	var lamp := make_lamp(design)
+	# with lamps, a second group in a lamp's reach (a lamp in reach is another variant), and one out of it
+	for side: float in ([-3.0, 3.0] if lamp else [0.0]):
+		var spot := Vector3(side, 0.0, -8.0)
+		if lamp and side < 0.0:
+			lamp.omni_range = 1.5  # the variant does not depend on the reach; keep the other group out of it
+			lamp.position = spot + Vector3(0, 0.5, 0)
+			stage.add_child(lamp)
+		var k := 0
+		for m: Material in mats:
+			var u: Dictionary = mats[m]
+			for layers: int in u.layers:
+				for inst: bool in u.inst:
+					var g: GeometryInstance3D
+					if inst:
+						var mm := MultiMesh.new()
+						mm.transform_format = MultiMesh.TRANSFORM_3D
+						mm.mesh = box
+						mm.instance_count = 1
+						g = MultiMeshInstance3D.new()
+						(g as MultiMeshInstance3D).multimesh = mm
+					else:
+						g = MeshInstance3D.new()
+						(g as MeshInstance3D).mesh = box
+					g.material_override = m
+					g.layers = layers
+					g.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON if u.cast else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+					g.position = spot + Vector3(float(k % 12) * 0.06 - 0.33, float(floori(k / 12.0) % 12) * 0.06 - 0.33, -0.01 * floorf(k / 144.0))
+					stage.add_child(g)
+					k += 1
+		for e in emitters:
+			var c := e.duplicate() as GPUParticles3D
+			c.visible = true
+			c.local_coords = false
+			c.preprocess = 0.0
+			c.one_shot = false
+			c.amount_ratio = 1.0
+			c.position = spot
+			stage.add_child(c)
+			c.emitting = true
+			c.restart()
+	var tree := root.get_tree()
+	for i in frames:
+		await tree.process_frame
+	if not is_instance_valid(stage):
+		return  # the scene went away while it warmed
+	if was and is_instance_valid(was):
+		was.make_current()
+	stage.free()
+

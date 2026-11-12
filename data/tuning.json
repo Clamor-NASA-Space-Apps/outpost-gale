@@ -80,13 +80,14 @@
   }
  },
  "audio": {
-  "note": "The mix (audio/audio.gd). dB on top of the files, which are normalised (loops -20 LUFS, one-shots -3 dBFS peak). range: m, a 3D sound's cut-off, Mars sound 'falters at just 26 feet (8 meters)' (NASA/JPL 2022); unit_size: m where a 3D sound starts to fall away. fade_s: s of the inside/outside crossfade. breath: rest in breaths a minute, a resting adult takes 12 to 18 (MedlinePlus, Vital signs); hard (at the sheet's hurry speed), rise_s and fall_s (time constants: up fast, settling back slowly) and inhale_share (where in a breath the exhale starts) are art direction, never shown to players. wind: ref_speed m/s that plays at wind.db (sky states blow 4 to 6, world.json weather); gust: the swell's share; gust_hz: its slow noise frequency. habitat and machines: world.json item ids. pitch: random spread on one-shots",
+  "note": "The mix (audio/audio.gd). dB on top of the files, which are normalised (loops -20 LUFS, one-shots -3 dBFS peak). range: m, a 3D sound's cut-off, Mars sound 'falters at just 26 feet (8 meters)' (NASA/JPL 2022); unit_size: m where a 3D sound starts to fall away. fade_s: s of the inside/outside crossfade. breath: rest in breaths a minute, a resting adult takes 12 to 18 (MedlinePlus, Vital signs); hard (at the sheet's hurry speed), rise_s and fall_s (time constants: up fast, settling back slowly) and inhale_share (where in a breath the exhale starts) are art direction, never shown to players. wind: ref_speed m/s that plays at wind.db (sky states blow 4 to 6, world.json weather); gust: the swell's share; gust_hz: its slow noise frequency. habitat and machines: world.json item ids. pitch: random spread on one-shots. music: db of a cue (files at about -16 LUFS), fade_s its fade in, gap_s the least silence between two cues (rare by design: skills/living-atmosphere), art direction, never shown to players",
   "fade_s": 1.0,
   "bus_db": {
    "Suit": 0,
    "Outside": 0,
    "Habitat": 0,
-   "UI": 0
+   "UI": 0,
+   "Music": 0
   },
   "suit_inside_db": -6,
   "range": 8,
@@ -135,7 +136,12 @@
    "bag_drop": 0
   },
   "hiss_after": 0.6,
-  "chirp_db": -12
+  "chirp_db": -12,
+  "music": {
+   "db": -8,
+   "fade_s": 0.6,
+   "gap_s": 60
+  }
  },
  "rover": {
   "note": "sandbox/rover.gd, art direction (the physical rows are reality.json rover.*). travel: m each wheel's suspension takes up either way before the body tilts; wheel_shade and body_shade: [radius m, strength 0 to 1] of the moving contact shadow under each wheel pair and under the body's two halves (world.touch(), shaded like data/world.json grounding)",

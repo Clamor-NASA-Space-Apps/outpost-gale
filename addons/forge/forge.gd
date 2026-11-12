@@ -8,6 +8,7 @@ extends Node
 ##   func render_game_to_text() -> Dictionary             # required: a snapshot of game state
 ##   func set_view(view: String) -> void                  # optional: camera to a named preset
 ##   func place(pos: Vector3, yaw_deg: float) -> void     # optional: put the hero down for a probe row
+##   func busy() -> bool                                  # optional: true while a cover hides the scene (HouseStyle.warm())
 ## Vector3, Vector2 and Color values in the snapshot become arrays in the JSON, so return them as they are.
 ##
 ## The look: Forge.HouseStyle.apply(model, design) and Forge.HouseStyle.apply_lighting(self, design).
@@ -177,6 +178,10 @@ func _key(key: String, down: bool) -> void:
 
 
 func _shot(file: String, errors: Array) -> bool:
+	for i in 600:  # a game warming its shaders behind a cover is not in the picture yet
+		if not (hooks and hooks.has_method("busy") and hooks.busy()):
+			break
+		await get_tree().process_frame
 	await RenderingServer.frame_post_draw
 	var tex := get_viewport().get_texture()
 	var img := tex.get_image() if tex else null

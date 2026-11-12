@@ -1,7 +1,7 @@
 extends "res://addons/forge/test.gd"
 ## The sound bed listens to the game (skills/living-atmosphere, Checks): godot --headless --path . -s tests/audio_test.gd
 
-const KEYS := ["started", "inside", "buses", "breath", "gust", "steps", "lastStep"]
+const KEYS := ["started", "inside", "buses", "breath", "gust", "steps", "lastStep", "music"]
 
 var game: Node3D
 var audio: Node
@@ -98,6 +98,8 @@ func play() -> bool:
 	await seconds(4.0)
 	action(&"move_forward", false)
 	check(audio._in_habitat(), "the hero walked into the habitat (at %s)" % player.body.global_position)
+	var indoors: Vector3 = player.body.global_position
+	check(audio.cue == "", "no music on the way in")
 	await seconds(audio.t.fade_s + 0.2)
 	check(audio.inside == 1.0, "the crossfade finished inside")
 	check(bus("Outside") < -40.0 and bus("Habitat") > -1.0, "inside: Outside down (%.0f dB), Habitat up (%.0f dB)" % [bus("Outside"), bus("Habitat")])
@@ -105,4 +107,42 @@ func play() -> bool:
 	player.place(game.world.landmark("spawn").pos, 0.0)
 	await seconds(audio.t.fade_s + 0.2)
 	check(bus("Outside") > -1.0 and bus("Habitat") < -40.0, "back outside, the buses swap back")
+
+	# music: rare cues on a clear bus of their own (skills/living-atmosphere)
+	check(AudioServer.get_bus_index("Music") >= 0, "a Music bus exists")
+	check(audio.cue == "first_step" and playing_music().size() == 1, "the first step outside plays first_step (%s)" % audio.cue)
+	var first: Array = playing_music()
+	audio._cue_end = -1e9  # as if the cue and the gap were long over
+	player.place(indoors, 180.0)
+	await seconds(0.5)
+	player.place(game.world.landmark("spawn").pos, 0.0)
+	await seconds(0.5)
+	check(audio.cue == "" and playing_music() == first, "first_step plays once a session (%s)" % audio.cue)
+	player.place(indoors, 180.0)
+	await seconds(0.5)
+	game.interactions.use(door)  # the hero closes the airlock behind them
+	await frames(1)
+	check(audio.cue == "airlock_sealed", "closing the airlock inside plays airlock_sealed (%s)" % audio.cue)
+	var sealed: Array = playing_music().filter(func(q: Node) -> bool: return q not in first)
+	check(not audio.music("discovery") and playing_music().size() == first.size() + 1, "a cue never starts over another")
+	audio._cue_end = audio._time - 1.0
+	check(not audio.music("discovery"), "nor within the gap after one ends")
+	await seconds(audio._stream("music/airlock_sealed").get_length() / 0.8 + 0.5)
+	check(sealed.size() == 1 and not is_instance_valid(sealed[0]), "a cue's player is freed when it has played")
+	audio._cue_end = -1e9
+	game._sky(game.SKIES.find("design.sunset"))
+	await frames(1)
+	check(audio.cue == "sunset", "the sky turning to sunset plays sunset (%s)" % audio.cue)
+	audio._cue_end = -1e9
+	game._sky(game.SKIES.find("design.sunset"))
+	await frames(1)
+	check(audio.cue == "", "once per change into sunset, not on every switch")
+	check(audio.music("discovery") and audio.cue == "discovery", "discovery plays when called (no event calls it yet)")
+	for q: AudioStreamPlayer in playing_music():
+		check(q.bus == "Music", "music plays on the Music bus")
 	return true
+
+
+func playing_music() -> Array:
+	return audio.get_children().filter(func(n: Node) -> bool:
+		return n is AudioStreamPlayer and n.playing and n.stream.resource_path.contains("/music/"))

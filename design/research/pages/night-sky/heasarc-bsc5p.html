@@ -1,0 +1,353 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>BSC5P - Bright Star Catalog</title>
+</head>
+<body bgcolor="#cceeff">
+<div><div><div><div><div><div>
+
+<table border=0 cellpadding=10 width=100% align=center>
+  <tr>
+    <td align=left><a target="_blank" href="/xamin/?table=bsc5p">Search&nbsp;in<br>Xamin</a>&nbsp;or <a target="_blank" href="/db-perl/W3Browse/w3table.pl?tablehead=name%3Dbsc5p&amp;Action=More+Options">Browse</a>...</td>
+    <td align=center><h1>BSC5P - Bright Star Catalog</h1></td>
+    <td align=right><a href="/docs/archive.html">HEASARC<br>Archive</a></td>
+  </tr>
+</table>
+<hr>
+<h2><a name="overview">Overview</a></h2>
+The BSC5P database table contains data derived from the Bright Star Catalog,
+5th Edition, preliminary, which is widely used as a source of basic
+astronomical and astrophysical data for stars brighter than magnitude 6.5.
+The database contains the identifications of included stars in several other
+widely-used catalogs, double- and multiple-star identifications, indication
+of variability and variable-star identifiers, equatorial positions for
+B1900.0 and J2000.0, galactic coordinates, UBVRI photoelectric photometric
+data when they exist, spectral types on the Morgan-Keenan (MK) classification
+system, proper motions (J2000.0), parallax, radial- and rotational-velocity
+data, and multiple-star information (number of components, separation, and
+magnitude differences) for known non-single stars.
+
+<hr><h3><a name="catalog_bibcode">Catalog Bibcode</a></h3>
+<a href="https://cdsarc.cds.unistra.fr/ftp/cats/V/50/" target="_blank">&lt;V/50/catalog&gt;</a>
+
+<hr><h3><a name="references">References</a></h3>
+Hoffleit, D. and Warren, Jr., W.H., 1991, &quot;The Bright Star Catalog, 5th
+Revised Edition (Preliminary Version)&quot;.
+
+<hr><h3><a name="provenance">Provenance</a></h3>
+This table was created by the HEASARC in 1995 based upon a file obtained from
+either the ADC or the CDS. A number of revisions have been made by the
+HEASARC to this original version, e.g., celestial positions were added for
+the 14 non-stellar objects which have received HR numbers: HR 92, 95, 182,
+1057, 1841, 2472, 2496, 3515, 3671, 6309, 6515, 7189, 7539 and 8296. In
+January 2014, the incorrect position for HR 3671 = NGC 2808 was fixed (the
+declination should have been -65 degrees, not +65 degrees), and smaller
+corrections were made to the positions of HR 2496, 3515 and 6515 so as to
+bring them in better agreement with the positions listed in SIMBAD and NED
+
+<hr><h3><a name="a_note_on_licensing">A Note on Licensing</a></h3>
+The HEASARC provides this catalog as a resource to the astronomical community
+solely for the purposes of scientific research. The HEASARC does not own the
+copyright and, therefore, does not control the licensing for commercial
+usage, nor can we clarify its terms of use beyond its usage in scientific
+research or provide legal advice on intellectual property rights.
+<p>
+
+The last printed version of the Yale Bright Star Catalog was the 4th edition,
+and it is copyright by Yale University Observatory. While the last version
+(the preliminary 5th edition), the one that the HEASARC has in its database,
+was never made available in a printed form. It is possible that Yale
+University Observatory and/or the authors listed in the References section
+still retain the copyright and intellectual property rights on this 5th
+edition.
+
+<hr><h3><a name="parameters">Parameters</a></h3>
+<p>
+<b><a name="ads">ADS</a></b><br>
+  If the star is in Aitken&#39;s Double Star Catalog (ADS), this parameter is
+  the designation in that catalog.
+<p>
+<b><a name="ads_comp">ADS_Comp</a></b><br>
+  The letter identification in the ADS.
+<p>
+<b><a name="alt_name">Alt_Name</a></b><br>
+  The alternative name for stars in the Bright Star Catalog. For those
+  stars which have this information, this is usually the Flamsteed and/or Bayer
+  constellation-based name for the star, e.g., 54Alp Peg, where 54 is the
+  Flamsteed number and Alp (for Alpha) is the Bayer Greek letter.
+<p>
+<b><a name="bii">BII</a></b><br>
+  The galactic longitude of the object.
+<p>
+<b><a name="bv_color">BV_Color</a></b><br>
+  The B-V magnitude and colors on the UBV system.
+<p>
+<b><a name="bv_uncert">BV_Uncert</a></b><br>
+  If the magnitude or colors are uncertain, this is set to &#39;:&#39;; if
+  the value is questionable, the uncertainty flag is set to &#39;?&#39;.
+<p>
+<b><a name="cdec">CDec</a></b><br>
+  The Declination of the object, in sexagesimal format.
+<p>
+<b><a name="cdec_1950">CDec_1950</a></b><br>
+  Declination, Sexagesimal in 1950 coordinates
+<p>
+<b><a name="class">Class</a></b><br>
+  Browse classification type. The classification is based on the
+  &#39;Spect_Type&#39; parameter, if one is available.
+<p>
+<b><a name="cra">CRA</a></b><br>
+  The Right Ascension of the object, in sexagesimal format.
+<p>
+<b><a name="cra_1950">CRA_1950</a></b><br>
+  The Right Ascension of the object, in sexagesimal format and B1950
+  coordinates.
+<p>
+<b><a name="dec">Dec</a></b><br>
+  The Declination of the object.
+<p>
+<b><a name="dec_1900">Dec_1900</a></b><br>
+  The Declination of the object, in B1900 coordinates.
+<p>
+<b><a name="dec_1950">Dec_1950</a></b><br>
+  The Declination of the object, in B1950 coordinates
+<p>
+<b><a name="dm_cat">DM_Cat</a></b><br>
+  The Durchmeusterung catalog ID.
+<p>
+<b><a name="dm_num">DM_Num</a></b><br>
+  The Durchmeusterung number.
+<p>
+<b><a name="fk5">FK5</a></b><br>
+  This is the number of the object in the Fifth Fundamental Catalogue, if
+  the star is included there.
+<p>
+<b><a name="glat">GLat</a></b><br>
+  The original galactic latitude coordinates from the original catalog.
+<p>
+<b><a name="glon">GLon</a></b><br>
+  The original galactic longitude coordinates from the original catalog.
+<p>
+<b><a name="hd">HD</a></b><br>
+  This is the Henry Draper Catalogue number.
+<p>
+<b><a name="hr">HR</a></b><br>
+  This is the Harvard Revised BS Catalogue number.
+<p>
+<b><a name="ir_flag">IR_Flag</a></b><br>
+  This is the infrared source flag. This parameter will have a value of
+  &#39;I&#39; if the star is a known infrared source.
+<p>
+<b><a name="lii">LII</a></b><br>
+  The galactic latitude of the object.
+<p>
+<b><a name="m_cnt">M_Cnt</a></b><br>
+  The total number of components assigned to a multiple system.
+<p>
+<b><a name="m_id">M_ID</a></b><br>
+  The identification of the components.
+<p>
+<b><a name="m_mdiff">M_Mdiff</a></b><br>
+  The magnitude difference between two components of a double, or between the two
+  brightest components of a multiple system.
+<p>
+<b><a name="m_sep">M_Sep</a></b><br>
+  The separation of two components of a double, or between the two brightest
+  components of a multiple system.
+<p>
+<b><a name="multiple">Multiple</a></b><br>
+  &#39;Multiple&#39; is coded as follows when the star is a known double or multiple: &#39;W&#39;
+  = Worley (1978) update of the IDS, &#39;D&#39; = Duplicity discovered by occultation, or
+  &#39;S&#39; = Duplicity discovered by speckle interferometry.
+<p>
+<b><a name="name">Name</a></b><br>
+  The standard name for the star, using the HR prefix. Note that stars in
+  this catalog are also sometimes referred to using the prefix &#39;BS&#39;.
+<p>
+<b><a name="note">Note</a></b><br>
+  An asterisk &#39;*&#39; indicates a note about the star can be found in the remarks.
+<p>
+<b><a name="par_code">Par_Code</a></b><br>
+  This flag determines the type of parallax; a &#39;D&#39; indicates that the
+  parallax is dynamical. Otherwise, the parallax is trigonometric.
+<p>
+<b><a name="parallax">Parallax</a></b><br>
+  This is the parallax, in seconds of arc. See the &#39;Par_Code&#39; field to
+  determine whether the parallax is dynamical or trigonometric.
+<p>
+<b><a name="pmdec">PMDec</a></b><br>
+  The annual Declination proper motion in seconds of arc for the equinox
+  J2000.0 in the FK5 system.
+<p>
+<b><a name="pmra">PMRA</a></b><br>
+  The annual Right Ascension proper motion in seconds of arc for the
+  equinox J2000.0 in the FK5 system.
+<p>
+<b><a name="ra">RA</a></b><br>
+  The Right Ascension of the object.
+<p>
+<b><a name="ra_1900">RA_1900</a></b><br>
+  The Right Ascension of the object, in B1900 coordinates.
+<p>
+<b><a name="ra_1950">RA_1950</a></b><br>
+  The Right Ascension of the object, in B1950 coordinates
+<p>
+<b><a name="radvel">RadVel</a></b><br>
+  The heliocentric radial velocity in km/s.
+<p>
+<b><a name="radvel_comm">RadVel_Comm</a></b><br>
+  Comments on the radial velocity as follows: &#39;V&#39; or &#39;V?&#39; = variable or suspected
+  variable radial velocity; &#39;SB&#39;, &#39;SB1&#39;, or &#39;SB2&#39; = spectroscopic binaries,
+  single or double lined spectra; &#39;O&#39; = orbital data available.
+<p>
+<b><a name="ri_code">RI_Code</a></b><br>
+  A star on the RI system.
+<p>
+<b><a name="ri_color">RI_Color</a></b><br>
+  This is the R-I color of the star on the RI system. These codes are as follows:
+  blank for the Johnson system, &#39;E&#39; for Kron system colors measured mainly by
+  Eggen, and &#39;C&#39; for Cape (Cousins) system colors.  Code &#39;D&#39; has not been
+  documented.  Uncertainty &#39;:&#39; or questionable &#39;?&#39; are also indicated in this
+  field.
+<p>
+<b><a name="rotvel">RotVel</a></b><br>
+  Limiting character: &#39;&lt;&#39; for &quot;less than&quot;, &#39;=&lt;&#39;  for &quot;less than or
+  equal to&quot;, and &#39;&gt;&#39; for &quot;greater than.&quot;
+<p>
+<b><a name="rotvel_comm">RotVel_Comm</a></b><br>
+  The projected rotational velocity (v sin i).
+<p>
+<b><a name="rotvel_uncert">RotVel_Uncert</a></b><br>
+  A colon &#39;:&#39; in indicates an uncertain rotational velocity.
+<p>
+<b><a name="sao">SAO</a></b><br>
+  This is the Smithsonian Astrophysical Observatory Star Catalog number, if
+  the object is listed in that catalog.
+<p>
+<b><a name="spect_code">Spect_Code</a></b><br>
+  Spectral type code. The codes &#39;e&#39;, &#39;v&#39;, and &#39;t&#39; are not documented.
+<p>
+<b><a name="spect_type">Spect_Type</a></b><br>
+  Spectral type on the standard Morgan-Keenan system and code.
+<p>
+<b><a name="ub_color">UB_Color</a></b><br>
+  The U-B magnitude and colors on the UBV system.
+<p>
+<b><a name="ub_uncert">UB_Uncert</a></b><br>
+  If the U-B color is uncertain, this is set to &#39;:&#39;; if the value is
+  questionable, the uncertainty flag is set to &#39;?&#39;.
+<p>
+<b><a name="var_id">Var_ID</a></b><br>
+  This is the variable star designation from the General Catalogue of
+  Variable Stars or one of its Supplements, or from the Catalogue of Suspected
+  Variable Stars, or simply the designation &#39;var&#39;.
+<p>
+<b><a name="vmag">Vmag</a></b><br>
+  Photographic magnitude.
+<p>
+<b><a name="vmag_code">Vmag_Code</a></b><br>
+  The photographic magnitude may also be reduced to the UBV system
+  from the Harvard Revised Photometry of 1908 (Vmag code = &#39;R&#39;), or it may also
+  be the original HR magnitude (Vmag code = &#39;H&#39;).
+<p>
+<b><a name="vmag_uncert">Vmag_Uncert</a></b><br>
+  If the magnitude is uncertain, this is set to &#39;:&#39;; if the values is
+  questionable, the uncertainty flag is set to &#39;?&#39;.
+
+<hr><h3><a name="contact_person">Contact Person</a></h3>
+Questions regarding the BSC5P database table can be addressed to the
+<a href="/cgi-bin/Feedback?selected=heasarc">HEASARC Help Desk</a>.
+
+<!--================================================================-->
+<hr>
+<em>Page Author:</em> <a href="/cgi-bin/Feedback?selected=w3browse">Browse Software Development Team</a><br>
+<em>Last Modified:</em> Tuesday, 10-Nov-2026 18:28:33 EST
+<hr>
+<!-- This is portalfooter.html -->
+<!-- Because some pages don't use the header files that include the css, the styles need to be written out here. -->
+</div>
+<!-- full-width-content-item -->
+                         <div class="divClear" style="clear:both;"></div>
+                      </div><!-- id=maincontent -->
+                   </div><!-- id="content-wrapper" -->
+		</div><!-- id="content" -->
+	<div class="divClear" style="clear:both;"></div>
+<div class="navigation">
+<div id="HEASARCfooter" style="background-color:#2E2E2E;height:20px;width:952px;border-top:none;margin:0 auto;margin-top:5px;">
+<table width="100%">
+<tr><td style="text-align:center;vertical-align:middle;">
+<p style="color:#B2B2B2;font-size:11px;text-decoration:none;font-family:Arial,Helvetica,sans-serif;margin:0;">A service of the <a href="https://science.gsfc.nasa.gov/astrophysics" style="color:#B2B2B2;font-size:11px;text-decoration:none;font-family:Arial,Helvetica,sans-serif;">Astrophysics Science Division</a> at <a href="http://www.nasa.gov/" style="color:#B2B2B2;font-size:11px;text-decoration:none;font-family:Arial,Helvetica,sans-serif;">NASA/</a><a href="http://www.nasa.gov/goddard" style="color:#B2B2B2;font-size:11px;text-decoration:none;font-family:Arial,Helvetica,sans-serif;">GSFC</a>.</p>
+</td></tr>
+</table>
+</div>
+
+<div id="footer" style="background-color:#2E2E2E;height:98px;width:952px;border-top:2px solid #222222;margin:0 auto;">
+                <div>
+               		<a href="http://www.nasa.gov" class="imageLink" style="display:block;float:left;"><img class="logo" style="border:0;" src="/Images/portal_new/nasa_header_logo1.gif" alt="NASA Logo, National Aeronautics and Space Administration" width="140" height="98"></a>
+                </div><!-- class="nasaLogo" -->
+
+                <div id="footer-signature" style="padding-left:20px;padding-top:19px;float:left;">
+               		<a href="http://www.nasa.gov/goddard/" class="imageLink" style="display:block;float:left;"><img class="logo" style="border:0;" src="/Images/portal_new/goddardsignature2.png" alt="Goddard Space Flight Center Signature Logo" width="172" height="68"></a>
+                </div>
+                <div class="nasafootlinks" style="float:left;height:84px;margin-left:15px;padding-left:0px;padding-top:14px;width:295px;">
+                	<ul style="list-style:none;padding:0;margin:0;">
+                		<li style="margin-bottom:2px;color:#B2B2B2;font-size:11px;font-family:Arial,Helvetica,sans-serif;">HEASARC Director: Vacant</li>
+                		<li style="margin-bottom:2px;color:#B2B2B2;font-size:11px;font-family:Arial,Helvetica,sans-serif;">NASA Official: Ryan Smallcomb</li>
+                		<li style="margin-bottom:2px;color:#B2B2B2;font-size:11px;font-family:Arial,Helvetica,sans-serif;">Web Curator: <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#106;&#111;&#104;&#110;&#46;&#100;&#46;&#109;&#121;&#101;&#114;&#115;&#64;&#110;&#97;&#115;&#97;&#46;&#103;&#111;&#118;">J.D. Myers</a></li>
+	        		<li style="margin-bottom:2px;color:#B2B2B2;font-size:11px;font-family:Arial,Helvetica,sans-serif;">Last Modified: 10-Nov-2026</li>
+                	</ul>
+                </div><!-- nasafootlinks -->
+                <div class="nasafootlinks" id="footerRight" style="float:left;height:84px;margin-left:15px;padding-left:0px;padding-top:14px;width:295px;">
+                	<ul style="list-style:none;padding:0;margin:0;">
+                		<li style="margin-bottom:2px;padding-left:12px;background:url(/Images/portal_new/rsaquo_gray.gif) no-repeat scroll 0 1px transparent;color:#B2B2B2;font-size:11px;"><a href="http://science.nasa.gov/astrophysics/" style="color:#B2B2B2;font-size:11px;text-decoration:none;font-family:Arial,Helvetica,sans-serif;">NASA Astrophysics</a></li>
+                		<li style="margin-bottom:2px;padding-left:12px;background:url(/Images/portal_new/rsaquo_gray.gif) no-repeat scroll 0 1px transparent;color:#B2B2B2;font-size:11px;text-decoration:none;font-family:Arial,Helvetica,sans-serif;"><a href="/docs/faq.html" style="color:#B2B2B2;font-size:11px;text-decoration:none;font-family:Arial,Helvetica,sans-serif;">FAQ/Comments/Feedback</a></li>
+                		<li style="margin-bottom:2px;padding-left:12px;background:url(/Images/portal_new/rsaquo_gray.gif) no-repeat scroll 0 1px transparent;color:#B2B2B2;font-size:11px;"><a href="/docs/outreach.html" style="color:#B2B2B2;font-size:11px;text-decoration:none;font-family:Arial,Helvetica,sans-serif;">Education Resources</a></li>
+                		<li style="margin-bottom:2px;padding-left:12px;background:url(/Images/portal_new/rsaquo_gray.gif) no-repeat scroll 0 1px transparent;color:#B2B2B2;font-size:11px;"><a href="/docs/plugins.html" style="color:#B2B2B2;font-size:11px;text-decoration:none;font-family:Arial,Helvetica,sans-serif;">Find helper applications like Adobe Acrobat</a></li>
+                		<li style="margin-bottom:2px;padding-left:12px;background:url(/Images/portal_new/rsaquo_gray.gif) no-repeat scroll 0 1px transparent;color:#B2B2B2;font-size:11px;"><a target="_blank" href="http://www.nasa.gov/about/highlights/HP_Privacy.html" style="color:#B2B2B2;font-size:11px;text-decoration:none;font-family:Arial,Helvetica,sans-serif;">Privacy Policy &amp; Important Notices</a></li>
+                	</ul>
+                </div><!-- nasafootlinks -->
+</div><!-- id=footer -->
+</div><!-- class=navigation -->
+</div><!-- id=page -->
+</div><!-- id=page-wrapper -->
+
+<pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+
+</body>
+</html>

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Builds every file in audio/ from the downloads in assets-cache (and our own synthesis), once, with ffmpeg.
-# Usage (from the project folder): nice -n 10 taskset -c 5-7 bash audio/make.sh
+# Usage (from the project folder): nice -n 10 taskset -c 5-7 bash audio/make.sh [music]   (music: only audio/music/)
 # Why baked: a Godot web build plays audio in Sample mode, where bus effects do not run (design/research/alive.md 4.3),
 # so every muffle is in the file. `<name>.ogg` is the clear copy (Habitat bus, full air), `<name>_out.ogg` the one
 # heard on Mars through a helmet (Outside bus). Credits: ASSETS.md, Sound.
@@ -41,6 +41,35 @@ loop() { # in.wav xf out.ogg
 [t][h]amix=inputs=2:normalize=0[x];[mid][x]concat=n=2:v=0:a=1" -ac 1 "$T/l.wav"
 	enc "$T/l.wav" "$3"
 }
+
+# Music (design/research/alive.md 5: rare, a few earned moments, silence the rest of the time). Stereo 44.1 kHz and
+# clear: music is not a sound in the Mars air, so nothing here is muffled. About -16 LUFS under a -1.5 dBFS ceiling;
+# the level in play is data/tuning.json `audio.music`. Picks and licences: assets-cache/music/README.md.
+M=../../../../assets-cache/music
+tune() { # in filter out.ogg
+	ffmpeg -v error -y -i "$1" -af "$2" -ar 44100 -ac 2 "$T/m.wav"
+	local i
+	i=$(ffmpeg -nostats -i "$T/m.wav" -af ebur128 -f null - 2>&1 | sed -n 's/^ *I: *\(-*[0-9.]*\) LUFS/\1/p' | tail -1)
+	ffmpeg -v error -y -i "$T/m.wav" -af "volume=$(python3 -c "print(-16 - $i)")dB,alimiter=limit=0.84:attack=5:release=80:level=false" \
+		-c:a libvorbis -q:a 3 "music/$3"
+}
+music() {
+	mkdir -p music
+	# ours (Apache-2.0, assets-cache/music/ours/make_motifs.py): a 20 ms fade in against a click, 0.3 s out at the end
+	END="areverse,afade=t=in:d=0.3,areverse"
+	for f in first_step airlock_sealed discovery mission_lost; do
+		tune "$M/ours/$f.ogg" "afade=t=in:d=0.02,$END" "$f.ogg"
+	done
+	# Kilua Boy's Sunset Walk is 48 bars of 1.6 s (its hits land on 12.8, 25.6, 49.6, 51.2 s, measured from the
+	# loudness envelope). Its first 16 bars: the soft intro and the first melody, which ends in a quiet bar before
+	# the downbeat at 25.6 s. Cut just before that downbeat, and fade the quiet bar out after the last hits (22.2 s).
+	tune "$M/oga-kiluaboy-sunset-walk/SunsetWalk.ogg" "atrim=0:25.55,asetpts=N/SR/TB,afade=t=in:d=0.02,afade=t=out:st=22.75:d=2.8" sunset.ogg
+	du -ch music/*.ogg | tail -1
+}
+if [ "${1:-}" = music ]; then
+	music
+	exit 0
+fi
 
 # Footsteps, left and right sets (Fantozzi, CC0): through the suit on sand and rock, clear on the habitat floor.
 for f in L1 L2 L3 R1 R2 R3; do
@@ -117,4 +146,12 @@ shot "$S/oga-rubberduck-breaking-falling-hit/bfh1_hit_01.ogg" "$DROP" bag_drop.o
 shot "$S/oga-rubberduck-breaking-falling-hit/bfh1_hit_01.ogg" "$DROP,$OUT" bag_drop_out.ogg
 shot "$K/interface-sounds/Audio/confirmation_001.ogg" "anull" chirp.ogg
 
+# PIP's beeps (Kenney Interface Sounds, CC0): a rising "off I go" when it sets out, a questioning one when it
+# notices the hero. Clear and outside copies.
+for pair in "maximize_003:pip_go" "question_002:pip_hello"; do
+	shot "$K/interface-sounds/Audio/${pair%%:*}.ogg" "anull" "${pair##*:}.ogg"
+	shot "$K/interface-sounds/Audio/${pair%%:*}.ogg" "$OUT" "${pair##*:}_out.ogg"
+done
+
+music
 du -ch ./*.ogg | tail -1

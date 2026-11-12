@@ -514,6 +514,37 @@
    "value": 0.3,
    "unit": "share of height",
    "source": "estimate: no measured buried share found; Viking 1 pictures show blocks 'partly buried by sediment' (NASA SP-425, https://solarviews.com/history/SP-425/ch21.htm, search summary only). A rounded block shows its widest middle, and the undercut below it reads as a gap, unless about a third of its height is in the ground"
+  },
+  {
+   "id": "pip.speed",
+   "real": [
+    0.2,
+    1.67
+   ],
+   "value": 0.5,
+   "unit": "m/s",
+   "source": "Floor: NASA VIPER, the fastest planetary rover, 'top speed 20cm/s, nominal speed 10 cm/s' (https://ntrs.nasa.gov/citations/20240013903); Curiosity 4 cm/s, Spirit and Opportunity 5 cm/s. Ceiling: robots that drive among people, Pudu BellaBot 'Safety Speed: 0.5-1.2 m/s (Adjustable)' (https://www.pudurobotics.com/en/products/bellabot), Starship delivery robot 'around average walking speed (6kmph)' (https://collection.sciencemuseumgroup.org.uk/objects/co8697500/starship-technologies-self-driving-delivery-robot). Saved: design/research/pages/pip/",
+   "why": "PIP is a helper that potters among the crew, not a science rover: the slowest setting of a robot built to drive among people, half the hero's walk, so it never races the hero and is easy to step round"
+  },
+  {
+   "id": "pip.accel",
+   "real": [
+    0.2,
+    1.0
+   ],
+   "value": 0.4,
+   "unit": "m/s2",
+   "source": "estimate: no small-rover figure found; 0.4 m/s2 reaches PIP's 0.5 m/s in 1.25 s, a gentle start a child can see (an indoor service robot's soft start, not measured)"
+  },
+  {
+   "id": "pip.turn",
+   "real": [
+    20,
+    120
+   ],
+   "value": 60,
+   "unit": "deg/s",
+   "source": "estimate: skid-steered small robots turn in place in a few seconds; 60 deg/s is a half turn in 3 s, slow enough to read as looking round (not measured)"
   }
  ],
  "pairs": []

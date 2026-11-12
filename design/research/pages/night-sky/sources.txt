@@ -1,0 +1,23 @@
+Night-sky sources, read 2026-11-12. file <- url
+naif-pck00011.tpc <- https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/pck00011.tpc
+nssdc-marsfact.html <- https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html
+jpl-approx_pos.html <- https://ssd.jpl.nasa.gov/planets/approx_pos.html (Keplerian element tables 1 and 2 are inline in the HTML)
+jpl-sats-elem.html <- https://ssd.jpl.nasa.gov/sats/elem/ (Phobos, Deimos mean elements, MAR099)
+heasarc-bsc5p.html <- https://heasarc.gsfc.nasa.gov/W3Browse/star-catalog/bsc5p.html
+svs-4851.html <- https://svs.gsfc.nasa.gov/4851/
+nasa-media-guidelines.html <- https://www.nasa.gov/nasa-brand-center/images-and-media/
+esa-gaia-sky-in-colour.html <- https://www.esa.int/ESA_Multimedia/Images/2018/04/Gaia_s_sky_in_colour2
+esa-cosmos-gaiadr2-skyincolour.html <- https://www.cosmos.esa.int/web/gaia/gaiadr2_gaiaskyincolour
+esa-gaia-data-license.html <- https://www.cosmos.esa.int/web/gaia-users/license
+esa-gaia-users-credits.html <- https://www.cosmos.esa.int/web/gaia-users/credits
+gaia-dr3-doc-transforms.html <- https://gea.esac.esa.int/archive/documentation/GDR3/Data_processing/chap_cu3ast/sec_cu3ast_intro/ssec_cu3ast_intro_tansforms.html
+nasa-pia17936.html <- https://science.nasa.gov/resource/bright-evening-star-seen-from-mars-is-earth/
+pds-pia17936.html, pds-pia05547.html, pds-pia05551.html, pds-pia05560.html, pds-pia07228.html, pds-pia16153.html <- https://pds-rings.seti.org/press_releases/pages/PIAxxxxx/PIAnnnnn.html (JPL Photojournal captions)
+arxiv-2309.07378-lemmon2024.pdf, arxiv-2309.07378-lemmon2024-abs.html <- https://arxiv.org/abs/2309.07378 (Lemmon et al. 2024, Icarus 408, 115821)
+mendeley-lemmon2024-msl-tau-880-3953.txt <- https://data.mendeley.com/datasets/tbh3pg39xc (CC BY 4.0; MSL Mastcam 880 nm tau, to sol 3953)
+ntrs-guzewich2019-msl-dust-storm.pdf <- https://ntrs.nasa.gov/api/citations/20190001691/downloads/20190001691.pdf (Guzewich et al. 2019, GRL 46, 71)
+planetary-curiosity-landing-briefing-2012.html <- https://www.planetary.org/articles/08061740-curiosity-press-briefing-notes (secondary)
+spacecom-mars-skywatching.html <- https://www.space.com/28403-astronauts-mars-skywatching-phobos-deimos.html (secondary)
+earthsky-mars-north-star.html <- https://earthsky.org/space/mars-north-south-star (secondary)
+skyatnight-mars-night-sky.html <- https://www.skyatnightmagazine.com/space-science/what-does-night-sky-look-like-mars (secondary)
+Blocked for curl (not saved): jpl.nasa.gov news/images pages; agupubs (Vasavada 2014) 403; cdsarc.cds.unistra.fr timed out.

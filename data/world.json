@@ -373,7 +373,7 @@
   "rover": "ground.sink.soft"
  },
  "shadow_min": 0.6,
- "moving": "^(door|dish|tell)$|^(panel|wheel)_[0-9]+$",
+ "moving": "^(door|dish|tell|head|status_bar)$|^(panel|wheel)_[0-9]+$",
  "lit_roles": ["glass"],
  "_lit_roles": "roles a sky state lights pane by pane (DESIGN.<state>.md `lit`, house_style): their panes are numbered when the meshes merge at load, whichever sky is up then",
  "blink": {
@@ -594,6 +594,32 @@
    30,
    80
   ]
+ },
+ "pip": {
+  "_note": "PIP's wandering (sandbox/pip.gd): ambient life, no game state. Speed, acceleration and turn: reality.json pip.*. Everything here is art direction. stops: where it parks [x, z] and what it looks at [x, z, height above the ground], weight how often it picks one; via: open ground it may drive through, so the route graph (every straight, clear line between stops and via points, `clearance` m clear either side) gets round the buildings; via_m: how near a via point counts as passed;  (the lander is a long trip), divided by near_m plus the distance so near stops come up more; never one of the last two. notice_m: the hero this close gets a look, a beep and two flashes (flash_hz under the 3 a second limit), at most every hello_cool_s. A hero standing still (below still_speed m/s for still_s) within greet_m gets a visit: PIP parks greet_stand_m away, looks up with its head tilted, wiggles, for greet_s, then not again for greet_cool_s. yield_m, yield_deg: a hero this close inside this cone ahead stops it for wait_s, then it drives round for patience_s. feeler_m: how far ahead it checks, every feel_s; stuck_s without getting 0.3 m closer and it goes elsewhere. door_clear_m round every door and rooms (prefabs, grown by room_margin) it never drives into. flee_m: a moving rover this close sends it aside. Head: yaw and pitch limits, turn rate, tilt; blinks every blink_s, double_blink share; status bar glows at glow_hz. track_every, track_width: m between wheel prints (a print is 0.12 m long, world/terrain.gd, so under that they join into a band) and their width (the wheel is 8 cm wide, forge/vehicle_pip.py); shade: contact shadow radius and strength",
+  "stops": [
+   {"id": "airlock", "at": [3.0, 5.2], "look": [0.0, 2.6, 1.2]},
+   {"id": "solar", "at": [19.5, -0.6], "look": [24.0, -4.0, 1.0]},
+   {"id": "greenhouse", "at": [-8.6, -10.0], "look": [-14.0, -6.0, 1.5]},
+   {"id": "dish", "at": [5.0, -12.6], "look": [6.0, -16.0, 2.5]},
+   {"id": "rover", "at": [-9.5, 3.6], "look": [-10.0, 0.0, 1.2]},
+   {"id": "bags", "at": [-1.2, 7.4], "look": [-3.0, 5.4, 0.2]},
+   {"id": "lander", "at": [83.0, -62.0], "look": [90.0, -70.0, 4.0], "weight": 0.15}
+  ],
+  "via": [[6.0, 6.0], [8.0, 0.5], [5.0, -7.0], [0.0, -6.0], [-5.0, -3.0], [-5.0, 6.5], [-6.0, 3.5], [14.0, -1.0], [-10.0, -12.5], [-4.0, -10.0], [40.0, -20.7], [60.0, -40.4], [2.0, 9.5], [-9.0, 6.0]],
+  "seed": 13,
+  "notice_m": 3.0, "hello_cool_s": 12,
+  "greet_m": 8.0, "greet_stand_m": 1.6, "still_speed": 0.15, "still_s": 4.0, "greet_s": 6.0, "greet_cool_s": 40,
+  "yield_m": 1.5, "yield_deg": 40, "wait_s": 3.0, "patience_s": 4.0,
+  "feeler_m": 1.0, "feel_s": 0.2, "arrive_m": 0.35, "via_m": 0.7, "clearance": 0.25, "stuck_s": 6.0,
+  "door_clear_m": 2.0, "rooms": ["habitat", "greenhouse", "storm_shelter"], "room_margin": 0.4,
+  "flee_m": 6.0,
+  "look_s": [3.0, 6.0], "near_m": 8.0, "face_deg": 50, "glance_s": [1.2, 3.0], "glance_m": 0.4,
+  "head_yaw_deg": 110, "head_pitch_deg": 35, "head_deg_s": 140, "tilt_deg": 14,
+  "blink_s": [2.5, 6.0], "blink_close_s": 0.14, "double_blink": 0.2,
+  "glow_hz": 0.4, "flash_hz": 2.0, "flashes": 2,
+  "wiggle_hz": 2.5, "wiggle_deg": 5, "wiggle_s": 0.8,
+  "track_every": 0.1, "track_width": 0.08, "shade": [0.35, 0.6]
  },
  "plants": {
   "_note": "lettuce in the greenhouse grow-bed slots (slot_N nodes of its model), one growth stage per slot; stage 4 is a harvest-size head (reality.json lettuce.width)",

@@ -52,6 +52,7 @@ func setup(w: Node3D, sheet: Dictionary, tuning: Dictionary) -> void:
 	# the ground holds it up through _settle(), so the sweep must not stop on the ground it rests on; rocks are
 	# the wheels' to climb, so the body's sweep passes them (a rock too tall is caught by _pose())
 	collision_mask &= ~1
+	collision_mask |= 16  # PIP (a vehicle too): the rover brakes for it as for a wall, and PIP gets out of the way
 	for b: Node in world.rocks.solids:
 		add_collision_exception_with(b)
 	_belly.size = Vector3(1.3, 0.3, 4.1)
