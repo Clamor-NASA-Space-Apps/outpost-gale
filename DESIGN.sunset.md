@@ -77,7 +77,7 @@ materials:
   trim: { color: "{colors.trim}", roughness: 0.75, metalness: 0, detail: { texture: "textures/trim_albedo.jpg", normal: "textures/trim_normal.jpg", roughness: "textures/trim_rough.jpg", textureSize: 0.75, strength: 0.6, pattern: grain, size: 0.75 } }
   accent: { color: "{colors.accent}", roughness: 0.45, metalness: 0 }
   metal: { color: "{colors.metal}", roughness: 0.4, metalness: 1, detail: { texture: "textures/metal_albedo.jpg", normal: "textures/metal_normal.jpg", roughness: "textures/metal_rough.jpg", textureSize: 1.0, strength: 0.8, pattern: grain, size: 1.0 } }
-  glass: { color: "{colors.glass}", roughness: 0.08, metalness: 0, opacity: 0.5 }
+  glass: { color: "{colors.glass}", roughness: 0.08, metalness: 0, opacity: 0.5, lit: { color: "#ffbe72", emissive: 1.5, share: 0.6, period: 90 } }
   rock: { color: "{colors.rock}", roughness: 0.95, metalness: 0, detail: { texture: "textures/rock_albedo.jpg", normal: "textures/rock_normal.jpg", roughness: "textures/rock_rough.jpg", textureSize: 1.83, strength: 1.0, pattern: grain, size: 1.83 } }
   dust: { color: "{colors.dust}", roughness: 1, metalness: 0, detail: { texture: "textures/dust_albedo.jpg", normal: "textures/dust_normal.jpg", roughness: "textures/dust_rough.jpg", textureSize: 3.1, strength: 1.0, pattern: grain, size: 3.1, gravel: { texture: "textures/gravel_albedo.jpg", normal: "textures/gravel_normal.jpg", textureSize: 2.48, share: 0.3 }, ripple: { normal: "textures/ripple_normal.jpg", textureSize: 12 } } }
   hazard: { color: "{colors.hazard}", roughness: 0.5, metalness: 0 }
@@ -111,13 +111,17 @@ lighting:
   azimuth: 270
   exposure: 1.1
   sunDisc: 1.6
+  halo: { color: "#3a6ad0", size: 16, strength: 1.0 }
+  twilight: { color: "#8aa2cc", height: 8, strength: 0.5 }
   toneMapping: aces
-  fog: { color: "{colors.horizon}", near: 25, far: 4200, sky: 0.25, curve: 1.6, density: 0.7, sun: 0.9 }
+  fog: { color: "{colors.horizon}", near: 25, far: 4200, sky: 0.25, curve: 1.6, density: 0.7, sun: 0.35 }
 quality:
   low: { msaa: 0, scale: 0.75, shadows: 1, shadowMap: 1024, shadowRange: 25, shadowFilter: 2, normalBias: 2, glow: 0, detail: off }
   medium: { msaa: 2, scale: 1, shadows: 2, shadowMap: 2048, shadowRange: 60, shadowFilter: 4, normalBias: 6, glow: 0.4, detail: code }
   high: { msaa: 4, scale: 1, shadows: 2, shadowMap: 4096, shadowRange: 60, shadowFilter: 4, normalBias: 4, glow: 0.5, detail: texture }
 kit:
+  "^(tex_0[1-5]|wheels|parts_AO)$": keep
+  "^internals$": body
   "^terrain$": dust
   "metalDark": metal
   "metalRed": hazard

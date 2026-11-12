@@ -343,6 +343,8 @@
   }
  },
  "kit": {
+  "^(tex_0[1-5]|wheels|parts_AO)$": "keep",
+  "^internals$": "body",
   "^terrain$": "dust",
   "metalDark": "metal",
   "metalRed": "hazard",

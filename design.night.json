@@ -150,7 +150,13 @@
    "color": "#5b7182",
    "roughness": 0.08,
    "metalness": 0,
-   "opacity": 0.5
+   "opacity": 0.5,
+   "lit": {
+    "color": "#ffbe72",
+    "emissive": 1.5,
+    "share": 0.85,
+    "period": 90
+   }
   },
   "rock": {
    "color": "#86716a",
@@ -296,6 +302,12 @@
   "azimuth": 120,
   "exposure": 1.2,
   "sunDisc": 0,
+  "twilight": {
+   "color": "#3c4a7a",
+   "azimuth": 270,
+   "height": 10,
+   "strength": 0.4
+  },
   "toneMapping": "aces",
   "fog": {
    "color": "#26233d",
@@ -348,6 +360,8 @@
   }
  },
  "kit": {
+  "^(tex_0[1-5]|wheels|parts_AO)$": "keep",
+  "^internals$": "body",
   "^terrain$": "dust",
   "metalDark": "metal",
   "metalRed": "hazard",

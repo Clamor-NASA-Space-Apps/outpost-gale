@@ -118,6 +118,8 @@ quality:
   medium: { msaa: 2, scale: 1, shadows: 2, shadowMap: 2048, shadowRange: 60, shadowFilter: 4, normalBias: 6, glow: 0.4, detail: code }
   high: { msaa: 4, scale: 1, shadows: 2, shadowMap: 4096, shadowRange: 60, shadowFilter: 4, normalBias: 4, glow: 0.5, detail: texture }
 kit:
+  "^(tex_0[1-5]|wheels|parts_AO)$": keep
+  "^internals$": body
   "^terrain$": dust
   "metalDark": metal
   "metalRed": hazard
