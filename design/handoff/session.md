@@ -32,6 +32,25 @@ Everything committed is pushed: game repo `main` on origin, factory `tooling/` b
   solar trackers, dish nod, status lights, contact shadow + dust rim, devil visible). Factory: halo/twilight tokens,
   `keep` kit role, clean quit with sound. All 8 suites 0 failed, feel-probe 0 failed (my own runs).
 
+## RESUME HERE (12 Nov 2026, about 15:40, stopped for a reboot: the laptop throttled)
+Ravindu is moving this NVMe to his i5 11th gen laptop (NVIDIA MX330, never throttles). Check CPU core count there
+and update the CPU rule (memory laptop-cpu-budget) before starting lanes.
+- `main` (game) and `godot` (factory) are clean, pushed, and pass every check (last full run before e0e2ebf).
+- In-progress, UNREVIEWED and UNTESTED, saved on branches: game `wip/polish-stripes`, factory `wip/device-presets`.
+  Two lanes were stopped mid-work:
+  1. Polish lane: five device presets (Phone, Older laptop, Laptop, Gaming PC, Max) with device icons
+     (ui/icons/device_*.svg), a simple settings screen (preset cards, Show FPS, sound sliders, an Advanced fold with
+     AA, resolution, shadows, effects, V-Sync, frame cap), the missing Save/Apply button bug, the cursor disappearing
+     bug (tests/cursor_test.gd), rover accel 1.0 (top of its range) and speed felt (camera lower/closer, look ahead,
+     motor pitch, dust and tracks with speed).
+  2. Suit stripes: a new `stripe` role in dark orange (about #c2501a to #d2621e) for the suit's bands only; accent
+     stays teal for HUD/usable; hero GLB re-export needed (forge/hero_astronaut.py). May not have started editing.
+  Resume: `git diff main..wip/polish-stripes` to see what landed, then either finish on that branch with a fresh
+  lane (brief from this list) or redo from main. Merge only after all tests/*.gd, feel-probe, style-check pass.
+- Decisions today: sky look approved; Milky Way map kept (CC BY-NC, non-commercial hackathon); music picks in
+  assets-cache/music/README.md; rover: options 1+2 (no boost); suit stripes dark orange; 4-person crew later.
+- A16 now 35-45 fps steady on the low preset (was 20 with stutters).
+
 ## 12 Nov afternoon (Ravindu napping, unsigned commits): running and queued
 - Merged and pushed: a943762 (rover glass/cabin/rocks/shadows/stream, flicker fixes + coplanar-check, CLAMOR on
   models, dust coat everywhere incl. suit, player look/carry/fade fixes), INVENTORY.md, performance research +
