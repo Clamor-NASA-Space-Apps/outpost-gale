@@ -17,24 +17,24 @@ Everything committed is pushed: game repo `main` on origin, factory `tooling/` b
   Its files: `models/character_astronaut.glb`, `forge/hero_*.py`, `data/clips.json`,
   `design/research/asset-previews/hero/`. See the note at the end for how it ended.
 
+## Night of 12 Nov (Ravindu asleep, remote): merged and pushed
+- b4df8b4 lane B: doorways 2.2 x 1.2 m, door leaf on the room side (black line gone), weight: items rest in the dust by
+  sink rows (Viking/Curiosity sources), tilt to the ground, rocks part buried, height_at on the drawn triangle.
+- e5bb149 lane A + sound lane: suited hero live (clips, contact-frame footsteps, collider from hero.width), damped
+  camera with a lead, audio/ sound bed (web build: no bus effects, muffle baked into *_out.ogg; buses fade).
+- Factory: skills living-atmosphere (new), third-person-camera rule 14 additions. Research: design/research/alive.md.
+- Open from the web-check: game data 47 MB (Ravindu: size no constraint), engine error "rp_child is null" (probably the
+  reflection probe in the web build), web-check.mjs reports "engine never started" after the first error (tool bug).
+
 ## Next, in order
-1. Agent H finished and passed (renders and films in `design/research/asset-previews/hero/`): the NASA-suit hero is
-   committed as `models/character_suited.glb` (6,667 tris, 65 UAL bones, clips idle, walk, lope, hop_start/air/land,
-   interact, carry_idle/walk, drive_sit at 30 fps; foot contacts in `data/clips.json`). The old Quaternius hero stays
-   as `character_astronaut.glb` so `main` stays green until the player switches. Notes from H: bones use UAL names
-   (pelvis, spine_01..03, Head, thigh_*, calf_*, foot_*); loops must be set in code (`loop` in clips.json); hop_start
-   ends at take-off (0.34 s, maybe start it partway for kids); carry bag centre (0, 1.10, 0.46) on spine_03; seat hip
-   (0, 0.523, -0.233); some rough skin shading on the thighs and the backpack's lower box to smooth later.
-2. Lane A (player): switch MODEL to `res://models/character_suited.glb` and the new rig and clip names (`idle`, `walk`, `lope`, `hop_*`...), footsteps from
-   `data/clips.json` contact times (prints appeared 0.2 s early), `SYNC_MODE_CYCLIC_MUTABLE` on the gait blend,
-   gait bands from `hero.froude.walk_run` 0.36, the hop from hop_start/air/land, carry and drive poses; then delete
-   the old `character_astronaut.glb`.
-3. Lane B: doorways to the new rows `hatch.height` 2.2 and `hatch.width` 1.2 (habitat airlock, shelter, greenhouse):
-   the hero could not enter. Find the black flickering line on the open habitat door (Ravindu's screenshot).
-4. Agent F: a test that walks the hero through every door into every enterable building.
-5. Then S3's phone step: web build on Ravindu's iPhone (`serve-web.mjs`), low preset, five minutes.
-6. Lessons for the factory: doors sized from the hero's collider, not the real hatch; a test walks through every
-   door; the variant lesson and the research skills are already in.
+1. Running now: lane A pass 2 (breathing chest on audio.breath_phase, head look-at, lean and settle, lower-third
+   framing + slope pitch, player.act(), hero.sink row, tests/doors_test.gd); lane B pass 2 (world.gust() shared,
+   dust streaks, wind gauge mast, panels track the sun, dish nods, blinking lights, lit windows, contact darkening,
+   blue sunset halo + long twilight as a DESIGN.sunset.md diff in design/handoff/sky-diff.md for Ravindu to approve).
+2. Ravindu: approve the sky diff; listen to the sound mix (outside cutoff 900 Hz and boot thud are guesses); look at
+   carry and drive poses. Suit breathing is synthesised: a real recording (adult, helmet or bucket) would be better.
+3. S3 phone step: web build on the iPhone (`serve-web.mjs`), low preset; fix rp_child.
+4. Gates: S1-S3 `/code-review medium` and lessons boxes.
 
 ## Machine rules
 - CPU: agent jobs on cores 2-7 (0-1 for the desktop), at most two lanes, `nice` + `taskset`, `LP_NUM_THREADS`.
