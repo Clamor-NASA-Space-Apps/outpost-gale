@@ -32,7 +32,23 @@ Everything committed is pushed: game repo `main` on origin, factory `tooling/` b
   solar trackers, dish nod, status lights, contact shadow + dust rim, devil visible). Factory: halo/twilight tokens,
   `keep` kit role, clean quit with sound. All 8 suites 0 failed, feel-probe 0 failed (my own runs).
 
-## Next, in order
+## 12 Nov afternoon (Ravindu napping, unsigned commits): running and queued
+- Merged and pushed: a943762 (rover glass/cabin/rocks/shadows/stream, flicker fixes + coplanar-check, CLAMOR on
+  models, dust coat everywhere incl. suit, player look/carry/fade fixes), INVENTORY.md, performance research +
+  factory skills frame-budget, surface-weathering. Web build served by `node ../../tools/serve-web.mjs .`.
+- Weakest device is Ravindu's Galaxy A16 (low preset ~20 fps on 12 Nov); teammates iPhone 16/17 at the event.
+- Profile (tests/profile_run.gd, data in the scratchpad): GPU 14.3 ms on high maximized (4x MSAA 6.4 ms, terrain
+  5.2), trail map 4 MB upload per print, first-use shader compiles (web 2-3 s per switch), contact map 12 ms per bag.
+- RUNNING: perf lane (trail map on GPU, shader warm-up, contact map spot update, terrain diet, presets with a
+  per-knob runtime API for a settings screen, physics steps 3); assets lane (PIP alive in sandbox/pip.gd, CLAMOR
+  shoulder patch, Phobos + Deimos, stars + Milky Way + Earth in sky.gdshader from the Yale BSC / NASA SVS).
+- NEXT WAVE: UI + audio lane: in-game graphics settings screen built from the perf lane's knob list (+ music/SFX
+  volume), and music: picks in assets-cache/music/README.md "Picked by Ravindu" (ours for first step, airlock,
+  discovery, mission lost; Kilua Boy Sunset Walk cut for sunset; Exploration Theme + Lifewave 2k for a title),
+  a Music bus heard clear, rare triggers (first exit, sky to sunset, airlock sealed). Then: APK build (Android
+  preset; SDK, JDK 17, debug keystore ready), EXE once Ravindu installs Windows templates.
+
+## Next, in order (older list)
 1. Ravindu: approve or reject the sky diff; listen to the mix (outside cutoff 900 Hz, boot thud are guesses);
    look at carry and drive poses; the telltale barely moves (real Phoenix curve): exaggerate it? (needs his yes).
 2. Open: CONTRACTS.md says yaw from north but the rig's sun azimuth turns from +Z (pick one); "Texture leaked"
