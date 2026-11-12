@@ -15,6 +15,9 @@
   "trim": "#4f4744",
   "accent": "#2ed3c0",
   "metal": "#9c948c",
+  "deck": "#86827c",
+  "panel": "#dedad2",
+  "bedding": "#45607e",
   "glass": "#5b7182",
   "rock": "#86716a",
   "dust": "#c98a5a",
@@ -148,6 +151,42 @@
     "strength": 0.8,
     "pattern": "grain",
     "size": 1
+   }
+  },
+  "deck": {
+   "color": "#86827c",
+   "roughness": 0.7,
+   "metalness": 0,
+   "weathering": 0,
+   "detail": {
+    "texture": "textures/metal_albedo.jpg",
+    "normal": "textures/metal_normal.jpg",
+    "roughness": "textures/metal_rough.jpg",
+    "textureSize": 1,
+    "strength": 0.6,
+    "pattern": "grain",
+    "size": 1
+   }
+  },
+  "panel": {
+   "color": "#dedad2",
+   "roughness": 0.5,
+   "metalness": 0,
+   "weathering": 0
+  },
+  "bedding": {
+   "color": "#45607e",
+   "roughness": 0.9,
+   "metalness": 0,
+   "weathering": 0,
+   "detail": {
+    "texture": "textures/suit_albedo.jpg",
+    "normal": "textures/suit_normal.jpg",
+    "roughness": "textures/suit_rough.jpg",
+    "textureSize": 0.4,
+    "strength": 0.7,
+    "pattern": "grain",
+    "size": 0.4
    }
   },
   "glass": {

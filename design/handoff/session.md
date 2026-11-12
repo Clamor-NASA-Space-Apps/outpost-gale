@@ -32,7 +32,30 @@ Everything committed is pushed: game repo `main` on origin, factory `tooling/` b
   solar trackers, dish nod, status lights, contact shadow + dust rim, devil visible). Factory: halo/twilight tokens,
   `keep` kit role, clean quit with sound. All 8 suites 0 failed, feel-probe 0 failed (my own runs).
 
-## RESUME HERE (12 Nov 2026, about 15:40, stopped for a reboot: the laptop throttled)
+## RESUME HERE (12 Nov 2026, about 22:00, stopped for an SSD swap to the i5 laptop: this one throttled again)
+Check `lscpu` first (memory laptop-cpu-budget): on the i5-1135G7 agents may use all 8 threads under nice, up to 3 lanes.
+- `main` (game, d91b720) and `godot` (factory) are pushed and fully checked: base for 2 crew, more life, night grit,
+  probe redraw, map boundary + safety net, presets, stripes. Factory since then: probe redraw in warm(), tests fail on
+  any script or shader error (test.gd Logger), first-person rules in skills/third-person-camera.
+- On branch `wip/polish-stripes` after d91b720, in the WIP commit "wip: first person indoors ...":
+  1. Lane A, DONE and tested (indoor_test etc. 0 failed): first person inside HAB 1 and the greenhouse (rooms in
+     data/world.json, doorway hysteresis, 0.4 s ease, body hidden, 0.2 s reveal when the lens is clear). Ravindu
+     liked it ("much better").
+  2. Lane B, STOPPED MID-WORK (untested): accurate interior. Brief items: real floor (sand showed through), window
+     frames on the curve, berths after ISS crew quarters with pillow/sleeping bag/reading light, CWC water bags as a
+     tidy padded wall, toilet cubicle with a sign and the UWMS seat visible, fabric (`suit` role) for soft goods and a
+     painted panel for cabinets (a new role needs Ravindu's OK), remove the 2 spare suits (keep a donning corner),
+     an interior reflection probe (visors reflected the outdoor base), greenhouse racks on the floor with lights on
+     them and an aisle of at least 1.3 m, eye-height views hab_eye_n/e/s/w and gh_eye_a/b.
+  3. Lane C, STOPPED MID-WORK (untested): the pale seam at the map edge, solar wings tracking the sun (single axis,
+     clean swept panels, tidy rows, cables), Mont Mercou bedded with a skirt, the "screen tear" near the wings
+     (likely coplanar faces or shadow shimmer), audio.gd reading player.room.
+  Resume: `git diff d91b720..wip/polish-stripes`, then run every test (a parse error now fails a test), then restart
+  lanes B and C with their briefs (this list) on the new machine. Merge to main only when all checks pass.
+- Docmost: update the power page to 2 crew (Ravindu: keep it in the roadmap, don't change it yet).
+- Known: draw calls base 185 (budget 150; the A16 decides); greenhouse aisle was 0.96 m for a 0.95 m hero.
+
+## Earlier resume note (12 Nov 2026, about 15:40, stopped for a reboot: the laptop throttled)
 Ravindu is moving this NVMe to his i5 11th gen laptop (NVIDIA MX330, never throttles). Check CPU core count there
 and update the CPU rule (memory laptop-cpu-budget) before starting lanes.
 - `main` (game) and `godot` (factory) are clean, pushed, and pass every check (last full run before e0e2ebf).

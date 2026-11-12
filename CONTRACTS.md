@@ -60,10 +60,11 @@ The composition root is `sandbox/sandbox.gd`. It calls only these:
 
 ## Test hooks
 `Forge.register(sandbox)`. `render_game_to_text()` returns:
-`player.{pos, speed, onFloor, gait, inside}`, `cam.{inside, dist}`, `heroScreen`, `interaction.{target, prompt}`,
+`player.{pos, speed, onFloor, gait, inside, room}`, `cam.{inside, dist, first}`, `heroScreen` (0 in first person), `interaction.{target, prompt}`,
 `vehicle.{driving, speed}`, `carry`, `sky`, `quality`, `fps`.
 `set_view(name)`: `default` (the play camera), `base`, `hero`, `horizon`, `storm`, `airlock`, `rover`, `greenhouse`,
-`hab_in` (inside HAB 1: the life-support wall and bunks), `hab_desk` (inside HAB 1: galley, Veggie, desk and map).
+`hab_in` (inside HAB 1: the life-support wall and bunks), `hab_desk` (inside HAB 1: galley, Veggie, desk and map),
+`hab_fp`, `greenhouse_fp` (the play camera in first person, the hero placed inside the door looking in).
 `place(pos, yaw_deg)`: the hero, through `player.place()`.
 
 ## Prefabs (`data/world.json` `prefabs`: id -> model file; a missing file loads a labelled stand-in box)
@@ -136,3 +137,16 @@ None. `world.build()` is synchronous (it loads everything it needs before return
   (the probe's ambient setters do not redraw it in Compatibility): `at` must stand inside every probe. Render layer 2
   holds the ground, the rocks and every dust emitter, also those made in play (`dust.layers`): the probe draws them
   and does not shade them (`reflection_mask` 1), so dust is lit as the ground it rose from.
+
+## First person indoors (12 Nov 2026)
+- `data/world.json` `rooms`: per item id, its floor plan in its own space (`{circle: [x, z, r]}`, `{rect: [x0, z0, x1,
+  z1]}`). The root hands them to `player.rooms` (`{id: {node, areas}}`). `player.room` is the room the body is in: in
+  once the whole body is past the plan's edge, out once it is wholly outside (the hero's radius either way), so a
+  doorway never flips it (skills/third-person-camera, Into first person indoors; `tests/indoor_test.gd`).
+- `follow_cam.room` (set by the player), `follow_cam.first` 0 to 1 (eased over `tuning.json camera.fp_ease_s`):
+  the lens blends from the follow position into the eye (`hero_model.eye`, the visor's middle). Yaw and pitch are
+  shared by both views; no recentre or glance in first person.
+- The hero is not drawn in first person (the close-lens fade: the lens is inside its drawn box), and comes back only
+  once the lens is clear of that box by the arm's sphere radius, faded in over `camera.fp_reveal_s`
+  (`follow_cam.reveal` caps `fade`). No shadow of the hero indoors: it is hidden, not culled by layer.
+- The interaction target in a room is the usable thing nearest the view's centre within reach (`interact.aim_deg`).

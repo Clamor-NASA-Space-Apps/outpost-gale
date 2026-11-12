@@ -10,6 +10,7 @@ const CHUNK := 100  # cells per side of one patch mesh: 200 m pieces, four in al
 const TRAIL_MPX := 0.03125
 const TILE := 64  # pixels: a print uploads the tiles it touched, never the whole map
 const MOVERS := 12  # contact discs for things that move (terrain.gdshader `movers`)
+const SEAM := 0.1  # m the backdrop stays under the patch's edge where they meet (_seat()), so the edge always hides it
 
 var step: float
 var cols: int
@@ -30,6 +31,7 @@ var _wipes: Array[ColorRect] = []
 static var _shaders: Dictionary = {}  # terrain.gdshader per `ground` variant
 var _cmap := PackedByteArray()  # the contact map (contacts())
 var _ctex: ImageTexture
+var skirt_y := 0.0  # the patch's skirt reaches down to here: under the lowest backdrop vertex near the edge (_seat())
 
 
 func build(design: Dictionary) -> void:
@@ -44,16 +46,17 @@ func build(design: Dictionary) -> void:
 	material.set_shader_parameter("macro_normal", load("res://data/terrain_normal.png"))
 	material.set_shader_parameter("macro_rect", Vector4(origin.x, origin.y, (cols - 1) * step, (rows - 1) * step))
 	restyle(design)
-	for i in range(0, rows - 1, CHUNK):
-		for j in range(0, cols - 1, CHUNK):
-			_chunk(i, j)
-	_collision()
 	var back: Node3D = load("res://models/terrain_backdrop.glb").instantiate()  # a web build has no file paths, only res://
 	for mi: MeshInstance3D in back.find_children("*", "MeshInstance3D", true, false):
+		mi.mesh = _seat(mi.mesh)
 		mi.material_override = material
 		mi.set_instance_shader_parameter("backdrop", 1.0)  # not drawn over the patch (terrain.gdshader)
 		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF  # too far out to shade anything we see
 	add_child(back)
+	for i in range(0, rows - 1, CHUNK):
+		for j in range(0, cols - 1, CHUNK):
+			_chunk(i, j)
+	_collision()
 
 
 ## Colours and the detail strength from the design in force (a theme or quality switch calls it again).
@@ -129,6 +132,27 @@ func _chunk(i0: int, j0: int) -> void:
 		for j in CHUNK:
 			var a := i * n + j
 			idx.append_array([a, a + 1, a + n, a + 1, a + n + 1, a + n])
+	# a skirt down from the patch's outer edges to skirt_y, shaded as the ground at the edge: from outside, the step
+	# down to the backdrop (_seat()) shows ground, never the sky through the discarded backdrop
+	for e: Array in [[i0 == 0, 0, 1, Vector3.FORWARD], [i0 + CHUNK == rows - 1, CHUNK * n, 1, Vector3.BACK],
+			[j0 == 0, 0, n, Vector3.LEFT], [j0 + CHUNK == cols - 1, CHUNK, n, Vector3.RIGHT]]:
+		if not e[0]:
+			continue
+		var top: int = e[1]
+		var by: int = e[2]
+		for k in CHUNK:
+			var a := top + k * by
+			var b := a + by
+			var lo := verts.size()
+			for p: int in [a, b]:
+				verts.append(Vector3(verts[p].x, skirt_y, verts[p].z))
+				norms.append(norms[p])
+			# Godot draws clockwise faces: their (v1 - v0) x (v2 - v0) points away from the viewer, here inward
+			var tri := [a, b, lo]
+			if (verts[b] - verts[a]).cross(verts[lo] - verts[a]).dot(e[3]) > 0.0:
+				tri = [a, lo, b]
+			idx.append_array(tri)
+			idx.append_array([b, lo + 1, lo] if tri[1] == b else [b, lo, lo + 1])
 	var arrays := []
 	arrays.resize(Mesh.ARRAY_MAX)
 	arrays[Mesh.ARRAY_VERTEX] = verts
@@ -141,6 +165,57 @@ func _chunk(i0: int, j0: int) -> void:
 	mi.mesh = mesh
 	mi.name = "patch_%d_%d" % [i0, j0]
 	add_child(mi)
+
+
+## The backdrop seated under the patch's edge. Its rim triangles cross the edge, and their straight sides stood up
+## to 2.3 m over it (measured): looking out from the line, the eye passed under the backdrop, whose back faces are
+## not drawn, and saw the sky as a pale band. Every vertex within `reach` of the edge (the longest side of a
+## triangle that crosses it) is held SEAM under the lowest edge height within `reach` of it, so every point of such
+## a triangle lies under the edge where it crosses it. The skirt (_chunk()) hides the step when seen from outside.
+func _seat(mesh: Mesh) -> ArrayMesh:
+	var arrays := mesh.surface_get_arrays(0)
+	var verts: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+	var idx: PackedInt32Array = arrays[Mesh.ARRAY_INDEX]
+	var rect := Rect2(origin, Vector2((cols - 1) * step, (rows - 1) * step))
+	var reach := 0.0
+	for t in range(0, idx.size(), 3):
+		var n_in := 0
+		for k in 3:
+			n_in += int(rect.has_point(Vector2(verts[idx[t + k]].x, verts[idx[t + k]].z)))
+		if n_in == 1 or n_in == 2:
+			for k in 3:
+				reach = maxf(reach, verts[idx[t + k]].distance_to(verts[idx[t + (k + 1) % 3]]))
+	# each side's heights, then the lowest within `reach` of every point along it
+	var w := ceili(reach / step)
+	var sides: Array[PackedFloat32Array] = []  # north, south, west, east
+	for s in 4:
+		var line := PackedFloat32Array()
+		for k in (cols if s < 2 else rows):
+			line.append(_h(0 if s == 0 else rows - 1, k) if s < 2 else _h(k, 0 if s == 2 else cols - 1))
+		var low := PackedFloat32Array()
+		for k in line.size():
+			var m := INF
+			for q in range(maxi(0, k - w), mini(line.size(), k + w + 1)):
+				m = minf(m, line[q])
+			low.append(m)
+		sides.append(low)
+	skirt_y = INF
+	for q in verts.size():
+		var v := verts[q]
+		var cap := INF
+		for s in 4:
+			var across := absf(v.z - (rect.position.y if s == 0 else rect.end.y)) if s < 2 else absf(v.x - (rect.position.x if s == 2 else rect.end.x))
+			var along := (v.x - origin.x) if s < 2 else (v.z - origin.y)
+			if across <= reach and along >= -reach and along <= sides[s].size() * step + reach:
+				cap = minf(cap, sides[s][clampi(roundi(along / step), 0, sides[s].size() - 1)] - SEAM)
+		if cap < INF:
+			v.y = minf(v.y, cap)
+			verts[q] = v
+			skirt_y = minf(skirt_y, v.y - SEAM)
+	arrays[Mesh.ARRAY_VERTEX] = verts
+	var out := ArrayMesh.new()
+	out.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	return out
 
 
 func _collision() -> void:

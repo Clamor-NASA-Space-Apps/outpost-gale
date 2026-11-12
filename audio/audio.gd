@@ -28,7 +28,7 @@ var last_step := {}
 var _time := 0.0
 var _hurry: float  # m/s, the sheet's hurry: full effort and the loudest step
 var _hab: Node3D
-var _hab_box: AABB  # the habitat's inside, in its own space
+var _hab_mid: Vector3  # the habitat's middle at head height: where its hum sounds, and a far point the dusk view may turn to
 var _rover: Node3D
 var _driving := false
 var _listener := AudioListener3D.new()
@@ -65,7 +65,7 @@ func setup(w: Node3D, p: Node3D, tuning: Dictionary) -> void:
 	_hurry = world.sheet_values["hero.speed.hurry"]
 	add_child(_listener)
 	_hab = world.items[t.habitat]
-	_hab_box = _enclosure(_hab)
+	_hab_mid = _hab.to_global(Vector3.UP * world.hero_height * 0.9)
 	_rover = world.items.get("rover")
 	player.footstep.connect(_step)
 	_radio_next = randf_range(t.radio.base_s[0], t.radio.base_s[1])
@@ -100,7 +100,7 @@ func start() -> void:
 	_flat("suit_fan", "Suit", t.fan_db).play()
 	_wind = _flat("wind_out", "Outside", t.wind.db)
 	_wind.play()
-	_at("hum", "Habitat", _hab.global_transform * _hab_box.get_center(), t.hum_db, _hab).play()
+	_at("hum", "Habitat", _hab_mid, t.hum_db, _hab).play()
 	for id: String in t.machines:
 		_at("hum_out", "Outside", world.items[id].global_position + Vector3.UP, t.hum_db, world.items[id]).play()
 	if _rover:
@@ -152,7 +152,7 @@ func used(what: String, pos: Vector3) -> void:
 			play("door_open", pos)
 		"door_close":
 			play("door_close", pos)
-			if _in_habitat():
+			if _in_room():
 				music("airlock_sealed")  # shut in, safe
 			get_tree().create_timer(t.hiss_after).timeout.connect(play.bind("hiss", pos))
 		"panel":
@@ -230,7 +230,7 @@ func state() -> Dictionary:
 func _step(pos: Vector3, _yaw: float, foot: String) -> void:
 	if not started or player.vehicle:
 		return
-	var surface := "in" if _in_habitat() else "sand"
+	var surface := "in" if _in_room() else "sand"
 	if surface == "sand":
 		var ray := PhysicsRayQueryParameters3D.create(pos + Vector3.UP * 0.3, pos + Vector3.DOWN * 0.2, SOLIDS)
 		if world.get_world_3d().direct_space_state.intersect_ray(ray):
@@ -323,7 +323,7 @@ func _quiet_moments(delta: float) -> void:
 			_still_s = 0.0
 	_glance.clear()
 	if _sky == "design.sunset" and outside:
-		_glance.append(_hab.global_transform * _hab_box.get_center())
+		_glance.append(_hab_mid)
 		if devil.emitting:
 			_glance.append(devil.global_position)
 
@@ -339,30 +339,13 @@ func _hold(s: AudioStream) -> void:
 
 
 func _inside_now() -> bool:
-	return (_rover != null and player.vehicle == _rover) or _in_habitat()
+	return (_rover != null and player.vehicle == _rover) or _in_room()
 
 
-func _in_habitat() -> bool:
-	return _hab_box.has_point(_hab.to_local(player.body.global_position + Vector3.UP * 0.5))
-
-
-## The habitat's inside in its own space: its drawn box, from the airlock door's inner face to the far wall.
-func _enclosure(item: Node3D) -> AABB:
-	var inv := item.global_transform.affine_inverse()
-	var box := AABB()
-	var door := AABB()
-	for m: MeshInstance3D in item.find_children("*", "MeshInstance3D", true, false):
-		var a: AABB = inv * (m.global_transform * m.get_aabb())
-		if m.name == "door":
-			door = a
-		box = a if box.size == Vector3.ZERO else box.merge(a)
-	# ponytail: the door sits in an end wall across the model's z, as building_habitat.glb is built
-	if door.get_center().z < box.get_center().z:
-		box.size.z = box.end.z - door.end.z
-		box.position.z = door.end.z
-	else:
-		box.size.z = door.position.z - box.position.z
-	return box
+## In a room (data/world.json `rooms`: HAB 1, the greenhouse): the player's own answer, the one that puts the view in
+## first person, so what you hear and what you see change at the same step.
+func _in_room() -> bool:
+	return player.room != ""
 
 
 func _bus(b: String, gain: float) -> void:

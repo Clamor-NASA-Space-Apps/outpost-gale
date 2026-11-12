@@ -42,6 +42,8 @@ var _pane_mark := Material.new()  # only tells HouseStyle.merge() to number the 
 var _resting: Dictionary = {}  # carriable -> resting on the ground (parent is the world), to redraw contacts on a change
 var _drawn: Dictionary = {}  # carriable -> Rect2 (x, z) of the feet drawn into the contact map
 var _probe: ReflectionProbe
+var _rooms: Array[ReflectionProbe] = []  # one probe per room (data/world.json probe.rooms), made with _probe
+const ROOMS := 1 << 3  # render layer 4: indoor swept surfaces, which only the room probes reflect onto
 var _cells: Array[Node3D] = []
 var _touch: Dictionary = {}  # mover -> PackedVector4Array of its contact discs (touch())
 var _touch_dirty := false
@@ -212,8 +214,29 @@ func restyle(design: Dictionary) -> void:
 		# the sun went pure black there; the rig's own shade colour keeps them as DESIGN.md says
 		_probe.ambient_mode = ReflectionProbe.AMBIENT_COLOR
 		add_child(_probe)
-	_probe.ambient_color = Color.html(design.lighting.get("ambientColor", design.lighting.sky))
-	_probe.ambient_color_energy = float(design.lighting.get("ambient", 1)) / PI  # the rig's units (house_style UNIT)
+		# A room's own probe (data/world.json probe.rooms): with only the base's, glass and metal inside HAB 1 showed
+		# the rover and the sky (12 Nov playtest). Compatibility averages every probe whose box holds a pixel, so the
+		# swept meshes (the rooms' fit-out and floors, world.gd _merge) go on a layer only the room probes reflect onto
+		for id: String in data.probe.get("rooms", {}):
+			if not items.has(id):
+				continue
+			var r: Dictionary = data.probe.rooms[id]
+			var room := ReflectionProbe.new()
+			room.name = "Probe_" + id
+			room.size = Vector3(r.size[0], r.size[1], r.size[2])
+			room.position = Vector3(r.at[0], r.at[1], r.at[2])
+			room.box_projection = true  # a closed room: reflections land on its walls, not at infinity
+			room.interior = true
+			room.reflection_mask = ROOMS
+			room.ambient_mode = ReflectionProbe.AMBIENT_COLOR
+			items[id].add_child(room)
+			_rooms.append(room)
+		for cell: Node3D in _cells:
+			for mi: MeshInstance3D in cell.find_children("merged_swept", "MeshInstance3D", false, false):
+				mi.layers = ROOMS
+	for p: ReflectionProbe in [_probe] + _rooms:
+		p.ambient_color = Color.html(design.lighting.get("ambientColor", design.lighting.sky))
+		p.ambient_color_energy = float(design.lighting.get("ambient", 1)) / PI  # the rig's units (house_style UNIT)
 
 
 func height_at(x: float, z: float) -> float:
@@ -271,6 +294,11 @@ func rest(root: Node3D) -> void:
 				var p := to * v
 				points.append(p)
 				low = minf(low, p.y)
+	# a model bedded in the ground (an outcrop's skirt) marks its ground line with a `ground_level` node: it rests
+	# there, and what is drawn below it stays in the dust
+	var mark := root.find_child("ground_level", true, false) as Node3D
+	if mark:
+		low = mark.global_position.y
 	# each foot dropped onto the underside's plane: a bevelled edge 4 cm up counts where it would meet the
 	# ground, or it pushed the flat bottom 4 cm deeper than the sink row
 	var feet := PackedVector3Array()

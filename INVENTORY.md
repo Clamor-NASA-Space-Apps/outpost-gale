@@ -42,8 +42,8 @@ All in `models/`. Triangles and licence per file: [ASSETS.md](ASSETS.md). "Movin
 
 | File | What it is | Real-world thing | Moving parts | Status |
 |---|---|---|---|---|
-| `building_habitat.glb` | 5 m drum, ramp, 1.2 x 2.2 m hatch, "HAB 1" lettering, mast, tanks; fitted for 2 crew: water-bag-lined bunks (the storm shelter), galley, toilet, CO2 and water racks (ISS rack faces), O2/N2 valve panel, workstation with the Gale map, 2 suits, ceiling lights | NASA Habitat Demonstration Unit; ISS racks | `door` (swings in) | done, fit-out 13 Nov |
-| `building_greenhouse.glb` | 6.8 m geodesic dome, vestibule, 2 hydroponic A-frames under magenta grow lights, 8 lettuce slots | Mars greenhouse (forged, not the Quaternius dome: it has no doorway) | `door` | done, WIP edit today |
+| `building_habitat.glb` | 5 m drum on a 0.40 m raised floor (deck plates), ramp, 1.2 x 2.2 m hatch, portholes through the wall, "HAB 1" lettering, mast, tanks; fitted for 2 crew round an open middle: 2 stacked sleep stations after the ISS crew quarters with 12 water bags (CWC, the storm shelter), galley, toilet, air and water racks (ISS rack faces), air valve panel, workstation with the Gale map, 2 spare suits on stands (`prop_suit_stand.glb` in slots), ceiling lights | NASA Habitat Demonstration Unit (8 wedges); ISS crew quarters and racks | `door` (swings in) | done, first-person refit 13 Nov |
+| `building_greenhouse.glb` | 6.8 m geodesic dome, vestibule, 2 floor-standing grow racks (3 tiers, magenta LED bars under each shelf, microgreens) either side of an aisle, 16 lettuce slots | Mars greenhouse (forged, not the Quaternius dome: it has no doorway) | `door` | done, WIP edit today |
 | `building_solar_array.glb` | 4 panels on a single-axis tracker | NASA surface-power wing | `panel_1..4` (tilt about the tube) | done, WIP edit today. No panel collision |
 | `building_dish.glb` | 3 m parabolic dish on a pedestal | base high-gain antenna | `dish` (nods) | done. No dish collision |
 | `building_storm_shelter.glb` | Stacked cargo bags, 3.0 x 2.42 x 2.81 m, one doorway | NASA Orion storm shelter (bags of food and water) | none | done. 12.5k triangles, the heaviest |

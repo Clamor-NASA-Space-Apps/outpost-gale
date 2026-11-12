@@ -8,9 +8,12 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from base_kit import *  # noqa: E402,F403
-from hab_interior import fit_out, wall_trim  # noqa: E402
+from hab_interior import deck, fit_out  # noqa: E402
 
-R, H, WALL, SILL, TOP = 2.5, 3.5, 0.12, 0.28, 2.6   # radius, height, wall, floor top, wall top
+# The floor sits 0.40 m up: the ground under the drum rises up to 0.31 m toward the hatch (the HiRISE patch at the
+# base), and a 0.28 m floor let the sand show through the deck. The wall and roof went up with it, so the room
+# keeps its 2.32 m to the ceiling; the drum is 3.62 m tall (the HDU's 3.5 m plus the raised floor).
+R, H, WALL, SILL, TOP = 2.5, 3.62, 0.12, 0.40, 2.72  # radius, height, wall, floor top, wall top
 HW, HH, FRONT = row("hatch.width"), row("hatch.height"), 90  # hatch width and height, front angle (+Y)
 CD = 0.4                                              # collar depth through the wall
 reset()
@@ -21,7 +24,8 @@ cut(wall, cyl("inner", R - WALL, TOP + 0.2, (0, 0, TOP / 2), None, 64))
 # they lay on the collar's jambs and flickered white through it (13 Nov playtest)
 cut(wall, box("hatch_cut", (HW + 0.2, 1.0, HH + 0.1), (0, R, SILL + HH / 2)))
 smooth(wall)
-floor = smooth(cyl("floor-col", R - WALL + 0.02, SILL, (0, 0, SILL / 2), mat("trim"), 64))
+FS = SILL - 0.015  # the slab's top: the deck plates (forge/hab_interior.py deck()) lie on it, their top at SILL
+floor = smooth(cyl("floor-col", R - WALL + 0.02, FS, (0, 0, FS / 2), mat("trim"), 64))
 cap = 3.92  # sphere radius whose cap is 0.9 m high over a 5 m circle: (2.5^2 + 0.9^2) / (2 * 0.9)
 roof = sphere("roof-col", cap, (0, 0, H - cap), mat("body"), 48)
 cut(roof, box("below", (10, 10, 10), (0, 0, TOP - 5)))
@@ -43,11 +47,11 @@ status_light("hatch_light", (0, R + 0.15, SILL + HH + 0.05), (0.3, 0.05, 0.06))
 # the door leaf, behind the collar on the room side, opening inward like a real pressure hatch
 inner_leaf(HW, HH, R - 0.07 - CD / 2, SILL, [box("door_seam", (HW - 0.1, 0.07, 0.03), (0, R - 0.07 - CD / 2 - 0.032, SILL + 0.6), mat("trim"))])
 
-# ramp from the ground to the sill: 0.28 m over 1.2 m, a step no suited crew finds hard
-RW = HW + 0.2
-ramp = prism("ramp-col", [(R + 0.13, 0), (R + 1.33, 0), (R + 0.13, SILL)], RW, mat=mat("metal"))
+# ramp from the ground to the sill: 0.40 m over 1.6 m (14 degrees), a slope no suited crew finds hard
+RW, RL = HW + 0.2, 1.6
+ramp = prism("ramp-col", [(R + 0.13, 0), (R + 0.13 + RL, 0), (R + 0.13, SILL)], RW, mat=mat("metal"))
 for s in (-1, 1):
-    box(f"ramp_edge{s}", (0.05, 1.18, 0.03), (s * (RW / 2 - 0.02), R + 0.74, 0.02), mat("hazard"))
+    box(f"ramp_edge{s}", (0.05, RL - 0.02, 0.03), (s * (RW / 2 - 0.02), R + 0.14 + RL / 2, 0.02), mat("hazard"))
 
 # hull detail: base skirt, a seam band under the roof, vertical panel seams, roof hatch and mast
 smooth(cyl("skirt", R + 0.05, 0.2, (0, 0, 0.1), mat("trim"), 64))
@@ -58,17 +62,24 @@ for r in (1.0, 1.85):  # seam rings on the roof, sitting on its curve
     smooth(cyl(f"roof_ring{r}-convcol", r, 0.05, (0, 0, H - cap + math.sqrt(cap * cap - r * r)), mat("trim"), 48))
 rb = cyl("roof_band", R + 0.04, 0.14, (0, 0, TOP), mat("trim"), 64)
 smooth(cut(rb, cyl("roof_band_in", R - 0.05, 0.3, (0, 0, TOP), None, 64)))  # else it lowers the ceiling
-LABEL, WINDOWS = FRONT + 52, (FRONT - 45, FRONT + 160, FRONT - 110)
+LABEL, WINDOWS = FRONT + 52, (0, 250, 328)  # over the galley, beside the berths, beside the racks
+WZ, WR, WO = SILL + 1.45, 0.34, 0.25  # window centre (eye height in the room), frame radius, opening radius
 for d in range(0, 360, 30):
     a = FRONT + 15 + d
     if min(abs((a - b + 180) % 360 - 180) for b in (FRONT, LABEL, *WINDOWS)) < 22:
         continue  # no seam through the hatch, the label or a window
     s = box(f"seam{d}", (0.05, 0.03, TOP - 0.45), at(R + 0.005, a, TOP / 2 + 0.05), mat("trim"))
     s.rotation_euler.z = math.radians(a)
+# portholes: a round frame through the wall, proud of both faces, so it meets the curve all round inside and out
+# (a flat ring laid on the inside clipped into the curve at its sides: 12 Nov playtest). The hole is cut wider
+# than the opening, so its faces end inside the frame; the pane's edge sits inside the frame too.
+r_in, r_out = R - WALL - 0.05, R + 0.07
 for i, a in enumerate(WINDOWS):
     rot = (0, math.pi / 2, math.radians(a))
-    cyl(f"window_ring{i}", 0.34, 0.1, at(R + 0.02, a, 1.65), mat("trim"), 32, rot)
-    smooth(cyl(f"window{i}", 0.26, 0.12, at(R + 0.03, a, 1.65), mat("glass"), 32, rot))
+    cut(wall, cyl("window_hole", (WO + WR) / 2, 0.6, at(R - WALL / 2, a, WZ), None, 24, rot))
+    ring = cyl(f"window_frame{i}", WR, r_out - r_in, at((r_in + r_out) / 2, a, WZ), mat("trim"), 24, rot)
+    smooth(bevel(cut(ring, cyl("window_open", WO, 1.0, at((r_in + r_out) / 2, a, WZ), None, 24, rot)), width=0.012, segments=1))
+    smooth(cyl(f"window{i}", WO + 0.02, 0.02, at(R - WALL / 2, a, WZ), mat("glass"), 24, rot))
 smooth(cyl("roof_hatch-convcol", 0.5, 0.14, (0, 0, H - 0.02), mat("trim"), 32))
 smooth(cyl("roof_hatch_lid-convcol", 0.38, 0.1, (0, 0, H + 0.06), mat("body"), 32))
 smooth(bar("mast", (1.1, -0.6, H - 0.25), (1.1, -0.6, H + 0.9), 0.025, mat("metal")))
@@ -89,16 +100,16 @@ for dy in (-0.18, 0.0, 0.18):
 status_light("utility_light", (R + 0.12, 0, 1.42), (0.05, 0.16, 0.05))
 
 # the fit-out for a crew of 2 (forge/hab_interior.py), clear of the hatch and its door's swing (65 to 115 degrees)
-U, _ = fit_out(SILL, R - WALL, TOP)
-wall_trim(SILL, R - WALL, TOP, WINDOWS, [(FRONT, 25), (301, 28), (214, 28), (172, 12), (348, 21), (22, 13), (141.5, 17), (62, 6)])
+U, _, slots = fit_out(SILL, R - WALL, TOP)
+deck(SILL, R - WALL, box("deck_hatch", (HW + 0.36, CD + 0.006, 1.0), (0, R - 0.07, SILL)))  # 3 mm short of the collar
 if os.environ.get("FORGE_TRIS"):
     dg = bpy.context.evaluated_depsgraph_get()
     for o in sorted(U, key=lambda o: -sum(len(p.vertices) - 2 for p in o.evaluated_get(dg).data.polygons)):
         print("TRIS", o.name, sum(len(p.vertices) - 2 for p in o.evaluated_get(dg).data.polygons))
 inside = join("interior-col", U)
 bpy.context.view_layer.update()
-for slot in (bpy.data.objects["slot_1"], bpy.data.objects["slot_2"]):  # under the fit-out, so what world.json puts
-    mw = slot.matrix_world.copy()                                        # in them is kept swept with it
+for slot in slots:  # under the fit-out, so what world.json puts in them is kept swept with it
+    mw = slot.matrix_world.copy()
     slot.parent = inside
     slot.matrix_world = mw
 

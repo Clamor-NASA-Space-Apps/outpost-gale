@@ -40,6 +40,11 @@
   "rush_height": 0.8,
   "rush_lead": 1.0,
   "note_rush": "a vehicle's speed framing (follow_cam.gd), reached at its top speed and eased by lead_rate: rush_distance and rush_height are shares of the vehicle distance and pivot height (9 m and 2.4 m become 7.2 m and 1.9 m), rush_lead s of velocity the aim looks ahead (lead_time on foot). The field of view never changes (skills/third-person-camera rule 14). Our choice, 13 Nov playtest: \"I felt the rover is slow\"",
+  "fp_ease_s": 0.4,
+  "fp_pitch_min": -70,
+  "fp_pitch_max": 60,
+  "fp_reveal_s": 0.2,
+  "note_fp": "first person inside a room (data/world.json rooms; skills/third-person-camera, Into first person indoors; design/research/pages/camera/first-person.md). fp_ease_s: s the lens takes between the follow position and the eye, each way (the brief asked for 0.3 to 0.5; short, as Meta's comfort guide keeps camera discontinuities and acceleration small); fp_pitch_min and fp_pitch_max: degrees the view may look down and up in first person, wider than the follow camera's so the floor at your feet and the ceiling show (art direction: at -70 the 75 degree lens sees straight down past its lower edge). fp_reveal_s: s the hero takes to fade back in once the lens is clear of its drawn box by the near sphere (follow_cam reveal; Ravindu's call after the 12 Nov 21:12 playtest: about 0.2 s, never a near-plane cut). In first person the hero is not drawn (12 Nov playtest: its shoulders crossed the lens as big pale triangles). The field of view stays the lens's 75 degrees vertical (games usually 75 to 90, de Vries 2007; Minecraft 70): no zoom at the switch. The eye is the visor's middle in the idle pose (player/hero_model.gd eye), no bob, no roll. The doorway band is the hero's own width (reality.json hero.width), no number here",
   "note_frame": "frame_low: share of the frame height the pivot sits below centre when looking level (1/6 is the lower-third line), easing to centred at pitch_min; slope_ahead: m ahead along the view where a ray reads the ground; slope_share: share of that slope the view pitches by; slope_max_deg: the most it pitches. follow_rate and lead_rate also set the lead that cancels the spring's lag in a steady walk (2 v / follow_rate, built at lead_rate)"
  },
  "input": {
@@ -59,7 +64,9 @@
    -60,
    -15
   ],
-  "move_s": 0.6
+  "move_s": 0.6,
+  "aim_deg": 30,
+  "note_aim": "aim_deg: in first person the target is the usable thing nearest the view's centre within reach, inside a cone this wide (degrees, both sides together): point at the hatch or a rack. Art direction: narrow enough that two things a metre apart at arm's length are told apart, wide enough for a thumb on a phone"
  },
  "touch": {
   "target_px": 96,

@@ -98,13 +98,21 @@ func _physics_process(_delta: float) -> void:
 	else:
 		var hero: Node3D = player.body
 		var fwd := -hero.global_basis.z
-		var best: float = tuning.interact.reach
+		# in first person the player points: the usable thing nearest the view's centre within reach, since the body
+		# and the view may face different ways (skills/third-person-camera, Into first person indoors)
+		var aim: bool = player.room != ""
+		var lens: Camera3D = player.cam.lens
+		var reach: float = tuning.interact.reach
+		var best: float = deg_to_rad(tuning.interact.aim_deg) / 2.0 if aim else reach
 		for it: Interactable in get_tree().get_nodes_in_group("interactable"):
 			var to := it.global_position - hero.global_position
 			to.y = 0.0
 			var d := to.length()
-			if d < best and (d < 0.3 or rad_to_deg(fwd.angle_to(to.normalized())) < tuning.interact.cone_deg / 2.0) and it.can_use(hero):
-				best = d
+			if d >= reach or not it.can_use(hero):
+				continue
+			var score := (-lens.global_basis.z).angle_to(it.global_position - lens.global_position) if aim else d
+			if score < best and (aim or d < 0.3 or rad_to_deg(fwd.angle_to(to.normalized())) < tuning.interact.cone_deg / 2.0):
+				best = score
 				target = it
 		if target:
 			text = target.prompt()

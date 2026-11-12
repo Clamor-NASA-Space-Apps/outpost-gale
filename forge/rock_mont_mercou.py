@@ -4,7 +4,13 @@
 # (a plane fitted to its edge), the flat ground round the butte cut away (ours is under it), the rest decimated to
 # the rock budget and its photo colour baked onto the low mesh at 2048 px (material `mercou_photo`, a DESIGN.md
 # kit `keep`): decimating a photo model 500 times smears its texture atlas, baking does not.
-# Kept at the model's own scale, read as metres (not checked against a NASA size). Collision is a hull (below).
+# Kept at the model's own scale, read as metres (not checked against a NASA size). Bedded like a real outcrop: its
+# open edge (where the cut left it, 0.4 to 0.9 m over the fitted ground) is carried down SKIRT m as a skirt that flares
+# a little, as a talus apron does, and the rock is bedded with its ground line at the edge's BURY share of heights, so
+# drift sand covers its foot and the skirt: a stretched skirt above the sand read as a striped band (13 Nov captures).
+# `ground_level` (an empty, child of the mesh) marks that line, and the world rests the rock on it (world.gd rest()).
+# Near the line the baked photo fades to the dust role's colour, drift sand banked against the foot. Collision is
+# the drawn mesh itself (`-col`): closed down into the ground, it has no thin edge to step onto.
 #   FORGE_DESIGN=$PWD/DESIGN.md FORGE_OUT=$PWD/models FORGE_PREVIEWS=$PWD/forge/previews blender -b -P forge/rock_mont_mercou.py
 import os
 import sys
@@ -15,7 +21,9 @@ from base_kit import *  # noqa: E402,F403
 from mathutils import Matrix, Vector  # noqa: E402
 
 SRC = os.path.join(os.path.dirname(os.path.abspath(__file__)), *[".."] * 4, "assets-cache", "sketchfab", "mont_mercou_on_mars_-_3d_printable_model")
-TRIS, CUT, BAKE = 1600, 0.8, 2048  # triangles, metres over the fitted ground kept, baked texture size
+TRIS, CUT, BAKE = 1400, 0.8, 2048  # triangles, metres over the fitted ground kept, baked texture size
+SKIRT, FLARE, DRIFT, BURY = 1.5, 0.4, 0.6, 0.9  # m under the fitted ground, m outward at its foot, m of sand banked
+# at the base, the share of the open edge under the sand
 reset()
 
 bpy.ops.import_scene.gltf(filepath=os.path.join(SRC, "scene.gltf"))
@@ -83,6 +91,12 @@ bpy.ops.object.select_all(action="DESELECT")
 low.select_set(True)
 bpy.context.view_layer.objects.active = low
 bpy.ops.object.modifier_apply(modifier=d.name)
+bm = bmesh.new()
+bm.from_mesh(low.data)
+rim_z = sorted(v.co.z for v in bm.verts if v.is_boundary)
+bm.free()
+GROUND = rim_z[int(BURY * (len(rim_z) - 1))]  # the ground line: this share of the open edge is under it
+print("mercou open edge %.2f to %.2f m, ground line %.2f m" % (rim_z[0], rim_z[-1], GROUND))
 while len(low.data.uv_layers):
     low.data.uv_layers.remove(low.data.uv_layers[0])
 low.data.uv_layers.new(name="UVMap")
@@ -109,7 +123,28 @@ sc.cycles.samples = 1
 src = high.data.materials[0].node_tree
 photo = next(n for n in src.nodes if n.type == "TEX_IMAGE")
 glow = src.nodes.new("ShaderNodeEmission")
-src.links.new(photo.outputs["Color"], glow.inputs["Color"])
+# drift sand at the foot: the photo fades to the dust role's colour over the lowest DRIFT m, in patches
+pos = src.nodes.new("ShaderNodeSeparateXYZ")
+src.links.new(src.nodes.new("ShaderNodeNewGeometry").outputs["Position"], pos.inputs[0])
+grain = src.nodes.new("ShaderNodeTexNoise")
+grain.inputs["Scale"].default_value = 0.6
+up = src.nodes.new("ShaderNodeMath")
+up.operation = "MULTIPLY_ADD"  # height plus a patchy share of DRIFT, so the line wanders
+src.links.new(grain.outputs["Fac"], up.inputs[0])
+up.inputs[1].default_value = DRIFT * 0.6
+src.links.new(pos.outputs["Z"], up.inputs[2])  # From Min and Max below are over the ground line
+fade = src.nodes.new("ShaderNodeMapRange")
+fade.inputs["From Min"].default_value = GROUND + DRIFT * 0.3
+fade.inputs["From Max"].default_value = GROUND + DRIFT * 1.3
+fade.inputs["To Min"].default_value = 1.0
+fade.inputs["To Max"].default_value = 0.0
+src.links.new(up.outputs[0], fade.inputs["Value"])
+sand = src.nodes.new("ShaderNodeMix")
+sand.data_type = "RGBA"
+src.links.new(fade.outputs["Result"], sand.inputs["Factor"])
+src.links.new(photo.outputs["Color"], sand.inputs["A"])
+sand.inputs["B"].default_value = mat("dust").node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value
+src.links.new(sand.outputs["Result"], glow.inputs["Color"])
 src.links.new(glow.outputs["Emission"], next(n for n in src.nodes if n.type == "OUTPUT_MATERIAL").inputs["Surface"])
 sc.render.bake.use_selected_to_active = True
 sc.render.bake.cage_extrusion = 0.4
@@ -125,21 +160,30 @@ img.filepath_raw, img.file_format = path, "JPEG"
 img.save()
 tex.image = bpy.data.images.load(path)
 bpy.data.objects.remove(high)
+# the skirt, after the bake (no photo under the cut to bake from): the open edge carried straight down under the
+# ground and a little outward, each new corner taking the colour of the rim corner above it (sand near the foot)
+bm = bmesh.new()
+bm.from_mesh(low.data)
+uv = bm.loops.layers.uv.active
+mid = sum((v.co for v in bm.verts), Vector()) / len(bm.verts)
+rim = [e for e in bm.edges if e.is_boundary]
+made = bmesh.ops.extrude_edge_only(bm, edges=rim)["geom"]
+drop = {v for v in made if isinstance(v, bmesh.types.BMVert)}
+for v in drop:
+    out = Vector((v.co.x - mid.x, v.co.y - mid.y, 0)).normalized()
+    v.co = Vector((v.co.x, v.co.y, -SKIRT)) + out * FLARE
+for f in {f for v in drop for f in v.link_faces}:
+    for lp in f.loops:
+        if lp.vert in drop:
+            top = next(e.other_vert(lp.vert) for e in lp.vert.link_edges if e.other_vert(lp.vert) not in drop)
+            lp[uv].uv = next(q[uv].uv for q in f.loops if q.vert == top)
+bm.to_mesh(low.data)
+bm.free()
 smooth(low, 60)
 
-# collision only: the hull of the low mesh with its open edge carried 0.6 m straight down. The cut edge is a thin
-# wedge on the ground; as a hull's slope it let the hero step up into the solid (sweep_test), as a wall it cannot
-hull = low.copy()
-hull.data = low.data.copy()
-hull.name = "mercou-convcolonly"
-bpy.context.scene.collection.objects.link(hull)
-bm = bmesh.new()
-bm.from_mesh(hull.data)
-rim = [e for e in bm.edges if e.is_boundary]
-new = bmesh.ops.extrude_edge_only(bm, edges=rim)["geom"]
-bmesh.ops.translate(bm, verts=[v for v in new if isinstance(v, bmesh.types.BMVert)], vec=(0, 0, -0.6))
-keep = bmesh.ops.convex_hull(bm, input=bm.verts)  # the engine hulls it anyway; stored as a hull it costs few triangles
-bmesh.ops.delete(bm, geom=list(set(bm.verts) - set(v for v in keep["geom"] if isinstance(v, bmesh.types.BMVert))), context="VERTS")
-bm.to_mesh(hull.data)
-bm.free()
-done("rock_mont_mercou", solid=False)  # the drawn butte carries no body of its own: the hull blocks
+low.name = "mercou-col"  # its own triangles block (world-collision rule 1)
+mark = bpy.data.objects.new("ground_level", None)  # the fitted ground, where the world rests the rock
+bpy.context.scene.collection.objects.link(mark)
+mark.parent = low
+mark.location.z = GROUND
+done("rock_mont_mercou", solid=False)

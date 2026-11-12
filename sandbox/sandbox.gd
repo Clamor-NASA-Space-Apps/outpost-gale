@@ -20,6 +20,12 @@ const VIEWS := {
 	"hab_in": [Vector3(0.3, 2.0, 1.4), Vector3(0.6, 1.1, -2.0)],  # inside HAB 1: the life-support wall and bunks
 	"hab_desk": [Vector3(0.9, 2.0, -0.6), Vector3(-2.0, 1.0, 0.9)],  # inside HAB 1: galley, Veggie, desk and map
 }
+# The play camera in first person inside a room: [item, where the hero stands in its space, yaw from the item's
+# front, pitch deg]. Both stand inside the door looking in (a model's door is on its front, -Z).
+const FP_VIEWS := {
+	"hab_fp": ["hab1", Vector3(0.0, 0.3, -1.3), 180.0, -12.0],
+	"greenhouse_fp": ["greenhouse", Vector3(0.0, 0.22, -2.0), 180.0, -12.0],
+}
 
 @onready var world: Node3D = $World
 @onready var player: Node3D = $Player
@@ -57,6 +63,9 @@ func _ready() -> void:
 	world.build(design)
 	var s: Dictionary = world.landmark("spawn")
 	player.bound = world.bound()
+	for id: String in world.data.rooms:
+		if world.items.has(id):  # skips the _note
+			player.rooms[id] = {"node": world.items[id], "areas": world.data.rooms[id]}
 	player.place(s.pos, s.yaw)
 	interactions = Interactions.new()
 	interactions.name = "Interactions"
@@ -246,6 +255,13 @@ func set_view(v: String) -> void:
 	view = v
 	if v == "settings":
 		settings.open()  # over the play view, for a picture of it
+		return
+	if FP_VIEWS.has(v):
+		var f: Array = FP_VIEWS[v]
+		var item: Node3D = world.items[f[0]]
+		$ViewCam.current = false
+		player.place(item.to_global(f[1]), -rad_to_deg(item.global_rotation.y) + float(f[2]))
+		player.cam.pitch = deg_to_rad(f[3])
 		return
 	if v == "storm":
 		_sky(SKIES.find("design.storm"))

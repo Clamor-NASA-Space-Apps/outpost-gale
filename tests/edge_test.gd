@@ -11,6 +11,7 @@ extends "res://addons/forge/test.gd"
 ## Nothing in 2 and 3 may need the net.
 
 const GHOST := 1 << 19  # layer 20, which nothing in the game uses: the drawn ground, touching nothing
+const BACK := 1 << 20  # layer 21, likewise: the drawn backdrop
 const SPOTS := [-0.8, -0.4, 0.0, 0.4, 0.8]  # along each side, as a share of the half width
 const AGREE := 0.06  # m: a heightmap cell's two triangles against the drawn ones (tests/run.gd)
 
@@ -63,16 +64,16 @@ func _surface() -> void:
 	var r: Rect2 = world.bound()
 	check(Rect2(patch.x, patch.y, patch.z, patch.w).encloses(r), "the bound %s lies inside the patch %s" % [r, patch])
 	for mi: MeshInstance3D in world.terrain.find_children("*", "MeshInstance3D", true, false):
-		if not str(mi.name).begins_with("patch_"):
+		var is_patch := str(mi.name).begins_with("patch_")
+		if not is_patch:
 			check(float(mi.get_instance_shader_parameter("backdrop")) == 1.0, "%s leaves the patch to the patch" % mi.name)
-			continue
 		var shape := ConcavePolygonShape3D.new()
 		var faces := mi.mesh.get_faces()
 		for k in faces.size():
 			faces[k] = mi.global_transform * faces[k]
 		shape.set_faces(faces)
 		var body := StaticBody3D.new()
-		body.collision_layer = GHOST
+		body.collision_layer = GHOST if is_patch else BACK
 		body.collision_mask = 0
 		var col := CollisionShape3D.new()
 		col.shape = shape
@@ -104,6 +105,33 @@ func _surface() -> void:
 	for what: String in worst:
 		check(worst[what] < AGREE, "%s ground and height_at() agree near the line (worst %.3f m at %s)" % [what, worst[what], where[what]])
 	print("surface near the line: drawn %.3f m, collision %.3f m worst off height_at()" % [worst.drawn, worst.collision])
+	# where the patch meets the backdrop (terrain.gd _seat()): just outside the patch the backdrop lies under the
+	# patch's edge, or the eye at the line passes under it and sees the sky (a pale band, 12 Nov playtest); and from
+	# outside, the step between them is the patch's skirt, never a hole
+	var e := Vector2(patch.z, patch.w) / 2.0  # the patch's half sizes (it is centred on the origin)
+	var over := -INF
+	var over_at := Vector2.ZERO
+	var holes := 0
+	for side in 4:
+		var d := _side(side)
+		var edge: float = e.x if side % 2 == 0 else e.y
+		for a in range(-int(edge) + 1, int(edge)):  # a ray down the corner runs along the other side's skirt
+			var p: Vector3 = d[0] * edge + d[1] * float(a)
+			var h: float = world.height_at(p.x, p.z)
+			var o: Vector3 = p + d[0] * 0.25
+			var hit := space.intersect_ray(PhysicsRayQueryParameters3D.create(Vector3(o.x, h + 60.0, o.z), Vector3(o.x, h - 60.0, o.z), BACK))
+			if not hit.is_empty() and hit.position.y - h > over:
+				over = hit.position.y - h
+				over_at = Vector2(o.x, o.z)
+			var low: float = hit.position.y if not hit.is_empty() else h - 1.0
+			for y: float in [h - 0.05, (h + low) / 2.0]:
+				var from: Vector3 = p + d[0] * 2.0
+				var into := space.intersect_ray(PhysicsRayQueryParameters3D.create(Vector3(from.x, y, from.z), Vector3(p.x, y, p.z) - d[0] * 1.0, GHOST))
+				if into.is_empty():
+					holes += 1
+					print("hole in the skirt at %s, %.2f m (edge %.2f, backdrop %.2f)" % [p, y, h, low])
+	check(over < 0.0, "the backdrop lies under the patch's edge all round (worst %.2f m over it at %s)" % [over, over_at])
+	check(holes == 0, "seen from outside, the patch's skirt fills the step down to the backdrop (%d holes)" % holes)
 
 
 ## The hero hurries at the line from 6 m in, turned `slant` degrees off straight out, for 7 s.

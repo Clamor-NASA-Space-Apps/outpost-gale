@@ -57,6 +57,9 @@ func play() -> bool:
 					var p: Vector3 = mi.global_transform * v
 					pts.append(p)
 					base = minf(base, (p - n.global_position).dot(up))
+		var mark := n.find_child("ground_level", true, false) as Node3D
+		if mark:  # a bedded model rests on its ground line, its skirt in the dust (world.rest())
+			base = (mark.global_position - n.global_position).dot(up)
 		var sink: Dictionary = world.data.sink
 		# a vehicle sits on its wheels only by its own sink row, set by its driver (sandbox/rover.gd)
 		var want: float = 0.0 if kind == "vehicle" and not sink.has(it.prefab) else world.sheet_values[sink.get(it.prefab, sink.default)]
@@ -76,6 +79,22 @@ func play() -> bool:
 	for i in 400:
 		m._process(0.05)
 	var now: Dictionary = m.state()
+	# rows that backtrack never shade the next row, at any sun: a chord's shadow across the row, L cos(sun - tilt),
+	# fits in the pitch seen from the sun, P cos(sun) (gcr = L / P; machines.gd _track)
+	for sky: String in ["design", "design.sunset"]:
+		game._sky(game.SKIES.find(sky))
+		for i in 800:
+			m._process(0.05)
+		var rows := 0
+		for p: Dictionary in m.panels:
+			if p.gcr > 0.0:
+				var d: Vector3 = (p.node as Node3D).get_parent().global_basis.inverse() * m._sun
+				var sun := atan2(d.z, d.y)
+				var tilt: float = p.at
+				rows += 1
+				check(cos(sun - tilt) * p.gcr <= cos(sun) + 1e-3 or absf(tilt) >= p.lim - 1e-3,
+					"%s: a %s row at %.1f deg shades the next (sun %.1f deg across it)" % [sky, (p.node as Node3D).get_parent().get_parent().name, rad_to_deg(tilt), rad_to_deg(sun)])
+		check(rows >= 6, "the wing rows backtrack (%d rows with a ground coverage ratio)" % rows)
 	game._sky(0)
 	check(now.panels != was.panels and now.dish != was.dish, "the panels and the dish move on their own (%s, %s)" % [now.panels.slice(0, 2), now.dish])
 	check(now.tell.size() == 1 and now.tell[0] >= 0.0, "the telltale leans downwind (%s deg)" % [now.tell])
@@ -245,7 +264,7 @@ func _no_leftovers(game: Node3D, world: Node3D, sky: String) -> void:
 	var rigs := game.get_children().filter(func(c: Node) -> bool: return c.has_meta("house_rig"))
 	var rig_n := 3 if design.lighting.has("celestial") else 2  # a night sky adds its clock (house_style SkyClock)
 	check(rigs.size() == rig_n, "%s: one environment, one sun (and a sky clock), found %d rig nodes" % [sky, rigs.size()])
-	check(world.find_children("*", "ReflectionProbe", true, false).size() == 1, "%s: one reflection probe" % sky)
+	check(world.find_children("*", "ReflectionProbe", true, false).size() == 1 + world.data.probe.get("rooms", {}).size(), "%s: one reflection probe, and one per room" % sky)
 	var lamps := world.get_tree().get_nodes_in_group("world_lamp").size()
 	var want: int = world.data.items.filter(func(it: Dictionary) -> bool: return it.prefab in world.data.lamps).size() if design.lighting.has("lamp") else 0
 	check(lamps == want, "%s: %d lamps lit, want %d" % [sky, lamps, want])

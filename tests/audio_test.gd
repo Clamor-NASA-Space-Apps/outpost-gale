@@ -97,7 +97,7 @@ func play() -> bool:
 	action(&"move_forward")
 	await seconds(4.0)
 	action(&"move_forward", false)
-	check(audio._in_habitat(), "the hero walked into the habitat (at %s)" % player.body.global_position)
+	check(player.room == audio.t.habitat and audio._inside_now(), "the hero walked into the habitat, and sound and camera agree (room %s, at %s)" % [player.room, player.body.global_position])
 	var indoors: Vector3 = player.body.global_position
 	check(audio.cue == "", "no music on the way in")
 	await seconds(audio.t.fade_s + 0.2)
@@ -140,6 +140,14 @@ func play() -> bool:
 	check(audio.music("discovery") and audio.cue == "discovery", "discovery plays when called (no event calls it yet)")
 	for q: AudioStreamPlayer in playing_music():
 		check(q.bus == "Music", "music plays on the Music bus")
+	# the greenhouse is a room too: inside it the sound is indoors, as the camera is (data/world.json rooms)
+	var gh: Node3D = game.world.items["greenhouse"]
+	player.place(gh.to_global(Vector3(0.0, 0.3, 0.0)), 0.0)
+	await seconds(audio.t.fade_s + 0.2)
+	check(player.room == "greenhouse" and audio.inside == 1.0, "in the greenhouse the sound is indoors (room %s, inside %.2f)" % [player.room, audio.inside])
+	player.place(gh.to_global(Vector3(0.0, 0.3, -6.5)), 0.0)  # outside its door
+	await frames(2)
+	check(player.room == "" and not audio._inside_now(), "outside the greenhouse door the sound is outdoors")
 	return true
 
 

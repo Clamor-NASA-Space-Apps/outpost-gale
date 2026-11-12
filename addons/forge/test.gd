@@ -16,9 +16,20 @@ enum { DOWN, UP, MOVE }
 var failed := 0
 var watchdog := 20.0  # seconds; set it in _init() for a longer test
 var slots: Array[Vector2] = []  # the web build's "previous position", kept by place in the event, not by finger
+var errors := Errors.new()
+
+
+## Counts the errors the engine reports from scripts and shaders (parse errors included).
+class Errors extends Logger:
+	var count := 0
+
+	func _log_error(_function: String, _file: String, _line: int, _code: String, _rationale: String, _editor_notify: bool, error_type: int, _script_backtraces: Array[ScriptBacktrace]) -> void:
+		if error_type == ERROR_TYPE_SCRIPT or error_type == ERROR_TYPE_SHADER:
+			count += 1
 
 
 func _initialize() -> void:
+	OS.add_logger(errors)  # here, not in _init(): a test may override _init() to set its watchdog
 	await process_frame
 	# a script error stops this function for good, and the engine would idle forever
 	create_timer(watchdog).timeout.connect(func() -> void:
@@ -30,6 +41,10 @@ func _initialize() -> void:
 	# a test whose scene failed to load printed "0 failed".
 	if await play() != true:
 		check(false, "play() did not reach its end: read the first error above")
+	# a script that fails to parse leaves its node without behaviour and play() still reaches its end: a broken
+	# scene printed "0 failed" (12 Nov run). Script and shader errors fail the test; engine noise does not
+	if errors.count:
+		check(false, "%d script or shader error(s) during the run: read the first one above" % errors.count)
 	print("%d failed" % failed)
 	quit(1 if failed else 0)
 

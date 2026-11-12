@@ -33,6 +33,11 @@ var fast := 0.0  # m/s at which the shot is all the way into its speed framing (
 var rush := 0.0  # 0 to 1: how far into it, eased by lead_rate so a start or a stop never jerks the lens
 var glance: Array[Vector3] = []  # far things worth a slow look while the view is left alone (the owner fills it)
 var glanced := 0.0  # rad the view has turned toward them since the player last looked
+var room := false  # the owner says the target is in a room: the lens goes into its head (skills/third-person-camera,
+# Into first person indoors)
+var first := 0.0  # 0 the follow camera, 1 the eye: eased over fp_ease_s, smoothstepped by the lens
+var eye := Vector3.ZERO  # the eye in the target's space, y up, z forward along the view (negative is ahead)
+var reveal := 1.0  # 0 while the lens could cut the drawn body, then up to 1 over fp_reveal_s: caps `fade`
 
 
 func setup(tuning: Dictionary) -> void:
@@ -78,6 +83,8 @@ func snap(heading: float) -> void:
 	slope = 0.0
 	rush = 0.0
 	glanced = 0.0
+	first = 1.0 if room else 0.0  # a teleport into a room is already in first person
+	reveal = 0.0 if room else 1.0
 	floor_y = target.global_position.y
 	global_position = target.global_position + Vector3.UP * height
 	dist = _wanted()
@@ -88,7 +95,9 @@ func snap(heading: float) -> void:
 ## Turn the view by degrees: right and down are positive, as the mouse and the thumb move.
 func look(right_deg: float, down_deg: float) -> void:
 	yaw -= deg_to_rad(right_deg)
-	pitch = clampf(pitch - deg_to_rad(down_deg), deg_to_rad(t.pitch_min), deg_to_rad(t.pitch_max))
+	var lo: float = t.fp_pitch_min if room else t.pitch_min
+	var hi: float = t.fp_pitch_max if room else t.pitch_max
+	pitch = clampf(pitch - deg_to_rad(down_deg), deg_to_rad(lo), deg_to_rad(hi))
 	idle = 0.0
 	glanced = 0.0
 
@@ -106,19 +115,25 @@ func follow(delta: float, travel: Vector3, facing: float, on_floor: bool) -> voi
 	if stick != Vector2.ZERO:
 		look(stick.x * t.stick_deg_per_s * delta, stick.y * t.stick_deg_per_s * delta)
 	idle += delta
+	first = move_toward(first, 1.0 if room else 0.0, delta / t.fp_ease_s)
+	if not room:
+		# back from the eye's wider pitch range into the follow camera's, eased, never a snap
+		pitch = lerpf(pitch, clampf(pitch, deg_to_rad(t.pitch_min), deg_to_rad(t.pitch_max)), 1.0 - exp(-t.ease_rate * delta))
 	var speed := travel.length()
 	# a phone player has no thumb free to look: left alone, the view drifts behind the real travel like a towed
 	# leash, by distance covered, so it never turns while the target stands or pushes into a wall (Nesky #23)
 	# Never while the travel comes toward the lens: swinging round behind a hero walking at the camera turns
 	# "back" with it, and the hero walks in circles (found by the doors test, walking out of a building)
 	var away := travel.dot(Vector3(-sin(yaw), 0, -cos(yaw))) > 0.0
-	if idle > t.recentre_after and speed > 0.0 and away:
+	# In first person every turn is the player's (Xbox AG 117: no camera motion the player did not start)
+	var mine := first > 0.0
+	if idle > t.recentre_after and speed > 0.0 and away and not mine:
 		var heading := facing if travel.dot(Vector3(-sin(facing), 0, -cos(facing))) < 0.0 else atan2(-travel.x, -travel.z)
 		yaw = lerp_angle(yaw, heading, 1.0 - exp(-t.recentre_per_m * speed * delta))
 	# a far thing worth seeing (Nesky #32: for a far target, rotate): with the view left alone and the hero standing
 	# on foot (`fast` is a vehicle's), the yaw turns slowly toward the one most in front, a few degrees at most, and
 	# the next look takes over at once (#34, #35: never take control, never while the player looks). Yaw only
-	elif glance.size() and idle > t.glance_after and speed < 0.05 and fast == 0.0 and glanced < deg_to_rad(t.glance_max_deg):
+	elif glance.size() and not mine and idle > t.glance_after and speed < 0.05 and fast == 0.0 and glanced < deg_to_rad(t.glance_max_deg):
 		var best := INF
 		for p in glance:
 			var err := wrapf(atan2(global_position.x - p.x, global_position.z - p.z) - yaw, -PI, PI)
@@ -208,9 +223,9 @@ func inside() -> bool:
 	return not space.intersect_shape(q, 1).is_empty()
 
 
-## The target's height as a share of the frame, 0 when it is hidden or behind the lens.
+## The target's height as a share of the frame, 0 when it is hidden or behind the lens, or seen from its own eye.
 func on_screen(feet: Vector3, tall: float) -> float:
-	if faded.is_empty() or not faded[0].visible or lens.is_position_behind(feet):
+	if faded.is_empty() or not faded[0].visible or first > 0.0 or lens.is_position_behind(feet):
 		return 0.0
 	var a := lens.unproject_position(feet)
 	var b := lens.unproject_position(feet + Vector3.UP * tall)
@@ -263,3 +278,23 @@ class Lens extends Camera3D:
 			var p: Vector3 = rig.target.global_transform.affine_inverse() * global_position
 			var gap := p.distance_to(p.clamp(rig.shell.position, rig.shell.end))
 			rig.fade = smoothstep(rig.t.fade_near, rig.t.fade_far, gap)
+		if rig.first > 0.0:
+			_into_eye(rig, h)
+		# a body seen from its own head shows its shoulders as triangles at the lens, and one met by the near plane
+		# shows half drawn: hidden while the lens is within the near sphere of the drawn box (in first person, and
+		# through the ease), then faded back in over fp_reveal_s once clear, never popped (skills/third-person-camera)
+		if rig.shell.has_volume():
+			var p: Vector3 = rig.target.global_transform.affine_inverse() * global_position
+			var clear: bool = p.distance_to(p.clamp(rig.shell.position, rig.shell.end)) > rig._near_radius()
+			rig.reveal = move_toward(rig.reveal, 1.0, delta / rig.t.fp_reveal_s) if clear and rig.first < 1.0 else 0.0
+			rig.fade = minf(rig.fade, rig.reveal)
+
+	## Toward the eye: position lerped, rotation slerped, one smoothstep for both. The lens above sits on the arm's
+	## free line from the pivot, so the straight path from it to the eye stays in what the arm already cleared (the
+	## doorway). Pitch and yaw are the player's own in both views, never a roll.
+	func _into_eye(rig: Node3D, h: float) -> void:
+		var s := smoothstep(0.0, 1.0, rig.first)
+		var at: Vector3 = rig.target.global_position + Vector3.UP * rig.eye.y + Basis(Vector3.UP, rig.yaw) * Vector3(0.0, 0.0, rig.eye.z)
+		var aim := Basis.from_euler(Vector3(rig.pitch, rig.yaw, 0.0)).get_rotation_quaternion()
+		global_transform = Transform3D(Basis(global_basis.get_rotation_quaternion().slerp(aim, s)), global_position.lerp(at, s))
+		set_frustum(h, Vector2(0.0, shift * h * (1.0 - s)), near, far)

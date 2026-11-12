@@ -15,6 +15,9 @@ colors:
   trim: "#4f4744"
   accent: "#2ed3c0"
   metal: "#9c948c"
+  deck: "#86827c"
+  panel: "#dedad2"
+  bedding: "#45607e"
   glass: "#5b7182"
   rock: "#86716a"
   dust: "#c98a5a"
@@ -80,6 +83,9 @@ materials:
   trim: { color: "{colors.trim}", roughness: 0.75, metalness: 0, detail: { texture: "textures/trim_albedo.jpg", normal: "textures/trim_normal.jpg", roughness: "textures/trim_rough.jpg", textureSize: 0.75, strength: 0.6, pattern: grain, size: 0.75 } }
   accent: { color: "{colors.accent}", roughness: 0.45, metalness: 0, weathering: 0.6 }
   metal: { color: "{colors.metal}", roughness: 0.4, metalness: 1, detail: { texture: "textures/metal_albedo.jpg", normal: "textures/metal_normal.jpg", roughness: "textures/metal_rough.jpg", textureSize: 1.0, strength: 0.8, pattern: grain, size: 1.0 } }
+  deck: { color: "{colors.deck}", roughness: 0.7, metalness: 0, weathering: 0, detail: { texture: "textures/metal_albedo.jpg", normal: "textures/metal_normal.jpg", roughness: "textures/metal_rough.jpg", textureSize: 1.0, strength: 0.6, pattern: grain, size: 1.0 } }
+  panel: { color: "{colors.panel}", roughness: 0.5, metalness: 0, weathering: 0 }
+  bedding: { color: "{colors.bedding}", roughness: 0.9, metalness: 0, weathering: 0, detail: { texture: "textures/suit_albedo.jpg", normal: "textures/suit_normal.jpg", roughness: "textures/suit_rough.jpg", textureSize: 0.4, strength: 0.7, pattern: grain, size: 0.4 } }
   glass: { color: "{colors.glass}", roughness: 0.08, metalness: 0, opacity: 0.5, weathering: 0.35 }
   rock: { color: "{colors.rock}", roughness: 0.95, metalness: 0, detail: { texture: "textures/rock_albedo.jpg", normal: "textures/rock_normal.jpg", roughness: "textures/rock_rough.jpg", textureSize: 1.83, strength: 1.0, pattern: grain, size: 1.83 }, weathering: 0 }
   dust: { color: "{colors.dust}", roughness: 1, metalness: 0, detail: { texture: "textures/dust_albedo.jpg", normal: "textures/dust_normal.jpg", roughness: "textures/dust_rough.jpg", textureSize: 3.1, strength: 1.0, pattern: grain, size: 3.1, gravel: { texture: "textures/gravel_albedo.jpg", normal: "textures/gravel_normal.jpg", textureSize: 2.48, share: 0.3 }, ripple: { normal: "textures/ripple_normal.jpg", textureSize: 12 } }, weathering: 0 }
@@ -199,7 +205,7 @@ always with an icon, pulsing no faster than 3 times a second.
 
 ## Materials
 
-Fifteen roles: `visor` (an EVA helmet's gold sun visor: opaque, so no face ever shows), plus the seven core ones and `dust` (the ground), `hazard`, `suit` (the astronauts' fabric, so they never wear hull panels), `stripe` (the suit's bands), `plant` (lettuce green, Ravindu's pick on 12 Nov), `romaine` (the red leaf of 'Outredgeous', the first lettuce eaten in space, and a radish's red root) and `grow` (the magenta glow of Veggie's red 630 nm and blue 455 nm LEDs, NTRS 20160005059; both roles approved by Ravindu on 12 Nov 2026). Kit models map by material name (`kit`).
+Eighteen roles: `deck` (the swept floor plates inside HAB 1 and the greenhouse aisle, a warm grey without shine: as `metal` it mirrored the warm sky and read as sand in first person, 13 Nov 2026), `panel` (the painted face of indoor cabinets, racks and cubicle walls: in `body` they wore the hull's metal plates, 12 Nov playtest), `bedding` (the sleeping bags' muted blue, so a bed reads as a bed at a glance; art direction), `visor` (an EVA helmet's gold sun visor: opaque, so no face ever shows), plus the seven core ones and `dust` (the ground), `hazard`, `suit` (the astronauts' fabric, so they never wear hull panels), `stripe` (the suit's bands), `plant` (lettuce green, Ravindu's pick on 12 Nov), `romaine` (the red leaf of 'Outredgeous', the first lettuce eaten in space, and a radish's red root) and `grow` (the magenta glow of Veggie's red 630 nm and blue 455 nm LEDs, NTRS 20160005059; both roles approved by Ravindu on 12 Nov 2026). Kit models map by material name (`kit`).
 
 Photo sets (CC0, `textures/README.md`): body MetalPlates009, metal Metal011, trim Rubber004, suit
 Fabric061, rock cliff_side, dust moon_02 (fine powder, after Ravindu asked for a soft Sahara / *The Martian*

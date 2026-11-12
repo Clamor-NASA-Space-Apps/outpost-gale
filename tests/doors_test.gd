@@ -3,6 +3,9 @@ extends "res://addons/forge/test.gd"
 ## godot --headless --path . --fixed-fps 60 -s tests/doors_test.gd
 ## Doors are opened through the interactions, as a player opens them. The walk is real input: forward from
 ## 7 m in front of the door until the hero is inside on the floor, then back toward the camera until it is out.
+## Into a room that turns the view first person (world.json rooms) the stick is aimed through the view at the centre,
+## then at the start, as a player steers: the view never turns by itself in there, so a held forward key would keep
+## whatever heading the door frame knocked it to.
 
 const ENTERABLE := ["hab1", "greenhouse", "shelter"]  # world.json items a person walks into
 const START := 7.0  # m in front of the building's centre, along its front
@@ -33,26 +36,43 @@ func play() -> bool:
 		var start := c + front * START
 		player.place(Vector3(start.x, world.height_at(start.x, start.z) + 0.05, start.z), rad_to_deg(atan2(-front.x, front.z)))
 		await frames(5)
-		var closest := await _walk(player, [&"move_forward"], c, 9.0, true)
+		var steer: bool = world.data.rooms.has(id)
+		var closest := await _walk(player, [] if steer else [&"move_forward"], c, c, 9.0, true)
 		var s: Dictionary = player.state().player
 		check(closest < INSIDE, "%s: the hero walks in through its door (closest %.2f m from the centre)" % [id, closest])
 		check(s.onFloor and s.inside.is_empty(), "%s: inside, on the floor and in no wall (%s)" % [id, s.inside])
-		var far := await _walk(player, [&"move_back"], c, 12.0, false)
+		var far := await _walk(player, [] if steer else [&"move_back"], start, c, 12.0, false)
 		check(far > START - 1.0, "%s: and walks back out (%.2f m from the centre)" % [id, far])
 	return true
 
 
-## Holds `keys` for `seconds`; the closest (or farthest) the hero came to `c` across the ground.
-func _walk(player: Node3D, keys: Array, c: Vector3, seconds: float, closest: bool) -> float:
+## Holds `keys` (or, with none, steers the stick toward `goal`) for `seconds`; the closest (or farthest) the hero came
+## to `c` across the ground.
+func _walk(player: Node3D, keys: Array, goal: Vector3, c: Vector3, seconds: float, closest: bool) -> float:
 	for k: StringName in keys:
 		action(k, true)
 	var best := INF if closest else 0.0
 	for i in int(60 * seconds):
+		if keys.is_empty():
+			var to: Vector3 = goal - player.body.global_position
+			to.y = 0.0
+			var v: Vector3 = player.cam.ground_basis().inverse() * to.normalized() if to.length() > 0.3 else Vector3.ZERO  # there: stand
+			_stick(Vector2(v.x, v.z))
 		await frames(1)
 		var p: Vector3 = player.body.global_position
 		var d := Vector2(p.x - c.x, p.z - c.z).length()
 		best = minf(best, d) if closest else maxf(best, d)
 	for k: StringName in keys:
 		action(k, false)
+	_stick(Vector2.ZERO)
 	await frames(2)
 	return best
+
+
+func _stick(v: Vector2) -> void:
+	for a: Array in [[&"move_right", v.x], [&"move_left", -v.x], [&"move_back", v.y], [&"move_forward", -v.y]]:
+		var e := InputEventAction.new()
+		e.action = a[0]
+		e.strength = maxf(a[1], 0.0)
+		e.pressed = a[1] > 0.0
+		send(e)

@@ -4,7 +4,7 @@ extends Node
 ## downwind with the gust, status lights flash. Motion and light only: nothing here changes game state.
 ## Numbers: data/world.json `machines`, `telltale`, `blink`.
 
-var panels: Array[Dictionary] = []  # {node, at (the angle written last), aim, wait, moving}
+var panels: Array[Dictionary] = []  # {node, at (the angle written last), aim, wait, moving, gcr, lim}
 var dishes: Array[Dictionary] = []  # {node, rest, at, aim, next, moving}
 var tells: Array[Dictionary] = []  # {node, rest: Basis, tilt}
 var lights: Array[MeshInstance3D] = []  # meshes with a `light` surface that flashes
@@ -28,7 +28,10 @@ func build(world: Node3D) -> void:
 	for n: Node3D in world.items.values():
 		for part: Node3D in n.get_meta("parts"):
 			if str(part.name).begins_with("panel_"):
-				panels.append({"node": part, "at": part.rotation.x, "aim": part.rotation.x, "wait": 0.0, "moving": false})
+				# per prefab: its rows' ground coverage ratio and its turning limit (data/world.json machines.tracker.rows)
+				var r: Dictionary = _m.tracker.rows.get(n.get_meta("prefab"), {})
+				panels.append({"node": part, "at": part.rotation.x, "aim": part.rotation.x, "wait": 0.0, "moving": false,
+					"gcr": float(r.get("gcr", 0.0)), "lim": deg_to_rad(float(r.get("limit_deg", _m.tracker.limit_deg)))})
 			elif part.name == &"dish":
 				dishes.append({"node": part, "rest": part.rotation.x, "at": part.rotation.x, "aim": part.rotation.x,
 					"next": _rng.randf() * float(_m.dish.period_s), "moving": false})
@@ -72,10 +75,12 @@ func _process(delta: float) -> void:
 
 
 ## Each panel turns about its tube (its X axis) toward the sun, inside the tracker's limits, in steps. It holds
-## still while the hero is near, and for a while after anything else moved it (the tilt interaction).
+## still while the hero is near, and for a while after anything else moved it (the tilt interaction). Rows backtrack:
+## when the sun is so low that a row's shadow would reach the next row, they turn back toward flat until it just
+## does not (Anderson and Mikofski 2020, NREL/TP-5K00-76626, eq. 14; pvlib tracking.singleaxis), so no row ever
+## shades another (design/research/pages/tracker/).
 func _track(delta: float) -> void:
 	var t: Dictionary = _m.tracker
-	var lim := deg_to_rad(float(t.limit_deg))
 	var step := deg_to_rad(float(t.step_deg))
 	for p in panels:
 		var node: Node3D = p.node
@@ -91,7 +96,12 @@ func _track(delta: float) -> void:
 		if _sun != Vector3.ZERO:
 			# the panel's face is its +Y; turned by x about X it points along (0, cos x, sin x)
 			var d: Vector3 = node.get_parent().global_basis.inverse() * _sun
-			want = clampf(atan2(d.z, d.y), -lim, lim)
+			want = atan2(d.z, d.y)  # true tracking: the sun across the tube
+			var gcr: float = p.gcr
+			var c: float = absf(cos(want)) / gcr if gcr > 0.0 else 1.0  # row pitch over the shadow's reach
+			if c < 1.0:
+				want -= signf(want) * acos(c)
+			want = clampf(want, -p.lim, p.lim)
 		# a tracker re-aims in steps, not continuously: when the sun is a step off its aim
 		if absf(want - p.aim) >= step:
 			p.aim = want

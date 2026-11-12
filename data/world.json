@@ -307,12 +307,12 @@
   },
   {"id": "battery2", "prefab": "battery_bank", "pos": [15.1, 2], "yaw": 270},
   {"id": "battery3", "prefab": "battery_bank", "pos": [16.2, 2], "yaw": 270},
-  {"id": "wing1", "prefab": "solar_wing", "pos": [56, 5], "yaw": 0},
-  {"id": "wing2", "prefab": "solar_wing", "pos": [56, 10], "yaw": 0},
-  {"id": "wing3", "prefab": "solar_wing", "pos": [56, 15], "yaw": 0},
-  {"id": "wing4", "prefab": "solar_wing", "pos": [56, 20], "yaw": 0},
-  {"id": "wing5", "prefab": "solar_wing", "pos": [56, 25], "yaw": 0},
-  {"id": "wing6", "prefab": "solar_wing", "pos": [56, 30], "yaw": 0},
+  {"id": "wing1", "prefab": "solar_wing", "pos": [26, 28.6], "yaw": 90},
+  {"id": "wing2", "prefab": "solar_wing", "pos": [33.5, 28.6], "yaw": 90},
+  {"id": "wing3", "prefab": "solar_wing", "pos": [41, 28.6], "yaw": 90},
+  {"id": "wing4", "prefab": "solar_wing", "pos": [48.5, 28.6], "yaw": 90},
+  {"id": "wing5", "prefab": "solar_wing", "pos": [56, 28.6], "yaw": 90},
+  {"id": "wing6", "prefab": "solar_wing", "pos": [63.5, 28.6], "yaw": 90},
   {"id": "reactor", "prefab": "reactor", "pos": [-180, -60], "yaw": 0},
   {"id": "mercou", "prefab": "mont_mercou", "pos": [-40, 38], "yaw": 45}
  ],
@@ -369,11 +369,11 @@
   ]
  },
  "cables": {
-  "_note": "power cables laid on the ground (world.gd _cables): polylines of [x, z], draped on height_at() every step m, width and height in metres, in a DESIGN.md role; rocks keep off them as off paths. The reactor's 3 kVac line comes in from 1 km in the real plan (NTRS 20250000841); our patch ends at 200 m, so the reactor stands near its west edge, 190 m out, and the line runs to HAB 1's utility panel. The field's line runs to the batteries, theirs to the habitat. Size and route are ours",
+  "_note": "power cables laid on the ground (world.gd _cables): polylines of [x, z], draped on height_at() every step m, width and height in metres, in a DESIGN.md role; rocks keep off them as off paths. The reactor's 3 kVac line comes in from 1 km in the real plan (NTRS 20250000841); our patch ends at 200 m, so the reactor stands near its west edge, 190 m out, and the line runs to HAB 1's utility panel. The field's header runs along the wings' north ends past each row's junction box (z 8.57), then to the batteries; theirs runs to the habitat. Size and route are ours",
   "role": "trim", "width": 0.06, "height": 0.04, "step": 1.0,
   "lines": [
    [[-178, -59], [-60, -30], [-12, -12], [-7, -3], [-2.75, -0.4]],
-   [[36, 17.5], [24, 9], [16.2, 2.9]],
+   [[63.5, 8.35], [26, 8.35], [21, 6.5], [16.2, 2.9]],
    [[13.2, 2.2], [6, 1.2], [2.6, 0.6]]
   ]
  },
@@ -415,7 +415,9 @@
  },
  "machines": {
   "_note": "the base working on its own (world/machines.gd). tracker: solar panels start facing the sun and turn to it about their tube at slew_deg_s (after a sky switch or a tilt by hand) within limit_deg (30 keeps a panel's low edge at the 0.82 m of its 30 degree rest, above a walker's knees), re-aiming when the sun is step_deg off, lying flat (stow) where weather says stow (night, storm), and holding still for pause_s after anyone else moves one (the tilt interaction). dish: nods nod_deg either side of its rest every period_s at slew_deg_s. near_m: panels and dish hold still while the hero is this close (a machine stops when people come near). All art direction; servo: the sound each move starts with, played only within hear_m (Mars sound 'falters at just 26 feet (8 meters)', NASA/JPL 2022)",
-  "tracker": {"slew_deg_s": 1.5, "limit_deg": 30, "pause_s": 20, "step_deg": 2.0},
+  "tracker": {"slew_deg_s": 1.5, "limit_deg": 30, "pause_s": 20, "step_deg": 2.0,
+   "_rows": "per prefab: gcr, the ground coverage ratio of its rows (panel chord over row pitch), with which the rows backtrack toward flat when the sun is low enough for a row to shade the next (Anderson and Mikofski 2020, NREL/TP-5K00-76626; pvlib tracking.singleaxis, whose example is 2 m modules 6 m apart, gcr 1/3; design/research/pages/tracker/). solar_array: 2.5 m panels in two rows 8 m apart. solar_wing: 2.5 m wings 7.5 m apart, the six rows running north and south as single-axis trackers usually do (Sandia PVPMC), turning to limit_deg 45, 'common' for trackers (Sandia PVPMC); its low edge then stands 0.57 m up, and the field has no walkway under it",
+   "rows": {"solar_array": {"gcr": 0.3125}, "solar_wing": {"gcr": 0.3333, "limit_deg": 45}}},
   "near_m": 6.0,
   "dish": {"nod_deg": 6, "period_s": 18, "slew_deg_s": 1.0},
   "servo": "servo",
@@ -614,16 +616,10 @@
   "speed": 3.0
  },
  "probe": {
-  "_note": "one reflection probe over the base: centre [x, z], size [x, y, z]",
-  "pos": [
-   6,
-   0
-  ],
-  "size": [
-   80,
-   30,
-   80
-  ]
+  "_note": "one reflection probe over the base: centre [x, z], size [x, y, z]. The sandbox redraws every probe from this centre looking north after a sky switch (HouseStyle.warm()), and a probe is drawn only once a camera sees it: the centre sits 10 m south of HAB 1 so the room probes are in view. rooms: an item's own probe, centre `at` and `size` in its space (HAB 1: the room between the deck at 0.40 m and the ceiling at 2.72 m)",
+  "pos": [4, 10],
+  "size": [80, 30, 80],
+  "rooms": {"hab1": {"at": [0, 1.56, 0], "size": [4.8, 2.36, 4.8]}}
  },
  "pip": {
   "_note": "PIP's wandering (sandbox/pip.gd): ambient life, no game state. Speed, acceleration and turn: reality.json pip.*. Everything here is art direction. stops: where it parks [x, z] and what it looks at [x, z, height above the ground], weight how often it picks one; via: open ground it may drive through, so the route graph (every straight, clear line between stops and via points, `clearance` m clear either side) gets round the buildings; via_m: how near a via point counts as passed;  (the lander is a long trip), divided by near_m plus the distance so near stops come up more; never one of the last two. notice_m: the hero this close gets a look, a beep and two flashes (flash_hz under the 3 a second limit), at most every hello_cool_s. A hero standing still (below still_speed m/s for still_s) within greet_m gets a visit: PIP parks greet_stand_m away, looks up with its head tilted, wiggles, for greet_s, then not again for greet_cool_s. yield_m, yield_deg: a hero this close inside this cone ahead stops it for wait_s, then it drives round for patience_s. feeler_m: how far ahead it checks, every feel_s; stuck_s without getting 0.3 m closer and it goes elsewhere. door_clear_m round every door and rooms (prefabs, grown by room_margin) it never drives into. flee_m: a moving rover this close sends it aside. Head: yaw and pitch limits, turn rate, tilt; blinks every blink_s, double_blink share; status bar glows at glow_hz. track_every, track_width: m between wheel prints (a print is 0.12 m long, world/terrain.gd, so under that they join into a band) and their width (the wheel is 8 cm wide, forge/vehicle_pip.py); shade: contact shadow radius and strength",
@@ -651,18 +647,23 @@
   "wiggle_hz": 2.5, "wiggle_deg": 5, "wiggle_s": 0.8,
   "track_every": 0.1, "track_width": 0.08, "shade": [0.35, 0.6]
  },
+ "views": {
+  "_note": "eye-height capture views at 1.6 m over the floor (lane B, interiors): [from, at], heights over the ground like sandbox.gd VIEWS",
+  "hab_eye_n": [[0, 1.7, 1.3], [0, 1.64, -2.0]],
+  "hab_eye_s": [[0, 1.84, -1.3], [0, 1.43, 2.0]],
+  "hab_eye_e": [[-1.3, 1.75, 0], [2.0, 1.55, 0]],
+  "hab_eye_w": [[1.3, 1.78, 0], [-2.0, 1.51, 0]],
+  "gh_eye_a": [[-11.88, 1.67, -3.88], [-15.98, 1.46, -7.98]],
+  "gh_eye_b": [[-15.63, 1.7, -7.63], [-11.74, 1.42, -3.74]]
+ },
+ "rooms": {
+  "_note": "the buildings whose inside puts the view in first person (player.gd _room, skills/third-person-camera Into first person indoors): each item id's floor plan in its own space, circles [x, z, r] and rects [x0, z0, x1, z1], measured from the models (12 Nov). hab1: building_habitat.glb floor x and z +-2.40, the door's inner face at z -2.16. greenhouse: building_greenhouse.glb floor +-3.28 (the dome), and the vestibule x +-1.0 from the door's inner face at z -4.46 to the dome. The doorway band is the hero's own radius either side of these lines",
+  "hab1": [{"circle": [0, 0, 2.4]}],
+  "greenhouse": [{"circle": [0, 0, 3.28]}, {"rect": [-1.0, -4.46, 1.0, -2.2]}]
+ },
  "plants": {
   "_note": "lettuce in the greenhouse grow-bed slots (slot_N nodes of its model), one growth stage per slot; stage 4 is a harvest-size head (reality.json lettuce.width). A prefab id instead of a stage goes in at its own size: HAB 1's Veggie unit on the galley counter",
-  "greenhouse": [
-   1,
-   2,
-   3,
-   4,
-   4,
-   3,
-   2,
-   1
-  ],
+  "greenhouse": [2, 3, 4, 3, 4, 2, 3, 4, 3, 4, 4, 2, 4, 3, 2, 4],
   "hab1": ["veggie", "gale_map"]
  }
 }

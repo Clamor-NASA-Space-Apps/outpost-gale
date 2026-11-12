@@ -12,6 +12,7 @@ var tree: AnimationTree
 var playback: AnimationNodeStateMachinePlayback
 var skeleton: Skeleton3D
 var bounds: AABB  # the drawn body in the idle pose, in this node's space (feet at y = 0, centred on the axis)
+var eye: Vector3  # the middle of the visor in the idle pose, in this node's space: where first person looks from
 var clip_speed := {}  # gait clip -> the ground speed its stride was made for, m/s, measured from the feet
 var touchdown := {}  # gait clip -> [left, right] phase (0..1) where each boot lands, from clips.json
 var foot_bones: Array[int] = []
@@ -28,8 +29,8 @@ var feel: Dictionary
 
 ## `info` is data/clips.json, `hop` tuning.json `hop`, `sink` how far the drawn boots sit in the dust,
 ## `contact` how close to its lowest a foot counts as down and `carry_out` how far ahead of the clip's hold a
-## carried bag rides (m).
-func setup(model: Node3D, design: Dictionary, info: Dictionary, hop: Dictionary, sink: float, contact: float, carry_out: float) -> void:
+## carried bag rides (m), `eye_role` the surface the eyes are behind.
+func setup(model: Node3D, design: Dictionary, info: Dictionary, hop: Dictionary, sink: float, contact: float, carry_out: float, eye_role: String) -> void:
 	clips = info.clips
 	feel = hop
 	Forge.HouseStyle.apply(model, design)
@@ -56,7 +57,13 @@ func setup(model: Node3D, design: Dictionary, info: Dictionary, hop: Dictionary,
 	var flip := Transform3D(Basis(Vector3.UP, PI), Vector3.ZERO)
 	var c := (flip * raw).get_center()
 	model.transform = Transform3D(flip.basis, Vector3(-c.x, -sink, -c.z))
-	bounds = Transform3D(flip.basis, Vector3(-c.x, 0, -c.z)) * raw
+	var placed := Transform3D(flip.basis, Vector3(-c.x, 0, -c.z))  # the model's space to this node's, feet on 0
+	bounds = placed * raw
+	var visor := _skinned_points(model, eye_role)
+	var mid := Vector3.ZERO
+	for p in visor:
+		mid += p / visor.size()
+	eye = placed * mid
 	var to_hero := global_transform.affine_inverse() * skeleton.global_transform
 	chest = skeleton.find_bone(clips.carry_idle.bag_bone)
 	anim.play(&"carry_idle")
@@ -192,9 +199,9 @@ func _ground_speed(model: Node3D, clip: StringName, feet: Array, contact: float)
 	return speeds[speeds.size() / 2]  # the median: a boot still settling as it lands would drag a mean down
 
 
-## The drawn body as the GPU skins it in the current pose, in the model's own space. A skinned mesh's get_aabb()
+## The drawn body (or the surfaces of one `role`) as the GPU skins it in the current pose, in the model's own space. A skinned mesh's get_aabb()
 ## is its bind pose (arms out) in file units, which says nothing about the body the player sees.
-func _skinned_points(model: Node3D) -> PackedVector3Array:
+func _skinned_points(model: Node3D, role := "") -> PackedVector3Array:
 	var out := PackedVector3Array()
 	var to_model := model.global_transform.affine_inverse() * skeleton.global_transform
 	for mi: MeshInstance3D in skeleton.find_children("*", "MeshInstance3D", true, false):
@@ -205,6 +212,8 @@ func _skinned_points(model: Node3D) -> PackedVector3Array:
 				bone = skeleton.find_bone(mi.skin.get_bind_name(i))
 			binds.append(to_model * skeleton.get_bone_global_pose(bone) * mi.skin.get_bind_pose(i))
 		for s in mi.mesh.get_surface_count():
+			if role != "" and mi.get_active_material(s).resource_name != role:
+				continue  # one role's surface only (the visor, for the eye)
 			var arr := mi.mesh.surface_get_arrays(s)
 			var verts: PackedVector3Array = arr[Mesh.ARRAY_VERTEX]
 			var bones: PackedInt32Array = arr[Mesh.ARRAY_BONES]

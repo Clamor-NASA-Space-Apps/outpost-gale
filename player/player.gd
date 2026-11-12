@@ -15,6 +15,7 @@ const OVERLAP := 2 | 4 | 16 | 64  # what the drawn body must never be inside; th
 # The model and its clips (names, loops, foot contacts). Another hero swaps these and nothing else.
 const MODEL := "res://models/character_suited.glb"
 const CLIPS := "res://data/clips.json"
+const EYE_ROLE := "visor"  # the surface the eye sits behind in first person
 
 ## A foot pressed onto the ground: each plant of a walk or run, and both feet on landing. `pos` is under the
 ## foot at the floor, `yaw_deg` the heading (CONTRACTS.md), `foot` is "foot_l" or "foot_r".
@@ -66,6 +67,10 @@ var glancing := false  # the camera faces the hero: the helmet looks at the lens
 ## Where the body may walk (x, z), set by the composition root; no area: anywhere. Near its edge the outward speed is
 ## held to what the hero's braking still stops in, so the hero slows and stops on the line, with no wall's jolt.
 var bound := Rect2()
+## The rooms that put the view in first person, set by the composition root: {id: {node: Node3D, areas: [{circle:
+## [x, z, r]} or {rect: [x0, z0, x1, z1]}, ...]}}, each area in its node's space (data/world.json `rooms`).
+var rooms := {}
+var room := ""  # the one the body is in, "" outside
 
 
 func _ready() -> void:
@@ -116,7 +121,7 @@ func _ready() -> void:
 			var at := mi.skin.get_bind_bone(b)
 			binds.append(bones.get_bone_name(at) if at >= 0 else String(mi.skin.get_bind_name(b)))
 		mi.mesh = HeroModel.prepared(mi.mesh, binds, deg_to_rad(tuning.hero.smooth_deg), tuning.hero.coat)
-	model.setup(drawn, design, clips, tuning.hop, sink, row.call("hero.contact.height"), tuning.life.carry_out)
+	model.setup(drawn, design, clips, tuning.hop, sink, row.call("hero.contact.height"), tuning.life.carry_out, EYE_ROLE)
 	life = HeroLife.new()
 	life.setup(model.skeleton, tuning.life, row.call("hero.lean.max"), gravity)
 	meshes.assign(model.find_children("*", "MeshInstance3D", true, false))
@@ -128,6 +133,7 @@ func _ready() -> void:
 	cam.name = "Camera"
 	add_child(cam)
 	cam.setup(tuning.camera)
+	cam.eye = Vector3(0.0, model.eye.y, model.eye.z)  # centred; the forward part turns with the view, not the body
 	cam.follow_target(body, [body.get_rid()], meshes, tuning.camera.distance, tuning.camera.pivot_height, model.bounds)
 	touch = Touch.new()
 	add_child(touch)
@@ -309,7 +315,32 @@ func _walk(delta: float) -> void:
 		_carry()
 	# a landing after real air time: a teleport's settle or a curb's single frame off the floor is not one
 	_steps(steps, on_floor and not was_on_floor and coyote <= 0.0)
+	_room()
 	cam.follow(delta, Vector3(real.x, 0.0, real.z), yaw, on_floor)
+
+
+## Which room the body is in, with a doorway band as wide as the body: in once the whole body is past the door (the
+## plan shrunk by its radius), out once it is wholly outside (grown by it), so rocking in the hatch never flips the
+## view. ponytail: the plan is flat, a body on a roof would count as inside; add a height when one can get there.
+func _room() -> void:
+	var r := breadth / 2.0
+	if room != "" and not _in(rooms[room], r):
+		room = ""
+	if room == "":
+		for id: String in rooms:
+			if _in(rooms[id], -r):
+				room = id
+	cam.room = room != ""
+
+
+func _in(spec: Dictionary, grow: float) -> bool:
+	var p: Vector3 = (spec.node as Node3D).to_local(body.global_position)
+	for a: Dictionary in spec.areas:
+		if a.has("circle") and Vector2(p.x - a.circle[0], p.z - a.circle[1]).length() < a.circle[2] + grow:
+			return true
+		if a.has("rect") and Rect2(a.rect[0], a.rect[1], a.rect[2] - a.rect[0], a.rect[3] - a.rect[1]).grow(grow).has_point(Vector2(p.x, p.z)):
+			return true
+	return false
 
 
 ## A speed along one axis held to what the brakes stop in the room left: `back` metres behind, `ahead` in front,
@@ -410,6 +441,8 @@ func place(pos: Vector3, yaw_deg: float) -> void:
 	last_vel = Vector3.ZERO
 	gait = "idle"
 	model.reset()
+	room = ""
+	_room()
 	cam.snap(yaw)
 	life.snap(pos + Vector3(-sin(yaw), 0.0, -cos(yaw)) * tuning.life.look_far + Vector3.UP * model.bounds.end.y * 0.9)
 
@@ -422,6 +455,8 @@ func act() -> void:
 ## Drive `v` (group `vehicle`): the hero sits on its seat and stops colliding, the camera follows the vehicle.
 func enter(v: Node3D) -> void:
 	vehicle = v
+	room = ""
+	cam.room = false
 	model.sit(true)
 	body.collision_layer = 0
 	body.collision_mask = 0
@@ -467,10 +502,11 @@ func inside() -> Array:
 func state() -> Dictionary:
 	var feet := body.global_position
 	return {
-		"player": {"pos": feet, "speed": moved, "onFloor": on_floor, "gait": gait, "inside": [] if vehicle else inside()},
-		"cam": {"inside": cam.inside(), "dist": cam.dist},
+		"player": {"pos": feet, "speed": moved, "onFloor": on_floor, "gait": gait, "inside": [] if vehicle else inside(), "room": room},
+		"cam": {"inside": cam.inside(), "dist": cam.dist, "first": cam.first},
 		"heroScreen": 0.0 if vehicle else cam.on_screen(feet, model.bounds.end.y),
 		"interaction": {"target": "", "prompt": ""},
 		"carry": "",
 		"vehicle": {"driving": vehicle != null, "speed": vehicle.speed() if vehicle else 0.0},
 	}
+

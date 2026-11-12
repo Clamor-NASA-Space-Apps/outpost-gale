@@ -1,16 +1,16 @@
 # The greenhouse: a geodesic dome (6.8 m across) on a low ring wall, entered through a short vestibule
 # with a doorway of data/reality.json hatch.width x hatch.height (the habitat's) and its own door leaf, which
-# swings into a vestibule wide enough to take it. Two hydroponic A-frames under
-# grow lights, with empty nodes slot_1..slot_8 where the lettuce models go.
+# swings into a vestibule wide enough to take it. Two grow racks on the floor either side of an aisle, with empty
+# nodes slot_1..slot_16 where the lettuce models go.
 # Built from Blender's icosphere rather than the Quaternius Geodesic_Dome: that one is a closed shell on
 # feet with no doorway and painted-on panes, and a doorway cut into it left loose triangles.
 import os
+import random
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import bmesh  # noqa: E402
 from base_kit import *  # noqa: E402,F403
-from mathutils import Vector  # noqa: E402
 
 RD, RW, FL = 3.4, 0.4, 0.2          # dome radius, ring wall height, floor top (over the uphill ground on a slope, under hero.step)
 HW, HH, TL = row("hatch.width"), row("hatch.height"), 2.4  # doorway, vestibule length
@@ -86,53 +86,59 @@ for s in (-1, 1):
 status_light("door_light", (0, FY + 0.08, FL + HH + 0.15), (0.3, 0.04, 0.06))
 inner_leaf(HW, HH, FY - 0.07, FL)
 
-# two hydroponic A-frames either side of the aisle (nutrient film channels, the way commercial growers stack
-# lettuce): the steel frame is Deepak Singh's "Hydroponic Farming Setup" (Sketchfab, CC BY 4.0; ASSETS.md) at 0.8
-# of its size, the channels ours. Lettuce rides the upper aisle-side channel (slot_1..slot_8), where it stays
-# inside the reach of the frame's foot, so nobody walks into a leaf. Grow lights glow magenta (Veggie's red and blue).
-HYDRO = os.path.join(os.path.dirname(os.path.abspath(__file__)), *[".."] * 4, "assets-cache", "sketchfab", "hydroponic_farming_setup", "scene.gltf")
-AS, AH, AW = 0.8, 2.04 * 0.8, 1.39 * 0.8 / 2  # A-frame scale, height, half its foot
+# Two grow racks either side of a 1.9 m aisle, standing on the floor: steel shelving with three tiers of trays, an
+# LED bar pair under each shelf (the `grow` magenta of red and blue diodes, Veggie's recipe) lighting the tier
+# below, as NASA's ground plant racks and commercial vertical farms stack them. 2.4 x 0.6 m each, 4.3 m2 of
+# trays for a 2-crew salad garden (NASA: 0.81 m2 grows 36 plants for 2, design/research/missing-assets.md 5).
+# Lettuce sits in the two upper tiers' growing medium (slot_1..slot_16, world.json `plants`), microgreens on the
+# bottom tier. Rack parts join `interior-col`: one collision body, swept clean (DESIGN.md weathering.clean).
+L, DP, H = 2.4, 0.6, 1.95                 # rack length (along the aisle), depth, height
+TIERS = (0.30, 0.85, 1.40)                # tray rim tops over the floor
+TRAY, MED = 0.08, 0.02                    # tray depth; the growing medium's top under the rim
+inside = []
 
 
-def a_frame(x):
-    before = set(bpy.context.scene.objects)
-    bpy.ops.import_scene.gltf(filepath=HYDRO)
-    new = set(bpy.context.scene.objects) - before
-    bpy.context.view_layer.update()
-    frame = next(o for o in new if o.name == "Object_6" or o.name.startswith("Object_6."))
-    mw = frame.matrix_world.copy()
-    frame.parent = None
-    frame.matrix_world = mw
-    for o in new - {frame}:
-        bpy.data.objects.remove(o)
-    frame.data.materials[0] = mat("metal")
-    frame.rotation_euler.z += math.pi / 2  # its length along y, down the aisle
-    frame.scale *= AS
-    bpy.context.view_layer.update()
-    pts = [frame.matrix_world @ Vector(c) for c in frame.bound_box]
-    mid = sum(pts, Vector()) / 8
-    frame.location += Vector((x - mid.x, -0.2 - mid.y, FL + 0.005 - min(p.z for p in pts)))
-    return frame
+def keep(o):
+    inside.append(o)
+    return o
 
 
 slot = 0
 for s in (-1, 1):
-    x = s * 1.3
-    parts = [a_frame(x)]
-    for h in (0.45, 1.05):  # a channel on each face at two heights, on the frame's arms
-        w = AW * (1 - h / AH) + 0.06
-        for side in (-1, 1):
-            parts.append(smooth(cyl(f"channel{s}{h}{side}", 0.05, 2.5, (x + side * w, -0.2, FL + h), mat("body"), 14, rot=(math.pi / 2, 0, 0))))
-    join(f"rack{s}-convcol", parts)
-    box(f"growlight{s}", (0.14, 3.2, 0.05), (x, -0.2, 2.25), mat("grow"))
-    box(f"growlight_housing{s}", (0.2, 3.3, 0.06), (x, -0.2, 2.3), mat("trim"))
-    for y in (-1.4, 1.0):
-        top = RW + math.sqrt(RD * RD - x * x - y * y)
-        bar(f"hanger{s}{y}", (x, y, 2.3), (x, y, top), 0.012, mat("metal"))
-    w = AW * (1 - 1.05 / AH) + 0.06
-    for k in range(4):
-        slot += 1
-        e = bpy.data.objects.new(f"slot_{slot}", None)  # where a lettuce model goes, on the aisle-side channel
-        e.location = (x - s * w, -1.25 + k * 0.7, FL + 1.05 + 0.04)
-        bpy.context.scene.collection.objects.link(e)
+    x = s * 1.25
+    y0 = -0.35
+    for sx in (-1, 1):
+        for sy in (-1, 1):  # square posts, their feet 5 mm into the floor so no face lies on it
+            keep(box(f"post{s}{sx}{sy}", (0.035, 0.035, H - 0.005), (x + sx * (DP / 2 - 0.02), y0 + sy * (L / 2 - 0.02), FL + (H - 0.015) / 2), mat("metal")))  # top inside the top plate
+    keep(bevel(box(f"top{s}", (DP, L, 0.025), (x, y0, FL + H - 0.0125), mat("metal")), width=0.004, segments=1))
+    for k, t in enumerate(TIERS):
+        tray = box(f"tray{s}{k}", (DP - 0.06, L - 0.06, TRAY), (x, y0, FL + t - TRAY / 2), mat("body"))
+        cut(tray, box("tray_in", (DP - 0.1, L - 0.1, TRAY), (x, y0, FL + t + 0.01 - TRAY / 2)))
+        keep(tray)
+        keep(box(f"medium{s}{k}", (DP - 0.08, L - 0.08, 0.03), (x, y0, FL + t - MED - 0.015), mat("trim")))  # rock wool
+        for sx in (-1, 1):  # rails under the tray, along the rack, into the posts
+            keep(box(f"rail{s}{k}{sx}", (0.025, L - 0.02, 0.03), (x + sx * (DP / 2 - 0.02), y0, FL + t - TRAY - 0.012), mat("metal")))  # 3 mm into the tray
+        # the LED bars over this tier: under the next tray up, or under the top
+        roof = (TIERS[k + 1] - TRAY) if k + 1 < len(TIERS) else (H - 0.025)
+        for bx in (-0.13, 0.13):
+            keep(box(f"led_housing{s}{k}{bx}", (0.05, L - 0.2, 0.025), (x + bx, y0, FL + roof - 0.0125 + 0.003), mat("trim")))
+            box(f"growlight{s}{k}{bx}", (0.03, L - 0.24, 0.008), (x + bx, y0, FL + roof - 0.024), mat("grow"))  # its top inside the housing
+    for k in (1, 2):  # lettuce in the upper two tiers, four heads a tier
+        for i in range(4):
+            slot += 1
+            e = bpy.data.objects.new(f"slot_{slot}", None)
+            e.location = (x, y0 - L / 2 + 0.3 + i * 0.6, FL + TIERS[k] - MED)
+            bpy.context.scene.collection.objects.link(e)
+    rng = random.Random(s)  # microgreens: a dense mat of seedlings on the bottom tier
+    for k in range(60):
+        px, py = x + rng.uniform(-0.22, 0.22), y0 + rng.uniform(-1.05, 1.05)
+        h = rng.uniform(0.04, 0.07)
+        keep(cyl(f"sprout{s}{k}", 0.003, h, (px, py, FL + TIERS[0] - MED + h / 2 - 0.005), mat("plant"), 4))
+        leaf = keep(box(f"leaf{s}{k}", (0.03, 0.012, 0.003), (px, py, FL + TIERS[0] - MED + h - 0.004), mat("plant")))
+        leaf.rotation_euler = (0, rng.uniform(-0.3, 0.3), rng.uniform(0, 3.14))
+
+# the aisle: a deck plate down the middle, from the vestibule's floor to the far side, 1 cm proud of the floor
+AY, VY = math.sqrt((RD - 0.2) ** 2 - 0.6 ** 2), RD - TL / 2 - 0.02
+keep(box("aisle", (1.2, AY + VY, 0.015), (0, (VY - AY) / 2, FL + 0.0025), mat("deck")))
+join("interior-col", inside)
 done("building_greenhouse")
