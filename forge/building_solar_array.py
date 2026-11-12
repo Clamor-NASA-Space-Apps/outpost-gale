@@ -16,11 +16,12 @@ for i, x in enumerate(XS, 1):
     parts = [bevel(box(f"cells{i}", (W - 0.04, L - 0.04, 0.03), (x, 0, AX + 0.06), mat("glass")), width=0.01, segments=1)]
     for s in (-1, 1):  # aluminium frame
         parts.append(box(f"rail{i}{s}", (0.04, L, 0.06), (x + s * (W / 2 - 0.02), 0, AX + 0.05), mat("metal")))
-        parts.append(box(f"end{i}{s}", (W, 0.04, 0.06), (x, s * (L / 2 - 0.02), AX + 0.05), mat("metal")))
-        parts.append(box(f"rib{i}{s}", (0.05, L - 0.1, 0.05), (x + s * 0.4, 0, AX + 0.015), mat("trim")))
+        parts.append(box(f"end{i}{s}", (W - 0.08, 0.04, 0.06), (x, s * (L / 2 - 0.02), AX + 0.05), mat("metal")))  # between the rails
+        parts.append(box(f"rib{i}{s}", (0.05, L - 0.1, 0.05), (x + s * 0.4, 0, AX + 0.01), mat("trim")))  # top 5 mm under the clamp's
     for k in range(1, 6):  # gaps between cell strings
-        parts.append(box(f"string{i}{k}", (W - 0.06, 0.012, 0.034), (x, -L / 2 + k * L / 6, AX + 0.062), mat("trim")))
-    parts.append(box(f"busbar{i}", (0.012, L - 0.06, 0.034), (x, 0, AX + 0.062), mat("trim")))
+        # 4 mm proud of the cells top and bottom: flush with them they flickered (tools/coplanar-check.mjs)
+        parts.append(box(f"string{i}{k}", (W - 0.09, 0.012, 0.038), (x, -L / 2 + k * L / 6, AX + 0.06), mat("trim")))
+    parts.append(box(f"busbar{i}", (0.012, L - 0.09, 0.038), (x, 0, AX + 0.06), mat("trim")))
     parts.append(box(f"clamp{i}", (0.5, 0.18, 0.08), (x, 0, AX), mat("metal")))
     p = settle(join(f"panel_{i}", parts), (x, 0, AX))
     p.rotation_euler.x = math.radians(-TILT)

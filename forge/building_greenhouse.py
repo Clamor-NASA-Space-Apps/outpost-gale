@@ -46,8 +46,11 @@ def cut_struts(o, cutter):
     bpy.data.objects.remove(cutter)
 
 
-def tunnel_hole():
-    return box("hole", (VW, TL + 1.0, VH), (0, RD, FL + VH / 2))
+def tunnel_hole(grow=0.0):
+    # wider than the vestibule's inside, and from under its floor to inside its roof, so every cut face ends
+    # inside the vestibule's solid; cut to the inside size, they lay on its walls and flickered. Each part
+    # gets its own `grow`: two parts cut by one cutter share their cut faces
+    return box("hole", (VW + 0.1 + grow, TL + 1.0, VH + 0.2 + grow), (0, RD, FL + VH / 2 - 0.075))
 
 
 panes = hemisphere("panes-col", "glass")
@@ -58,21 +61,24 @@ struts = hemisphere("struts", "metal")
 w = struts.modifiers.new("w", "WIREFRAME")
 w.thickness, w.offset, w.use_even_offset = 0.09, 0.0, True
 applied(struts)
-cut_struts(struts, tunnel_hole())
+cut_struts(struts, tunnel_hole(0.04))
 
 ring = cyl("ring-col", RD + 0.06, RW, (0, 0, RW / 2), mat("trim"), 48)
 cut(ring, cyl("ring_in", RD - 0.14, RW + 0.2, (0, 0, RW / 2), None, 48))
-cut(ring, tunnel_hole())
-smooth(cyl("floor-col", RD - 0.12, FL, (0, 0, FL / 2), mat("trim"), 48))
+cut(ring, tunnel_hole(0.08))
+floor = smooth(cyl("floor-col", RD - 0.12, FL, (0, 0, FL / 2), mat("trim"), 48))
+cut(floor, box("under_vest", (VW + 0.1, TL, 1.0), (0, RD, 0.5)))  # the vestibule's own floor takes over there
 
 # vestibule: a box tunnel through the dome, closed at the front by a frame with the doorway
 vest = box("vestibule-col", (VW + 0.3, TL, FL + VH + 0.15), (0, RD, (FL + VH + 0.15) / 2), mat("body"))
 cut(vest, box("vest_in", (VW, TL + 0.2, VH), (0, RD, FL + VH / 2)))
 bevel(vest, width=0.03)
-box("vest_floor-col", (VW, TL, FL), (0, RD, FL / 2), mat("trim"))
+# a 6 mm trim plate on the vestibule's own bottom, up to the frame. Laid at the same height as that bottom, with the
+# dome's floor reaching in too, it was three faces in one plane: the black striped band on the threshold (13 Nov playtest)
+box("vest_floor-col", (VW, TL - 0.07, 0.006), (0, RD - 0.035, FL + 0.003), mat("trim"))
 FY = RD + TL / 2  # the front frame's middle
 frame = box("doorframe-col", (VW + 0.4, 0.14, FL + VH + 0.3), (0, FY, (FL + VH + 0.3) / 2), mat("trim"))
-cut(frame, box("door_cut", (HW, 0.5, HH), (0, FY, FL + HH / 2)))
+cut(frame, box("door_cut", (HW, 0.5, HH - 0.012), (0, FY, FL + 0.012 + (HH - 0.012) / 2)))  # sill 6 mm over the plate
 bevel(frame, width=0.025)
 for s in (-1, 1):
     box(f"hazard{s}", (0.06, 0.02, HH), (s * (HW / 2 + 0.1), FY + 0.075, FL + HH / 2), mat("hazard"))

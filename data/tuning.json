@@ -13,8 +13,10 @@
   "follow_rate": 6.0,
   "follow_limit": 0.6,
   "recentre_after": 2.0,
-  "fade_near": 0.5,
-  "fade_far": 0.9,
+  "fade_near": 0.12,
+  "fade_far": 0.35,
+  "lift_full": 0.9,
+  "note_fade": "fade_near and fade_far: m from the lens to the hero's drawn box, gone from fade_near in, solid from fade_far out, the whole body as one in between (it was a per-pixel dither by each fragment's distance, which showed as a dot pattern over the pack and helmet in a tight room). lift_full: m of free arm behind the pivot at which a wall behind lifts the view all the way to pitch_min",
   "mouse_deg_per_px": 0.15,
   "touch_deg_per_half_window": 120,
   "stick_deg_per_s": 140,
@@ -61,10 +63,21 @@
   "xfade_hop": 0.06
  },
  "hero": {
-  "note": "dust_height: m up the boots the dust tint reaches (grit lands within about 7 cm, design/research/dust.md, plus what a step scuffs on); dust_share: how far toward the dust colour at the sole; gait_hysteresis: Froude the hurry-to-walk change sits below hero.froude.walk_run. The boots' sink is reality.json hero.sink",
-  "dust_height": 0.2,
-  "dust_share": 0.6,
-  "gait_hysteresis": 0.05
+  "note": "gait_hysteresis: Froude the hurry-to-walk change sits below hero.froude.walk_run. The boots' sink is reality.json hero.sink; smooth_deg: at load the hero's normals are averaged across edges flatter than this angle, so the suit's folds shade smooth and the pack's box corners (90 deg) stay sharp; the limbs are about eight-sided, 45 deg a face, which 40 left faceted (the file's normals were split face by face)",
+  "gait_hysteresis": 0.05,
+  "smooth_deg": 60,
+  "coat": {
+   "legs_top": 0.55,
+   "knees": 0.75,
+   "hands": 0.8,
+   "forearms": 0.5,
+   "torso": 0.12,
+   "pack_top": 0.35,
+   "patch": 0.3,
+   "max": 0.5,
+   "chroma": 0.4,
+   "note": "Where the suit gathers the design's dust coat (DESIGN.md weathering: its colour, its amount by sky state, each role's share; the visor's share is 0), by analogy with Apollo: dust 'quickly and effectively coated' boots, gloves and suits, and wore through 'above boot' (Gaier 2005); no Mars EVA has happened. legs_top: m above the soles where the kicked-up dust has faded out (the knee is about 0.5 m up); knees: the front of the thighs, knees and shins (kneeling, falls); hands, forearms: gloves and forearms (tools and samples); torso: helmet shell, chest and back, light; pack_top: the top of the backpack, by how level it is; patch: m across a patch of thicker or thinner dust; max: the most of the coat any part shows; chroma: the share of the dust's hue the suit takes (the rest is its brightness, a grey-brown stain): with the dust's full hue the storm turned the suit orange, and an orange astronaut vanishes against Mars (project rule). Both keep the hero a dusty white with readable teal bands. All art direction, judged in day and storm captures."
+  }
  },
  "audio": {
   "note": "The mix (audio/audio.gd). dB on top of the files, which are normalised (loops -20 LUFS, one-shots -3 dBFS peak). range: m, a 3D sound's cut-off, Mars sound 'falters at just 26 feet (8 meters)' (NASA/JPL 2022); unit_size: m where a 3D sound starts to fall away. fade_s: s of the inside/outside crossfade. breath: rest in breaths a minute, a resting adult takes 12 to 18 (MedlinePlus, Vital signs); hard (at the sheet's hurry speed), rise_s and fall_s (time constants: up fast, settling back slowly) and inhale_share (where in a breath the exhale starts) are art direction, never shown to players. wind: ref_speed m/s that plays at wind.db (sky states blow 4 to 6, world.json weather); gust: the swell's share; gust_hz: its slow noise frequency. habitat and machines: world.json item ids. pitch: random spread on one-shots",
@@ -124,8 +137,20 @@
   "hiss_after": 0.6,
   "chirp_db": -12
  },
+ "rover": {
+  "note": "sandbox/rover.gd, art direction (the physical rows are reality.json rover.*). travel: m each wheel's suspension takes up either way before the body tilts; wheel_shade and body_shade: [radius m, strength 0 to 1] of the moving contact shadow under each wheel pair and under the body's two halves (world.touch(), shaded like data/world.json grounding)",
+  "travel": 0.3,
+  "wheel_shade": [
+   0.5,
+   0.9
+  ],
+  "body_shade": [
+   1.5,
+   0.45
+  ]
+ },
  "life": {
-  "note": "The hero's layers on top of its clips (player/hero_life.gd), art direction judged on film; the limits that are physical come from the sheet (hero.lean.max). lean_share: share of the free-body angle atan(a / g) the upper body leans into a push; lean_hz and lean_damping: its spring (under 1 swings a little past upright at a stop); carry_lean_deg: extra forward lean over a carried bag; breath_chest_deg and breath_shoulder_deg: how far the chest tips back and the shoulders rise at a full breath (the clock and rate are audio.breath's); look_waist_deg, look_head_deg, look_pitch_deg: each side, the waist takes most of a turn because a helmet turns with the torso (no sheet row: suited neck and waist ranges were not found); look_rate: 1/s the gaze eases to a new point; look_far: m ahead along the camera's view the gaze rests when nothing is near",
+  "note": "The hero's layers on top of its clips (player/hero_life.gd), art direction judged on film; the limits that are physical come from the sheet (hero.lean.max). lean_share: share of the free-body angle atan(a / g) the upper body leans into a push; lean_hz and lean_damping: its spring (under 1 swings a little past upright at a stop); carry_lean_deg: extra forward lean over a carried bag; breath_chest_deg and breath_shoulder_deg: how far the chest tips back and the shoulders rise at a full breath (the clock and rate are audio.breath's); look_waist_deg, look_head_deg, look_pitch_deg: each side, the waist takes most of a turn because a helmet turns with the torso (no sheet row: suited neck and waist ranges were not found); look_rate: 1/s the gaze's angles ease toward a new aim (angles, not the point: a point eased across the body flips the turn); look_far: m ahead along the camera's view the gaze rests when nothing is near; the waist's share fades out with the pace (a walker looks with the head). carry_swing_deg: each arm swings out about the vertical at the shoulder while a bag is held, so the gloves and forearms meet its sides instead of going into it; carry_out: m the bag rides ahead of the clip's hold point, so the chest does not go into its back (the clip was posed for a thinner bag); both found with tests/player_test.gd carry_hands (the drawn hero at most 1 cm inside the cargo bag over a walk cycle); carry_swing_s: s to swing in or out, the clip's crossfade",
   "lean_share": 0.5,
   "lean_hz": 1.2,
   "lean_damping": 0.45,
@@ -136,6 +161,9 @@
   "look_head_deg": 15,
   "look_pitch_deg": 12,
   "look_rate": 3.0,
-  "look_far": 10.0
+  "look_far": 10.0,
+  "carry_swing_deg": 10,
+  "carry_swing_s": 0.2,
+  "carry_out": 0.12
  }
 }

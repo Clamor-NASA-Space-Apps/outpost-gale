@@ -42,6 +42,8 @@ uniform vec4 contact_rect = vec4(-150.0, -150.0, 300.0, 300.0);
 uniform float contact_ao = 0.0;
 uniform float contact_albedo = 0.0;
 uniform float contact_pile = 0.0;
+// things that move (terrain.gd movers()): x, z, radius, strength; 12 is terrain.gd MOVERS
+uniform vec4 movers[12];
 
 varying vec3 wpos;
 varying vec3 wnrm;
@@ -129,9 +131,13 @@ void fragment() {
 		contact = texture(contact_map, cu).r;
 		float cx = texture(contact_map, cu + e.xy).r - texture(contact_map, cu - e.xy).r;
 		float cz = texture(contact_map, cu + e.yx).r - texture(contact_map, cu - e.yx).r;
-		albedo *= 1.0 - contact_albedo * contact;
 		tn.xy -= vec2(cx, cz) * contact_pile * (1.0 - rock);
 	}
+	for (int i = 0; i < 12; i++) {
+		float d = 1.0 - length(wpos.xz - movers[i].xy) / max(movers[i].z, 0.001);
+		contact = max(contact, movers[i].w * d * d * step(0.0, d));
+	}
+	albedo *= 1.0 - contact_albedo * contact;
 
 	tn = normalize(mix(vec3(0.0, 0.0, 1.0), tn, near));
 	// the photos are laid flat on x and z: their right is +X, their up (+v) is +Z

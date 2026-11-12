@@ -52,8 +52,12 @@ for s in (-1, 1):  # two windows and the hatch on the cabin's front slope
 hatch = bevel(box("hatch", (0.75, 0.08, 0.95), at(1.06, 90, DECK + 3.25), mat("trim")), width=0.03)
 hatch.rotation_euler.x = math.radians(SLOPE)
 
+# the operator's name on the propellant stage, front and back, between its bands
+for a in (90, 270):
+    wrap(flat_label(f"team_label{a}", "CLAMOR", 0.32, (0, 0, 0), "trim", 0.02, 180), 1.2, a, DECK + 0.75)
+
 # porch at deck level and a ladder down to the ground at the front
-box("porch-col", (1.2, 0.8, 0.08), (0, 2.4, DECK - 0.04), mat("metal"))
+box("porch-col", (1.2, 0.8, 0.08), (0, 2.4, DECK - 0.046), mat("metal"))  # 6 mm under the deck, never flush with it
 for s in (-1, 1):
     bar(f"porch_rail{s}", (s * 0.6, 2.0, DECK + 0.9), (s * 0.6, 2.8, DECK + 0.9), 0.025, mat("metal"))
     bar(f"porch_post{s}", (s * 0.6, 2.8, DECK), (s * 0.6, 2.8, DECK + 0.9), 0.025, mat("metal"))

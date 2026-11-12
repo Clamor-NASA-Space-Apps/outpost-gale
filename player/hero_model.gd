@@ -26,9 +26,10 @@ var clips: Dictionary
 var feel: Dictionary
 
 
-## `info` is data/clips.json, `hop` tuning.json `hop`, `sink` how far the drawn boots sit in the dust and
-## `contact` how close to its lowest a foot counts as down (m).
-func setup(model: Node3D, design: Dictionary, info: Dictionary, hop: Dictionary, sink: float, contact: float) -> void:
+## `info` is data/clips.json, `hop` tuning.json `hop`, `sink` how far the drawn boots sit in the dust,
+## `contact` how close to its lowest a foot counts as down and `carry_out` how far ahead of the clip's hold a
+## carried bag rides (m).
+func setup(model: Node3D, design: Dictionary, info: Dictionary, hop: Dictionary, sink: float, contact: float, carry_out: float) -> void:
 	clips = info.clips
 	feel = hop
 	Forge.HouseStyle.apply(model, design)
@@ -62,7 +63,8 @@ func setup(model: Node3D, design: Dictionary, info: Dictionary, hop: Dictionary,
 	anim.seek(0.0, true)
 	var bag: Array = clips.carry_idle.bag_center_godot  # in the model's own space, facing +Z
 	var model_to_skel := skeleton.global_transform.affine_inverse() * model.global_transform
-	bag_at = skeleton.get_bone_global_pose(chest).affine_inverse() * Transform3D(model_to_skel.basis, model_to_skel * Vector3(bag[0], bag[1], bag[2]))
+	var hold := Vector3(bag[0], bag[1], bag[2] + carry_out)  # out from the chest: the clip's bag was thinner
+	bag_at = skeleton.get_bone_global_pose(chest).affine_inverse() * Transform3D(model_to_skel.basis, model_to_skel * hold)
 	anim.play(&"drive_sit")
 	anim.seek(0.0, true)
 	hip_sit = to_hero * skeleton.get_bone_global_pose(skeleton.find_bone(&"pelvis")).origin  # as drawn, sink included
@@ -216,6 +218,75 @@ func _skinned_points(model: Node3D) -> PackedVector3Array:
 						p += w * (binds[bones[i * per + j]] * verts[i])
 				out.append(p)
 	return out
+
+
+## The mesh ready to draw: each vertex's normal averaged with the normals of the vertices at the same place that
+## face within `limit` of it (the suit's soft folds shade smooth, a box's corners stay sharp; the file's normals
+## were split face by face, so a thigh shaded as a row of flat bands), and in the vertex colour's red how much
+## dust that point of a suit gathers, in patches (`coat`: tuning.json hero.coat). Baked in the rest pose, so the
+## patches ride on the suit and the shader reads one number. `binds` names the skin's bones in order.
+static func prepared(mesh: Mesh, binds: PackedStringArray, limit: float, coat: Dictionary) -> ArrayMesh:
+	var out := ArrayMesh.new()
+	var patches := FastNoiseLite.new()
+	patches.frequency = 1.0 / coat.patch
+	for s in mesh.get_surface_count():
+		var arr := mesh.surface_get_arrays(s)
+		var verts: PackedVector3Array = arr[Mesh.ARRAY_VERTEX]
+		var normals: PackedVector3Array = arr[Mesh.ARRAY_NORMAL]
+		var at := {}
+		for i in verts.size():
+			var key := Vector3i((verts[i] * 1e4).round())
+			if not at.has(key):
+				at[key] = []
+			at[key].append(i)
+		var smooth := normals.duplicate()
+		for group: Array in at.values():
+			for i: int in group:
+				var sum := normals[i]
+				for j: int in group:
+					if j != i and normals[i].dot(normals[j]) > cos(limit):
+						sum += normals[j]
+				smooth[i] = sum.normalized()
+		var bones: PackedInt32Array = arr[Mesh.ARRAY_BONES]
+		var weights: PackedFloat32Array = arr[Mesh.ARRAY_WEIGHTS]
+		var per := bones.size() / verts.size()
+		var dust := PackedColorArray()
+		dust.resize(verts.size())
+		for i in verts.size():
+			var top := 0
+			for j in per:
+				if weights[i * per + j] > weights[i * per + top]:
+					top = j
+			# thick here, swept thin there, never an even film (skills/surface-weathering section 2.4)
+			var patch := 0.4 + 1.2 * (0.5 + 0.5 * patches.get_noise_3dv(verts[i]))
+			dust[i] = Color(_dust(binds[bones[i * per + top]], verts[i], smooth[i], coat) * patch, 0, 0)
+		arr[Mesh.ARRAY_NORMAL] = smooth
+		arr[Mesh.ARRAY_TANGENT] = null  # stale now, and no normal map reads them
+		arr[Mesh.ARRAY_COLOR] = dust
+		out.add_surface_from_arrays(mesh.surface_get_primitive_type(s), arr, [], {}, mesh.surface_get_format(s) & ~Mesh.ARRAY_FORMAT_TANGENT)
+		out.surface_set_material(s, mesh.surface_get_material(s))
+		out.surface_set_name(s, mesh.surface_get_name(s))
+	return out
+
+
+## How much dust a point of a walking, kneeling, working suit gathers, 0 to 1, from the bone that carries it and
+## where it sits in the rest pose (model space: feet at 0, the front toward +Z). Apollo crews came back dusty
+## on the boots and lower legs, the knees and shins from kneeling, the gloves and forearms from handling tools
+## and samples, and only lightly on the torso; the pack's top catches what falls (skills/surface-weathering).
+static func _dust(bone: String, p: Vector3, n: Vector3, coat: Dictionary) -> float:
+	var low: float = 1.0 - smoothstep(0.0, coat.legs_top, p.y)  # boots and shins, kicked up at every step
+	var front := maxf(n.z, 0.0)
+	var part: float = coat.torso
+	if bone.begins_with("thigh") or bone.begins_with("calf"):
+		part = coat.knees * front  # the knees, shins and the front of the thighs
+	elif bone.begins_with("lowerarm"):
+		part = coat.forearms
+	elif bone.ends_with("_l") or bone.ends_with("_r"):
+		if bone.begins_with("hand") or bone.begins_with("index") or bone.begins_with("middle") or bone.begins_with("ring") or bone.begins_with("pinky") or bone.begins_with("thumb"):
+			part = coat.hands
+	if bone == "spine_03" and p.z < 0.0 and n.y > 0.0:
+		part = maxf(part, coat.pack_top * n.y)  # the pack's top, behind the back
+	return maxf(low, part)
 
 
 func _build_tree(model: Node3D) -> void:

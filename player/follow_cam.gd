@@ -13,7 +13,9 @@ var arm: SpringArm3D
 var lens: Lens
 var target: Node3D
 var excluded: Array[RID] = []
-var faded: Array[MeshInstance3D] = []  # the hero's meshes, which hide when the lens is inside them
+var faded: Array[MeshInstance3D] = []  # the hero's meshes, which fade when the lens is close
+var shell := AABB()  # the drawn body in the target's space; none for a vehicle, which never fades
+var fade := 1.0  # 1 solid, 0 hidden: by the lens's gap to `shell` (Lens); the owner applies it to its materials
 var distance := 0.0  # the wanted distance at the default pitch
 var height := 0.0  # pivot above the target's floor
 var yaw := 0.0  # radians, as rotation.y: 0 puts the lens south of the target looking north
@@ -41,8 +43,9 @@ func setup(tuning: Dictionary) -> void:
 	lens.make_current()
 
 
-## Follow `node`. `bodies` are left out of every cast (the hero, or the vehicle), `meshes` hide when the lens is close.
-func follow_target(node: Node3D, bodies: Array[RID], meshes: Array[MeshInstance3D], dist_wanted: float, pivot_height: float) -> void:
+## Follow `node`. `bodies` are left out of every cast (the hero, or the vehicle), `meshes` fade when the lens
+## comes within the camera's fade range of `drawn`, the body's box in the node's space.
+func follow_target(node: Node3D, bodies: Array[RID], meshes: Array[MeshInstance3D], dist_wanted: float, pivot_height: float, drawn := AABB()) -> void:
 	for r in excluded:
 		arm.remove_excluded_object(r)
 	excluded = bodies
@@ -50,6 +53,7 @@ func follow_target(node: Node3D, bodies: Array[RID], meshes: Array[MeshInstance3
 		arm.add_excluded_object(r)
 	target = node
 	faded = meshes
+	shell = drawn
 	distance = dist_wanted
 	height = pivot_height
 	snap(-node.global_rotation.y)
@@ -132,7 +136,7 @@ func follow(delta: float, travel: Vector3, facing: float, on_floor: bool) -> voi
 	q.collision_mask = SOLIDS
 	q.exclude = excluded
 	var free: float = get_world_3d().direct_space_state.cast_motion(q)[0] * wanted
-	var squeeze := clampf(inverse_lerp(wanted, t.fade_far, free), 0.0, 1.0)
+	var squeeze := clampf(inverse_lerp(wanted, t.lift_full, free), 0.0, 1.0)
 	lift = lerpf(lift, (deg_to_rad(t.pitch_min) - pitch) * squeeze, 1.0 - exp(-t.ease_rate * delta))
 	# the ground some way ahead pitches the view: up a dune shows the crest, down one the floor (Nesky #26)
 	var fwd: Vector3 = Vector3(-sin(yaw), 0.0, -cos(yaw)) * t.slope_ahead
@@ -218,5 +222,11 @@ class Lens extends Camera3D:
 		# an off-axis frustum the size the fov would give: the same lens, its picture moved up
 		var h := 2.0 * near * tan(deg_to_rad(fov) / 2.0)
 		set_frustum(h, Vector2(0.0, shift * h), near, far)
-		for m: MeshInstance3D in rig.faded:
-			m.visible = rig.dist > rig.t.fade_near  # never show the inside of the hero's head
+		# the gap from the lens to the drawn body, not to the pivot: over a backpack or a helmet the lens is
+		# much nearer the suit than the arm's length says. The whole body fades as one (Opsive's Object
+		# Fader): solid as long as possible, then gone before the near plane could cut into it.
+		rig.fade = 1.0
+		if rig.shell.has_volume():
+			var p: Vector3 = rig.target.global_transform.affine_inverse() * global_position
+			var gap := p.distance_to(p.clamp(rig.shell.position, rig.shell.end))
+			rig.fade = smoothstep(rig.t.fade_near, rig.t.fade_far, gap)

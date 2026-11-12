@@ -75,16 +75,17 @@ components:
 materials:
   body: { color: "{colors.body}", roughness: 0.55, metalness: 0.1, detail: { texture: "textures/body_albedo.jpg", normal: "textures/body_normal.jpg", roughness: "textures/body_rough.jpg", textureSize: 2.0, strength: 0.8, pattern: grain, size: 2.0 } }
   trim: { color: "{colors.trim}", roughness: 0.75, metalness: 0, detail: { texture: "textures/trim_albedo.jpg", normal: "textures/trim_normal.jpg", roughness: "textures/trim_rough.jpg", textureSize: 0.75, strength: 0.6, pattern: grain, size: 0.75 } }
-  accent: { color: "{colors.accent}", roughness: 0.45, metalness: 0 }
+  accent: { color: "{colors.accent}", roughness: 0.45, metalness: 0, weathering: 0.6 }
   metal: { color: "{colors.metal}", roughness: 0.4, metalness: 1, detail: { texture: "textures/metal_albedo.jpg", normal: "textures/metal_normal.jpg", roughness: "textures/metal_rough.jpg", textureSize: 1.0, strength: 0.8, pattern: grain, size: 1.0 } }
-  glass: { color: "{colors.glass}", roughness: 0.08, metalness: 0, opacity: 0.5 }
-  rock: { color: "{colors.rock}", roughness: 0.95, metalness: 0, detail: { texture: "textures/rock_albedo.jpg", normal: "textures/rock_normal.jpg", roughness: "textures/rock_rough.jpg", textureSize: 1.83, strength: 1.0, pattern: grain, size: 1.83 } }
-  dust: { color: "{colors.dust}", roughness: 1, metalness: 0, detail: { texture: "textures/dust_albedo.jpg", normal: "textures/dust_normal.jpg", roughness: "textures/dust_rough.jpg", textureSize: 3.1, strength: 1.0, pattern: grain, size: 3.1, gravel: { texture: "textures/gravel_albedo.jpg", normal: "textures/gravel_normal.jpg", textureSize: 2.48, share: 0.3 }, ripple: { normal: "textures/ripple_normal.jpg", textureSize: 12 } } }
+  glass: { color: "{colors.glass}", roughness: 0.08, metalness: 0, opacity: 0.5, weathering: 0.35 }
+  rock: { color: "{colors.rock}", roughness: 0.95, metalness: 0, detail: { texture: "textures/rock_albedo.jpg", normal: "textures/rock_normal.jpg", roughness: "textures/rock_rough.jpg", textureSize: 1.83, strength: 1.0, pattern: grain, size: 1.83 }, weathering: 0 }
+  dust: { color: "{colors.dust}", roughness: 1, metalness: 0, detail: { texture: "textures/dust_albedo.jpg", normal: "textures/dust_normal.jpg", roughness: "textures/dust_rough.jpg", textureSize: 3.1, strength: 1.0, pattern: grain, size: 3.1, gravel: { texture: "textures/gravel_albedo.jpg", normal: "textures/gravel_normal.jpg", textureSize: 2.48, share: 0.3 }, ripple: { normal: "textures/ripple_normal.jpg", textureSize: 12 } }, weathering: 0 }
   hazard: { color: "{colors.hazard}", roughness: 0.5, metalness: 0 }
-  light: { color: "{colors.light}", roughness: 0.4, metalness: 0, emissive: 2.5 }
+  light: { color: "{colors.light}", roughness: 0.4, metalness: 0, emissive: 2.5, weathering: 0 }
   suit: { color: "{colors.suit}", roughness: 0.85, metalness: 0, detail: { texture: "textures/suit_albedo.jpg", normal: "textures/suit_normal.jpg", roughness: "textures/suit_rough.jpg", textureSize: 0.4, strength: 0.7, pattern: grain, size: 0.4 } }
-  plant: { color: "{colors.plant}", roughness: 0.6, metalness: 0 }
-  visor: { color: "{colors.visor}", roughness: 0.12, metalness: 1 }
+  plant: { color: "{colors.plant}", roughness: 0.6, metalness: 0, weathering: 0 }
+  visor: { color: "{colors.visor}", roughness: 0.12, metalness: 1, weathering: 0 }
+weathering: { color: "{colors.dust}", amount: 0.6, side: 0.45, crevice: 0.6, noise: 1.2, texture: "textures/dust_albedo.jpg", textureSize: 1.5, clean: "^panel_[0-9]+$|^(floor|vest_floor|floor_mat|dashboard)(-col)?$" }
 geometry:
   shading: smooth
   bevel: 0.03
@@ -192,6 +193,14 @@ Photo sets (CC0, `textures/README.md`): body MetalPlates009, metal Metal011, tri
 Fabric061, rock cliff_side, dust moon_02 (fine powder, after Ravindu asked for a soft Sahara / *The Martian*
 ground), with gravelly_sand patches and aerial_beach_01 wind ripples on the ground. Each only shades its role's colour.
 
+Dust coat (`weathering`, skills/surface-weathering), asked for by Ravindu on 12 Nov 2026 ("nothing can exist shining
+on Mars"): every model wears settled dust in the `dust` colour, the same colour the hero's boots pick up. Level tops
+are 60% covered, about 460 sols at the typical 0.2% per sol (Lorenz 2021); walls a share of that, undersides none,
+more in the seams of each photo set. Thin, it tints the paint and lets its plates and lettering show; it always takes
+the shine. The storm file raises tops to 85% and walls to 65% of that (Curiosity's vertical target reached 49% in a
+major storm). Clean on purpose: the solar panels (swept, `clean`), pressurised floors (habitat, greenhouse, rover cabin: crews sweep them), lights, the visor, plants, the ground and rocks
+(already dust). Glass gets a film (0.35), the teal accent stays legible (0.6). `design/research/pages/dust-coat/`.
+
 ## Quality
 
 A phone starts on `low` (one shadow split, no glow, no detail), anything else on `high`.
@@ -222,5 +231,7 @@ or orange. Don't put `danger` on a model. Don't use shapes that cannot exist at 
   rejected flat surfaces as low quality on 12 Nov 2026.
 - Download size is not a limit (hosted on Ravindu's home server; an internet build gets a loading bar).
   Texture memory still is: iPhone 16 and 17 Safari are the phones.
+- Walls carry more dust than measured: Curiosity's vertical target averaged 4.7% (Lorenz 2021), our day walls about
+  27%, so a wall reads as dusty too (Ravindu: "cover up every single object"). The storm's 55% is near its 49% peak.
 - `vehicle_curiosity.glb` keeps NASA's own textures (the real rover, insignia painted out) instead of role
   colours, so style-check reports its materials as not roles. Check the other models with it left out.

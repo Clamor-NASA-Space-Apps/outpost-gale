@@ -331,6 +331,48 @@
    "source": "estimate: the SEV's wheels \"pivot 360 degrees\", so it can turn on the spot (https://www.nasa.gov/wp-content/uploads/2015/08/464826main_sev_factsheet_508.pdf); a slow pivot of 10 to 30 degrees a second, no measured rate found"
   },
   {
+   "id": "rover.climb",
+   "real": [
+    0.43,
+    1.29
+   ],
+   "value": 0.5,
+   "unit": "m",
+   "source": "Curiosity rolls over obstacles up to 65 cm on 0.5 m wheels, 1.3 wheel diameters (JPL MSL fact sheet, https://solarsystem.nasa.gov/docs/MSL%20Fact%20Sheet%20REV-141119.pdf); the Apollo LRV was built to climb a 35 cm step on 81.8 cm tyres, 0.43 diameters (UMD ENAE 788X LRV case study slide 47, https://spacecraft.ssl.umd.edu/academics/788XF20/788XF20L05.LRVx.pdf). For the SEV's 0.99 m wheels (active suspension, no number published): 0.43 to 1.29 m. Excerpts: design/research/pages/rover-climb/excerpts.md",
+   "note": "the tallest rock a wheel rolls up onto (sandbox/rover.gd): taller ones stop the rover. Value: the wheel's radius, under the chassis's 0.62 m clearance, so a rock the wheels climb never meets the belly"
+  },
+  {
+   "id": "rover.brake",
+   "real": [
+    1.1,
+    2.2
+   ],
+   "value": 1.2,
+   "unit": "m/s2",
+   "source": "estimate: a wheel brakes at most at its traction, mu x g; dry loose sand gives mu of about 0.3 to 0.6 (no rover measurement found) and Mars g is 3.71 m/s2 (world.gravity row): 1.1 to 2.2 m/s2. Value at the low end, so the rover rolls to a stop at a rock instead of lurching"
+  },
+  {
+   "id": "rover.cabin.volume",
+   "real": [
+    8.6,
+    10.8
+   ],
+   "value": 10.7,
+   "unit": "m3",
+   "source": "NASA's Lunar Electric Rover (the SEV's forerunner): interior volume 10.8 m3, net habitable volume about 8.6 m3, crew of two for 14 days (https://ntrs.nasa.gov/citations/20100009798, design/research/pages/sizes/ntrs-20100009798.txt). Value: the cabin's cut-out inside, printed by forge/vehicle_rover.py"
+  },
+  {
+   "id": "rover.cabin.height",
+   "real": [
+    1.6,
+    1.75
+   ],
+   "value": 1.65,
+   "unit": "m",
+   "source": "estimate: the SEV is 3.05 m tall (fact sheet, https://www.nasa.gov/wp-content/uploads/2015/08/464826main_sev_factsheet_508.pdf) on a chassis listed as 1.3 m tall (https://en.wikipedia.org/wiki/Space_Exploration_Vehicle, citing NASA's LER fact sheet), so the cabin is at most about 1.75 m outside; 10.8 m3 inside over a floor of about 2.2 x 3 m is about 1.6 m",
+   "note": "floor to ceiling inside (forge/vehicle_rover.py FLOOR to ROOF). The seated suited hero needs 1.57 m from boots to helmet (measured in drive_sit); the real crew ride without suits, which wait on the suitports"
+  },
+  {
    "id": "lettuce.width",
    "real": [
     0.2,

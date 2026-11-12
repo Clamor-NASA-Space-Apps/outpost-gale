@@ -27,12 +27,14 @@ var _line: StandardMaterial3D
 var _dir: Vector3  # where the wind blows to, flat
 var _devil_angle := 0.0
 var _haze_mat: ShaderMaterial
+var _wheel_haze_mat: ShaderMaterial  # a rover's trail: paler than a boot's puff, or it vanished against the ground
 var _grit_mat: ShaderMaterial
 var _c: Dictionary  # data/world.json `contact`
 var _g: float  # gravity, from the reality sheet
 var _live: Dictionary = {}  # emitter -> {kind, age, life, top}: what is in flight, for checks and for hiding
 var _next_grit := 0  # the oldest of each pool, reused next
 var _next_haze := 0
+var _streams: Dictionary = {}  # id -> {grit, haze, off}: emitters that run while a wheel rolls (stream())
 var _streak_share := 0.0  # the sky state's share of streaks; a gust shows all of it, a lull a quarter
 
 
@@ -58,6 +60,7 @@ func build(world: Node3D) -> void:
 	# scissor makes the last tenth's fade a shrink rather than a pop
 	_grit_mat = _ground_lit(dot, true)
 	_haze_mat = _ground_lit(_blot(), false)
+	_wheel_haze_mat = _ground_lit(_blot(), false)
 	var gs := float(_c.grit_size)
 	for i in GRIT:
 		var e := _emitter("Grit%d" % i, int(_c.grit), 0.5, Vector2(gs, gs), _grit_mat, [1.0, 1.0, 1.0], [1.0, 1.0])
@@ -133,7 +136,10 @@ func build(world: Node3D) -> void:
 func restyle(design: Dictionary, weather: Dictionary) -> void:
 	# grit is the ground itself, lit like it; the colour is the dust role's, a fixed preset per surface
 	_grit_mat.set_shader_parameter("albedo", Color.html(design.materials.dust.color))
-	_haze_mat.set_shader_parameter("albedo", Color.html(design.materials.dust.color).lerp(Color.html(design.lighting.horizon), 0.5))
+	# a fifth of the way to the horizon's colour: half way, a puff at a boot was a bright orange patch against the
+	# shaded ground under a sunset (13 Nov playtest)
+	_haze_mat.set_shader_parameter("albedo", Color.html(design.materials.dust.color).lerp(Color.html(design.lighting.horizon), 0.2))
+	_wheel_haze_mat.set_shader_parameter("albedo", Color.html(design.materials.dust.color).lerp(Color.html(design.lighting.horizon), 0.65))
 	_column.albedo_color = Color.html(design.materials.dust.color).lerp(Color.html(design.lighting.horizon), 0.15)
 	for m: StandardMaterial3D in [_soft, _line]:
 		# fine dust in the air is paler than the ground it rose from: it takes on the haze, and a cloud the
@@ -148,11 +154,12 @@ func restyle(design: Dictionary, weather: Dictionary) -> void:
 		pm.initial_velocity_max = wind.length() * (1.4 if e == streaks else 0.6)
 	# the haze is pushed by the wind against quadratic drag, which balances at the wind's speed:
 	# damping = 20 a / v^2 (engine source, skills/ground-contact-fx); `a` sets how soon it gets there
-	var hp: ParticleProcessMaterial = haze[0].process_material
 	var push := maxf(wind.length(), 0.01)
-	hp.gravity = _dir * push
-	hp.damping_min = 20.0 * push / (push * push)
-	hp.damping_max = hp.damping_min
+	for e: GPUParticles3D in [haze[0]] + _streams.values().map(func(st: Dictionary) -> GPUParticles3D: return st.haze):
+		var hp: ParticleProcessMaterial = e.process_material
+		hp.gravity = _dir * push
+		hp.damping_min = 20.0 * push / (push * push)
+		hp.damping_max = hp.damping_min
 	_streak_share = float(weather.streaks)
 	streaks.amount_ratio = _streak_share
 	streaks.emitting = _streak_share > 0.0
@@ -189,6 +196,61 @@ func puff(pos: Vector3, vel: Vector3, strength: float, kind := "foot") -> void:
 	_fire(e, pos, strength, {"kind": kind, "life": e.lifetime, "top": pow(fast * steep, 2.0) / (2.0 * _g)})
 	_fire(haze[_next_haze], pos + Vector3(0, 0.03, 0), strength, {"kind": "haze", "life": float(_c.haze_life), "top": 0.05})
 	_next_haze = (_next_haze + 1) % HAZE
+
+
+## A wheel rolling on the dust: grit and haze stream from `pos` (behind the contact) for as long as it rolls, so
+## a drive leaves a steady low trail. A puff per wheel print restarted one of six shared emitters 20 times a second,
+## and every grain died a few frames old: nothing showed (13 Nov playtest). `vel` is the tread's world velocity,
+## `strength` 0 to 1 (0 stops it; grains in flight land first). Call it every physics frame while the wheel
+## rolls: a stream not called for a frame stops (13 Nov playtest: dust kept coming from a parked rover after its
+## driver got out). data/world.json `contact` wheel_*.
+func stream(id: String, pos: Vector3, vel: Vector3, strength: float) -> void:
+	var on := strength > 0.0 and vel.length() >= float(_c.min_speed)
+	if not _streams.has(id):
+		if not on:
+			return
+		# grains fly at the tread's speed: the lifetime is the flight of the fastest, at the rover's top speed
+		var angles: Array = _c.wheel_launch_deg
+		var fast := float(_world.sheet_values["rover.speed.max"]) * (1.0 + float(_c.speed_spread))
+		var gs := float(_c.wheel_grit_size)
+		var g := _emitter("Stream_" + id, int(_c.wheel_grit), 2.0 * fast * sin(deg_to_rad(float(angles[1]))) / _g, Vector2(gs, gs), _grit_mat, [1.0, 1.0, 1.0], [1.0, 1.0])
+		var gp: ParticleProcessMaterial = g.process_material
+		gp.color_ramp = (grit[0].process_material as ParticleProcessMaterial).color_ramp
+		gp.gravity = Vector3(0, -_g, 0)
+		gp.scale_min = 0.6
+		gp.scale_max = 1.6
+		gp.spread = (float(angles[1]) - float(angles[0])) / 2.0
+		gp.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_SPHERE
+		gp.emission_sphere_radius = 0.12  # about a tread's half width
+		var hs: Array = _c.wheel_haze_size
+		var h := _emitter("StreamHaze_" + id, int(_c.wheel_haze), float(_c.haze_life), Vector2(hs[0], hs[1]), _wheel_haze_mat, [0.0, float(_c.wheel_haze_alpha), 0.0], [0.6, 1.6])
+		# the haze's motion (restyle() keeps the wind on both), with its own fade: the alpha lives in the process
+		# material's colour ramp, and sharing the puffs' left the trail at their 0.07, invisible
+		var hp := (haze[0].process_material as ParticleProcessMaterial).duplicate() as ParticleProcessMaterial
+		hp.color_ramp = (h.process_material as ParticleProcessMaterial).color_ramp
+		h.process_material = hp
+		_streams[id] = {"grit": g, "haze": h, "off": 0.0, "frame": 0}
+	var st: Dictionary = _streams[id]
+	st.frame = Engine.get_physics_frames()
+	var g: GPUParticles3D = st.grit
+	var h: GPUParticles3D = st.haze
+	g.emitting = on
+	h.emitting = on
+	if on:
+		st.off = 0.0
+		g.visible = true
+		h.visible = true
+		var flat := Vector3(vel.x, 0, vel.z).normalized()
+		var angles: Array = _c.wheel_launch_deg
+		var mid := deg_to_rad((float(angles[0]) + float(angles[1])) / 2.0)
+		var gp: ParticleProcessMaterial = g.process_material
+		gp.direction = flat * cos(mid) + Vector3.UP * sin(mid)
+		gp.initial_velocity_min = vel.length() * (1.0 - float(_c.speed_spread))
+		gp.initial_velocity_max = vel.length() * (1.0 + float(_c.speed_spread))
+		g.amount_ratio = clampf(strength, 0.05, 1.0)
+		h.amount_ratio = clampf(strength, 0.05, 1.0)
+		g.global_position = pos
+		h.global_position = pos + Vector3(0, 0.03, 0)
 
 
 ## What is in flight: [{kind, age, life, top}], `top` the highest a grain can get (analytic H).
@@ -233,6 +295,17 @@ func _process(delta: float) -> void:
 		if _live[e].age >= _live[e].life:
 			e.visible = false
 			_live.erase(e)
+	for st: Dictionary in _streams.values():
+		var h: GPUParticles3D = st.haze
+		if h.emitting and Engine.get_physics_frames() - int(st.frame) > 1:
+			# nobody rolls it any more (the driver got out): a wheel that is not driven throws nothing
+			h.emitting = false
+			st.grit.emitting = false
+		if not h.emitting and h.visible:
+			st.off += delta
+			if st.off > h.lifetime:  # the last haze has faded: hide them, a spent emitter still costs a draw call
+				h.visible = false
+				st.grit.visible = false
 	var cam := get_viewport().get_camera_3d()
 	if cam:
 		var at := cam.global_position

@@ -18,6 +18,7 @@ Change it only through the session that merges the lanes.
 | 5 | 16 | vehicles (the rover, as an `AnimatableBody3D`) | hero, camera |
 | 6 | 32 | interaction areas (`Area3D`, never blocks) | the hero's interaction finder |
 | 7 | 64 | carriables (cargo bags) | hero, rover, camera |
+| 9 | 256 | rock: a solid rock's extra bit (with 2 or 3), what a rover wheel rolls onto | rover wheel casts |
 
 ## Input actions (registered in code by `player/controls.gd`, keys and touch feed the same actions)
 `move_forward` W/Up, `move_back` S/Down, `move_left` A/Left, `move_right` D/Right, `hurry` Shift,

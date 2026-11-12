@@ -365,11 +365,12 @@
   "cargo_bag": "carriable"
  },
  "sink": {
-  "_note": "how far each prefab sits in the dust: a reality.json row id per prefab, else default (skills/shadows-and-grounding, Sink). support: metres above an item's lowest drawn point that still count as resting on the ground (feet, skids, bevelled bottom edges). level: prefabs crews build level (floors, foundations, tracking mounts); everything else tilts to the ground under it, as a lander's legs or a bag do. Vehicles only touch: their drivers set them on their wheels. Rocks: reality.json rock.embed",
+  "_note": "how far each prefab sits in the dust: a reality.json row id per prefab, else default (skills/shadows-and-grounding, Sink). support: metres above an item's lowest drawn point that still count as resting on the ground (feet, skids, bevelled bottom edges). level: prefabs crews build level (floors, foundations, tracking mounts); everything else tilts to the ground under it, as a lander's legs or a bag do. Vehicles only touch: their drivers set them on their wheels, sunk by their own row here (rover). Rocks: reality.json rock.embed",
   "support": 0.05,
   "level": ["habitat", "greenhouse", "storm_shelter", "build_pad", "solar_array", "dish", "telltale"],
   "default": "ground.sink.soft",
-  "lander": "ground.sink.foot"
+  "lander": "ground.sink.foot",
+  "rover": "ground.sink.soft"
  },
  "shadow_min": 0.6,
  "moving": "^(door|dish|tell)$|^(panel|wheel)_[0-9]+$",
@@ -557,7 +558,7 @@
   }
  },
  "contact": {
-  "_note": "footstep and wheel dust (skills/ground-contact-fx, design/research/dust.md). Grit: grains over ~70 um launched at 30 to 60 deg (Kok 2012), each gone when it lands, T = 2 v sin(theta) / g with g from reality.json; a wheel throws them backward and low (fenders, NASM 2015). Haze: dust under ~20 um in the bottom few cm, spreading then drifting downwind and gone in 2 to 3 s (Lemmon 2022). min_speed (nothing thrown standing still), counts, sizes (grit_size: a few pixels at the 4.2 m play camera, ground-contact-fx section 3), alpha and the speed spread are art direction",
+  "_note": "footstep and wheel dust (skills/ground-contact-fx, design/research/dust.md). Grit: grains over ~70 um launched at 30 to 60 deg (Kok 2012), each gone when it lands, T = 2 v sin(theta) / g with g from reality.json; a wheel throws them backward and low (fenders, NASM 2015). Haze: dust under ~20 um in the bottom few cm, spreading then drifting downwind and gone in 2 to 3 s (Lemmon 2022). min_speed (nothing thrown standing still), counts, sizes (grit_size: a few pixels at the 4.2 m play camera, ground-contact-fx section 3), alpha and the speed spread are art direction. foot_kick: the share of the walking speed a boot's push-off scuffs grit backward at (the boot is nearly still at contact; ground-contact-fx section 2), art direction. wheel_grit, wheel_grit_size, wheel_haze: a rolling wheel's steady stream (dust.stream()): grains alive at once, their size (a few pixels at the 9 m driving camera, ground-contact-fx section 3) haze quads alive at once, their peak alpha and size (a 3 t rover lifts more fine dust than a boot, and grit the ground's colour vanishes against the ground); art direction",
   "launch_deg": [30, 60],
   "wheel_launch_deg": [10, 30],
   "speed_spread": 0.3,
@@ -568,7 +569,13 @@
   "haze_size": [0.55, 0.12],
   "haze_alpha": 0.07,
   "haze_life": 2.5,
-  "haze_burst": 0.4
+  "haze_burst": 0.4,
+  "foot_kick": 0.4,
+  "wheel_grit": 48,
+  "wheel_grit_size": 0.06,
+  "wheel_haze": 20,
+  "wheel_haze_alpha": 0.6,
+  "wheel_haze_size": [1.2, 0.45]
  },
  "devil": {
   "_note": "the dust devil wanders round the base centre this far out, in and out by the share `wander`, at this speed in m/s; day only (weather), the summer afternoons NASA saw them at Gale (sol 1597). All design choices (no measured Gale speed in our sources): slow enough to watch, outside the lander and Curiosity, near enough to see from the base (at 160 m it did not show)",

@@ -16,9 +16,11 @@ reset()
 
 wall = cyl("wall-col", R, TOP, (0, 0, TOP / 2), mat("body"), 64)
 cut(wall, cyl("inner", R - WALL, TOP + 0.2, (0, 0, TOP / 2), None, 64))
-cut(wall, box("hatch_cut", (HW, 1.0, HH), (0, R, SILL + HH / 2)))
+# 10 cm wider and taller than the opening, so the wall's cut faces end inside the collar: cut to the same size
+# they lay on the collar's jambs and flickered white through it (13 Nov playtest)
+cut(wall, box("hatch_cut", (HW + 0.2, 1.0, HH + 0.1), (0, R, SILL + HH / 2)))
 smooth(wall)
-smooth(cyl("floor-col", R - WALL + 0.02, SILL, (0, 0, SILL / 2), mat("trim"), 64))
+floor = smooth(cyl("floor-col", R - WALL + 0.02, SILL, (0, 0, SILL / 2), mat("trim"), 64))
 cap = 3.92  # sphere radius whose cap is 0.9 m high over a 5 m circle: (2.5^2 + 0.9^2) / (2 * 0.9)
 roof = sphere("roof-col", cap, (0, 0, H - cap), mat("body"), 48)
 cut(roof, box("below", (10, 10, 10), (0, 0, TOP - 5)))
@@ -28,6 +30,7 @@ smooth(roof)
 # the collar's top stays under the roof band (TOP): SILL + HH + 0.1 with a 2.2 m hatch
 collar = box("hatch-col", (HW + 0.34, CD, HH + 0.2), (0, R - 0.07, SILL + HH / 2), mat("trim"))
 cut(collar, box("hatch_cut2", (HW, 1.0, HH), (0, R, SILL + HH / 2)))
+cut(floor, box("under_collar", (HW + 0.34, CD, 1.0), (0, R - 0.07, 0.4)))  # the collar's sill is the floor there
 bevel(collar, width=0.03)
 for s in (-1, 1):
     box(f"hazard{s}", (0.07, 0.02, HH), (s * (HW / 2 + 0.1), R + 0.135, SILL + HH / 2), mat("hazard"))
@@ -43,7 +46,7 @@ inner_leaf(HW, HH, R - 0.07 - CD / 2, SILL, [box("door_seam", (HW - 0.1, 0.07, 0
 RW = HW + 0.2
 ramp = prism("ramp-col", [(R + 0.13, 0), (R + 1.33, 0), (R + 0.13, SILL)], RW, mat=mat("metal"))
 for s in (-1, 1):
-    box(f"ramp_edge{s}", (0.05, 1.2, 0.03), (s * (RW / 2 - 0.02), R + 0.73, 0.02), mat("hazard"))
+    box(f"ramp_edge{s}", (0.05, 1.18, 0.03), (s * (RW / 2 - 0.02), R + 0.74, 0.02), mat("hazard"))
 
 # hull detail: base skirt, a seam band under the roof, vertical panel seams, roof hatch and mast
 smooth(cyl("skirt", R + 0.05, 0.2, (0, 0, 0.1), mat("trim"), 64))
@@ -85,4 +88,5 @@ for dy in (-0.18, 0.0, 0.18):
 status_light("utility_light", (R + 0.12, 0, 1.42), (0.05, 0.16, 0.05))
 
 wrap(flat_label("hab_label", "HAB 1", 0.75, (0, 0, 0), "trim", 0.03, 180), R, LABEL, 1.45)
+wrap(flat_label("team_label", "CLAMOR", 0.2, (0, 0, 0), "trim", 0.02, 180), R, LABEL, 1.0)  # the operator, under the name
 done("building_habitat")

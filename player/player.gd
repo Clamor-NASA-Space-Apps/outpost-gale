@@ -60,6 +60,9 @@ var breath := 0.0
 var clock_seen := -1.0
 var last_vel := Vector3.ZERO
 var on_floor := false  # the body's floor contact, or a floor it was snapped down onto this frame
+var fading: Shader  # hero.gdshader built with FADE: blended, swapped in only while the lens is close
+var shown := 1.0  # the fade the materials carry now
+var glancing := false  # the camera faces the hero: the helmet looks at the lens, not along its aim
 
 
 func _ready() -> void:
@@ -102,17 +105,27 @@ func _ready() -> void:
 	body.add_child(model)
 	var clips: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CLIPS))
 	sink = row.call("hero.sink")
-	model.setup(load(MODEL).instantiate(), design, clips, tuning.hop, sink, row.call("hero.contact.height"))
+	var drawn: Node3D = load(MODEL).instantiate()
+	var bones: Skeleton3D = drawn.find_children("*", "Skeleton3D", true, false)[0]
+	for mi: MeshInstance3D in drawn.find_children("*", "MeshInstance3D", true, false):
+		var binds := PackedStringArray()
+		for b in mi.skin.get_bind_count():
+			var at := mi.skin.get_bind_bone(b)
+			binds.append(bones.get_bone_name(at) if at >= 0 else String(mi.skin.get_bind_name(b)))
+		mi.mesh = HeroModel.prepared(mi.mesh, binds, deg_to_rad(tuning.hero.smooth_deg), tuning.hero.coat)
+	model.setup(drawn, design, clips, tuning.hop, sink, row.call("hero.contact.height"), tuning.life.carry_out)
 	life = HeroLife.new()
 	life.setup(model.skeleton, tuning.life, row.call("hero.lean.max"), gravity)
 	meshes.assign(model.find_children("*", "MeshInstance3D", true, false))
+	fading = Shader.new()
+	fading.code = HeroShader.code.replace("// VARIANT\n", "#define FADE\n")
 	_fading()
 	_collider()
 	cam = FollowCam.new()
 	cam.name = "Camera"
 	add_child(cam)
 	cam.setup(tuning.camera)
-	cam.follow_target(body, [body.get_rid()], meshes, tuning.camera.distance, tuning.camera.pivot_height)
+	cam.follow_target(body, [body.get_rid()], meshes, tuning.camera.distance, tuning.camera.pivot_height, model.bounds)
 	touch = Touch.new()
 	add_child(touch)
 	touch.setup(tuning, design.colors, cam.look)
@@ -147,8 +160,8 @@ func _collider() -> void:
 
 
 ## The hero's own copies of its role materials (house-style materials are shared by every model with that
-## role, so changing them in place would change the whole base): they dither away when the lens comes close,
-## and the boots carry dust. A role with `detail` gives only its plain values: its detail is laid in world space.
+## role, so changing them in place would change the whole base): they fade when the lens comes close, and they
+## wear the design's dust coat (DESIGN.md `weathering`, each role's share) where a suit gathers it. A role with `detail` gives only its plain values: its detail is laid in world space.
 func _fading() -> void:
 	var t: Dictionary = tuning.hero
 	for mi in meshes:
@@ -163,11 +176,10 @@ func _fading() -> void:
 			else:
 				for k: String in ["albedo", "roughness", "metallic"]:
 					f.set_shader_parameter(k, m.get_shader_parameter(k))
-			f.set_shader_parameter("dust", Color.html(design.materials.dust.color))
-			f.set_shader_parameter("dust_height", t.dust_height)
-			f.set_shader_parameter("dust_share", t.dust_share)
-			f.set_shader_parameter("fade_near", tuning.camera.fade_near)
-			f.set_shader_parameter("fade_far", tuning.camera.fade_far)
+			f.set_shader_parameter("coat_color", Color.html(design.get("weathering", {}).get("color", "#ffffff")))
+			f.set_shader_parameter("coat_amount", Forge.HouseStyle._coat(design, design.materials.get(m.resource_name, {})))
+			f.set_shader_parameter("coat_max", t.coat.max)
+			f.set_shader_parameter("coat_chroma", t.coat.chroma)
 			f.resource_name = m.resource_name  # the house style finds the role by this name on the next restyle
 			mi.set_surface_override_material(i, f)
 
@@ -178,7 +190,23 @@ func restyle(d: Dictionary) -> void:
 	design = d
 	Forge.HouseStyle.apply(model, design)
 	_fading()
+	shown = -1.0  # new solid copies: the next frame puts the fade back on them
 	touch.restyle(design.colors)
+
+
+## After the physics steps, before the frame is drawn: the whole body fades as one by the lens's gap to it
+## (follow_cam), never a pattern over part of it, and hides before the lens could be inside the helmet.
+func _process(_delta: float) -> void:
+	var f: float = cam.fade
+	if f == shown:
+		return
+	shown = f
+	for mi in meshes:
+		mi.visible = f > 0.0
+		for i in mi.mesh.get_surface_count():
+			var m := mi.get_surface_override_material(i) as ShaderMaterial
+			m.shader = HeroShader if f >= 1.0 else fading
+			m.set_shader_parameter("opacity", f)
 
 
 func _physics_process(delta: float) -> void:
@@ -207,11 +235,18 @@ func _live(delta: float, accel: Vector3) -> void:
 	var c: float = breath_clock.breath_phase if breath_clock else -1.0
 	breath = c if c >= 0.0 and c != clock_seen else fmod(breath + delta * b.rest / 60.0, 1.0)
 	clock_seen = c
+	# where the camera looks, while that is ahead of the hero; once the camera comes round to face the hero,
+	# its aim lies behind the hero and the helmet glances at the lens instead (with a little hysteresis, so a
+	# camera parked at the side does not switch every frame)
+	var view := -cam.lens.global_basis.z
+	var ahead := Vector2(view.x, view.z).normalized().dot(Vector2(-sin(yaw), -cos(yaw)))
+	glancing = ahead < cos(PI * 0.45) if not glancing else ahead < cos(PI * 0.35)
 	var head := body.global_position + Vector3.UP * model.bounds.end.y * 0.9
-	var look: Vector3 = head - cam.lens.global_basis.z * tuning.life.look_far
+	var look: Vector3 = cam.lens.global_position if glancing else head + view * tuning.life.look_far
 	if is_instance_valid(attention) and attention.is_inside_tree():
 		look = attention.global_position
-	life.update(delta, accel if not vehicle else Vector3.ZERO, carried != null, breath, b.inhale_share, look)
+	var pace := clampf(moved / walk, 0.0, 1.0)
+	life.update(delta, accel if not vehicle else Vector3.ZERO, carried != null, breath, b.inhale_share, look, pace)
 
 
 func _walk(delta: float) -> void:
@@ -370,8 +405,6 @@ func act() -> void:
 func enter(v: Node3D) -> void:
 	vehicle = v
 	model.sit(true)
-	for m in meshes:
-		m.visible = true  # the lens may have hidden it close up; the vehicle's camera never comes that close
 	body.collision_layer = 0
 	body.collision_mask = 0
 	var rids: Array[RID] = []
@@ -394,7 +427,7 @@ func _leave() -> void:
 	model.sit(false)
 	body.collision_layer = HERO_LAYER
 	body.collision_mask = MASK
-	cam.follow_target(body, [body.get_rid()], meshes, tuning.camera.distance, tuning.camera.pivot_height)
+	cam.follow_target(body, [body.get_rid()], meshes, tuning.camera.distance, tuning.camera.pivot_height, model.bounds)
 
 
 ## The solids the suited torso is inside (skills/world-collision). Empty means the body never went into a wall.

@@ -58,7 +58,8 @@ func play() -> bool:
 					pts.append(p)
 					base = minf(base, (p - n.global_position).dot(up))
 		var sink: Dictionary = world.data.sink
-		var want: float = 0.0 if kind == "vehicle" else world.sheet_values[sink.get(it.prefab, sink.default)]
+		# a vehicle sits on its wheels only by its own sink row, set by its driver (sandbox/rover.gd)
+		var want: float = 0.0 if kind == "vehicle" and not sink.has(it.prefab) else world.sheet_values[sink.get(it.prefab, sink.default)]
 		var top := -INF  # the highest foot over the ground under it, each dropped onto the underside's plane
 		for p in pts:
 			var h := (p - n.global_position).dot(up) - base
@@ -82,7 +83,8 @@ func play() -> bool:
 	check(world.gust() >= 0.0 and world.gust() <= 1.0, "gust() is between 0 and 1 (%.2f)" % world.gust())
 
 	for b: StaticBody3D in world.rocks.solids:
-		check(b.collision_layer in [world.STATICS, world.THIN], "a solid rock off layers 2 and 3 at %s" % b.position)
+		# layer 2 or 3 for the hero and camera, plus the rock bit a wheel rolls onto (world/rocks.gd ROCK)
+		check(b.collision_layer & ~world.Rocks.ROCK in [world.STATICS, world.THIN] and b.collision_layer & world.Rocks.ROCK, "a solid rock off layers 2 and 3, or not a rock to a wheel, at %s" % b.position)
 	check(world.rocks.solids.size() > 0 and world.rocks.pebbles.size() > 0, "the scatter placed rocks and pebbles")
 
 	var misses := _sweep(world, statics, solid)

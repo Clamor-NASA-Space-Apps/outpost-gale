@@ -7,12 +7,15 @@ extends Node3D
 const SHAPES := 3  # pebble shapes
 const SUPPORT := 0.1  # share of a rock's height above its lowest point that rests on the ground
 const STANDIN := "standin"
+const ROCK := 256  # layer 9, added to a solid rock's own layer: what a wheel rolls onto (world.wheel_rest())
+const CELL := 2.0  # metres: the grid pebbles are looked up in
 
 var solids: Array[StaticBody3D] = []
 var pebbles: Array[MultiMeshInstance3D] = []
 var big: MeshInstance3D  # every solid rock in one mesh, a surface per role
 var spots: Array[Transform3D] = []  # every rock placed, pebbles and solid ones
 var feet := PackedVector2Array()  # where solid rocks meet the ground, for the contact shading (world._contacts)
+var bumps: Dictionary = {}  # Vector2i cell -> Array of Vector4(x, centre y, z, radius): each pebble as a ball a wheel rolls over
 var _world: Node3D
 var _keep_out: Array[AABB] = []  # item footprints, grown by the margin
 
@@ -65,6 +68,8 @@ func build(world: Node3D) -> void:
 				_ring(corners[meshes[k]], basis, Vector3(x, y, z))
 	for r: Array in small + large:
 		spots.append(r[1])
+	for r: Array in small:
+		_bump(corners[small_shapes[r[0]]], r[1])
 	pebbles = _multi(small_shapes, small)
 	big = _baked(big_shapes, large)
 	for r: Array in large:
@@ -239,6 +244,32 @@ func _multi(meshes: Array[Mesh], placed: Array) -> Array[MultiMeshInstance3D]:
 	return out
 
 
+## A pebble as a ball as wide as it is, its top at the pebble's top: a wheel over it rides up the ball's curve.
+func _bump(points: PackedVector3Array, at: Transform3D) -> void:
+	var top := -INF
+	var wide := 0.0
+	for p in points:
+		var q := at.basis * p
+		top = maxf(top, q.y)
+		wide = maxf(wide, Vector2(q.x, q.z).length())
+	var b := Vector4(at.origin.x, at.origin.y + top - wide, at.origin.z, wide)
+	bumps.get_or_add(Vector2i(floori(b.x / CELL), floori(b.z / CELL)), []).append(b)
+
+
+## The lowest a wheel of radius `r` over (x, z) can sit on the pebbles: its bottom's height, or -INF.
+func on_pebbles(x: float, z: float, r: float) -> float:
+	var best := -INF
+	var c := Vector2i(floori(x / CELL), floori(z / CELL))
+	for i in range(-1, 2):
+		for j in range(-1, 2):
+			for b: Vector4 in bumps.get(c + Vector2i(i, j), []):
+				var reach := r + b.w
+				var d2 := (x - b.x) * (x - b.x) + (z - b.z) * (z - b.z)
+				if d2 < reach * reach:
+					best = maxf(best, b.y + sqrt(reach * reach - d2) - r)
+	return best
+
+
 ## A solid rock: its own drawn points as a convex body, so what you see is what you hit.
 func _solid(mesh: Mesh, at: Transform3D) -> void:
 	var points := PackedVector3Array()
@@ -253,4 +284,5 @@ func _solid(mesh: Mesh, at: Transform3D) -> void:
 	body.add_child(col)
 	add_child(body)
 	_world._layer(body)
+	body.collision_layer |= ROCK
 	solids.append(body)

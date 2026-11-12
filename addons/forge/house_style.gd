@@ -29,14 +29,16 @@ static func load_design(path: String) -> Dictionary:
 
 ## One shared material per role, kept inside the design so a second design gets its own set.
 ## Its meta "shadow" is false for a role DESIGN.md marks `shadow: false`: whoever draws it may skip the shadow pass.
-## `still` asks for the role's world-space extras (DESIGN.md `detail` and `lit`). They are laid on by world
-## position and would slide over anything that moves, so only a mesh that never moves may have them.
-static func role(design: Dictionary, name: String, still := false) -> Material:
+## `still` asks for the role's world-space extras (DESIGN.md `detail`, `lit` and the `weathering` coat). They are
+## laid on by world position and would slide over anything that moves, so a moving mesh takes them in its own space.
+## `clean` leaves the weathering coat off (DESIGN.md `weathering.clean`: a solar cell someone keeps swept).
+static func role(design: Dictionary, name: String, still := false, clean := false) -> Material:
 	var cache: Dictionary = design.get_or_add("_roles", {})
 	var t: Dictionary = design.materials[name]
-	still = still and (t.has("detail") or t.has("lit"))
-	var key := name + ("+still" if still else "")
-	var moving_detail := not still and t.has("detail")
+	var coated := not clean and _coat(design, t) > 0.0
+	still = still and (t.has("detail") or t.has("lit") or coated)
+	var key := name + ("+still" if still else "") + ("+clean" if clean else "")
+	var moving_detail := not still and (t.has("detail") or coated)
 	if cache.has(key):
 		return cache[key]
 	var color := Color.html(t.color)
@@ -52,6 +54,7 @@ static func role(design: Dictionary, name: String, still := false) -> Material:
 		s.set_shader_parameter("metallic", float(t.get("metalness", 0)))
 		s.set_shader_parameter("emission", color * glow)
 		s.set_meta("still", still)
+		s.set_meta("clean", clean)
 		_dress(design, t, s)
 		m = s
 	else:
@@ -68,6 +71,7 @@ static func role(design: Dictionary, name: String, still := false) -> Material:
 			s.emission_energy_multiplier = glow
 		m = s
 	m.resource_name = name
+	m.set_meta("clean", clean)  # so a restyle of a merged mesh, which has no node names left, keeps it clean
 	m.set_meta("shadow", t.get("shadow", true))  # `shadow: false` is for roles that only ever lie flat on the ground
 	cache[key] = m
 	return m
@@ -75,6 +79,80 @@ static func role(design: Dictionary, name: String, still := false) -> Material:
 
 static func _flat(design: Dictionary) -> bool:
 	return design.get("geometry", {}).get("shading", "smooth") == "flat"
+
+
+## How much of the `weathering` coat a role takes on a level top: the design's amount times the role's own share.
+static func _coat(design: Dictionary, t: Dictionary) -> float:
+	return float(design.get("weathering", {}).get("amount", 0)) * float(t.get("weathering", 1))
+
+
+## The coat's defines and values on `s`, at the quality in force: `low` (detail off) is the plain coat,
+## `code` breaks it into patches, `texture` adds the coat's photo (skills/surface-weathering).
+static func _dress_coat(design: Dictionary, amount: float, s: ShaderMaterial, defines: PackedStringArray) -> void:
+	var w: Dictionary = design.get("weathering", {})
+	var level: String = design.get("_quality", {}).get("detail", "off")
+	var grain: Texture2D = null
+	if level == "texture" and w.has("texture") and ResourceLoader.exists("res://" + str(w.texture)):
+		grain = load("res://" + str(w.texture))
+	defines.append("COAT")
+	if level != "off":
+		defines.append("COAT_NOISE")
+	if grain:
+		defines.append("COAT_GRAIN")
+	if not s.get_meta("still", false) and not defines.has("LOCAL"):
+		defines.append("LOCAL")
+	s.set_shader_parameter("coat_texture", grain)
+	s.set_shader_parameter("coat_texture_size", float(w.get("textureSize", 3)))
+	s.set_shader_parameter("coat_color", Color.html(w.color))  # style-check makes it required
+	s.set_shader_parameter("coat_amount", amount)
+	s.set_shader_parameter("coat_side", float(w.get("side", 0.15)))
+	s.set_shader_parameter("coat_crevice", float(w.get("crevice", 0.5)))
+	s.set_shader_parameter("coat_noise", float(w.get("noise", 1.5)))
+
+
+static func _variant(defines: PackedStringArray) -> Shader:
+	var key := " ".join(defines)
+	if not _variants.has(key):
+		var lines := ""
+		for d_ in defines:
+			lines += "#define %s\n" % d_
+		var shader := Shader.new()
+		shader.code = SURFACE.code.replace("// VARIANT\n", lines)
+		_variants[key] = shader
+	return _variants[key]
+
+
+## An official model's own textured material (a `keep` kit role) under the same coat as everything else, so a
+## real rover parked at the base is as dusty as the base. Its original rides along as meta "kept", so a theme switch
+## rebuilds the coat from it. Without a coat, or without a texture, the original is used as it is.
+static func _kept(design: Dictionary, m: Material, still: bool) -> Material:
+	var std := m as BaseMaterial3D
+	var amount := float(design.get("weathering", {}).get("amount", 0))
+	if std == null or std.albedo_texture == null or amount <= 0.0:
+		return m
+	var cache: Dictionary = design.get_or_add("_kept", {})
+	var key := [m, still]
+	if not cache.has(key):
+		var s := ShaderMaterial.new()
+		s.resource_name = m.resource_name
+		s.set_meta("kept", m)
+		s.set_meta("still", still)
+		s.set_shader_parameter("albedo", std.albedo_color)
+		s.set_shader_parameter("roughness", std.roughness)
+		s.set_shader_parameter("metallic", std.metallic)
+		s.set_shader_parameter("base_texture", std.albedo_texture)
+		if std.normal_enabled and std.normal_texture:
+			s.set_shader_parameter("base_normal", std.normal_texture)
+			s.set_shader_parameter("base_normal_scale", std.normal_scale)
+		s.set_meta("shadow", true)
+		cache[key] = s
+	var s: ShaderMaterial = cache[key]
+	var defines := PackedStringArray(["KEEP"])
+	if s.get_shader_parameter("base_normal"):
+		defines.append("KEEP_NORMAL")
+	_dress_coat(design, amount, s, defines)
+	s.shader = _variant(defines)
+	return s
 
 
 ## Gives a role material the shader variant and the values its role has at the quality in force.
@@ -114,15 +192,9 @@ static func _dress(design: Dictionary, t: Dictionary, s: ShaderMaterial) -> void
 		s.set_shader_parameter("lit_color", Color.html(t.lit.color) * float(t.lit.get("emissive", 1)))
 		s.set_shader_parameter("lit_share", float(t.lit.get("share", 0.5)))
 		s.set_shader_parameter("lit_period", float(t.lit.get("period", 60)))
-	var key := " ".join(defines)
-	if not _variants.has(key):
-		var lines := ""
-		for d_ in defines:
-			lines += "#define %s\n" % d_
-		var shader := Shader.new()
-		shader.code = SURFACE.code.replace("// VARIANT\n", lines)
-		_variants[key] = shader
-	s.shader = _variants[key]
+	if not s.get_meta("clean", false) and _coat(design, t) > 0.0:
+		_dress_coat(design, _coat(design, t), s, defines)
+	s.shader = _variant(defines)
 
 
 ## Adds one surface of a still mesh to a merged one, placed by `at`. For a role with `lit` it first gives every
@@ -155,17 +227,20 @@ static func merge(into: SurfaceTool, mesh: Mesh, surface: int, at: Transform3D, 
 	into.append_from(numbered, 0, at)
 
 
-static func _pick(design: Dictionary, m: Material, still := false) -> Material:
+static func _pick(design: Dictionary, m: Material, still := false, clean := false) -> Material:
+	if m and m.has_meta("kept"):
+		m = m.get_meta("kept")  # a coated official material from an earlier design: start again from the original
+	clean = clean or (m != null and m.get_meta("clean", false))
 	var n := m.resource_name if m else ""
 	if design.materials.has(n):
-		return role(design, n, still)
+		return role(design, n, still, clean)
 	for pattern: String in design.get("kit", {}):
 		if pattern.begins_with("#"):
 			continue # colour anchors belong to tools/kit-roles.mjs, not name matching
 		if RegEx.create_from_string("(?i)" + pattern).search(n):
 			if design.kit[pattern] == "keep":
-				return m  # an official model's own photo textures, kept on purpose (style-check allows only textured ones)
-			return role(design, design.kit[pattern], still)
+				return _kept(design, m, still)  # an official model's own photo textures, kept on purpose (style-check allows only textured ones)
+			return role(design, design.kit[pattern], still, clean)
 	var std := m as BaseMaterial3D
 	if std and std.albedo_texture:
 		push_warning("house-style: textured material \"%s\" kept as is; map it in DESIGN.md kit or retexture it" % n)
@@ -183,21 +258,27 @@ static func _pick(design: Dictionary, m: Material, still := false) -> Material:
 			best = r
 			dist = d
 	push_warning("house-style: material \"%s\" is not in DESIGN.md kit; using nearest role \"%s\"" % [n, best])
-	return role(design, best, still)
+	return role(design, best, still, clean)
 
 
 ## Every mesh under `root` gets the role materials. Returns root.
 ## Pass `still` for a model that never moves: its roles then show their `detail` and `lit` (see role()).
+## A node whose name, or an ancestor's, matches DESIGN.md `weathering.clean` keeps its surfaces free of the coat.
 static func apply(root: Node, design: Dictionary, still := false) -> Node:
-	var todo: Array[Node] = [root]
+	var pattern := str(design.get("weathering", {}).get("clean", ""))
+	var clean_re := RegEx.create_from_string(pattern) if pattern else null
+	var todo: Array = [[root, false]]
 	while todo.size():
-		var n: Node = todo.pop_back()
-		todo.append_array(n.get_children())
+		var item: Array = todo.pop_back()
+		var n: Node = item[0]
+		var clean: bool = item[1] or (clean_re != null and clean_re.search(n.name) != null)
+		for c in n.get_children():
+			todo.append([c, clean])
 		var mi := n as MeshInstance3D
 		if mi == null or mi.mesh == null:
 			continue
 		for i in mi.mesh.get_surface_count():
-			mi.set_surface_override_material(i, _pick(design, mi.get_active_material(i), still and mi.skin == null))
+			mi.set_surface_override_material(i, _pick(design, mi.get_active_material(i), still and mi.skin == null, clean))
 	return root
 
 
@@ -413,6 +494,8 @@ static func set_quality(root: Node, design: Dictionary, level: String) -> void:
 	for m: Material in design.get("_roles", {}).values():
 		if m is ShaderMaterial:
 			_dress(design, design.materials[m.resource_name], m)
+	for m: Material in design.get("_kept", {}).values():
+		_kept(design, m.get_meta("kept"), m.get_meta("still"))
 	var pool: Node = root.get_node_or_null("LampPool")
 	if not q.has("lamps"):
 		if pool:

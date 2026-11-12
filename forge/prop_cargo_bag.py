@@ -5,7 +5,9 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from shapes import bar, bevel, box, finish, mat, reset, smooth  # noqa: E402
+import math  # noqa: E402
+
+from shapes import bar, bevel, box, finish, label, mat, reset, smooth  # noqa: E402
 
 reset()
 SUIT, TRIM, BODY, ACCENT, METAL = (mat(n) for n in ("suit", "trim", "body", "accent", "metal"))
@@ -25,4 +27,5 @@ for y in (-0.255, 0.255):
 # Label patch with an accent tab: a carriable thing, so the one cool colour marks it as usable
 bevel(box("label", (0.004, 0.2, 0.1), (0.212, 0.04, 0.12), BODY), width=0.01, segments=1)
 box("label_tab", (0.005, 0.05, 0.1), (0.213, -0.09, 0.12), ACCENT)
+label("team", "CLAMOR", 0.035, (0.2155, 0.05, 0.12), (math.pi / 2, 0, math.pi / 2), TRIM, 0.0015)  # the operator, on the patch
 finish("prop_cargo_bag")

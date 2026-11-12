@@ -29,6 +29,9 @@ func play() -> bool:
 	await no_sinking()
 	await footsteps()
 	await life()
+	await look_turns()
+	await carry_hands()
+	await fade_close()
 	await sweep()
 	await turn_beside()
 	await corner()
@@ -237,8 +240,6 @@ func corner() -> void:
 		check(s.player.inside.is_empty(), "corner: the drawn body is inside a wall")
 	action(&"move_back", false)
 	check(inside == 0, "corner, pressed in: the lens was inside a wall on %d frames" % inside)
-	var meshes: Array = player.meshes
-	check(player.cam.dist > player.tuning.camera.fade_near or not meshes[0].visible, "a lens inside the fade range hides the hero")
 	north.free()
 	west.free()
 
@@ -261,6 +262,126 @@ func step_up() -> void:
 		b.free()
 
 
+## Bone `name`'s drawn turn from the body's front, degrees, as its look modifier sees it (read in
+## skeleton_updated, the only place the pose after the modifiers is readable).
+func _drawn_yaw(sk: Skeleton3D, name: StringName, axis: int) -> float:
+	var basis := sk.global_basis * sk.get_bone_global_pose(sk.find_bone(name)).basis
+	var f: Vector3 = basis[axis / 2] * (1.0 if axis % 2 == 0 else -1.0)
+	var front: Vector3 = -player.body.global_basis.z
+	return rad_to_deg(Vector2(front.x, front.z).angle_to(Vector2(f.x, f.z)))
+
+
+## The helmet never teleports (playtest 13 Nov): the camera goes once round the standing hero, then the
+## hero walks toward a camera in front of it. The drawn waist and head turn on every frame by at most what
+## the eased gaze can, and walking at the camera they stay near the middle.
+func look_turns() -> void:
+	game.place(Vector3(OPEN.x, 0, OPEN.y + 6.0), 0)
+	await frames(30)
+	var sk: Skeleton3D = player.model.skeleton
+	var yaws := [0.0, 0.0]
+	var grab := func() -> void:
+		yaws[0] = _drawn_yaw(sk, &"spine_03", player.life.looks[0].forward_axis)
+		yaws[1] = _drawn_yaw(sk, &"Head", player.life.looks[1].forward_axis)
+	sk.skeleton_updated.connect(grab)
+	await frames(2)
+	var reach: float = player.tuning.life.look_waist_deg + player.tuning.life.look_head_deg
+	var last := yaws.duplicate()
+	var jump := 0.0
+	var widest := 0.0
+	for i in 240:  # 90 deg/s, once round
+		player.cam.look(1.5, 0.0)
+		await frames(1)
+		jump = maxf(jump, maxf(absf(yaws[0] - last[0]), absf(yaws[1] - last[1])))
+		widest = maxf(widest, absf(yaws[1]))
+		last = yaws.duplicate()
+	check(jump < 3.0, "the camera once round the standing hero: the waist and head turn at most %.1f deg a frame (%.1f)" % [3.0, jump])
+	check(widest < reach + 10.0, "and the head stays within its reach (%.0f deg, reach %.0f)" % [widest, reach])
+	# the camera in front, looking at the hero; "back" walks the hero toward it
+	player.cam.snap(player.yaw + PI)
+	await frames(30)
+	action(&"move_back", true)
+	await frames(60)  # turned round and walking
+	last = yaws.duplicate()
+	jump = 0.0
+	var waist := 0.0
+	widest = 0.0
+	for i in 180:
+		await frames(1)
+		jump = maxf(jump, maxf(absf(yaws[0] - last[0]), absf(yaws[1] - last[1])))
+		waist = maxf(waist, absf(yaws[0]))
+		widest = maxf(widest, absf(yaws[1]))
+		last = yaws.duplicate()
+	action(&"move_back", false)
+	sk.skeleton_updated.disconnect(grab)
+	check(jump < 3.0, "walking toward the camera: the waist and head move at most %.1f deg a frame (%.1f)" % [3.0, jump])
+	check(waist < 8.0 and widest < player.tuning.life.look_head_deg + 8.0, "and stay near the middle (waist %.1f, head %.1f deg)" % [waist, widest])
+
+
+## The gloves hold a carried bag, they do not go into it (playtest 13 Nov): no vertex of the drawn hero is
+## inside the bag's box, standing and walking, in the pose after the modifiers (the arm swing is one).
+func carry_hands() -> void:
+	game.place(Vector3(OPEN.x, 0, OPEN.y + 6.0), 0)
+	var bag := StaticBody3D.new()
+	bag.collision_layer = 0
+	bag.add_to_group("carriable")
+	bag.add_child(HouseStyle.apply(load("res://models/prop_cargo_bag.glb").instantiate(), HouseStyle.load_design("res://design.json")))
+	player.body.add_child(bag)
+	var sk: Skeleton3D = player.model.skeleton
+	var glb: Node3D = player.model.get_child(0)
+	var worst := [0.0, 0]
+	var probe := func() -> void:
+		# in the bag's own space, where its box is exact however the body turns it
+		var shell: MeshInstance3D = bag.find_child("bag", true, false)
+		var to_bag := shell.global_transform.affine_inverse() * glb.global_transform
+		var box := shell.get_aabb().grow(-0.005)
+		for p: Vector3 in player.model._skinned_points(glb):
+			var q := to_bag * p
+			if box.has_point(q):
+				var depth := minf(minf(q.x - box.position.x, box.end.x - q.x), minf(q.z - box.position.z, box.end.z - q.z))
+				worst[0] = maxf(worst[0], depth)
+				worst[1] += 1
+	for walk: bool in [false, true]:
+		if walk:
+			action(&"move_forward", true)
+		await frames(60)
+		worst.assign([0.0, 0])  # in place: the probe holds this array, not the variable
+		sk.skeleton_updated.connect(probe)
+		await frames(48)  # a whole walk cycle and a part of a breath
+		sk.skeleton_updated.disconnect(probe)
+		# a few millimetres under a glove's cuff do not show; a hand in the bag is centimetres
+		check(worst[0] < 0.01, "carrying a bag %s: the hero is at most %.3f m inside it (%d vertex frames)" % ["walking" if walk else "standing", worst[0], worst[1]])
+	action(&"move_forward", false)
+	bag.free()
+	await frames(2)
+
+
+## Close to the hero the whole body fades as one and then hides (playtest 13 Nov: a dot pattern over the pack
+## and helmet in the greenhouse). At the play distance it is solid and drawn with the opaque shader.
+func fade_close() -> void:
+	game.place(Vector3(OPEN.x, 0, OPEN.y + 6.0), 0)
+	var cam: Node3D = player.cam
+	var far: float = player.tuning.camera.distance
+	for d: float in [far, 0.75, 0.25]:
+		cam.distance = d
+		cam.snap(player.yaw)
+		await frames(10)
+		var shaders := {}
+		var visible := 0
+		for mi: MeshInstance3D in player.meshes:
+			visible += int(mi.visible)
+			for i in mi.mesh.get_surface_count():
+				var m := mi.get_surface_override_material(i) as ShaderMaterial
+				shaders["%s %.2f" % ["solid" if m.shader == player.HeroShader else "fading", m.get_shader_parameter("opacity") if m.shader != player.HeroShader else 1.0]] = true
+		check(shaders.size() == 1, "lens %.2f m back: every surface fades alike (%s)" % [d, shaders.keys()])
+		if d == far:
+			check(cam.fade == 1.0 and shaders.has("solid 1.00"), "at the play distance the hero is solid (%s)" % [shaders.keys()])
+		if d == 0.25:
+			check(visible == 0, "a lens at the helmet hides the hero (gap fade %.2f)" % cam.fade)
+	cam.distance = far
+	cam.snap(player.yaw)
+	await frames(2)
+
+
 ## A sky switch reaches the hero: its own fading copies now carry the new design's colours.
 func restyle() -> void:
 	var night := HouseStyle.load_design("res://design.night.json")
@@ -275,6 +396,28 @@ func restyle() -> void:
 			matched += int(role.has("color") and (m.get_shader_parameter("albedo") as Color).is_equal_approx(Color.html(role.color)))
 	var total: int = player.meshes.reduce(func(n: int, mi: MeshInstance3D) -> int: return n + mi.mesh.get_surface_count(), 0)
 	check(faded == total and matched == total, "restyle: %d of %d hero surfaces fade, %d carry the night colours" % [faded, total, matched])
+	# the dust coat: the storm's amount reaches the suit through the same restyle, the visor stays clean, and the
+	# boots gather more than the chest (the mask in the vertex colour)
+	var coats := {}
+	for sky: String in ["design", "design.storm"]:
+		player.restyle(HouseStyle.load_design("res://%s.json" % sky))
+		for mi: MeshInstance3D in player.meshes:
+			for i in mi.mesh.get_surface_count():
+				var m := mi.get_surface_override_material(i) as ShaderMaterial
+				coats["%s %s" % [sky, m.resource_name]] = m.get_shader_parameter("coat_amount")
+	check(coats["design.storm suit"] > coats["design suit"] and coats["design visor"] == 0.0,
+		"the suit's coat grows in the storm (%.2f to %.2f) and the visor has none (%.2f)" % [coats["design suit"], coats["design.storm suit"], coats["design visor"]])
+	var low := 0.0
+	var high := 0.0
+	var arr: Array = (player.meshes[0] as MeshInstance3D).mesh.surface_get_arrays(0)  # the suit
+	var verts: PackedVector3Array = arr[Mesh.ARRAY_VERTEX]
+	var dust: PackedColorArray = arr[Mesh.ARRAY_COLOR]
+	for i in verts.size():
+		if verts[i].y < 0.25:
+			low = maxf(low, dust[i].r)
+		elif verts[i].y > 1.2 and absf(verts[i].x) < 0.2:
+			high = maxf(high, dust[i].r)
+	check(low > 0.8 and high < 0.4, "the boots gather the most dust (%.2f), the chest little (%.2f)" % [low, high])
 	player.restyle(HouseStyle.load_design("res://design.json"))
 
 

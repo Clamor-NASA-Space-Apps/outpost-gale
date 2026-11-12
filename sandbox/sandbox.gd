@@ -63,8 +63,9 @@ func _ready() -> void:
 	# a boot pressed into soft dust leaves a print and lifts a little cloud
 	player.footstep.connect(func(pos: Vector3, yaw: float, foot: String) -> void:
 		world.mark(pos, yaw, foot)
-		# the foot meets the ground at about the body's speed (contract: the contact velocity)
-		world.puff(pos, player.body.velocity, 0.3, "foot"))
+		# a planted boot is nearly still: only the push-off scuffs a little grit back, low and behind the heel. The
+		# body's own velocity threw it ahead, between the legs and toward a camera in front (13 Nov playtest: "sparks")
+		world.puff(pos, -player.body.velocity * float(world.data.contact.foot_kick), 0.3, "foot"))
 	Forge.register(self)
 
 

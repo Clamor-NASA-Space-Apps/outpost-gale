@@ -9,6 +9,7 @@ const CHUNK := 50  # cells per side of one patch mesh: 100 m pieces the camera c
 const TRAIL_PX := 2048
 const TRAIL_M := 64.0
 const TRAIL_SHIFT := 16.0  # metres the camera may wander from the square's centre before it moves
+const MOVERS := 12  # contact discs for things that move (terrain.gdshader `movers`)
 
 var step: float
 var cols: int
@@ -176,6 +177,12 @@ func contacts(feet: PackedVector2Array, g: Dictionary, half: float) -> void:
 	material.set_shader_parameter("contact_ao", float(g.ao))
 	material.set_shader_parameter("contact_albedo", float(g.albedo))
 	material.set_shader_parameter("contact_pile", float(g.pile))
+
+
+## Contacts that move (world.touch()): at most MOVERS discs Vector4(x, z, radius, strength), darkened like the map's.
+func movers(discs: PackedVector4Array) -> void:
+	discs.resize(MOVERS)  # unused slots are zero: no radius, no strength
+	material.set_shader_parameter("movers", discs)
 
 
 ## A print pressed into the dust: `foot_l` / `foot_r` (a boot with tread) or `wheel` (`width` wide, along `yaw`).

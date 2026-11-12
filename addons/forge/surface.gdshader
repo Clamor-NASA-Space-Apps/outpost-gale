@@ -10,6 +10,11 @@ shader_type spatial;
 //             NORMALMAP and ROUGHMAP add the photo set's normal (OpenGL) and roughness maps.
 //   LIT       the role's `lit`: panes that light up one by one. COLOR.r is a pane's own number.
 //   SEE       the role's `opacity` below 1: glass you see through (alpha blended, so it sorts and costs more).
+//   COAT      DESIGN.md `weathering`: settled dust (or snow, ash, grime) over the role, thickest on level tops, thin
+//             on walls, none underneath, by the face's own direction (skills/surface-weathering). Thin, it tints
+//             the surface and leaves its texture and bumps showing; it always takes the shine away. In the mesh's
+//             own space with LOCAL, so it stays put on a part that turns. COAT_NOISE breaks it into patches,
+//             COAT_GRAIN adds the coat's own photo. KEEP: an official model's own textures under the coat.
 // VARIANT
 #ifdef SEE
 render_mode blend_mix, depth_draw_always, cull_disabled;
@@ -21,7 +26,28 @@ uniform vec3 emission : source_color = vec3(0.0);
 #ifdef DETAIL
 uniform vec2 detail_size = vec2(1.0);  // metres per repeat
 uniform float detail_strength = 0.4;
+#endif
+#if defined(DETAIL) || defined(COAT)
 varying vec3 world_pos;
+varying vec3 surf_nrm;
+#endif
+#ifdef COAT
+uniform vec3 coat_color : source_color = vec3(1.0);
+uniform float coat_amount = 0.5;  // how much a level top is covered, 0 to 1 (the role's share already in)
+uniform float coat_side = 0.15;  // the share of that a wall keeps; undersides fade to none
+uniform float coat_crevice = 0.5;  // extra in the dark seams of the role's photo
+uniform float coat_noise = 1.5;  // metres per patch
+#endif
+#ifdef COAT_GRAIN
+uniform sampler2D coat_texture : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
+uniform float coat_texture_size = 3.0;
+#endif
+#ifdef KEEP
+uniform sampler2D base_texture : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
+#endif
+#ifdef KEEP_NORMAL
+uniform sampler2D base_normal : hint_normal, filter_linear_mipmap_anisotropic, repeat_enable;
+uniform float base_normal_scale = 1.0;
 #endif
 #ifdef TEXTURE
 uniform sampler2D detail_texture : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
@@ -32,9 +58,6 @@ uniform sampler2D detail_normal : hint_normal, repeat_enable, filter_linear_mipm
 #ifdef ROUGHMAP
 uniform sampler2D detail_roughness : hint_default_white, repeat_enable, filter_linear_mipmap_anisotropic;
 #endif
-#ifdef DETAIL
-varying vec3 surf_nrm;
-#endif
 #ifdef LIT
 uniform vec3 lit_color : source_color = vec3(1.0);
 uniform float lit_share = 0.5;  // how many panes are on at any moment
@@ -42,7 +65,7 @@ uniform float lit_period = 60.0;  // seconds before a pane may change
 varying flat float pane;
 #endif
 
-#ifdef DETAIL
+#if defined(DETAIL) || defined(COAT_NOISE)
 float hash(vec2 p) {
 	return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
 }
@@ -54,6 +77,9 @@ float noise(vec2 p) {
 	f = f * f * (3.0 - 2.0 * f);
 	return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), f.x), mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), f.x), f.y);
 }
+#endif
+
+#ifdef DETAIL
 
 // 1 inside a cell, 0 in the joint round it, which is `metres` wide on each side. `w` is how much of a cell
 // one pixel covers, so a joint thinner than a pixel fades out and cannot flicker.
@@ -65,7 +91,7 @@ float joint(vec2 f, vec2 w, float metres) {
 #endif
 
 void vertex() {
-#ifdef DETAIL
+#if defined(DETAIL) || defined(COAT)
 #ifdef LOCAL
 	world_pos = VERTEX;
 	surf_nrm = NORMAL;
@@ -119,8 +145,42 @@ void fragment() {
 	shade = mix(vec3(1.0), mix(shade, vec3(1.0), far), detail_strength);
 #endif
 	ALBEDO = albedo.rgb * shade;
+#ifdef KEEP
+	ALBEDO *= texture(base_texture, UV).rgb;
+#endif
 #ifdef SEE
 	ALPHA = albedo.a;
+#endif
+	float cov = 0.0;  // how much of the surface the coat hides
+#ifdef COAT
+	// the face as built, before any normal map: a level top takes all of it, a wall coat_side, an underside none
+	vec3 cn = normalize(surf_nrm);
+	float face = cn.y > 0.0 ? mix(coat_side, 1.0, smoothstep(0.2, 0.85, cn.y)) : coat_side * (1.0 + cn.y);
+	float thick = coat_amount * face;
+#if defined(COAT_NOISE) || defined(COAT_GRAIN)
+	vec2 cp = abs(cn.y) > 0.5 ? world_pos.xz : (abs(cn.x) > abs(cn.z) ? world_pos.zy : world_pos.xy);
+#endif
+#ifdef COAT_NOISE
+	// patches: thick here, swept thin there (wind leaves "heavily dusty and windswept areas"), never a clean edge
+	thick *= 0.3 + 1.4 * (0.7 * noise(cp / coat_noise) + 0.3 * noise(cp * 3.7 / coat_noise + 5.0));
+#endif
+#ifdef DETAIL
+	// it gathers in seams and pits: the dark of the role's own photo or pattern
+	thick += coat_crevice * coat_amount * max(face, 0.0) * clamp(1.0 - dot(shade, vec3(0.333)), 0.0, 1.0);
+#endif
+	cov = clamp(thick, 0.0, 1.0);
+	vec3 coat = coat_color;
+#ifdef COAT_GRAIN
+	vec2 gp = cp / coat_texture_size;
+	coat *= texture(coat_texture, gp).rgb / max(textureLod(coat_texture, gp, 16.0).rgb, vec3(0.02));
+#endif
+	// Thin, the coat is a filter: its grains swallow blue and pass red, so what shows through is tinted by its
+	// colour (multiplied, so dark stays dark). Thick, it is the coat's own colour.
+	vec3 tint = coat_color / max(max(coat_color.r, coat_color.g), max(coat_color.b, 0.001));
+	ALBEDO = mix(ALBEDO * mix(vec3(1.0), tint, cov), coat, cov);
+#ifdef SEE
+	ALPHA = mix(ALPHA, 1.0, cov);  // a film on glass: still see-through while thin
+#endif
 #endif
 	ROUGHNESS = roughness;
 #ifdef ROUGHMAP
@@ -128,6 +188,7 @@ void fragment() {
 	float rough_avg = max(textureLod(detail_roughness, uv, 16.0).r, 0.02);
 	ROUGHNESS = clamp(roughness * mix(1.0, texture(detail_roughness, uv).r / rough_avg, detail_strength), 0.02, 1.0);
 #endif
+	ROUGHNESS = mix(ROUGHNESS, 1.0, cov);  // powder has no shine
 #ifdef NORMALMAP
 	// the photo's right and up on the side it was laid on, then bent by its normal map
 	vec3 tu = top ? vec3(1.0, 0.0, 0.0) : (side_x ? vec3(0.0, 0.0, 1.0) : vec3(1.0, 0.0, 0.0));
@@ -135,7 +196,7 @@ void fragment() {
 	tu = normalize(tu - g * dot(g, tu));
 	tv = normalize(tv - g * dot(g, tv) - tu * dot(tu, tv));
 	vec3 tn = texture(detail_normal, uv).xyz * 2.0 - 1.0;
-	tn.xy *= detail_strength * (1.0 - far);
+	tn.xy *= detail_strength * (1.0 - far) * (1.0 - 0.5 * cov);  // a thin coat drapes the bumps, it does not fill them
 	vec3 bent = normalize(tu * tn.x + tv * tn.y + g * tn.z);
 #ifdef LOCAL
 	NORMAL = normalize((VIEW_MATRIX * (MODEL_MATRIX * vec4(bent, 0.0))).xyz);  // MODELVIEW_MATRIX is vertex-only
@@ -143,7 +204,11 @@ void fragment() {
 	NORMAL = normalize((VIEW_MATRIX * vec4(bent, 0.0)).xyz);
 #endif
 #endif
-	METALLIC = metallic;
+#ifdef KEEP_NORMAL
+	NORMAL_MAP = texture(base_normal, UV).rgb;
+	NORMAL_MAP_DEPTH = base_normal_scale * (1.0 - 0.5 * cov);
+#endif
+	METALLIC = metallic * (1.0 - cov);  // dust on metal is dust
 	EMISSION = emission;
 #ifdef LIT
 	// a pane decides again every lit_period seconds, each at its own moment

@@ -40,6 +40,9 @@ var _pane_mark := Material.new()  # only tells HouseStyle.merge() to number the 
 var _resting: Dictionary = {}  # carriable -> resting on the ground (parent is the world), to redraw contacts on a change
 var _probe: ReflectionProbe
 var _cells: Array[Node3D] = []
+var _touch: Dictionary = {}  # mover -> PackedVector4Array of its contact discs (touch())
+var _touch_dirty := false
+var _wheel := SphereShape3D.new()
 
 
 func build(design: Dictionary) -> void:
@@ -100,6 +103,50 @@ func _process(delta: float) -> void:
 		_resting[n] = now
 	if changed:
 		_contacts()  # a bag picked up leaves the dust bare; put down, rest() draws it again
+	if _touch_dirty:
+		_touch_dirty = false
+		var all := PackedVector4Array()
+		for d: PackedVector4Array in _touch.values():
+			all.append_array(d)
+		terrain.movers(all)
+
+
+## Where something that moves meets the ground, redrawn every time it moves: `discs` are Vector4(x, z, radius,
+## strength 0 to 1), darkened like a resting item's feet (data/world.json `grounding`). The contact map is drawn once
+## at load, too slow to redraw per frame, so movers go to the ground shader as a short list (terrain.MOVERS).
+func touch(who: Object, discs: PackedVector4Array) -> void:
+	_touch[who] = discs
+	_touch_dirty = true
+
+
+## A continuous stream of grit and haze from a rolling wheel (world/dust.gd stream()): `id` names the stream, `vel` is
+## the tread's world velocity at the ground, `strength` 0 stops it.
+func stream(id: String, pos: Vector3, vel: Vector3, strength: float) -> void:
+	dust.stream(id, pos, vel, strength)
+
+
+## The height a wheel of radius `r` centred over (x, z) rests at: the ground, or the top of a rock under it. A rock
+## meets the round wheel before the hub is over it, so the wheel rolls up its side rather than stepping onto it.
+## Above `reach` over the ground the answer stops at ground + reach + r (a rock that tall is a wall to a wheel).
+## Call it from physics (it asks the physics space). The rover subtracts its own sink (data/world.json `sink`).
+func wheel_rest(x: float, z: float, r: float, reach: float) -> float:
+	var ground := height_at(x, z)
+	var best := maxf(ground, rocks.on_pebbles(x, z, r))
+	_wheel.radius = r
+	var q := PhysicsShapeQueryParameters3D.new()
+	q.shape = _wheel
+	q.collision_mask = Rocks.ROCK
+	var top := ground + reach + r  # the hub of a wheel standing on a rock `reach` tall
+	q.transform = Transform3D(Basis(), Vector3(x, top, z))
+	var space := get_world_3d().direct_space_state
+	# Jolt answers "never stopped" when the cast starts inside a solid (skills/world-collision): ask first
+	if not space.intersect_shape(q, 1).is_empty():
+		return ground + reach + r
+	q.motion = Vector3(0, ground - top, 0)
+	var stop := space.cast_motion(q)
+	if stop[0] < 1.0:
+		best = maxf(best, top + q.motion.y * stop[0] - r)
+	return best
 
 
 ## The wind's slow swell, 0 to 1: one value for every listener (dust streaks, the wind sound, the telltale),
@@ -313,12 +360,7 @@ func _item(it: Dictionary, design: Dictionary) -> Node3D:
 	root.set_meta("prefab", it.prefab)
 	rest(root)
 	var box := drawn(root)
-	if kind != "static":
-		# a vehicle's wheels sit in the shadow of its own body
-		for part in parts:
-			for g: Node in part.find_children("*", "GeometryInstance3D", true, false) + [part]:
-				if g is GeometryInstance3D:
-					g.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	# a vehicle's wheels cast too: without them its shadow was a body floating on nothing (13 Nov playtest)
 	if box.size.y < float(data.shadow_min):
 		# each shadow split draws a caster again, and a knee-high bag's shadow is a few pixels
 		for g: GeometryInstance3D in root.find_children("*", "GeometryInstance3D", true, false):

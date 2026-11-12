@@ -1,0 +1,396 @@
+National Aeronautics and Space Administration
+
+Mars Science Laboratory/Curiosity
+NASA’s Mars Science Laboratory mission set
+down a large, mobile laboratory — the rover
+Curiosity — at Gale Crater, using precision
+landing technology that made one of Mars’
+most intriguing regions a viable destination for
+the first time. Within the first eight months of
+a 23-month primary mission, Curiosity met its
+major objective of finding evidence of a past
+environment well suited to supporting microbial
+life. The rover studies the geology and environment of selected areas in the crater and ana-
+
+Curiosity touches down on Mars after being lowered by its
+Sky Crane.
+
+lyzes samples drilled from rocks or scooped
+
+Mission Overview
+
+from the ground.
+
+The Mars Science Laboratory spacecraft
+
+Curiosity carries the most advanced payload
+of scientific gear ever used on Mars’ surface,
+a payload more than 10 times as massive as
+those of earlier Mars rovers. Its assignment:
+Investigate whether conditions have been
+favorable for microbial life and for preserving
+clues in the rocks about possible past life.
+
+launched from Cape Canaveral Air Force Station, Florida, on Nov. 26, 2011. Mars rover
+Curiosity landed successfully on the floor of
+Gale Crater on Aug. 6, 2012 Universal Time
+(evening of Aug. 5, Pacific Time), at 4.6 degrees
+south latitude, 137.4 degrees east longitude
+and minus 4,501 meters (2.8 miles) elevation.
+
+More than 400 scientists from around the
+
+Engineers designed the spacecraft to steer it-
+
+world participate in the science operations.
+
+self during descent through Mars’ atmosphere
+with a series of S-curve maneuvers similar to
+those used by astronauts piloting NASA space
+shuttles. During the three minutes before touchdown, the spacecraft slowed its descent with
+a parachute, then used retrorockets mounted
+around the rim of its upper stage. In the final
+seconds, the upper stage acted as a sky crane,
+lowering the upright rover on a tether to land on
+its wheels.
+The touchdown site, Bradbury Landing, is near
+
+The rover’s landing site, Gale Crater, is about the size of
+Connecticut and Rhode Island combined.
+
+the foot of a layered mountain, Aeolis Mons
+(“Mount Sharp”). Selection of Gale Crater fol-
+
+investigate an ancient river and fan system identified in
+orbital images.
+The rover analyzed its first scoops of soil on the way to
+Yellowknife Bay. Once there, it collected the first samples
+of material ever drilled from rocks on Mars. Analysis of the
+first drilled sample, from a rock target called “John Klein,”
+provided the evidence of conditions favorable for life in
+Mars’ early history: geological and mineralogical evidence
+for sustained liquid water, other key elemental ingredients
+for life, a chemical energy source, and water not too acidic or too salty. On a subsequent drill sample, Curiosity
+
+A rock outcrop called Link shows signs of being formed by the deposition
+of water.
+
+was able to accomplish a first for measurements on
+another planet: determining the age of the rock. The
+
+lowed consideration of more than 30 Martian locations by
+
+measurements showed that the drilled material was
+
+more than 100 scientists participating in a series of open
+
+4.2 billion years old and yet had been exposed at the
+
+workshops. The selection process benefited from examin-
+
+surface for only 80 million years.
+
+ing candidate sites with NASA’s Mars Reconnaissance
+Orbiter and earlier orbiters, and from the rover mission’s
+
+In July 2013, Curiosity finished investigations in the Yel-
+
+capability of landing within a target area only about 20 ki-
+
+lowknife Bay area and began a southwestward trek to
+
+lometers (12 miles) long. That precision, about a five-fold
+
+the base of Mount Sharp. It reached the base layer of
+
+improvement on earlier Mars landings, made sites eligible
+
+this main destination in September 2014. In the low lay-
+
+that would otherwise be excluded for encompassing
+
+ers of Mount Sharp during the rover’s extended mission,
+
+nearby unsuitable terrain. The Gale Crater landing site is so
+
+researchers anticipate finding further evidence about hab-
+
+close to the crater wall and Mount Sharp that it would not
+
+itable past environments and about the evolution of the
+
+have been considered safe if the mission were not using
+
+Martian environment from a wetter past to a drier present.
+
+this improved precision.
+
+Big Rover
+
+Science findings began months before landing. Measure-
+
+Curiosity is about twice as long (about 3 meters or 10 feet)
+
+ments that Curiosity made of natural radiation levels during
+
+and five times as heavy as NASA’s twin Mars Exploration
+
+the flight from Earth to Mars will help NASA design for as-
+
+Rovers, Spirit and Opportunity, launched in 2003. It inher-
+
+tronaut safety on future human missions to Mars.
+
+ited many design elements from them, including six-wheel
+
+In the first few weeks after landing, images from the rover
+showed that Curiosity touched down right in an area
+where water once coursed vigorously over the surface.
+The evidence for stream flow was in rounded pebbles
+mixed with hardened sand in conglomerate rocks at and
+near the landing site. Analysis of Mars’ atmospheric composition early in the mission provided evidence that the
+planet has lost much of its original atmosphere by a process favoring loss from the top of the atmosphere rather
+than interaction with the surface.
+In the initial months of the surface mission, the rover team
+drove Curiosity eastward toward “Yellowknife Bay” to
+
+Mars Science Laboratory/Curiosity
+
+Curiosity’s first sample drilling, at a rock called “John Klein.”
+
+2
+
+NASA Facts
+
+The mission uses radio relays via Mars orbiters as the
+principal means of communication between Curiosity and
+the Deep Space Network’s antennas on Earth. In the first
+two years after Curiosity’s landing, the orbiters downlinked
+48 gigabytes of data from Curiosity.
+
+Science Payload
+In April 2004, NASA solicited proposals for specific instruments and investigations to be carried by Mars Science
+Laboratory. The agency selected eight of the proposals
+later that year and also reached agreements with Russia
+and Spain to carry instruments those nations provided.
+A suite of instruments named Sample Analysis at Mars
+analyzes samples of material collected and delivered by
+
+A self-portrait of Curiosity, built up from pictures taken by its Mars
+Hand Lens Imager.
+
+the rover’s arm, plus atmospheric samples. It includes a
+gas chromatograph, a mass spectrometer and a tunable
+
+drive, a rocker-bogie suspension system, and cameras
+
+laser spectrometer with combined capabilities to identify a
+
+mounted on a mast to help the mission’s team on Earth
+
+wide range of carbon-containing compounds and deter-
+
+select exploration targets and driving routes. Unlike earlier
+
+mine the ratios of different isotopes of key elements. Iso-
+
+rovers, Curiosity carries equipment to gather and process
+
+tope ratios are clues to understanding the history of Mars’
+
+samples of rocks and soil, distributing them to onboard
+
+atmosphere and water. The principal investigator is Paul
+
+test chambers inside analytical instruments.
+
+Mahaffy of NASA’s Goddard Space Flight Center, Greenbelt, Md.
+
+NASA’s Jet Propulsion Laboratory (JPL), Pasadena, Calif.,
+builder of the Mars Science Laboratory, engineered Curi-
+
+An X-ray diffraction and fluorescence instrument called
+
+osity to roll over obstacles up to 65 centimeters (25 inch-
+
+CheMin also examines samples gathered by the robotic
+
+es) high and to travel up to about 200 meters (660 feet)
+
+arm. It is designed to identify and quantify the minerals in
+
+per day on Martian terrain.
+
+rocks and soils, and to measure bulk composition. The
+
+The rover’s electrical power is supplied by a U.S. Depart-
+
+principal investigator is David Blake of NASA’s Ames Re-
+
+ment of Energy radioisotope power generator. The multi-
+
+search Center, Moffett Field, Calif.
+
+mission radioisotope thermoelectric generator produces
+
+Mounted on the arm, the Mars Hand Lens Imager takes
+
+electricity from the heat of plutonium-238’s radioactive
+
+extreme close-up pictures of rocks and soil, revealing
+
+decay. This long-lived power supply gives the mission an
+
+details smaller than the width of a human hair. It can also
+
+operating lifespan on Mars’ surface of a full Mars year
+
+focus on hard-to-reach objects more than an arm’s length
+
+(687 Earth days) or more. At launch, the generator pro-
+
+away and has taken images assembled into dramatic self-
+
+vided about 110 watts of electrical power to operate the
+
+portraits of Curiosity. The principal investiga- tor is Kenneth
+
+rover’s instruments, robotic arm, wheels, computers and
+
+Edgett of Malin Space Science Systems, San Diego.
+
+radio. Warm fluids heated by the generator’s excess heat
+are plumbed throughout the rover to keep electronics and
+
+Also on the arm, the Alpha Particle X-ray Spectrometer
+
+other systems at acceptable operating temperatures. Al-
+
+determines the relative abundances of different elements in
+
+though the total power from the generator will decline over
+
+rocks and soils. Dr. Ralf Gellert of the University of Guelph,
+
+the course of the mission, it was still providing more than
+
+Ontario, Canada, is principal investigator for this instru-
+
+100 watts two years after landing.
+
+ment, which was provided by the Canadian Space Agency.
+
+Mars Science Laboratory/Curiosity
+
+3
+
+NASA Facts
+
+The Mast Camera, mounted at about human-eye height,
+
+Javier Gómez-Elvira of the Center for Astrobiology, Madrid,
+
+images the rover’s surroundings in high-resolution stereo
+
+an international partner of the NASA Astrobiology Institute.
+
+and color, with the capability to take and store high-definition video sequences. It can also be used for viewing
+materials collected or treated by the arm. The principal
+investigator is Michael Malin of Malin Space Science
+Systems.
+An instrument named ChemCam uses laser pulses to
+vaporize thin layers of material from Martian rocks or soil
+targets up to 7 meters (23 feet) away. It includes both a
+spectrometer to identify the types of atoms excited by
+the beam, and a telescope to capture detailed images
+of the area illuminated by the beam. The laser and telescope sit on the rover’s mast. Chemcam also serves as
+a passive spectrometer to measure composition of the
+surface and atmosphere. Roger Wiens of Los Alamos
+National Laboratory, Los Alamos, N.M., is the principal
+investigator.
+
+Russia’s Federal Space Agency provided the Dynamic
+Albedo of Neutrons instrument to measure subsurface
+hydrogen up to 1 meter (3 feet) below the surface. Detections of hydrogen may indicate the presence of water
+bound in minerals. Igor Mitrofanov of the Space Research
+Institute, Moscow, is the principal investigator.
+In addition to the science payload, equipment of the rover’s
+engineering infrastructure contributes to scientific observations. Like the Mars Exploration Rovers, Curiosity has
+a stereo Navigation Camera on its mast and low-slung,
+stereo Hazard-Avoidance cameras. The wide view of the
+Navigation Camera is also used to aid targeting of other
+instruments and to survey the sky for clouds and dust.
+Equipment called the Sample Acquisition/Sample Preparation and Handling System includes tools to remove dust
+from rock surfaces, scoop up soil, drill into rocks to collect
+
+The rover’s Radiation Assessment Detector character-
+
+powdered samples from rocks’ interiors, sort samples by
+
+izes the radiation environment at the surface of Mars.
+
+particle size with sieves, and deliver samples to laboratory
+
+This information is necessary for planning human explo-
+
+instruments.
+
+ration of Mars and is relevant to assessing the planet’s
+ability to harbor life. The principal investigator is Donald
+Hassler of Southwest Research Institute, Boulder, Colo.
+
+The Mars Science Laboratory Entry, Descent and Landing Instrument Suite is a set of engineering sensors that
+measured atmospheric conditions and performance of the
+
+In the two minutes before landing, the Mars Descent Im-
+
+spacecraft during the arrival-day plunge through the atmo-
+
+ager captured color, high-definition video of the landing
+
+sphere, to aid in design of future missions.
+
+region to provide geological context for the investigations
+on the ground and to aid precise determination of the
+
+Program/Project Management
+
+landing site. Pointed toward the ground, it can also be
+
+The Mars Science Laboratory is managed for NASA’s Sci-
+
+used for surface imaging as the rover explores. Michael
+
+ence Mission Directorate, Washington, D.C., by JPL, a di-
+
+Malin is principal investigator.
+
+vision of the California Institute of Technology in Pasadena.
+
+Spain’s Ministry of Education and Science provided the
+Rover Environmental Monitoring Station to measure
+atmospheric pressure, temperature, humidity, winds, plus
+ultraviolet radiation levels. The principal investigator is
+
+At NASA Headquarters, David Lavery is the Mars Science
+Laboratory program executive and Michael Meyer is program scientist. In Pasadena, Jim Erickson of JPL is project
+manager, a role fulfilled earlier by JPL’s Peter Theisinger
+and Richard Cook, and John Grotzinger of Caltech is project scientist.
+
+National Aeronautics and Space Administration
+
+For more information about MSL/Curiosity, go to:
+
+Jet Propulsion Laboratory
+California Institute of Technology
+Pasadena, California
+
+www.nasa.gov/msl
+mars.jpl.nasa.gov/msl
+
+www.nasa.gov
+JPL 400-1537
+
+NASA Facts
+
+

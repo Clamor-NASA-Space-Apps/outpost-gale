@@ -65,7 +65,8 @@ def skid(w, d, h=0.12, role="metal"):
     """The steel skid a machine ships on: two runners, cross members, four foot plates."""
     parts = [bevel(box(f"runner{s}", (w, 0.1, h), (0, s * (d / 2 - 0.05), h / 2), mat(role))) for s in (-1, 1)]
     parts += [box(f"cross{i}", (0.08, d - 0.2, h * 0.6), (x, 0, h * 0.5), mat(role)) for i, x in enumerate((-w / 2 + 0.1, 0, w / 2 - 0.1))]
-    parts += [box(f"foot{i}", (0.18, 0.18, 0.02), (sx * (w / 2 - 0.09), sy * (d / 2 - 0.09), 0.01), mat("trim"))
+    # feet 5 mm proud of the runners: flush sides flickered (tools/coplanar-check.mjs)
+    parts += [box(f"foot{i}", (0.19, 0.19, 0.02), (sx * (w / 2 - 0.09), sy * (d / 2 - 0.09), 0.01), mat("trim"))
               for i, (sx, sy) in enumerate(((-1, -1), (-1, 1), (1, -1), (1, 1)))]
     return parts
 
