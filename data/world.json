@@ -349,6 +349,13 @@
   "pip": "vehicle",
   "cargo_bag": "carriable"
  },
+ "sink": {
+  "_note": "how far each prefab sits in the dust: a reality.json row id per prefab, else default (skills/shadows-and-grounding, Sink). support: metres above an item's lowest drawn point that still count as resting on the ground (feet, skids, bevelled bottom edges). level: prefabs crews build level (floors, foundations, tracking mounts); everything else tilts to the ground under it, as a lander's legs or a bag do. Vehicles only touch: their drivers set them on their wheels. Rocks: reality.json rock.embed",
+  "support": 0.05,
+  "level": ["habitat", "greenhouse", "storm_shelter", "build_pad", "solar_array", "dish"],
+  "default": "ground.sink.soft",
+  "lander": "ground.sink.foot"
+ },
  "shadow_min": 0.6,
  "moving": "^(door|dish)$|^(panel|wheel)_[0-9]+$",
  "lamps": [

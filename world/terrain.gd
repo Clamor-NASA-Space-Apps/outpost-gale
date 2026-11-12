@@ -76,17 +76,24 @@ func restyle(design: Dictionary) -> void:
 	material.set_shader_parameter("detail_strength", 0.0 if level == "off" else 1.0)
 
 
-## Ground height at x, z (metres, world), between the four nearest samples. Outside the patch: its edge.
+## Ground height at x, z (metres, world) on the same triangle the mesh draws and the collision uses (both split
+## each cell from its (j+1, i) corner to its (j, i+1) corner; measured against the heightmap shape). A bilinear
+## blend was up to 2 cm off them on 2 m cells, so things set on it hovered over the drawn ground or sank.
+## Outside the patch: its edge.
 func height_at(x: float, z: float) -> float:
 	var fx := clampf((x - origin.x) / step, 0.0, cols - 1.001)
 	var fz := clampf((z - origin.y) / step, 0.0, rows - 1.001)
 	var j := int(fx)
 	var i := int(fz)
+	var u := fx - j
+	var v := fz - i
 	var a := heights[i * cols + j]
 	var b := heights[i * cols + j + 1]
 	var c := heights[(i + 1) * cols + j]
 	var e := heights[(i + 1) * cols + j + 1]
-	return lerpf(lerpf(a, b, fx - j), lerpf(c, e, fx - j), fz - i)
+	if u + v <= 1.0:
+		return a + (b - a) * u + (c - a) * v
+	return e + (c - e) * (1.0 - u) + (b - e) * (1.0 - v)
 
 
 func _h(i: int, j: int) -> float:

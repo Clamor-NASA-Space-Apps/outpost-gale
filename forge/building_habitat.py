@@ -1,5 +1,6 @@
 # The habitat: NASA's Habitat Demonstration Unit shape (a 5 m drum, 3.5 m tall, domed roof), hollow with
-# a real wall, a floor at the hatch sill, a 1.02 x 1.9 m hatch (data/reality.json) and a ramp up to it.
+# a real wall, a floor at the hatch sill, a hatch sized by data/reality.json hatch.width and hatch.height
+# (wider and taller than the real one, so the suited hero walks in upright) and a ramp up to it.
 # Collision comes from the -col parts (wall, floor, hatch frame, ramp, roof); the door leaf has none,
 # it gets an AnimatableBody in the game.
 import os
@@ -9,7 +10,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from base_kit import *  # noqa: E402,F403
 
 R, H, WALL, SILL, TOP = 2.5, 3.5, 0.12, 0.28, 2.6   # radius, height, wall, floor top, wall top
-HW, HH, FRONT = 1.02, 1.9, 90                         # hatch width and height, front angle (+Y)
+HW, HH, FRONT = row("hatch.width"), row("hatch.height"), 90  # hatch width and height, front angle (+Y)
+CD = 0.4                                              # collar depth through the wall
 reset()
 
 wall = cyl("wall-col", R, TOP, (0, 0, TOP / 2), mat("body"), 64)
@@ -23,7 +25,8 @@ cut(roof, box("below", (10, 10, 10), (0, 0, TOP - 5)))
 smooth(roof)
 
 # hatch frame: a collar through the wall, the opening cut out, hazard edges and grab bars
-collar = box("hatch-col", (HW + 0.34, 0.4, HH + 0.26), (0, R - 0.07, SILL + HH / 2 + 0.03), mat("trim"))
+# the collar's top stays under the roof band (TOP): SILL + HH + 0.1 with a 2.2 m hatch
+collar = box("hatch-col", (HW + 0.34, CD, HH + 0.2), (0, R - 0.07, SILL + HH / 2), mat("trim"))
 cut(collar, box("hatch_cut2", (HW, 1.0, HH), (0, R, SILL + HH / 2)))
 bevel(collar, width=0.03)
 for s in (-1, 1):
@@ -31,20 +34,16 @@ for s in (-1, 1):
     smooth(bar(f"grab{s}", (s * (HW / 2 + 0.28), R + 0.2, SILL + 0.85), (s * (HW / 2 + 0.28), R + 0.2, SILL + 1.35), 0.02, mat("metal")))
     for z in (0.85, 1.35):
         bar(f"standoff{s}{z}", (s * (HW / 2 + 0.28), R + 0.08, SILL + z), (s * (HW / 2 + 0.28), R + 0.2, SILL + z), 0.015, mat("metal"))
-status_light("hatch_light", (0, R + 0.15, SILL + HH + 0.08), (0.3, 0.05, 0.06))
+status_light("hatch_light", (0, R + 0.15, SILL + HH + 0.05), (0.3, 0.05, 0.06))
 
-# the door leaf, hinged on its left edge seen from outside; its own node, no collision suffix
-leaf = [bevel(box("door", (HW - 0.02, 0.06, HH - 0.02), (0, R + 0.06, SILL + HH / 2), mat("body")), width=0.02)]
-leaf.append(smooth(cyl("door_window", 0.13, 0.08, (0, R + 0.07, SILL + 1.5), mat("glass"), 24, rot=(math.pi / 2, 0, 0))))
-leaf.append(cyl("door_window_ring", 0.17, 0.07, (0, R + 0.065, SILL + 1.5), mat("trim"), 24, rot=(math.pi / 2, 0, 0)))
-leaf.append(box("door_seam", (HW - 0.2, 0.07, 0.03), (0, R + 0.06, SILL + 0.6), mat("trim")))
-leaf.append(smooth(bar("door_handle", (-0.36, R + 0.12, SILL + 0.95), (-0.36, R + 0.12, SILL + 1.25), 0.02, mat("metal"))))
-settle(join("door", leaf), (HW / 2, R + 0.06, SILL))
+# the door leaf, behind the collar on the room side, opening inward like a real pressure hatch
+inner_leaf(HW, HH, R - 0.07 - CD / 2, SILL, [box("door_seam", (HW - 0.1, 0.07, 0.03), (0, R - 0.07 - CD / 2 - 0.032, SILL + 0.6), mat("trim"))])
 
 # ramp from the ground to the sill: 0.28 m over 1.2 m, a step no suited crew finds hard
-ramp = prism("ramp-col", [(R + 0.13, 0), (R + 1.33, 0), (R + 0.13, SILL)], 1.2, mat=mat("metal"))
+RW = HW + 0.2
+ramp = prism("ramp-col", [(R + 0.13, 0), (R + 1.33, 0), (R + 0.13, SILL)], RW, mat=mat("metal"))
 for s in (-1, 1):
-    box(f"ramp_edge{s}", (0.05, 1.2, 0.03), (s * 0.58, R + 0.73, 0.02), mat("hazard"))
+    box(f"ramp_edge{s}", (0.05, 1.2, 0.03), (s * (RW / 2 - 0.02), R + 0.73, 0.02), mat("hazard"))
 
 # hull detail: base skirt, a seam band under the roof, vertical panel seams, roof hatch and mast
 smooth(cyl("skirt", R + 0.05, 0.2, (0, 0, 0.1), mat("trim"), 64))

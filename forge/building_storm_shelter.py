@@ -1,6 +1,7 @@
 # The storm shelter: NASA's idea of walls from cargo transfer bags full of food and water (CTB 0.5 x 0.42 x
 # 0.25 m, data/reality.json crate.length), stacked eight high in a running bond with half bags at the ends,
-# under a metal deck with one more layer of bags on top. Doorway 1.16 m wide, 1.92 m clear.
+# under a metal deck with one more layer of bags on top. The doorway is data/reality.json hatch.width by
+# hatch.height clear under the beam, so the walls rise as many courses as that takes.
 import os
 import random
 import sys
@@ -9,8 +10,10 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from base_kit import *  # noqa: E402,F403
 
 BL, BW, BH, GAP = 0.5, 0.42, 0.25, 0.012   # bag length, width, height, the gap between bags
-X, Y, COURSES = 3.0, 2.42, 8               # outer footprint, courses (8 x 0.25 = 2.0 m)
-DOOR = 0.58                                # half width of the doorway
+BEAM = 0.08                               # the beam over the doorway
+X, Y = 3.0, 2.42                           # outer footprint
+COURSES = math.ceil((row("hatch.height") + BEAM) / BH)  # 10 x 0.25 = 2.5 m for a 2.2 m doorway
+DOOR = row("hatch.width") / 2              # half width of the doorway
 rng = random.Random(7)                     # fixed: the same sag every build
 reset()
 bags = []
@@ -51,7 +54,7 @@ settle(join("walls-col", bags), (0, 0, 0))  # the first bag's sag must not tilt 
 
 # roof: a beam over the doorway, a metal deck, one layer of bags as shielding
 bags = []
-roof = [box("beam", (2 * DOOR + 0.3, 0.2, 0.08), (0, Y / 2 - 0.1, COURSES * BH - 0.04), mat("metal"))]
+roof = [box("beam", (2 * DOOR + 0.3, 0.2, BEAM), (0, Y / 2 - 0.1, COURSES * BH - BEAM / 2), mat("metal"))]
 roof.append(bevel(box("deck", (X + 0.1, Y + 0.1, 0.06), (0, 0, COURSES * BH + 0.03), mat("metal")), width=0.02))
 for r in range(7):  # laid the other way on the roof: 7 rows of 0.42 m across, 5 bags of 0.5 m deep
     for k in range(5):

@@ -429,6 +429,38 @@
    "value": 0.02,
    "unit": "m",
    "source": "estimate: a foot counts as landed within 2 cm of the floor; a check on footstep timing, not a feel number"
+  },
+  {
+   "id": "ground.sink.soft",
+   "real": [
+    0.005,
+    0.036
+   ],
+   "value": 0.03,
+   "unit": "m",
+   "source": "Curiosity's wheels sank under 1 cm on Gale's plains (Arvidson et al. 2014, JGR Planets, doi:10.1002/2013JE004605, from the abstract); Viking Lander 1 footpad 3 went 0.036 m into blocky ground (Moore et al. 1987, USGS PP 1389, https://www.usgs.gov/publications/physical-properties-surface-materials-viking-landing-sites-mars). Excerpts: design/research/pages/sinkage/excerpts.md",
+   "note": "how far a broad, light load (a bag, a skid, a building's base, a tripod) sits in the dust: the world loader lowers it this much after its lowest drawn point touches the ground"
+  },
+  {
+   "id": "ground.sink.foot",
+   "real": [
+    0.036,
+    0.165
+   ],
+   "value": 0.06,
+   "unit": "m",
+   "source": "Viking Lander 1 footpads: 0.036 m into blocky material, 0.165 m into drift (Moore et al. 1987, USGS PP 1389, https://www.usgs.gov/publications/physical-properties-surface-materials-viking-landing-sites-mars)",
+   "note": "a lander's footpad: tonnes on four plates"
+  },
+  {
+   "id": "rock.embed",
+   "real": [
+    0.1,
+    0.5
+   ],
+   "value": 0.3,
+   "unit": "share of height",
+   "source": "estimate: no measured buried share found; Viking 1 pictures show blocks 'partly buried by sediment' (NASA SP-425, https://solarviews.com/history/SP-425/ch21.htm, search summary only). A rounded block shows its widest middle, and the undercut below it reads as a gap, unless about a third of its height is in the ground"
   }
  ],
  "pairs": []

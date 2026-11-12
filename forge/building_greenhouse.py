@@ -1,5 +1,6 @@
 # The greenhouse: a geodesic dome (6.8 m across) on a low ring wall, entered through a short vestibule
-# with a 1.02 x 1.9 m doorway (the habitat's hatch size) and its own door leaf. Two raised grow beds under
+# with a doorway of data/reality.json hatch.width x hatch.height (the habitat's) and its own door leaf, which
+# swings into a vestibule wide enough to take it. Two raised grow beds under
 # grow lights, with empty nodes slot_1..slot_8 where the lettuce models go.
 # Built from Blender's icosphere rather than the Quaternius Geodesic_Dome: that one is a closed shell on
 # feet with no doorway and painted-on panes, and a doorway cut into it left loose triangles.
@@ -10,8 +11,9 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import bmesh  # noqa: E402
 from base_kit import *  # noqa: E402,F403
 
-RD, RW, FL = 3.4, 0.4, 0.1          # dome radius, ring wall height, floor top
-HW, HH, TL = 1.02, 1.9, 2.0         # doorway, vestibule length
+RD, RW, FL = 3.4, 0.4, 0.2          # dome radius, ring wall height, floor top (over the uphill ground on a slope, under hero.step)
+HW, HH, TL = row("hatch.width"), row("hatch.height"), 2.4  # doorway, vestibule length
+VW, VH = HW + 0.6, HH + 0.15        # vestibule inside: room for the leaf opened 100 degrees (data/tuning.json)
 reset()
 
 
@@ -45,7 +47,7 @@ def cut_struts(o, cutter):
 
 
 def tunnel_hole():
-    return box("hole", (1.2, TL + 1.0, 2.05), (0, RD, FL + 1.025))
+    return box("hole", (VW, TL + 1.0, VH), (0, RD, FL + VH / 2))
 
 
 panes = hemisphere("panes-col", "glass")
@@ -64,20 +66,18 @@ cut(ring, tunnel_hole())
 smooth(cyl("floor-col", RD - 0.12, FL, (0, 0, FL / 2), mat("trim"), 48))
 
 # vestibule: a box tunnel through the dome, closed at the front by a frame with the doorway
-vest = box("vestibule-col", (1.5, TL, 2.35), (0, RD, 1.175), mat("body"))
-cut(vest, box("vest_in", (1.2, TL + 0.2, 2.05), (0, RD, FL + 1.025)))
+vest = box("vestibule-col", (VW + 0.3, TL, FL + VH + 0.15), (0, RD, (FL + VH + 0.15) / 2), mat("body"))
+cut(vest, box("vest_in", (VW, TL + 0.2, VH), (0, RD, FL + VH / 2)))
 bevel(vest, width=0.03)
-box("vest_floor-col", (1.2, TL, FL), (0, RD, FL / 2), mat("trim"))
-frame = box("doorframe-col", (1.6, 0.14, 2.45), (0, RD + TL / 2, 1.225), mat("trim"))
-cut(frame, box("door_cut", (HW, 0.5, HH), (0, RD + TL / 2, FL + HH / 2)))
+box("vest_floor-col", (VW, TL, FL), (0, RD, FL / 2), mat("trim"))
+FY = RD + TL / 2  # the front frame's middle
+frame = box("doorframe-col", (VW + 0.4, 0.14, FL + VH + 0.3), (0, FY, (FL + VH + 0.3) / 2), mat("trim"))
+cut(frame, box("door_cut", (HW, 0.5, HH), (0, FY, FL + HH / 2)))
 bevel(frame, width=0.025)
 for s in (-1, 1):
-    box(f"hazard{s}", (0.06, 0.02, HH), (s * (HW / 2 + 0.1), RD + TL / 2 + 0.075, FL + HH / 2), mat("hazard"))
-status_light("door_light", (0, RD + TL / 2 + 0.08, FL + HH + 0.2), (0.3, 0.04, 0.06))
-leaf = [bevel(box("door", (HW - 0.02, 0.06, HH - 0.02), (0, RD + TL / 2, FL + HH / 2), mat("body")), width=0.02)]
-leaf.append(smooth(cyl("door_window", 0.13, 0.08, (0, RD + TL / 2 + 0.01, FL + 1.5), mat("glass"), 24, rot=(math.pi / 2, 0, 0))))
-leaf.append(smooth(bar("door_handle", (-0.36, RD + TL / 2 + 0.06, FL + 0.95), (-0.36, RD + TL / 2 + 0.06, FL + 1.25), 0.02, mat("metal"))))
-settle(join("door", leaf), (HW / 2, RD + TL / 2, FL))
+    box(f"hazard{s}", (0.06, 0.02, HH), (s * (HW / 2 + 0.1), FY + 0.075, FL + HH / 2), mat("hazard"))
+status_light("door_light", (0, FY + 0.08, FL + HH + 0.15), (0.3, 0.04, 0.06))
+inner_leaf(HW, HH, FY - 0.07, FL)
 
 # two raised beds either side of the aisle, soil on top, grow lights hung from the dome
 slot = 0

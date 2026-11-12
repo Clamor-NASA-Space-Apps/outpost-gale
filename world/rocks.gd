@@ -5,6 +5,7 @@ extends Node3D
 ## Solid rocks are models/rock_*.glb (lumps made here until they exist); pebbles are always the lumps.
 
 const SHAPES := 3  # pebble shapes
+const SUPPORT := 0.1  # share of a rock's height above its lowest point that rests on the ground
 const STANDIN := "standin"
 
 var solids: Array[StaticBody3D] = []
@@ -28,6 +29,13 @@ func build(world: Node3D) -> void:
 		big_shapes = small_shapes
 	var rng := RandomNumberGenerator.new()
 	rng.seed = int(p.seed)
+	var embed: float = world.sheet_values["rock.embed"]
+	var corners: Dictionary = {}  # Mesh -> its distinct vertices
+	for mesh: Mesh in big_shapes + small_shapes:
+		var seen: Dictionary = {}
+		for v in mesh.get_faces():
+			seen[v] = true
+		corners[mesh] = PackedVector3Array(seen.keys())
 	var small: Array = [] # [mesh index, Transform3D]
 	var large: Array = []
 	for is_big: bool in [true, false]:
@@ -49,9 +57,8 @@ func build(world: Node3D) -> void:
 				continue
 			var basis := Basis.from_euler(Vector3(rng.randf_range(-0.3, 0.3), rng.randf() * TAU, rng.randf_range(-0.3, 0.3)))
 			basis = basis.scaled(Vector3(1.0, rng.randf_range(squash[0], squash[1]), rng.randf_range(0.7, 1.1)) * s)
-			# a rock rests sunk into the dust a little, never balanced on a point
-			var y: float = world.height_at(x, z) - 0.15 * s
-			placed.append([rng.randi() % meshes.size(), Transform3D(basis, Vector3(x, y, z))])
+			var k := rng.randi() % meshes.size()
+			placed.append([k, Transform3D(basis, Vector3(x, _bury(corners[meshes[k]], basis, x, z, embed), z))])
 	for r: Array in small + large:
 		spots.append(r[1])
 	pebbles = _multi(small_shapes, small)
@@ -69,6 +76,25 @@ func restyle(design: Dictionary) -> void:
 			# a modelled rock names its roles (rock under a dust coat); anything else is rock
 			var role: String = mesh.surface_get_name(i)
 			mesh.surface_set_material(i, Forge.HouseStyle.role(design, role if design.materials.has(role) else "rock", true))
+
+
+## The height for a rock's origin that puts the share `embed` of its height into the ground under every point
+## it rests on (reality.json rock.embed): a rounded rock set on its lowest point showed a lit undercut, read as
+## a gap, and a tilted one stood on an edge.
+func _bury(points: PackedVector3Array, basis: Basis, x: float, z: float, embed: float) -> float:
+	var low := INF
+	var high := -INF
+	var moved := PackedVector3Array()
+	for p in points:
+		var q := basis * p
+		moved.append(q)
+		low = minf(low, q.y)
+		high = maxf(high, q.y)
+	var lift := INF
+	for q in moved:
+		if q.y < low + SUPPORT * (high - low):
+			lift = minf(lift, _world.height_at(x + q.x, z + q.z) - q.y)
+	return lift - embed * (high - low)
 
 
 ## How likely a rock is this far from the clearing's centre: few inside, most at its edge, thinning outward.

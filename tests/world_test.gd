@@ -46,13 +46,26 @@ func play() -> bool:
 			check(bodies.size() == 1, "%s: a mover holds no body but its own (the import's stay behind when it moves)" % it.id)
 			check(n is AnimatableBody3D and n.collision_layer == (world.VEHICLES if kind == "vehicle" else world.CARRIABLES),
 				"%s: a %s is one body on its own layer" % [it.id, kind])
-		# resting: the lowest drawn point on the lowest ground under the footprint, sampled finer than the loader does
-		var box: AABB = world.drawn(n)
-		var low := INF
-		for i in 11:
-			for j in 11:
-				low = minf(low, world.height_at(box.position.x + box.size.x * i / 10.0, box.position.z + box.size.z * j / 10.0))
-		check(absf(box.position.y - low) < 0.05, "%s floats or sinks: lowest point %.2f m off the ground under it" % [it.id, box.position.y - low])
+		# resting (world.rest()): the drawn points near the underside, measured along the item's own up, are all in
+		# the ground right under them, the shallowest by the prefab's sink row; a vehicle's just touch
+		var up := n.global_basis.y.normalized()
+		var pts: Array[Vector3] = []
+		var base := INF
+		for mi: MeshInstance3D in n.find_children("*", "MeshInstance3D", true, false):
+			if mi.mesh:
+				for v in mi.mesh.get_faces():
+					var p: Vector3 = mi.global_transform * v
+					pts.append(p)
+					base = minf(base, (p - n.global_position).dot(up))
+		var sink: Dictionary = world.data.sink
+		var want: float = 0.0 if kind == "vehicle" else world.sheet_values[sink.get(it.prefab, sink.default)]
+		var top := -INF  # the highest foot over the ground under it, each dropped onto the underside's plane
+		for p in pts:
+			var h := (p - n.global_position).dot(up) - base
+			if h < float(sink.support):
+				var u := p - up * h
+				top = maxf(top, u.y - world.height_at(u.x, u.z))
+		check(absf(top + want) < 0.02, "%s floats or sinks: its highest foot is %.3f m off the ground under it, not %.3f" % [it.id, top, -want])
 
 	for b: StaticBody3D in world.rocks.solids:
 		check(b.collision_layer in [world.STATICS, world.THIN], "a solid rock off layers 2 and 3 at %s" % b.position)

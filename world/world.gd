@@ -24,6 +24,7 @@ var hero_width: float  # from the reality sheet: a solid narrower than this is `
 var hero_step: float  # and one no higher than this is a `floor` the hero steps onto
 var hero_height: float  # for the sweeps in tests/world_test.gd
 var weather: Dictionary
+var sheet_values: Dictionary = {}  # reality.json row id -> value
 var _moving: RegEx
 var _probe: ReflectionProbe
 var _cells: Array[Node3D] = []
@@ -33,6 +34,7 @@ func build(design: Dictionary) -> void:
 	data = JSON.parse_string(FileAccess.get_file_as_string("res://data/world.json"))
 	var sheet: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/reality.json"))
 	for r: Dictionary in sheet.rows:
+		sheet_values[r.id] = r.value
 		if r.id == "hero.width":
 			hero_width = r.value
 		elif r.id == "hero.step":
@@ -121,13 +123,76 @@ func puff(pos: Vector3, vel: Vector3, strength: float, kind := "foot") -> void:
 	dust.puff(pos, vel, strength, kind)
 
 
-## Lowest ground under a world-space box, sampled on a grid: what a footprint rests on.
-func ground_under(box: AABB) -> float:
+## Sets an item down in the dust (at load, and wherever the sandbox puts one down). Its feet are the drawn points
+## within `sink.support` of its underside (data/world.json `sink`); an item crews do not level first turns to the
+## ground's plane under them, then every foot goes into the ground right under it by the prefab's sink row
+## (reality.json ground.sink.*), so no foot, skid or bevelled edge hangs over a dip. Its collision moves with it.
+## Vehicles only touch: their drivers set them on their wheels.
+func rest(root: Node3D) -> void:
+	var prefab: String = root.get_meta("prefab")
+	var s: Dictionary = data.sink
+	var kind: String = data.kinds.get(prefab, "static")
+	var depth := 0.0 if kind == "vehicle" else float(sheet_values[s.get(prefab, s.default)])
+	var points := PackedVector3Array()
 	var low := INF
-	for i in 6:
-		for j in 6:
-			low = minf(low, height_at(box.position.x + box.size.x * i / 5.0, box.position.z + box.size.z * j / 5.0))
-	return low
+	for mi: MeshInstance3D in root.find_children("*", "MeshInstance3D", true, false):
+		if mi.mesh:
+			var to := mi.global_transform
+			for v in mi.mesh.get_faces():
+				var p := to * v
+				points.append(p)
+				low = minf(low, p.y)
+	# each foot dropped onto the underside's plane: a bevelled edge 4 cm up counts where it would meet the
+	# ground, or it pushed the flat bottom 4 cm deeper than the sink row
+	var feet := PackedVector3Array()
+	for p in points:
+		if p.y < low + float(s.support):
+			feet.append(Vector3(p.x, low, p.z))
+	if feet.is_empty():
+		return
+	if kind != "vehicle" and prefab not in s.level:
+		feet = _tilt(root, feet)
+	var lift := INF  # how far up the root may go before a foot leaves the ground
+	for p in feet:
+		lift = minf(lift, height_at(p.x, p.z) - p.y)
+	root.global_position.y += lift - depth
+
+
+## Turns `root` about its origin so its feet (world space) lie along the ground's plane under them (a least-squares
+## fit), and returns them turned: on a slope a rigid lander buried its uphill pads and lifted its downhill ones.
+## A pole or a single foot has no plane and stays upright.
+func _tilt(root: Node3D, feet: PackedVector3Array) -> PackedVector3Array:
+	var mid := Vector3.ZERO
+	var ground: Array[Vector3] = []
+	for p in feet:
+		var g := Vector3(p.x, height_at(p.x, p.z), p.z)
+		ground.append(g)
+		mid += g
+	mid /= ground.size()
+	var xx := 0.0
+	var xz := 0.0
+	var zz := 0.0
+	var xg := 0.0
+	var zg := 0.0
+	for g in ground:
+		var d := g - mid
+		xx += d.x * d.x
+		xz += d.x * d.z
+		zz += d.z * d.z
+		xg += d.x * d.y
+		zg += d.z * d.y
+	var det := xx * zz - xz * xz
+	if det < 1e-6:
+		return feet
+	# ground height = mid.y + a * dx + b * dz
+	var a := (xg * zz - zg * xz) / det
+	var b := (zg * xx - xg * xz) / det
+	var turn := Basis(Quaternion(Vector3.UP, Vector3(-a, 1.0, -b).normalized()))
+	var o := root.global_position
+	root.global_basis = turn * root.global_basis
+	for i in feet.size():
+		feet[i] = o + turn * (feet[i] - o)
+	return feet
 
 
 ## The box everything drawn under `root` fills, in world space.
@@ -177,9 +242,9 @@ func _item(it: Dictionary, design: Dictionary) -> Node3D:
 		_merge(still, model)
 		for mi: MeshInstance3D in still:
 			mi.mesh = null
-	# on a slope the footprint's lowest corner touches the ground and the rest sits a little into it
+	root.set_meta("prefab", it.prefab)
+	rest(root)
 	var box := drawn(root)
-	root.position.y = ground_under(box) - box.position.y
 	if kind != "static":
 		# a vehicle's wheels sit in the shadow of its own body
 		for part in parts:

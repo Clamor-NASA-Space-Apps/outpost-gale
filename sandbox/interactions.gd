@@ -155,6 +155,7 @@ func _put_down() -> void:
 	carried.reparent(world, false)
 	carried.global_position = Vector3(at.x, world.height_at(at.x, at.z), at.z)
 	carried.global_rotation = Vector3(0, hero.global_rotation.y, 0)
+	world.rest(carried)  # in the dust under all of it, not on the height at its middle
 	(carried as CollisionObject3D).collision_layer = CARRIABLES
 	carried = null
 

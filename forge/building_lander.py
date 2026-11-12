@@ -19,11 +19,15 @@ for i in range(8):  # equipment bays around the descent stage
 for i in range(4):  # propellant tanks under the deck, and the legs between them
     body.append(smooth(sphere(f"tank{i}", 0.55, at(1.05, 45 + 90 * i, DECK - 1.0), mat("metal"), 20)))
     a = 90 * i
-    top, foot = at(1.9, a, DECK - 0.4), at(PAD, a, 0.35)
+    # the leg ends in a ball joint seated on its footpad: it stopped 23 cm above the pad, which read as a
+    # floating leg once the pads sat in the dust
+    top, foot = at(1.9, a, DECK - 0.4), at(PAD, a, 0.2)
     body.append(smooth(bar(f"leg{i}", top, foot, 0.08, mat("metal"), 12)))
+    body.append(smooth(sphere(f"leg_joint{i}", 0.11, at(PAD, a, 0.17), mat("metal"), 12)))
     body.append(smooth(bar(f"strut{i}", at(1.0, a, DECK - 0.5), at(2.2, a, 1.4), 0.05, mat("metal"), 10)))
     body.append(smooth(cyl(f"footpad{i}", 0.38, 0.12, at(PAD, a, 0.06), mat("metal"), 20)))
-    body.append(smooth(cyl(f"leg_band{i}", 0.1, 0.2, at(PAD - 0.08, a, 0.6), mat("hazard"), 12)))
+    k = (0.6 - 0.2) / (DECK - 0.4 - 0.2)  # the band sits on the leg, 0.6 m up
+    body.append(smooth(cyl(f"leg_band{i}", 0.1, 0.2, at(PAD - k * (PAD - 1.9), a, 0.6), mat("hazard"), 12)))
 body.append(smooth(cone("engine", 0.6, 0.85, (0, 0, DECK - 1.45), mat("metal"), 24)))
 
 # ascent vehicle: propellant stage, then the crew cabin with windows, hatch and docking ring

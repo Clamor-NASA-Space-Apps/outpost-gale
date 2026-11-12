@@ -7,6 +7,7 @@ Front convention: a model's front (hatch, label, door) faces Blender +Y, which t
 into -Z, the game's yaw-0 front (CONTRACTS.md). lib's "front" preview looks from -Y, so done() shoots
 the previews from +Y instead: the picture named front shows the real front.
 """
+import json
 import math
 import os
 
@@ -73,6 +74,30 @@ def status_light(name, loc, size=(0.16, 0.05, 0.05)):
     """A lamp the game can switch: role `light` on a small dark housing."""
     return [box(name + "_housing", (size[0] + 0.04, size[1], size[2] + 0.04), (loc[0], loc[1] - 0.01, loc[2]), mat("trim")),
             box(name, size, (loc[0], loc[1] + 0.01, loc[2]), mat("light"))]
+
+
+SHEET = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "reality.json")
+
+
+def row(rid):
+    """A value from data/reality.json, the one home of physical numbers (a doorway's size, a bag's)."""
+    with open(SHEET) as f:
+        return next(r["value"] for r in json.load(f)["rows"] if r["id"] == rid)
+
+
+def inner_leaf(hw, hh, y_in, z0, extra=()):
+    """A hatch leaf on the room side of a frame whose inner face is at y = y_in: it overlaps the opening by
+    5 cm at the sides and top like a pressure hatch, and swings inward about its room-side corner. A leaf
+    hinged mid-frame cut through the jamb once it opened (a flickering dark line on the open door), and a
+    leaf inside the opening showed a dark slit round its edge. `extra` parts join the leaf; returns it."""
+    w, t = hw + 0.1, 0.06
+    y = y_in - 0.002 - t / 2  # 2 mm behind the frame: close enough to read as sealed, never coplanar
+    leaf = [bevel(box("door", (w, t, hh + 0.045), (0, y, z0 + 0.005 + (hh + 0.045) / 2), mat("body")), width=0.02)]
+    leaf.append(smooth(cyl("door_window", 0.13, t + 0.02, (0, y, z0 + 1.55), mat("glass"), 24, rot=(math.pi / 2, 0, 0))))
+    leaf.append(cyl("door_window_ring", 0.17, t + 0.01, (0, y, z0 + 1.55), mat("trim"), 24, rot=(math.pi / 2, 0, 0)))
+    leaf.append(smooth(bar("door_handle", (-hw / 2 + 0.12, y + t / 2 + 0.06, z0 + 0.95), (-hw / 2 + 0.12, y + t / 2 + 0.06, z0 + 1.25), 0.02, mat("metal"))))
+    leaf += list(extra)
+    return settle(join("door", leaf), (w / 2, y - t / 2, z0))
 
 
 COL = ("-col", "-convcol", "-colonly", "-convcolonly")
