@@ -26,15 +26,23 @@ Everything committed is pushed: game repo `main` on origin, factory `tooling/` b
 - Open from the web-check: game data 47 MB (Ravindu: size no constraint), engine error "rp_child is null" (probably the
   reflection probe in the web build), web-check.mjs reports "engine never started" after the first error (tool bug).
 
+- Second pass, merged and pushed: 154b5f4 look (blue sunset halo, twilight, lit windows: WAITS FOR RAVINDU'S
+  APPROVAL, `design/handoff/sky-diff.md`; revert that one commit to undo), 0e28435 alive pass (breathing chest on the
+  sound's clock, look-at, lean and settle, lower-third framing, slope pitch, doors_test; shared gust, telltale mast,
+  solar trackers, dish nod, status lights, contact shadow + dust rim, devil visible). Factory: halo/twilight tokens,
+  `keep` kit role, clean quit with sound. All 8 suites 0 failed, feel-probe 0 failed (my own runs).
+
 ## Next, in order
-1. Running now: lane A pass 2 (breathing chest on audio.breath_phase, head look-at, lean and settle, lower-third
-   framing + slope pitch, player.act(), hero.sink row, tests/doors_test.gd); lane B pass 2 (world.gust() shared,
-   dust streaks, wind gauge mast, panels track the sun, dish nods, blinking lights, lit windows, contact darkening,
-   blue sunset halo + long twilight as a DESIGN.sunset.md diff in design/handoff/sky-diff.md for Ravindu to approve).
-2. Ravindu: approve the sky diff; listen to the sound mix (outside cutoff 900 Hz and boot thud are guesses); look at
-   carry and drive poses. Suit breathing is synthesised: a real recording (adult, helmet or bucket) would be better.
-3. S3 phone step: web build on the iPhone (`serve-web.mjs`), low preset; fix rp_child.
-4. Gates: S1-S3 `/code-review medium` and lessons boxes.
+1. Ravindu: approve or reject the sky diff; listen to the mix (outside cutoff 900 Hz, boot thud are guesses);
+   look at carry and drive poses; the telltale barely moves (real Phoenix curve): exaggerate it? (needs his yes).
+2. Open: CONTRACTS.md says yaw from north but the rig's sun azimuth turns from +Z (pick one); "Texture leaked"
+   error after a sky switch (fails capture-view runs that switch sky); `new-project.mjs --sync` deletes the
+   project's `addons/forge/sky.gdshader.uid` (restore with git checkout); suit breathing is synthesised.
+3. S3 phone step: web build on the iPhone (`serve-web.mjs`), low preset; "rp_child is null" in the web build;
+   web-check.mjs says "engine never started" after the first error (tool bug).
+4. Next soul items from design/research/alive.md: rover body roll and sound polish, radio squelch chirps, a rare
+   music motif, a camera hint toward the devil or the base at dusk.
+5. Gates: S1-S3 `/code-review medium` and lessons boxes.
 
 ## Machine rules
 - CPU: agent jobs on cores 2-7 (0-1 for the desktop), at most two lanes, `nice` + `taskset`, `LP_NUM_THREADS`.
