@@ -1,0 +1,679 @@
+ 
+ Image Quality And Settings - Rage: Performance Analysis On The PC | Tom's Hardware 
+ Skip to main content 
+Become a member for free
+Join for quick access. Enter your email below and we'll send confirmation plus sign you up to our newsletter.
+Contact me with news and offers from other Future brands
+Sign Up
+By submitting your information, you confirm you are aged 16 or over,
+have read our
+ Privacy Policy 
+and agree to the
+ Terms & Conditions . Geographical rules apply.
+ Join Tom’s Hardware today 
+ Upgrade to Tom’s Hardware Premium 
+Explore
+GO PREMIUM
+Choose how you want to join Tom’s Hardware
+ MEMBER 
+ Get started with free access to reviews, badges and discussions. 
+Become a member
+ Premium member 
+ Unlock exclusive tools and insights for enthusiasts who want more. 
+Bench Database
+Exclusive Features
+Roadmaps
+Deep Analysis
+Become a premium member
+Go beyond the headlines with Tom’s Hardware Premium 
+ Access Bench, Roadmaps, deep analysis and other exclusive tools. 
+Explore PREMIUM
+ Bench Performance Database 
+ Dive into our proprietary testing data and compare hardware with detailed benchmarks. 
+ Deep-Dive Analysis 
+ Go beyond the headlines with expert reporting on the hardware industry. 
+ Hardware Roadmaps 
+ Track upcoming CPUs, GPUs and tech releases before they arrive. 
+ Exclusive Long-Form Features 
+ In-depth features, interviews and insider stories from the world of hardware. 
+ Uptime Premium Newsletter 
+ Expert insights and analysis delivered to your inbox. 
+ of
+ Bench Performance Database 
+ Dive into our proprietary testing data and compare hardware with detailed benchmarks. 
+ 1 
+of
+ 5 
+ Deep-Dive Analysis 
+ Go beyond the headlines with expert reporting on the hardware industry. 
+ 2 
+of
+ 5 
+ Hardware Roadmaps 
+ Track upcoming CPUs, GPUs and tech releases before they arrive. 
+ 3 
+of
+ 5 
+ Exclusive Long-Form Features 
+ In-depth features, interviews and insider stories from the world of hardware. 
+ 4 
+of
+ 5 
+ Uptime Premium Newsletter 
+ Expert insights and analysis delivered to your inbox. 
+ 5 
+of
+ 5 
+Explore PREMIUM
+ Welcome 
+to
+Tom's Hardware club !
+ Hi 
+ ,
+Your membership journey starts here.
+Keep exploring and earning more as a member.
+MY ACCOUNT
+Earn your first
+badge
+Read 1 article to unlock your first badge.
+Keep earning badges
+Explore ways to get more involved as a member.
+ Latest on CPUs 
+ News, reviews, and technical insights. 
+Explore
+ GPU Insights 
+ Reviews, benchmarks, and updates on current GPUs. 
+Explore
+See what you’ve unlocked.
+Explore your membership
+benefits.
+Explore
+Unlock Premium
+Limited-time Premium offer
+Cancel anytime
+Explore premium
+ Sign Out 
+Premium Member
+ Hi 
+ ,
+Keep exploring with your premium access.
+ GO TO PREMIUM HUB
+Premium Tools
+ Bench Database 
+ Exclusive Features 
+ Roadmaps 
+ Deep Analysis 
+ My Account 
+ Sign Out 
+Become a member for free
+Join for quick access. Enter your email below and we'll send confirmation plus sign you up to our newsletter.
+Contact me with news and offers from other Future brands
+Sign Up
+By submitting your information, you confirm you are aged 16 or over,
+have read our
+ Privacy Policy 
+and agree to the
+ Terms & Conditions . Geographical rules apply.
+ Tom's Hardware 
+ US Edition 
+ UK
+ US
+ Australia
+ Canada
+ RSS 
+ Sign in 
+ View Profile 
+ Sign out 
+ Search 
+ Search Tom's Hardware 
+Best Picks
+CPU Buying Advice
+CPU Best Picks
+CPU Reviews
+GPU Buying Advice
+GPU Best Picks
+GPU Reviews
+Laptop Buying Advice
+Laptop Best Picks
+Laptop Reviews
+More Buying Advice
+Keyboard Best Picks
+Gaming Monitor Best Picks
+Gaming Headset Best Picks
+3D Printer Best Picks
+Webcam Best Picks
+Mice Best Picks
+How We Test
+CPUs
+CPU Brands
+Nvidia RTX Spark
+AMD Ryzen
+Intel Core Ultra
+Qualcomm Snapdragon X
+Apple Silicon (M-Series)
+Platforms
+X86
+RISC-V
+ARM
+Zen 5
+AM5
+Oryon
+Chipmaking
+DUV
+EUV
+Rare Earth Metals
+Photonics
+GPUs
+GPU Brands
+Nvidia Blackwell
+Nvidia GeForce
+AMD Radeon
+Intel Arc
+Memory Tech
+GDDR7
+GDDR8
+HBM
+AI Architecture
+Nvidia Vera Rubin
+Meta MTIA
+Google TPU
+AMD Instinct
+Microsoft Maia
+Drivers
+PC Components
+Memory
+RAM
+DRAM
+DDR5
+Storage
+HDDs
+SSDs
+Cooling
+Air Cooling
+Liquid Cooling
+Thermal Paste
+Networking
+Routers
+Motherboards
+Overclocking
+PC Cases
+PC Building
+Power Supplies
+News
+Tech Industry News
+CPU News
+GPU News
+Chips Act
+Semiconductors
+Cybersecurity
+Supercomputers
+Quantum Computing
+Company News
+AMD
+Intel
+Nvidia
+Microsoft
+TSMC
+IBM
+ASML
+Newsletters
+Laptops
+Gaming Laptops
+Ultrabooks
+Processors
+Intel Lunar Lake
+Intel Panther Lake
+AMD Strix Point
+AMD Gorgon Point
+Qualcomm Snapdragon X
+Qualcomm Snapdragon X2
+Laptop Brands
+Apple
+Asus
+HP
+Lenovo
+Microsoft
+MSI
+Razer
+Desktops
+PC Building
+PC Cases
+Gaming PCs
+Monitors
+Gaming Monitors
+Peripherals
+Keyboards
+Mice
+3D Printers
+Headphones
+Desktop Brands
+Acer
+Alienware
+Corsair
+CyberPowerPC
+Gigabyte
+MSI
+Software & AI
+Artificial Intelligence
+Machine Learning
+R&D
+Intel Gaudi
+Cerebras
+xAI
+LLMs
+OpenAI
+Anthropic
+DeepSeek
+Gemini
+Grok
+Operating Systems
+Windows
+MacOS
+iOS
+ChromeOS
+Linux
+Software
+Programming
+Applications
+Microsoft Office
+Web Browsers
+Coupons
+Laptop and PC Coupons
+Dell Coupon Codes
+Asus Coupon Codes
+Logitech Promo Codes
+Samsung Promo codes
+Hardware Coupons
+Newegg Promo Codes
+Corsair Discount Codes
+Razer Promo Codes
+Anycubic Discount codes
+Software Coupons
+Bitdefender Coupons
+Simplisafe Coupons
+MacPaw Coupons
+Squarespace Coupon Codes
+Gaming Coupons
+Kinguin Discount Codes
+Loaded Discount Codes
+Logitech G Promo Codes
+SteelSeries Coupons
+More
+Premium
+Forums
+ Home 
+Best Picks
+View Best Picks
+CPU Buying Advice 
+CPU Best Picks
+CPU Reviews
+GPU Buying Advice 
+GPU Best Picks
+GPU Reviews
+Laptop Buying Advice 
+Laptop Best Picks
+Laptop Reviews
+More Buying Advice 
+Keyboard Best Picks
+Gaming Monitor Best Picks
+Gaming Headset Best Picks
+3D Printer Best Picks
+Webcam Best Picks
+Mice Best Picks
+How We Test
+CPUs
+View CPUs
+CPU Brands 
+Nvidia RTX Spark
+AMD Ryzen
+Intel Core Ultra
+Qualcomm Snapdragon X
+Apple Silicon (M-Series)
+Platforms 
+X86
+RISC-V
+ARM
+Zen 5
+AM5
+Oryon
+Chipmaking 
+View Chipmaking
+DUV
+EUV
+Rare Earth Metals
+Photonics
+GPUs
+View GPUs
+GPU Brands 
+Nvidia Blackwell
+Nvidia GeForce
+AMD Radeon
+Intel Arc
+Memory Tech 
+GDDR7
+GDDR8
+HBM
+AI Architecture 
+Nvidia Vera Rubin
+Meta MTIA
+Google TPU
+AMD Instinct
+Microsoft Maia
+Drivers
+PC Components
+View PC Components
+Memory 
+RAM
+DRAM
+DDR5
+Storage 
+View Storage
+HDDs
+SSDs
+Cooling 
+View Cooling
+Air Cooling
+Liquid Cooling
+Thermal Paste
+Networking 
+View Networking
+Routers
+Motherboards
+Overclocking
+PC Cases
+PC Building
+Power Supplies
+News
+View News
+Tech Industry News 
+View Tech Industry News
+CPU News
+GPU News
+Chips Act
+Semiconductors
+Cybersecurity
+Supercomputers
+Quantum Computing
+Company News 
+AMD
+Intel
+Nvidia
+Microsoft
+TSMC
+IBM
+ASML
+Newsletters
+Laptops
+View Laptops
+Gaming Laptops
+Ultrabooks
+Processors 
+Intel Lunar Lake
+Intel Panther Lake
+AMD Strix Point
+AMD Gorgon Point
+Qualcomm Snapdragon X
+Qualcomm Snapdragon X2
+Laptop Brands 
+Apple
+Asus
+HP
+Lenovo
+Microsoft
+MSI
+Razer
+Desktops
+View Desktops
+PC Building 
+View PC Building
+PC Cases
+Gaming PCs
+Monitors 
+View Monitors
+Gaming Monitors
+Peripherals 
+View Peripherals
+Keyboards
+Mice
+3D Printers
+Headphones
+Desktop Brands 
+Acer
+Alienware
+Corsair
+CyberPowerPC
+Gigabyte
+MSI
+Software & AI
+View Software & AI
+Artificial Intelligence 
+View Artificial Intelligence
+Machine Learning
+R&D
+Intel Gaudi
+Cerebras
+xAI
+LLMs 
+View LLMs
+OpenAI
+Anthropic
+DeepSeek
+Gemini
+Grok
+Operating Systems 
+View Operating Systems
+Windows
+MacOS
+iOS
+ChromeOS
+Linux
+Software 
+View Software
+Programming
+Applications
+Microsoft Office
+Web Browsers
+Coupons
+View Coupons
+Laptop and PC Coupons 
+View Laptop and PC Coupons
+Dell Coupon Codes
+Asus Coupon Codes
+Logitech Promo Codes
+Samsung Promo codes
+Hardware Coupons 
+View Hardware Coupons
+Newegg Promo Codes
+Corsair Discount Codes
+Razer Promo Codes
+Anycubic Discount codes
+Software Coupons 
+View Software Coupons
+Bitdefender Coupons
+Simplisafe Coupons
+MacPaw Coupons
+Squarespace Coupon Codes
+Gaming Coupons 
+View Gaming Coupons
+Kinguin Discount Codes
+Loaded Discount Codes
+Logitech G Promo Codes
+SteelSeries Coupons
+Premium
+Forums
+ svg]:max-h-[var(--modal-logo-height,40px)] h-[var(--modal-logo-height,40px)] [&>svg]:w-auto [&>svg]:h-full my-4">
+ Tom's Hardware 
+ Stay On the Cutting Edge: Get the Tom's Hardware Newsletter 
+ Get Tom's Hardware's best news and in-depth reviews, straight to your inbox. 
+ Become a Member in Seconds 
+ Unlock instant access to exclusive member features. 
+Contact me with news and offers from other Future brands
+Receive email from us on behalf of our trusted partners or sponsors
+ a]:underline font-article-copy">
+By submitting your information you agree to the Terms & Conditions and Privacy Policy and are aged 16 or over.
+ You are now subscribed 
+ Your newsletter sign-up was successful 
+ Join the club 
+ Get full access to premium articles, exclusive features and a growing list of member rewards. 
+ Explore 
+ An account already exists for this email address, please log in. 
+ Trending MacBook PROLED Nova Lake AI Data Centers RTX Spark Deals RAM Shortage TH App RAM Combo Deals Vera Rubin Tom's 30th Anniversary 
+ Software 
+ Rage: Performance Analysis On The PC 
+Features
+By
+ Don Woligroski 
+Published
+21 October 2011
+ Equipped with new id Tech 5 graphics engine, Rage is an ambitious game that tackles first-person and vehicle combat. We take a close look at performance with different graphics hardware and CPUs, so that you know exactly what you need for smooth play. 
+ a]:text-inherit [&>a]:underline">
+When you purchase through links on our site, we may earn an affiliate commission. Here’s how it works .
+ Page 2 of 9:
+Image Quality And Settings
+ Page 1: After Drivers And Patches, Rage Cleans Up Nicely
+ Page 2: Image Quality And Settings
+ Page 3: The Rage Benchmark Conundrum: Video Comparison
+ Page 4: Test System And Benchmarks
+ Page 5: Benchmark Results: Lowest Detail
+ Page 6: Benchmark Results: Max Detail, 4x AA
+ Page 7: Benchmark Results: Max Detail, 8x AA
+ Page 8: CPU Benchmarks
+ Page 9: Rage: A Glitchy Game, Patched, Looks Much Better
+ {alert('Link copied')}).catch(err => {console.error('Failed to copy: ', err)})" data-platform="copy_link" data-action="" class="font-ui-heading py-2 text-sm text-neutral-700 hover:bg-neutral-100 transition-colors no-underline block cursor-pointer border-0 bg-transparent w-full text-left normal-case" aria-label="Copy link" role="menuitem" data-analytics-id="article-social" analytics-label="utility-bar-social-share-copy-link" analytics-name="utility-bar-secondary" data-mrf-recirculation="article-social">
+Copy link
+Facebook
+X
+Whatsapp
+Reddit
+Pinterest
+Flipboard
+Email
+ Share this article 
+82
+ Join the conversation 
+Follow us
+ Add us as a preferred source on Google 
+Newsletter
+ Subscribe to our newsletter 
+ Image Quality And Settings Rage is powered by id’s new Tech 5 engine, successor to the id Tech 4 engine, which was used as far back as Doom 3. While the modernized platform features a host of visual and technical improvements over the previous version, the really important changes will undoubtedly be most appreciated by game developers. For example, the Virtual Texturing feature pioneered in Enemy Territory: Quake Wars allows artists to directly sculpt and paint the game world as though it was a unique canvas instead of a repetitive, tiled environment. Secondly, the platform-agnostic development tools change what used to be a grueling porting process into a relatively trivial, mostly automated affair. This approach has a profound effect on the PC player’s experience. The Tech 5 engine's goal is to generate a 60 frame-per-second (FPS) output, regardless of whether it's running on PC, Xbox 360, PS3, or Mac. The software does whatever it has to in order to achieve a steady 60 FPS, going so far as to alter a number of variables on the fly, including model complexity and texture resolution. 
+ The original video options were quite spartan As a result, Rage shipped to PC customers early this month with almost no visual detail options, since the engine is trusted to adjust detail on the fly. The problem is that the game doesn’t do an exceptional job of optimizing textures on the PC, often displaying a lower level of detail when the hardware can easily handle more. Add to that the panic of a botched quick-fix driver release from AMD (later updated with the correct version) and various texture popping issues across different configurations with older drivers, and the Rage launch quickly became a PR fiasco. Latest Videos From Tom's Hardware Watch full video here: 
+ Even at the highest detail level, some textures are low resolution, blurry, and just not very nice to look at In response, id released a Rage patch that gives PC users slightly more control over detail settings: anisotropic filtering and texture detail are the key additions. The changes were welcome. Though some game textures are still less detailed than we’d expect from a leading-edge game, the most apparent offenders were cleaned up. Using the highest settings, in conjunction with AMD’s Catalyst Rage Performance Driver and Nvidia’s 285.38 beta driver, I haven't run across any show-stopping issues. The most egregious problems seem to be solved, despite a less-than-perfect launch. Texture popping is still observable, though less often with the new drivers installed. Perhaps more disturbing than the rocky start, however, is id’s irreverent approach to the PC. Even if the engine’s priority is to automatically deliver 60 FPS, why didn’t Rage come with a default auto-detail setting with optional granular graphic options in the first place? For a company that literally invented the first-person shooter on the PC, it's frustrating to see such a powerful platform treated like a gaming console constrained by comparatively ancient innards. 
+ You may like
+ Gears of War: E-Day PC graphics performance tested 
+ Control Resonant PC performance tested 
+ We tested gaming performance in 17-year-old Windows 7 on a modern gaming PC against Windows 11 
+ The post-patch video settings does add a few more appreciated settings Fortunately, we now have control over a few more quality-oriented features. The list isn't exhaustive, but the texture resolution and anisotropic options do help. Before the patch, both items could be tweaked with a custom configuration file, but now there’s no need for one. Here’s how the game looks with the lowest and highest settings: The new detail level works much better than the original automatic setting, but low resolution textures (like the one on the rail, bottom right) still plague this game The new vsync option doesn’t increase rendering quality. It can improve game play on PCs that suffer from screen tearing, though. The side effect is that enabling vsync can force performance down to 30 FPS if your hardware isn’t capable of sustaining the 60 FPS target. The Smart setting biases to 60 FPS tearing if your graphics card supports the "swap-tear" extension, as this is considered less jarring than a sudden drop down to 30 FPS. The Rage patch update mentions this feature but doesn’t’ specify the graphics cards that support it. Stay On the Cutting Edge: Get the Tom's Hardware Newsletter Get Tom's Hardware's best news and in-depth reviews, straight to your inbox. Contact me with news and offers from other Future brands Receive email from us on behalf of our trusted partners or sponsors By submitting your information you agree to the Terms & Conditions and Privacy Policy and are aged 16 or over. Update : AMD let us know that, "The swap-tear extension is an extension to the original WGL_swap_control that allows the driver to dynamically toggle v-sync based on frame rate. This feature was implemented by our engineering team and is supported on all of our ASICs. However, it's never been documented." The good news is that it's implemented in Vista and Windows 7 Radeon drivers. We're still waiting on a response from Nvidia. Finally, there’s a GPU transcoding option available exclusively to owners of GeForce graphics cards. This feature employs CUDA to convert texture files from the disk into a format the game can use. As explained by Nvidia's own configuration guide: "In Rage, id Software uses a compressed texture format to hold tens of gigabytes of assets in 12GB of files in the game’s virtualtextures directory. Each time a texture is required in-game it is uncompressed via DXT, a texture compression algorithm originally developed by S3 Graphics, a company known for its Savage GPUs in the late 90s. As this process requires a significant amount of computational power, and is used every second as the player moves around the world, the CUDA GPU Transcoding feature offloads much of the work from the CPU to ensure that is completed as quickly as possible in an attempt to prevent texture streaming and pop-in issues." 
+ 1 
+2
+ 3 
+ 4 
+ 5 
+ 6 
+ 7 
+ 8 
+ 9 
+ Current page: 
+Image Quality And Settings
+ Prev Page After Drivers And Patches, Rage Cleans Up Nicely 
+ Next Page The Rage Benchmark Conundrum: Video Comparison 
+ TOPICS 
+Benchmark
+AMD
+ See all comments (82) 
+Don Woligroski
+ Contributor 
+ Don Woligroski was a former senior hardware editor for Tom's Hardware. He has covered a wide range of PC hardware topics, including CPUs, GPUs, system building, and emerging technologies. 
+ Read more 
+ GPUs 
+ Gears of War: E-Day PC graphics performance tested 
+ PC Gaming 
+ Control Resonant PC performance tested 
+ Windows 
+ We tested gaming performance in 17-year-old Windows 7 on a modern gaming PC against Windows 11 
+ GPUs 
+ Best Graphics Cards for Gaming in 2026 
+ CPUs 
+ Gears of War E-Day is an uncharacteristically CPU-heavy Unreal Engine 5 game 
+ CPUs 
+ Benchmarking 31 different CPUs in Onimusha: Way of the Sword 
+ Latest in Software 
+ Linux 
+ The end of an era as Linux 7.5 purges the last 30-year-old Intel MMX optimizations from Pentium age 
+ Software 
+ Enthusiast abandons self-hosted Microsoft Exchange after 27 years, moving mailboxes to Microsoft 365 
+ Windows 
+ Windows 11 8GB RAM configurations get a performance boost 
+ Applications 
+ Disgruntled software developers start ambitious open-source revolt, using AI to clone common services 
+ Windows 
+ Developer manages to run Windows 11 26H2 with just 128MB of RAM, just 3.1% of recommended minimum 
+ Social Media 
+ French lawmakers add $11.2 billion internet tax based on traffic usage to budget, costs $0.06 per gigabyte of content accessed 
+ Latest in Features 
+ PC Gaming 
+ Ditch the headset: How HDMI® eARC unlocks lossless surround and Dolby Atmos for PC gaming 
+ Macbooks 
+ Apple finally has a touchscreen MacBook. Why now? 
+ DRAM 
+ Micron details ambitious DRAM and NAND roadmap — 3D NAND, High-NA EUV, new materials, and custom silicon makes a comeback 
+ Semiconductors 
+ GlobalFoundries VP details FDX Fusion technology, sporting 7nm-class performance without the need for EUV tools — company targets 2030 for high-volume manufacturing, with planar transistors in tow 
+ Artificial Intelligence 
+ Our first step at defining a CPU benchmark for agentic AI 
+ Semiconductors 
+ China can make advanced chips without EUV, but the bill keeps growing 
+ 82 Comments 
+ Comment from the forums 
+ MasterMace 
+This is an instance of a company making a game for consoles and expecting it to work in PCs. This company will be abandoned by PC gamers, and it will settle in on the consoles. Eventually, they'll die off or change, just like the Red Faction series. This applies for the graphics and the quality of the game.
+ Reply 
+ crisan_tiberiu 
+Piracy doesn't make the PC world very atractive. Thats the only reason why game developers turn away from the PC, they dont make money.
+ Reply 
+ amirp 
+I believe there may be a typo, 6570 should be 6670 in the charts? I'm not sure though.
+ Reply 
+ dragonsqrrl 
+mmmm... poorly optimized console ports... does a body good.
+ Reply 
+ dbonetrain 
+ 9521547 said: Piracy doesn't make the PC world very atractive. Thats the only reason why game developers turn away from the PC, they dont make money. 
+Carmack said they make for the consoles is for money. You are mistaken if you think piracy is what drives developers away from the PC.
+ Reply 
+ cbeermann 
+Any1 know why its running so bad on my PC. I have a Phenom X2 550 3.1 Ghz, and a HD 6950.According to this review, it should be able to run it fine but whenever im playing my CPU is at 100% and it runs choppy as hell. I've installed the new RAGE performance driver, as well as that 11.10 thing, neither helped. I added the cache folder for textures, still choppy. I am curious however, that since I have my Steam on my K drive and not on my C if that could be screwing with the cache, anyone know?
+ Reply 
+ dlsmoker 
+You missing that console games too are downloaded "illegal", don't think that only pc games are.
+ Reply 
+ Darkerson 
+This game was a big "meh" for me. Hopefully they do a better job on the next game they make.
+ Reply 
+ rottingsheep 
+amazing! 
+a phenom dual core is enough.
+ Reply 
+ killerclick 
+MasterMaceThis company will be abandoned by PC gamers 
+You mean Bethesda? I've already broken up with my girlfriend so I don't have to make up illnesses when Skyrim comes out on 11.11.11 
+Or did you mean id Software? In which case you're right, they can go to hell.
+ Reply 
+ View All 82 Comments 
+Show more comments 
+Tom's Hardware is part of Future US Inc, an international media group and leading digital publisher. Visit our corporate site .
+ Add as a preferred source on Google 
+ Terms and conditions 
+ Contact Future's experts 
+ Privacy policy 
+ Cookies policy 
+ Accessibility Statement 
+ Advertise with us 
+ About us 
+ Coupons 
+ Careers 
+ ©
+Future US, Inc. Full 7th Floor, 130 West 42nd Street,
+New York,
+NY 10036. 
+ UK edition for content related to your region.","homepageLink":"https:\/\/www.tomshardware.com\/uk"},{"locale":"US","translatedText":"Looks like you're in the US! Visit Tom's Hardware's US edition for content related to your region.","homepageLink":"https:\/\/www.tomshardware.com"}]">
+ 

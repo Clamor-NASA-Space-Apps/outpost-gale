@@ -1,0 +1,152 @@
+ 
+ Face-Off: Modern Warfare 2 | Eurogamer.net 
+ Skip to main content 
+Menu 
+Sign in / Create account 
+ Home
+ Latest
+ Digital Foundry
+ News
+ Reviews
+ Videos
+ Features
+ Guides
+ Buy eShop codes
+ Platforms 
+ 2025 Release Schedule
+ Fortnite Godzilla
+ Genshin Impact Lantern Rite
+ Pokémon Go Fashion Week
+ Supporters only
+ Deals
+ Switch 2 unveiled Nintendo finally reveals new console 
+ Read our coverage
+If you click on a link and make a purchase we may receive a small commission. Read our editorial policy .
+ Home
+ Features
+ Call of Duty: Modern Warfare 2 (2009)
+ Face-Off: Modern Warfare 2 
+ Extensive analysis of the PS3 and Xbox 360 versions. 
+Image credit: Eurogamer 
+ Feature
+ by Richard Leadbetter 
+ Technology Editor, Digital Foundry
+Updated on Nov. 12, 2009 
+ 139 comments
+ Follow Call of Duty: Modern Warfare 2 (2009)
+Page 1 of 3 
+Next page 
+The year's hottest and most successful videogame finally gets the full-on Digital Foundry Face-Off treatment. It's fair to say that Call of Duty titles in recent years have consistently favoured performance on the Xbox 360, whether they've been produced by series founder Infinity Ward or gap-year specialists Treyarch. With 2009's offering featuring an enhanced engine and brand new streaming tech, can the PS3 game match or indeed surpass the quality of the Xbox title?
+First things first. While there have been plenty of attempts at comparison shots thus far across the net, something hasn't really looked quite right about any of them. The colour balance is quite patently wrong .
+Basic settings don't cut it with Modern Warfare 2. You really need to spend some time setting up the game to play nicely with your screen... or indeed your capture kit. Usual form within any Digital Foundry Face-Off is simply to run the game at default settings and let the chips fall as they may - the assumption being that the default is equivalent to the colour settings within the console's framebuffer, or at the very least what the developer calibrates the output to. However, keeping the default settings is really not a particularly good idea within Modern Warfare 2 and we're also not sure how effective Infinity Ward's calibration method is for the end user is either.
+Leave things at default settings and you get images like this:
+ Default brightness settings make neither version look particularly impressive, and aren't particularly useful for comparison. 
+Bottom line: if you're an Xbox 360 owner, you should be making the image brighter, and if you're playing on PS3, it's really a massively good idea to lower the brightness level significantly, otherwise the lighting - one of the really impressive things in this game - simply won't look as good as it should. Many people online are discussing the PS3's washed-out image, or talking about a "grey filter". In truth, there's nothing wrong with it. It's simply a case of tweaking your settings.
+So with all that in mind, here's our set of 720p comparison shots, different from the others you might have seen in that they actually show each version of the game in the way they should be seen.
+For the record, these are the settings we ended up using that gave us the closest colour match between the two versions while at the same time offering the best picture. Mileage will vary according to your display, but assuming your screen is well set-up, this is the ballpark. Give this a shot and tweak from there.
+ Our preferred settings. Note the enormous difference required in brightness between the two games to produce a decent like-for-like image. 
+With that sorted out, it's time to take a look at some like-for-like comparison video to show just how close the game is between the two console platforms. The video runs at 30 per cent speed here, in order to retain detail levels while keeping it readily streamable for broadband users. Even with the extra layer of scrutiny that this affords us, it's clear to see that Infinity Ward has done a superb job of achieving platform parity. Particular effort has been made on the PS3 side of things. Under the bonnet, a lot has been done to bring the visuals on the Sony platform up to the same standard as that seen on the 360 build.
+ Slowed down to 30 per cent speed, here we compare two versions directly in like-for-like shots. Hit the full-screen button for full HD resolution, or else click the EGTV link for a larger window. 
+Infinity Ward's improvements to the PS3 game are particularly evident in the handling of textures. The original Modern Warfare did a good job of being perceptually very similar to the Xbox 360 version, but look more closely - literally - and you could see that there were compromises in texture quality. The comparison shots here kick off with a close-up of Captain Price from COD4, followed up by an equivalent close-up shot in the sequel. The improvement is absolutely colossal, and while there isn't quite platform parity, any differences are now negligible.
+ 1 of 4 
+Caption 
+Attribution 
+So, what's the secret? In common with many other developers, Infinity Ward has jettisoned the notion of storing all textures in RAM and instead streams them in as and when they are needed. Liberated from the constraints of onboard video memory, Modern Warfare 2 is a much richer place in which to play, but it does come at a cost. There's limited bandwidth available when streaming from an optical disc, so in fast-moving scenes, lower-resolution textures are left on-screen for longer than you might like. While this affects the 360 build to some extent too, at least there you have the ability to install the entire game to hard disk.
+Page 1 of 3 
+Next page 
+ Richard Leadbetter : Rich has been a games journalist since the days of 16-bit and specialises in technical analysis. He's commonly known around Eurogamer as the Blacksmith of the Future.
+View comments (139) 
+ In this article 
+ Awaiting cover image 
+ Call of Duty: Modern Warfare 2 (2009) 
+ Video Game
+ Follow
+ Related topics 
+ Analysis 
+ Digital Foundry 
+ PS3 
+ Xbox 360 
+ Eurogamer is better when you sign in
+ Join our community of gamers and get access to personalised reading recommendations and much more!
+ Sign in with Google 
+ Sign in with Facebook 
+ Sign in with Twitter 
+ Sign in with Reddit 
+Sign in with email 
+ Latest On Call of Duty: Modern Warfare 2 (2009) 
+Amazon's The Boys coming to Call of Duty: Modern Warfare 2 and Warzone 2 
+ Review | 
+Modern Warfare 2: Resurgence Pack 
+COD creators "betrayed" me - Kotick 
+Acti: IW "will rise from the ashes" 
+Acti laments poor Blur, Singularity sales 
+5000 applied to work on COD 
+"You'll never have to pay to play COD" 
+MW2 Resurgence DLC at 6pm UK 
+ Latest News
+ Latest Features
+ Top Discussions
+ Unannounced MySims games mysteriously pop up and disappear from EA app
+ Poppy Playtime's going after Google
+ Nintendo reveals what it thinks is "the best direction" for Switch 2
+ Ubisoft says Assassin's Creed Shadows will have less map icon 'hand-holding', more player-driven exploration
+ Genshin Impact maker agrees to pay $20m in FTC case accusing it of violating children's privacy and deceiving players
+ Death Howl is a strikingly moody "Soulslike deck builder" from publisher 11-Bit Studios
+ Switch 2 hands-on registration now open in Europe, and you'll get up to four hours play time
+ What we've been playing - great escapes, unexpected ends, and Salem Socks
+ Switch 2's reveal: what have we learned about its next-gen potential?
+ Hyper Light Breaker offers loot, lore, and... the tiniest touch of Fortnite?
+ If Switch 2 is the end of innovative Nintendo, there's much to be sad about
+ If the Switch 2 is safe, then I'm Jason Statham and I want to star in it
+ Skate City: New York is as dreamy as a week off in Manhattan
+ How do you get better at social games like The Traitors?
+ With Switch 2 and presumably a new 3D Mario on the horizon, it's time for me to admit Super Mario Odyssey always felt a little weird
+ 84 
+ Marvel Snap gets surprise US suspension as stateside TikTok ban takes effect
+ 32 
+ Never-before-seen Astro Bot level debuts at weekend PlayStation Tournament
+ 3 
+ Call of Duty: Black Ops 6 bans another 136,000 cheaters
+ 3 
+ Eurogamer.net is owned by Gamer Network Limited, an IGN Entertainment company and subsidiary of Ziff Davis.
+ © 2025 Gamer Network Limited, 18 Mansell Street Level 3, London, E1 8AA, United Kingdom. Company number 03882481.
+All rights reserved. No part of this website or its content may be reproduced without the copyright owner's permission. 
+ Helpful Links
+ About Us
+ Advertise with us
+ Archive
+ Authors
+ Contact Us
+ Corporate Site
+ Interactive Maps
+ Manage push notifications
+ Newsletters
+ RSS Feeds
+ Policies
+ AdChoices
+ Code of Conduct
+ Cookie Policy
+ Do Not Sell My Personal Information
+ Editorial Policy
+ Privacy Policy
+ Review Policy
+ Terms & Conditions
+ Gamer Network
+ Dicebreaker
+ Digital Foundry
+ GamesIndustry.biz
+ Jelly Deals
+ Nintendo Life
+ Pure Xbox
+ Push Square
+ Rock Paper Shotgun
+ Time Extension
+ VG247
+ Across Europe
+ Eurogamer.cz
+ Eurogamer.de
+ Eurogamer.es
+ Eurogamer.nl
+ Eurogamer.pl
+ Eurogamer.pt
+ 

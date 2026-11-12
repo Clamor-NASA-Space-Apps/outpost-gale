@@ -1,0 +1,156 @@
+ 
+ It's not the same old 3D graphics in Call of Duty: Black Ops II - GamesBeat 
+ Menu 
+ Search 
+ Menu 
+ GamesBeat 
+ Newsroom 
+ Gaming Biz 
+ Entertainment 
+ Technology 
+ Culture 
+ Development 
+ Gameplay 
+ GamesBeat Event Coverage 
+ Industry Event Coverage 
+ Special Features – BOSS Mode 
+ Events 
+ Upcoming Events 
+ GamesBeat NEXT 
+ GamesBeat Summit 
+ GamesBeat Event Coverage 
+ Video 
+ Partnerships 
+ The BIG Show 
+ GB MAX 
+ Search 
+ Become a Member 
+ Sign in 
+ close 
+ Search for: 
+ Search 
+ GamesBeat close 
+ Newsroom 
+ Gaming Biz 
+ Entertainment 
+ Technology 
+ Culture 
+ Development 
+ Gameplay 
+ GamesBeat Event Coverage 
+ Industry Event Coverage 
+ Special Features – BOSS Mode 
+ Events 
+ Upcoming Events 
+ GamesBeat NEXT 
+ GamesBeat Summit 
+ GamesBeat Event Coverage 
+ Video 
+ Partnerships 
+ The BIG Show 
+ GB MAX 
+ Become a Member 
+ Sign in 
+ Follow us Follow us on social media 
+ Share this article 
+ twitter 
+ facebook 
+ linkedin 
+ bluesky 
+ Categories 
+ Posted in in Business 
+ It’s not the same old 3D graphics in Call of Duty: Black Ops II 
+ Posted by by Dean Takahashi 
+ May 2, 2012 
+ Updated June 18, 2025 
+ 4 min 
+ Share this article 
+ twitter 
+ facebook 
+ linkedin 
+ bluesky 
+ Hollywood & Games returns to Los Angeles on December 10, bringing together 250+ executives, founders, investors and decision-makers at the Grammy Museum's Clive Davis Theater. Explore the business of entertainment's biggest partnership through independent, journalist-led conversations on IP, investment, storytelling and new opportunities across gaming and Hollywood. Space is limited. Secure your seat today. 
+ [Editor’s note: minor spoilers on game locations] 
+ The one requirement for a Call of Duty game is that it has to run at 60 frames per second on a console. The graphics of the game have to look good, but they can’t slow the game down. 
+ So you would think it would be very hard to make Call of Duty: Blacks Ops II, which is being unveiled today, look any better than Call of Duty: Black Ops from 2010. After all, they’re both running on the Xbox 360, which was introduced in 2005, and the PlayStation 3, which was introduced in 2006. 
+ Happily, the Treyarch team has been able to squeeze  more 3D graphics performance out of the consoles. 
+ “You have to challenge assumptions,” said Dan Bunting, director of online at Treyarch. “We didn’t want to rely on the stuff we have done in the past. We locked ourselves in a room and decided what do we want to take away from the game in terms of technology.” 
+ Treyarch brought together a “strike team which we called the Beautiful Corner team.” That was an affectionate term for a vertical slice program that defines a flow of a map, starting with one corner of the map. They studied the graphics technology and defined what the game would look like. They plotted for four months, and in the end, they wanted to produce “PC quality graphics running at 60 frames per second on a console.” 
+ The performance of consoles is frozen in time because every console has to be the same, and it presents developers with a stable development platform. The PC, on the other hand, evolves every year and can absorb the latest and greatest graphics chips and microprocessors. But a talented programming team can rewrite code so that it runs more efficiently on a console and frees up resources to do more things. 
+ “It’s a simple statement and a big ask,” Bunting said. “Getting PC quality graphics running on a console is tough. A seasoned team can do it, but the graphics are expensive in terms of rendering power. The tricky part is the 60 frames per second.” 
+ Gamers won’t tolerate anything except fast and fluid gameplay and graphics. Immediate responsiveness is what you need when you are in a duel with another player. 
+ After those four months had passed, the team had completed two maps. They have since made other maps now and are now pushing the technology even harder. 
+ Some of the major changes they made were with lighting effects. “Lighting is the rub that pulls the room together,” Bunting said. “It makes it feel immersive and realistic. Lighting is where we focused our energy.” 
+ One of the upgrades is better high-dynamic range (HDR), which allows for both light and dark elements in the same scene. HDR pulls out more details that you would otherwise miss in a scene with different kinds of lighting and shadows. 
+ Another new element is “bounce lighting,” where light bounces off the ground and illuminates another surface. You can see this kind of lighting if you are looking out at the end of a tunnel. Light from the outside hits the floor, bounces off the ceiling, and creates secondary light sources. In a room with windows, you will see softer shadows. 
+ Techniques are what artists use to accomplish cool visuals, once they have the technology. Bunting showed a map set on an island near Yemen. It has unique trees that have complex branches and leaves. With “vertex baked lighting,” the trees get a very dense interaction of light and shadow. 
+ Ambient occlusion, which is what happens when light bounces around a room a lot, causes some rooms to have really dark shadows in the corners. Light reflects off of weapons in different ways. Particle effects, like motes of dust, bits of ash, or insects flying around add granular details. Sand on the ground will obscure the asphalt on a road. But if you see cracks in the pavement, the sand will fall into those crevices and really look like what you would expect. Rocks on the side of the road have more depth. 
+ “We can do a lot more of these effects in the same scene,” Bunting said. 
+ In the map (dubbed Aftermath) of a destroyed Los Angeles, you see things such as water puddles on the street. Some of those puddles have colorful oil slicks on them. You’ll see many more things happening on a screen at the same time compared to past games, said Mark Lamia, studio head at Treyarch. Even objects in the far background will have visible features, such as a skyscraper on fire in the distance. 
+ In the map, you see a lot of rubble, steel girders, and destruction. The landscape has a lot more detail to render. The artists started working on this level by taking photographs of downtown Los Angeles. The scene is layered with smoke, fires, shadows, sparks from live electrical wires, and sunlight coming through the glass. 
+ “We’re not resting on our laurels,” Bunting said. “We want to create these new experiences for the Call of Duty franchise. We don’t want to take anything for granted.” 
+ [Photo credit: Dean Takahashi] 
+ Check out our other coverage of Call of Duty: Black Ops II : 
+ First trailer released 
+ Treyarch unveils Black Ops II, a.k.a. Attack of the Drones 
+ Treyarch studio head Mark Lamia on taking design risks (interview) 
+ How Treyarch created realistic human faces 
+ Creating the sounds of future wars 
+ GamesBeat 2012 is VentureBeat’s fourth annual conference on disruption in the video game market. This year we’re calling on speakers from the hottest mobile, social, PC, and console companies to debate new ways to stay on pace with changing consumer tastes and platforms. Join 500+ execs, investors, analysts, entrepreneurs, and press as we explore the gaming industry’s latest trends and newest monetization opportunities. The event takes place July 10-11 in San Francisco, and you can get your early-bird tickets here . 
+ Share this article 
+ twitter 
+ facebook 
+ linkedin 
+ bluesky 
+ Latest News 
+ Posted in in Entertainment 
+ Golden Joystick Awards honors BioWare, crowns Resident Evil Requiem 
+ Posted by Rachel Kaser 
+ November 11, 2026
+ Posted in in Technology 
+ Nvidia shares fall 8% on new allegations of CEO’s 2nd affair and board preparing ouster 
+ Posted by Dean Takahashi 
+ November 11, 2026
+ Posted in in Business 
+ Grand Theft Auto VI preorders cross $1B | analyst roundup 
+ Posted by Dean Takahashi 
+ November 11, 2026
+ Trending 
+ Posted in in Development 
+ How short-form video creators are turning their audiences into UGC game development businesses | GamesBeat Next 2026 
+ Posted by Alexander Lee 
+ November 11, 2026
+ Posted in in Business 
+ Shadow publishing gives studios more control as developers take charge of their own success | GamesBeat Next 2026 
+ Posted by Sam Smith 
+ November 11, 2026
+ Posted in in Business 
+ Nintendo’s The Legend of Zelda: Ocarina of Time remake sells 5.2M copies in four days 
+ Posted by Jolie Feld 
+ November 11, 2026
+ Subscribe to our newsletter 
+ Join GB MAX and get access to GamesBeat newsletters for all the latest updates 
+ Join Now 
+ Gameplay 
+ Nintendo’s The Legend of Zelda: Ocarina of Time remake sells 5.2M copies in four days 
+ Posted by Jolie Feld 
+ GBNext Fireside Chat: Nex president Tom Kang makes the case for family-oriented active play 
+ Posted by Jolie Feld 
+ Entertainment 
+ Golden Joystick Awards honors BioWare, crowns Resident Evil Requiem 
+ Posted by Rachel Kaser 
+ Grand Theft Auto VI preorders cross $1B | analyst roundup 
+ Posted by Dean Takahashi 
+ Development 
+ How short-form video creators are turning their audiences into UGC game development businesses | GamesBeat Next 2026 
+ Posted by Alexander Lee 
+ Shadow publishing gives studios more control as developers take charge of their own success | GamesBeat Next 2026 
+ Posted by Sam Smith 
+ Become a Member 
+ Sign in 
+ Contact Us 
+ About Us 
+ Terms of Service 
+ Privacy Policy 
+ Do Not Sell My Information 
+ Copyright © 2026 GamesBeat. All Rights Reserved. 

@@ -1,0 +1,82 @@
+ 
+ UDK | PrecomputedVisibility 
+ -->
+ -->
+ |    Main | UnrealEngine2 | UnrealEngine3 | UnrealEngine4 | Business & Legal | 
+ UDN 
+Search public documentation: 
+ PrecomputedVisibility 
+ 日本語訳 中国翻译 한국어 
+Interested in the Unreal Engine? 
+Visit the Unreal Technology site. 
+Looking for jobs and company info? 
+Check out the Epic games site. 
+Questions about support via UDN? 
+Contact the UDN Staff 
+ UE3 Home > Rendering > Precomputed Visibility 
+ UE3 Home > Mobile Home > Precomputed Visibility
+ Precomputed Visibility 
+ Document Changelog: Created by Daniel Wright . 
+ Precomputed Visibility 
+ Overview 
+ Setting up a game to use precomputed visibility 
+ Setting up a level to use precomputed visibility 
+ Cell placement 
+ Visualizing results 
+ Visibility Settings 
+ Relevant Stats 
+ Results 
+ Limitations 
+ Debugging visibility issues 
+ Overview 
+As of cl 572477 (which will be in QA_APPROVED_BUILD_AUG_2010), UE3 has the ability to precalculate visibility during lighting builds.
+The primary benefits of precomputed visibility are for mobile platforms which don't support hardware occlusion queries, and to save rendering thread time in rendering thread bottlenecked scenarios like split screen on consoles. Precomputed visibility decreases rendering thread time in game at the cost of increasing runtime memory and lighting build time somewhat. It saves rendering thread time by reducing the number of primitives that have to be handled by the dynamic occlusion system (hardware occlusion queries) and because it works immediately, while the dynamic occlusion system needs time to converge, which often means poor performance coming around a corner or rotating the view quickly. This technique is only useful for medium sized levels or smaller, as the memory and computation requirements grow with the level size. It is also only useful for games with mostly static environments, restricted player movement and somewhat 2d play areas.
+ Note: Lightmass is required to build precomputed visibility.
+ Setting up a game to use precomputed visibility 
+Since scale is game-dependent, parameters for visibility calculation need to be tweaked for each game. These are in the DevOptions.PrecomputedVisibility section of BaseLightmass.ini. Games override these by creating a DevOptions.PrecomputedVisibility section in their DefaultLightmass.ini. The primary setting to tweak is:
+ PlayAreaHeight - The height above a surface that the camera can be. This is usually your tallest players eye height + jumping height. The default is 220.
+ Setting up a level to use precomputed visibility 
+First, place one or more PrecomputedVisibilityVolumes around the play areas of your level. These don't have to be rectangles or axis aligned, any brush shape will work. They should bound the play areas as tightly as possible for optimal memory usage and build times.
+Next, enable bPrecomputeVisibility under View->WorldInfo->PrecomputedVisibility, and build lighting for your level. When the camera is inside a visibility cell, the renderer will cull any objects that were determined to be occluded.
+ Cell placement 
+Visibility cells are placed just above shadow casting geometry inside the PrecomputedVisibilityVolumes you have placed, and along matinee camera movement tracks even if they are outside of a visibility volume. Precomputed visibility can only work if the viewer is inside one of these cells, so most of the time when you are flying around in the editor it will not be active.
+This image shows blue visibility cells placed on surfaces inside the green visibility volume in UDK's DM-Sanctuary:
+This image shows blue visibility cells placed along a matinee camera movement track:
+ Visualizing results 
+The editor has the ability to treat one view as the 'occlusion parent' for another view, see Occlusion Preview . We can use this to visualize precomputed occlusion too.
+ First, setup the level for precomputed visibility and build lighting.
+ Setup your viewports. A 1x1 Vertical split works well. All views need to have realtime update enabled. Move your perspective viewport into the play area (inside a visibility volume, somewhat near the ground) so that it will be inside a cell. You will know that it is working when you get a non-zero value for 'Statically Occluded Primitives' when you enter 'stat initviews' on the console and enable stats for the perspective view.
+ Type 'ToggleOcclusion' into the console to turn off the dynamic occlusion system. You should get the message 'Occlusion queries are now disabled' in the log. This will allow us to look at only the results of precomputed occlusion.
+ In the perspective view, click 'View Culling/Occlusion' in viewport drop down.
+The frustum of the perspective view will now be drawn in pink on the wireframe view, and you can see which meshes are considered visible by precomputed occlusion.
+This scene shows precomputed visibility culling 2487 primitives (this is the 'Statically Occluded Primitives' stat below), which are all hidden in the wireframe on the right:
+This is the same scene with the camera moved slightly outside of any visibility cells, so no occlusion is happening, notice the new meshes in the wireframe on the right:
+ Visibility Settings 
+ Relevant Stats 
+ 'Statically occluded primitives' under 'stat initviews' shows how many primitives were determined invisible by precomputed visibility after frustum culling took place. 'Occluded primitives' shows how many primitives were determined invisible by both precomputed visibility and the dynamic occlusion system. The difference between these two stats is how many primitives the dynamic occlusion system culled that precomputed visibility missed. When precomputed visibility is working well, 'Statically occluded primitives' should be within 50-80% of 'Occluded primitives'. Precomputed visibility culls less objects because it stores information for large cells and doesn't handle dynamic or masked occluders (see the Limitations section). Note: this stat is most reliable in game or PIE, and not in the editor, due to all the debug stuff that gets drawn in the editor.
+ 'Decompress Occlusion' under 'stat initviews' shows how much time was spent decompressing precomputed visibility.
+ 'Precomputed Visibility Memory' under 'stat memory' shows how much runtime memory is used by precomputed visibility. Note: this stat is not reliable in PIE, check it in the editor or in game instead, since it is counting both PIE and editor memory when in PIE.
+ Results 
+These are from a Gears of War 3 MP level with good occluders (large opaque occluders without many small holes), in splitscreen, with both views looking toward the center of the map:
+ 1739 primitives statically occluded out of 2180 occcluded total
+ Savings of 2.7ms of rendering thread time on Xbox 360 compared to without precomputed occlusion (35.4ms ->32.7ms). Note that the main benefit of using precomputed visibility is that it is instantly active, while the dynamic occlusion system can take a while to converge. So frame time when coming around a corner for the first time or rotating the view rapidly should be better with precomputed visibility enabled, but these cases are difficult to measure reliably.
+ 627Kb of precomputed visibility data
+ Tiny 1ms hitch on the rendering thread when moving to a new area and occlusion gets decompressed for that area
+ Limitations 
+The current implementation of precomputed visibility has these limitations:
+ Doesn't handle movable objects or movable occluders
+ Doesn't handle non-opaque occluders, because masked occluders often have small holes that are difficult to detect
+ Only places cells above surfaces, so games with flying modes won't get much benefit
+ Doesn't handle streaming levels efficiently, all data is stored in the persistent level instead of streamed in and out with the streaming levels
+ Only static shadow casting triangles will occlude. This means that a lightmapped interpactor will occlude when it shouldn't, and a non-movable object that doesn't cast shadows will also not occlude when it should.
+These may be improved in the future.
+ Debugging visibility issues 
+There are a few console commands that can be helpful when debugging precomputed visibility issues: 
+ TogglePrecomputedVisibility - Toggles the use of precomputed visibility data.
+ ShowPrecomputedVisibility - Toggles debug visualization of precomputed visibility cells
+If you have objects disappearing, and TogglePrecomputedVisibility causes them to be displayed, then precomputed visibility is causing the issue and you will need to adjust existing PrecomputedVisibilityVolumes or add new ones to make sure the area is fully covered.
+ Important!
+ You are viewing documentation for the Unreal Development Kit (UDK) . 
+ If you are looking for the Unreal Engine 4 documentation, please visit the Unreal Engine 4 Documentation site. 
+ Don't show me this again 
+   Copyright © 2001-2012 Epic Games, Inc. Terms and Conditions Privacy Notice 

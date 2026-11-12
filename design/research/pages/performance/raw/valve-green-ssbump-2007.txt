@@ -1,0 +1,255 @@
+                           Efficient Self-Shadowed Radiosity Normal Mapping
+                                                                  Chris Green∗
+                                                                    Valve
+
+
+
+
+                Normal-mapped                     Normal mapped with ambient occlusion                        Self-shadowed
+
+
+Abstract                                                                  and then convolved with the incoming light distribution for each
+                                                                          output pixel [Sloan 2006].
+In Valve’s Source graphics engine, bump mapping is combined with
+precomputed radiosity lighting to provide realistic surface illumina-     In this chapter, we extend Radiosity Normal Mapping by modify-
+tion using a technique we call Radiosity Normal Mapping. When             ing the bump map representation to be pre-convolved against the
+bump map data is derived from geometric descriptions of surface           tangent-space lighting basis in order to gain efficiency and reduce
+detail (such as height maps), only the lighting effects caused by the     rendering artifacts. We then extend this pre-convolution to take into
+surface orientation are preserved and significant lighting cues due       account directional self-occlusion information, allowing for both
+to lighting occlusion by surface details are lost. While it is common     occlusion of isotropic ambient lighting and dynamic directional
+to use an additional texture channel to hold an “ambient occlusion”       lighting.
+field, this only provides a darkening effect which is independent of
+the direction from which the surface is being lit.                        2      Related work
+In this chapter, we present a modification to the Radiosity Normal
+Mapping system that we have described in this course in the past.         Many different techniques have been used to add shadowing infor-
+This modification provides a directional occlusion function to the        mation to bump mapped surfaces for real-time rendering. Horizon
+bump maps, which requires no additional texture memory and is             mapping augments bump map data by precomputing and storing
+actually faster than our previous non-shadowing solution.                 the angle to the “horizon” for a small set of fixed tangent-space di-
+                                                                          rections and uses this representation to produce hard shadows [Max
+                                                                          1998] [Sloan and Cohen 2000]. In [Kautz et al. 2000], an oriented
+1     Introduction                                                        ellipse is fitted to the distribution of non-shadowed lights over a
+                                                                          bump map texel. In [Oat and Sander 2007], a spherical cap is used
+In order to increase surface detail and perceived realism, bump
+                                                                          to model the visible light directions over a bump map texel, and
+mapping is used heavily in modern real-time 3D games [Blinn
+                                                                          this data is used to render hard and soft shadows from point and
+1978] [Peercy et al. 1997]. Bump maps are often used as an ap-
+                                                                          area lights in real time.
+proximation of highly detailed geometry which would either be too
+slow to render in real time or too memory intensive to store rea-         Recently, techniques have been developed for direct rendering of
+sonably. However, one weakness of bump maps is that they only             height fields in real time using graphics hardware [Policarpo et al.
+modify the surface normal which is used for lighting computations.        2005] [McGuire and McGuire ] [Tatarchuk 2006]. Since these tech-
+While this provides a realistic directional lighting cue, effects such    niques are able to compute visibility of height field texels from any
+as self-shadowing of surface details and ambient occlusion are not        viewpoint, they are also able to implement shadowing of height
+rendered.                                                                 fields by computing visibility to light sources.
+Traditional bump mapping also cannot be combined with conven-
+tional precomputed light maps, a technique in which a global illu-        3      Representation and Generation
+mination solution is generated as a precomputation and then stored
+in a low resolution texture which is used to modulate the brightness      We wished to implement self-shadowing of bump maps that would
+of the surface albedo [id Software 1997].
+                                                                              • mesh well with our existing Radiosity Normal Mapping tech-
+With Radiosity Normal Mapping, the precomputed light map in-
+                                                                                nique
+formation was extended to encompass lighting from multiple di-
+rections and allowed arbitrary bump mapped data to be combined                • work on older generations of graphics hardware as well as
+with precomputed lighting textures [McTaggart 2004] [Mitchell                   current systems.
+et al. 2006]. Using Radiosity Normal Mapping, the distribution
+of incoming distributed lighting can be stored in many possible               • run as fast as, or faster than our current non-shadowed solu-
+bases, with the tangent-space surface normal evaluated per pixel                tion.
+    ∗ e-mail: cgreen@valvesoftware.com                                        • improve bump map anti-aliasing
+                                                                                                                 3   REPRESENTATION AND GENERATION
+
+
+   • work with dynamics lights as well as our pre-calculated ra-                           f l o a t 3 d i f f u s e L i g h t i n g = normalTexel . x ∗ lightmapColor1 +
+     diosity lighting                                                                                                                  normalTexel . y ∗ lightmapColor2 +
+                                                                                                                                       normalTexel . z ∗ lightmapColor3 ;
+   • provide soft shadows and ambient occlusion
+   • allow shadowing information to be generated either from
+     height data or from arbitrary geometry.                                               Figure 2: HLSL source code for new self shadowed radiosity nor-
+                                                                                           mal mapping
+   • not use any increased texture storage space compared to or-
+     dinary bump mapping. In particular, we wanted to be able to
+     preserve existing uses of the alpha channel of bump maps as
+                                                                                           normal for use to calculate the lighting from dynamic lights and re-
+     a mask for various other effects.
+                                                                                           flection vectors. However, when needed, we can use our original
+We successfully implemented a method to generate diffuse soft-                             basis directions B~ to reconstruct a suitable tangent-space normal
+shadows from static and dynamic light sources, with no increase                            for reflections. For dynamic lights, we can project the lighting di-
+in bump map storage space, while providing an actual performance                           rection onto our basis directions and use that directly in the lighting
+increase over our existing non-shadowed radiosity bump map im-                             equation, which gives us a form of shadowing from dynamic light
+plementation.                                                                              sources.
+Prior to the integration of self-shadowing into the Radiosity Normal                       Once bump maps are stored in this format, some advantages are
+Mapping technique, the Source engine calculated lighting at each                           seen besides the increased pixel shader performance:
+surface pixel using the following operations:
+                                                                                              • Because the bump maps now just represent positive light map
+                                                                                                texture blending weights, no special processing is required
+                                      √                                                         when filtering or mip-mapping them.
+             −1  1   1   −1 −1 1  2        1
+~ 0..2 =
+B             √ , √ , √ , √ , √ , √ , √ , 0, √
+               6   2   3    6  2   3    3      3                                              • Numeric precision is increased since we no longer have to
+                                      ~     ~
+                                      N = 2T − 1                                                represent negative numbers and because we are now storing
+                                                                                                the bump maps in the exact numeric representation required
+                                                                ~ ·B
+                                                                   ~ i )2
+                                                ~ i = saturate(
+                                                D         P2 ~
+                                                               N                                by the shader.
+                                                            i=0
+                                                                Di
+                                                                                              • Surface textures stored in this form can be processed by ex-
+                                                                        2
+                                                                        X                       isting art tools with no special interpretation. For instance,
+                                               pixelcolor = kd                 ~ iD
+                                                                               L  ~i
+                                                                                                filters such as sharpen and blur can be used in PhotoshopTM .
+                                                                         i=0
+                                                                                              • Texture blending for operations such as detail texturing, tex-
+                                                                                                ture cross fading, etc. are much more straightforward.
+where T~ is the tangent-space bump map texel (which must be scaled
+and biased to obtain N ~ , because the stored texels are unsigned), B ~                       • Fewer aliasing artifacts will be seen when textures are mini-
+is the set of tangent-space directions for which incoming light has                             mized.
+been precomputed, ~ L0..2 are the 3 precomputed lighting values, and
+                                                                                              • Textures in this format can be directly generated from geom-
+kd is the RGB albedo of the surface texel being lit. saturate(x) is the
+                                                                                                etry in 3D rendering packages, by placing red/green/blue un-
+HLSL function which clamps its input to be in the range between 0
+                                                                                                shadowed point lights in the scene, offset along the 3 pre-
+and 1.
+                                                                                                defined basis vectors.
+
+f l o a t 3 normal = 2.0 ∗           normalTexel − 1 . 0 ;                                 Ordinary bump maps can only change the apparent lighting orien-
+f l o a t 3 dp ;                                                                           tation of the surface. However, when rendering with this represen-
+dp . x = s a t u r a t e ( d o t (   normal , bumpBasis [ 0 ] ) ) ;                        tation, if we uniformly scale the RGB values of the normal map
+dp . y = s a t u r a t e ( d o t (   normal , bumpBasis [ 1 ] ) ) ;                        texels, we can provide a darkening effect which is independent of
+dp . z = s a t u r a t e ( d o t (   normal , bumpBasis [ 2 ] ) ) ;
+                                                                                           the lighting direction. This allows us to have normal maps also
+dp ∗= dp ;
+                                                                                           act to modulate surface albedo, without having to store a separate
+f l o a t sum = d o t ( dp , f l o a t 3 ( 1 . 0 f , 1 . 0 f , 1 . 0 f ) ) ;               brightness channel, or change the RGB values of the base albedo
+f l o a t 3 d i f f u s e L i g h t i n g = dp . x ∗ l i g h t m a p C o l o r 1 +         texture. Since it is often possible to produce good imagery by com-
+                                            dp . y ∗ l i g h t m a p C o l o r 2 +         bining a fairly low frequency albedo texture with a high frequency
+                                            dp . z ∗ l i g h t m a p C o l o r 3 ;         bump map texture, this can save us texture memory.
+d i f f u s e L i g h t i n g / = sum ;
+                                                                                           A common bump map production method involves taking eleva-
+                                                                                           tion maps which are either painted, created in a modeling package,
+Figure 1: HLSL source code for original Source Radiosity Normal                            or acquired from real-word sources, and then using these elevation
+Mapping                                                                                    maps to extract a surface normal. Then, the same elevation data is
+                                                                                           used to calculate an ambient occlusion channel, which is typically
+                                                                                           generated by firing from each texel, a large set of rays. The results
+We observed that some execution time could be saved if, instead                            of these ray intersections are used to determine the cosine-weighted
+of storing the surface normal N~ in our texture maps, we stored the
+                                                                                           proportion of the hemisphere above the surface which can be seen
+value of ~
+         D in the 3 color components of the bump map, which was a                          without the surface obscuring it. The result of this ambient occlu-
+trivial modification to our bump map generation utility. P
+                                                         This change                       sion calculation is then either stored in its own texture channel, or
+                                                           2   ~ i T~i .
+reduced the lighting equation to just pixelcolor = kd i=0 L                                multiplied into the base texture. We can do the exact same thing in
+Just making this change saves a substantial number of pixel shader                         our representation, except that we can encode this channel directly
+instructions. However, we no longer have a tangent-space surface                           into the 3 channel normal map.
+
+
+                                                                  c 2007 Valve Corporation. All Rights Reserved
+                                                                                                                            REFERENCES
+
+
+
+
+           Height map                          Bump map                 Bump map stored in new basis    With directional ambient occlusion
+
+
+Moreover, since each of the channels of our modified bump map
+store the amount of light coming from 3 fixed tangent-space direc-
+tions, we are able to do better than just encoding ambient occlusion.
+If we weight the contribution of each ray intersection test based
+upon the dot product between it and the fixed tangent-space direc-
+tion associated with each channel, we can calculate a separate oc-
+clusion value for each channel, with that occlusion value represent-
+ing a smaller angular distribution centered upon the corresponding
+basis vector. This gives us a “directional ambient occlusion” effect
+which causes ambient and direct lighting arriving from different di-
+rections to be darkened when that light would have been blocked
+by the self-shadowing effects of the surface. These 3 ambient oc-
+clusion directions are simply multiplied into the 3 channels of the
+non-shadowed bump map we are already using in our representa-
+tion. This gives us a form of diffuse self-shadowing essentially “for
+free,” providing self-shadowing of direct and indirect light.
+
+When these directional ambient occlusion textures are converted
+back into normal vectors for reflection calculations, something akin      Figure 3: Cave walls exhibiting self-shadowing from the flashlight
+to the use of “bent normals” is achieved [?].                             in Half-Life R 2: Episode 2.
+
+We implemented an efficient multi-threaded SIMD ray tracing sys-
+tem [Wald et al. ] in order to perform the hundreds of ray inter-         4   Conclusion
+section tests per texel necessary to generate accurate directional
+ambient occlusion. Our offline utility takes as input an elevation        A form of self-shadowing can be easily added to radiosity bump
+map and an elevation scale factor. A user-configurable bilateral fil-     mapping by “baking” the light sampling basis into the actual bump
+ter [Tomasi and Manduchi 1998] is applied to the input image to           map data, with no decrease in performance or increase in texture
+reduce stair-stepping, and then 300 rays per output texel are traced      memory cost. We are able to make heavy use of this technique in
+in order to generate bump maps with directional ambient occlusion         the games Half-Life R 2: Episode 2 and Team Fortress 2.
+in our new format.
+
+                                                                          References
+It is also possible to generate textures in this format through stan-
+dard 3D rendering packages, by the careful placement of area lights       B LINN , J. F. 1978. Simulation of wrinkled surfaces. In SIGGRAPH
+in the scenes. Analogously, such maps could be captured from real            ’78: Proceedings of the 5th annual conference on Computer
+world materials via photography with appropriately placed lights             graphics and interactive techniques, ACM Press, New York, NY,
+and reflectors.                                                              USA, 286–292.
+                                                                          ID S OFTWARE , 1997. Quake 2.
+The standard techniques for generating bump maps for a coarsely
+tessellated model by tracing rays against a more finely tessellated       K AUTZ , J., H EIDRICH , W., AND DAUBERT, K. 2000. Bump map
+one can be easily extended to support this bump map representa-              shadows for OpenGL rendering. Tech. Rep. MPI-I-2000-4-001,
+tion, which will allow for animated articulated models with self-            Max-Planck-Institut für Informatik, Saarbrücken, Germany.
+shadowing surface detail.
+                                                                          M AX , N. L. 1998. Horizon mapping: shadows for bump-mapped
+                                                                            surfaces. In The Visual Computer, 109–117.
+We can easily extend this technique to support more channels in
+order to produce more accurate lighting and shadows, at the ex-           M C G UIRE , M., AND M C G UIRE , M. Steep parallax mapping. I3D
+pense of higher texture storage. Differing combinations of sam-             2005 Poster.
+ple directions and lighting precomputation directions can be used,
+for instance to provide more accurate shadows from dynamic lights         M C TAGGART, G., 2004. Half-life 2 shading. GDC Direct3D Tu-
+without increasing the storage needed for light maps.                       torial.
+
+
+                                                c 2007 Valve Corporation. All Rights Reserved
+REFERENCES                                                                                    REFERENCES
+
+
+M ITCHELL , J., M C TAGGART, G., AND G REEN , C. 2006. Shading
+  in valve’s source engine. In SIGGRAPH ’06: ACM SIGGRAPH
+  2006 Courses, ACM Press, New York, NY, USA, 129–142.
+OAT, C., AND S ANDER , P. V. 2007. Ambient aperture lighting. In
+  I3D ’07: Proceedings of the 2007 symposium on Interactive 3D
+  graphics and games, ACM Press, New York, NY, USA, 61–64.
+P EERCY, M., A IREY, J., AND C ABRAL , B. 1997. Efficient bump
+   mapping hardware. Computer Graphics 31, Annual Conference
+   Series, 303–306.
+P OLICARPO , F., O LIVEIRA , M. M., AND C OMBA , J. L. D. 2005.
+   Real-time relief mapping on arbitrary polygonal surfaces. In
+   I3D ’05: Proceedings of the 2005 symposium on Interactive 3D
+   graphics and games, ACM Press, New York, NY, USA, 155–
+   162.
+S LOAN , P.-P. J., AND C OHEN , M. F. 2000. Interactive hori-
+   zon mapping. In Proceedings of the Eurographics Workshop
+   on Rendering Techniques 2000, Springer-Verlag, London, UK,
+   281–286.
+S LOAN , P.-P. 2006. Normal mapping for precomputed radiance
+   transfer. In I3D ’06: Proceedings of the 2006 symposium on
+   Interactive 3D graphics and games, ACM Press, New York, NY,
+   USA, 23–26.
+TATARCHUK , N. 2006. Practical parallax occlusion mapping with
+  approximate soft shadows for detailed surface rendering. In SIG-
+  GRAPH ’06: ACM SIGGRAPH 2006 Courses, ACM Press, New
+  York, NY, USA, 81–112.
+T OMASI , C., AND M ANDUCHI , R. 1998. Bilateral filtering for
+   gray and color images. In ICCV, 839–846.
+WALD , I., B ENTHIN , C., WAGNER , M., AND S LUSALLEK , P.
+ Interactive rendering with coherent ray tracing.
+
+
+
+
+                                              c 2007 Valve Corporation. All Rights Reserved
+

@@ -1,0 +1,218 @@
+ 
+ Face-Off: Modern Warfare 3 | Eurogamer.net 
+ Skip to main content 
+Menu 
+Sign in / Create account 
+ Home
+ Latest
+ Digital Foundry
+ News
+ Reviews
+ Videos
+ Features
+ Guides
+ Buy eShop codes
+ Platforms 
+ 2025 Release Schedule
+ Fortnite Godzilla
+ Genshin Impact Lantern Rite
+ Pokémon Go Steeled Resolve
+ Supporters only
+ Deals
+If you click on a link and make a purchase we may receive a small commission. Read our editorial policy .
+ Home
+ Face-offs
+ Call of Duty: Modern Warfare 3
+ Face-Off: Modern Warfare 3 
+ To the edge of Infinity. 
+ Face-off
+ by Richard Leadbetter 
+ Technology Editor, Digital Foundry
+Updated on Nov. 10, 2011 
+ 40 comments
+ Follow Call of Duty: Modern Warfare 3
+ - 
+ Xbox 360 
+ PlayStation 3 
+ Disc Size 
+ 7.6GB 
+ 8.24GB 
+ Install 
+ 7.6GB (optional) 
+ - 
+ Surround Support 
+ Dolby Digital 
+ Dolby Digital, 5.1LPCM 
+The biggest game of the year has finally arrived. The latest chapter in the Modern Warfare saga may well be short on revolutionary new concepts and never-seen-before technology, but what Infinity Ward and co-developers Sledgehammer and Raven have delivered is a supremely enjoyable, highly polished package that offers a ton of value across its principle single-player, Spec Ops and multiplayer components.
+While the Call of Duty games have enjoyed mammoth levels of success across both console platforms, the game has arguably found its home on Xbox 360. Putting aside DLC exclusive windows and a perceivably higher level of multiplayer performance, the core technology itself just seems to run better on the Microsoft architecture: every metric we've run on COD titles from Modern Warfare onwards has produced a palpably higher performance level on Xbox 360. 
+In a year where the gap between the two consoles has become wafer-thin, has Infinity Ward managed to upgrade its core technology to produce a truly like-for-like experience on both machines? Let's find out, first by checking out the usual head-to-head comparison movie, backed up - as ever - by a comparison gallery that includes both consoles, plus the PC version running at 720p on the maximum quality level.
+ Modern Warfare 3 on Xbox 360 and PlayStation 3. Use the full-screen button to ensure you see full 720p resolution. 
+Curiously, the colour balance issue we saw in Modern Warfare 2 hasn't been fully addressed in the sequel (there were no problems with Treyarch's Call of Duty: Black Ops ), so while the 360 version doesn't look so dark and oppressive as it did in MW2 (and is a match for PC) the PlayStation 3 game is considerably brighter. This time - for whatever reason - we're going to assume it's by design, so we've left the default settings as is for our main comparison assets, and double-checked that both consoles were indeed set to full-range RGB output.
+ The Resolution Game 
+First up, the good news is that the resolution disparity between the Xbox 360 and the PlayStation 3 that was introduced with Black Ops hasn't been carried forward into the latest iteration of the Infinity Ward engine: the underwhelming PS3 res of 960x540 is no more. Both versions run at the standard COD resolution of 1024x600 with 2x multi-sample anti-aliasing (MSAA) applied. This sub-HD reduction from standard 720p has been standard since the first Modern Warfare game, and allows the developers to maximise the 10MB of eDRAM attached to the Xbox 360 GPU, while the reduction in fill-rate frees up precious RSX resources on the PlayStation 3. 
+ The sub-HD nature of the console games is mitigated somewhat by the high frame-rate, but the PC version offers up the chance to compare the 1024x600 2x MSAA framebuffer with a more preferable native 720p with 4x MSAA. 
+Based on what we've seen on previous Call of Duty titles, it appears to be the case that Treyarch carry out their own custom changes to the core engine - and there's no guarantee that the tech team at Infinity Ward keep these alterations for their own games. The standout example here is that the stereoscopic 3D technology introduced in Black Ops is absent in Modern Warfare 3. While we're never keen about features being removed from sequels, in this case it's probably a good move - 3D support in Black Ops came at the cost of the engine's high frame-rate, a crucial component in the make-up of the Call of Duty gameplay experience.
+However, we do see some ideas first implemented by Treyarch making their way across to a Modern Warfare game. In Call of Duty: World at War , the developers experimented with lower resolution alpha buffers (used for particle and transparency work) on PlayStation 3 in order to increase performance. Modern Warfare 2 didn't pursue this strategy and we can't help but feel that it was a contributory factor to the PS3 version's noticeably lower frame-rate. This has changed for the sequel.
+ Explosive Impact 
+As you can see from the shots below, alpha buffers are reduced on PlayStation 3 to what we would think is something lower than 50 per cent of 720p resolution, meaning that effects such as atmospheric rendering, particles and explosions can be rather more pixelated in comparison to the Xbox 360 where the effect is running at full resolution.
+ The PS3 implementation of transparency effects seems to be running at a lower resolution compared to the Xbox 360 equivalent, which can produce some noticeably jaggy effects. 
+The implementation of pared back alpha is a trick used extensively by many PS3 developers - even first party PS3 game-makers like Guerrilla Games and Evolution Studios use it in some of their best games. At best, it's barely noticeable at all. However, the effect in Modern Warfare 3 is so widely utilised that it sometimes contributes to the feeling that the PS3 version runs at a lower resolution than the 360 game - even when the reality is that native res is identical.
+The problem comes down to two factors. First of all, Modern Warfare 3 uses a lot of alpha - the game is packed with action, meaning large volumes of explosive effects and particles. Secondly, there's the suspicion that the buffer isn't implementing anti-aliasing, so when the transparencies overlap geometry, we see some very low-res edges with no AA.
+ Texture streaming is a point of differentiation between the two console platforms - the Xbox 360 seems to be more adept in getting high quality artwork on-screen. In some cases, the equivalent PS3 textures arrive 1-2 seconds later. 
+The only other major difference we spotted during our playthroughs concerned texture streaming. Modern Warfare 3, like its predecessors, doesn't require any kind of mandatory install on the PlayStation 3, but there are occasions in the game where we wish that an option existed to dump texture data on the hard drive for faster access. We often saw very low texture work on the PS3 - mostly noticeable during cut-scenes - that appeared to arrive between 1-2 seconds later than it did on the Xbox 360.
+Elsewhere, it's safe to say that any technical differences between the two games are mostly very minor. Similar to previous Modern Warfare titles we see different implementations of shadow on the two consoles: a hard edge on PlayStation 3, most likely using the hardware PCF (percentage closer filtering) that's implemented in RSX while Xbox 360 gets a low quality dither. 
+Owing to the 60FPS nature of the game, there's not much processing time available for computationally expensive shadow rendering, so they're very low res, and the effectiveness of each implementation varies seemingly according to how far you are away from them but generally speaking, it's safe to say that the PS3 version handles the effect better overall.
+ As per Modern Warfare 2, we see different shadow implementations on the two console versions. While shadows are low-res on both platforms, quality on PS3 stands up better at close quarters. 
+ Performance Analysis 
+So with these noticeable - and not so noticeable - tweaks to the PlayStation 3 code, the question of performance needs to be addressed. Call of Duty is a series that defines itself by the intimate connection between the player and the controls: the 60 frames per second target frame-rate is the key to the ultra-responsive controls and the great "feel" of the game. Both Modern Warfare 2 and Black Ops were clearly sub-optimal on PlayStation 3 when compared directly with the Xbox 360 releases in this regard, so let's take see if things have improved with the new release.
+In order to get the best outlook on overall performance, we have two different tests that regular readers will be familiar with. In this first experiment, we used the extensive engine-driven cut-scenes in the game to judge performance directly, head-to-head. This should give us a very good indication of how well each version of the game copes in dealing with what is essentially the exact same content.
+ A comparison of rendering performance on like-for-like scenes from the single-player game. In this respect, the Xbox 360 version typically demonstrates an advantage in COD games and while we see that here, there's a sense that the gap has narrowed. 
+In a sense we're retreading familiar ground here. In the wake of the Microsoft E3 press conference, we got hold of SpikeTV's 1080i transmission of the event, reversed the footage back into the original 720p60 output and analysed it - the conclusion being that the locked 60FPS PR line was essentially a myth, but that overall performance level of the game looked remarkably good regardless.
+Looking at a series of scenes from the final game, we can confirm that this conclusion holds true, and that the performance level of the E3 demo is very similar indeed to the retail product. Improvements to PlayStation 3 frame-rates were also promised and while it's clear that the Xbox 360 version does command something of an advantage over its counterpart, the gap does appear to have narrowed. At worst we do see the same sort of 10FPS-15FPS advantage that we saw in Modern Warfare 2, but overall, there is the perception that PlayStation 3 frame-rates are improved across the overall run of the video.
+Let's see how that translates into gameplay in this expansive series of clips taken from across the campaign. 
+ Extended gameplay clips from both console versions of Modern Warfare 3 put to the test. While performance is variable on both systems, it seems that PlayStation 3 has trouble with effects work. 
+First up, apologies for only including Xbox 360 audio. Most games allow us to dip music and dialogue, so typically we run full audio on one version, then dial down music and dialogue on the other to avoid these elements clashing. Modern Warfare 3 only has a single master volume control, so we had to dump one track completely. Regardless, we're here for the performance tests and the analysis itself proves to be intriguing. 
+As long-time Digital Foundry readers may recall, Call of Duty on console very rarely actually runs at the "rock solid 60FPS" that it is often lauded for. Performance drops are to be expected bearing in mind the mere 16.66ms of rendering time available per frame and the sheer amount of action and effects work that can kick off without warning at any given point. The trick is to ensure that frame-rate remains high enough to pass as the highest possible frame-rate - something that we like to call the "perceptual 60FPS".
+The question is, just how many people out there can tell the difference between 50FPS and 60FPS - especially during gameplay as fast-paced and intense as we see in Call of Duty? As you can see from the analysis, while the PlayStation 3 version of Modern Warfare 3 does have a performance disadvantage in direct comparison to the 360 code, the gap isn't as pronounced as it seems to have been in Modern Warfare 2 or in last year's Black Ops. 
+In our tests, the PS3 version seemed to feel a little less responsive when the engine was really under load, but the frame-rate drop manifested more as a judder as opposed to the more crippling kind of jerkiness we see when the more usual 30FPS console game drops down to the low 20s. This isn't so much of an issue in single-player gameplay, but could be a problem for multiplayer, so the next step was to take both versions online and see how they played.
+ Multiplayer Performance 
+Since it's the PS3 game that is most under the spotlight here, here's an analysis of some online PSN gameplay. We chose three levels here: Sandtown got the nod as a small level with tight, enclosed corridors (so in theory, renderer-friendly). Next up, Underground is a good example of a medium-sized stage while finally, Downturn gives us a chance to see how the game works with a large map. The Groundwar game type was chosen in order for us to max out the action with 18 players in total.
+ PlayStation 3 multiplayer performance put through its paces on small, medium and large maps in the 18-player Groundwar mode. We found overall frame-rates to be very consistent. 
+We also repeated the test with MW3 Xbox LIVE gameplay, but as you can see, the multiplayer tests turned out to be a whole lot more consistent between the two versions than single-player. Utilising smoke grenades has traditionally impacted frame-rate - here we see that both versions can drop to around 50FPS.
+The only other noteworthy difference we saw was at the beginning of the Downturn map on PlayStation 3, where accommodating so many character models on-screen at the beginning of the level did cause a frame-rate hit, and close to the end of the video where multiple effects and players on-screen also impacted performance. While both versions of Modern Warfare 3 play really well in multiplayer, Xbox 360 seems to hold onto 60FPS just a little more tightly, but overall there's not so much in it.
+ Enter the PC version 
+So what of the almost forgotten third SKU? For a series that began life on the PC, it's quite remarkable how Call of Duty has transformed into the quintessential console game. Well, it's safe to say that the PC version of Modern Warfare 3 won't do much to appeal to enthusiasts spoilt by the sheer majesty of a fully armed and operational DirectX 11-fuelled Battlefield 3 . 
+The game appears to be DX9 only with only a very limited range of effects, and even a fully maxed out configuration set to 720p doesn't appear to offer a huge advantage over the console versions. We don't have to put up with a sub-HD experience and effects precision seems to have increased, but if you're looking for a revelatory increase in texture quality, be prepared for a disappointment.
+Here's how the Xbox 360 version of Modern Warfare 3 stacks up against its PC equivalent, and we've mirrored the content in a PS3 vs. PC MW3 comparison that's just one click away.
+ Modern Warfare 3 compared on Xbox 360 and PC at 720p with max settings engaged. Use the full-screen button to ensure you see full 720p resolution. 
+Aside from the ability to choose your own resolution and to power past the frame-rate drops we see on the console versions of Modern Warfare 3, there's not much meat here to convince PC owners they're getting other than a console port and it's somewhat at odds with the Battlefield 3 experience: there, console quality was mostly equivalent with the lowest settings. On Modern Warfare 3, it seems that the opposite is true.
+Curiously you are allowed to adjust quality levels of textures in general along with normal and specular map quality (and if you really want a bizarre-looking game you can turn them off too), and there is the ability to ramp up anti-aliasing, though the maximum allowed 4x MSAA seems a bit mean compared to the higher options available in last year's Black Ops where we happily played in fully supported stereoscopic 3D at 1080p with 16x MSAA. Most of the tweakables seem to concern turning specific effects on or off: shadows, depth of field and bullet decals can be disabled if you feel the need and there's also an option to soften smoke edges.
+ 1 of 4 
+Caption 
+Attribution 
+The overall effect we get from the PC version is that it's a slightly more refined version of the existing console game, but it's really difficult to shake off the feeling that the core art assets generated for the project, and the focus of the technology in general, has a firm console focus. Playing through the PC version of the game - even at 720p - we couldn't help but feel that the additional clarity offered acted almost like a lens in focusing on the strengths and weaknesses of the console-led visuals.
+There are moments - mostly in the outdoor scenes - where the artwork scales up magnificently and the effect can be quite remarkable. However, there are many areas where the engine really starts to show its age: cut-scenes where you dart between buildings in a helicopter demonstrate how flat and low in detail the geometry and textures can be - and in comparison with Battlefield 3, the lighting can be somewhat rudimentary to say the least.
+Move up to the higher resolutions supported by Modern Warfare 3 and it's clear that the artwork simply doesn't scale with it. Texture resolution in particular just doesn't seem to cut the mustard. While we do see the occasional improvement in core art quality in direct comparison with the console builds, the game just seems to look somewhat backward - while Battlefield 3 may not have won the sales war against Call of Duty this year, it's really difficult to believe that owners of DICE's game will be able to go back once they've been spoiled by the BF3 experience.
+PC exclusive additions are few and far between. What we do see is the implementation of far superior, softer shadows, but as you can see from the top shots below, the actual resolution of them is still rather low. However, the inclusion of screen-space ambient occlusion (SSAO) does help a little in adding a little richness to the depth of the scene.
+ 1 of 4 
+Caption 
+Attribution 
+If it all feels like too little, too late, PC gamers have at least scored a small victory against the ongoing consolification of their beloved series. Infinity Ward managed to alienate its PC fanbase by removing support for dedicated servers completely in Modern Warfare 2 , and while this preferred system has been restored in the new title, the implementation may prove to be controversial. 
+On the face of it, the options offered look suitably robust, but in an effort to attempt to contain cheats, levelling up on dedicated servers is impossible - players need to rely on the server admin to pick and choose the unlocks available. 
+It's a bit of a shame in that one of the core elements of appeal in Modern Warfare 3 is only available in a P2P environment, where there are a huge amount of variables in play that dictate the quality of the gameplay - and indeed how fair it is - something we aim to explore in more depth in a very special Digital Foundry feature we're currently working on.
+ Modern Warfare 3: The Digital Foundry Verdict 
+Summing up, we thoroughly enjoyed playing Modern Warfare 3. On console, the value proposition of the overall package in terms of the single-player, Spec Ops and multiplayer is nothing short of phenomenal and it's difficult not to have admiration for the sheer level of polish and consistency that runs through the entire product. Infinity Ward, Sledgehammer and Raven have targeted the consoles - in terms of both the hardware and the audience - with a remarkable assurance. This is all the more impressive bearing in mind the behind-the-scenes fracas that saw Infinity Ward implode as production on Modern Warfare 3 got underway.
+However, in terms of the console comparisons, it's fairly obvious that the underlying Infinity Ward technology favours the Xbox 360 architecture and in terms of both image quality and performance, it's the Microsoft platform that is the recommended buy - unless you prefer gaming on PSN of course. It's in the multiplayer game that Modern Warfare finds its longevity, so the make-up of your friends list may well be more important than additional frame-rate or sharper visuals. In this all-important mode, overall performance between the two console versions appeared to be much closer.
+Normally, the innate ability of PC hardware to power past the limitations of the consoles would ensure that the computer version would take the honours in a triple-format Face-Off. Certainly, the PC version cleans up just about all of the visual issues of the console versions, but in the process, it also serves to demonstrate just how old the technology is, and how art assets so fundamentally tied to six year old console hardware don't really cut the mustard in the age of DirectX 11. When it looks good, it can look really impressive but in many areas, the game looks somewhat basic and behind the times. In the era of Battlefield 3, the consummate console experience offered up by Modern Warfare 3 just doesn't feel competitive for enthusiast PC gamers.
+ Thanks to Tom Morgan for the immense collaborative effort in producing this article. 
+ Read this next 
+ Activision bans further 27,000 Call of Duty accounts for cheating
+ Activision reportedly told Infinity Ward staff to "take the money and get over it" after West and Zampella firing
+ Call of Duty's best dog is back in Modern Warfare 3
+ Richard Leadbetter : Rich has been a games journalist since the days of 16-bit and specialises in technical analysis. He's commonly known around Eurogamer as the Blacksmith of the Future.
+View comments (40) 
+ In this article 
+ Call of Duty: Modern Warfare 3 
+ PS3 , 
+ Xbox 360 , 
+ Nintendo Wii , 
+ PC , 
+ Nintendo DS 
+ Follow
+ Related topics 
+ Digital Foundry 
+ PC 
+ PS3 
+ Shooter 
+ Xbox 360 
+ Eurogamer is better when you sign in
+ Join our community of gamers and get access to personalised reading recommendations and much more!
+ Sign in with Google 
+ Sign in with Facebook 
+ Sign in with Twitter 
+ Sign in with Reddit 
+Sign in with email 
+ Latest On Call of Duty: Modern Warfare 3 
+Warzone and MW3 Season 1 Battle Pass skins and blueprints list 
+ Feature | 
+What we've been playing 
+ Supporters | 
+Game of the Week: Football Manager, realism, and the need to leave some gaps 
+When does the Modern Warfare 3 beta end? 
+Modern Warfare 3 remaster "does not exist", Activision insists 
+Super cool Call of Duty: Modern Warfare 2 Campaign Remastered Easter egg fixes nine-year-old No Russian continuity error 
+UK Top 40: FIFA 12 enters 2012 in top spot 
+Call of Duty: Modern Warfare 3 now backwards compatible on Xbox One 
+ Latest News
+ Latest Articles
+ Top Discussions
+ Dune: Awakening's "early 2025" release date is looser than you might think
+ Nintendo announces bad news if you use Japanese eShop with a foreign card or Paypal
+ Beyond: Two Souls TV series announced, produced by the game's star
+ Marvel's Spider-Man 2 recommended specs and PC features detailed
+ Pokémon TCG Pocket players brand trading system "a joke" and "downright greedy"
+ Nintendo loses trademark fight against Super Mario supermarket
+ No Man's Sky gets storm-ravaged gas giants and "trillions of new planets" in another major overhaul
+ Final Fantasy 7 Rebirth's PC port has promise - but too many problems
+ DF Weekly: Doom: The Dark Ages pushes current-gen tech hard - and it looks phenomenal
+ Nvidia DLSS 4 tested: ray reconstruction upgrades deliver radical enhancements
+ Six hours with Assassin's Creed Shadows: the biggest shake-up of the series in years
+ Star Wars Jedi: Survivor gets a PSSR upgrade on PS5 Pro - and image quality is much improved
+ Donkey Kong Country Returns HD: a solid Switch port with some unexpected failings
+ DF Weekly: can the new RTX 5070 really match RTX 4090 performance?
+ Xbox hardware sales slump, but Game Pass is surging
+ 67 
+ PlayStation Plus shifting focus to PS5 games next year, will only "occasionally" include PS4 titles
+ 54 
+ Sony pulls controversial PSN account requirements for Marvel's Spider-Man 2 and other games on PC
+ 48 
+ BioWare confirms "many" staff moved elsewhere in EA as "core team" focuses on Mass Effect 5 in downsized studio
+ 45 
+ BioWare veteran writer among those looking for work after post-Dragon Age: The Veilguard downsizing
+ 42 
+ PlayStation Plus February games revealed
+ 27 
+ Call of Duty: Black Ops 6 "the top-selling game on Xbox and PlayStation" last quarter
+ 25 
+ Eurogamer.net is owned by Gamer Network Limited, an IGN Entertainment company and subsidiary of Ziff Davis.
+ © 2025 Gamer Network Limited, 18 Mansell Street Level 3, London, E1 8AA, United Kingdom. Company number 03882481.
+All rights reserved. No part of this website or its content may be reproduced without the copyright owner's permission. 
+ Helpful Links
+ About Us
+ Advertise with us
+ Archive
+ Authors
+ Contact Us
+ Corporate Site
+ Interactive Maps
+ Manage push notifications
+ Newsletters
+ RSS Feeds
+ Policies
+ AdChoices
+ Code of Conduct
+ Cookie Policy
+ Do Not Sell My Personal Information
+ Editorial Policy
+ Privacy Policy
+ Review Policy
+ Terms & Conditions
+ Gamer Network
+ Dicebreaker
+ Digital Foundry
+ GamesIndustry.biz
+ Jelly Deals
+ Nintendo Life
+ Pure Xbox
+ Push Square
+ Rock Paper Shotgun
+ Time Extension
+ VG247
+ Across Europe
+ Eurogamer.cz
+ Eurogamer.de
+ Eurogamer.es
+ Eurogamer.nl
+ Eurogamer.pl
+ Eurogamer.pt
+ 
