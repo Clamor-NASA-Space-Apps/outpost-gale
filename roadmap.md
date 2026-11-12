@@ -46,6 +46,20 @@ No story, no `sim/` rules, no meters, no sol clock, no win or lose before 14 Nov
 - [ ] /code-review medium
 - [ ] lessons
 
+## S3b: polish and more life (13 Nov)
+- [ ] Device presets (phone, older, laptop, gaming, max), simple settings screen, Save button and cursor fixes
+- [ ] Rover speed felt: camera lower and closer, motor pitch, dust and tracks grow with speed
+- [ ] Suit stripes in dark orange (`stripe` role), hero GLB re-exported
+- [ ] Rover body rolls and pitches on its springs in turns and on bumps
+- [ ] Radio squelch chirps (PIP and the base), rare and quiet
+- [ ] A rare music motif, never on a loop
+- [ ] At dusk, a soft camera hint toward the dust devil or the base
+- [ ] Night sky: the faint compression grid gone
+- [ ] Missing assets list researched (`design/research/missing-assets.md`): habitat for 4, life support, power, greenhouse, scenery
+- [ ] checks pass
+- [ ] /code-review medium
+- [ ] lessons
+
 ## S4: the gate (13 Nov evening)
 - [ ] Sweeps: static, walk into every prop, never under the floor
 - [ ] Films of every gait and the hop; captures default, base, hero, horizon, storm, airlock, rover at full size
