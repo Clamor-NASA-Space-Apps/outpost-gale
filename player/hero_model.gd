@@ -159,12 +159,14 @@ func take_off() -> void:
 
 
 ## Plays a use clip once (data/clips.json; the reach by default). A second reach while one plays is ignored; another
-## clip replaces it. Walking off ends it (update()).
-func act(clip := &"interact") -> void:
+## clip replaces it. Walking off ends it (update()). False when refused (the same clip playing, a hop or a landing).
+func act(clip := &"interact") -> bool:
 	if phase == "" or (phase in ["act", "seat"] and clip != act_clip):
 		phase = "act"
 		act_clip = clip
 		timer = clips[clip].length
+		return true
+	return false
 
 
 ## Sits down onto a seat behind the hero (sit_down, then sit_idle until told), or stands up (sit_to_stand).

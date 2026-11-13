@@ -218,6 +218,10 @@ None. `world.build()` is synchronous (it loads everything it needs before return
   driving). A move key ends it; jump is blocked. `player.sit(on)`, `player.seated`, `player.cut` (empty when idle).
   `follow_cam.show_body` holds the body drawn in first person during either. `player.model.point(clip, "hand" |
   "seat_hip" | "wheel") -> Vector3` in the hero's own space, to place a stand point from a spot.
+- Use spots (`data/world.json` `uses`: item id -> rows `{kind, prompt, box: [x0,y0,z0,x1,y1,z1], stand: [x, z, yaw_deg],
+  clip, sound}` in the item's own space): one Interactable of kind `spot` per row, its `thing` an empty node at the
+  item's origin, its `shape` the box, `row` the row, `stand()` the global stand point. E calls
+  `player.perform(clip, stand())` and emits `used(sound)`. `player.cut.clip` names the playing clip.
 - `audio.used(name, pos)` plays the `SOUNDS` table's files for `name` (`audio.gd`); an unknown name or a missing file
   is an error. `audio.music(name, force := false)` (`force` fades the playing cue and skips the gap), `stop_music()`,
   `bed(name)` (`eva`, `habitat`: phrases with long rests), `duck(on)` (world sound down `audio.duck_db`, music not),

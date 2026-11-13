@@ -462,7 +462,8 @@ func place(pos: Vector3, yaw_deg: float) -> void:
 
 ## The hero reaches for something it uses (CONTRACTS.md): the interactions call this when a use happens.
 func act() -> void:
-	model.act()
+	if not seated:  # a reach would replace the sit while `seated` stays true
+		model.act()
 
 
 ## Plays a use clip (data/clips.json) once and returns its length in seconds; the hero then stands in idle. The
@@ -473,14 +474,14 @@ func perform(clip: StringName, stand: Transform3D) -> float:
 	if vehicle or not model.clips.has(clip):
 		push_error("perform: no clip %s, or driving" % clip)
 		return 0.0
+	if seated or not model.act(clip):  # refused: no cut, or the hero would stand idle with the keys locked
+		return 0.0
 	var move := stand.origin - body.global_position
 	move.y = 0.0
 	var front := -stand.basis.z
 	var length: float = model.clips[clip].length
-	seated = false
-	cut = {"left": length, "t": 0.0, "move": move.limit_length(tuning.perform.glide_max), "yaw0": yaw, "yaw1": atan2(-front.x, -front.z), "firm": false}
+	cut = {"clip": clip, "left": length, "t": 0.0, "move": move.limit_length(tuning.perform.glide_max), "yaw0": yaw, "yaw1": atan2(-front.x, -front.z), "firm": false}
 	speed = 0.0
-	model.act(clip)
 	cam.show_body = true
 	return length
 

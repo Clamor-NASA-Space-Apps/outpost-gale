@@ -31,6 +31,7 @@ func play() -> bool:
 	await frames(5)
 	box = game.interactions
 	var player: Node3D = game.player
+	await galley()
 
 	var door := face("door")
 	await frames(3)
@@ -166,6 +167,46 @@ func lights(r: Node3D) -> void:
 	await frames(int(fade * 90.0))
 	check(r.lamp_level == 0.0, "and they go dark (%.2f)" % r.lamp_level)
 	clock.pinned = false
+
+
+## HAB 1's galley (world.json `uses`): at its stand point, the view on the dispenser, E drinks: the consume clip and
+## the drink sound, no new state keys (motion and sound only, hard rule 1), and a move key ends it.
+func galley() -> void:
+	var spot: Node3D = null
+	for it: Node3D in game.get_tree().get_nodes_in_group("interactable"):
+		if it.kind == "spot" and it.row.kind == "drink":
+			spot = it
+	if not check(spot != null, "HAB 1's galley has a drink spot (world.json uses)"):
+		return
+	var player: Node3D = game.player
+	var hab: Node3D = game.world.items["hab1"]
+	var at: Vector3 = spot.stand().origin
+	at.y = hab.to_global(Vector3(0, 0.45, 0)).y
+	var to: Vector3 = spot.middle() - at
+	player.place(at, rad_to_deg(atan2(to.x, -to.z)))
+	await frames(40)
+	var down: Vector3 = spot.middle() - player.cam.lens.global_position
+	player.cam.pitch = -atan2(-down.y, Vector2(down.x, down.z).length())
+	await frames(5)
+	check(player.room != "", "the hero stands inside HAB 1 (room '%s')" % player.room)
+	check(box.target == spot, "the galley dispenser is the target (got %s)" % [box.target])
+	check(box.prompt_label.text.ends_with("Drink"), "the prompt says Drink ('%s')" % box.prompt_label.text)
+	var keys: Array = game.render_game_to_text().keys()
+	var heard: Array = []
+	var hear := func(what: String, _pos: Vector3) -> void: heard.append(what)
+	box.used.connect(hear)
+	box.interact()
+	await frames(2)
+	box.used.disconnect(hear)
+	check(player.cut.get("clip") == &"consume", "E plays the consume clip (cut %s)" % [player.cut])
+	check(not spot.can_use(player.body), "mid-drink the spot is not offered again")
+	check(heard == ["drink"], "it sounds drink, pour then sip (%s)" % [heard])
+	var extra: Array = game.render_game_to_text().keys().filter(func(k: String) -> bool: return not k in keys)
+	check(extra.is_empty(), "no new state keys (%s)" % [extra])
+	action(&"move_forward")
+	await frames(3)
+	action(&"move_forward", false)
+	check(player.cut.is_empty(), "a move key ends the drink")
 
 
 ## Drives the rover straight across `at` (x, z) from 8 m before it (room to reach top speed) to `beyond` + 4 m past

@@ -10,7 +10,7 @@ const CARRIABLES := 64
 const WALLS := 2  # what hides a thing from the hands (CONTRACTS.md collision layers: statics)
 const POINTED := 2 | 4 | 16 | 64  # what the view's centre can rest on: statics, thin statics, vehicles, carriables
 
-signal used(what: String, pos: Vector3)  # for the sound: "door_open", "door_close", "panel", "bag", "rover", "put_down"
+signal used(what: String, pos: Vector3)  # for the sound: "door_open", "door_close", "panel", "bag", "rover", "put_down", a spot's `sound`
 
 
 class Interactable extends Node3D:
@@ -21,6 +21,7 @@ class Interactable extends Node3D:
 	var open := false
 	var step := 0
 	var box: Node  # the interactions node, which knows the hero and the world
+	var row: Dictionary  # a use spot's world.json `uses` row (kind `spot`)
 
 	func prompt() -> String:
 		match kind:
@@ -29,9 +30,12 @@ class Interactable extends Node3D:
 			"panel": return "Tilt panel"
 			"bag": return "Pick up bag"
 			"rover": return "Drive rover"
+			"spot": return row.prompt
 		return ""
 
 	func can_use(_hero: Node3D) -> bool:
+		if kind == "spot":  # one use at a time, and never from a seat
+			return not box.player.seated and box.player.cut.is_empty()
 		return not (kind == "bag" and box.carried != null)
 
 	func use(_hero: Node3D) -> void:
@@ -53,6 +57,11 @@ class Interactable extends Node3D:
 
 	func middle() -> Vector3:
 		return thing.global_transform * shape.get_center()
+
+	## A spot's stand point (global, floor origin, facing its -Z), from the row's [x, z, yaw_deg] in the item's space.
+	func stand() -> Transform3D:
+		var s: Array = row.stand
+		return thing.global_transform * Transform3D(Basis(Vector3.UP, deg_to_rad(s[2])), Vector3(s[0], 0.0, s[1]))
 
 	## Where the hands at `p` could touch it, in each pose: the nearest point, the middle, and both ends of its longest
 	## level side at the hands' height (an open door seen past a jamb shows only its far edge).
@@ -108,6 +117,21 @@ func setup(w: Node3D, p: Node3D, t: Dictionary, sheet: Dictionary) -> void:
 			item.setup(world, sheet, tuning)
 			var it := _add("rover", item)
 			it.shape = _hatch(item)
+			it.global_position = it.middle()
+	# use spots: an empty node at the item's origin is the thing, the row's box its shape (the parts are welded into
+	# one mesh, next-lanes.md section 0 finding 3)
+	var uses: Dictionary = world.data.get("uses", {})
+	for id: String in uses:
+		if id.begins_with("_"):
+			continue
+		for row: Dictionary in uses[id]:
+			var spot := Node3D.new()
+			spot.name = "use_" + row.kind
+			world.items[id].add_child(spot)
+			var it := _add("spot", spot)
+			var b: Array = row.box
+			it.row = row
+			it.shape = AABB(Vector3(b[0], b[1], b[2]), Vector3(b[3] - b[0], b[4] - b[1], b[5] - b[2]))
 			it.global_position = it.middle()
 	var layer := CanvasLayer.new()
 	add_child(layer)
@@ -256,6 +280,10 @@ func interact() -> void:
 
 
 func use(it: Interactable) -> void:
+	if it.kind == "spot":  # ponytail: clip and sound only; the cut camera and the prop verbs come with the full lane
+		player.perform(StringName(it.row.clip), it.stand())
+		used.emit(it.row.sound, it.middle())
+		return
 	player.act()  # the reach clip, only when something is really used
 	var s: float = tuning.interact.move_s
 	match it.kind:

@@ -280,6 +280,9 @@ func player_methods() -> void:
 	# a move key ends a clip at once
 	player.perform(&"radio", Transform3D(Basis(), player.body.global_position))
 	await frames(10)
+	var left: float = player.cut.left
+	check(player.perform(&"radio", Transform3D(Basis(), player.body.global_position)) == 0.0 and player.cut.left == left,
+		"the playing clip asked for again is refused, and its cut runs on (%s)" % [player.cut])
 	action(&"move_forward", true)
 	await frames(10)
 	action(&"move_forward", false)
@@ -291,6 +294,11 @@ func player_methods() -> void:
 	await frames(ceili(float(clips.sit_down.length) * Engine.physics_ticks_per_second) + 20)
 	await process_frame
 	check(player.seated and model.state == &"sit_idle", "sit(true) ends in sit_idle (%s)" % model.state)
+	check(player.perform(&"consume", Transform3D(Basis(), at)) == 0.0 and player.cut.is_empty(), "no use clip from a seat: perform returns 0 and starts no cut")
+	player.act()
+	await frames(2)
+	await process_frame
+	check(player.seated and model.state == &"sit_idle", "a reach from a seat leaves the hero sitting (%s)" % model.state)
 	action(&"move_forward", true)
 	await frames(5)
 	action(&"move_forward", false)

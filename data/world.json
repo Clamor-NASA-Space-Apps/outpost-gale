@@ -613,5 +613,11 @@
   "_note": "lettuce in the greenhouse grow-bed slots (slot_N nodes of its model), one growth stage per slot; stage 4 is a harvest-size head (reality.json lettuce.width). A prefab id instead of a stage goes in at its own size: HAB 1's Veggie unit on the galley counter",
   "greenhouse": [2, 3, 4, 3, 4, 2, 3, 4, 3, 4, 4, 2, 4, 3, 2, 4],
   "hab1": ["veggie", "gale_map"]
+ },
+ "uses": {
+  "_note": "use spots (design/plans/next-lanes.md section 0): per item, rows in the item's own space. box: [x0,y0,z0,x1,y1,z1] what E aims at; stand: [x, z, yaw_deg] where the hero glides to, facing the stand's -Z; clip (data/clips.json), sound (audio.gd SOUNDS), prompt. Motion and sound only, no game state (hard rule 1). HAB 1's galley is unit(galley, 351, 1.6) in forge/hab_interior.py: the dispenser and its nozzle, worked out from _mount (wall chord at 351 degrees, back plane 2.21 m out)",
+  "hab1": [
+   {"kind": "drink", "prompt": "Drink", "box": [1.92, 1.34, 0.06, 2.2, 1.69, 0.32], "stand": [1.22, 0.05, -99], "clip": "consume", "sound": "drink"}
+  ]
  }
 }
