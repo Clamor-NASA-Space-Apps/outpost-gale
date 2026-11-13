@@ -45,7 +45,9 @@ func at(h: float) -> void:
 func play() -> bool:
 	# the waits count frames as game seconds: without a fixed step a headless run races, 1800 frames passed 0.3 game
 	# hours where 30 s holds 0.7, and ten checks failed for it (13 Nov gate)
-	if not check("--fixed-fps" in OS.get_cmdline_args(), "run with --fixed-fps 60 (the waits count frames as game time)"):
+	# the engine eats its own flags (OS.get_cmdline_args() never lists --fixed-fps), so read the step it runs at
+	await process_frame
+	if not check(is_equal_approx(root.get_process_delta_time(), 1.0 / 60.0), "run with --fixed-fps 60 (the waits count frames as game time)"):
 		return true
 	game = load("res://sandbox/sandbox.tscn").instantiate()
 	root.add_child(game)
