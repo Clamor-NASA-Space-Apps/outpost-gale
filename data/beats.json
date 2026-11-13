@@ -104,8 +104,8 @@
       "task": "task.meet_pip",
       "pip": {
         "go_to": [
-          0.0,
-          9.0
+          2.0,
+          12.0
         ],
         "wave": true
       },
@@ -319,6 +319,7 @@
       "do": [
         "clock:run"
       ],
+      "task": "task.choose_power",
       "pip": {
         "point_at": "solar"
       },
@@ -347,7 +348,6 @@
       "do": [
         "offer:sol1_power"
       ],
-      "task": "task.choose_power",
       "line": "sol1.every_choice",
       "wait": {
         "action": "chose:sol1_power"

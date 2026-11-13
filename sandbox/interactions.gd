@@ -292,6 +292,8 @@ func _physics_process(delta: float) -> void:
 		text = target.prompt()
 		target.global_position = target.middle()  # a swung door's middle, for the helmet's look
 	player.attention = target  # the helmet turns toward what can be used
+	if not player.may(&"interact"):
+		text = ""  # a tutorial step that blocks E shows no "E Sit" or "E Close door" that would do nothing
 	# the key on a keyboard; on a phone the lit interact button says the same
 	prompt_label.text = "" if text == "" else ("[E]  " + text if not DisplayServer.is_touchscreen_available() else text)
 

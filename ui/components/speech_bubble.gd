@@ -210,7 +210,9 @@ func _place() -> void:
 		panel.position = Vector2((size.x - ps.x) * 0.5, size.y - ps.y - EDGE)
 		queue_redraw()
 		return
-	var p := Hud.project(self, camera, speaker.global_position + Vector3.UP * head, EDGE)
+	# a cinematic shot draws through its own camera: projected through the idle play camera, the ring hung over empty ground
+	var cam: Camera3D = camera if camera.current or get_viewport().get_camera_3d() == null else get_viewport().get_camera_3d()
+	var p := Hud.project(self, cam, speaker.global_position + Vector3.UP * head, EDGE)
 	anchor = p.at
 	docked = not p.on
 	if docked:

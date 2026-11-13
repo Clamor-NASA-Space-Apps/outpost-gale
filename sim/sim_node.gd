@@ -21,6 +21,11 @@ func _process(delta: float) -> void:
 		changed.emit(sim.state())
 
 
+## The HUD's bind() reads it at once: before the first `changed` it showed its gallery sample (Sol 3, 72%).
+func state() -> Dictionary:
+	return sim.state()
+
+
 func apply(choice_id: String) -> Dictionary:
 	return _told(sim.apply(choice_id))
 

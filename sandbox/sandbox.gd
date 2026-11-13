@@ -411,6 +411,7 @@ func _wire() -> void:
 	beats.setup(world, player, interactions, clock)
 	interactions.used.connect(beats.used)
 	beats.line.connect(hud.say)
+	beats.finished.connect(func(_s: String) -> void: hud.clear_line())  # PIP's last "This way!" stayed up for good
 	offers = JSON.parse_string(FileAccess.get_file_as_string("res://data/beats.json")).get("offers", {})
 	offers.erase("_note")  # a string: the chosen handler below called .get() on it and a click on a choice did nothing
 	beats.choice_offered.connect(func(id: String) -> void:
