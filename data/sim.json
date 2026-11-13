@@ -1,0 +1,115 @@
+{
+ "_note": "The rules' numbers (sim/sim.gd). Each entry names its source in `factcheck` (a row of the workspace research/junior-astronaut/factcheck.md, or a named page); `placeholder: true` marks a value the story decides on 14 Nov. Rates are per Earth day and per crew member unless the key says otherwise. The rules clock counts Earth hours in a sol of 24 h 39 min (hour 0 to 24.66), not the look clock's 24 local hours.",
+ "clock": {
+  "sol_h": {"value": 24.6597, "unit": "h", "factcheck": "rows 6, 164 (mean sol 24 h 39 min 35 s)"},
+  "start_sol": {"value": 1, "factcheck": "story", "placeholder": true},
+  "start_hour": {"value": 6.5, "unit": "h", "factcheck": "row 208 (06:30 wake)", "placeholder": true},
+  "wake_hour": {"value": 6.5, "unit": "h", "factcheck": "rows 188, 205, 208 (8.5 h sleep, wake 06:30)"},
+  "nap_h": {"value": 0.3333, "unit": "h", "factcheck": "rows 194, 195 (naps of 10 to 40 min; design/typical-day.md 'Nap 20 min')"},
+  "step_h": {"value": 0.25, "unit": "h", "factcheck": "solver step, not a fact: the sun's curve is sampled this often"},
+  "real_s_per_sol": {"value": 1200, "unit": "s", "factcheck": "game pace: the look clock's day_minutes 20 (data/tuning.json sky)", "placeholder": true},
+  "emit_hz": {"value": 4, "unit": "1/s", "factcheck": "how often sim_node tells the HUD, not a fact"}
+ },
+ "crew": {"value": 2, "factcheck": "rows 150, 163 (two crew on the surface for 30 sols)"},
+ "per_person_day": {
+  "o2_kg": {"value": 0.84, "factcheck": "rows 23, 110 (BVAD 2022)"},
+  "water_kg": {"value": 3.217, "factcheck": "rows 25, 123 (BVAD 2022: drink 2.00, food 0.50, sweat 0.717)"},
+  "food_kg": {"value": 2.39, "factcheck": "row 112 (BVAD 2022, packed food)"},
+  "dose_msv": {"value": 0.67, "factcheck": "row 32 (Curiosity RAD at Gale, 2012 to 2013)"}
+ },
+ "start": {
+  "o2_kg": {"value": 52, "factcheck": "row 163 (2 crew x 30 sols)", "placeholder": true},
+  "water_kg": {"value": 198, "factcheck": "row 163 (2 crew x 30 sols)", "placeholder": true},
+  "food_kg": {"value": 147, "factcheck": "row 112, our maths (2.39 x 2 x 30.8 Earth days)", "placeholder": true},
+  "battery_pct": {"value": 100, "factcheck": "story", "placeholder": true},
+  "panel_dust": {"value": 0.0, "factcheck": "story", "placeholder": true},
+  "crop_age_days": {"value": 30, "factcheck": "robots planted before the crew landed (design/plans/event-ready.md)", "placeholder": true}
+ },
+ "power": {
+  "battery_kwh": {"value": 140, "factcheck": "design/research/missing-assets.md section 2: 10 kW x 14 h night, our maths", "placeholder": true},
+  "panel_m2": {"value": 290, "factcheck": "one DRA 5.0 array module of 290 m2 (design/research/sizes.md row 8, missing-assets.md section 2)", "placeholder": true},
+  "yield_kwh_m2_sol": {"value": 0.658, "factcheck": "row 160 (InSight 5,000 Wh a sol) over its 7.6 m2 of panels (missing-assets.md section 2, our maths); a clean panel in clear sky"},
+  "dust_per_sol": {"value": 0.002, "factcheck": "row 180 (0.2% a sol typical)"},
+  "tau_clear": {"value": 1.0, "factcheck": "NTRS 20160011275 slide 7: 'Optical depth varies from 1.0 (clear skies) to 5.0 (dust storm)' (needs a factcheck row)"},
+  "tau_storm": {"value": 5.0, "factcheck": "same slide"},
+  "storm_light": {"value": 0.35, "factcheck": "same slide: diffuse light in a storm '~30-40% of direct light on a clear day'; the curve between and beyond is our exponential fit (needs a factcheck row)"},
+  "reactor_kw": {"value": 10, "factcheck": "rows 21, 152 (Fission Surface Power, 10 kWe)"},
+  "hab_kw": {"value": 4.0, "factcheck": "row 78: DRA 5.0 habitat 12 kWe for 6 crew, scaled to 2 (our maths, warning: includes life support)"},
+  "heater_ua_kw_per_k": {"value": 0.022, "factcheck": "no source: about 2 kW at night against 0.5 kW by day", "placeholder": true},
+  "inside_c": {"value": 21, "factcheck": "no source for the habitat set point", "placeholder": true},
+  "outside_high_c": {"value": 0, "factcheck": "row 174 (Gale highs about 0 C)"},
+  "outside_low_c": {"value": -70, "factcheck": "row 174 (Gale lows about -70 C)"},
+  "high_hour": {"value": 14.5, "unit": "local h", "factcheck": "row 173 (air high 14:00 to 15:00)"},
+  "low_hour": {"value": 5.5, "unit": "local h", "factcheck": "row 11 (coldest before dawn; the hour is our pick)"}
+ },
+ "devices": {
+  "o2_maker": {"kw": 3.573, "o2_kg_day": 5.4, "water_per_o2": 1.125, "factcheck": "rows 74, 75 (ISS oxygen maker), 106 (water per kg O2, warning: inferred)"},
+  "moxie": {"kw": 0.3, "o2_kg_day": 0.24, "water_per_o2": 0, "factcheck": "row 57 (300 W, up to 10 g O2 an hour, run all day here)"},
+  "greenhouse": {"kw": 5.67, "o2_kg_day": 0.021, "water_per_o2": 0, "factcheck": "rows 66, 67 (1.35 m2 salad per person at 2.1 kW/m2 of lamps, warning: pre-LED), 64 (lettuce 7.78 g O2/m2 a day)"},
+  "recycler": {"kw": 0.767, "recover": 0.98, "factcheck": "row 128 (water 343 W + urine 424 W processing, warning: pre-flight), rows 26, 127 (98% recovered)"}
+ },
+ "knobs": {
+  "_note": "what choices set; the start values are the story's",
+  "o2_maker": {"value": false, "factcheck": "the first stay runs on tanked oxygen (row 132)", "placeholder": true},
+  "moxie": {"value": false, "placeholder": true},
+  "greenhouse": {"value": true, "placeholder": true},
+  "recycler": {"value": false, "factcheck": "the first stay does not recycle water (row 132)", "placeholder": true},
+  "reactor": {"value": true, "factcheck": "Ravindu, 12 Nov: solar and the reactor together (missing-assets.md)", "placeholder": true},
+  "heater_c": {"value": 21, "placeholder": true},
+  "sheltered": {"value": false}
+ },
+ "suit": {
+  "full_min": {"value": 480, "factcheck": "row 135 (new suits 8 h)"}
+ },
+ "crop": {
+  "ready_days": {"value": 33, "factcheck": "row 29 (Veggie lettuce 33 days)"},
+  "harvest_food_kg": {"value": 0.03, "factcheck": "row 121 (a 15 g salad, one each for 2 crew)"}
+ },
+ "harm_scale": {
+  "_note": "how top_causes() weighs meters against each other: a cause's share of the starting stock (o2, water, food, the battery). dose_msv 10 has no source, a game weight (placeholder)",
+  "o2_kg": 52, "water_kg": 198, "food_kg": 147, "energy_kwh": 140, "dose_msv": 10
+ },
+ "choices": {
+  "o2_maker_on": {"label": "Run the oxygen maker", "set": {"o2_maker": true}},
+  "o2_maker_off": {"label": "Rest the oxygen maker", "set": {"o2_maker": false}},
+  "moxie_on": {"label": "Make oxygen from Mars air", "set": {"moxie": true}},
+  "moxie_off": {"label": "Stop the Mars-air oxygen maker", "set": {"moxie": false}},
+  "greenhouse_on": {"label": "Greenhouse lights on", "set": {"greenhouse": true}},
+  "greenhouse_off": {"label": "Greenhouse lights off", "set": {"greenhouse": false}},
+  "recycler_on": {"label": "Recycle water", "set": {"recycler": true}},
+  "recycler_off": {"label": "Stop recycling water", "set": {"recycler": false}},
+  "heater_low": {"label": "Turn the heat down", "set": {"heater_c": 15}, "placeholder": true},
+  "heater_normal": {"label": "Normal heat", "set": {"heater_c": 21}, "placeholder": true},
+  "shelter_in": {"label": "Hide in the storm shelter", "set": {"sheltered": true}},
+  "shelter_out": {"label": "Leave the shelter", "set": {"sheltered": false}}
+ },
+ "uses": {
+  "_note": "use spots. Drinking and eating are already in the daily rates, so their use has no extra effect (counting them twice would lie)",
+  "drink": {}, "eat": {}, "o2_valve": {}, "sample": {}, "radio": {}, "brush": {}, "sit": {},
+  "plant": {"plant": true},
+  "harvest": {"harvest": true},
+  "clean_panel": {"label": "Cleaned a solar wing", "clean": 0.1667, "factcheck": "one of the 6 wing rows (design/research/layout.md); row 181 (Spirit +50% after its panels cleared)", "placeholder": true},
+  "sleep_night": {"to_hour": "wake_hour"},
+  "nap": {"advance_h": "nap_h"}
+ },
+ "events": {
+  "flare_x12": {"label": "Solar storm", "kind": "flare", "dose_msv": 8.1, "duration_h": 24, "shelter_factor": 0.5, "chance_per_sol": 0,
+   "source": "JPL: Curiosity RAD, X12 flare of 20 May 2024 (ARCHIVED 2024-05-20)", "live": false,
+   "factcheck": "row 37 (8,100 microgray; gray to sievert taken as 1 for flare protons, warning: our assumption), row 35 (shelter up to 24 h, our duration), row 90 (5.3 cm of water halves the dose)"},
+  "flare_noaa": {"label": "Solar flare M1.4", "kind": "flare", "dose_msv": 0.098, "duration_h": 24, "shelter_factor": 0.5, "chance_per_sol": 0,
+   "source": "NOAA SWPC GOES X-ray flares, M1.4 peaking 2026-11-07 17:17 UTC (ARCHIVED 2026-11-07)", "live": false,
+   "factcheck": "assets-cache/data-snapshots/noaa-xray-flares-latest_2026-11-07.json; the dose is row 37's scaled by peak X-ray flux (1.45e-5 / 1.2e-3 W/m2): no source, an X-ray class does not set a particle dose", "placeholder": true},
+  "dust_storm": {"label": "Dust storm", "kind": "storm", "tau_peak": 8.5, "rise_h": 48, "e_fold_sols": 43, "chance_per_sol": 0.000498,
+   "source": "Curiosity at Gale, 2018 global storm (ARCHIVED 2018)", "live": false,
+   "factcheck": "row 182 (peak opacity 8.5, clears with an e-fold of 43 sols), row 40 (a global storm about every 3 Mars years = 1 / 2009 sols, our maths); rise_h is ours", "placeholder_keys": ["rise_h"]}
+ },
+ "schedule": {
+  "_note": "when events happen: the story's",
+  "placeholder": true,
+  "list": [
+   {"sol": 5, "hour": 10, "event": "flare_x12"},
+   {"sol": 8, "hour": 9, "event": "dust_storm"}
+  ]
+ },
+ "seed": {"value": 2026, "placeholder": true}
+}
