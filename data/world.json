@@ -55,9 +55,9 @@
    7.0
   ],
   "storm_shelter": [
-   3.0,
-   2.2,
-   2.5
+   3.5,
+   2.8,
+   3.4
   ],
   "dish": [
    3.0,
@@ -409,8 +409,8 @@
   "rover": "ground.sink.soft"
  },
  "graded": {
-  "_note": "prefabs whose footprint (standin size) is graded level before the ground is built (world/terrain.gd _grade()), as crews prepare a site before they lay a slab on it: NASA's ASPECT project 'will develop tools and methods to clear, level, and compact the lunar surface' (https://www.nasa.gov/?p=96252, design/research/pages/pad-grading/). Without it a 0.15 m pad on a slope was buried at its uphill side and the ground came up through it",
-  "prefabs": ["build_pad"]
+  "_note": "prefabs whose footprint (standin size) is graded level before the ground is built (world/terrain.gd _grade()), as crews prepare a site before they lay a slab on it: NASA's ASPECT project 'will develop tools and methods to clear, level, and compact the lunar surface' (https://www.nasa.gov/?p=96252, design/research/pages/pad-grading/). Without it a 0.15 m pad on a slope was buried at its uphill side and the ground came up through it; the greenhouse's and the shelter's floors showed the ground through them the same way (13 Nov playtest)",
+  "prefabs": ["build_pad", "greenhouse", "storm_shelter"]
  },
  "shadow_min": 0.6,
  "_swept_range_m": "metres from the camera to a ground cell's centre (the patch centre for the base) beyond which its swept surfaces (floors, HAB 1's fit-out: DESIGN.md weathering.clean) are not drawn: seen only through doorways, they cost a draw call each from anywhere (world.gd _merge). Art direction",
