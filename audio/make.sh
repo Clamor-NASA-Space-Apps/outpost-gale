@@ -111,8 +111,16 @@ radio() {
 # greenhouse, the toilet, the desk) get only the clear copy; ones that can happen outside also get `_out`.
 sfx() {
 	nice -n 10 python3 -I make_sfx.py "$T"
-	for f in curtain pour sip crinkle rattle leaf suction brush beep; do
+	for f in pour sip crinkle rattle leaf suction brush beep; do
 		shot "$T/$f.wav" "anull" "$f.ogg"
+	done
+	# the curtain: a real cloth recording (Kenney RPG Audio "cloth1", CC0); the synthesised swish read as weird
+	shot "$K/rpg-audio/Audio/cloth1.ogg" "anull" curtain.ogg
+	# a food pouch taken and opened, a thing picked up and set down (Kenney RPG Audio, CC0): real foley, not synthesis
+	shot "$K/rpg-audio/Audio/handleSmallLeather.ogg" "anull" pouch.ogg
+	for f in grab:handleSmallLeather2 set_down:dropLeather; do
+		shot "$K/rpg-audio/Audio/${f#*:}.ogg" "anull" "${f%%:*}.ogg"
+		shot "$K/rpg-audio/Audio/${f#*:}.ogg" "$OUT" "${f%%:*}_out.ogg"
 	done
 	for f in latch ratchet valve zip; do
 		shot "$T/$f.wav" "anull" "$f.ogg"

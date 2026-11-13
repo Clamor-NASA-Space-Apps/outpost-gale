@@ -39,7 +39,9 @@ const SOUNDS := {
 	"radio_base": ["radio_base"],
 	# the use spots (design/plans/next-lanes.md section 2): one name per world.json `uses` row
 	"drink": ["pour", "sip@1.8"],
-	"eat": ["latch", "crinkle@0.4", "latch@1.4", "beep@1.8"],
+	"eat": ["latch", "pouch@0.4", "latch@1.4", "beep@1.8"],  # a real pouch rustle (the foil synth read as odd, 13 Nov)
+	"grab": ["grab"],  # something picked up by hand
+	"set_down": ["set_down"],  # and put down
 	"toilet": ["curtain", "suction@0.8", "curtain@4.2"],
 	"plant": ["rattle", "pat@0.7"],
 	"harvest": ["leaf"],
