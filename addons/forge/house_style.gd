@@ -1,6 +1,8 @@
 extends RefCounted
 
 const MIN_CAST_DEG := 15.0  # the lowest a shadow is cast from (set_look())
+const FADE_DEG := 20.0  # below this sun elevation the shadow fades (set_look())
+const SHADOW_LOW := 0.4  # the shadow's opacity with the sun at the horizon
 ## The DESIGN.md look in Godot. Every project uses this instead of writing its own, so models from the
 ## forge, from kits and from official sources end up in one style under one light rig.
 ##
@@ -480,6 +482,9 @@ static func set_look(parent: Node, design: Dictionary, v: Dictionary) -> void:
 			if cast.y < low and Vector2(cast.x, cast.z).length() > 1e-4:
 				cast = (Vector3(cast.x, 0.0, cast.z).normalized() * cos(deg_to_rad(MIN_CAST_DEG))) + Vector3.UP * low
 			sun.transform = Transform3D(Basis.looking_at(-cast, Vector3.FORWARD if absf(cast.y) > 0.999 else Vector3.UP), cast * 50.0)
+			# and it fades as the sun gets low: dawn light is soft, and a faint shadow hides the stretched texels a clamp
+			# alone leaves (design/research/shadow-low-sun.md): full from FADE_DEG up, SHADOW_LOW at the horizon
+			sun.shadow_opacity = lerpf(SHADOW_LOW, 1.0, clampf(rad_to_deg(asin(clampf(to.y, -1.0, 1.0))) / FADE_DEG, 0.0, 1.0))
 			# `light_shadowed` when the caller solved it already (a cycle, once per burst and not per frame)
 			var shadowed: float = v.light_shadowed if v.has("light_shadowed") else _shadowed(design, parent, v.light_energy, v.light_color, to.y)
 			# a preset that turns the shadow off (set_quality) needs the plain energy back, or the scene goes dim

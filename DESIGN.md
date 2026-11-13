@@ -132,9 +132,9 @@ lighting:
 quality:
   phone: { start: phone, msaa: 0, pixels: 0.6, shadows: 1, shadowMap: 1024, shadowRange: 25, shadowFilter: 2, normalBias: 2, glow: 0, detail: off, aniso: 1, ground: flat, particles: 0.5, trail: 1024, lamps: 2 }
   older: { msaa: 0, pixels: 0.8, shadows: 1, shadowMap: 1024, shadowRange: 25, shadowFilter: 2, normalBias: 2, glow: 0, detail: off, aniso: 1, ground: cheap, particles: 0.5, trail: 1024, lamps: 2 }
-  laptop: { start: desktop, msaa: 2, pixels: 1.4, shadows: 2, shadowMap: 2048, shadowRange: 60, shadowFilter: 3, normalBias: 6, glow: 0.4, detail: texture, aniso: 2, ground: full, particles: 0.75, trail: 2048, lamps: 4 }
-  gaming: { msaa: 4, scale: 1, shadows: 4, shadowMap: 4096, shadowRange: 60, shadowFilter: 4, normalBias: 4, glow: 0.5, detail: texture, aniso: 3, ground: full, particles: 1, trail: 2048 }
-  max: { msaa: 8, scale: 1, shadows: 4, shadowMap: 4096, shadowRange: 60, shadowFilter: 5, normalBias: 4, glow: 0.5, ssao: true, detail: texture, aniso: 4, ground: full, particles: 1, trail: 2048 }
+  laptop: { start: desktop, msaa: 2, pixels: 1.4, shadows: 2, shadowMap: 2048, shadowRange: 40, shadowFilter: 3, normalBias: 6, glow: 0.4, detail: texture, aniso: 2, ground: full, particles: 0.75, trail: 2048, lamps: 4 }
+  gaming: { msaa: 4, scale: 1, shadows: 4, shadowMap: 4096, shadowRange: 40, shadowFilter: 4, normalBias: 3, glow: 0.5, detail: texture, aniso: 3, ground: full, particles: 1, trail: 2048 }
+  max: { msaa: 8, scale: 1, shadows: 4, shadowMap: 4096, shadowRange: 40, shadowFilter: 5, normalBias: 3, glow: 0.5, ssao: true, detail: texture, aniso: 4, ground: full, particles: 1, trail: 2048 }
 kit:
   "^(tex_0[1-5]|wheels|parts_AO)$": keep
   "^(iss_panels|mercou_photo|gale_photo)$": keep
