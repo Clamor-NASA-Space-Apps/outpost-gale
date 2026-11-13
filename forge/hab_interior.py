@@ -112,6 +112,26 @@ def _curtain(name, w, h, x, y, z, folds=6, depth=0.025):
     return o
 
 
+def _wc_icon(x, y_left, z_foot):
+    """The toilet pictogram side on, 9 cm tall, as on public signs: a tank, a gap, then seat and bowl in one curve on a
+    foot, facing the reader's right. Drawn in cm (u to the reader's right, v up) on a sign whose face looks to -x, so u
+    runs along -y; 4 mm thick, its back 1 mm into the sign. A seven-point blob with a corner cut read as a white smudge
+    (13 Nov playtest). Returns the two parts, filled by ear clipping so a concave outline has no stray triangle."""
+    ell = [(3.0 + 5.4 * math.cos(math.radians(a)), 4.0 + 2.8 * math.sin(math.radians(a))) for a in range(0, -72, -9)]
+    bowl = [(0.4, 4.6), (0.4, 4.0), (2.8, 1.4), (2.8, 0.0), (5.4, 0.0), (5.4, 1.2)] + ell[::-1] + [(8.4, 4.6)]
+    tank = [(0.0, 5.2), (2.4, 5.2), (2.4, 9.0), (0.0, 9.0)]
+    parts = []
+    for name, uv in (("wc_icon", bowl), ("wc_icon_tank", tank)):
+        o = prism(name, [(y_left - u * 0.01, z_foot + v * 0.01) for u, v in uv], 0.004, x, mat=mat("light"))
+        bm = bmesh.new()
+        bm.from_mesh(o.data)
+        bmesh.ops.triangulate(bm, faces=bm.faces[:], quad_method="BEAUTY", ngon_method="EAR_CLIP")
+        bm.to_mesh(o.data)
+        bm.free()
+        parts.append(o)
+    return parts
+
+
 def _cwc(name, at_, along_y=True):
     """One water bag lying flat: a soft white Nomex pillow with its dark carry strap round the middle."""
     L, W, T = CWC
@@ -256,9 +276,7 @@ def fit_out(F, RI, CEIL):
         loose.append(cur)  # mounted with the cubicle, kept out of interior-col
         # the sign: a plate with a glowing toilet pictogram and the word, like the HUD's labels
         _b("wc_sign", (0.012, 0.5, 0.16), (-D - 0.004, 0, z0 + H - 0.1), "trim", 0.004)
-        icon = prism("wc_icon", [(0.0, 0.0), (0.05, 0.0), (0.05, 0.02), (0.035, 0.035), (0.035, 0.06), (0.01, 0.06), (0.0, 0.04)], 0.008, mat=mat("light"))
-        icon.location, icon.scale = (-D - 0.012, 0.13, z0 + H - 0.145), (1.5, 1.5, 1.5)  # a toilet side on: bowl, seat, tank
-        loose.append(icon)
+        loose.extend(_wc_icon(-D - 0.011, 0.22, z0 + H - 0.145))
         loose.append(flat_label("wc_word", "TOILET", 0.075, (-D - 0.013, -0.06, z0 + H - 0.1), "light", 0, 90, 0))  # flat, 3 mm proud
         # the UWMS: a short white pedestal, a seat with its dark opening, the lid up against the back wall
         _c("wc_unit", 0.17, 0.4, (-0.38, -0.06, z0 + 0.2), "panel", 16)
@@ -363,7 +381,9 @@ def liner(F, RI, CEIL, windows, wz, wr, hatch_w, hatch_top):
     # narrower than the collar (hatch_w + 0.34), so the cut faces end 4 cm inside its solid
     lo, hi = F - 0.05, hatch_top - 0.02  # its top edge 2 cm down inside the collar too
     cut(o, box("liner_hatch", (hatch_w + 0.26, 0.6, hi - lo), (0, RI, (lo + hi) / 2)))
-    U.append(o)
+    # a closed tube for the cuts; then its back (5 mm off the hull), its top (in the roof) and its foot go: nobody
+    # sees them, and HAB 1 sits at its triangle budget
+    U.append(smooth(unseen(o, lambda f: abs(f.normal.z) > 0.9 or _outward(f))))  # the curve reads round, not in 48 lit strips
     # the ceiling: one face 5 mm under the roof's flat underside, so the room light (world.gd) reaches it (the roof is on
     # the outside's layer) and it reads as a module's white panel ceiling, not the hull's plates
     cm = bpy.data.meshes.new("ceiling")
@@ -375,6 +395,21 @@ def liner(F, RI, CEIL, windows, wz, wr, hatch_w, hatch_top):
     return o
 
 
+def _outward(f):
+    return f.normal.dot(f.calc_center_median().normalized()) > 0.5
+
+
+def unseen(o, test):
+    """Deletes the faces of `o` (its mesh in the model's space, origin at the drum's centre) that `test(face)` picks:
+    faces nobody sees, inside the hull or on the ground, so the triangle budget goes to what is seen."""
+    bm = bmesh.new()
+    bm.from_mesh(o.data)
+    bmesh.ops.delete(bm, geom=[f for f in bm.faces if test(f)], context="FACES")
+    bm.to_mesh(o.data)
+    bm.free()
+    return o
+
+
 def deck(F, RI, hatch_cut):
     """The floor: a deck in the `deck` role, top at F, its underside inside the floor slab, laid out in 60 cm plates
     (a raised-floor tile) by dark joint strips 3 mm proud of it (never flush: a face on a face flickers), each
@@ -383,7 +418,7 @@ def deck(F, RI, hatch_cut):
     sill_x = hatch_cut.dimensions.x / 2
     d = cyl("deck", RI - 0.004, 0.025, (0, 0, F - 0.0125), mat("deck"), 48)
     cut(d, hatch_cut)
-    U.append(d)
+    U.append(unseen(d, lambda f: f.normal.z < -0.9 or (abs(f.normal.z) < 0.1 and _outward(f))))  # its foot and rim: behind the liner, in the slab
     for k in range(-4, 4):
         g = k * 0.6 + 0.3
         half = math.sqrt((RI + 0.05) ** 2 - g * g)

@@ -1,14 +1,18 @@
-# Side-view films of the hero's clips: 8 frames per clip in one strip, camera at the side looking a little down, the hero carried forward at the clip's ground speed over a floor ruled every 0.25 m, so a planted
-# boot stays on one mark and a sliding one does not. The hop strip flies the body on a Mars-gravity arc.
-#   blender -b --python-exit-code 1 -P forge/hero_films.py -- models/character_suited.glb data/clips.json <out dir>
+# Films of the hero's clips: 8 frames per clip in one strip, camera at the side looking a little down, the hero carried forward at the clip's ground speed over a floor ruled every 0.25 m, so a planted
+# boot stays on one mark and a sliding one does not; under it the same frames from the front three-quarter, where an
+# arm through the helmet or the chest unit shows. The hop strip flies the body on a Mars-gravity arc.
+#   blender -b --python-exit-code 1 -P forge/hero_films.py -- models/character_suited.glb data/clips.json <out dir> [clip,clip]
 import json
 import os
 import subprocess
 import sys
 
 import bpy
+from mathutils import Vector
 
-glb, clips_json, out = [os.path.abspath(a) for a in sys.argv[sys.argv.index("--") + 1:]]
+args = sys.argv[sys.argv.index("--") + 1:]
+glb, clips_json, out = [os.path.abspath(a) for a in args[:3]]
+only = args[3].split(",") if len(args) > 3 else None  # just these clips (and no hop strip unless named)
 os.makedirs(out, exist_ok=True)
 clips = json.load(open(clips_json))["clips"]
 G, AIR = 3.73, clips["hop_air"]["length"]
@@ -48,35 +52,46 @@ def play(name, t):
     sc.frame_set(int(t * 30), subframe=(t * 30) % 1)
 
 
-def shot(path, y, z=0.0):
+def shot(path, y, z=0.0, front=False):
     root.location = (0, y, z)
-    cam.location = (4.0, y, 1.6)  # tipped 10 degrees down so the floor rules show
-    cam.rotation_euler = (1.3963, 0, 1.5708)
+    if front:  # the model faces -Y: from its front right, at chest height
+        cam.location = (2.6, y - 2.6, 1.5)
+        cam.rotation_euler = (Vector((0, y, 1.0)) - cam.location).to_track_quat("-Z", "Y").to_euler()
+    else:
+        cam.location = (4.0, y, 1.6)  # tipped 10 degrees down so the floor rules show
+        cam.rotation_euler = (1.3963, 0, 1.5708)
     sc.render.filepath = path
     bpy.ops.render.render(write_still=True)
 
 
 def strip(name, frames):
-    """frames: [(clip, t, y, z)] -> one PNG of len(frames) panels."""
+    """frames: [(clip, t, y, z)] -> one PNG: the side view in a row of len(frames) panels, the front view under it."""
     paths = []
-    for k, (clip, t, y, z) in enumerate(frames):
-        play(clip, t)
-        p = os.path.join(out, f"_{name}_{k}.png")
-        shot(p, y, z)
-        paths.append(p)
+    for front in (False, True):
+        for k, (clip, t, y, z) in enumerate(frames):
+            play(clip, t)
+            p = os.path.join(out, f"_{name}_{int(front)}_{k}.png")
+            shot(p, y, z, front)
+            paths.append(p)
     dst = os.path.join(out, f"{name}.png")
     inputs = sum((["-i", p] for p in paths), [])
-    subprocess.run(["ffmpeg", "-loglevel", "error", "-y", *inputs, "-filter_complex", f"hstack=inputs={len(paths)}", dst], check=True)
+    n = len(frames)
+    side = "".join(f"[{i}:v]" for i in range(n))
+    fr = "".join(f"[{i}:v]" for i in range(n, 2 * n))
+    graph = f"{side}hstack=inputs={n}[a];{fr}hstack=inputs={n}[b];[a][b]vstack"
+    subprocess.run(["ffmpeg", "-loglevel", "error", "-y", *inputs, "-filter_complex", graph, dst], check=True)
     for p in paths:
         os.remove(p)
     print("FILM", dst)
 
 
 for name, c in clips.items():
-    if name.startswith("hop_"):
+    if name.startswith("hop_") or (only and name not in only):
         continue
     L, v = c["length"], c.get("speed", 0.0)
     strip(name, [(name, L * k / 8, -v * L * k / 8, 0.0) for k in range(8)])
+if only and "hop" not in only:
+    sys.exit(0)
 # the hop: start (crouch, take-off), the flight on the arc, the landing
 s, l = clips["hop_start"]["length"], clips["hop_land"]["length"]
 v0 = G * AIR / 2

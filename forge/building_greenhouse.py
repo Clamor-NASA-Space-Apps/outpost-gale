@@ -106,9 +106,11 @@ def keep(o):
 
 slot = 0
 slots = []
+OY = RD - TL / 2 + 0.25  # the outlet boxes' line along the vestibule's sides, inside the dome
 for s in (-1, 1):
     x = s * 1.25
     y0 = -0.35
+    px = x - s * (DP / 2 - 0.02)  # the aisle-side posts
     for sx in (-1, 1):
         for sy in (-1, 1):  # square posts, their feet 5 mm into the floor so no face lies on it
             keep(box(f"post{s}{sx}{sy}", (0.035, 0.035, H - 0.005), (x + sx * (DP / 2 - 0.02), y0 + sy * (L / 2 - 0.02), FL + (H - 0.015) / 2), mat("panel")))  # top inside the top plate
@@ -125,6 +127,32 @@ for s in (-1, 1):
         for bx in (-0.13, 0.13):
             keep(box(f"led_housing{s}{k}{bx}", (0.07, L - 0.2, 0.025), (x + bx, y0, FL + roof - 0.0125 + 0.003), mat("trim")))
             box(f"growlight{s}{k}{bx}", (0.05, L - 0.24, 0.008), (x + bx, y0, FL + roof - 0.024), mat("grow"))  # its top inside the housing
+        # the feed to this tier's bars: from each housing's door end out past the end post, then across the rack's end to
+        # the riser on the aisle post. Lit bars with no wire read as lights out of thin air (13 Nov playtest)
+        zf, ye = FL + roof - 0.015, y0 + L / 2 - 0.02 + 0.0175 + 0.014  # under the tray; 1.4 cm off the end posts' face
+        for bx in (-0.13, 0.13):
+            keep(smooth(bar(f"feed{s}{k}{bx}", (x + bx, y0 + (L - 0.2) / 2 - 0.005, zf), (x + bx, ye, zf), 0.008, mat("trim"), 8)))
+        keep(smooth(bar(f"feed_x{s}{k}", (px - s * 0.008, ye, zf), (x + s * 0.138, ye, zf), 0.008, mat("trim"), 8)))
+    # levelling feet: a steel plate and a boss on every post, the plate 2 mm into the floor. The room light casts no
+    # shadow, so the feet are what show the racks stand on the floor (13 Nov playtest: they looked to float)
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            fx, fy = x + sx * (DP / 2 - 0.02), y0 + sy * (L / 2 - 0.02)
+            keep(bevel(box(f"foot{s}{sx}{sy}", (0.08, 0.08, 0.01), (fx, fy, FL + 0.003), mat("metal")), width=0.003, segments=1))
+            keep(smooth(cyl(f"boss{s}{sx}{sy}", 0.028, 0.04, (fx, fy, FL + 0.026), mat("metal"), 12)))
+    # the riser down the aisle-side door-end post, then along the floor beside the vestibule to an outlet box on its
+    # side wall: where the power comes in from outside, by the door
+    zc, xo = FL + 0.013, s * 1.10  # the floor run's centre 1 mm over the floor; its line, clear of posts and vestibule
+    keep(smooth(bar(f"riser{s}", (px, ye, zc - 0.008), (px, ye, FL + H - 0.04), 0.012, mat("trim"), 8)))
+    keep(smooth(bar(f"floor_run_x{s}", (px, ye, zc), (xo + s * 0.012, ye, zc), 0.012, mat("trim"), 8)))
+    keep(smooth(bar(f"floor_run{s}", (xo, ye - 0.012, zc), (xo, OY, zc), 0.012, mat("trim"), 8)))
+    keep(smooth(bar(f"outlet_riser{s}", (xo, OY, zc - 0.008), (xo, OY, FL + 0.11), 0.012, mat("trim"), 8)))
+    ob = keep(bevel(box(f"outlet{s}", (0.08, 0.16, 0.2), (s * (VW / 2 + 0.15 + 0.03), OY, FL + 0.2), mat("trim")), width=0.01, segments=1))
+    if s < 0:  # world.json cables.ends: the feed from outside meets it here
+        e = bpy.data.objects.new("port_in", None)
+        bpy.context.scene.collection.objects.link(e)
+        e.location = (s * (VW / 2 + 0.15 + 0.03), OY, FL + 0.2)
+        port_in = e
     for k in (1, 2):  # lettuce in the upper two tiers, four heads a tier
         for i in range(4):
             slot += 1
@@ -145,8 +173,12 @@ AY, VY = math.sqrt((RD - 0.2) ** 2 - 0.6 ** 2), RD - TL / 2 - 0.02
 keep(box("aisle", (1.2, AY + VY, 0.015), (0, (VY - AY) / 2, FL + 0.0025), mat("deck")))
 racks = join("interior-col", inside)
 bpy.context.view_layer.update()
-for e in slots:  # under the racks, so the lettuce in them is swept with the room and its light reaches it (world.gd)
+for e in slots + [port_in]:  # under the racks, so the lettuce in them is swept with the room and its light reaches it (world.gd)
     mw = e.matrix_world.copy()
     e.parent = racks
     e.matrix_world = mw
+# the feed from HAB 1 (world.json cables.ends): a gland on the ring wall at the back, toward HAB 1 where the dome
+# stands in the world, out and down into a ground gland box
+PA = 240
+port("port_1", at(RD + 0.3, PA, 0)[:2], at(RD + 0.05, PA, 0.24), r=0.03, turn=PA)
 done("building_greenhouse")

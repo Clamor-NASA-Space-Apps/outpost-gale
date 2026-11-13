@@ -69,3 +69,13 @@ No story, no `sim/` rules, no meters, no sol clock, no win or lose before 14 Nov
 - [ ] checks pass
 - [ ] /code-review medium
 - [ ] lessons (including: one of the three variants must carry photo texture sets)
+
+## Notes for the event (14 Nov): decisions taken during asset prep, no rules built
+- Range and limits come from the rules, not from walls: going far costs suit oxygen and rover power, and adds
+  radiation dose; that is what keeps a player near the base (Ravindu, 13 Nov 2026). Mont Mercou stays a solid butte
+  unless a mission needs its top.
+- Jumping and climbing for missions: the hero could climb Mont Mercou at only one spot and not where a hop looked
+  high enough (13 Nov playtest). If a mission needs high ground, build it with skills/contextual-traversal (ability
+  tiers from the reality sheet: step, hop, scramble; one-press targets that always succeed; routes to the top).
+- The sky clock hands over to the rules through `clock.driven` / `clock.set_hour()`; settled dust is `clock.coat`,
+  ready to tie to panel power (CONTRACTS.md, The sky clock).

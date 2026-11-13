@@ -544,7 +544,7 @@ func _glow(k: float) -> void:
 		_bar_mat = m.duplicate()
 		_bar_mat.resource_name = "light_pip"
 		_bar_lit = _bar_mat.albedo_color
-		_bar_glow = _bar_mat.emission_energy_multiplier
+		_bar_glow = float(m.get_meta("glow", _bar_mat.emission_energy_multiplier))  # the full glow, not the sky clock's daytime glimmer
 		_bar.set_surface_override_material(0, _bar_mat)
 	_bar_mat.albedo_color = _bar_lit * Color(k, k, k)
 	_bar_mat.emission_energy_multiplier = _bar_glow * k
@@ -567,7 +567,7 @@ func _ground_fx() -> void:
 		_travel = 0.0
 		for i in _hubs.size():
 			if _hubs[i].z > 0.0:
-				world.mark(global_transform * Vector3(_hubs[i].x, 0.0, _hubs[i].z), -rad_to_deg(yaw), "wheel", float(p.track_width))
+				world.mark(global_transform * Vector3(_hubs[i].x, 0.0, _hubs[i].z), -rad_to_deg(yaw), "wheel", float(p.track_width), float(p.track_depth))
 	var s: Array = p.shade
 	var discs := PackedVector4Array()
 	for z: float in [-1.0, 1.0]:

@@ -340,7 +340,7 @@
    "value": 0.5,
    "unit": "m",
    "source": "Curiosity rolls over obstacles up to 65 cm on 0.5 m wheels, 1.3 wheel diameters (JPL MSL fact sheet, https://solarsystem.nasa.gov/docs/MSL%20Fact%20Sheet%20REV-141119.pdf); the Apollo LRV was built to climb a 35 cm step on 81.8 cm tyres, 0.43 diameters (UMD ENAE 788X LRV case study slide 47, https://spacecraft.ssl.umd.edu/academics/788XF20/788XF20L05.LRVx.pdf). For the SEV's 0.99 m wheels (active suspension, no number published): 0.43 to 1.29 m. Excerpts: design/research/pages/rover-climb/excerpts.md",
-   "note": "the tallest rock a wheel rolls up onto (sandbox/rover.gd): taller ones stop the rover. Value: the wheel's radius, under the chassis's 0.62 m clearance, so a rock the wheels climb never meets the belly"
+   "note": "the tallest rock or step a wheel rolls up onto (sandbox/rover.gd); a static whose top is no higher than this over its underside (a build pad, a sill: world.gd _solidify()) is ground to a wheel as a rock is. Taller ones stop the rover. Value: the wheel's radius, under the chassis's 0.62 m clearance, so a rock the wheels climb never meets the belly"
   },
   {
    "id": "rover.brake",

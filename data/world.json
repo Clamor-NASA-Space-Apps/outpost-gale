@@ -1,8 +1,7 @@
 {
- "note": "The sandbox base. pos is [x, z] in metres from the patch centre (+X east, -Z north), yaw degrees clockwise from north. Heights come from the terrain. Layout from real surface-base practice where we have it: power away from the habitat, the lander pad far off, Curiosity is a landmark toward Mount Sharp (it is really far up the mountain).",
+ "note": "The sandbox base. pos is [x, z] in metres from the patch centre (+X east, -Z north), yaw degrees clockwise from north. Heights come from the terrain. Laid out as a real surface outpost (design/research/layout.md): HAB 1, the greenhouse and the storm shelter with their doors on one yard south of the airlock, the gas bottles at the airlock, the power yard (battery bank) east between the sun-tracking wing field and the users, the dish north in open sky, the rover in a charging bay by the power yard, and the two things NASA keeps 1 km off (the reactor, the lander) in opposite corners of the play area (play_half), about 190 m out. Curiosity is a landmark toward Mount Sharp (it is really far up the mountain).",
  "prefabs": {
   "habitat": "res://models/building_habitat.glb",
-  "solar_array": "res://models/building_solar_array.glb",
   "battery_bank": "res://models/prop_battery_bank.glb",
   "oxygen_maker": "res://models/prop_oxygen_maker.glb",
   "water_recycler": "res://models/prop_water_recycler.glb",
@@ -13,6 +12,7 @@
   "lander": "res://models/building_lander.glb",
   "rover": "res://models/vehicle_rover.glb",
   "curiosity": "res://models/vehicle_curiosity.glb",
+  "charger": "res://models/prop_charger.glb",
   "cargo_bag": "res://models/prop_cargo_bag.glb",
   "pip": "res://models/vehicle_pip.glb",
   "lamp": "res://models/prop_lamp.glb",
@@ -33,11 +33,6 @@
    5.0,
    3.5,
    5.0
-  ],
-  "solar_array": [
-   6.0,
-   2.5,
-   2.0
   ],
   "battery_bank": [
    1.6,
@@ -144,31 +139,13 @@
    "yaw": 270
   },
   {
-   "id": "solar1",
-   "prefab": "solar_array",
-   "pos": [
-    24,
-    -4
-   ],
-   "yaw": 0
-  },
-  {
-   "id": "solar2",
-   "prefab": "solar_array",
-   "pos": [
-    24,
-    4
-   ],
-   "yaw": 0
-  },
-  {
    "id": "greenhouse",
    "prefab": "greenhouse",
    "pos": [
-    -14,
-    -6
+    -11,
+    -2
    ],
-   "yaw": 135
+   "yaw": 180
   },
   {
    "id": "shelter",
@@ -192,8 +169,8 @@
    "id": "pad1",
    "prefab": "build_pad",
    "pos": [
-    -14,
-    6
+    -15,
+    9
    ],
    "yaw": 0
   },
@@ -201,7 +178,7 @@
    "id": "pad2",
    "prefab": "build_pad",
    "pos": [
-    12,
+    18,
     14
    ],
    "yaw": 0
@@ -210,10 +187,10 @@
    "id": "rover",
    "prefab": "rover",
    "pos": [
-    -10,
-    0
+    10,
+    8
    ],
-   "yaw": 90
+   "yaw": 180
   },
   {
    "id": "pip",
@@ -228,8 +205,8 @@
    "id": "bag1",
    "prefab": "cargo_bag",
    "pos": [
-    -3,
-    5
+    3.3,
+    7.0
    ],
    "yaw": 10
   },
@@ -237,8 +214,8 @@
    "id": "bag2",
    "prefab": "cargo_bag",
    "pos": [
-    -3.6,
-    5.4
+    2.7,
+    7.4
    ],
    "yaw": 40
   },
@@ -246,8 +223,8 @@
    "id": "bag3",
    "prefab": "cargo_bag",
    "pos": [
-    -2.4,
-    5.8
+    3.9,
+    7.8
    ],
    "yaw": 75
   },
@@ -255,8 +232,8 @@
    "id": "lamp1",
    "prefab": "lamp",
    "pos": [
-    -4,
-    4
+    5.5,
+    2.6
    ],
    "yaw": 0
   },
@@ -273,8 +250,8 @@
    "id": "beacon1",
    "prefab": "beacon",
    "pos": [
-    30,
-    0
+    -122,
+    -143
    ],
    "yaw": 0
   },
@@ -282,8 +259,8 @@
    "id": "telltale",
    "prefab": "telltale",
    "pos": [
-    -4.4,
-    2.0
+    4,
+    11
    ],
    "yaw": 90
   },
@@ -291,10 +268,10 @@
    "id": "lander",
    "prefab": "lander",
    "pos": [
-    90,
-    -70
+    -135,
+    -135
    ],
-   "yaw": 0
+   "yaw": 135
   },
   {
    "id": "curiosity",
@@ -313,7 +290,8 @@
   {"id": "wing4", "prefab": "solar_wing", "pos": [48.5, 28.6], "yaw": 90},
   {"id": "wing5", "prefab": "solar_wing", "pos": [56, 28.6], "yaw": 90},
   {"id": "wing6", "prefab": "solar_wing", "pos": [63.5, 28.6], "yaw": 90},
-  {"id": "reactor", "prefab": "reactor", "pos": [-180, -60], "yaw": 0},
+  {"id": "reactor", "prefab": "reactor", "pos": [135, -135], "yaw": 225},
+  {"id": "charger", "prefab": "charger", "pos": [12.6, 8.2], "yaw": 270},
   {"id": "mercou", "prefab": "mont_mercou", "pos": [-40, 38], "yaw": 45}
  ],
  "landmarks": {
@@ -334,22 +312,22 @@
   ],
   "solar": [
    20,
-   0,
-   270
+   4,
+   135
   ],
   "greenhouse": [
-   -7,
-   -6,
-   270
+   -11,
+   5.2,
+   0
   ],
   "rover": [
-   -10,
-   4,
+   10,
+   3.5,
    180
   ],
   "lander": [
-   80,
-   -60,
+   -125,
+   -123,
    320
   ],
   "curiosity": [
@@ -366,16 +344,46 @@
    -33,
    31,
    225
-  ]
+  ],
+  "reactor": [120, -120, 45]
  },
  "cables": {
-  "_note": "power cables laid on the ground (world.gd _cables): polylines of [x, z], draped on height_at() every step m, width and height in metres, in a DESIGN.md role; rocks keep off them as off paths. The reactor's 3 kVac line comes in from 1 km in the real plan (NTRS 20250000841); our patch ends at 200 m, so the reactor stands near its west edge, 190 m out, and the line runs to HAB 1's utility panel. The field's header runs along the wings' north ends past each row's junction box (z 8.57), then to the batteries; theirs runs to the habitat. Size and route are ours",
+  "_note": "power cables laid on the ground (world.gd _lay_cables): polylines of [x, z], draped on height_at() every step m, width and height in metres, in a DESIGN.md role; rocks keep off them as off paths. Each line runs between two devices, `ends` in the same order: 'item:node' names the empty in the device's model where it plugs in (port_1 when left out), and the line's first and last points move onto it, so the cable ends inside the gland box on the ground that the model carries, under a conduit up into the device (forge/base_kit.py port(); a cable stopping beside its device read as unplugged, 13 Nov playtest). Power runs source to yard to user: the reactor and the wings into the battery bank (battery..battery3, the power yard east of HAB 1; each cabinet has port_n and port_s on its north and south ends), and out of it to each user (the greenhouse and the yard light through HAB 1). Layout and its sources: design/research/layout.md. In order: the reactor's 3 kVac line (real: 1 km, NTRS 20250000841; our ground is real and swept to 150 m, so it comes from the north-east corner of that, 191 m out) into battery3; the wing field's header from battery3 to wing 1's junction box, then box to box along the rows' north ends (each box has port_w and port_e, the field's combiner chain; wing 6's port_e stays capped); HAB 1 (its east feed box, port_e2); HAB 1 on to the greenhouse round the north side, clear of both doors; the dish; the north work light; the rover's charging post in its bay (SAC21: the crew 'connect the PR to the surface power grid to recharge batteries'; the post's own lead to the rover is `charger`); the yard light, off HAB 1's port_e1. No line crosses a path, the lander track or a doorway (tests/world_test.gd), so no cover ramp is needed. Size and routes are ours",
   "role": "trim", "width": 0.06, "height": 0.04, "step": 1.0,
   "lines": [
-   [[-178, -59], [-60, -30], [-12, -12], [-7, -3], [-2.75, -0.4]],
-   [[63.5, 8.35], [26, 8.35], [21, 6.5], [16.2, 2.9]],
-   [[13.2, 2.2], [6, 1.2], [2.6, 0.6]]
+   [[16.2, 1.13], [16.2, 0.4], [24, -6], [133.6, -133.6]],
+   [[16.2, 2.87], [16.2, 3.6], [21, 6.5], [25.1, 8.58], [25.58, 8.58]],
+   [[26.42, 8.58], [33.08, 8.58]],
+   [[33.92, 8.58], [40.58, 8.58]],
+   [[41.42, 8.58], [48.08, 8.58]],
+   [[48.92, 8.58], [55.58, 8.58]],
+   [[56.42, 8.58], [63.08, 8.58]],
+   [[14, 2.87], [13.6, 3.3], [12.5, 2.6], [6, 1.0], [3.2, -0.12], [2.7, -0.12]],
+   [[-2.64, 0], [-3.2, -0.6], [-4.6, -3.4], [-8.7, -5.4], [-9.15, -5.2]],
+   [[15.1, 1.13], [15.1, 0.4], [15.1, -11.5], [8.0, -15.6], [6.8, -16]],
+   [[14, 1.13], [14, 0.5], [13.6, -4.8], [8.6, -5.6], [8.04, -5.91]],
+   [[15.1, 2.87], [15.1, 7.6], [13.5, 8.2], [12.9, 8.2]],
+   [[2.7, 0.12], [3.4, 0.3], [4.9, 2.5], [5.54, 2.69]]
+  ],
+  "ends": [
+   ["battery3:port_n", "reactor"],
+   ["battery3:port_s", "wing1:port_w"],
+   ["wing1:port_e", "wing2:port_w"],
+   ["wing2:port_e", "wing3:port_w"],
+   ["wing3:port_e", "wing4:port_w"],
+   ["wing4:port_e", "wing5:port_w"],
+   ["wing5:port_e", "wing6:port_w"],
+   ["battery:port_s", "hab1:port_e2"],
+   ["hab1:port_w", "greenhouse"],
+   ["battery2:port_n", "dish"],
+   ["battery:port_n", "lamp2"],
+   ["battery2:port_s", "charger"],
+   ["hab1:port_e1", "lamp1"]
   ]
+ },
+ "charger": {
+  "_note": "the rover's charging post in its bay (world.gd _charger, forge/prop_charger.py): with the rover parked and still for still_s seconds and its port_charge within reach_m of the post's lead_out, the plug sits in the rover's socket and the post's light glows; once the rover moves drift_m the plug is back in the post's holster. The lead is lead_m long and width thick, in a DESIGN.md role. Motion and light only. Lengths are ours (a car charger's lead is 5 to 7.5 m; a short one keeps it in the bay)",
+  "item": "charger", "rover": "rover", "role": "trim", "lead_m": 2.4, "reach_m": 2.1, "width": 0.035, "still_s": 1.0, "drift_m": 0.05
  },
  "play_half": 150,
  "bound": {
@@ -395,15 +403,19 @@
  "sink": {
   "_note": "how far each prefab sits in the dust: a reality.json row id per prefab, else default (skills/shadows-and-grounding, Sink). support: metres above an item's lowest drawn point that still count as resting on the ground (feet, skids, bevelled bottom edges). level: prefabs crews build level (floors, foundations, tracking mounts); everything else tilts to the ground under it, as a lander's legs or a bag do. Vehicles only touch: their drivers set them on their wheels, sunk by their own row here (rover). Rocks: reality.json rock.embed",
   "support": 0.05,
-  "level": ["habitat", "greenhouse", "storm_shelter", "build_pad", "solar_array", "dish", "telltale"],
+  "level": ["habitat", "greenhouse", "storm_shelter", "build_pad", "dish", "telltale"],
   "default": "ground.sink.soft",
   "lander": "ground.sink.foot",
   "rover": "ground.sink.soft"
  },
+ "graded": {
+  "_note": "prefabs whose footprint (standin size) is graded level before the ground is built (world/terrain.gd _grade()), as crews prepare a site before they lay a slab on it: NASA's ASPECT project 'will develop tools and methods to clear, level, and compact the lunar surface' (https://www.nasa.gov/?p=96252, design/research/pages/pad-grading/). Without it a 0.15 m pad on a slope was buried at its uphill side and the ground came up through it",
+  "prefabs": ["build_pad"]
+ },
  "shadow_min": 0.6,
  "_swept_range_m": "metres from the camera to a ground cell's centre (the patch centre for the base) beyond which its swept surfaces (floors, HAB 1's fit-out: DESIGN.md weathering.clean) are not drawn: seen only through doorways, they cost a draw call each from anywhere (world.gd _merge). Art direction",
  "swept_range_m": 30,
- "moving": "^(door|dish|tell|head|status_bar|curtain)$|^(panel|wheel)_[0-9]+$",
+ "moving": "^(door|dish|tell|head|status_bar|curtain|plug|charge_light)$|^(panel|wheel)_[0-9]+$",
  "blink": {
   "_note": "status lights that flash on their own (world/machines.gd): nodes named by `nodes` keep their own mesh and a copy of the light role. hz and duty: an obstruction beacon flashes 20 to 40 times a minute (FAA L-864 red 20 to 40, L-865 white 40, https://www.faa.gov/documentLibrary/media/Advisory_Circular/150-5345-43GH.pdf, from a search summary); WCAG 2.3.1 allows at most 3 flashes in any second. off: the share of the light left when it is dark",
   "nodes": "^(cap|beacon)$",
@@ -414,8 +426,8 @@
  "machines": {
   "_note": "the base working on its own (world/machines.gd). tracker: solar panels start facing the sun and turn to it about their tube at slew_deg_s (after a sky switch or a tilt by hand) within limit_deg (30 keeps a panel's low edge at the 0.82 m of its 30 degree rest, above a walker's knees), re-aiming when the sun is step_deg off, lying flat (stow) where weather says stow (night, storm), and holding still for pause_s after anyone else moves one (the tilt interaction). dish: nods nod_deg either side of its rest every period_s at slew_deg_s. near_m: panels and dish hold still while the hero is this close (a machine stops when people come near). All art direction; servo: the sound each move starts with, played only within hear_m (Mars sound 'falters at just 26 feet (8 meters)', NASA/JPL 2022)",
   "tracker": {"slew_deg_s": 1.5, "limit_deg": 30, "pause_s": 20, "step_deg": 2.0,
-   "_rows": "per prefab: gcr, the ground coverage ratio of its rows (panel chord over row pitch), with which the rows backtrack toward flat when the sun is low enough for a row to shade the next (Anderson and Mikofski 2020, NREL/TP-5K00-76626; pvlib tracking.singleaxis, whose example is 2 m modules 6 m apart, gcr 1/3; design/research/pages/tracker/). solar_array: 2.5 m panels in two rows 8 m apart. solar_wing: 2.5 m wings 7.5 m apart, the six rows running north and south as single-axis trackers usually do (Sandia PVPMC), turning to limit_deg 45, 'common' for trackers (Sandia PVPMC); its low edge then stands 0.57 m up, and the field has no walkway under it",
-   "rows": {"solar_array": {"gcr": 0.3125}, "solar_wing": {"gcr": 0.3333, "limit_deg": 45}}},
+   "_rows": "per prefab: gcr, the ground coverage ratio of its rows (panel chord over row pitch), with which the rows backtrack toward flat when the sun is low enough for a row to shade the next (Anderson and Mikofski 2020, NREL/TP-5K00-76626; pvlib tracking.singleaxis, whose example is 2 m modules 6 m apart, gcr 1/3; design/research/pages/tracker/). solar_wing: 2.5 m wings 7.5 m apart, the six rows running north and south as single-axis trackers usually do (Sandia PVPMC), turning to limit_deg 45, 'common' for trackers (Sandia PVPMC); its low edge then stands 0.57 m up, and the field has no walkway under it",
+   "rows": {"solar_wing": {"gcr": 0.3333, "limit_deg": 45}}},
   "near_m": 6.0,
   "dish": {"nod_deg": 6, "period_s": 18, "slew_deg_s": 1.0},
   "servo": "servo",
@@ -442,89 +454,16 @@
   "beacon"
  ],
  "paths": {
-  "_note": "walkways kept clear of rocks: polylines of [x, z], width in metres",
+  "_note": "walkways kept clear of rocks: polylines of [x, z], width in metres. From the airlock yard: south, to the rover's hatch, to the power yard, to the greenhouse door, past the storm shelter's door to build pad 1; the dish path north; the rover's track from its bay to the lander, 191 m north-west (design/research/layout.md)",
   "width": 2.5,
   "lines": [
-   [
-    [
-     0,
-     3
-    ],
-    [
-     0,
-     14
-    ]
-   ],
-   [
-    [
-     3,
-     0
-    ],
-    [
-     22,
-     0
-    ]
-   ],
-   [
-    [
-     -3,
-     0
-    ],
-    [
-     -8,
-     0
-    ]
-   ],
-   [
-    [
-     2,
-     -3
-    ],
-    [
-     6,
-     -14
-    ]
-   ],
-   [
-    [
-     -3,
-     -2
-    ],
-    [
-     -10,
-     -6
-    ]
-   ],
-   [
-    [
-     22,
-     0
-    ],
-    [
-     30,
-     0
-    ]
-   ],
-   [
-    [
-     25,
-     -6
-    ],
-    [
-     86,
-     -66
-    ]
-   ],
-   [
-    [
-     -2,
-     5
-    ],
-    [
-     -12,
-     8
-    ]
-   ]
+   [[0, 3], [0, 14]],
+   [[2, 5], [9, 4.6]],
+   [[3, -0.5], [12.5, -0.5]],
+   [[2, -3], [6, -14]],
+   [[-1, 5], [-11, 4.2]],
+   [[-1.5, 5.5], [-6, 8], [-12, 9]],
+   [[10, 11], [10, 15], [-22, 15], [-127, -125]]
   ]
  },
  "scatter": {
@@ -614,26 +553,27 @@
   "speed": 3.0
  },
  "probe": {
-  "_note": "one reflection probe over the base: centre [x, z], size [x, y, z]. The sandbox redraws every probe from this centre looking north after a sky switch (HouseStyle.warm()), and a probe is drawn only once a camera sees it: the centre sits 10 m south of HAB 1 so the room probes are in view. rooms: an item's own probe, centre `at` and `size` in its space (HAB 1: the room between the deck at 0.40 m and the ceiling at 2.72 m; the greenhouse: the dome, `interior` false so its glass shows the sky). light: the room's own light (world.gd restyle(), DESIGN.md lighting.room), at `at` in the item's space with its `range` in m and `color` a DESIGN.md colour name (default lighting.room.color), `share` of lighting.room.intensity (default 1; the grow light at full strength turned the greenhouse floor magenta by day): HAB 1's at the ceiling's middle, the greenhouse's the grow light at the rack tops in the `grow` magenta",
+  "_note": "one reflection probe over the base: centre [x, z], size [x, y, z]. The sandbox redraws every probe from this centre looking north after a sky switch (HouseStyle.warm()), and a probe is drawn only once a camera sees it: the centre sits 10 m south of HAB 1 so the room probes are in view. rooms: an item's own probe, centre `at` and `size` in its space (HAB 1: the room between the deck at 0.40 m and the ceiling at 2.72 m; the greenhouse: the dome, `interior` false so its glass shows the sky). light: the room's own light (world.gd restyle(), DESIGN.md lighting.room), at `at` in the item's space with its `range` in m and `color` a DESIGN.md colour name (default lighting.room.color), `share` of lighting.room.intensity (default 1; the grow light at full strength turned the greenhouse floor magenta by day): HAB 1's at the ceiling's middle, the greenhouse's the grow light at the rack tops in the `grow` magenta. The storm shelter: the room between its floor at 0.06 m and its ceiling at 2.5 m, the light under its ceiling panel. It stands west of this centre, out of the warm-up camera's view, so its probe is drawn the first time the play camera sees it",
   "pos": [4, 10],
   "size": [80, 30, 80],
   "rooms": {
    "hab1": {"at": [0, 1.56, 0], "size": [4.8, 2.36, 4.8], "light": {"at": [0, 2.55, 0], "range": 4.0}},
-   "greenhouse": {"at": [0, 2.0, 0], "size": [6.8, 3.8, 6.8], "interior": false, "light": {"at": [0, 2.1, 0], "range": 3.5, "color": "grow", "share": 0.6}}
+   "greenhouse": {"at": [0, 2.0, 0], "size": [6.8, 3.8, 6.8], "interior": false, "light": {"at": [0, 2.1, 0], "range": 3.5, "color": "growlight", "share": 0.6}},
+   "shelter": {"at": [0, 1.28, 0], "size": [2.6, 2.44, 2.5], "light": {"at": [0, 2.4, 0], "range": 3.5}}
   }
  },
  "pip": {
-  "_note": "PIP's wandering (sandbox/pip.gd): ambient life, no game state. Speed, acceleration and turn: reality.json pip.*. Everything here is art direction. stops: where it parks [x, z] and what it looks at [x, z, height above the ground], weight how often it picks one; via: open ground it may drive through, so the route graph (every straight, clear line between stops and via points, `clearance` m clear either side) gets round the buildings; via_m: how near a via point counts as passed;  (the lander is a long trip), divided by near_m plus the distance so near stops come up more; never one of the last two. notice_m: the hero this close gets a look, a beep and two flashes (flash_hz under the 3 a second limit), at most every hello_cool_s. A hero standing still (below still_speed m/s for still_s) within greet_m gets a visit: PIP parks greet_stand_m away, looks up with its head tilted, wiggles, for greet_s, then not again for greet_cool_s. yield_m, yield_deg: a hero this close inside this cone ahead stops it for wait_s, then it drives round for patience_s. feeler_m: how far ahead it checks, every feel_s; stuck_s without getting 0.3 m closer and it goes elsewhere. door_clear_m round every door and rooms (prefabs, grown by room_margin) it never drives into. flee_m: a moving rover this close sends it aside. Head: yaw and pitch limits, turn rate, tilt; blinks every blink_s, double_blink share; status bar glows at glow_hz. track_every, track_width: m between wheel prints (a print is 0.12 m long, world/terrain.gd, so under that they join into a band) and their width (the wheel is 8 cm wide, forge/vehicle_pip.py); shade: contact shadow radius and strength",
+  "_note": "PIP's wandering (sandbox/pip.gd): ambient life, no game state. Speed, acceleration and turn: reality.json pip.*. Everything here is art direction. stops: where it parks [x, z] and what it looks at [x, z, height above the ground], weight how often it picks one; via: open ground it may drive through, so the route graph (every straight, clear line between stops and via points, `clearance` m clear either side) gets round the buildings; via_m: how near a via point counts as passed;  (the lander is a long trip), divided by near_m plus the distance so near stops come up more; never one of the last two. notice_m: the hero this close gets a look, a beep and two flashes (flash_hz under the 3 a second limit), at most every hello_cool_s. A hero standing still (below still_speed m/s for still_s) within greet_m gets a visit: PIP parks greet_stand_m away, looks up with its head tilted, wiggles, for greet_s, then not again for greet_cool_s. yield_m, yield_deg: a hero this close inside this cone ahead stops it for wait_s, then it drives round for patience_s. feeler_m: how far ahead it checks, every feel_s; stuck_s without getting 0.3 m closer and it goes elsewhere. door_clear_m round every door and rooms (prefabs, grown by room_margin) it never drives into. flee_m: a moving rover this close sends it aside. Head: yaw and pitch limits, turn rate, tilt; blinks every blink_s, double_blink share; status bar glows at glow_hz. track_every, track_width: m between wheel prints (a print is 0.24 m long, world/terrain.gd, so under that they join into a band) and their width (the wheel is 8 cm wide, forge/vehicle_pip.py); track_depth: the prints' depth and darkness (terrain.mark strength; the rover's are tuning.json rover.track_depth, 0.5 at a crawl to 1 at speed, the hero's boots 1). Art direction from the physics: sinkage grows with the pressure under the wheel (Bekker), and a small robot's light load on narrow wheels barely marks the dust where a crewed rover's 0.99 m wheels leave a rut (Curiosity's 0.5 m wheels sank under 1 cm on Gale's plains, reality.json ground.sink.soft), so a faint scuff: a fifth of the rover's crawl; shade: contact shadow radius and strength",
   "stops": [
    {"id": "airlock", "at": [3.0, 5.2], "look": [0.0, 2.6, 1.2]},
-   {"id": "solar", "at": [19.5, -0.6], "look": [24.0, -4.0, 1.0]},
-   {"id": "greenhouse", "at": [-8.6, -10.0], "look": [-14.0, -6.0, 1.5]},
+   {"id": "solar", "at": [20.0, 3.0], "look": [26.0, 8.5, 1.2]},
+   {"id": "greenhouse", "at": [-7.5, -6.5], "look": [-11.0, -2.0, 1.5]},
    {"id": "dish", "at": [5.0, -12.6], "look": [6.0, -16.0, 2.5]},
-   {"id": "rover", "at": [-9.5, 3.6], "look": [-10.0, 0.0, 1.2]},
-   {"id": "bags", "at": [-1.2, 7.4], "look": [-3.0, 5.4, 0.2]},
-   {"id": "lander", "at": [83.0, -62.0], "look": [90.0, -70.0, 4.0], "weight": 0.15}
+   {"id": "rover", "at": [6.6, 4.6], "look": [10.0, 4.8, 1.2]},
+   {"id": "bags", "at": [1.4, 6.0], "look": [3.3, 7.4, 0.2]},
+   {"id": "lander", "at": [-125.0, -123.0], "look": [-135.0, -135.0, 4.0], "weight": 0.15}
   ],
-  "via": [[6.0, 6.0], [8.0, 0.5], [5.0, -7.0], [0.0, -6.0], [-5.0, -3.0], [-5.0, 6.5], [-6.0, 3.5], [14.0, -1.0], [-10.0, -12.5], [-4.0, -10.0], [40.0, -20.7], [60.0, -40.4], [2.0, 9.5], [-9.0, 6.0]],
+  "via": [[6.0, 6.0], [8.0, 0.5], [5.0, -7.0], [0.0, -6.0], [-5.0, -3.0], [14.0, -1.0], [-10.0, -12.5], [-4.0, -10.0], [10.0, 12.5], [-22.0, 15.0], [-57.0, -32.0], [-92.0, -78.0], [2.0, 9.5], [-3.8, 3.6], [-6.0, 13.5]],
   "seed": 13,
   "notice_m": 3.0, "hello_cool_s": 12,
   "greet_m": 8.0, "greet_stand_m": 1.6, "still_speed": 0.15, "still_s": 4.0, "greet_s": 6.0, "greet_cool_s": 40,
@@ -646,10 +586,10 @@
   "blink_s": [2.5, 6.0], "blink_close_s": 0.14, "double_blink": 0.2,
   "glow_hz": 0.4, "flash_hz": 2.0, "flashes": 2,
   "wiggle_hz": 2.5, "wiggle_deg": 5, "wiggle_s": 0.8,
-  "track_every": 0.1, "track_width": 0.08, "shade": [0.35, 0.6]
+  "track_every": 0.1, "track_width": 0.08, "track_depth": 0.1, "shade": [0.35, 0.6]
  },
  "views": {
-  "_note": "eye-height capture views inside rooms (sandbox.gd set_view): [item id, from, at], both in the item's own space (its front, the door, toward -Z; y over the model's lowest point), so they follow the item if it moves. The eye is 1.6 m over the floor (HAB 1's deck at 0.40 m, the greenhouse floor at 0.20 m). n, e, s, w: the compass way the view looks (HAB 1 stands at yaw 180, so its own +Z is north). hab_eye_bed and hab_eye_wc look straight at the berths and into the toilet. gh_eye_a looks in from the vestibule down the aisle, gh_eye_b back from the far end",
+  "_note": "eye-height capture views inside rooms (sandbox.gd set_view): [item id, from, at], both in the item's own space (its front, the door, toward -Z; y over the model's lowest point), so they follow the item if it moves. The eye is 1.6 m over the floor (HAB 1's deck at 0.40 m, the greenhouse floor at 0.20 m). n, e, s, w: the compass way the view looks (HAB 1 stands at yaw 180, so its own +Z is north). hab_eye_bed and hab_eye_wc look straight at the berths and into the toilet. gh_eye_a looks in from the vestibule down the aisle, gh_eye_b back from the far end. The storm shelter's floor is at 0.06 m: sh_eye_in looks from inside its door at the bunks, sh_eye_left at the comms screen and radiation sign, sh_eye_rack at the water and food rack, sh_eye_door back at the door",
   "hab_eye_n": ["hab1", [0, 2.0, -1.3], [0, 1.75, 2.38]],
   "hab_eye_s": ["hab1", [0, 2.0, 1.3], [0, 1.6, -2.38]],
   "hab_eye_e": ["hab1", [1.3, 2.0, 0], [-2.38, 1.6, 0]],
@@ -657,12 +597,17 @@
   "hab_eye_bed": ["hab1", [0.5, 2.0, -0.3], [-1.9, 1.35, 1.3]],
   "hab_eye_wc": ["hab1", [0.4, 2.0, 0.1], [-2.0, 1.1, -0.1]],
   "gh_eye_a": ["greenhouse", [0, 1.8, -3.6], [0, 1.2, 3.0]],
-  "gh_eye_b": ["greenhouse", [0, 1.8, 2.4], [0, 1.2, -3.0]]
+  "gh_eye_b": ["greenhouse", [0, 1.8, 2.4], [0, 1.2, -3.0]],
+  "sh_eye_in": ["shelter", [0, 1.66, -0.9], [-0.3, 1.0, 1.25]],
+  "sh_eye_left": ["shelter", [0.6, 1.66, -0.3], [-1.3, 1.45, -0.2]],
+  "sh_eye_rack": ["shelter", [0.75, 1.66, -0.75], [1.0, 0.9, 1.0]],
+  "sh_eye_door": ["shelter", [-0.2, 1.66, 0.4], [0, 1.3, -1.24]]
  },
  "rooms": {
-  "_note": "the buildings whose inside puts the view in first person (player.gd _room, skills/third-person-camera Into first person indoors): each item id's floor plan in its own space, circles [x, z, r] and rects [x0, z0, x1, z1], measured from the models (12 Nov). hab1: building_habitat.glb floor x and z +-2.40, the door's inner face at z -2.16. greenhouse: building_greenhouse.glb floor +-3.28 (the dome), and the vestibule x +-1.0 from the door's inner face at z -4.46 to the dome. The doorway band is the hero's own radius either side of these lines",
+  "_note": "the buildings whose inside puts the view in first person (player.gd _room, skills/third-person-camera Into first person indoors): each item id's floor plan in its own space, circles [x, z, r] and rects [x0, z0, x1, z1], measured from the models (12 Nov). hab1: building_habitat.glb floor x and z +-2.40, the door's inner face at z -2.16. greenhouse: building_greenhouse.glb floor +-3.28 (the dome), and the vestibule x +-1.0 from the door's inner face at z -4.46 to the dome. shelter (13 Nov): building_storm_shelter.glb, the bags' inside faces at x +-1.3, the back at z 1.25, the door frame's inner face at z -1.24. The doorway band is the hero's own radius either side of these lines",
   "hab1": [{"circle": [0, 0, 2.4]}],
-  "greenhouse": [{"circle": [0, 0, 3.28]}, {"rect": [-1.0, -4.46, 1.0, -2.2]}]
+  "greenhouse": [{"circle": [0, 0, 3.28]}, {"rect": [-1.0, -4.46, 1.0, -2.2]}],
+  "shelter": [{"rect": [-1.3, -1.24, 1.3, 1.25]}]
  },
  "plants": {
   "_note": "lettuce in the greenhouse grow-bed slots (slot_N nodes of its model), one growth stage per slot; stage 4 is a harvest-size head (reality.json lettuce.width). A prefab id instead of a stage goes in at its own size: HAB 1's Veggie unit on the galley counter",

@@ -8,7 +8,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from base_kit import *  # noqa: E402,F403
-from hab_interior import deck, fit_out, liner  # noqa: E402
+from hab_interior import deck, fit_out, liner, unseen  # noqa: E402
 
 # The floor sits 0.40 m up: the ground under the drum rises up to 0.31 m toward the hatch (the HiRISE patch at the
 # base), and a 0.28 m floor let the sand show through the deck. The wall and roof went up with it, so the room
@@ -25,7 +25,7 @@ cut(wall, cyl("inner", R - WALL, TOP + 0.2, (0, 0, TOP / 2), None, 64))
 cut(wall, box("hatch_cut", (HW + 0.2, 1.0, HH + 0.1), (0, R, SILL + HH / 2)))
 smooth(wall)
 FS = SILL - 0.015  # the slab's top: the deck plates (forge/hab_interior.py deck()) lie on it, their top at SILL
-floor = smooth(cyl("floor-col", R - WALL + 0.02, FS, (0, 0, FS / 2), mat("trim"), 64))
+floor = smooth(cyl("floor-col", R - WALL + 0.02, FS, (0, 0, FS / 2), mat("trim"), 32))  # hidden: 32 sides keep its flats in the wall
 cap = 3.92  # sphere radius whose cap is 0.9 m high over a 5 m circle: (2.5^2 + 0.9^2) / (2 * 0.9)
 roof = sphere("roof-col", cap, (0, 0, H - cap), mat("body"), 48)
 cut(roof, box("below", (10, 10, 10), (0, 0, TOP - 5)))
@@ -54,7 +54,7 @@ for s in (-1, 1):
     box(f"ramp_edge{s}", (0.05, RL - 0.02, 0.03), (s * (RW / 2 - 0.02), R + 0.14 + RL / 2, 0.02), mat("hazard"))
 
 # hull detail: base skirt, a seam band under the roof, vertical panel seams, roof hatch and mast
-smooth(cyl("skirt", R + 0.05, 0.2, (0, 0, 0.1), mat("trim"), 64))
+smooth(unseen(cyl("skirt", R + 0.05, 0.2, (0, 0, 0.1), mat("trim"), 64), lambda f: f.normal.z < -0.9))  # no underside: on the ground
 band = cyl("mid_band", R + 0.03, 0.08, (0, 0, 0.8), mat("trim"), 48)  # 48 sides: 2.4 cm proud of the 64-sided wall still
 cut(band, cyl("band_in", R - 0.05, 0.2, (0, 0, 0.8), None, 48))  # a ring, not a disc across the room
 smooth(cut(band, box("band_cut", (HW + 0.34, 1.0, 1.0), (0, R, 0.8))))
@@ -99,6 +99,13 @@ bevel(box("utility_box", (0.12, 0.6, 0.7), at(R + 0.05, 0, 1.0), mat("trim")), w
 for dy in (-0.18, 0.0, 0.18):
     smooth(bar(f"conduit{dy}", (R + 0.14, dy, 0.65), (R + 0.14, dy, 0.02), 0.035, mat("metal")))
 status_light("utility_light", (R + 0.12, 0, 1.42), (0.05, 0.16, 0.05))
+# where the field cables plug in (world.json cables.ends): on this side a gland box under the three conduits
+# (port_w, out to the greenhouse); on the far side (-X, toward the power yard) a feed box under the mid band with
+# two conduits down into gland boxes, port_e2 in from the battery bank and port_e1 out to the yard light
+port("port_w", (R + 0.14, 0), size=(0.16, 0.52))
+bevel(box("feed_box", (0.14, 0.4, 0.3), (-(R + 0.04), 0, 0.55), mat("trim")), width=0.02)
+for name, y in (("port_e1", 0.12), ("port_e2", -0.12)):
+    port(name, (-(R + 0.2), y), (-(R + 0.11), y, 0.5), r=0.03)
 
 # the fit-out for a crew of 2 (forge/hab_interior.py), clear of the hatch and its door's swing (65 to 115 degrees)
 U, _, slots = fit_out(SILL, R - WALL, TOP)
@@ -109,6 +116,8 @@ if os.environ.get("FORGE_TRIS"):
     dg = bpy.context.evaluated_depsgraph_get()
     for o in sorted([o for o in bpy.data.objects if o.type == "MESH"], key=lambda o: -sum(len(p.vertices) - 2 for p in o.evaluated_get(dg).data.polygons)):
         print("TRIS", o.name, sum(len(p.vertices) - 2 for p in o.evaluated_get(dg).data.polygons))
+# the wall's top (under the roof) and foot (on the ground), and the window holes' faces inside the frames: never seen
+unseen(wall, lambda f: abs(f.normal.z) > 0.9)
 inside = join("interior-col", U)
 bpy.context.view_layer.update()
 for slot in slots:  # under the fit-out, so what world.json puts in them is kept swept with it

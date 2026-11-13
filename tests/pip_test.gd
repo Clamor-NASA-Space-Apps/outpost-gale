@@ -21,6 +21,7 @@ func play() -> bool:
 	var pip: Node3D = world.items.get("pip")
 	if not check(pip != null and pip.has_method("state_text"), "the sandbox drives PIP with sandbox/pip.gd"):
 		return true
+	_prints(world, float(pip.p.track_depth))
 	var sounds: Array[String] = []
 	pip.sound.connect(func(what: String, _at: Vector3) -> void: sounds.append(what))
 	var keys: Array = game.render_game_to_text().keys()
@@ -102,6 +103,33 @@ func play() -> bool:
 
 
 ## PIP's hull, 3% smaller (a touch is not an overlap), against everything it must keep out of.
+## Wheel prints in the ground's trail map (world/terrain.gd mark()): PIP's as faint as its data says, every print's
+## sides faded over more than a pixel, and two tracks crossing no deeper than one (13 Nov playtest: PIP's tracks deep
+## and thick, hard dark bands where they crossed).
+func _prints(world: Node3D, depth: float) -> void:
+	var t: Node3D = world.terrain
+	var at: Vector2 = t.trail_centre + Vector2(5.0, 5.0)
+	var px: float = t.TRAIL_MPX
+	var read := func(x: float, z: float) -> float:
+		return t.trail.get_pixel(posmod(floori(x / px), t.trail_px), posmod(floori(z / px), t.trail_px)).r
+	world.mark(Vector3(at.x, 0.0, at.y), 0.0, "wheel", 0.08, depth)
+	var deepest := 0.0
+	for i in range(-6, 7):
+		for k in range(-6, 7):
+			deepest = maxf(deepest, read.call(at.x + i * px, at.y + k * px))
+	check(deepest > 0.0 and deepest <= depth + 1.0 / 255.0, "a PIP print is %.2f deep at most (%.3f)" % [depth, deepest])
+	var b: Vector2 = at + Vector2(1.0, 0.0)
+	world.mark(Vector3(b.x, 0.0, b.y), 0.0, "wheel", 0.3, 1.0)
+	var step := 0.0
+	for i in range(-8, 8):
+		step = maxf(step, absf(read.call(b.x + (i + 1) * px, b.y) - read.call(b.x + i * px, b.y)))
+	check(step < 0.75, "a wheel print's sides fade over more than a pixel (largest step %.2f)" % step)
+	var c: Vector2 = at + Vector2(-1.0, 0.0)
+	world.mark(Vector3(c.x, 0.0, c.y), 0.0, "wheel", 0.3, 0.5)
+	world.mark(Vector3(c.x, 0.0, c.y), 90.0, "wheel", 0.3, 0.5)
+	check(absf(read.call(c.x, c.y) - 0.5) < 0.01, "two tracks crossing are as deep as one, not deeper (%.2f of 0.5)" % read.call(c.x, c.y))
+
+
 func _overlaps(pip: Node3D) -> bool:
 	var cs: CollisionShape3D = pip._shape
 	var q := PhysicsShapeQueryParameters3D.new()

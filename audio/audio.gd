@@ -7,6 +7,9 @@ extends Node
 ## in or out is a crossfade of bus volumes.
 ## Music is rare (skills/living-atmosphere): a cue at a few earned moments (music()), on its own clear bus, never two at
 ## once and never soon after the last one; nothing ducks for it, so the suit stays loudest.
+## Beds (bed()): now and then one phrase of a calm piece, outside on foot after the first step or inside a room, then
+## minutes of rest (Breath of the Wild's field music, design/plans/next-lanes.md 4.2). A bed waits for a cue to end,
+## and ducks under one that starts, so it never blocks a cue.
 ## The radio and the quiet moments: now and then a wordless call from the base or a chirp from PIP on the suit radio,
 ## clear (a radio is not heard through the helmet), rare and never over another cue; a short motif when the hero
 ## stands still outside a while or first sees the dust devil; and, in the sunset sky, the far things worth a slow
@@ -14,6 +17,50 @@ extends Node
 
 const BUSES := ["Suit", "Outside", "Habitat", "UI", "Music"]
 const SOLIDS := 2  # collision layer 2, statics: a boot on one is on rock or a pad, not in the dust
+
+## Every sound name anything asks for (interactions.gd `used`, the world's and PIP's `sound`, a use spot's `sound` in
+## data/world.json) and what it plays: files in audio/, each "file" or "file@seconds" after the start. A file plays
+## its clear copy on the Habitat bus and its `_out` copy on Outside, whichever exist; `radio_*` goes to the suit radio.
+## One table, so a missing name or file fails audio_test instead of staying silent (the curtain did, 13 Nov).
+const SOUNDS := {
+	# the sandbox's interactions
+	"door_open": ["hiss", "door_open"],  # the lock equalises, then the door moves
+	"door_close": ["door_close", "hiss@0.6"],  # shut, then the lock fills
+	"curtain": ["curtain"],
+	"panel": ["servo"],
+	"bag": ["bag_lift"],
+	"put_down": ["bag_drop"],
+	"rover": ["hiss", "door_open", "door_close@1.2"],  # the cab hatch lets the hero in and shuts behind
+	# the base and PIP on their own
+	"servo": ["servo"],
+	"pip_go": ["pip_go"],
+	"pip_hello": ["pip_hello"],
+	"radio_pip": ["radio_pip"],
+	"radio_base": ["radio_base"],
+	# the use spots (design/plans/next-lanes.md section 2): one name per world.json `uses` row
+	"drink": ["pour", "sip@1.8"],
+	"eat": ["latch", "crinkle@0.4", "latch@1.4", "beep@1.8"],
+	"toilet": ["curtain", "suction@0.8", "curtain@4.2"],
+	"plant": ["rattle", "pat@0.7"],
+	"harvest": ["leaf"],
+	"sample": ["kneel", "rock@0.5", "zip@1.2"],  # the first of a session also plays the discovery cue
+	"o2_valve": ["valve", "vent@0.35"],
+	"suit_air": ["connect", "refill@0.3", "connect@3.5"],
+	"call": ["screens", "radio_base@0.6"],
+	"dish": ["servo"],
+	"repair": ["latch", "ratchet@0.6", "latch@2.0"],
+	"suit_check": ["ticks"],
+	"brush": ["brush"],
+	# each use-spot sound alone, for a row that wants one
+	"pour": ["pour"], "sip": ["sip"], "crinkle": ["crinkle"], "latch": ["latch"], "beep": ["beep"],
+	"suction": ["suction"], "rattle": ["rattle"], "pat": ["pat"], "leaf": ["leaf"], "kneel": ["kneel"],
+	"rock": ["rock"], "zip": ["zip"], "valve": ["valve"], "vent": ["vent"], "connect": ["connect"],
+	"refill": ["refill"], "screens": ["screens"], "ratchet": ["ratchet"], "ticks": ["ticks"],
+}
+## Every cue music() may play (audio/music/<name>.ogg), and the beds' phrases in the order they take turns.
+const CUES := ["first_step", "airlock_sealed", "sunset", "discovery", "mission_lost", "quiet", "dawn", "sleep", "storm"]
+const BEDS := {"eva": ["bed_eva_1", "bed_eva_2", "bed_eva_3"], "habitat": ["bed_hab_1", "bed_hab_2"]}
+const SKY_CUES := {"design.sunset": "sunset", "design.storm": "storm"}  # the sky turning plays its cue, once a change
 
 var world: Node3D
 var player: Node3D
@@ -38,6 +85,19 @@ var _streams: Dictionary = {}
 var volume := {"master": 1.0, "music": 1.0, "effects": 1.0}  # the player's own levels (ui/settings.gd), 0 to 1
 var cue := ""  # the music cue playing now, "" in silence
 var _cue_end := -1e9  # _time the last cue ends; the next may start tuning `music.gap_s` after it
+var _cue_player: AudioStreamPlayer
+var _cue_tween: Tween
+var bed_name := ""  # the bed phrase playing ("bed_eva_2"), "" in its rests
+var _bed: AudioStreamPlayer
+var _bed_of := ""  # which bed it is a phrase of
+var _bed_end := -1e9
+var _bed_next: float  # _time the next phrase may start
+var _bed_turn := {}  # bed -> the index of its next phrase
+var _duck := 0.0  # 0 to 1, how far the world is ducked under a cutscene (duck())
+var _ducking := false
+var _exert: AudioStreamPlayer  # the respirator under hard breathing
+var _found := false  # discovery has played for a rock sample this session
+var _dawn := false  # wake() armed the dawn cue for the next door that opens
 var _was_inside := false
 var _stepped_out := false  # first_step has played this session
 var _sky := ""
@@ -69,6 +129,7 @@ func setup(w: Node3D, p: Node3D, tuning: Dictionary) -> void:
 	_rover = world.items.get("rover")
 	player.footstep.connect(_step)
 	_radio_next = randf_range(t.radio.base_s[0], t.radio.base_s[1])
+	_bed_next = float(t.bed.first_s)
 	player.cam.glance = _glance
 	# a browser starts no sound before the player's first press (exporting_for_web.rst); elsewhere start now
 	if not OS.has_feature("web"):
@@ -98,6 +159,8 @@ func start() -> void:
 	# (library_godot_audio.js, 4.7.2), so make.sh crossfades each loop's ends to hide the seam
 	_was_inside = _inside_now()
 	_flat("suit_fan", "Suit", t.fan_db).play()
+	_exert = _flat("exert", "Suit", -80.0)
+	_exert.play()
 	_wind = _flat("wind_out", "Outside", t.wind.db)
 	_wind.play()
 	_at("hum", "Habitat", _hab_mid, t.hum_db, _hab).play()
@@ -121,6 +184,7 @@ func _process(delta: float) -> void:
 	if _time >= _cue_end:
 		cue = ""
 	inside = move_toward(inside, into, delta / t.fade_s)
+	_duck = move_toward(_duck, 1.0 if _ducking else 0.0, delta / t.fade_s)
 	# equal power, so the doorway does not dip
 	_bus("Outside", cos(inside * PI / 2.0))
 	_bus("Habitat", sin(inside * PI / 2.0))
@@ -140,51 +204,90 @@ func _process(delta: float) -> void:
 		_drive()
 	_radio()
 	_quiet_moments(delta)
+	_beds(delta)
 
 
-## The sounds an interaction makes (sandbox/interactions.gd `used`): one name, where it happened.
+## The sounds an interaction makes (sandbox/interactions.gd `used`): one SOUNDS name, where it happened.
 func used(what: String, pos: Vector3) -> void:
 	_one_shot("chirp", "UI", t.chirp_db)  # the suit acknowledges, no words
 	_hold(_stream("chirp"))
-	match what:
-		"door_open":
-			play("hiss", pos)  # the lock equalises, then the door moves
-			play("door_open", pos)
-		"door_close":
-			play("door_close", pos)
-			if _in_room():
-				music("airlock_sealed")  # shut in, safe
-			get_tree().create_timer(t.hiss_after).timeout.connect(play.bind("hiss", pos))
-		"panel":
-			play("servo", pos)
-		"bag":
-			play("bag_lift", pos)
-		"put_down":
-			play("bag_drop", pos)
+	play(what, pos)
+	if what == "door_close" and _in_room():
+		music("airlock_sealed")  # shut in, safe
+	elif what == "door_open" and _dawn:
+		_dawn = false
+		music("dawn", true)  # the first door after a night's sleep opens on the morning
+	elif what == "sample" and not _found:
+		_found = music("discovery")  # a find; tried again on the next sample if a cue was in the way
 
 
 ## A music cue from audio/music/<name>.ogg, faded in. False when it does not play: before the first press, while
-## another cue plays, or within `music.gap_s` of the last one's end (rare by design).
-func music(name: String) -> bool:
+## another cue plays, or within `music.gap_s` of the last one's end (rare by design). `force` (the cine's sleep and
+## wake) fades out whatever cue plays and skips the gap.
+func music(name: String, force := false) -> bool:
 	var m: Dictionary = t.music
 	var s := _stream("music/" + name)
-	if not started or s == null or _time < _cue_end + float(m.gap_s):
+	if s == null:
+		push_error("audio: no cue audio/music/%s.ogg" % name)
 		return false
+	if not started or (not force and _time < _cue_end + float(m.gap_s)):
+		return false
+	if force:
+		stop_music()
 	if name == t.motif.name:
 		_motif_at = _time
-	var q := _flat("music/" + name, "Music", -60.0)
-	q.play()
-	create_tween().tween_property(q, "volume_db", float(m.db), float(m.fade_s))
-	_free_after(q)
+	_cue_player = _flat("music/" + name, "Music", -60.0)
+	_cue_player.play()
+	_cue_tween = create_tween()
+	_cue_tween.tween_property(_cue_player, "volume_db", float(m.db), float(m.fade_s))
+	_free_after(_cue_player)
 	cue = name
 	_cue_end = _time + s.get_length()
 	return true
 
 
-## The sky state's name (sandbox SKIES): the sun going down plays its cue, once per change into it.
+## Fades out the cue playing (the cine's cut at the end of a time-lapse); the gap to the next counts from now.
+func stop_music() -> void:
+	if cue != "" and is_instance_valid(_cue_player):
+		if _cue_tween:
+			_cue_tween.kill()  # its fade-in would fight the fade-out
+		create_tween().tween_property(_cue_player, "volume_db", -60.0, float(t.music.fade_s))
+	cue = ""
+	_cue_end = minf(_cue_end, _time)
+
+
+## One phrase of a bed ("eva" or "habitat", BEDS), its phrases taking turns, on the Music bus under any cue. False
+## before the first press or while a phrase plays. The next may start a `bed.rest_s` rest after this one ends.
+func bed(name: String) -> bool:
+	if not started or is_instance_valid(_bed):
+		return false
+	var phrases: Array = BEDS[name]
+	var i: int = _bed_turn.get(name, 0)
+	_bed_turn[name] = (i + 1) % phrases.size()
+	_bed = _flat("music/" + phrases[i], "Music", _bed_db())
+	_bed.play()
+	_free_after(_bed)
+	_bed_of = name
+	bed_name = phrases[i]
+	_bed_end = _time + _bed.stream.get_length()
+	_bed_next = _bed_end + randf_range(t.bed.rest_s[0], t.bed.rest_s[1])
+	return true
+
+
+## The world's sound (suit, outside, inside) down by `duck_db` while a cutscene wants the music heard, eased.
+func duck(on: bool) -> void:
+	_ducking = on
+
+
+## After a sleep (the cine): the next door that opens plays the dawn cue, whatever the gap.
+func wake() -> void:
+	_dawn = true
+
+
+## The sky state's name (sandbox SKIES): turning to sunset or storm plays its cue, once per change into it.
 func sky(name: String) -> void:
-	if name == "design.sunset" and _sky != name:
-		music("sunset")
+	if name != _sky and SKY_CUES.has(name):
+		music(SKY_CUES[name])
 	_sky = name
 
 
@@ -194,13 +297,30 @@ func set_volume(which: String, v: float) -> void:
 	AudioServer.set_bus_volume_db(0, linear_to_db(maxf(volume.master, 0.0001)))
 
 
-## A world sound at `pos`: the clear copy on Habitat and the muffled one on Outside, so the crossfade picks.
+## A world sound at `pos`, by its SOUNDS name: each of its files at its time.
 func play(sound: String, pos: Vector3) -> void:
+	if not started:
+		return
+	if not SOUNDS.has(sound):
+		push_error("audio: no sound named '%s' (audio.gd SOUNDS)" % sound)
+		return
+	for step: String in SOUNDS[sound]:
+		var after := step.get_slice("@", 1).to_float()  # "" when it has no time: 0
+		if after > 0.0:
+			get_tree().create_timer(after).timeout.connect(_file.bind(step.get_slice("@", 0), pos))
+		else:
+			_file(step, pos)
+
+
+## One file of a sound: the clear copy on Habitat and the muffled one on Outside, so the crossfade picks.
+func _file(sound: String, pos: Vector3) -> void:
 	if not started:
 		return
 	if sound.begins_with("radio_"):
 		radio(sound.trim_prefix("radio_"))  # PIP on the radio, not in the air
 		return
+	if not _stream(sound) and not _stream(sound + "_out"):
+		push_error("audio: no file audio/%s.ogg nor its _out copy" % sound)
 	for v: Array in [["", "Habitat"], ["_out", "Outside"]]:
 		var s := _stream(sound + v[0])
 		if s:
@@ -223,7 +343,7 @@ func state() -> Dictionary:
 	for b: String in BUSES:
 		buses[b] = snappedf(AudioServer.get_bus_volume_db(AudioServer.get_bus_index(b)), 0.1)
 	return {"audio": {"started": started, "inside": snappedf(inside, 0.01), "buses": buses, "breath": snappedf(breath_rate, 0.1),
-		"gust": snappedf(gust, 0.01), "steps": steps, "lastStep": last_step, "music": cue,
+		"gust": snappedf(gust, 0.01), "steps": steps, "lastStep": last_step, "music": cue, "bed": bed_name,
 		"radio": {"who": radio_who, "at": snappedf(radio_last, 0.01)}}}
 
 
@@ -256,6 +376,8 @@ func _breathe(delta: float) -> void:
 	var hard := inverse_lerp(t.breath.rest, t.breath.hard, breath_rate)
 	var db: float = lerpf(t.breath.db_rest, t.breath.db_hard, clampf(hard, 0.0, 1.0))
 	# a recorded breath is one resting breath long: a faster one plays it quicker, or the inhale ran into the exhale
+	# hard work: the respirator rises under the breaths, silent at rest
+	_exert.volume_db = float(t.breath.exert_db) + linear_to_db(maxf(clampf(hard, 0.0, 1.0), 0.0001))
 	var quick := sqrt(maxf(breath_rate / float(t.breath.rest), 1.0))
 	if breath_phase < before:
 		_one_shot("breath_in", "Suit", db, quick + randf_range(-t.pitch, t.pitch))
@@ -267,7 +389,8 @@ func _drive() -> void:
 	var driving: bool = player.vehicle == _rover
 	if driving != _driving:
 		_driving = driving
-		used("door_close" if driving else "door_open", _rover.global_position + Vector3.UP)  # the cab hatch
+		if not driving:  # out through the cab hatch; boarding is the interaction's "rover" sound
+			play("door_open", _rover.global_position + Vector3.UP)
 	var k := clampf(absf(_rover.speed()) / maxf(_rover.top, 0.1), 0.0, 1.0)
 	var r: Dictionary = t.rover
 	for q: AudioStreamPlayer3D in _rover_loops.motor:
@@ -328,6 +451,33 @@ func _quiet_moments(delta: float) -> void:
 			_glance.append(devil.global_position)
 
 
+## Which bed fits where the hero is (outside on foot after the first step, or in a room), and its phrases: one at a
+## time, after the rest and once any cue is over; ducked while a cue plays; let go if the hero goes in or out.
+func _beds(delta: float) -> void:
+	var b: Dictionary = t.bed
+	if not is_instance_valid(_bed) or _time >= _bed_end:  # over (its player frees itself a little later)
+		_bed = null
+		bed_name = ""
+	var want := ""
+	if player.vehicle == null:
+		if _in_room():
+			want = "habitat"
+		elif inside == 0.0 and _stepped_out:
+			want = "eva"
+	if _bed and _bed_of != want:
+		create_tween().tween_property(_bed, "volume_db", -60.0, float(b.fade_s))
+		_bed = null
+		bed_name = ""
+	elif _bed:
+		_bed.volume_db = move_toward(_bed.volume_db, _bed_db(), float(b.duck_db) * delta / float(t.music.fade_s))
+	elif want != "" and _time >= _bed_next and _time >= _cue_end + float(b.after_cue_s):
+		bed(want)
+
+
+func _bed_db() -> float:
+	return float(t.bed.db) - (float(t.bed.duck_db) if cue != "" else 0.0)
+
+
 ## No music cue playing and no event sound sounding.
 func _clear() -> bool:
 	return _time >= _busy_until and _time >= _cue_end
@@ -349,7 +499,9 @@ func _in_room() -> bool:
 
 
 func _bus(b: String, gain: float) -> void:
-	AudioServer.set_bus_volume_db(AudioServer.get_bus_index(b), t.bus_db[b] + linear_to_db(maxf(gain * (volume.music if b == "Music" else volume.effects), 0.0001)))
+	var world_bus := b in ["Suit", "Outside", "Habitat"]
+	var down := float(t.duck_db) * _duck if world_bus else 0.0
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index(b), t.bus_db[b] + down + linear_to_db(maxf(gain * (volume.music if b == "Music" else volume.effects), 0.0001)))
 
 
 func _stream(sound: String) -> AudioStream:

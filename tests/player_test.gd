@@ -15,7 +15,7 @@ var radius := 0.0
 
 
 func _init() -> void:
-	watchdog = 150.0
+	watchdog = 200.0
 
 
 func play() -> bool:
@@ -36,6 +36,7 @@ func play() -> bool:
 	await turn_beside()
 	await corner()
 	await step_up()
+	await pad_walk()
 	await drive()
 	restyle()
 	for s in SHAPES:
@@ -260,6 +261,43 @@ func step_up() -> void:
 		else:
 			check(y < top - 0.1, "a %.2f m step stops the hero (feet at %.2f, top at %.2f)" % [step * k, y, top])
 		b.free()
+
+
+## Across each build pad on three headings: up its edge in one step, then over the pavers' seams with the feet on
+## the drawn top, never snapped up or down and never slowed (13 Nov playtest: the hero jolted at every seam of a
+## body made of the drawn pavers).
+func pad_walk() -> void:
+	var world: Node3D = game.get_node("World")
+	var walk: float = world.sheet_values["hero.speed.walk"]
+	for id: String in ["pad1", "pad2"]:
+		var pad: Node3D = world.items[id]
+		var top: float = pad.global_position.y + 0.15  # forge/pad_build.py T
+		for yaw: float in [90.0, 45.0, 180.0]:
+			var dir := Vector3(sin(deg_to_rad(yaw)), 0, -cos(deg_to_rad(yaw)))
+			var from: Vector3 = pad.global_position - dir * 4.5
+			game.place(Vector3(from.x, 0, from.z), yaw)
+			await frames(2)
+			action(&"move_forward", true)
+			var jolts := 0
+			var slow := 0
+			var off := 0.0
+			var on := 0
+			var y: float = player.body.global_position.y
+			for i in int(9.0 / walk * 60.0) + 40:
+				await frames(1)
+				var p: Vector3 = player.body.global_position
+				var local: Vector3 = pad.global_transform.affine_inverse() * p
+				if maxf(absf(local.x), absf(local.z)) < 3.0 - radius - 0.1:  # well inside the edge
+					on += 1
+					jolts += int(absf(p.y - y) > 0.02)
+					slow += int(Vector2(player.body.velocity.x, player.body.velocity.z).length() < 0.8 * walk)
+					off = maxf(off, absf(p.y - top))
+				y = p.y
+			action(&"move_forward", false)
+			var tag := "%s at %d deg" % [id, yaw]
+			check(on > 60, "%s: walked onto the pad (%d frames on it)" % [tag, on])
+			check(jolts == 0 and slow == 0, "%s: no snap over 2 cm (%d frames) and no stall (%d frames)" % [tag, jolts, slow])
+			check(off < 0.02, "%s: feet on the drawn top (%.3f m off)" % [tag, off])
 
 
 ## Bone `name`'s drawn turn from the body's front, degrees, as its look modifier sees it (read in

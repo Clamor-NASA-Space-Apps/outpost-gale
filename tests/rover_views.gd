@@ -5,7 +5,7 @@ extends Node3D
 ## mode: park (the rover as placed), drive (the hero drives it east, starting at top speed), rock (the same, over a
 ## 0.3 m rock under the left wheels: the front pair is on it about 0.6 s in, the middle 1.15 s, the back 1.7 s).
 ## Views follow the rover: side, front (three-quarter from ahead), seat (close on the windscreen), low (wheels at
-## ground level), trail (low behind the left wheels, on the grit); and fixed: gh_in, gh_out (greenhouse vestibule floor), hab_a, hab_b (habitat door frame, door open).
+## ground level), trail (low behind the left wheels, on the grit); and fixed: gh_in, gh_out (greenhouse vestibule floor), hab_a, hab_b (habitat door frame, door open), pad1_se, pad1_nw, pad2_se, pad2_nw (the build pads).
 
 var game: Node3D
 var cam := Camera3D.new()
@@ -110,6 +110,11 @@ func set_view(v: String) -> void:
 		"hab_b": [hab, Vector3(1.2, 1.4, -4.0), Vector3(-0.6, 1.0, -2.5)],
 		"hab_in": [hab, Vector3(0.3, 1.7, 1.2), Vector3(0.0, 0.3, -2.4)],
 	}
+	# the build pads from two diagonals, a kid's eye height and a little over, to see every corner meet the ground
+	for id: String in ["pad1", "pad2"]:
+		var pad: Node3D = game.world.items[id]
+		fixed[id + "_se"] = [pad, Vector3(6.5, 2.4, 6.5), Vector3(0.0, 0.0, 0.0)]
+		fixed[id + "_nw"] = [pad, Vector3(-6.5, 2.4, -6.5), Vector3(0.0, 0.0, 0.0)]
 	if shots.has(v):
 		cam.look_at_from_position(t * shots[v][0], t * shots[v][1])
 	elif fixed.has(v):

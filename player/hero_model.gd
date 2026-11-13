@@ -20,7 +20,9 @@ var chest := -1  # the bone a carried bag rides on
 var bag_at: Transform3D  # the bag's centre in the chest bone's space, in the carry pose
 var hip_sit: Vector3  # the drawn hips in drive_sit, in the hero's space: what goes on a seat
 var state := &"idle"
-var phase := ""  # "", "crouch", "air", "land", "act", "sit"
+var phase := ""  # "", "crouch", "air", "land", "act", "sit" (driving), "seat" (on a seat)
+var act_clip := &"interact"  # what the "act" phase plays: the reach, or any use clip (clips.json)
+var placed: Transform3D  # the model's own space to this node's, feet on y = 0: where clips.json's points land
 var timer := 0.0  # seconds left in a timed phase (landing, interacting)
 var last_phase := -1.0  # where the gait cycle was last frame, 0..1, negative outside a gait
 var clips: Dictionary
@@ -57,7 +59,7 @@ func setup(model: Node3D, design: Dictionary, info: Dictionary, hop: Dictionary,
 	var flip := Transform3D(Basis(Vector3.UP, PI), Vector3.ZERO)
 	var c := (flip * raw).get_center()
 	model.transform = Transform3D(flip.basis, Vector3(-c.x, -sink, -c.z))
-	var placed := Transform3D(flip.basis, Vector3(-c.x, 0, -c.z))  # the model's space to this node's, feet on 0
+	placed = Transform3D(flip.basis, Vector3(-c.x, 0, -c.z))
 	bounds = placed * raw
 	var visor := _skinned_points(model, eye_role)
 	var mid := Vector3.ZERO
@@ -95,6 +97,8 @@ func update(speed: float, idle: float, on_floor: bool, carrying: bool, delta: fl
 			if on_floor:
 				phase = "land"
 				timer = clips.hop_land.length
+		"seat":
+			pass  # until seat(false)
 		"land", "act":
 			if timer <= 0.0 or speed > idle:
 				phase = ""  # walking off cuts the landing or the reach short: an in-place clip would skate
@@ -106,8 +110,9 @@ func update(speed: float, idle: float, on_floor: bool, carrying: bool, delta: fl
 		"crouch": next = &"hop_start"
 		"air": next = &"hop_air"
 		"land": next = &"hop_land"
-		"act": next = &"interact"
+		"act": next = act_clip
 		"sit": next = &"drive_sit"
+		"seat": next = &"sit_down" if timer > 0.0 else &"sit_idle"
 		_:
 			if speed > idle:
 				next = &"carry_move" if carrying else &"move"
@@ -153,10 +158,29 @@ func take_off() -> void:
 	phase = "air"
 
 
-func act() -> void:
-	if phase == "":
+## Plays a use clip once (data/clips.json; the reach by default). A second reach while one plays is ignored; another
+## clip replaces it. Walking off ends it (update()).
+func act(clip := &"interact") -> void:
+	if phase == "" or (phase in ["act", "seat"] and clip != act_clip):
 		phase = "act"
-		timer = clips.interact.length
+		act_clip = clip
+		timer = clips[clip].length
+
+
+## Sits down onto a seat behind the hero (sit_down, then sit_idle until told), or stands up (sit_to_stand).
+func seat(on: bool) -> void:
+	if on:
+		phase = "seat"
+		timer = clips.sit_down.length
+	elif phase == "seat":
+		act(&"sit_to_stand")
+
+
+## A point a clip names (clips.json `hand`, `seat_hip`, `wheel`: the model's own space) in this node's space, where
+## the body's origin is the feet and -Z the front: lets a use spot put its box where the glove will be.
+func point(clip: StringName, key: String) -> Vector3:
+	var v: Array = clips[clip][key]
+	return placed * Vector3(v[0], v[1], v[2])
 
 
 func sit(on: bool) -> void:
@@ -300,7 +324,11 @@ static func _dust(bone: String, p: Vector3, n: Vector3, coat: Dictionary) -> flo
 
 func _build_tree(model: Node3D) -> void:
 	var sm := AnimationNodeStateMachine.new()
-	for c: StringName in [&"idle", &"carry_idle", &"hop_air", &"hop_land", &"interact", &"drive_sit"]:
+	var own: Array[StringName] = [&"idle", &"carry_idle", &"hop_air", &"hop_land", &"interact", &"drive_sit"]
+	for c: String in clips:  # the use clips: each one a state of its own, played by act()
+		if not (c in GAITS or c in [CARRY, "hop_start"] or StringName(c) in own):
+			own.append(StringName(c))
+	for c: StringName in own:
 		sm.add_node(c, _clip(c))
 	# hop_start ends at take-off: start it late, so its last part fills the body's short crouch
 	var start := _clip(&"hop_start")
@@ -320,7 +348,8 @@ func _build_tree(model: Node3D) -> void:
 	var first := AnimationNodeStateMachineTransition.new()
 	first.advance_mode = AnimationNodeStateMachineTransition.ADVANCE_MODE_AUTO  # or the tree sits in Start
 	sm.add_transition(&"Start", &"idle", first)
-	var states := [&"idle", &"move", &"carry_idle", &"carry_move", &"hop_start", &"hop_air", &"hop_land", &"interact", &"drive_sit"]
+	var states := own.duplicate()
+	states.append_array([&"move", &"carry_move", &"hop_start"])
 	for a: StringName in states:
 		for b: StringName in states:
 			if a != b:

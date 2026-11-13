@@ -26,10 +26,10 @@ box("sign", (0.9, 0.012, 0.2), (-0.15, front + 0.006, SK + CH - 0.13), mat("trim
 flat_label("power_label", "POWER", 0.15, (-0.15, front + 0.016, SK + CH - 0.13), "body", 0.006)
 status_light("power_light", (0.55, front + 0.02, SK + CH - 0.13), (0.2, 0.03, 0.06))
 
-for s in (-1, 1):  # lifting eyes on the roof, a cable gland and conduit down the side into the ground
+for s in (-1, 1):  # lifting eyes on the roof; a terminal box on each end, its conduit down into a ground gland box
     for y in (-0.25, 0.25):
         smooth(cyl(f"eye{s}{y}", 0.04, 0.012, (s * 0.68, y, SK + CH + 0.1), mat("metal"), 12, rot=(math.pi / 2, 0, 0)))
-box("gland_box", (0.08, 0.25, 0.25), (W / 2 - 0.01, 0, SK + 0.6), mat("trim"))
-smooth(bar("conduit", (W / 2 + 0.06, 0, SK + 0.5), (W / 2 + 0.06, 0, 0.02), 0.035, mat("metal")))
-smooth(bar("conduit_run", (W / 2 + 0.06, 0, 0.035), (W / 2 + 0.3, 0, 0.035), 0.035, mat("metal")))
+    box(f"gland_box{s}", (0.08, 0.25, 0.25), (s * (W / 2 - 0.01), 0, SK + 0.6), mat("trim"))
+    # the field cables plug in here (world.json cables.ends): port_n on +X, port_s on -X
+    port("port_n" if s > 0 else "port_s", (s * (W / 2 + 0.07), 0), (s * (W / 2 + 0.03), 0, SK + 0.5), r=0.035)
 done("prop_battery_bank")

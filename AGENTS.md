@@ -60,6 +60,8 @@ Its own repo. Commits signed off (`git commit -s`), prefixed by area, ending wit
   solve fail (2,889 unweighted vertices, a crumpled sleeve in play): join them after skin() and make them rigid.
 - `feel-probe --film` draws every row of the run under xvfb, and the sandbox timed out at 300 s: film one row with
   `--only <id> --film <id>`, and check pass/fail headless without `--film`.
+- A script set on an item after it entered the tree (interactions.gd puts rover.gd on the rover's body) never gets
+  `_ready`, so `_process` and `_physics_process` do not run until `setup()` turns them on (the rover's lights stayed dark).
 - rover.gd and pip.gd find wheels with `find_children("wheel_*")`: never name a helper node `wheel_*` (a MultiMesh
   copy named so became a seventh wheel; world_test caught it).
 - Anything made during play (a dust stream, a spawned prop) must take the render layer its family uses (ground and
@@ -68,3 +70,6 @@ Its own repo. Commits signed off (`git commit -s`), prefixed by area, ending wit
   steps run first, so await `process_frame` twice before reading what `_process` sets (audio_test, 12 Nov).
 - At `_ready` the physics space still holds bodies at the transforms they were added with (items at the origin):
   build anything that queries physics (PIP's route graph) on the first physics tick (pip_test, 13 Nov).
+- The look runs on `world/sky_clock.gd`: the hour moves in tests, so a test that needs a sky jumps the clock
+  (`game._sky(i)`, `clock.jump()`) and pins it if it must hold; tool runs pin it themselves. A jump re-aims the
+  trackers, and their servo sounds keep the audio busy for a second: wait before testing a quiet moment (life_test).

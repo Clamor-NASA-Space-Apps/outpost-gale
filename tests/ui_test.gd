@@ -54,7 +54,20 @@ func play() -> bool:
 	check(1.0 / pulse <= MAX_FLASHES, "the alert pulses %.1f times a second" % (1.0 / pulse))
 	_no_colour_literals("res://ui/")
 	_no_colour_literals("res://ui/components/")
+	_loading_tokens()
 	return true
+
+
+## The web shell (web/shell.html) and the boot splash colour (project.godot) cannot read design.json, so they hold
+## copies of its tokens: the loading screens must not drift from the HUD.
+func _loading_tokens() -> void:
+	var colors: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://design.json")).colors
+	var found := RegEx.create_from_string("--([a-z-]+): (#[0-9a-f]{6});").search_all(FileAccess.get_file_as_string("res://web/shell.html"))
+	check(found.size() >= 4, "web/shell.html declares its colour tokens")
+	for m: RegExMatch in found:
+		check(colors.get(m.get_string(1), "") == m.get_string(2), "web/shell.html --%s is %s, design.json says %s" % [m.get_string(1), m.get_string(2), colors.get(m.get_string(1), "nothing")])
+	var bg: Color = ProjectSettings.get_setting("application/boot_splash/bg_color")
+	check(bg.to_html(false) == Hud.color("surface").to_html(false), "the boot splash colour %s is not the surface token" % bg.to_html(false))
 
 
 ## The style a text sits on: its own button, or the nearest panel above it with a fill.

@@ -38,6 +38,9 @@ func play() -> bool:
 	game = load("res://sandbox/sandbox.tscn").instantiate()
 	root.add_child(game)
 	await frames(3)
+	# the hour holds: the trackers turn with the sun, and the drawn-face ghosts below are built once (a wing's ghost
+	# from dawn stood where its panel had turned away by the time the sweep walked into it)
+	game.clock.pinned = true
 	world = game.get_node("World")
 	player = game.get_node("Player")
 	space = game.get_world_3d().direct_space_state

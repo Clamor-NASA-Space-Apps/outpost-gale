@@ -275,16 +275,18 @@ func press(a: StringName, what: String) -> void:
 	action(a, false)
 
 
-## Stands the hero in front of the first interactable of `kind` (and `thing`, if named), facing it, and
-## returns it (interact_test.gd's face()).
+## Stands the hero a metre off the first interactable of `kind` (and `thing`, if named), facing the nearest point of
+## its shape, and returns it (interact_test.gd's face()): off a door's or a panel row's face, at the rover's hatch,
+## beside a bag.
 func face(kind: String, thing := "") -> Node3D:
 	for it: Node3D in game.get_tree().get_nodes_in_group("interactable"):
 		if it.kind == kind and (thing == "" or str(it.thing.name) == thing):
-			var at: Vector3 = it.global_position
-			var from := at + Vector3(1, 0, 1).normalized()
-			if kind == "rover":
-				from = at + (at - it.thing.global_position) * Vector3(1, 0, 1) * 0.6
-			game.place(Vector3(from.x, 0, from.z), rad_to_deg(atan2(at.x - from.x, -(at.z - from.z))))
+			var s: AABB = it.shape
+			var n := Vector3.AXIS_X if s.size.x < s.size.z else Vector3.AXIS_Z
+			var off: Vector3 = (it.thing.global_basis[n] * Vector3(1, 0, 1)).normalized() * (s.size[n] / 2.0 + 1.0)
+			var from: Vector3 = it.thing.exit_point() if kind == "rover" else it.middle() + (off if kind != "bag" else Vector3(0.7, 0, 0.7))
+			var to: Vector3 = it.nearest(from + Vector3.UP * box.hold) - from
+			game.place(Vector3(from.x, 0, from.z), rad_to_deg(atan2(to.x, -to.z)))
 			return it
 	return null
 

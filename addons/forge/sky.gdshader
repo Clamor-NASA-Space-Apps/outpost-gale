@@ -9,20 +9,25 @@ shader_type sky;
 // `forge_sky_clock`, a global uniform: a material parameter changed every frame would re-render the reflection
 // cubemap every few frames, and TIME re-renders it every frame. Neither stars nor moons go into that cubemap.
 
-global uniform float forge_sky_clock; // seconds since the rig was built (house_style.gd SkyClock)
-
-uniform vec3 top : source_color;
-uniform vec3 horizon : source_color;
-uniform vec3 ground : source_color;
-uniform vec3 sun : source_color;
-uniform float disc = 0.02; // radians; 0 draws no sun and no halo
-uniform vec3 halo_color : source_color = vec3(1.0);
-uniform float halo = 0.25; // radians for the glow to fall to a third
-uniform float halo_strength = 0.7;
-uniform vec3 twilight_color : source_color = vec3(1.0);
-uniform vec3 twilight_dir = vec3(0.0, 0.0, -1.0); // flat, toward the glow
-uniform float twilight_height = 0.2; // radians above the horizon for the glow to fall to a third
-uniform float twilight_strength = 0.0;
+global uniform float forge_sky_clock; // seconds since the rig was built (house_style.gd SkyClock), or a day cycle's
+// Everything that changes with the time of day is a global too, so a day cycle can turn it every frame without
+// re-rendering the reflection cubemap (house_style.gd look(), set_look()). Colours are linear.
+global uniform vec3 forge_sky_top;
+global uniform vec3 forge_sky_horizon;
+global uniform vec3 forge_sky_ground;
+global uniform vec3 forge_sky_sun;
+global uniform vec3 forge_sky_sun_dir; // toward the sun; the disc is drawn here and not at LIGHT0, which may be a night fill
+global uniform float forge_sky_disc; // radians; 0 draws no sun and no halo
+global uniform vec3 forge_sky_halo_color;
+global uniform float forge_sky_halo; // radians for the glow to fall to a third
+global uniform float forge_sky_halo_strength;
+global uniform vec3 forge_sky_twilight_color;
+global uniform vec3 forge_sky_twilight_dir; // flat, toward the glow
+global uniform float forge_sky_twilight_height; // radians above the horizon for the glow to fall to a third
+global uniform float forge_sky_twilight_strength;
+global uniform float forge_sky_star_fade; // 0 by day, through twilight, 1 at night (the sun's elevation)
+global uniform float forge_sky_moon_fade;
+global uniform float forge_sky_milky_gain;
 
 uniform bool celestial = false;
 uniform mat3 frame = mat3(1.0); // columns: the planet's equator frame (x to the node, z the pole) in celestial axes
@@ -31,10 +36,7 @@ uniform float lst0 = 0.0; // radians: the local meridian's angle in the equator 
 uniform float spin = 0.0; // radians a second the sky turns (2 pi / sidereal day x time scale)
 uniform float planet_radius = 1.0; // the moons' distances share its unit
 uniform float tau = 0.5; // dust optical depth: a star at airmass X keeps exp(-tau X) of its light
-uniform float star_fade = 1.0; // 0 by day, through twilight, 1 at night (the sun's elevation, house_style.gd)
-uniform float moon_fade = 1.0;
 uniform float star_gain = 1.0;
-uniform float milky_gain = 0.5;
 uniform vec3 milky_color : source_color = vec3(0.8, 0.82, 0.9);
 uniform sampler2D star_map : source_color, filter_linear_mipmap, repeat_enable; // RA across, Dec up: the Milky Way in RGB, faint stars in A
 uniform sampler2D star_list : filter_nearest, repeat_disable; // per cell, LIST_K stars as two texels: (RA16, Dec16), (rgb, magnitude)
@@ -58,11 +60,11 @@ vec3 point(float d, float px, float m, vec3 col, float dim) {
 
 void sky() {
 	float y = EYEDIR.y;
-	vec3 c = y > 0.0 ? mix(horizon, top, pow(y, 0.5)) : mix(horizon, ground, clamp(-y * 8.0, 0.0, 1.0));
-	if (twilight_strength > 0.0 && y > -0.02) {
+	vec3 c = y > 0.0 ? mix(forge_sky_horizon, forge_sky_top, pow(y, 0.5)) : mix(forge_sky_horizon, forge_sky_ground, clamp(-y * 8.0, 0.0, 1.0));
+	if (forge_sky_twilight_strength > 0.0 && y > -0.02) {
 		// strongest on the horizon under the glow's direction, gone a quarter turn either side
-		float along = max(dot(normalize(vec3(EYEDIR.x, 0.0, EYEDIR.z) + 1e-5), twilight_dir), 0.0);
-		c = mix(c, twilight_color, exp(-asin(max(y, 0.0)) / twilight_height) * along * along * twilight_strength);
+		float along = max(dot(normalize(vec3(EYEDIR.x, 0.0, EYEDIR.z) + 1e-5), forge_sky_twilight_dir), 0.0);
+		c = mix(c, forge_sky_twilight_color, exp(-asin(max(y, 0.0)) / forge_sky_twilight_height) * along * along * forge_sky_twilight_strength);
 	}
 	if (celestial && !AT_CUBEMAP_PASS && y > -0.05) {
 		// the look direction in the planet's equator frame: east is +X, up +Y, north -Z here
@@ -85,7 +87,7 @@ void sky() {
 		vec2 gy = vec2(abs(dFdy(uv.x)) < abs(dFdy(u2)) ? dFdy(uv.x) : dFdy(u2), dFdy(uv.y));
 		vec4 map = textureGrad(star_map, vec2(uv.x, 1.0 - uv.y), gx, gy);
 		// alpha holds the square root of the faint stars' light, a star at the list's limit (V 5) filling it
-		lights += (vec3(map.a * map.a * pow(10.0, -0.4 * 4.0) * star_gain) + map.rgb * milky_color * milky_gain) * dim;
+		lights += (vec3(map.a * map.a * pow(10.0, -0.4 * 4.0) * star_gain) + map.rgb * milky_color * forge_sky_milky_gain) * dim;
 		// the bright stars, drawn here so they stay one or two pixels sharp: the list holds every star whose glow
 		// reaches into this cell
 		vec2 cell = floor(vec2(uv.x * list_cells.x, uv.y * list_cells.y));
@@ -106,7 +108,7 @@ void sky() {
 				lights += point(length(d - planet_dir[i].xyz), px, planet_dir[i].w, planet_color[i], dim);
 			}
 		}
-		c += lights * star_fade;
+		c += lights * forge_sky_star_fade;
 		// moons: where each is now, seen from this spot on the surface (so near ones show parallax and rise
 		// where their orbit takes them), a disc lit by the true sun
 		vec3 eye = zen * planet_radius;
@@ -138,14 +140,16 @@ void sky() {
 				// the night side is not black: the planet's own reflected light reaches it (as earthshine does the Moon)
 				vec3 face = moon_look[i].rgb * moon_look[i].a * (0.08 + lit) * hdim;
 				// the disc hides the stars behind it, its dark side too
-				c = mix(c, c - lights * star_fade + face, edge * moon_fade);
+				c = mix(c, c - lights * forge_sky_star_fade + face, edge * forge_sky_moon_fade);
 			}
 		}
 	}
-	if (LIGHT0_ENABLED && disc > 0.0) {
-		float a = acos(clamp(dot(EYEDIR, LIGHT0_DIRECTION), -1.0, 1.0));
-		c = mix(c, halo_color, exp(-a / halo) * halo_strength);
-		c = mix(c, sun * 4.0, smoothstep(disc * 1.15, disc, a));
+	if (forge_sky_disc > 0.0) {
+		float a = acos(clamp(dot(EYEDIR, forge_sky_sun_dir), -1.0, 1.0));
+		// a sun gone below the horizon takes its glow with it
+		float up = smoothstep(-0.1, 0.02, forge_sky_sun_dir.y);
+		c = mix(c, forge_sky_halo_color, exp(-a / forge_sky_halo) * forge_sky_halo_strength * up);
+		c = mix(c, forge_sky_sun * 4.0, smoothstep(forge_sky_disc * 1.15, forge_sky_disc, a) * step(0.0, y));
 	}
 	// Compatibility draws into 8 bits with no debanding, and a hazy gradient bands: a 1/255 dither hides it
 	COLOR = c + (fract(sin(dot(SCREEN_UV, vec2(12.9898, 78.233))) * 43758.5453) - 0.5) / 255.0;

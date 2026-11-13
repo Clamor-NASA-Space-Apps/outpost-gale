@@ -107,7 +107,7 @@ func _radio() -> void:
 	audio.radio("base")
 	await frames(2)
 	check(audio.radio_last < audio._time - 0.01, "no radio over an event sound")
-	await frames(int(60 * (audio._stream("door_open").get_length() + 0.3)))
+	await frames(int(60 * (audio._busy_until - audio._time + 0.3)))  # "door_open" is a hiss and the door (audio.gd SOUNDS)
 	check(audio.radio_who == "base" and audio._time - audio.radio_last < 0.4, "it plays once the sound has ended")
 
 
@@ -130,7 +130,10 @@ func _motif() -> void:
 	check(audio._motif_at == at, "never twice within %s s, even after another still spell" % m.gap_s)
 	# the dust devil (out in the day sky) in the middle of the view: once a session
 	var devil: Node3D = game.world.dust.devil
-	check(devil.emitting, "the day sky has its dust devil")
+	game.clock.jump("noon")  # the whirlwind is out around midday (tuning.json sky.devil_hours, world/sky_clock.gd)
+	game.clock.pinned = true
+	await frames(60)  # the devil walks out to its circle, and the trackers' servos that the noon sun started go quiet
+	check(devil.emitting, "the day sky has its dust devil at noon")
 	audio._motif_at = -1e9
 	audio._devil_seen = false  # a drive past it earlier in this run may have counted
 	_quiet_now()

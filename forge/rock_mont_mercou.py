@@ -93,6 +93,11 @@ bpy.context.view_layer.objects.active = low
 bpy.ops.object.modifier_apply(modifier=d.name)
 bm = bmesh.new()
 bm.from_mesh(low.data)
+# decimating 500 times left slivers a few cm across, 44 of them wound the other way (measured in the game): drawn as
+# holes, since back faces are not, the likeliest dark slits of the 13 Nov playtest. Gone, and every face wound outward
+bmesh.ops.dissolve_degenerate(bm, dist=0.03, edges=bm.edges)
+bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+bm.to_mesh(low.data)
 rim_z = sorted(v.co.z for v in bm.verts if v.is_boundary)
 bm.free()
 GROUND = rim_z[int(BURY * (len(rim_z) - 1))]  # the ground line: this share of the open edge is under it
@@ -177,6 +182,7 @@ for f in {f for v in drop for f in v.link_faces}:
         if lp.vert in drop:
             top = next(e.other_vert(lp.vert) for e in lp.vert.link_edges if e.other_vert(lp.vert) not in drop)
             lp[uv].uv = next(q[uv].uv for q in f.loops if q.vert == top)
+bmesh.ops.recalc_face_normals(bm, faces=bm.faces)  # the skirt's new faces wound outward like the rest
 bm.to_mesh(low.data)
 bm.free()
 smooth(low, 60)

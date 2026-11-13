@@ -32,6 +32,7 @@ static var _shaders: Dictionary = {}  # terrain.gdshader per `ground` variant
 var _cmap := PackedByteArray()  # the contact map (contacts())
 var _ctex: ImageTexture
 var skirt_y := 0.0  # the patch's skirt reaches down to here: under the lowest backdrop vertex near the edge (_seat())
+var grades: Array[Dictionary] = []  # footprints laid level before the ground is built (_grade(), set by world.gd)
 
 
 func build(design: Dictionary) -> void:
@@ -41,6 +42,8 @@ func build(design: Dictionary) -> void:
 	rows = d.size[1]
 	origin = Vector2(d.origin[0], d.origin[1])
 	heights = PackedFloat32Array(d.heights)
+	for g in grades:
+		_grade(g)
 	material = ShaderMaterial.new()
 	material.shader = SHADER
 	material.set_shader_parameter("macro_normal", load("res://data/terrain_normal.png"))
@@ -113,6 +116,27 @@ func height_at(x: float, z: float) -> float:
 	if u + v <= 1.0:
 		return a + (b - a) * u + (c - a) * v
 	return e + (c - e) * (1.0 - u) + (b - e) * (1.0 - v)
+
+
+## A footprint laid level, as crews grade a site before they build on it (NASA's ASPECT: "clear, level, and compact
+## the lunar surface", design/research/pages/pad-grading): every height post under `g` ({at: centre (x, z), half:
+## half size, yaw: rotation.y}) or one cell out from it takes their mean, so each triangle under it is flat and a slab
+## laid on it shows no ground through it (a build pad on a 7 degree slope was buried 0.8 m at one corner). The cut
+## or fill is the next cell's slope. Before the mesh and the collision are made, so everything reads the same ground.
+func _grade(g: Dictionary) -> void:
+	var turn := Basis(Vector3.UP, -float(g.yaw))
+	var reach: Vector2 = g.half + Vector2.ONE * (step * (1.0 if absf(sin(2.0 * float(g.yaw))) < 0.01 else sqrt(2.0)) + 0.001)
+	var under: Array[int] = []
+	var mean := 0.0
+	for i in rows:
+		for j in cols:
+			var p := turn * Vector3(origin.x + j * step - g.at.x, 0.0, origin.y + i * step - g.at.y)
+			if absf(p.x) <= reach.x and absf(p.z) <= reach.y:
+				under.append(i * cols + j)
+				mean += heights[i * cols + j]
+	mean /= maxi(under.size(), 1)
+	for k in under:
+		heights[k] = mean
 
 
 func _h(i: int, j: int) -> float:
@@ -298,7 +322,9 @@ func mark(pos: Vector3, yaw_deg: float, kind: String, width := 0.3, strength := 
 	var px := TRAIL_MPX
 	var fwd := Vector2(sin(deg_to_rad(yaw_deg)), -cos(deg_to_rad(yaw_deg)))  # x, z of the heading
 	var side := Vector2(-fwd.y, fwd.x)
-	var long := 0.30 if kind != "wheel" else 0.12
+	# a wheel print is twice the spacing movers lay them at (0.1 to 0.12 m), so a track is one band: at 0.12 m each
+	# print faded out where the next began, a bead every 4 pixels
+	var long := 0.30 if kind != "wheel" else 0.24
 	var wide := 0.12 if kind != "wheel" else width
 	var c := Vector2(pos.x, pos.z) / px
 	var r := int(ceil(maxf(long, wide) / px)) + 1
@@ -312,9 +338,12 @@ func mark(pos: Vector3, yaw_deg: float, kind: String, width := 0.3, strength := 
 			var v := d.dot(side) / (wide / 2.0)
 			var depth := 0.0
 			if kind == "wheel":
-				# a flat band with chevron lugs across it
-				depth = clampf(1.0 - pow(absf(v), 6.0), 0.0, 1.0) * clampf(2.0 - 2.0 * absf(u), 0.0, 1.0)
-				depth *= 0.7 + (0.3 if fposmod((d.dot(fwd) + absf(d.dot(side)) * 0.5) / 0.05, 1.0) >= 0.5 else 0.0)
+				# a band whose sides and ends fade over 1.5 map pixels, inside the wheel's width. Hard sides stair-stepped
+				# on the 3 cm pixels, and where two tracks crossed their edges met in jagged bands (13 Nov playtest); the
+				# map keeps the deeper of two prints (max below), so a crossing is never darker than either track.
+				# ponytail: no lugs; a 5 cm lug is under two pixels here, so it drew as noise
+				var soft := 1.5 * px
+				depth = (1.0 - smoothstep(wide / 2.0 - soft, wide / 2.0, absf(d.dot(side)))) * (1.0 - smoothstep(long / 2.0 - soft, long / 2.0, absf(d.dot(fwd))))
 			else:
 				# a rounded boot outline, a little narrower at the arch, with tread bars every 3 cm
 				var arch := 1.0 - 0.25 * exp(-u * u * 8.0)

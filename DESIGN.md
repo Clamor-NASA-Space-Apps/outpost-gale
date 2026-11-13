@@ -28,6 +28,7 @@ colors:
   plant: "#76a83c"
   romaine: "#7e2a3a"
   grow: "#e04fd2"
+  growlight: "#e889d6"
   visor: "#b8913c"
   sky: "#c27d4c"
   horizon: "#f6d9a6"
@@ -131,7 +132,7 @@ quality:
   phone: { start: phone, msaa: 0, pixels: 0.6, shadows: 1, shadowMap: 1024, shadowRange: 25, shadowFilter: 2, normalBias: 2, glow: 0, detail: off, aniso: 1, ground: flat, particles: 0.5, trail: 1024, lamps: 2 }
   older: { msaa: 0, pixels: 0.8, shadows: 1, shadowMap: 1024, shadowRange: 25, shadowFilter: 2, normalBias: 2, glow: 0, detail: off, aniso: 1, ground: cheap, particles: 0.5, trail: 1024, lamps: 2 }
   laptop: { start: desktop, msaa: 2, pixels: 1.4, shadows: 2, shadowMap: 2048, shadowRange: 60, shadowFilter: 3, normalBias: 6, glow: 0.4, detail: texture, aniso: 2, ground: full, particles: 0.75, trail: 2048, lamps: 4 }
-  gaming: { msaa: 4, scale: 1, shadows: 2, shadowMap: 4096, shadowRange: 60, shadowFilter: 4, normalBias: 4, glow: 0.5, detail: texture, aniso: 3, ground: full, particles: 1, trail: 2048 }
+  gaming: { msaa: 4, scale: 1, shadows: 4, shadowMap: 4096, shadowRange: 60, shadowFilter: 4, normalBias: 4, glow: 0.5, detail: texture, aniso: 3, ground: full, particles: 1, trail: 2048 }
   max: { msaa: 8, scale: 1, shadows: 4, shadowMap: 4096, shadowRange: 60, shadowFilter: 5, normalBias: 4, glow: 0.5, ssao: true, detail: texture, aniso: 4, ground: full, particles: 1, trail: 2048 }
 kit:
   "^(tex_0[1-5]|wheels|parts_AO)$": keep
@@ -230,7 +231,9 @@ major storm). Clean on purpose: the solar panels (swept, `clean`), pressurised f
 
 Five presets named for the hardware, weakest first: `phone` (budget phones such as the Galaxy A16), `older` (Intel HD
 laptops, 6th to 8th gen), `laptop` (Iris Xe and UHD), `gaming` (a graphics card) and `max`. A phone starts on `phone`,
-anything else on `laptop` (`start`). Each value and its measured cost: `design/research/presets.md`.
+anything else on `laptop` (`start`). Each value and its measured cost: `design/research/presets.md`. `gaming` splits its sun shadow in four: with a
+sun that moves to 60 degrees, two splits stair-stepped the greenhouse frame's shadows on its floor, and four cost nothing
+measurable on a graphics card (approved by Ravindu on 13 Nov 2026).
 
 ## Geometry & Proportions
 
@@ -243,7 +246,10 @@ One sun, warm, at the elevation token. Cool ambient. Depth fog in the horizon co
 sky so the gradient stays. ACES. Night, sunset and dust storm are `DESIGN.<state>.md` files.
 Indoors, one unshadowed ceiling light per room (`lighting.room`, the same in every sky): always on, like the
 ISS's LED panels, so HAB 1 and the greenhouse look by day as they do at night. It lights only the rooms' own render
-layer, never the ground outside through a wall (approved by Ravindu on 13 Nov 2026).
+layer, never the ground outside through a wall (approved by Ravindu on 13 Nov 2026). The greenhouse's light is `{colors.growlight}` (data/world.json
+`probe.rooms`),
+Veggie's red and blue LEDs with some green (630, 455 and 530 nm, NTRS 20160005059): under pure `grow` magenta the
+yellow-green lettuce read olive and tan, as if dying (approved by Ravindu on 13 Nov 2026). The LED bars stay `grow`.
 
 ## Kit adaptation
 

@@ -33,12 +33,15 @@ static func load_design(path: String) -> Dictionary:
 ## `still` asks for the role's world-space extras (DESIGN.md `detail`, `lit` and the `weathering` coat). They are
 ## laid on by world position and would slide over anything that moves, so a moving mesh takes them in its own space.
 ## `clean` leaves the weathering coat off (DESIGN.md `weathering.clean`: a solar cell someone keeps swept).
-static func role(design: Dictionary, name: String, still := false, clean := false) -> Material:
+## `each` puts the coat on a role drawn in a MultiMesh, each copy taking its share from its custom data (surface.gdshader
+## COAT_EACH): a row of panels that each gather and shed their own dust.
+static func role(design: Dictionary, name: String, still := false, clean := false, each := false) -> Material:
 	var cache: Dictionary = design.get_or_add("_roles", {})
 	var t: Dictionary = design.materials[name]
+	clean = clean and not each
 	var coated := not clean and _coat(design, t) > 0.0
 	still = still and (t.has("detail") or t.has("lit") or coated)
-	var key := name + ("+still" if still else "") + ("+clean" if clean else "")
+	var key := name + ("+still" if still else "") + ("+clean" if clean else "") + ("+each" if each else "")
 	var moving_detail := not still and (t.has("detail") or coated)
 	if cache.has(key):
 		return cache[key]
@@ -57,6 +60,7 @@ static func role(design: Dictionary, name: String, still := false, clean := fals
 		s.set_shader_parameter("emission", color * glow)
 		s.set_meta("still", still)
 		s.set_meta("clean", clean)
+		s.set_meta("each", each)
 		_dress(design, t, s)
 		m = s
 	else:
@@ -85,6 +89,19 @@ static func _coat(design: Dictionary, t: Dictionary) -> float:
 	return float(design.get("weathering", {}).get("amount", 0)) * float(t.get("weathering", 1))
 
 
+## The `weathering` coat's `amount` and `side` on every material already made, without a new shader variant: a coat
+## that builds in a storm and clears with the wind (skills/day-cycle section 7). Roles that wear no coat stay bare.
+static func set_coat(design: Dictionary, amount: float, side: float) -> void:
+	var w: Dictionary = design.get_or_add("weathering", {})
+	w.amount = amount
+	w.side = side
+	for m: Material in design.get("_roles", {}).values() + design.get("_kept", {}).values():
+		if m is ShaderMaterial and m.get_shader_parameter("coat_amount") != null:
+			var t: Dictionary = design.materials.get(m.resource_name, {})
+			m.set_shader_parameter("coat_amount", _coat(design, t))
+			m.set_shader_parameter("coat_side", side)
+
+
 ## The coat's defines and values on `s`, at the quality in force: detail `off` is the plain coat,
 ## `code` breaks it into patches, `texture` adds the coat's photo (skills/surface-weathering).
 static func _dress_coat(design: Dictionary, amount: float, s: ShaderMaterial, defines: PackedStringArray) -> void:
@@ -100,6 +117,8 @@ static func _dress_coat(design: Dictionary, amount: float, s: ShaderMaterial, de
 		defines.append("COAT_GRAIN")
 	if not s.get_meta("still", false) and not defines.has("LOCAL"):
 		defines.append("LOCAL")
+	if s.get_meta("each", false):
+		defines.append("COAT_EACH")
 	s.set_shader_parameter("coat_texture", grain)
 	s.set_shader_parameter("coat_texture_size", float(w.get("textureSize", 3)))
 	s.set_shader_parameter("coat_color", Color.html(w.color))  # style-check makes it required
@@ -282,6 +301,7 @@ static func apply(root: Node, design: Dictionary, still := false) -> Node:
 
 
 ## The one light rig: sky, ambient, sun, tone mapping and fog. Calling it again (a theme switch) replaces the old rig.
+## Returns {world, sun, clock}. A day cycle builds it once and then turns it with set_look() (skills/day-cycle).
 static func apply_lighting(parent: Node, design: Dictionary) -> Dictionary:
 	var L: Dictionary = design.lighting
 	for old in parent.get_children():
@@ -294,33 +314,12 @@ static func apply_lighting(parent: Node, design: Dictionary) -> Dictionary:
 	# by default the sun's colour, ten discs wide); 0 draws no sun. `twilight` (colour, azimuth, height in degrees,
 	# strength) is a glow along the horizon toward an azimuth, the sun's by default, and needs no disc. `celestial`
 	# is a planet's real night sky (_celestial())
-	var disc := float(L.get("sunDisc", 0))
 	var sky_mat: Material
+	_globals()  # any shader may read them (the sky, a ground that answers the light), and they must exist before it loads
 	var clock: SkyClock = null
-	if disc > 0.0 or L.has("twilight") or L.has("celestial"):
+	if float(L.get("sunDisc", 0)) > 0.0 or L.has("twilight") or L.has("celestial"):
 		var sm := ShaderMaterial.new()
-		# the shader names the global clock, and compiles when it loads: the global must exist first
-		# (the list of globals leaves out ones added at run time, so a flag remembers it)
-		if not Engine.has_meta(&"forge_sky_clock"):
-			RenderingServer.global_shader_parameter_add(&"forge_sky_clock", RenderingServer.GLOBAL_VAR_TYPE_FLOAT, 0.0)
-			Engine.set_meta(&"forge_sky_clock", true)
 		sm.shader = load("res://addons/forge/sky.gdshader")
-		var sun_color := Color.html(L.get("sunColor", "#ffffff"))
-		var halo: Dictionary = L.get("halo", {})
-		var dusk: Dictionary = L.get("twilight", {})
-		var az := deg_to_rad(float(dusk.get("azimuth", L.get("azimuth", 0))))
-		sm.set_shader_parameter("top", Color.html(L.sky))
-		sm.set_shader_parameter("horizon", Color.html(L.get("horizon", L.sky)))
-		sm.set_shader_parameter("ground", Color.html(L.get("ground", L.sky)))
-		sm.set_shader_parameter("sun", sun_color)
-		sm.set_shader_parameter("disc", deg_to_rad(disc) / 2.0)
-		sm.set_shader_parameter("halo_color", Color.html(halo.color) if halo.has("color") else sun_color)
-		sm.set_shader_parameter("halo", deg_to_rad(float(halo.get("size", disc * 10.0))))
-		sm.set_shader_parameter("halo_strength", float(halo.get("strength", 0.7)))
-		sm.set_shader_parameter("twilight_color", Color.html(dusk.get("color", "#ffffff")))
-		sm.set_shader_parameter("twilight_dir", Vector3(sin(az), 0.0, cos(az)))  # azimuth as the sun's, below
-		sm.set_shader_parameter("twilight_height", deg_to_rad(float(dusk.get("height", 10))))
-		sm.set_shader_parameter("twilight_strength", float(dusk.get("strength", 0.0)))
 		if L.has("celestial"):
 			_celestial(sm, L.celestial)
 			clock = SkyClock.new()
@@ -340,92 +339,275 @@ static func apply_lighting(parent: Node, design: Dictionary) -> Dictionary:
 	# ambient is a colour and not the sky: measured on 4.7.2, sky ambient in the Compatibility renderer
 	# ignores ambient_light_energy and lights everything at full sky brightness
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	# a cool shade under a warm sun is what keeps shadows from going muddy: `ambientColor`, else the sky
-	env.ambient_light_color = Color.html(L.get("ambientColor", L.sky))
-	env.ambient_light_energy = float(L.get("ambient", 1)) * UNIT
 	env.reflected_light_source = Environment.REFLECTION_SOURCE_SKY
 	env.tonemap_mode = {
 		"aces": Environment.TONE_MAPPER_ACES, "agx": Environment.TONE_MAPPER_AGX,
 		"filmic": Environment.TONE_MAPPER_FILMIC, "reinhard": Environment.TONE_MAPPER_REINHARDT,
 	}.get(L.get("toneMapping", ""), Environment.TONE_MAPPER_LINEAR)
-	env.tonemap_exposure = float(L.get("exposure", 1))
 	# at the engine's white of 1 a sunlit `body` wall is already at the top of the range (252 of 255, measured);
 	# 6 leaves it at 222, with room for a highlight
 	env.tonemap_white = 6.0
-	if L.has("fog"):
-		env.fog_enabled = true
-		env.fog_mode = Environment.FOG_MODE_DEPTH
-		env.fog_light_color = Color.html(L.fog.color)
-		env.fog_depth_begin = float(L.fog.near)
-		env.fog_depth_end = float(L.fog.far)
-		# 1 paints the whole sky in the fog colour, which flattens a sky gradient; haze wants it low
-		env.fog_sky_affect = float(L.fog.get("sky", 1))
-		env.fog_depth_curve = float(L.fog.get("curve", 1))
-		# in depth mode density is the most fog anything gets: the engine's 0.01 left the far end 1% fogged
-		# (measured on 4.7.2), so `far` meant nothing until this was set. `density` 0.4 to 0.7 keeps a far hill
-		env.fog_density = float(L.fog.get("density", 1))
-		# `sun`: fog lit by the sun when you look toward it, the haze bleaching around a low sun
-		env.fog_sun_scatter = float(L.fog.get("sun", 0))
+	env.fog_enabled = L.has("fog")
+	env.fog_mode = Environment.FOG_MODE_DEPTH
 	var world := WorldEnvironment.new()
 	world.environment = env
 	var sun := DirectionalLight3D.new()
-	sun.light_color = Color.html(L.get("sunColor", "#ffffff"))
-	sun.light_energy = float(L.get("sun", 2.5)) * UNIT
 	sun.shadow_enabled = true
-	sun.light_angular_distance = disc  # the sky draws the disc at the light's own angular size
 	# every shadow split draws each caster again, and a phone pays for it: two splits, no farther than the fog shows
 	sun.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS
 	sun.directional_shadow_max_distance = minf(float(L.get("fog", {}).get("far", 60)), 60.0)
 	sun.shadow_normal_bias = 4.0  # a split now covers more ground per texel; the default of 2 left ripples on flat tops
 	# shadow_blur is not read by the Compatibility renderer (4.7.2 source): the filter is set_quality's `shadowFilter`
-	# same angles as the forge previews; Godot is Y-up, so azimuth turns around Y
-	var phi := deg_to_rad(90.0 - float(L.get("elevation", 40)))
-	var theta := deg_to_rad(float(L.get("azimuth", 35)))
-	sun.position = Vector3(sin(phi) * sin(theta), cos(phi), sin(phi) * cos(theta)) * 50.0
-	var shadowed := sun.light_energy
-	if RenderingServer.get_current_rendering_method() == "gl_compatibility":
-		# The Compatibility renderer draws a shadowed light in a pass of its own and adds it to the picture after
-		# tone mapping ("Note on Appearance Changes" in the Lights and shadows docs). Measured on 4.7.2: a day sun
-		# plus ambient came out 2.2 times too bright on flat ground, and with that corrected by a plain gamma a
-		# moon came out black, because the tone curve's dark end swallowed it. So find the energy at which the
-		# two passes add up, on screen, to what one pass would show. No energy does that for every surface: it is
-		# solved for the palette's brightest role, so nothing burns out and darker surfaces come out a little under.
-		var k := 0.0
-		for t: Dictionary in design.materials.values():
-			if not t.get("emissive", 0):
-				k = maxf(k, Color.html(t.color).srgb_to_linear().get_luminance())
-		var a := env.ambient_light_energy * env.ambient_light_color.srgb_to_linear().get_luminance() * k
-		var s := sun.light_energy * sun.light_color.srgb_to_linear().get_luminance() * cos(phi) * k
-		var want := _on_screen(a + s, env) - _on_screen(a, env)
-		var lo := 0.0
-		var hi := 16.0
-		for i in 40:
-			var mid := (lo + hi) / 2.0
-			if _on_screen(mid * s, env) < want:
-				lo = mid
-			else:
-				hi = mid
-		if s > 0.0 and want > 0.0:
-			shadowed *= hi
-	# a preset that turns the shadow off (set_quality) needs the plain energy back, or the scene goes dim
-	sun.set_meta("energy", {false: sun.light_energy, true: shadowed})
-	sun.light_energy = shadowed
 	for n: Node in [world, sun, clock]:
 		if n:
 			n.set_meta("house_rig", true)
 			parent.add_child(n)
-	sun.look_at(Vector3.ZERO)
-	return {"world": world, "sun": sun}
+	set_look(parent, design, look(L))
+	return {"world": world, "sun": sun, "clock": clock}
+
+
+## Every value of the rig that a time of day changes, from one lighting block (DESIGN.md `lighting`), as numbers and
+## vectors so looks can be blended (blend()) and put on the rig (set_look()). Colours are linear.
+##   sky globals (sky.gdshader): top, horizon, ground, sun, sun_dir, disc, halo_color, halo, halo_strength,
+##     twilight_color, twilight_dir, twilight_height, twilight_strength, star_fade, moon_fade, milky_gain
+##   environment: ambient_color, ambient, exposure, fog_color, fog_near, fog_far, fog_density, fog_curve, fog_sky, fog_sun
+##   the light: light_color, light_energy (before the Compatibility correction), light_dir (toward the light)
+static func look(L: Dictionary) -> Dictionary:
+	var lin := func(hex: Variant) -> Vector3:
+		var c := Color.html(str(hex)).srgb_to_linear()
+		return Vector3(c.r, c.g, c.b)
+	var disc := float(L.get("sunDisc", 0))
+	var halo: Dictionary = L.get("halo", {})
+	var dusk: Dictionary = L.get("twilight", {})
+	var fog: Dictionary = L.get("fog", {})
+	var sun_color: Vector3 = lin.call(L.get("sunColor", "#ffffff"))
+	# same angles as the forge previews; Godot is Y-up, so azimuth turns around Y from +Z
+	var phi := deg_to_rad(90.0 - float(L.get("elevation", 40)))
+	var theta := deg_to_rad(float(L.get("azimuth", 35)))
+	var to_sun := Vector3(sin(phi) * sin(theta), cos(phi), sin(phi) * cos(theta))
+	var az := deg_to_rad(float(dusk.get("azimuth", L.get("azimuth", 0))))
+	var v := {
+		"top": lin.call(L.sky), "horizon": lin.call(L.get("horizon", L.sky)), "ground": lin.call(L.get("ground", L.sky)),
+		"sun": sun_color, "sun_dir": to_sun, "disc": deg_to_rad(disc) / 2.0,
+		"halo_color": lin.call(halo.color) if halo.has("color") else sun_color,
+		"halo": deg_to_rad(float(halo.get("size", disc * 10.0))), "halo_strength": float(halo.get("strength", 0.7)),
+		"twilight_color": lin.call(dusk.get("color", "#ffffff")), "twilight_dir": Vector3(sin(az), 0.0, cos(az)),
+		"twilight_height": deg_to_rad(float(dusk.get("height", 10))), "twilight_strength": float(dusk.get("strength", 0.0)),
+		"star_fade": 0.0, "moon_fade": 0.0, "milky_gain": 0.0,
+		# a cool shade under a warm sun is what keeps shadows from going muddy: `ambientColor`, else the sky
+		"ambient_color": lin.call(L.get("ambientColor", L.sky)), "ambient": float(L.get("ambient", 1)) * UNIT,
+		"exposure": float(L.get("exposure", 1)),
+		"fog_color": lin.call(fog.get("color", L.sky)), "fog_near": float(fog.get("near", 0)), "fog_far": float(fog.get("far", 4000)),
+		# in depth mode density is the most fog anything gets: the engine's 0.01 left the far end 1% fogged
+		# (measured on 4.7.2), so `far` meant nothing until this was set. `density` 0.4 to 0.7 keeps a far hill
+		"fog_density": float(fog.get("density", 1)) if L.has("fog") else 0.0,
+		# `sky` 1 paints the whole sky in the fog colour, which flattens a sky gradient; haze wants it low.
+		# `sun`: fog lit by the sun when you look toward it, the haze bleaching around a low sun
+		"fog_curve": float(fog.get("curve", 1)), "fog_sky": float(fog.get("sky", 1)), "fog_sun": float(fog.get("sun", 0)),
+		"light_color": sun_color, "light_energy": float(L.get("sun", 2.5)) * UNIT, "light_dir": to_sun,
+		"split_el": float(L.get("elevation", 40)),  # the sun the design was approved under: its shadow split (_fit_split())
+	}
+	if L.has("celestial"):
+		v.merge(sky_fades(_sky_frame(L.celestial).sun_el, L.celestial), true)
+	return v
+
+
+## Stars come out with the sun's real elevation (degrees): planets and moons from sunset to civil dusk (-6 deg),
+## stars to nautical (-12), the Milky Way to astronomical (-18) (US Naval Observatory twilight definitions).
+static func sky_fades(sun_el: float, C: Dictionary) -> Dictionary:
+	return {"moon_fade": clampf(-sun_el / 6.0, 0.0, 1.0), "star_fade": clampf((-sun_el - 6.0) / 6.0, 0.0, 1.0),
+		"milky_gain": float(C.get("stars", {}).get("milkyWay", 0.5)) * clampf((-sun_el - 12.0) / 6.0, 0.0, 1.0)}
+
+
+## Looks (look()) mixed by weights that sum to 1. Directions are mixed too and set to length 1; a cycle usually
+## puts its own sun there afterwards.
+static func blend(looks: Array, weights: Array) -> Dictionary:
+	var out := {}
+	for i in looks.size():
+		var w: float = weights[i]
+		if w == 0.0 and out.size():
+			continue  # most hours have one or two keys: the others cost a dictionary walk each for nothing
+		for k: String in looks[i]:
+			out[k] = out.get(k, looks[i][k] * 0.0) + looks[i][k] * w
+	for k: String in ["sun_dir", "twilight_dir", "light_dir"]:
+		if out.has(k) and out[k] != Vector3.ZERO:
+			out[k] = (out[k] as Vector3).normalized()
+	return out
+
+
+## Puts a look (look(), blend()) on the rig under `parent`: the sky's globals, the environment, and the light's
+## colour, energy and direction. Globals and environment values are cheap to set every frame; the light is not
+## (a sky that sees it re-renders its reflection cubemap whenever the light changes), so a cycle moves it in steps.
+## A part of a look sets only that part: no `ambient`, no environment; no `light_dir`, no light.
+## static func _shadowed() gives `light_shadowed` for a caller that moves the light often.
+static func set_look(parent: Node, design: Dictionary, v: Dictionary) -> void:
+	_globals()
+	for k: String in v:
+		if SKY_GLOBALS.has(k):
+			RenderingServer.global_shader_parameter_set(StringName("forge_sky_" + k), v[k])
+	var col := func(x: Vector3) -> Color:
+		return Color(x.x, x.y, x.z).linear_to_srgb()
+	for rig: Node in parent.get_children():
+		if not rig.has_meta("house_rig") or not v.has("ambient"):
+			continue
+		if rig is WorldEnvironment:
+			var env: Environment = rig.environment
+			env.ambient_light_color = col.call(v.ambient_color)
+			env.ambient_light_energy = v.ambient
+			env.tonemap_exposure = v.exposure
+			env.fog_light_color = col.call(v.fog_color)
+			env.fog_depth_begin = v.fog_near
+			env.fog_depth_end = v.fog_far
+			env.fog_density = v.fog_density
+			env.fog_depth_curve = v.fog_curve
+			env.fog_sky_affect = v.fog_sky
+			env.fog_sun_scatter = v.fog_sun
+	for rig: Node in parent.get_children():
+		if rig is DirectionalLight3D and rig.has_meta("house_rig") and v.has("light_dir"):
+			var sun := rig as DirectionalLight3D
+			sun.light_color = col.call(v.light_color)
+			var to: Vector3 = v.light_dir
+			sun.light_angular_distance = rad_to_deg(v.disc) * 2.0  # the sky draws the disc at the light's own angular size
+			# it shines along its -Z, from the sun toward the scene
+			sun.transform = Transform3D(Basis.looking_at(-to, Vector3.FORWARD if absf(to.y) > 0.999 else Vector3.UP), to * 50.0)
+			# `light_shadowed` when the caller solved it already (a cycle, once per burst and not per frame)
+			var shadowed: float = v.light_shadowed if v.has("light_shadowed") else _shadowed(design, parent, v.light_energy, v.light_color, to.y)
+			# a preset that turns the shadow off (set_quality) needs the plain energy back, or the scene goes dim
+			sun.set_meta("energy", {false: v.light_energy, true: shadowed})
+			sun.light_energy = shadowed if sun.shadow_enabled else v.light_energy
+			if v.has("split_el"):
+				sun.set_meta("split_el", v.split_el)
+			_fit_split(sun, design)
+
+
+## The energy a shadowed light needs in the Compatibility renderer to look as `energy` should, with the sun `up`
+## (the sine of its elevation) and the environment in force.
+## The Compatibility renderer draws a shadowed light in a pass of its own and adds it to the picture after tone
+## mapping ("Note on Appearance Changes" in the Lights and shadows docs). Measured on 4.7.2: a day sun plus ambient
+## came out 2.2 times too bright on flat ground, and with that corrected by a plain gamma a moon came out black,
+## because the tone curve's dark end swallowed it. So find the energy at which the two passes add up, on screen, to
+## what one pass would show. No energy does that for every surface: it is solved for the palette's brightest role,
+## so nothing burns out and darker surfaces come out a little under.
+static func _shadowed(design: Dictionary, parent: Node, energy: float, color: Vector3, up: float) -> float:
+	if RenderingServer.get_current_rendering_method() != "gl_compatibility":
+		return energy
+	var env: Environment = null
+	for rig: Node in parent.get_children():
+		if rig is WorldEnvironment and rig.has_meta("house_rig"):
+			env = rig.environment
+	if env == null:
+		return energy
+	var k: float = design.get_or_add("_brightest", -1.0)
+	if k < 0.0:
+		for t: Dictionary in design.materials.values():
+			if not t.get("emissive", 0):
+				k = maxf(k, Color.html(t.color).srgb_to_linear().get_luminance())
+		design["_brightest"] = k
+	var a := env.ambient_light_energy * env.ambient_light_color.srgb_to_linear().get_luminance() * k
+	var s := energy * Color(color.x, color.y, color.z).get_luminance() * maxf(up, 0.0) * k
+	var want := _on_screen(a + s, env) - _on_screen(a, env)
+	if s <= 0.0 or want <= 0.0:
+		return energy
+	var lo := 0.0
+	var hi := 16.0
+	for i in 24:  # 16 / 2^24: far finer than a byte on screen
+		var mid := (lo + hi) / 2.0
+		if _on_screen(mid * s, env) < want:
+			lo = mid
+		else:
+			hi = mid
+	return energy * hi
+
+
+## skills/shadows-and-grounding: a low sun throws a hero's shadow far past the near split's default 10%, and the seam
+## cuts it like scissors; size the near split to hold the whole shadow, sun angle by sun angle. `shadowPad` is about the
+## follow camera's distance plus a metre. Sized for the lower of the light's own elevation and the one its design was
+## approved under (meta `split_el`, from look()): sized for a high moving sun alone, the near split shrank to 0.13 and
+## the ground from 7.6 to 14.5 m fell into the far split, its shadows sawtoothed, the seam across the long ones
+## (13 Nov playtest).
+static func _fit_split(sun: DirectionalLight3D, design: Dictionary) -> void:
+	var human: float = design.get("geometry", {}).get("human", 1.8)
+	var el := minf(rad_to_deg(asin(clampf(sun.basis.z.y, -1.0, 1.0))), float(sun.get_meta("split_el", 90.0)))
+	var near := human / tan(deg_to_rad(maxf(el, 2.0))) + float(design.lighting.get("shadowPad", 6.0))
+	var fit := clampf(near / sun.directional_shadow_max_distance, 0.1, 0.6)
+	sun.directional_shadow_split_1 = fit
+	if sun.directional_shadow_mode == DirectionalLight3D.SHADOW_PARALLEL_4_SPLITS:
+		# four: the second holds the hero's shadow, the first is the ground at the camera's feet in finer texels, the
+		# rest in order beyond (the engine's 0.2 for split 2 lay inside a fitted split 1 of 0.24)
+		sun.directional_shadow_split_1 = fit * 0.4
+		sun.directional_shadow_split_2 = fit
+		sun.directional_shadow_split_3 = fit + (1.0 - fit) * 0.45
+
+
+## The sky's time-varying values, as global shader uniforms (sky.gdshader): name (after `forge_sky_`) -> type.
+const SKY_GLOBALS := {
+	"clock": RenderingServer.GLOBAL_VAR_TYPE_FLOAT,
+	"top": RenderingServer.GLOBAL_VAR_TYPE_VEC3, "horizon": RenderingServer.GLOBAL_VAR_TYPE_VEC3,
+	"ground": RenderingServer.GLOBAL_VAR_TYPE_VEC3, "sun": RenderingServer.GLOBAL_VAR_TYPE_VEC3,
+	"sun_dir": RenderingServer.GLOBAL_VAR_TYPE_VEC3, "disc": RenderingServer.GLOBAL_VAR_TYPE_FLOAT,
+	"halo_color": RenderingServer.GLOBAL_VAR_TYPE_VEC3, "halo": RenderingServer.GLOBAL_VAR_TYPE_FLOAT,
+	"halo_strength": RenderingServer.GLOBAL_VAR_TYPE_FLOAT, "twilight_color": RenderingServer.GLOBAL_VAR_TYPE_VEC3,
+	"twilight_dir": RenderingServer.GLOBAL_VAR_TYPE_VEC3, "twilight_height": RenderingServer.GLOBAL_VAR_TYPE_FLOAT,
+	"twilight_strength": RenderingServer.GLOBAL_VAR_TYPE_FLOAT, "star_fade": RenderingServer.GLOBAL_VAR_TYPE_FLOAT,
+	"moon_fade": RenderingServer.GLOBAL_VAR_TYPE_FLOAT, "milky_gain": RenderingServer.GLOBAL_VAR_TYPE_FLOAT,
+	"light_dir": RenderingServer.GLOBAL_VAR_TYPE_VEC3,  # toward the light in force (the sun, or a night fill): for surfaces
+}
+
+
+## Adds the sky globals once per run (the list of globals leaves out ones added at run time, so a flag remembers it).
+static func _globals() -> void:
+	if Engine.has_meta(&"forge_sky_globals"):
+		return
+	Engine.set_meta(&"forge_sky_globals", true)
+	for k: String in SKY_GLOBALS:
+		var type: int = SKY_GLOBALS[k]
+		RenderingServer.global_shader_parameter_add(StringName("forge_sky_" + k), type,
+			0.0 if type == RenderingServer.GLOBAL_VAR_TYPE_FLOAT else Vector3.ZERO)
 
 
 ## Counts the seconds sky.gdshader turns its night sky by, from when the rig was built: a global shader uniform, as a
-## material parameter set every frame would re-render the sky's reflection cubemap over and over.
+## material parameter set every frame would re-render the sky's reflection cubemap over and over. A day cycle sets
+## `driven` and writes `t` itself (the planet's seconds since the design's `celestial.hour`, at timeScale 1).
 class SkyClock extends Node:
 	var t := 0.0
+	var driven := false
 
 	func _process(delta: float) -> void:
-		t += delta
+		if not driven:
+			t += delta
 		RenderingServer.global_shader_parameter_set(&"forge_sky_clock", t)
+
+
+## The local frame of a planet's sky (DESIGN.md `lighting.celestial`): its equator frame, the sun in it, the
+## local meridian's angle at the design's `hour` (lst0) and the sun's elevation then (degrees).
+static func _sky_frame(C: Dictionary) -> Dictionary:
+	var dir := func(ra_dec: Array) -> Vector3:
+		var ra := deg_to_rad(float(ra_dec[0]))
+		var de := deg_to_rad(float(ra_dec[1]))
+		return Vector3(cos(de) * cos(ra), cos(de) * sin(ra), sin(de))
+	var pole: Vector3 = dir.call(C.pole)
+	var node := Vector3(0, 0, 1).cross(pole).normalized()  # where the planet's equator crosses Earth's
+	var frame := Basis(node, pole.cross(node), pole)
+	var sun_eq: Vector3 = frame.transposed() * dir.call(C.sun)
+	var lat := deg_to_rad(float(C.latitude))
+	# the sun is on the meridian at noon, and the sky turns 15 degrees a planet hour
+	var lst0 := atan2(sun_eq.y, sun_eq.x) + deg_to_rad((float(C.hour) - 12.0) * 15.0)
+	var zen := Vector3(cos(lat) * cos(lst0), cos(lat) * sin(lst0), sin(lat))
+	return {"frame": frame, "sun_eq": sun_eq, "lat": lat, "lst0": lst0, "sun_el": rad_to_deg(asin(sun_eq.dot(zen))), "dir": dir}
+
+
+## Toward the sun at local solar `hour` (0 to 24), in the scene's axes (x east, y up, z south), from DESIGN.md
+## `lighting.celestial` (pole, latitude, sun): the same sky sky.gdshader draws, so its disc, the stars and the light
+## agree. Hours past 24 are the next sol.
+static func sun_at(C: Dictionary, hour: float) -> Vector3:
+	var f := _sky_frame(C)
+	var lat: float = f.lat
+	var th := atan2(f.sun_eq.y, f.sun_eq.x) + deg_to_rad((hour - 12.0) * 15.0)
+	var zen := Vector3(cos(lat) * cos(th), cos(lat) * sin(th), sin(lat))
+	var north := Vector3(-sin(lat) * cos(th), -sin(lat) * sin(th), cos(lat))
+	var east := Vector3(-sin(th), cos(th), 0.0)
+	var s: Vector3 = f.sun_eq
+	return Vector3(s.dot(east), s.dot(zen), -s.dot(north))
 
 
 ## A planet's real night sky from DESIGN.md `lighting.celestial` (sky.gdshader, tools/sky-stars.mjs):
@@ -435,38 +617,23 @@ class SkyClock extends Node:
 ##   stars: {map, list (from tools/sky-stars.mjs, paths from the project), brightness, milkyWay, milkyColor}
 ##   planets: [{ra, dec, mag, color}]   moons: [{radius, orbit (km), period (s), start (deg east of the meridian
 ##   along its orbit at the start; negative rises in the west for a moon faster than the sky), color, brightness}]
-## Stars come out with the sun's real elevation at that hour: planets and moons from sunset to civil dusk (-6 deg),
-## stars to nautical (-12), the Milky Way to astronomical (-18) (US Naval Observatory twilight definitions).
+## How far the stars are out is sky_fades(), a global set with the rest of the look.
 static func _celestial(sm: ShaderMaterial, C: Dictionary) -> void:
-	var dir := func(ra_dec: Array) -> Vector3:
-		var ra := deg_to_rad(float(ra_dec[0]))
-		var de := deg_to_rad(float(ra_dec[1]))
-		return Vector3(cos(de) * cos(ra), cos(de) * sin(ra), sin(de))
-	var pole: Vector3 = dir.call(C.pole)
-	var node := Vector3(0, 0, 1).cross(pole).normalized()  # where the planet's equator crosses Earth's
-	var frame := Basis(node, pole.cross(node), pole)
-	var to_eq := frame.transposed()
-	var lat := deg_to_rad(float(C.latitude))
-	var sun_eq: Vector3 = to_eq * dir.call(C.sun)
-	# the sun is on the meridian at noon, and the sky turns 15 degrees a planet hour
-	var lst0 := atan2(sun_eq.y, sun_eq.x) + deg_to_rad((float(C.hour) - 12.0) * 15.0)
-	var zen := Vector3(cos(lat) * cos(lst0), cos(lat) * sin(lst0), sin(lat))
-	var sun_el := rad_to_deg(asin(sun_eq.dot(zen)))
+	var f := _sky_frame(C)
+	var to_eq: Basis = (f.frame as Basis).transposed()
+	var lst0: float = f.lst0
 	var scale := float(C.get("timeScale", 1))
 	var R := float(C.radius)
 	var stars: Dictionary = C.get("stars", {})
 	sm.set_shader_parameter("celestial", true)
-	sm.set_shader_parameter("frame", frame)
-	sm.set_shader_parameter("latitude", lat)
+	sm.set_shader_parameter("frame", f.frame)
+	sm.set_shader_parameter("latitude", f.lat)
 	sm.set_shader_parameter("lst0", lst0)
 	sm.set_shader_parameter("spin", TAU / float(C.day) * scale)
 	sm.set_shader_parameter("planet_radius", 1.0)
 	sm.set_shader_parameter("tau", float(C.get("tau", 0.5)))
-	sm.set_shader_parameter("sun_eq", sun_eq)
-	sm.set_shader_parameter("moon_fade", clampf(-sun_el / 6.0, 0.0, 1.0))
-	sm.set_shader_parameter("star_fade", clampf((-sun_el - 6.0) / 6.0, 0.0, 1.0))
+	sm.set_shader_parameter("sun_eq", f.sun_eq)
 	sm.set_shader_parameter("star_gain", float(stars.get("brightness", 1)))
-	sm.set_shader_parameter("milky_gain", float(stars.get("milkyWay", 0.5)) * clampf((-sun_el - 12.0) / 6.0, 0.0, 1.0))
 	sm.set_shader_parameter("milky_color", Color.html(stars.get("milkyColor", "#ffffff")))
 	for k: String in ["map", "list"]:
 		if stars.has(k) and ResourceLoader.exists("res://" + str(stars[k])):
@@ -474,7 +641,7 @@ static func _celestial(sm: ShaderMaterial, C: Dictionary) -> void:
 	var dirs := PackedVector4Array()
 	var colors := PackedColorArray()
 	for p: Dictionary in C.get("planets", []).slice(0, 4):
-		var d: Vector3 = to_eq * dir.call([p.ra, p.dec])
+		var d: Vector3 = to_eq * f.dir.call([p.ra, p.dec])
 		dirs.append(Vector4(d.x, d.y, d.z, float(p.mag)))
 		colors.append(Color.html(p.get("color", "#ffffff")))
 	dirs.resize(4)  # unused slots are zero: the shader skips them
@@ -491,7 +658,6 @@ static func _celestial(sm: ShaderMaterial, C: Dictionary) -> void:
 	looks.resize(2)
 	sm.set_shader_parameter("moon_orbit", orbits)
 	sm.set_shader_parameter("moon_look", looks)
-
 
 ## How bright a linear value ends up on screen, 0 to 1, by the engine's own tone curves
 ## (drivers/gles3/shaders/tonemap_inc.glsl, grey only) and the sRGB step after them.
@@ -563,7 +729,7 @@ const KNOBS := {
 	"detail": {"values": ["off", "code", "texture"], "default": "off", "recompile": true},
 	"lamps": {"values": [0, 1, 2, 4, 8, -1], "default": -1, "recompile": true},  # nearest lamps lit, -1 all
 	"vsync": {"values": [true, false], "default": true, "recompile": false},
-	"maxFps": {"values": [0, 30, 60, 120], "default": 0, "recompile": false},  # 0 = no cap
+	"maxFps": {"values": [0, 30, 45, 60, 120], "default": 0, "recompile": false},  # 0 = no cap; 45 is every second refresh of a 90 Hz phone
 	"trail": {"values": [512, 1024, 2048], "default": 2048, "recompile": false, "game": true},  # print map pixels
 	"particles": {"values": [0.25, 0.5, 0.75, 1.0], "default": 1.0, "recompile": false, "game": true},  # share of dust
 	"ground": {"values": ["flat", "cheap", "full"], "default": "full", "recompile": true, "game": true},  # ground shader
@@ -653,16 +819,9 @@ static func set_quality(root: Node, design: Dictionary, level: String, overrides
 				splits, DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS)
 			rig.light_energy = rig.get_meta("energy")[rig.shadow_enabled]
 			rig.set_meta("shadow_map", map)  # the engine keeps no getter for it; this is for checks
-			# skills/shadows-and-grounding: a low sun throws a hero's shadow far past the near split's default
-			# 10%, and the seam cuts it like scissors; size the near split to hold the whole shadow, sun angle
-			# by sun angle. `shadowPad` is about the follow camera's distance plus a metre
-			var L: Dictionary = design.lighting
-			var reach := minf(float(q.get("shadowRange", 60)), float(L.get("fog", {}).get("far", 60)))
-			rig.directional_shadow_max_distance = reach
+			rig.directional_shadow_max_distance = minf(float(q.get("shadowRange", 60)), float(design.lighting.get("fog", {}).get("far", 60)))
 			rig.shadow_normal_bias = float(q.get("normalBias", 4.0))
-			var human: float = design.get("geometry", {}).get("human", 1.8)
-			var near := human / tan(deg_to_rad(maxf(float(L.get("elevation", 40)), 2.0))) + float(L.get("shadowPad", 6.0))
-			rig.directional_shadow_split_1 = clampf(near / reach, 0.1, 0.6)
+			_fit_split(rig, design)
 			RenderingServer.directional_soft_shadow_filter_set_quality(int(q.get("shadowFilter", 2)) as RenderingServer.ShadowQuality)
 	for m: Material in design.get("_roles", {}).values():
 		if m is ShaderMaterial:
@@ -699,7 +858,9 @@ static func _fit_pixels(view: Viewport, q: Dictionary) -> void:
 ## distinct render `layers` value seen gets its own copy (a reflection probe's mask makes another variant), and a
 ## design with lamps gets a lamp over half the stage (a lamp in reach is another variant). Put `at` inside any
 ## reflection probe the game has: each probe is redrawn there after the variants, under the new sky (_redraw_probes()).
-static func warm(root: Node, design: Dictionary, at: Transform3D, extra: Array = [], frames := 3) -> void:
+## `progress` (optional) is called with 0 to 1 as it goes, for a bar on the cover: the copies show in WARM_STEPS
+## batches, a frame each, so the screen updates between compiles instead of freezing on one long frame.
+static func warm(root: Node, design: Dictionary, at: Transform3D, extra: Array = [], frames := 3, progress := Callable()) -> void:
 	if Array(OS.get_cmdline_user_args()).any(func(a: String) -> bool: return a.begins_with("--forge-job=")):
 		# a tool run wants pictures and state, not hitches; every variant on the tools' software GL took minutes. Its
 		# pictures still need the probes in the sky in force
@@ -752,6 +913,7 @@ static func warm(root: Node, design: Dictionary, at: Transform3D, extra: Array =
 	var box := BoxMesh.new()
 	box.size = Vector3.ONE * 0.05
 	var lamp := make_lamp(design)
+	var parts: Array[Node3D] = []
 	# with lamps, a second group in a lamp's reach (a lamp in reach is another variant), and one out of it
 	for side: float in ([-3.0, 3.0] if lamp else [0.0]):
 		var spot := Vector3(side, 0.0, -8.0)
@@ -779,7 +941,9 @@ static func warm(root: Node, design: Dictionary, at: Transform3D, extra: Array =
 					g.layers = layers
 					g.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON if u.cast else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 					g.position = spot + Vector3(float(k % 12) * 0.06 - 0.33, float(floori(k / 12.0) % 12) * 0.06 - 0.33, -0.01 * floorf(k / 144.0))
+					g.visible = false  # shown a batch a frame below; on stage already, so it goes with the stage
 					stage.add_child(g)
+					parts.append(g)
 					k += 1
 		for e in emitters:
 			var c := e.duplicate() as GPUParticles3D
@@ -793,15 +957,40 @@ static func warm(root: Node, design: Dictionary, at: Transform3D, extra: Array =
 			c.emitting = true
 			c.restart()
 	var tree := root.get_tree()
+	var probes := root.find_children("*", "ReflectionProbe", true, false).size()
+	# progress in frames, the compiles weighed as one frame each (probe frames are cheap, compiles are not)
+	var batch := maxi(1, ceili(parts.size() / float(WARM_STEPS)))
+	var steps := float(ceili(parts.size() / float(batch)) * WARM_STEPS + frames + PROBE_FRAMES * probes)
+	var done := [0]  # an array, so the frame hook below counts into the same one
+	var tell := func(n: int) -> void:
+		done[0] += n
+		if progress.is_valid():
+			progress.call(minf(done[0] / steps, 1.0))
+	for at_part in range(0, parts.size(), batch):
+		for j in range(at_part, mini(at_part + batch, parts.size())):
+			parts[j].visible = true
+		await tree.process_frame
+		if not is_instance_valid(stage):
+			return  # the scene went away while it warmed
+		tell.call(WARM_STEPS)
 	for i in frames:
 		await tree.process_frame
+		tell.call(1)
 	if not is_instance_valid(stage):
 		return  # the scene went away while it warmed
 	if cam.current and was and is_instance_valid(was):
 		was.make_current()  # unless the game moved to another camera meanwhile (a preset view)
 	stage.free()
+	var each_frame := tell.bind(1)
+	tree.process_frame.connect(each_frame)
 	await _redraw_probes(root, at)
+	tree.process_frame.disconnect(each_frame)
 
+
+## Frames warm() spreads its compiles over, for a cover's bar. Each frame also draws the whole scene, so more steps
+## cost more: 10 adds about half a second on a 20 fps phone, and a fixed batch of 8 (33 frames for 264 copies) made a
+## software-GL web load far longer (ready at 285 s against 95 s, on a busy laptop).
+const WARM_STEPS := 10
 
 ## Frames an UPDATE_ONCE probe takes once a camera sees it: one to be queued by the cull, one for its six faces, then
 ## one per roughness mip, at most 8 (renderer_scene_cull.cpp render_probes(), gles3 light_storage.cpp, 4.7.2), plus one.

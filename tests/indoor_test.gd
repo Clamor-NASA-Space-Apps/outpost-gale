@@ -1,12 +1,12 @@
 extends "res://addons/forge/test.gd"
 ## First person inside the rooms (skills/third-person-camera, Into first person indoors):
 ## godot --headless --path . --fixed-fps 60 -s tests/indoor_test.gd
-## For HAB 1 and the greenhouse, with real input: walk in through the door and the view goes into the eye within the
+## For HAB 1, the greenhouse and the storm shelter, with real input: walk in through the door and the view goes into the eye within the
 ## ease time, the lens stays in the room's plan and in no solid, and no part of the hero is drawn; a slow walk back
 ## and forth across the doorway never flips the view; walking out brings the follow camera back, the hero fading in
 ## once the lens is clear of it. On no frame is the hero drawn with the lens close enough to cut it.
 
-const ROOMS := ["hab1", "greenhouse"]
+const ROOMS := ["hab1", "greenhouse", "shelter"]
 const START := 7.0  # m in front of the building's centre, along its front (as tests/doors_test.gd)
 const SLOW := 0.35  # stick share for the doorway rocking: a careful shuffle
 
@@ -36,7 +36,8 @@ func play() -> bool:
 	await frames(int(60 * (0.2 + float(game.tuning.interact.move_s))))
 	for id: String in ROOMS:
 		await room(id)
-	probes()
+	for id: String in world.data.probe.rooms:
+		probes(id)
 	await curtain()
 	return true
 
@@ -76,16 +77,24 @@ func curtain() -> void:
 	check(not it.open and is_equal_approx(c.scale[axis], 1.0), "E draws it closed again")
 
 
-## HAB 1's own reflection probe (data/world.json probe.rooms): glass and metal inside reflect the room. With only the
-## base's probe they showed the rover and the sky (12 Nov playtest).
-func probes() -> void:
-	var hab: Node3D = world.items["hab1"]
-	var probe := hab.get_node_or_null("Probe_hab1") as ReflectionProbe
-	if not check(probe != null and probe.interior, "HAB 1 has its own interior reflection probe"):
+## A room's own reflection probe (data/world.json probe.rooms): glass and metal inside reflect the room. With only the
+## base's probe they showed the rover and the sky (12 Nov playtest). A closed room's probe is an interior one, and
+## its light lights only the rooms' layer.
+func probes(id: String) -> void:
+	if id.begins_with("_") or not world.items.has(id):
+		return
+	var r: Dictionary = world.data.probe.rooms[id]
+	var hab: Node3D = world.items[id]
+	var probe := hab.get_node_or_null("Probe_" + id) as ReflectionProbe
+	if not check(probe != null and probe.interior == r.get("interior", true), "%s has its own reflection probe" % id):
 		return
 	var box := AABB(probe.global_position - probe.size / 2.0, probe.size)
-	var eye := hab.to_global(Vector3(0, 2.0, 0))  # 1.6 m over the deck, mid-room
-	check(box.has_point(eye), "the room probe's box holds the room at eye height")
+	var eye := hab.to_global(Vector3(0, float(r.at[1]) + 0.4, 0))  # about eye height, mid-room
+	check(box.has_point(eye), "%s: the room probe's box holds the room at eye height" % id)
+	var light := hab.get_node_or_null("RoomLight") as OmniLight3D
+	if r.has("light"):
+		check(light != null and light.light_cull_mask == probe.reflection_mask and float(light.get_meta("energy", 0.0)) > 0.0,
+			"%s: its room light is on and lights only the rooms' layer" % id)
 	var base := world.get_node("Probe") as ReflectionProbe
 	var swept := 0
 	for mi: MeshInstance3D in world.find_children("merged_swept", "MeshInstance3D", true, false):
@@ -93,8 +102,8 @@ func probes() -> void:
 		if mi.is_visible_in_tree() and b.intersects(box):
 			swept += 1
 			check(mi.layers & probe.reflection_mask and not mi.layers & base.reflection_mask,
-				"the swept fit-out (%s) takes the room's reflections, not the base's (layers %d)" % [mi.get_parent().name, mi.layers])
-	check(swept > 0, "the fit-out is merged into a swept mesh the room probe reflects onto")
+				"%s: the swept fit-out (%s) takes the room's reflections, not the base's (layers %d)" % [id, mi.get_parent().name, mi.layers])
+	check(swept > 0, "%s: the fit-out is merged into a swept mesh the room probe reflects onto" % id)
 
 
 func room(id: String) -> void:
@@ -128,7 +137,7 @@ func room(id: String) -> void:
 		if reached >= 0 and (not lens_in(id) or s.cam.inside):
 			strays += 1
 		var p: Vector3 = player.body.global_position
-		if Vector2(p.x - c.x, p.z - c.z).length() < 1.5:
+		if Vector2(p.x - c.x, p.z - c.z).length() < 1.5 and reached >= 0:  # the shelter's room starts nearer than 1.5 m
 			break
 	action(&"move_forward", false)
 	await frames(10)

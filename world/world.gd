@@ -49,6 +49,8 @@ var _touch: Dictionary = {}  # mover -> PackedVector4Array of its contact discs 
 var _touch_dirty := false
 var _wheel := SphereShape3D.new()
 var _cables: MeshInstance3D
+var cable_paths: Array[PackedVector3Array] = []  # each cable as drawn, port to port (_lay_cables(); tests read the ends)
+var _charge: Dictionary = {}  # the rover's charge lead (_charger())
 var _static_parts: Array = []  # the moving parts of still items, drawn together (_instance())
 var _mirrors: Array[Dictionary] = []  # {mmi, srcs, at}: identical moving meshes drawn as one MultiMesh (_instance())
 
@@ -69,6 +71,10 @@ func build(design: Dictionary) -> void:
 	_gust.frequency = float(data.wind.gust_hz)
 	terrain = Terrain.new()
 	terrain.name = "Terrain"
+	for it: Dictionary in data.items:
+		if it.prefab in data.graded.prefabs:
+			var s: Array = data.standin[it.prefab]  # the item's real size
+			terrain.grades.append({"at": Vector2(it.pos[0], it.pos[1]), "half": Vector2(s[0], s[2]) / 2.0, "yaw": -deg_to_rad(float(it.get("yaw", 0)))})
 	add_child(terrain)
 	terrain.build(design)
 	for it: Dictionary in data.items:
@@ -110,6 +116,7 @@ func build(design: Dictionary) -> void:
 
 func _process(delta: float) -> void:
 	_time += delta
+	_charge_step(delta)
 	for m: Dictionary in _mirrors:
 		var to_mmi: Transform3D = (m.mmi as Node3D).global_transform.affine_inverse()
 		for i in m.srcs.size():
@@ -333,6 +340,11 @@ func rest(root: Node3D) -> void:
 		lift = minf(lift, height_at(p.x, p.z) - p.y)
 		flat.append(Vector2(p.x, p.z))
 	root.global_position.y += lift - depth
+	if mark and not root.has_meta("bedded"):
+		root.set_meta("bedded", true)
+		var meets := _bed(root)
+		if meets.size():
+			flat = meets  # its contact is where it now meets the sand, not the buried skirt's ring
 	if kind == "vehicle":
 		return
 	root.set_meta("feet", flat)  # where the ground darkens round it (_contacts)
@@ -344,6 +356,75 @@ func rest(root: Node3D) -> void:
 		var at := root.global_position
 		puff(Vector3(at.x, height_at(at.x, at.z), at.z), Vector3.DOWN * float(g.set_down_speed), float(g.set_down_strength))
 		_contacts(root)
+
+
+## A bedded outcrop meets the sand with a wall the hero cannot step, never a lip lying along it (skills/world-collision
+## rules 5 and 11). Mont Mercou's sanded foot crossed the ground three times in a metre, and the walking sweep dropped
+## the hero off a 20 cm crest of it (13 Nov). Every point of it under three of the hero's steps over the ground goes
+## down, by a share that eases from none at that height to all of the drop a step-and-a-half lower: smooth and only
+## ever lower the lower it was, so no face folds over (a hard cut at one height stretched faces across it into dark
+## slits, 13 Nov playtest), while what stays above the sand rises steeply out of it. The moved faces get their normals
+## again. Read from height_at() where the rock stands, so it holds wherever the item is placed; its collision is the
+## drawn mesh. Returns where it now meets the sand (x, z), for the contact map.
+func _bed(root: Node3D) -> PackedVector2Array:
+	var top := 3.0 * hero_step
+	var band := 1.5 * hero_step
+	var drop := top + 0.1
+	var meets := PackedVector2Array()
+	for mi: MeshInstance3D in root.find_children("*", "MeshInstance3D", true, false):
+		if mi.mesh == null:
+			continue
+		var to := mi.global_transform
+		var back := to.affine_inverse()
+		var mesh := ArrayMesh.new()
+		for s in mi.mesh.get_surface_count():
+			var arrays := mi.mesh.surface_get_arrays(s)
+			var verts: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+			var moved := {}  # where the vertices that went down are now (local, snapped): their faces are shaded again
+			for k in verts.size():
+				var p := to * verts[k]
+				var ground := height_at(p.x, p.z)
+				var d := p.y - ground
+				if d < top:
+					p.y -= drop * smoothstep(0.0, 1.0, (top - d) / band)
+					verts[k] = back * p
+					moved[verts[k].snappedf(1e-4)] = true
+				if absf(p.y - ground) < 0.2:
+					meets.append(Vector2(p.x, p.z))
+			arrays[Mesh.ARRAY_VERTEX] = verts
+			arrays[Mesh.ARRAY_NORMAL] = _renormal(verts, arrays[Mesh.ARRAY_NORMAL], arrays[Mesh.ARRAY_INDEX], moved)
+			mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+			mesh.surface_set_material(s, mi.mesh.surface_get_material(s))
+		mi.mesh = mesh
+		for col: CollisionShape3D in mi.find_children("*", "CollisionShape3D", true, false):
+			col.shape = mesh.create_trimesh_shape()
+	return meets
+
+
+## Area-weighted normals for the vertices at `moved` positions, summed by position so the copies a UV seam splits
+## stay one smooth surface; every other vertex keeps the normal it came with. `normals` are read before any is set.
+func _renormal(verts: PackedVector3Array, normals: PackedVector3Array, idx: PackedInt32Array, moved: Dictionary) -> PackedVector3Array:
+	var sum := {}
+	for t in range(0, idx.size(), 3):
+		var a := verts[idx[t]]
+		var b := verts[idx[t + 1]]
+		var c := verts[idx[t + 2]]
+		var keys := [a.snappedf(1e-4), b.snappedf(1e-4), c.snappedf(1e-4)]
+		if not (moved.has(keys[0]) or moved.has(keys[1]) or moved.has(keys[2])):
+			continue
+		var n := (c - a).cross(b - a)  # Godot's front faces wind clockwise
+		# a face wound the other way (a sliver the scan's decimation left) counts toward the side its corners face
+		if n.dot(normals[idx[t]] + normals[idx[t + 1]] + normals[idx[t + 2]]) < 0.0:
+			n = -n
+		for key: Vector3 in keys:
+			sum[key] = sum.get(key, Vector3.ZERO) + n
+	var out := normals.duplicate()
+	for k in verts.size():
+		var key := verts[k].snappedf(1e-4)
+		# where the scan folds into a thin fin, faces meet back to back and their sum points anywhere: keep its own
+		if moved.has(key) and sum.has(key) and (sum[key] as Vector3).dot(normals[k]) > 0.0:
+			out[k] = (sum[key] as Vector3).normalized()
+	return out
 
 
 ## Every resting item's feet and the solid rocks' into the ground's contact map (terrain.gd). With `moved` (a carriable
@@ -539,6 +620,7 @@ func _instance(meshes: Array, holder: Node3D) -> void:
 			mesh.surface_set_material(i, first.get_active_material(i))
 		var mm := MultiMesh.new()
 		mm.transform_format = MultiMesh.TRANSFORM_3D
+		mm.use_custom_data = true  # each copy's own dust (world/sky_clock.gd, surface.gdshader COAT_EACH); before the count
 		mm.mesh = mesh
 		mm.instance_count = srcs.size()
 		var mmi := MultiMeshInstance3D.new()
@@ -553,6 +635,15 @@ func _instance(meshes: Array, holder: Node3D) -> void:
 			mm.set_instance_transform(i, at[i])
 			(srcs[i] as MeshInstance3D).visible = false
 		_mirrors.append({"mmi": mmi, "srcs": srcs, "at": at})
+
+
+## Where `mi` is drawn when a MultiMesh draws it (_instance()): [MultiMeshInstance3D, index], else [].
+func instanced(mi: MeshInstance3D) -> Array:
+	for m: Dictionary in _mirrors:
+		var i: int = (m.srcs as Array).find(mi)
+		if i >= 0:
+			return [m.mmi, i]
+	return []
 
 
 ## Collision for a static item, from its own triangles. A model that arrives with bodies (-col names) chose
@@ -580,6 +671,15 @@ func _solidify(model: Node3D, parts: Array[Node3D]) -> void:
 		_layer(body)
 	if authored and model.find_children("*", "CollisionObject3D", true, false).all(func(b: CollisionObject3D) -> bool: return b.collision_layer == THIN):
 		_feet(model)
+	# a solid whose top is within the rover's climb (reality.json rover.climb) of the item's underside is ground to a
+	# wheel, as a rock is: a build pad, a sill. The rover rolls onto it (wheel_rest()) instead of stopping at its edge
+	var base := drawn(model).position.y
+	for body: CollisionObject3D in model.find_children("*", "CollisionObject3D", true, false):
+		var top := -INF
+		for cs: CollisionShape3D in body.find_children("*", "CollisionShape3D", false, false):
+			top = maxf(top, (cs.global_transform * cs.shape.get_debug_mesh().get_aabb()).end.y)
+		if top - base <= float(sheet_values["rover.climb"]):
+			body.collision_layer |= Rocks.ROCK
 
 
 ## A pole on feet (a lamp's tripod): its authored body is the pole, and the hero stood inside the drawn feet
@@ -678,8 +778,14 @@ func _merge(meshes: Array, parent: Node3D) -> MeshInstance3D:
 func _still(n: Node3D) -> Array:
 	var parts: Array[Node3D] = n.get_meta("parts")
 	return n.find_children("*", "MeshInstance3D", true, false).filter(func(mi: MeshInstance3D) -> bool:
-		# a flashing light keeps its own mesh, so its material can change without the rest of the cell
-		return mi.mesh != null and mi.skin == null and not _in_part(mi, parts) and not _blink.search(mi.name))
+		# a flashing light keeps its own mesh, so its material can change without the rest of the cell; so does a
+		# cable's gland box, which _glands() sets onto the ground after the item rests
+		return mi.mesh != null and mi.skin == null and not _in_part(mi, parts) and not _blink.search(mi.name) and not _gland(mi))
+
+
+## A cable's gland box (forge/base_kit.py port()): the mesh that holds a `port*` empty.
+static func _gland(mi: MeshInstance3D) -> bool:
+	return mi.get_children().any(func(c: Node) -> bool: return str(c.name).begins_with("port") and not c is MeshInstance3D)
 
 
 ## The still meshes of every static item in one ground cell, merged per material (world-collision rule 9):
@@ -739,34 +845,36 @@ func _lamps(design: Dictionary) -> void:
 
 ## Power cables on the ground (data/world.json `cables`): a box-section strip draped on height_at() every `step` m,
 ## all lines one mesh in the role's material. No body: the hero steps over a cable a few centimetres high.
+## Each line runs from one device's port to another's (`ends`, "item:node", node `port_1` when left out): its first
+## and last points move onto the ports, so it ends inside the gland box the model carries (forge/base_kit.py port())
+## wherever the item stands; a cable that stopped beside its device read as unplugged (13 Nov playtest).
 func _lay_cables(design: Dictionary) -> void:
 	var c: Dictionary = data.get("cables", {})
 	if c.get("lines", []).is_empty():
 		return
-	var w := float(c.width) / 2.0
+	_glands(float(c.height))
 	var h := float(c.height)
+	var ends: Array = c.get("ends", [])
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
-	for line: Array in c.lines:
+	for li in c.lines.size():
+		var line: Array[Vector2] = []
+		for p: Array in c.lines[li]:
+			line.append(Vector2(p[0], p[1]))
+		for k in (2 if li < ends.size() else 0):
+			var port := _port(ends[li][k])
+			if port == null:
+				push_error("cables: line %d has no port %s" % [li, ends[li][k]])
+			else:
+				line[[0, line.size() - 1][k]] = Vector2(port.global_position.x, port.global_position.z)
 		var pts: Array[Vector3] = []
 		for i in line.size() - 1:
-			var a := Vector2(line[i][0], line[i][1])
-			var b := Vector2(line[i + 1][0], line[i + 1][1])
-			var n := maxi(1, ceili(a.distance_to(b) / float(c.step)))
+			var n := maxi(1, ceili(line[i].distance_to(line[i + 1]) / float(c.step)))
 			for k in n + int(i == line.size() - 2):
-				var p := a.lerp(b, float(k) / n)
+				var p := line[i].lerp(line[i + 1], float(k) / n)
 				pts.append(Vector3(p.x, height_at(p.x, p.y) - h * 0.3, p.y))  # bedded a little into the dust
-		for i in pts.size() - 1:
-			var side := (pts[i + 1] - pts[i]).cross(Vector3.UP).normalized() * w
-			var up := Vector3.UP * h
-			# left wall, top, right wall: three quads per step
-			for q: Array in [[-side, -side + up], [-side + up, side + up], [side + up, side]]:
-				var a0: Vector3 = pts[i] + q[0]
-				var a1: Vector3 = pts[i] + q[1]
-				var b0: Vector3 = pts[i + 1] + q[0]
-				var b1: Vector3 = pts[i + 1] + q[1]
-				for v: Vector3 in [a0, b0, b1, a0, b1, a1]:
-					st.add_vertex(v)
+		cable_paths.append(PackedVector3Array(pts))
+		_strip(st, pts, float(c.width) / 2.0, h)
 	st.generate_normals()
 	var mesh := st.commit()
 	mesh.surface_set_material(0, Forge.HouseStyle.role(design, c.role, true))
@@ -775,6 +883,138 @@ func _lay_cables(design: Dictionary) -> void:
 	_cables.mesh = mesh
 	_cables.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF  # a few pixels wide: not worth a shadow pass
 	add_child(_cables)
+	_charger(design)
+
+
+## Every item's gland boxes set onto the ground: an item rests on its lowest feet and a long or level one (a 40 m
+## wing row, HAB 1) stands with the ground higher than its base at one end, where the boxes were buried 10 to 30 cm
+## and the cable lay over nothing. Lifted only (the conduit above runs down into the box), then drawn as one
+## MultiMesh per box size, as they no longer merge with their items (_still()).
+func _glands(h: float) -> void:
+	var boxes: Array = []
+	for n: Node3D in items.values():
+		for mi: MeshInstance3D in n.find_children("*", "MeshInstance3D", true, false):
+			if _gland(mi):
+				var port: Node3D = mi.get_children().filter(func(c: Node) -> bool: return str(c.name).begins_with("port"))[0]
+				var p := port.global_position
+				var up := height_at(p.x, p.z) + h * 0.2 - p.y  # the port at the bedded cable's middle (_lay_cables())
+				if up > 0.0:
+					mi.global_position.y += up
+				boxes.append(mi)
+	_instance(boxes, self)
+
+
+## "item:node" (node `port_1` when left out): a cable's end in a device's model.
+func _port(ref: String) -> Node3D:
+	var p := ref.split(":")
+	var item: Node3D = items.get(p[0])
+	return item.find_child(p[1] if p.size() > 1 else "port_1", true, false) as Node3D if item else null
+
+
+## A box-section strip `w` either side of `pts` and `h` tall, into `st`: three walls with its bottom on the points
+## (a cable on the ground), or four round the points with `hang` (a lead in the air, seen from below too).
+## One cross-section per point, turned to the mean of its two segments, so the bends close.
+func _strip(st: SurfaceTool, pts: Array[Vector3], w: float, h: float, hang := false) -> void:
+	var side := Vector3.RIGHT
+	var rings: Array[PackedVector3Array] = []
+	for i in pts.size():
+		var t := pts[mini(i + 1, pts.size() - 1)] - pts[maxi(i - 1, 0)]
+		if t.cross(Vector3.UP).length() > 1e-4:
+			side = t.cross(Vector3.UP).normalized()  # straight up or down keeps the last one
+		var up := side.cross(t).normalized()
+		var o := pts[i] - (up * h / 2.0 if hang else Vector3.ZERO)
+		rings.append(PackedVector3Array([o - side * w, o - side * w + up * h, o + side * w + up * h, o + side * w]))
+	for i in pts.size() - 1:
+		for k in (4 if hang else 3):  # left wall, top, right wall (and the underside)
+			var a0 := rings[i][k]
+			var a1 := rings[i][(k + 1) % 4]
+			var b0 := rings[i + 1][k]
+			var b1 := rings[i + 1][(k + 1) % 4]
+			for v: Vector3 in [a0, b0, b1, a0, b1, a1]:
+				st.add_vertex(v)
+
+
+## The rover's charging post (data/world.json `charger`, forge/prop_charger.py): parked in its bay and still for
+## `still_s`, the rover is plugged in, the plug in its `port_charge` and the post's `charge_light` lit; once it
+## moves `drift_m` the plug is back in the post's `holster`, so the lead never stretches after a rover driven
+## off. The lead hangs from `lead_out` to the plug's tail, `lead_m` long, lying on the ground where it reaches it.
+## Motion and light only: no game state.
+func _charger(design: Dictionary) -> void:
+	var c: Dictionary = data.get("charger", {})
+	var post: Node3D = items.get(c.get("item", ""))
+	var rover: Node3D = items.get(c.get("rover", ""))
+	if post == null or rover == null:
+		return
+	var plug := post.find_child("plug", true, false) as MeshInstance3D
+	# it travels to the rover: with a body it would hold the rover where it parked (rover.gd test_move), and
+	# outside the post's tree the post's collision checks do not count it as the post's
+	for b: Node in plug.find_children("*", "CollisionObject3D", true, false):
+		b.free()
+	plug.reparent(self)
+	var lead := MeshInstance3D.new()
+	lead.name = "ChargeLead"
+	lead.mesh = ArrayMesh.new()
+	lead.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF  # 3.5 cm: a few pixels
+	_cables.add_child(lead)  # restyled with the cables
+	_charge = {"plug": plug, "lead": lead, "rover": rover, "port": rover.find_child("port_charge", true, false),
+		"holster": post.find_child("holster", true, false), "out": post.find_child("lead_out", true, false),
+		"light": post.find_child("charge_light", true, false), "tail": plug.get_aabb().position.z,
+		"mat": Forge.HouseStyle.role(design, c.get("role", "trim"), true), "at": rover.global_position,
+		"still": float(c.still_s), "on": null, "drawn": Transform3D()}
+	if ["port", "holster", "out", "light"].any(func(n: String) -> bool: return _charge[n] == null):
+		push_error("charger: the post needs plug, holster, lead_out and charge_light, the rover port_charge")
+		_charge = {}
+
+
+## Plugs the rover in or out (_charger()), every frame: a few distance checks; the lead is drawn again only when
+## the plug moved (the parked rover's body still rides its springs for a moment).
+func _charge_step(delta: float) -> void:
+	if _charge.is_empty():
+		return
+	var k := _charge
+	var c: Dictionary = data.charger
+	var rover: Node3D = k.rover
+	if rover.global_position.distance_to(k.at) > float(c.drift_m):
+		k.at = rover.global_position
+		k.still = 0.0
+	else:
+		k.still += delta
+	var out: Node3D = k.out
+	var port: Node3D = k.port
+	var on: bool = k.still >= float(c.still_s) and port.global_position.distance_to(out.global_position) < float(c.reach_m)
+	var to: Transform3D = port.global_transform if on else (k.holster as Node3D).global_transform
+	to = to.orthonormalized()
+	(k.light as Node3D).visible = on
+	if on == k.on and to.origin.distance_to((k.drawn as Transform3D).origin) < 0.005:
+		return
+	k.on = on
+	k.drawn = to
+	var plug: Node3D = k.plug
+	plug.global_transform = to
+	var a := out.global_position
+	var b := to * Vector3(0, 0, k.tail)
+	var d := a.distance_to(b)
+	var sag := sqrt(maxf(float(c.lead_m) ** 2 - d * d, 0.0)) / 2.0  # a lead of that length hung as a V
+	var w := float(c.width) / 2.0
+	var pts: Array[Vector3] = []
+	for i in 25:
+		var t := i / 24.0
+		var p := a.lerp(b, t) + Vector3.DOWN * sag * 4.0 * t * (1.0 - t)
+		p.y = maxf(p.y, height_at(p.x, p.z) + w)  # what reaches the ground lies on it
+		pts.append(p)
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	_strip(st, pts, w, 2.0 * w, true)
+	st.generate_normals()
+	var mesh: ArrayMesh = (k.lead as MeshInstance3D).mesh
+	mesh.clear_surfaces()
+	st.commit(mesh)
+	mesh.surface_set_material(0, k.mat)
+
+
+## Whether the rover is plugged in at its charging post (tests).
+func charging() -> bool:
+	return not _charge.is_empty() and _charge.on == true
 
 
 ## Lettuce in the greenhouse's grow-bed slots (data/world.json `plants`), sized so a full head is the sheet's

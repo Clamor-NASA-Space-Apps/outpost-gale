@@ -38,8 +38,11 @@ func play() -> bool:
 			bodies.append(n)
 		if kind == "static":
 			statics.append(n)
-			check(bodies.size() > 0 and bodies.all(func(b: CollisionObject3D) -> bool: return b.collision_layer in [world.STATICS, world.THIN]),
+			# plus the rock bit on a low one, a wheel's to roll onto (world.gd _solidify())
+			check(bodies.size() > 0 and bodies.all(func(b: CollisionObject3D) -> bool: return b.collision_layer & ~world.Rocks.ROCK in [world.STATICS, world.THIN]),
 				"%s: every body on layer 2 or 3 (%d bodies)" % [it.id, bodies.size()])
+			if it.prefab == "build_pad":
+				check(bodies.all(func(b: CollisionObject3D) -> bool: return b.collision_layer & world.Rocks.ROCK), "%s: a rover wheel rolls onto it" % it.id)
 		else:
 			check(Vector2(n.global_position.x, n.global_position.z).distance_to(Vector2(it.pos[0], it.pos[1])) < 0.01,
 				"%s stays where world.json puts it, not at %s" % [it.id, n.global_position])
@@ -106,6 +109,22 @@ func play() -> bool:
 		check(b.collision_layer & ~world.Rocks.ROCK in [world.STATICS, world.THIN] and b.collision_layer & world.Rocks.ROCK, "a solid rock off layers 2 and 3, or not a rock to a wheel, at %s" % b.position)
 	check(world.rocks.solids.size() > 0 and world.rocks.pebbles.size() > 0, "the scatter placed rocks and pebbles")
 
+	# a build pad's top clears the ground everywhere under it (the ground came up through a corner of one laid on a
+	# slope, 13 Nov playtest), and stands no higher than a step, so the hero walks on and a wheel rolls on
+	for it: Dictionary in world.data.items:
+		if it.prefab == "build_pad":
+			var pad: Node3D = world.items[it.id]
+			var top: float = pad.global_position.y + 0.15  # forge/pad_build.py T
+			var lo := INF
+			var hi := -INF
+			for i in 25:
+				for j in 25:
+					var p: Vector3 = pad.global_transform * Vector3(-2.95 + i * 0.245, 0.0, -2.95 + j * 0.245)
+					var over: float = top - world.height_at(p.x, p.z)
+					lo = minf(lo, over)
+					hi = maxf(hi, over)
+			check(lo > 0.03 and hi <= world.hero_step, "%s: its top is 3 cm to a step over the ground under it (%.2f to %.2f m)" % [it.id, lo, hi])
+
 	var misses := _sweep(world, statics, solid)
 	check(misses.is_empty(), "%d drawn faces nothing stops, first: %s" % [misses.size(), misses.slice(0, 5)])
 	# the sweep proves itself: with one item's collision off it must find that item's faces
@@ -120,6 +139,8 @@ func play() -> bool:
 		off[i].collision_layer = layers[i]
 
 	_rocks_clear(world)
+	_cables_clear(world)
+	await _charge_lead(world)
 	await _contact(world)
 
 	for i in game.SKIES.size():
@@ -233,6 +254,90 @@ func _sweep(world: Node3D, nodes: Array, mask: int) -> Array[String]:
 				if space.cast_motion(q)[0] >= 1.0:
 					out.append("%s/%s at %s" % [n.name, mi.name, mid.snappedf(0.1)])
 	return out
+
+
+## Power cables (data/world.json `cables`) cross no path (a drive or walk across one would need a cover ramp) and run
+## through no solid: a ray 0.2 m over the ground along each, its ends left out where it plugs into a machine. Each
+## ends in a device (13 Nov playtest: "those wires aren't connected"): both drawn ends within a few cm of a port
+## empty (`port*`) in the named item's model, and the data's ends near it too (rocks keep off the data's line).
+func _cables_clear(world: Node3D) -> void:
+	var space := world.get_world_3d().direct_space_state
+	var crossings := 0
+	var through: Array[String] = []
+	var loose: Array[String] = []
+	var c: Dictionary = world.data.cables
+	check(c.ends.size() == c.lines.size() and world.cable_paths.size() == c.lines.size(),
+		"every cable names its two devices (%d lines, %d ends, %d drawn)" % [c.lines.size(), c.ends.size(), world.cable_paths.size()])
+	for li in c.lines.size():
+		var line: Array = c.lines[li]
+		var drawn: PackedVector3Array = world.cable_paths[li] if li < world.cable_paths.size() else PackedVector3Array()
+		for k in 2:
+			var ref: String = c.ends[li][k] if li < c.ends.size() else "?"
+			var port: Node3D = world._port(ref)
+			if port == null or not str(port.name).begins_with("port") or port is MeshInstance3D or drawn.is_empty():
+				loose.append("%s (no port)" % ref)
+				continue
+			var end := drawn[0] if k == 0 else drawn[-1]
+			var at: Array = line[0] if k == 0 else line[-1]
+			var flat := Vector2(port.global_position.x, port.global_position.z)
+			if Vector2(end.x, end.z).distance_to(flat) > 0.03 or absf(end.y - port.global_position.y) > 0.06 \
+					or Vector2(at[0], at[1]).distance_to(flat) > 0.3:
+				loose.append("%s at %s, its cable at %s (data %s)" % [ref, port.global_position.snappedf(0.01), end.snappedf(0.01), at])
+		var pts: Array[Vector2] = []
+		for k in line.size() - 1:
+			var a := Vector2(line[k][0], line[k][1])
+			var b := Vector2(line[k + 1][0], line[k + 1][1])
+			for path: Array in world.data.paths.lines:
+				for j in path.size() - 1:
+					if Geometry2D.segment_intersects_segment(a, b, Vector2(path[j][0], path[j][1]), Vector2(path[j + 1][0], path[j + 1][1])) != null:
+						crossings += 1
+			for i in ceili(a.distance_to(b)):
+				pts.append(a.move_toward(b, i))
+		pts.append(Vector2(line[-1][0], line[-1][1]))
+		for i in range(1, pts.size() - 2):  # the first and last metre plug in
+			var from := Vector3(pts[i].x, world.height_at(pts[i].x, pts[i].y) + 0.2, pts[i].y)
+			var to := Vector3(pts[i + 1].x, world.height_at(pts[i + 1].x, pts[i + 1].y) + 0.2, pts[i + 1].y)
+			var hit := space.intersect_ray(PhysicsRayQueryParameters3D.create(from, to, world.STATICS | world.THIN))
+			if hit:
+				through.append("%s at %s" % [hit.collider.get_parent().owner.name if hit.collider.get_parent().owner else hit.collider.name, Vector2(from.x, from.z).snappedf(0.1)])
+	check(crossings == 0, "%d cable crossings over a path" % crossings)
+	check(through.is_empty(), "cables run through solids: %s" % [through])
+	check(loose.is_empty(), "cables that end beside their device, not in its port: %s" % [loose])
+
+
+## The rover's charge lead (world.gd _charger): plugged in while the rover stands in its bay, the plug in the
+## rover's socket and the post's light lit; driven off, the plug goes back to the post and the lead stays short;
+## parked back, it plugs in again once the rover stands still.
+func _charge_lead(world: Node3D) -> void:
+	var k: Dictionary = world._charge
+	check(not k.is_empty(), "the charging post and the rover's charge port are found")
+	if k.is_empty():
+		return
+	var rover: Node3D = k.rover
+	var plug: Node3D = k.plug
+	var lead: MeshInstance3D = k.lead
+	var c: Dictionary = world.data.charger
+	await frames(ceili(float(c.still_s) * Engine.physics_ticks_per_second) + 5)
+	await root.get_tree().process_frame
+	check(world.charging() and plug.global_position.distance_to((k.port as Node3D).global_position) < 0.02 and (k.light as Node3D).visible,
+		"parked in its bay, the rover is plugged in (plug %.2f m from its port)" % plug.global_position.distance_to((k.port as Node3D).global_position))
+	var home := rover.global_transform
+	rover.global_position -= rover.global_basis.z * 12.0  # driven off, nose first down its track
+	await frames(2)
+	await root.get_tree().process_frame
+	await root.get_tree().process_frame
+	var out: Vector3 = (k.out as Node3D).global_position
+	var far := 0.0
+	for v in lead.mesh.get_faces():
+		far = maxf(far, v.distance_to(out))
+	check(not world.charging() and plug.global_position.distance_to((k.holster as Node3D).global_position) < 0.02 and not (k.light as Node3D).visible,
+		"driven off, the plug is back in the post's holster and the light is off")
+	check(far <= float(c.lead_m) + 0.1, "the lead stays at the post when the rover is away (%.2f m from it)" % far)
+	rover.global_transform = home
+	await frames(ceili(float(c.still_s) * Engine.physics_ticks_per_second) + 5)
+	await root.get_tree().process_frame
+	check(world.charging() and plug.global_position.distance_to((k.port as Node3D).global_position) < 0.02,
+		"parked back in its bay, the rover is plugged in again")
 
 
 ## No rock on an item, a pad or a path.

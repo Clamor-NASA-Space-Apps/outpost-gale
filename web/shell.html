@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
+		<title>Outpost Gale</title>
+		<!--
+		Outpost Gale's loading screen, the export preset's html/custom_html_shell. Built on Godot 4.7.2's own shell
+		(godot.html in web_nothreads_release.zip): its engine start code is kept as it was. What changed: the splash
+		picture fills the screen the way the engine draws it, a bar with plain words counts the download, and the
+		screen stays up until the game's own cover is drawn (ui/cover.gd calls shellDone()), so the player never
+		sees a black canvas between them. Offline first: no file comes from another host; the font is inline.
+		Colours are DESIGN.md tokens copied here (tests/ui_test.gd fails when they drift). Font: Lexend (OFL,
+		ui/fonts/Lexend-OFL.txt), weight 500 only, ASCII plus the ellipsis, made with
+		  python3 -m fontTools.varLib.instancer ui/fonts/Lexend-latin-wght.woff2 wght=500 -o lex.woff2
+		  python3 -m fontTools.subset lex.woff2 --unicodes="U+0020-007E,U+2026" --flavor=woff2 --output-file=sub.woff2
+		-->
+		<style>
+@font-face {
+	font-family: 'Lexend';
+	font-weight: 500;
+	src: url(data:font/woff2;base64,d09GMgABAAAAAB7kABAAAAAAQNAAAB6EAAEBywAAAAAAAAAAAAAAAAAAAAAAAAAAGnQbowwchQgGYD9TVEFUKgCBNhEICskEuBoBNgIkA4N8C4IAAAQgBYNKByAMBxtQNrOiXrRa8SWKskH5Nfm/JHAyBk93vJUowRrFUoQmOkqj4VgaXUtI+9zy6F0xzk7XX2Pd51S/WDS7QDkUzZMjNPZJLs/D7++/dc59nxwwiVFoConsVomTwDh1QprkNE2M2j/w2+x9sGAODERC+kNLCi1SJYg5ESMaZaGuLrZrXeZl6qouIud17rYrXftHrOppWoqSoWzM66uwyg4xW8QWsQvzl3yC7EvElv6pA3Tfv7OIxCgCsUynU8FCAbl8/Q/wILABBaiA/vRu1jxk724eac+gZildMxmBZI2K79+ZkN/wXTWnXUXnTLN0BwRHYNyH5tXahxYWEqCHB+iQ1dDWf6/LbPdZBvl4jwPARQXUp+Sm/Hp/tF9vv2VgmeDuvlHyHpG06xltCKmyj1gBhOnDRZMUbaanougA21QpyjKxVarDotYJxgShU0p7xXejL4ly6/Uz4LCITb23EqyEMA2D/X9NqquFjr8RMqy08IEpQC8wB6hSIHgQfHwIIR2EnhkGQSoKNjkLF0yrDpS+zZZZGGnwkBKH1GcZaLJPY3a0hOCLAd1QapiNX6FKIBz7GRsAghTAQlro6O+RAcgAYSspMDth4Fs/yhk8ygr/loHk1BMlQYYCldmoMw010WL7vd/Vfux6Hdt0vyu+M89ol5U17mQLbNU6gLXs3W3Z0MSGN7FZ57f84/3d5JyCIzgz5/S8eQkp8bv2Hr5T9+p+DGGGwMBKkQ4Hb4VMRFmy5SAhy0dFV4CFjYNLSExCSqaQnJpGES0dPYtiViVs7Jzc4uq1aNWuQ5duvfr0GzZiUgJWaxZ0ROgMwGgP6okD0YMECxeXpw54U2BDpQsQIZtSYi/oIdJH3/QAJkRnxqVJBdqBTjCE9iPClXJR3PQoT7QU8QzVCws1mZ2GNnfFxQnjSpQjbIb2zfKEkZxI1SJdYtGuGIYTNqKKJDQFHd0A0cHV1ychrsScKU875Oe69WFdZuyVCaMVyXGklyrUIgVaGpu7WVfsQRILYIMzhpEsxZBM2mOBRLSgkMbEQc4AUQQJB8Pmp/bBQ7QrJ6tHTiClIpziR0S2BDk0uaQ+HmkkqtUSst1OIvlEFsrPEDWuUz/sFc3D7nAwEDMBn4W9LlBLQ3YEbCTT2w4gasoWoltiEDCBBRyQQuHwiqeoHyt6YRYPislKypZ9DvK2Z1QOrKF0ABGyiZRQ5Ify6aDUJ9GBaTAdZhx0FgspsLB72QsqsnptozDIz6B+NgJsQ+kgPIioKRs70Z/GACaw5uU8kwCT1JIMUKhyIYE3AA0aAHRYW9mwimJasCiKoZAqfsjaygzBdN0C0nCXHZ99ENV5w4peUsYMJ/a+QQ5QgzQCWtUTClsI+8zZyRmAPAEHpntaCui+89FBiiUboZ/K8iZApBorcs4xt+g9jouBBK+r8nRxX8UK+c8fMyBKsVa6neYVEwd7RUemPshCcKBZUhSc31v5/EQhBZEY4Sv8bTH9UpGTJAEJmlRydolb+RbiyKmGQVhqv1Hy1iBMvkmRPXeJ6SIgJpjMVQe3bYqnXclwSg+c9jbbMz+KGnr84CWCjgHgNAJi7CVoUcgZbLqRTXbBeaQQ4DdKZo2EPwOGB5hl+hrolND1EhTSguYMyyCWZvryrLYTkcE36CrZkkEVumttQdEZ2ouNsB8D8IjdEuSt4CZ0xIpAt0pHtAbIODI2269+Q0WZ+KXGW4qR8NZhtqX36mnGp4hgEt3BEqMt615JT70XwJdt4GGAFlhQ+UlNLB39vlDJVD9uHmSzZ38Le1Y1RRF7yyLnpFeYnE2CaVdJronOyvh8lef2KiapL/GNkyTL+SixSe2LxxLjgs0zEnkdtzyRhSycQmmKZo96zo4q4WGMTF2RYfk8hhh/UwqVxRC2yj4owvt4JtPh4SNfklL0zO9aDVkFFzxnwmYjJcSyXa+zkIp+iCzAHiwTNuKyRVleZ0sBkCwGKbIZQm+LmKOnbhqQn141ufzNcLqjRX3+AC/QQRkVh8hR5tzZ+DFi9qDVFsqzSznzbHG6BXFs8I6xSUKnPUCz8691RO1/bd5NQVaLm/cBowvj1E1qnsKAYwnsE2rPu5aFGacwqnKwr0/sHI8UimYXAkc8KvpbR4IKRNnqjOM1jNpPN72lFBwH/zbDLKp0yIL+j9N0GHiZ0hDx4PCZMcXV0+rVTw+B6IdBAmjJQwbol48CwAAwCQ1dugIMTFlYUiGysaXJxYGHBRo4XJnw8BAIHhSfQAYhEbGVJHLhZMLKlI/nsBzJnjtTI6W0vVgYmBJDGMPhFT8GINNSaq5MJIiVuDupyFYCxfukA04h8iEazZmQgU4r2pLUeHTCZZ0oj2Q3SaS6+KtI/OMx8RwbhlwOt+7bzRbYYK9U8Rln+dT4Jnts6sCWSGirmXDIFS+PlCYrsal3VJYH5zwIEJb6cRKJ5yalgVNOTYedpqWj0BGBw84AXOqKvb/6h8BV3HVg38BgP5T/i1CpsOpYd2cz/JSMCX3QpQ1oY9r0Y5sZGO8fgU0ACkAFMJBe38gYgpxcGTVEw2hYLUVLnTMNAZNrV9NW6SDnLniV7K97H3sGBB5GDgoEhokZBhsvNIsgYCzNPBeCNygLD41MObu9U5JSr4Ub2KXwuLAEOdIB2+D2klgrTyJ7BW7uEQHDpBviZWpli5CkrpSpZ8BbgEvEwKhIGuNOInqYbhMMntqdRBDIhlOqot+lgnprLcAmuuuygzqzfPILAAX+Nxibg9PA/pzVfP1qQOtJh7hV7cMsyZnKcLo4AnCLTe04/qdr7KF861fakd+PXjawje2qT3GwlFlee2MUjGximnSbtnbmrDAwk5KJXZ1mPZKN7l6Q7ddwsfWt3pkgcbBEW969FtD36RjUZkzSiCHderQaV69TXLsGjRImTGoxrF+HAdO6rNVrVJ8pCCSMCBTrAP4DdwC6T4P++cAnAE9IVnU2psSrmUTDZESTX7DwVXrY32tjaGkqSU4gAgtj2RA2nVqy6b9sRAxwCN7FlGKEWMRcYhgHnqoMuklstEiZltYHEUHkebqKeaDeDOxWhLVabC1WBdfkY7Zyz2ixU225ZYVhafDZloQWeQ22ZmlEO2tjZXFIWFm/Nl0tOgi2uSZLTSvKraBlT6oiZI9hDIOi0Ey/w0mxP8dDVoSF10QDEWMe5lCt8N5b60opFru7wz1CKhztSgDuE+B+5EC5pu0gFRgYu8DwVymFHkLXQqnPRBgHBiYcccl7grUuq9TsFAF39ill6xhvBsE5+ZNta6UiEgN47ysYaPeA0qi4ljgsomcCs9uiTYNMybX95fQBHKGgFFAlLwott0MoFAJaqV4TtSDxmcPmZKRs8VoaCq2wMlvxWEqKLPzlWpeSKTOwSKRxe0UW2qiVXTLGQ7W4towUzJujlsq1BwcA8cPnptTAmooSYtmmeURLdDlf2bYUF4JRFaTUYv37EGVs9A7/kikzUml6FU16M6mKVgVRcVIyY7iPmG4dHXQvvgtweV078VsjKxcW7Mw2H9ophBJqm6MLrGjxf7EiLBuJKEouektuFRURtEzpi9MxGz8+jXF7crqrlKooRkqqiVDLNmyI+J5qTk+olonejJAs7tGFjoo1od7gRR3TpQUh74QDQkn2SekaFT7aNmYi3FgVpBRn6z8dH/zBRW2c3tDmZGQKo3a0uMvSrTXEkO4qSHtPsNJktQuh3MLYMT4OVi08bz1OkVwc+QRyT+KjHUIJh1mLrik1/99Qf4QV6tRUi4mNmoSmud1XZUO/AHMOSC7egnT91HpkpCNClQyfU1D7TUU7WtSq8zEsiVqN++h58zvcbstNQkFdH80EjPRMW0z8UZOHi8DYBw9X9YPg391KConZr1WiUGyjqeIqwJaZGHfY41nXlhaKUWj2VXFSZttJsOQTxzFiq4jfoLvLzCGI4BZ3I1MsOmxplUE2FY6uylPJ5GYkP1mhOYG7vuPtxMJLW27KDlg9BqOpDIxL4fvi4kdbfTAeW6s/yiOs9T9KTbW+mBRQzoLfhQVHWrg9JdxMMVd8/bbSHrZ1gWK0pZRvQV1vUXV8r8dJr5tX10m1ZI8iTmrIT3hDdM5AWxxWbqKjgItQjeDrYwhZxAEKSY9UCKpyMF5GNb+032BCoo15qxQh29K5Pp8wm9lNR4u+aTOx3dPTx5nJ7Chkx7xSOs5l9fvqEM9+VcgjqaCcyJQWfSLTpudT7Bc8kQoJcWLGReeunAGtQ2GxubLhy0JXiOMYu1qkBPgtPJDrlEQna6+uFi3KSmOrXPsoNjBNE/kG5p1xgMKzj/hQj6mtS+GN/87K0y7Mtg+rkQ3zRA8BDxqm+2n0VnTvx7yc70OPoEvnxdn6siYgjSUW159m2upw17vuS75tcKilTpVnFSPurZVbI54TNxemy4scT8is63v4ZVu6dknvO97FbFx9HYaEm+9B972GFwZCMGxqqj+flU4KyJmryMDATmTLaUioiMXDkOylcIRK+yYmcsuCkaXqTX/PhF5jR8vCsr6HKHjOBrcw7nbhuzcjq8M92tdFwBkd1SR+C0E/QQHPeLg5zIKRXvq58f/Lt2rMHrJZdQ3kZYdaDsuqsZYdvfd1EOe4e91ADb1glHdwZvyrXTUPs7lzaOF3x0py0+5WGoyQ9V9Px3V6XUY2nOHs8R5X4gyNY78zF1kzOC3Y79sOnmdsoJuaiS6dbLZ+7iNzl0DmkpwBZ8LJlU/4PhVCSb4GbX7+N/7h+wv/lAZoeNIn0wrJTb2ec2H6FUKus27f4pMHII3iIgUcKkH0ntH/bSc8Xtd91wpyvzdygYuhsKu77hFZnTDQH70oF0z8DcwvIKH92V90/o1CaJjNhYQD/mx3UlAO6Tp6HILFdIEcmY11tglRR8qrZh+U6FwxxyV6iqkGhFZXlUhLuvDaNb7s3XvWubgyhj2M4IvGoeKoaD1me3W4ZyeGdS52sOhtZiKC3+CfTSD6fBX5fo7UmoTVYGvn3+Ahg/aH+KW3fS132CT6n4/p3KsLDRmnz5TUi8j+oxVpJFX6iC8V0vhn8KWZ70FX4btRbcqp4WnZVuosEMbrcCK5H6zrOnqpdsmjUKeumWGSV7n7sJz4uZaMITnV4U8q9nOYJyT32LKyFqcJi5vntwaxlt/NMxW/5CGt87ek7pMNlSiGoGFJ4m4QKsMGU3FkLfYbt1oQUGrYpb/V0PRPjD3M59/HLLhUyb9vaB/jyDhVFC+ah0240BpNXZN6QySknW1sXqcNahoZkaKD5bGdbQdZ8jLOg5zKIi276qVKtobzmq2qpGM6Im2hQMMSNTStWlUvXxcOy2dq4klVaKHtrt3KxaqjV2q1jac3yFLtO50d7vmJwKvhiTulY3VjzidzbsnNnOie6EIT9yRgFy6yUdfSrJ0rDenmWps2acP6dkZUeyBa9dyh37jqSt5PvCqNCq2x26tRFf8P8iEmmfTKWDGNloFzK4aqoyMyYC3NLTkxRJA1/fw0+EdH365kV+EVBASH/lK291q4jPrLma+y2NcOcdpnx/vH+0ZUnLIXytlw/tXcmc7uQ/WLdwz0ZzTVhQMPb9JxORP0l88seX2vF5A940uz6bGM2/Gef98NO14LfoR3ZGxpTs+8XOPz3ApzLIJxIyHp67NLk9toC960sIFPIBDhVlxwnbahSbM+HBammS0NhuCqb9bMhUs9xgYNkVSGuUYbu0qjYQZmf6BVKiLcfayqIg2rel+ECw1LPEuT0dhqLTG2NZktByCxnXrrVgZjyy3U7dDej2tsc6XFzfRBcylLOk2WthIL/2vSYbI9iuQ/at5IuVD1yMhjjPvWMTif1PF2gRlX3M6MFv9X2ah01mvM3LHfKdkvLlT8f6Enik5QXTKZwO/U1jKKzHG6R9dRVWml3MNGnW/SSMx0VVpPDfo6yyZy21rGi+Bb1+UEJfGyC8ZTK2Y9gdWRR9YfU0h8XqlE7pdKfIpjax+JBFbPekCcv3jbrjtOZr1zpK2g5/fgl3fecTt1Eb57b/Gm5O7yPaurZPtPvne0bLxwcKRw16/7/WP6Yr1upnt65+b3Fxsevffx40cA+64xb/bgG1raxgX86rrwy4W/umLBc5LtQKlvot2+/R3t52fVdxF2EpztYKnbhPt8yzQ2tgH/8yMJIODs3d6SZCRSkux3u0V2MjW14eiG1cQ1a8/3ODoc+dg+qV2MBlRK1G8XS6U2Mc+vVPECNjH04HgOUoWl+kXMmsnPk5Far0T9Jtvb57YmI2XFyT5Pfa/ELuF3MyI+MY/5Q4AYFxj3OpPhMDP9sga8o9obzujV1zQ0mUsiDCgUIr9bKqXBKaGznD6hAzrOM+CxTZdFSpL66XsEnvwEQsPGk1cnMcnhjJVaF3lFp9QuRYNqFRqyS4oZM5Sq1B7zf5PAiqtY6/YkwlZhuyfQIjIX1QrtLm5DOv5+ckXdz2Q5M8BWOfgcj1YjCYZFWv47VkvlcRc3mAsJq1Ic8EtU3AUNP/78CytJD1zJMVlzWA3b+tx9ULRsHuNZpLGw9n6G1sPmOdTN5IaaKFcaHHE7EpGIfXrE42Ou+aZxlL0NmZr6zsZv9rrauWZ/ocuIuQQBp7iw0CnhcqWifmfAd3Xa3nv3zghPYilTiBp9jqRRVPku0E8ThBRrcQ4LqolJonUtfwOXvQ0VbOCxtoHLfXSw8rK8XiLeKIEkwyyvqJamPO4TYCP5/I/Vc/vzR/759/DfhKvJq9+c+bbajykC/9XVV8FDnEK69TdbskYYUgftygO8dccmmIN0S0QhbPZZV+tEzuNs6unrYRTzar2gfCeT+sj/uO8t4CMmkN5Z5zbgIkmPNxmJCNOlkTCRx4Jn7tI+qUMq8BOI9PY5JFKpS8IPKBR8v0sK3g++m0ImfQ0TZRyZp89tnSqLWKf7PC55Je/ewY8at5ZI7GLUr1TyfKykMpuID4ZHZRPD0gexuXSCx0bmeQY8JclI2a3r8gjc+ZMI7ldkQ+L7DKv09q1UKjSALx1WgLD+2wc+4hRyLPVYowcVZi/fzd505K8s6tlsWQEV/sJ5BuTSiOs1P0Ocfazk8EoKY+Hh/HovqsMQC3hf13rzhKJArg3tdgY4L7xKyn27+DBhxeGFo48KM+0slHODoSjyx8QwO5+c/3z3SPUIXMcZK9TSBoc7KZXsZPFo+6/TqJYkMYH01z15SykXfvmIsGn+5oU9d6z/mgDnHyGsgfHJ6Dp+YI5/18Tk2kcJqzaZOeuMsGf++SffZWy/88I3bzM5r+a7Kzaee+YPR3niwp2wbXkQA1Gs87Y7avred21u+bcjWXP7B4TaZVCvyumm5XbevQrfoiZ3gglXlai27R8aEqYbq6qmAqOhKoc9oZnxidCsx8OlE+P4uwtvKw2Rrd6C4ZMtvvk/lImBBETZ0de+zW7gluXRO+dZdPnxt5uNVF9lS6HJUq/S1ZjJex3k717d+0BxLAHpuPCoS1neXNyWiTI4g+koekCCZulWJ1iVFz/4UICM7lq3/O/2qIcgi7Dv54TlbkfPsBUatb//wD1wYhir7aw71nEScGn+cWuvt/QRNyoRPGLg8il38knaz9TFFSLZ+lHTK+yP/C/wTzDs7WZzl8vtGBi1AUsb4zsc/Fodk+BkhsQVJ+J7Vhsnzr0irWSG7qbFfnq84gDL1Gw1dVqD1rFBp3sYnb0m4uLHeIKDeFSQeTd0MKeGOsafJfiyx4CHcQ7o7HEjV1zqYiR3PvjltQidpapdbS0hxv+E6ajXzp98wfuvptHPNtnjA1rXILf2OwbrxxiXE7jOKvgvwDYyl+eptIUvmYwvF2jU+WX4yPjGsysCPx1ou4thbLQY2yxe+8iQw6uJoQ67oErJeCDfi1YtVD4YaEDv+IOH/jOEcku+FrC/ssNJnNyjFFfo9MJKr0Kh8CgElXqdsMKrlFWQLl+PU1BYTJ9CoYcphLojKvB2FTtbZSvIUIILtNYfv1eZRfwlK6dH8hH+kpvFM7/EZKd+EPnaeiQIx3HkbQ20Bhoth4Yn51ykEt5+vHa07oetoQvpvu7yo61omuoZJU/3MuRsD4VCD4h/uT2x+3lDTrxTfyjbd//rUdiVQbPlRUS2a315dFo+6QNq9jtru/OPvlV6X2bOzGu/97PYhW+wRD1uFjycYQ82BC38Ordawd6gLL1Cz+FsKLr2m90o5FlOswSm0wIP6UNy3oN5+S+RyCcghNss5j4d+eTtzUJ4Ei/4Icpk3l4ve9/IYMh3ofxdckbu/5d8mfQ7mczoD3wn+Vpe7rfk/G9z874n78s9mp19NJfUPNunYHcGZ0wZfh6fS04v5F3D2kwiXvFppjDwk8Dur3+RfnJcGt5lygkS+QSZ9GI+6UHIfH1x9I1FmMCj3QLeFi7aJeRtgepnZ5znc/FzRMcH2bRGJv3BMR4r0CyA+B/9mRvS58z+OX9x2sbM9VMCuPVlP/Mh/WbRked+Ws6jbfuDIfBqDlaHJI6E32lr15hjRi7dYXTL9qz0jm7j7ebyEkK8DRx0CvYP4qdmBgIS/6Q2ddIg8Q+F78Ana/EbjvaXigNThhUJncTfFzqDm4LBycX+zv3U4dZga8bh1eqjl33zUmugFVZuon7hTFDPOeHxHsoXwikqVgiazye0E6C4r6msCTjPTgXXfbHl1pmrei6Hu9nZdmZoSBjVQfmzz4J2aK92uh/6NsHAFaqX9RHZJoEG/b+nJQ2y0+8ZoKE8VtdKyq9c/aFciMRMptDDaY+aQkYkJpB9uAaUV8LRW14ccyr9kb60Jb+a6mX9kCe38do6iJyYJrYdrLm462gbGE9UayBOw/9Pk7Ebo1h2HnaTagDh0+X/LXsO1NxS1NSk3lw+Xv7cXXNnXYNl62R1FcoRj0uQdDfGdTq06xorK5qd+5Pa7uSKZC65IKpXcptKylapi1iEL9F9tP1jWh1nIbCSIUDdpJg6WNIzZazqOGIc7bPuanULevzBfoFH4cx8vwJ1PFjB9K6gGdgL+xxs0QoKgqGgT3Ir5MICsFfU3DjY9wkBx6cUaaON8hJFlH3fpQZTAQktKFNS8p7cfOqXsZn77t53COeftLjbi0urRiuYoYqXXtQIY262Surj7OXXtA2vkXRbK6PmZhb4Th8ZOwJmXGyz/UaoTW1v1FjeHN2/n9BkUFSZZpSvMd3sp0tfJS96OswtZdgrMTb2OPO4etr7W6HwatcfXdrF5Yll0Pu63u9672Ln+53Qj2jjjeecHRs9I2/UwAEEDCb/ckL/u1k79y4v09/F5cgZtWFHhSPz7W+eP3z+v2Fcdohcg1HRHS1A7n+rZ4Cezfo9hLsOZMMdLy9OvrFo8Cl8KlGV3iCq9qmUdZRqg05c7VfJKnOfvc7h3Hj259zndeuP7/1wNCHF8G5+lULpZX55YQW0AfaN513SlZ/jOdefh39WvzUU52/kbqGj6plWZ+2uuSqRNgsKtFt9vSoL7Fk7sLsZJG02No6Nd3IKRBxDEhFE80J7B3hA2aXBC4fBB9tsfwsCsAOCsBtCsAdKYZ8dRmUkuATiEA7E9St3Qv1/WraMTzgh7uV4vOyJt8Oa54oW5AfI3gVQaYDnWAIIQDO+q8H+zWmvJkI9Uli3RmdXXXwvEdbpDczzxMXT7gWqSCl2noDW1rhLZK3KsDN41XLUlylrq3DnSKvKvhdxq0mv9yp7bmcx1AlNvoheXqN5uAXTXM8h/Q3nj/Q3mMx+kH9DgFJe+Pfu+IvGW/5nYLFfA97qjuwC4D39GT+N3HCDtwxohwEo4HOr1uWEnpbi5s9Rzlcf0Z6TtUc01AfI94emYYk1lTZYTz/gKf/w11ti+DgWK2zaiQmi+vaGkp7lV3aUcHHc/aC6Pi/7fCF7TyDWvVLqbpbNQTfDV+kEm+VYQO/mwt1xyGa+wucqWK8m+vuopewlgL85zpNhpdpQ3Fdn6Eg87zJ2G1HXg+g+uUcmdw7Zq5Ba/qM+OQRXLzF24R6CbVEmyYaHaEVJJpS3JFqZg06L70O49AtQTonZauwKCGsmro6qrQT1kNWKl5eyPtJqcdFh1iCzCIBvcX0OeblTFtm2vBJpoF0G5LeAtufwZ0KoeoL2KNqjlE0QyU5Z7SfZidoOZXs29TiRj/RzIeJ+pi4N/HWMZFHyBRi2Ur67MkExIvDnk3/GiYAHAG4hJbcAApzXKo1bmj9ki9tYlxFYSAsH4DZAvRsi08HdMAge2g1LbWm3FAV+3C0VLfyuaQpC94MA9BYbpD3zEKdBQ6aM6Napyxg2NSUVI7bKGdoppCjReAe0YSsrSB3Uo11rUnbjxtJq0IhRSJEUa2nImd9EQaFTN2RkVQu51lb2N5imwUb1adcx00CORqNw38Bs8Xgq19QJp09z8+2qyCkp6ZmFRYS5mXtOoTD524fFhmrUILunCbEHZC4KNQnzqBTU5jBu7of9CtBzU8sDnyLc+uT2AgAA) format('woff2');
+}
+
+:root {
+	--surface: #160f0c;
+	--surface-container: #251914;
+	--on-surface: #f6ecdc;
+	--primary: #f0a640;
+}
+
+html, body, #canvas {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+body {
+	color: var(--on-surface);
+	background-color: var(--surface);
+	overflow: hidden;
+	touch-action: none;
+	font-family: 'Lexend', system-ui, sans-serif;
+	font-weight: 500;
+}
+
+#canvas {
+	display: block;
+}
+
+#canvas:focus {
+	outline: none;
+}
+
+#status {
+	position: absolute;
+	inset: 0;
+	background-color: var(--surface);
+	z-index: 1;
+}
+
+/* the engine's boot splash with stretch mode Keep: the whole picture, centred, never cropped */
+#status-splash {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+}
+
+/* low and centred, where ui/cover.gd draws its bar; one size for a phone and a laptop */
+#status-box {
+	position: absolute;
+	left: 50%;
+	bottom: max(56px, 10vh);
+	transform: translateX(-50%);
+	width: min(520px, calc(100vw - 32px));
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	text-align: center;
+}
+
+#status-line {
+	font-size: 22px;
+	line-height: 30px;
+	text-shadow: 0 0 4px var(--surface), 0 0 8px var(--surface);
+	font-variant-numeric: tabular-nums;
+}
+
+#status-bar {
+	position: relative;
+	height: 18px;
+	box-sizing: border-box;
+	border: 2px solid color-mix(in srgb, var(--primary) 60%, transparent);
+	border-radius: 9px;
+	background: color-mix(in srgb, var(--surface-container) 90%, transparent);
+	overflow: hidden;
+}
+
+#status-fill {
+	height: 100%;
+	width: 0;
+	border-radius: 7px;
+	background: var(--primary);
+	transition: width 0.2s linear;
+}
+
+/* while the engine starts: a soft light sweeps the full bar every 2 s, so it never looks stuck (no flashing) */
+#status-bar.busy::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+	transform: translateX(-100%);
+	animation: sweep 2s ease-in-out infinite;
+}
+
+@keyframes sweep {
+	to { transform: translateX(100%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	#status-fill { transition: none; }
+	#status-bar.busy::after { animation: none; display: none; }
+}
+
+#status-notice {
+	display: none;
+	margin-top: 6px;
+	padding: 12px 16px;
+	border-radius: 8px;
+	background: var(--surface-container);
+	border: 2px solid var(--primary);
+	font-size: 18px;
+	line-height: 26px;
+	text-align: center;
+}
+		</style>
+		$GODOT_HEAD_INCLUDE
+	</head>
+	<body>
+		<canvas id="canvas">
+			Your browser does not support the canvas tag.
+		</canvas>
+
+		<noscript>
+			Please turn on JavaScript to play.
+		</noscript>
+
+		<div id="status">
+			<img id="status-splash" src="$GODOT_SPLASH" alt="Outpost Gale">
+			<div id="status-box">
+				<div id="status-line" aria-live="polite">Downloading the base...</div>
+				<div id="status-bar" role="progressbar" aria-label="Loading" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="status-fill"></div></div>
+				<div id="status-notice" role="alert"></div>
+			</div>
+		</div>
+
+		<script src="$GODOT_URL"></script>
+		<script>
+const GODOT_CONFIG = $GODOT_CONFIG;
+const GODOT_THREADS_ENABLED = $GODOT_THREADS_ENABLED;
+const engine = new Engine(GODOT_CONFIG);
+
+(function () {
+	const statusOverlay = document.getElementById('status');
+	const statusLine = document.getElementById('status-line');
+	const statusBar = document.getElementById('status-bar');
+	const statusFill = document.getElementById('status-fill');
+	const statusNotice = document.getElementById('status-notice');
+	// every file the engine fetches, with its size, so the total never jumps when the second download starts
+	const sizes = Object.values(GODOT_CONFIG['fileSizes'] || {});
+	const total = sizes.reduce((a, b) => a + b, 0);
+	const mb = (bytes) => Math.round(bytes / 1048576);
+
+	function setBar(fraction) {
+		statusFill.style.width = `${Math.round(fraction * 100)}%`;
+		statusBar.setAttribute('aria-valuenow', String(Math.round(fraction * 100)));
+	}
+
+	// ui/cover.gd calls this on the first frame it is drawn: the game's own cover takes over from here
+	window.shellDone = function () {
+		statusOverlay.remove();
+	};
+
+	function displayFailureNotice(err) {
+		console.error(err);
+		statusLine.textContent = 'The game could not start.';
+		statusBar.style.display = 'none';
+		let text = 'An unknown error occurred.';
+		if (err instanceof Error) {
+			text = err.message;
+		} else if (typeof err === 'string') {
+			text = err;
+		}
+		statusNotice.textContent = `Try reloading the page. (${text})`;
+		statusNotice.style.display = 'block';
+	}
+
+	const missing = Engine.getMissingFeatures({
+		threads: GODOT_THREADS_ENABLED,
+	});
+
+	if (missing.length !== 0) {
+		if (GODOT_CONFIG['serviceWorker'] && GODOT_CONFIG['ensureCrossOriginIsolationHeaders'] && 'serviceWorker' in navigator) {
+			let serviceWorkerRegistrationPromise;
+			try {
+				serviceWorkerRegistrationPromise = navigator.serviceWorker.getRegistration();
+			} catch (err) {
+				serviceWorkerRegistrationPromise = Promise.reject(new Error('Service worker registration failed.'));
+			}
+			// There's a chance that installing the service worker would fix the issue
+			Promise.race([
+				serviceWorkerRegistrationPromise.then((registration) => {
+					if (registration != null) {
+						return Promise.reject(new Error('Service worker already exists.'));
+					}
+					return registration;
+				}).then(() => engine.installServiceWorker()),
+				// For some reason, `getRegistration()` can stall
+				new Promise((resolve) => {
+					setTimeout(() => resolve(), 2000);
+				}),
+			]).then(() => {
+				// Reload if there was no error.
+				window.location.reload();
+			}).catch((err) => {
+				console.error('Error while registering service worker:', err);
+			});
+		} else {
+			displayFailureNotice(`This browser cannot run the game. Missing: ${missing.join(', ')}`);
+		}
+	} else {
+		engine.startGame({
+			'onProgress': function (current) {
+				if (total > 0 && current < total) {
+					statusLine.textContent = `Downloading the base... ${mb(current)} MB of ${mb(total)} MB`;
+					setBar(current / total);
+				} else if (total > 0) {
+					statusLine.textContent = 'Getting ready...';
+					setBar(1);
+					statusBar.classList.add('busy');
+				}
+			},
+		}).then(() => {
+			// downloaded and started; the screen stays until the game's cover is drawn (shellDone)
+			statusLine.textContent = 'Getting ready...';
+			setBar(1);
+			statusBar.classList.add('busy');
+		}, displayFailureNotice);
+	}
+}());
+		</script>
+	</body>
+</html>

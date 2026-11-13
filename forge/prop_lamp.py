@@ -6,6 +6,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from base_kit import port  # noqa: E402
 from shapes import bar, bevel, box, cyl, finish, mat, reset, smooth  # noqa: E402
 
 reset()
@@ -20,6 +21,9 @@ for i in range(3):  # tripod feet, splayed so the mast stands on loose ground
     bevel(box(f"pad{i}", (0.1, 0.1, 0.04), foot, TRIM), width=0.01, segments=1)
 bevel(box("junction", (0.12, 0.08, 0.18), (0, -0.07, 1.1), TRIM), width=0.01, segments=1)
 box("junction_stripe", (0.13, 0.09, 0.03), (0, -0.07, 1.16), HAZ)  # 5 mm proud: 1 mm flickered
+# the feed: a conduit from under the junction box down past the -Y leg (4 cm clear of it) into a ground gland box,
+# where the field cable plugs in (world.json cables.ends, node port_1)
+port("port_1", (0.04, -0.09), (0.04, -0.09, 1.01), r=0.012, size=(0.1, 0.1))
 # Lamp head: housing, lens underneath, a short arm, tipped 25 degrees down to the front
 housing = bevel(box("housing", (0.34, 0.2, 0.09), (0, 0.08, 2.9), TRIM), width=0.02, segments=2)
 lens = bevel(box("lens", (0.29, 0.15, 0.02), (0, 0.08, 2.85), LIGHT), width=0.005, segments=1)

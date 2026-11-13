@@ -1,5 +1,10 @@
 {
  "note": "Feel numbers that are not physical (physical ones live in reality.json). Camera rows sized against hero.height 1.89 m.",
+ "perform": {
+  "note": "player.perform(): glide_max: m the body slides at most to a use spot's stand point; glide_s: s the slide and the turn take, while the clip starts in place (design/plans/next-lanes.md, Lane A)",
+  "glide_max": 0.5,
+  "glide_s": 0.3
+ },
  "camera": {
   "distance": 4.2,
   "distance_up": 3.2,
@@ -67,8 +72,10 @@
   "move_s": 0.6,
   "curtain_gather": 0.22,
   "note_curtain": "curtain_gather: an open curtain's width as a share of its closed width, gathered at its jamb (HAB 1's toilet). Art direction",
-  "aim_deg": 30,
-  "note_aim": "aim_deg: in first person the target is the usable thing nearest the view's centre within reach, inside a cone this wide (degrees, both sides together): point at the hatch or a rack. Art direction: narrow enough that two things a metre apart at arm's length are told apart, wide enough for a thumb on a phone"
+  "aim_deg": 74,
+  "note_aim": "aim_deg: in first person the target is what the view's centre rests on within reach, else the usable thing whose shape is nearest the view's centre inside a cone this wide (degrees, both sides together). 74 = Source's +use radius search, which keeps an object only when the direction to its nearest point has dot >= 0.8 with the view (2 x acos 0.8; design/research/pages/interaction/source-sdk-2013-baseplayer_shared.cpp FindUseEntity). The nearest one wins, so a wide gate does not blur two things a metre apart",
+  "stick_deg": 10,
+  "note_reach": "reach: m from the body's axis to the nearest point of the thing's collision box (either side of a door), height counted only past the feet or the head; cone_deg: in third person the thing's shape must lie inside this cone (both sides) round the heading. stick_deg: the current target counts this much nearer the aim, at the cone's edge and against a rival, so the prompt does not flicker (skills/character-body, Using things). All three art direction"
  },
  "touch": {
   "target_px": 96,
@@ -120,7 +127,8 @@
    "fall_s": 15,
    "inhale_share": 0.4,
    "db_rest": -16,
-   "db_hard": -9
+   "db_hard": -9,
+   "exert_db": -18
   },
   "step": {
    "db_soft": -10,
@@ -153,15 +161,45 @@
    "hiss": -6,
    "servo": -4,
    "bag_lift": -6,
-   "bag_drop": 0
+   "bag_drop": 0,
+   "curtain": -4,
+   "pour": -6,
+   "sip": -8,
+   "crinkle": -8,
+   "latch": -4,
+   "beep": -10,
+   "suction": -8,
+   "rattle": -8,
+   "pat": -6,
+   "leaf": -6,
+   "kneel": -4,
+   "rock": -2,
+   "zip": -8,
+   "valve": -6,
+   "vent": -8,
+   "connect": -4,
+   "refill": -10,
+   "screens": -10,
+   "ratchet": -6,
+   "ticks": -6,
+   "brush": -6
   },
-  "hiss_after": 0.6,
   "chirp_db": -12,
   "music": {
    "db": -8,
    "fade_s": 0.6,
    "gap_s": 60
   },
+  "bed": {
+   "db": -14,
+   "duck_db": 8,
+   "fade_s": 3,
+   "rest_s": [120, 240],
+   "first_s": 30,
+   "after_cue_s": 8
+  },
+  "duck_db": -10,
+  "note_bed": "art direction, audio/audio.gd. sounds: dB per file on top of its -3 dBFS peak. breath.exert_db: the respirator loop under the breaths at the sheet's hurry speed, silent at rest. bed: one phrase of a calm piece (files at about -16 LUFS) at db, duck_db lower while a cue plays, fade_s to let a phrase go when the hero goes in or out, then a rest of rest_s (random in the range) after a phrase ends; none in the first first_s of a session nor within after_cue_s of a cue's end (Breath of the Wild's field-music habit, design/plans/next-lanes.md 4.2). duck_db: the suit, outside and inside sound under a cutscene that calls audio.duck(true)",
   "radio": {
    "db": -14,
    "gap_s": 120,
@@ -216,5 +254,38 @@
   "carry_swing_deg": 12,
   "carry_swing_s": 0.2,
   "carry_out": 0.12
+ },
+ "sky": {
+  "_note": "the world's own clock (world/sky_clock.gd, design/research/day-cycle.md section 5, skills/day-cycle). It drives the look only: no sol counter, nothing scored (hard rule 1 until 14 Nov). day_minutes: real minutes a whole sol takes (12 to 24; Minecraft 20, Breath of the Wild 24, Subnautica about 20), with the night night_speed times faster than the day (Subnautica's split: 4 min 30 s of night in 20), so about 16.7 minutes of light, the long dusk at full speed, and 3.3 of night; the night is where the sun is below the night key's elevation (DESIGN.night.md celestial.hour), ramping in over night_ramp_deg above it. start_hour: local solar time the session starts, 06:30, just after sunrise (the first sunset about 12 minutes in). sol_s: a mean sol in seconds (Mars24, NASA GISS: 24 h 39 min 35.244 s), how the stars and moons keep pace with the sun",
+  "day_minutes": 20,
+  "night_speed": 3,
+  "night_ramp_deg": 4,
+  "start_hour": 6.5,
+  "sol_s": 88775.244,
+  "_look": "look_hz: how often a second the sky, ambient, fog, lamps, coat and wind take the clock's blend (a step of a tenth of a second moves a 75 s dusk by 0.13%, unseen); sun_step_deg: 0 turns the light with the sun every frame, as smoothly as its disc (13 Nov playtest: 1 degree steps eased over burst_s read as shadows that 'wait, then teleport fast-forward'); above 0 the light follows in burst_s eased bursts each time the sun has moved that far, sun_step_low_deg below low_deg of sun. Measured at 16:30 with a still camera, 4 s: flickering pixels 2.96% continuous against 3.52% in 1 degree steps (Gaming), 2.17% against 1.69% (Phone; 1.64% with the clock stopped, PIP and the dust); light_swap_deg: the sun elevation at which the one light changes from the sun to the night design's fill, both dark there, each fading over light_band_deg down to light_floor (energy, the sun's and an off lamp's) and the fog's sun scatter to scatter_floor: the renderer specialises every material on a light reaching it and on scatter over 0.001, so crossing either compiled them all again at the first dusk (rasterizer_scene_gles3.cpp 4.7.2, measured); probe_step: how far the four keys' shares must move (summed) before the outdoor reflection probes are redrawn, about 8 times a sol. All art direction",
+  "look_hz": 10,
+  "sun_step_deg": 0,
+  "sun_step_low_deg": 0,
+  "low_deg": 15,
+  "burst_s": 0.8,
+  "light_swap_deg": -2,
+  "light_band_deg": 4,
+  "light_floor": 0.002,
+  "scatter_floor": 0.002,
+  "probe_step": 0.5,
+  "_lamps": "the base's lamps switch on below lamps_on_deg of sun and off above lamps_off_deg (hysteresis, the research's 2 and 6 degrees), each lamp up to lamps_stagger_deg apart so the base does not flip like a switchboard, fading over lamps_fade_s. Art direction",
+  "lamps_on_deg": 2,
+  "lamps_off_deg": 6,
+  "lamps_stagger_deg": 1.5,
+  "lamps_fade_s": 1.5,
+  "_debug": "skip_s: real seconds of time-lapse the debug sky key takes to the next phase (dawn, noon, dusk, night, then a storm at noon); storm_build_h: game hours a storm takes to blow in or clear on the key (a real global storm builds over days and its haze e-folds in 43 sols, Guzewich 2019: too slow to see in a sandbox). Art direction",
+  "skip_s": 2.5,
+  "storm_build_h": 0.15,
+  "_dust": "dust that settles and stays (design/research/day-cycle.md rows 22 to 27): the weathering coat climbs from DESIGN.md's amount to DESIGN.storm.md's over coat_rise_h game hours of storm and stays after it, clearing back with an e-fold of coat_clear_sols sols (panels on Mars lose about 0.2% a sol to dust and get it back only in rare wind cleaning events, Lorenz 2021; art direction, so a session sees it go); every panel takes the storm's coat and a tilt by hand sheds it over shed_s (crew-base studies shed panel dust by tilting, NTRS 20170000235: our game action, not presented as the NASA plan). Wind: night_wind times the night row's speed after dark (Gale's downslope winds peak at night, about 21 m/s against 14 by day: Martinez 2017, Ullan 2017); the far whirlwind only between devil_hours (Gale's vortices peak 11:00 to 13:00 LTST, about one a sol, Newman 2019; it shows into the early afternoon)",
+  "coat_rise_h": 1.0,
+  "coat_clear_sols": 10,
+  "shed_s": 1.0,
+  "night_wind": 1.5,
+  "devil_hours": [11, 14]
  }
 }

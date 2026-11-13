@@ -165,6 +165,254 @@
    },
    "flight_share": 0.0
   },
+  "consume": {
+   "length": 1.3333,
+   "loop": false,
+   "knee_peak": 6.0,
+   "lean": [
+    -1.5,
+    3.2
+   ],
+   "planted": [
+    "foot_l",
+    "foot_r"
+   ],
+   "work_at": 0.525,
+   "hand_bone": "hand_r",
+   "hand": [
+    -0.129,
+    1.584,
+    0.334
+   ]
+  },
+  "plant": {
+   "length": 2.7667,
+   "loop": false,
+   "knee_peak": 6.0,
+   "lean": [
+    -2.6,
+    8.8
+   ],
+   "planted": [
+    "foot_l",
+    "foot_r"
+   ],
+   "work_at": 0.488,
+   "hand_bone": "hand_r",
+   "hand": [
+    -0.156,
+    1.179,
+    0.428
+   ]
+  },
+  "harvest": {
+   "length": 2.5,
+   "loop": false,
+   "knee_peak": 6.0,
+   "lean": [
+    -0.5,
+    10.2
+   ],
+   "planted": [
+    "foot_l",
+    "foot_r"
+   ],
+   "work_at": 0.34,
+   "hand_bone": "hand_r",
+   "hand": [
+    -0.122,
+    1.221,
+    0.405
+   ]
+  },
+  "pick_up": {
+   "length": 1.25,
+   "loop": false,
+   "knee_peak": 6.0,
+   "lean": [
+    0.9,
+    3.2
+   ],
+   "planted": [
+    "foot_l",
+    "foot_r"
+   ],
+   "work_at": 0.4,
+   "hand_bone": "hand_r",
+   "hand": [
+    -0.156,
+    1.202,
+    0.284
+   ]
+  },
+  "radio": {
+   "length": 2.9333,
+   "loop": false,
+   "knee_peak": 6.0,
+   "lean": [
+    -2.9,
+    3.2
+   ],
+   "planted": [
+    "foot_l",
+    "foot_r"
+   ],
+   "work_at": 0.5,
+   "hand_bone": "hand_r",
+   "hand": [
+    -0.381,
+    1.599,
+    0.081
+   ]
+  },
+  "suit_check": {
+   "length": 2.4,
+   "loop": false,
+   "knee_peak": 6.0,
+   "lean": [
+    3.2,
+    3.2
+   ],
+   "planted": [
+    "foot_l",
+    "foot_r"
+   ],
+   "work_at": 0.333,
+   "hand_bone": "hand_r",
+   "hand": [
+    -0.06,
+    1.36,
+    0.47
+   ]
+  },
+  "brush": {
+   "length": 3.0,
+   "loop": false,
+   "knee_peak": 6.0,
+   "lean": [
+    3.2,
+    14.5
+   ],
+   "planted": [
+    "foot_l",
+    "foot_r"
+   ],
+   "work_at": 0.267,
+   "hand_bone": "hand_r",
+   "hand": [
+    -0.24,
+    0.932,
+    0.374
+   ]
+  },
+  "turn_valve": {
+   "length": 2.6,
+   "loop": false,
+   "knee_peak": 6.0,
+   "lean": [
+    3.2,
+    8.1
+   ],
+   "planted": [
+    "foot_l",
+    "foot_r"
+   ],
+   "wheel": [
+    0.0,
+    1.02,
+    0.58
+   ],
+   "wheel_radius": 0.13,
+   "work_at": 0.462,
+   "hand_bone": "hand_r",
+   "hand": [
+    -0.147,
+    1.067,
+    0.469
+   ]
+  },
+  "kneel_pick": {
+   "length": 3.8732,
+   "loop": false,
+   "knee_peak": 125.0,
+   "lean": [
+    3.2,
+    24.0
+   ],
+   "planted": [
+    "foot_l"
+   ],
+   "work_at": 0.37,
+   "hand_bone": "hand_r",
+   "hand": [
+    -0.281,
+    0.441,
+    0.001
+   ]
+  },
+  "fix_kneel": {
+   "length": 4.2732,
+   "loop": false,
+   "knee_peak": 125.0,
+   "lean": [
+    1.8,
+    11.0
+   ],
+   "planted": [
+    "foot_l"
+   ],
+   "work_at": 0.405,
+   "hand_bone": "hand_r",
+   "hand": [
+    -0.13,
+    0.747,
+    0.041
+   ]
+  },
+  "sit_down": {
+   "length": 2.1083,
+   "loop": false,
+   "knee_peak": 103.9,
+   "lean": [
+    12.0,
+    24.1
+   ],
+   "planted": [
+    "foot_l",
+    "foot_r"
+   ]
+  },
+  "sit_idle": {
+   "length": 1.6667,
+   "loop": true,
+   "knee_peak": 103.7,
+   "lean": [
+    15.0,
+    15.8
+   ],
+   "planted": [
+    "foot_l",
+    "foot_r"
+   ],
+   "seat_hip": [
+    0.002,
+    0.525,
+    -0.251
+   ]
+  },
+  "sit_to_stand": {
+   "length": 1.6758,
+   "loop": false,
+   "knee_peak": 103.7,
+   "lean": [
+    12.0,
+    24.2
+   ],
+   "planted": [
+    "foot_l",
+    "foot_r"
+   ]
+  },
   "drive_sit": {
    "length": 1.6667,
    "loop": true,

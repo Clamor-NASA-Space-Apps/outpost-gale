@@ -1,7 +1,7 @@
 extends Node3D
 ## Camera presets for the edge of the ground, the wing field and Mont Mercou, around the real sandbox (capture-view --scene):
 ##   node ../../tools/capture-view.mjs . captures/c --scene res://tests/c_views.tscn --views edge,edge_far,solar,mercou -- sky=sunset
-## sky=sunset (or night, storm) switches the sky first; knob=name:value sets one graphics knob (knob=shadows:0). Views (eye height is 1.6 m over the ground at `from`):
+## sky=sunset (or night, storm) switches the sky first; knob=name:value sets one graphics knob (knob=shadows:0); hour=17.7, or a view@hour (mercou@17.7, slower: it warms again), pins the clock. Views (eye height is 1.6 m over the ground at `from`):
 ##   edge      at the east boundary (x 190) looking out over the patch's end, where it meets the backdrop
 ##   edge_n    at the north boundary looking along it, the seam running across the frame
 ##   edge_far  from 60 m inside, a little up, looking at the edge and the skyline past it
@@ -44,6 +44,10 @@ func _ready() -> void:
 	for a in OS.get_cmdline_user_args():
 		if a.begins_with("sky="):
 			game._sky(game.SKIES.find("design." + a.trim_prefix("sky=")))
+		elif a.begins_with("hour="):  # hour=17.7: pinned before the sandbox's first warm-up, so no second one (a view@hour warms again)
+			game.clock.pinned = true
+			game.clock.set_hour(float(a.trim_prefix("hour=")))
+			game.clock.refresh()
 		elif a.begins_with("knob="):  # knob=shadows:0, to tell a shadow artefact from a model one
 			var kv := a.trim_prefix("knob=").split(":")
 			game.set_graphics(game.quality, {kv[0]: str_to_var(kv[1])})
@@ -64,6 +68,12 @@ func busy() -> bool:
 
 
 func set_view(v: String) -> void:
+	if "@" in v:  # "mercou@17.7": the view at that local hour, pinned, as sandbox.gd set_view() does
+		game.clock.pinned = true
+		game.clock.set_hour(float(v.get_slice("@", 1)))
+		game.clock.refresh()
+		game._warm()
+		v = v.get_slice("@", 0)
 	if not SHOTS.has(v):
 		game.set_view(v)
 		return

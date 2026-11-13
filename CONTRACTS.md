@@ -18,7 +18,7 @@ Change it only through the session that merges the lanes.
 | 5 | 16 | vehicles (the rover, as an `AnimatableBody3D`) | hero, camera |
 | 6 | 32 | interaction areas (`Area3D`, never blocks) | the hero's interaction finder |
 | 7 | 64 | carriables (cargo bags) | hero, rover, camera |
-| 9 | 256 | rock: a solid rock's extra bit (with 2 or 3), what a rover wheel rolls onto | rover wheel casts |
+| 9 | 256 | rock: a solid rock's extra bit (with 2 or 3), and any static no taller than `rover.climb` over its item's underside (a build pad, a gland box; `world.gd _solidify()`): what a rover wheel rolls onto | rover wheel casts |
 
 ## Input actions (registered in code by `player/controls.gd`, keys and touch feed the same actions)
 `move_forward` W/Up, `move_back` S/Down, `move_left` A/Left, `move_right` D/Right, `hurry` Shift,
@@ -34,8 +34,15 @@ The composition root is `sandbox/sandbox.gd`. It calls only these:
   `player.state() -> Dictionary` (the `player`, `cam`, `heroScreen`, `interaction`, `carry`, `vehicle` keys below).
 - The camera belongs to `player/` and follows the hero, or the vehicle the hero drives.
 - An interactable is any node in group `interactable` with `prompt() -> String`, `can_use(hero) -> bool`,
-  `use(hero) -> void`. Its `Area3D` (layer 6) sits in front of the thing. `use()` does one physical thing and
-  changes no game state (hard rule 1: no meters, no resources before 14 Nov).
+  `use(hero) -> void`, `thing` (what moves) and `shape` (the thing's collision box in its own space). `use()` does
+  one physical thing and changes no game state (hard rule 1: no meters, no resources before 14 Nov).
+- The target (`sandbox/interactions.gd _pick()`, skills/character-body "Using things"): in reach when the nearest
+  point of the shape is within `interact.reach` of the body's axis (height counted past the feet or head only), from
+  either side; an open door or curtain counts at its shut pose too, so it closes from both sides; a wall (layer 2)
+  between the hands and every spot of it hides it. In first person what the view's centre rests on wins, else the
+  shape nearest the view line within `aim_deg`; in third person nearest the heading within `cone_deg`. The current
+  target is favoured by `stick_deg`. `tests/doors_test.gd` holds the standing grid. The rover's shape is its rear
+  hatch (the model's `hatch*` parts), not its hull: it is boarded there only (`tests/interact_test.gd` hatch()).
 - A vehicle is in group `vehicle` with `drive(input: Vector2, hurry: bool, delta: float)` (input.x steer, right
   positive; input.y throttle, forward positive), `seat() -> Transform3D` (global), `exit_point() -> Vector3` (global),
   `speed() -> float`. The sandbox root calls `player.exit()` on `interact` while driving.
@@ -61,22 +68,28 @@ The composition root is `sandbox/sandbox.gd`. It calls only these:
 ## Test hooks
 `Forge.register(sandbox)`. `render_game_to_text()` returns:
 `player.{pos, speed, onFloor, gait, inside, room}`, `cam.{inside, dist, first}`, `heroScreen` (0 in first person), `interaction.{target, prompt}`,
-`vehicle.{driving, speed}`, `carry`, `sky`, `quality`, `fps`.
-`set_view(name)`: `default` (the play camera), `base`, `hero`, `horizon`, `storm`, `airlock`, `rover`, `greenhouse`,
+`vehicle.{driving, speed}`, `carry`, `sky.{state, phase, hour, sun_el, sun_az, keys, light_el, lamps_on, coat, bursts,
+probe_redraws}` (The sky clock, below), `quality`, `fps`.
+`set_view(name)`: `default` (the play camera), `base`, `hero`, `horizon`, `west`, `storm`, `airlock`, `rover`, `greenhouse`,
 `hab_in` (inside HAB 1: the life-support wall and bunks), `hab_desk` (inside HAB 1: galley, Veggie, desk and map),
 `hab_fp`, `greenhouse_fp` (the play camera in first person, the hero placed inside the door looking in).
 `place(pos, yaw_deg)`: the hero, through `player.place()`.
 
 ## Prefabs (`data/world.json` `prefabs`: id -> model file; a missing file loads a labelled stand-in box)
-`habitat`, `solar_array`, `battery_bank`, `oxygen_maker`, `water_recycler`, `greenhouse`, `storm_shelter`,
-`dish`, `build_pad`, `lander`, `rover`, `curiosity`, `cargo_bag`, `pip`, `lamp`, `beacon`, `telltale`, `veggie` (HAB 1's
-plant unit), `solar_wing`, `reactor` (fission surface power, near the west edge), `gale_map` (the wall map in HAB 1),
+`habitat`, `battery_bank`, `oxygen_maker`, `water_recycler`, `greenhouse`, `storm_shelter`,
+`dish`, `build_pad`, `lander`, `rover`, `curiosity`, `cargo_bag`, `pip`, `lamp`, `beacon`, `telltale`, `charger` (the rover's charging post), `veggie` (HAB 1's
+plant unit), `solar_wing`, `reactor` (fission surface power, in the north-east corner; layout in `design/research/layout.md`), `gale_map` (the wall map in HAB 1),
 `mont_mercou` (the butte), `lettuce_1` to `lettuce_4`, `rock_*`. (`water_recycler` stays registered but is not placed:
 water is recycled indoors, in HAB 1's racks.)
 - `plants`: `{item id: [slot entry, ...]}`, filling the model's `slot_N` nodes in order. An entry is a lettuce growth
   stage (1 to 4) or a prefab id, which goes in at its own size (HAB 1: `veggie`, `gale_map`).
 - `cables`: power lines laid on the ground (`world.gd _lay_cables()`): polylines of [x, z] draped on `height_at()` every
   `step` m, `width` and `height` m, one DESIGN.md `role`; rocks keep off them as off paths. One merged mesh, no collision.
+  `ends` (one per line): `"item:node"`, the empty in the device's model the line plugs into (`port_1` when left out);
+  the line's first and last points move onto it. A device's model carries each port as an empty named `port*` inside a
+  ground gland box (`forge/base_kit.py port()`), which the world sets onto the ground (`world.gd _glands()`).
+- `charger`: the rover's charging post: the plug (`plug`) sits in the rover's `port_charge` while the rover stands in
+  its bay, else in the post's `holster`; `charge_light` shows while plugged in; `world.charging()`. Motion and light only.
 Groups: `floor` (anything walkable on top), `wall` (blocks), `thin` (layer 3), `interactable`, `vehicle`, `carriable`.
 
 ## Graphics settings (quality knobs; owner: `addons/forge/house_style.gd`, presets in DESIGN.md `quality`)
@@ -149,7 +162,8 @@ None. `world.build()` is synchronous (it loads everything it needs before return
 - The hero is not drawn in first person (the close-lens fade: the lens is inside its drawn box), and comes back only
   once the lens is clear of that box by the arm's sphere radius, faded in over `camera.fp_reveal_s`
   (`follow_cam.reveal` caps `fade`). No shadow of the hero indoors: it is hidden, not culled by layer.
-- The interaction target in a room is the usable thing nearest the view's centre within reach (`interact.aim_deg`).
+- The interaction target in a room is what the view's centre rests on, else the usable shape nearest the view's
+  centre within reach (`interact.aim_deg`).
 
 ## Room light and the toilet curtain (13 Nov 2026)
 - Each room in `data/world.json` `probe.rooms.<id>` has its own reflection probe (`interior` false for a glass dome)
@@ -159,3 +173,58 @@ None. `world.build()` is synchronous (it loads everything it needs before return
   `lamps` limit holds.
 - Interactable `curtain` (HAB 1's toilet): closed at start, E gathers it along its rail to
   `tuning.json interact.curtain_gather` of its width over `move_s` and back; motion and the sound `curtain` only.
+
+## The sky clock (13 Nov 2026)
+- `world/sky_clock.gd` (the sandbox's `clock`) owns one local solar hour at Gale. The sun runs its real path
+  (`HouseStyle.sun_at(DESIGN.night.md celestial, hour)`), and the look blends the four designs by the sun's elevation:
+  day at and above DESIGN.md's 12 degrees, sunset at DESIGN.sunset.md's 4, night at DESIGN.night.md's `celestial.hour`
+  (19:30, -18 degrees), the storm laid over the lit keys. Knobs: `tuning.json sky` (`day_minutes` 20, `night_speed` 3,
+  `start_hour` 6.5, and the rest).
+- **It drives the look only**: no sol counter is shown or kept, nothing scored, no dust lowering power (hard rule 1).
+- **The 14 Nov hook**: set `clock.driven = true` and call `clock.set_hour(h)` from the sim every frame (h in hours,
+  values past 24 run on into later sols); the sim then owns time, skips and sleeping. `clock.phase_changed(state)`
+  fires when the leading design changes (`design`, `design.sunset`, `design.night`, `design.storm`): the audio's sunset
+  cue listens to it. `clock.storm_on` starts or ends a storm (it builds and clears over `storm_build_h` game hours);
+  `clock.coat` is the settled dust (DESIGN.md `weathering.amount` clear, DESIGN.storm.md's after a storm), the value
+  the rules may tie to panel power on 14 Nov. `clock.paused` stops it (the sandbox sets it while the settings or the
+  cover are up). `clock.hour()`, `clock.phase()`, `clock.report()`.
+- Debug key `debug_sky` (B): a few seconds of time-lapse to the next phase, dawn, noon, dusk, night, then a storm at
+  noon, then the storm off and on to dawn (its coat stays). `sandbox._sky(i)` jumps straight to SKIES key `i`'s own look
+  (noon, the sunset's sun, the night's hour, a noon storm) behind the cover, for tests and the tools' `sky=` args.
+- The tools pin the hour (any `--forge-job` run, so pictures repeat); `hour=H` as a game argument, or a view named
+  `<view>@H` (`base@18.6`), pins it at H.
+- The rig is built once (DESIGN.md's materials, DESIGN.night.md's lamp and night sky at `timeScale` 1, its stars turned
+  by the clock's own Mars seconds). The sky's changing values are global shader uniforms (`HouseStyle.set_look()`;
+  `forge_sky_light_dir` is the light in force, for any surface that answers it), the light turns with the sun every
+  frame (`sun_step_deg` 0; above 0 it steps), the outdoor probes redraw when the blend has moved `probe_step`, and the
+  world's lamps (group `world_lamp`) fade on below `lamps_on_deg` of sun and off above `lamps_off_deg`.
+- The work lights' glowing faces (the shared `light` role: lamp heads, the pad's corner lights) fade with the lamps,
+  to a glimmer by day; blinking status lights (machines.gd `light_flash`) and PIP's bar wear their own copies and
+  keep their full glow. The rover's lights belong to its lane: give them their own material copy, or they dim by day.
+- `forge_sky_light_dir` (global) is the light in force, for a surface that answers it. The sun's shadow split is sized for the lower of the light's elevation and the
+  leading design's (`HouseStyle._fit_split()`, meta `split_el`), never smaller than the approved look's.
+- A storm coats the trackers' panels at `coat_rise_h`; a tilt sheds one over `shed_s`, and it gathers dust again only
+  at that rate.
+- `world.dust.switch(emitter, on, instant)` turns the devil or the storm front on or off (instant: whole at once
+  behind a cover; in play it grows).
+- `world.instanced(mi) -> [MultiMeshInstance3D, index]`: where a moving mesh is drawn; every MultiMesh carries custom
+  data, whose red is the copy's share of the coat on a role drawn with `HouseStyle.role(..., each = true)` (the
+  trackers' panels: a storm coats them all, a tilt by hand sheds one, `interactions.used` -> `clock.used`).
+  `machines.aim(sun)` turns the trackers to the clock's sun (zero lies them flat).
+
+## Actions, sounds and the charger (13 Nov 2026, night)
+- `player.perform(clip: StringName, stand: Transform3D) -> float`: glide at most `tuning.perform` to `stand` (global, floor
+  origin, facing its -Z), play a use clip from `data/clips.json`, return its length (0 for an unknown clip or while
+  driving). A move key ends it; jump is blocked. `player.sit(on)`, `player.seated`, `player.cut` (empty when idle).
+  `follow_cam.show_body` holds the body drawn in first person during either. `player.model.point(clip, "hand" |
+  "seat_hip" | "wheel") -> Vector3` in the hero's own space, to place a stand point from a spot.
+- `audio.used(name, pos)` plays the `SOUNDS` table's files for `name` (`audio.gd`); an unknown name or a missing file
+  is an error. `audio.music(name, force := false)` (`force` fades the playing cue and skips the gap), `stop_music()`,
+  `bed(name)` (`eva`, `habitat`: phrases with long rests), `duck(on)` (world sound down `audio.duck_db`, music not),
+  `wake()` (the next door opened plays `dawn`). `render_game_to_text()` gains `audio.bed`.
+- Cables (`world.json cables`): `ends` names each line's two `item:port_*` nodes (forge/base_kit.py `port()`); `world.gd`
+  moves the line's ends onto them. `charger` plugs the parked rover in at its post (`world.charging()`): motion and light
+  only, no game state.
+
+- `graded.prefabs` (world.json): items of these prefabs have their footprint (standin size) laid level before the ground
+  is built (`terrain.gd _grade()`), so a pad on a slope is neither buried nor torn by the ground.

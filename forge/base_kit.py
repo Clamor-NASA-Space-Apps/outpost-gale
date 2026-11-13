@@ -71,6 +71,37 @@ def skid(w, d, h=0.12, role="metal"):
     return parts
 
 
+def port(name, foot, top=None, r=0.03, size=(0.16, 0.16), turn=0.0):
+    """Where a ground cable plugs into a device (world.gd _lay_cables): a conduit from a gland at `top` on the
+    device out level to over `foot` (x, y), then down into a gland box on the ground there, and the empty `name`
+    inside that box at cable height. The conduit is the riser, so the cable on the ground ends inside the box from
+    whichever side its route comes (a cable stopping beside a device read as unplugged, 13 Nov playtest). The box is
+    its own `-col` body with the empty as its child, so the empty moves with the model and no join drops it; 9 cm
+    tall, the hero steps over it. `turn` (degrees about Z) squares the box to a curved wall."""
+    x, y = foot
+    if top is not None:
+        tx, ty, tz = top
+        bend = (x, y, tz)
+        d = Vector((x - tx, y - ty, 0))
+        d = d.normalized() if d.length > 1e-6 else Vector((0, 0, -1))
+        # the gland: a collar on the conduit where it leaves the device, its back 1 cm inside the device's skin.
+        # 8-sided, no elbow piece: the level run goes on past the bend by its radius and covers the corner (a
+        # habitat is near its triangle budget)
+        smooth(bar(name + "_gland", Vector(top) - d * 0.01, Vector(top) + d * 0.05, r + 0.015, mat("trim"), 8))
+        if d.z == 0:
+            smooth(bar(name + "_conduit_out", top, Vector(bend) + d * r, r, mat("metal"), 8))
+        smooth(bar(name + "_conduit", bend, (x, y, 0.08), r, mat("metal"), 8))
+    b = bevel(box(name + "_box-col", (size[0], size[1], 0.09), (x, y, 0.045), mat("trim")), width=0.012, segments=1)
+    b.rotation_euler.z = math.radians(turn)
+    e = bpy.data.objects.new(name, None)
+    bpy.context.scene.collection.objects.link(e)
+    e.location = (x, y, 0.02)
+    e.parent = b
+    bpy.context.view_layer.update()
+    e.matrix_parent_inverse = b.matrix_world.inverted()
+    return b
+
+
 def status_light(name, loc, size=(0.16, 0.05, 0.05)):
     """A lamp the game can switch: role `light` on a small dark housing."""
     return [box(name + "_housing", (size[0] + 0.04, size[1], size[2] + 0.04), (loc[0], loc[1] - 0.01, loc[2]), mat("trim")),
@@ -93,20 +124,31 @@ def inner_leaf(hw, hh, y_in, z0, extra=()):
     leaf inside the opening showed a dark slit round its edge. `extra` parts join the leaf; returns it."""
     w, t = hw + 0.1, 0.06
     y = y_in - 0.002 - t / 2  # 2 mm behind the frame: close enough to read as sealed, never coplanar
-    leaf = [bevel(box("door", (w, t, hh + 0.045), (0, y, z0 + 0.005 + (hh + 0.045) / 2), mat("body")), width=0.02)]
-    leaf.append(smooth(cyl("door_window", 0.13, t + 0.02, (0, y, z0 + 1.55), mat("glass"), 24, rot=(math.pi / 2, 0, 0))))
-    leaf.append(cyl("door_window_ring", 0.17, t + 0.01, (0, y, z0 + 1.55), mat("trim"), 24, rot=(math.pi / 2, 0, 0)))
+    # the window goes through the leaf: a pane in a solid leaf, over a solid ring, read as a dark disc from both
+    # sides (13 Nov playtest); 20 sides, for the building budget. The hole (r 0.135) is a little wider than the pane (r 0.13) so their walls never lie
+    # on each other, and the ring's opening (r 0.125) laps the pane's edge, holding it
+    ax = (0, y, z0 + 1.55)
+    slab = bevel(box("door", (w, t, hh + 0.045), (0, y, z0 + 0.005 + (hh + 0.045) / 2), mat("body")), width=0.02)
+    leaf = [cut(slab, cyl("door_hole", 0.135, t + 0.2, ax, None, 20, rot=(math.pi / 2, 0, 0)))]
+    leaf.append(smooth(cyl("door_window", 0.13, t + 0.02, ax, mat("glass"), 20, rot=(math.pi / 2, 0, 0))))
+    ring = cyl("door_window_ring", 0.17, t + 0.01, ax, mat("trim"), 20, rot=(math.pi / 2, 0, 0))
+    leaf.append(cut(ring, cyl("ring_hole", 0.125, t + 0.2, ax, None, 20, rot=(math.pi / 2, 0, 0))))
     leaf.append(smooth(bar("door_handle", (-hw / 2 + 0.12, y + t / 2 + 0.06, z0 + 0.95), (-hw / 2 + 0.12, y + t / 2 + 0.06, z0 + 1.25), 0.02, mat("metal"))))
     leaf += list(extra)
     door = settle(join("door", leaf), (w / 2, y - t / 2, z0))
     # the room side: a painted panel round the window and a handle, as a child named `interior` so it stays clean of
     # the dust coat (DESIGN.md weathering.clean) while the outside face keeps it; dusty, the inside read salmon
     fy = y - t / 2 - 0.005  # 5 mm off the leaf's room face
-    zw, hole = z0 + 1.55, 0.19
+    zw = z0 + 1.55
     x0, x1, zb, zt = -w / 2 + 0.06, w / 2 - 0.06, z0 + 0.065, z0 + hh - 0.01
-    panes = [((x0 + x1) / 2, x1 - x0, zb, zw - hole), ((x0 + x1) / 2, x1 - x0, zw + hole, zt)]
-    panes += [(s * (hole + x1) / 2, x1 - hole, zw - hole, zw + hole) for s in (-1, 1)]
-    lining = [box(f"lining{i}", (pw, 0.003, z1 - z0_), (px, fy - 0.0015, (z0_ + z1) / 2), mat("panel")) for i, (px, pw, z0_, z1) in enumerate(panes)]
+    # one plate with a round hole just wider than the outside ring (r 0.17), and a bezel over its edge: a square
+    # hole round the round window showed the dusty leaf at its corners (13 Nov first person)
+    plate = box("lining", (x1 - x0, 0.003, zt - zb), ((x0 + x1) / 2, fy - 0.0015, (zb + zt) / 2), mat("panel"))
+    lining = [cut(plate, cyl("lining_hole", 0.175, 0.1, (0, fy, zw), None, 20, rot=(math.pi / 2, 0, 0)))]
+    # its back 1.5 mm into the plate and 1.5 mm off the plate's back (1 mm off, coplanar-check's tolerance, failed it
+    # by rounding in one building and not another), its opening wider than the pane (r 0.13), so no face lies on another
+    bezel = cyl("window_bezel", 0.21, 0.012, (0, fy - 0.0075, zw), mat("trim"), 20, rot=(math.pi / 2, 0, 0))
+    lining.append(smooth(cut(bezel, cyl("bezel_in", 0.135, 0.1, (0, fy, zw), None, 20, rot=(math.pi / 2, 0, 0)))))
     lining.append(smooth(bar("inner_handle", (-hw / 2 + 0.12, fy - 0.06, z0 + 0.95), (-hw / 2 + 0.12, fy - 0.06, z0 + 1.25), 0.02, mat("metal"))))
     lining = join("interior", lining)
     bpy.context.view_layer.update()
@@ -122,7 +164,7 @@ COL = ("-col", "-convcol", "-colonly", "-convcolonly")
 def moves(o):
     """Parts the game moves get their own bodies in the engine, so they carry no collision suffix; their children
     move with them."""
-    return o.name in ("door", "dish", "tell", "curtain") or o.name.startswith("panel_") or (o.parent is not None and moves(o.parent))
+    return o.name in ("door", "dish", "tell", "curtain", "plug", "charge_light") or o.name.startswith("panel_") or (o.parent is not None and moves(o.parent))
 
 
 def done(name, solid=True):

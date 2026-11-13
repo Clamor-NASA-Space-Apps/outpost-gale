@@ -2,12 +2,15 @@ extends AnimatableBody3D
 ## Drives the crewed rover over the real ground (CONTRACTS.md vehicle). Kinematic, not VehicleBody3D (unproven
 ## under Jolt in the web build): the sheet's top speed, acceleration and braking, a pivot on the spot as the real
 ## SEV's swivelling wheels allow. Each wheel rests on the ground or on the rock under it (world.wheel_rest()): it
-## rolls up rocks up to the sheet's climb height, the body takes its height and tilt from the six wheels, and each
-## wheel takes up the rest on its suspension. A taller rock, or a wall, ahead within the braking distance brakes it
-## to a stop at the contact. Tracks, a dust stream from the wheels, and a moving contact shadow on the ground.
+## rolls up rocks and low solids (a build pad) up to the sheet's climb height, the body takes its height and tilt
+## from the six wheels, and each wheel takes up the rest on its suspension. A taller rock, or a wall, ahead within the
+## braking distance brakes it to a stop at the contact. Tracks, a dust stream from the wheels, and a moving contact
+## shadow on the ground.
 ## The drawn body rides on a damped spring over the wheels (`_spring()`): it leans out of a turn, squats when it sets
 ## off, dips when it brakes and bobs over a rock. Only the drawing moves: the physics body, which the camera follows,
 ## stays on the wheels' plane, so the camera never shakes with it.
+## Its own lights (the `light` role's faces: headlights, rack lights, screens) burn only at night with the crew
+## aboard, fading over the base lamps' fade; off is the base's daytime glimmer, never zero (`_lights()`).
 
 const Rocks := preload("res://world/rocks.gd")
 const AXLE := 1.55
@@ -46,6 +49,12 @@ var _plane := Vector3.INF  # the wheels' plane last frame: (height, pitch, roll)
 var _plane_v := Vector3.ZERO  # and how fast it moved
 var _push := Vector3.ZERO  # (0, pitch, roll) the inertia of this frame's speed change and turn asks
 var _driven := -2  # the physics frame drive() last ran
+var lamp_level := 0.0  # its lights, 0 (the glimmer) to 1 (for checks)
+var lamp_mat: StandardMaterial3D  # its own copy of the `light` role: the shared one burns with the base's lamps
+var _lamp_full := 0.0  # that role's full glow (DESIGN.md emissive)
+var _lamp_slots: Array[Array] = []  # [MeshInstance3D, surface] wearing it
+var _night := false
+var _sky: Dictionary  # tuning.sky: lamps_on_deg, lamps_off_deg, lamps_fade_s, light_floor
 
 
 func setup(w: Node3D, sheet: Dictionary, tuning: Dictionary) -> void:
@@ -63,13 +72,16 @@ func setup(w: Node3D, sheet: Dictionary, tuning: Dictionary) -> void:
 	travel = tuning.rover.travel
 	shade = tuning.rover
 	spring = tuning.rover.spring
+	_sky = tuning.sky
 	g = world.sheet_values["world.gravity"]
-	# the ground holds it up through _settle(), so the sweep must not stop on the ground it rests on; rocks are
-	# the wheels' to climb, so the body's sweep passes them (a rock too tall is caught by _pose())
+	# the ground holds it up through _pose(), so the sweep must not stop on the ground it rests on; rocks and low
+	# solids (a build pad: world.gd gives them the rock bit) are the wheels' to climb, so the body's sweep passes
+	# them (one too tall is caught by _pose())
 	collision_mask &= ~1
 	collision_mask |= 16  # PIP (a vehicle too): the rover brakes for it as for a wall, and PIP gets out of the way
-	for b: Node in world.rocks.solids:
-		add_collision_exception_with(b)
+	for b: Node in world.find_children("*", "CollisionObject3D", true, false):
+		if (b as CollisionObject3D).collision_layer & Rocks.ROCK:
+			add_collision_exception_with(b)
 	_belly.size = Vector3(1.3, 0.3, 4.1)
 	yaw = rotation.y
 	var seat_node := find_child("seat", true, false) as Node3D
@@ -94,6 +106,13 @@ func setup(w: Node3D, sheet: Dictionary, tuning: Dictionary) -> void:
 	var p := _pose(global_position, yaw)
 	_apply(p)
 	set_physics_process(true)
+	set_process(true)  # the script comes after the body's _ready (interactions.gd), so neither starts on its own
+	for mi: MeshInstance3D in find_children("*", "MeshInstance3D", true, false):
+		for i in (mi.mesh.get_surface_count() if mi.mesh else 0):
+			var m := mi.get_active_material(i)
+			if m and m.resource_name == "light":
+				_lamp_slots.append([mi, i])
+	_lights(0.0)
 
 
 ## input.x steers (right positive), input.y is throttle (forward positive), CONTRACTS.md.
@@ -260,6 +279,40 @@ func _ground_fx(moved: float) -> void:
 		for side: float in [-TRACK, TRACK]:
 			var p := global_transform * Vector3(side, 0.0, AXLE)
 			world.mark(p, -rad_to_deg(yaw), "wheel", 0.3, lerpf(shade.track_depth[0], shade.track_depth[1], absf(v) / top))
+
+
+## The lights by the sky clock's sun (the base lamps' switch angles, with their gap so they do not flicker at the
+## line) and whether anyone drove it this frame or the last (the hero aboard calls drive() every physics frame).
+func _process(delta: float) -> void:
+	var clock: Node = world.get_parent().get("clock")  # ponytail: the sandbox's sky clock; none means day
+	var el := rad_to_deg(asin(clampf(clock.sun.y, -1.0, 1.0))) if clock else 90.0
+	if el < float(_sky.lamps_on_deg):
+		_night = true
+	elif el > float(_sky.lamps_off_deg):
+		_night = false
+	_lights(delta)
+
+
+## Fades the lights toward on (night, crew aboard) or off. The off state keeps the base's glimmer (`light_floor`), not
+## zero: only a uniform changes, so lighting up never compiles a shader in play. A sky or quality switch puts the
+## shared role back on its faces (HouseStyle.apply()), so the copy is made again from it.
+func _lights(delta: float) -> void:
+	if _lamp_slots.is_empty():
+		return
+	var want := 1.0 if _night and Engine.get_physics_frames() - _driven <= 2 else 0.0
+	var was := lamp_level
+	lamp_level = move_toward(lamp_level, want, delta / float(_sky.lamps_fade_s))
+	var slot: Array = _lamp_slots[0]
+	var now := (slot[0] as MeshInstance3D).get_active_material(slot[1])
+	if now != lamp_mat and now is StandardMaterial3D:
+		lamp_mat = now.duplicate() as StandardMaterial3D
+		lamp_mat.resource_name = "rover_light"  # no role's name; DESIGN.md kit maps it back to `light` on a restyle
+		_lamp_full = float(now.get_meta("glow", lamp_mat.emission_energy_multiplier))  # full, not the clock's glimmer
+		for s: Array in _lamp_slots:
+			(s[0] as MeshInstance3D).set_surface_override_material(s[1], lamp_mat)
+	elif was == lamp_level or lamp_mat == null:
+		return
+	lamp_mat.emission_energy_multiplier = _lamp_full * maxf(lamp_level, float(_sky.light_floor))
 
 
 ## Parked (nobody drives): the body settles on its own.

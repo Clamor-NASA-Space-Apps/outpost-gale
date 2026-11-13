@@ -111,7 +111,6 @@ func build(world: Node3D) -> void:
 	fp.emission_ring_inner_radius = 14.0
 	fp.emission_ring_height = 6.0
 	fp.spread = 20.0
-	front.preprocess = front.lifetime
 
 	# a devil the colour of the haze vanished against the sky from the base (measured, 160 m off): the column is
 	# the ground's own dust, denser
@@ -121,7 +120,6 @@ func build(world: Node3D) -> void:
 	_column.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	devil = _emitter("Devil", 200, 7.0, Vector2(4.0, 4.0), _column, [0.0, 0.75, 0.0], [0.6, 3.2])
 	devil.local_coords = true  # the node spins, so the column swirls
-	devil.preprocess = devil.lifetime  # a whole column at once, not a puff growing for 7 s after a sky switch
 	devil.visibility_aabb = AABB(Vector3(-20, -2, -20), Vector3(40, 50, 40))
 	var dp: ParticleProcessMaterial = devil.process_material
 	dp.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_RING
@@ -138,7 +136,8 @@ func build(world: Node3D) -> void:
 
 
 ## Colours from the design's `dust` role (the sky's light does the rest: the clouds are lit), and the weather row.
-func restyle(design: Dictionary, weather: Dictionary) -> void:
+## `instant` false when the weather turns in play (the sky clock): the devil and the front grow in, see switch().
+func restyle(design: Dictionary, weather: Dictionary, instant := true) -> void:
 	# grit is the ground itself, lit like it; the colour is the dust role's, a fixed preset per surface
 	_grit_mat.set_shader_parameter("albedo", Color.html(design.materials.dust.color))
 	# a fifth of the way to the horizon's colour: half way, a puff at a boot was a bright orange patch against the
@@ -169,10 +168,22 @@ func restyle(design: Dictionary, weather: Dictionary) -> void:
 	_streak_share = float(weather.streaks)
 	streaks.amount_ratio = _streak_share * _share
 	streaks.emitting = _streak_share > 0.0
-	devil.emitting = bool(weather.devil)
-	devil.visible = devil.emitting
-	front.emitting = bool(weather.front)
-	front.visible = front.emitting
+	switch(devil, bool(weather.devil), instant)
+	switch(front, bool(weather.front), instant)
+
+
+## Turns the devil or the storm front on or off. `instant` (behind a cover: a load, a sky jump) fills it to its whole
+## life at once and clears it when off; in play it spins up and drifts out over its life. A fill is `preprocess`, which
+## runs lifetime x fixed_fps simulation steps in the frame emission starts: the 7 s devil switched on at 11:00 in play
+## was 210 steps in one 98 ms frame (measured 13 Nov, the same with a warm shader cache, gone with no preprocess).
+## Its first whirl still compiles something on a cold shader cache (169 ms, 13 Nov; neither HouseStyle.warm()'s copy
+## nor the real emitter run behind the cover took it away): open.
+func switch(e: GPUParticles3D, on: bool, instant: bool) -> void:
+	e.preprocess = e.lifetime if instant and on else 0.0
+	if instant and (on != e.emitting or not on):
+		e.restart()  # whole at once with the preprocess above, or emptied
+	e.emitting = on
+	e.visible = on or not instant  # in play its last particles drift out; a jump clears it
 
 
 ## A boot or a wheel touching the dust at `pos`. `vel` is the foot's (or the wheel rim's) world velocity at

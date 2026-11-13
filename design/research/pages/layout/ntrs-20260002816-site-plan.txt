@@ -1,0 +1,181 @@
+Earth & Space 2026
+20TH BIENNIAL INTERNATIONAL CONFERENCE
+APRIL 13–16, 2026 | COLLEGE STATION, TEXAS
+
+
+
+
+                          Lunar Innovation Park
+                               Site Plan & Bulk Regolith Feature Design
+                                                                           Nathan Gelino
+                                                              NASA, Kennedy Space Center, Swamp Works
+
+
+
+
+Panorama view of Station 8 and Mt. Hadley taken during the third moonwalk of the Apollo 15 mission
+                                    Introduction
+• Lunar Innovation Park is a set of collocated
+  infrastructure elements deployed over a
+  campaign of missions in the south polar
+  region of the Moon
+• Intention to define the fastest path to a
+  sustained lunar presence
+• Demonstrate critical technologies that
+   reduce risk for Artemis
+• Provide initial kernel of capability for a space
+  resource-based economy on the Moon
+• Bulk regolith infrastructure (e.g., berms,
+  prepared surfaces) and landing aids enable
+  extreme proximity landings (~20 m)
+                                     Introduction
+• Use of medium scale CLPS landers (~625 kg)                           M1   M2
+• Human presence not required
+• Focus on site plan and regolith feature design
+• Related publications focus on:
+  – Motivations for the Park
+  – Lunar site evaluation methodology                                  M3        M4
+  – Site preparation operations analysis
+  – Mission analysis and design
+• Incremental build up of surface infrastructure in
+   Mission 1 (M1) through M5
+                                                                            M5
+• Initiate economic development by providing Park services
+  commercially for fee (e.g., power, comm, logistics, regolith
+  delivery and manipulation, shelter)
+• Customer missions (C1 & C2) for science or tech
+  development                                                    C1
+                                                                      C2
+• Lower cost science and tech development because
+  customer missions do not need to be self sufficient
+                     PSI Ejecta Example
+• Lunar Uncrewed Explorer Tool (LUNEXT) shows a low fidelity simulation of the extent of PSI ejecta
+  and effects of mitigation features (ejecta velocity of 1 km/s and angle of 3°)
+• Ejecta risks sandblasting landed assets and jeopardizes surface science potential via contamination
+• Distance reduces risks due to diminished ejecta flux and early drop out of larger particles
+• No safe scientific or operational standoff distances have been defined for various landers
+                             Park Site Layout
+• Two regions of the Park:
+  – “Hub and spokes” Industrial Area
+  – Reusable Launch/Landing Pad
+• Design is a function of:
+  – Existing surface conditions
+  – Landing accuracy
+  – Lander geometry
+  – VSAT geometry
+  – Plume geometry
+  – Ejecta erosive effect on berms
+  – Secondary ejecta trajectories
+• Minimizes cable run distances
+• Allows for an incremental build up
+  of collocated assets protected
+  from PSI ejecta
+               Existing Surface Conditions
+• Sites were evaluated based on criteria such
+  as:
+  – Ave surface illumination
+  – Earth visibility
+  – Ave slope
+• 5 m/pixel LOLA data is insufficient to
+  assess affects of natural terrain on site
+  design and construction ops
+• Preliminary analysis compared berms on a level vs 4°
+  sloped site and yielded 2.6x increase in berm volume in the
+  Industrial Area using conservative assumptions
+• Further work must be completed using higher resolution data
+  and/or simulated terrain roughness, slope and rock
+  distributions
+         Fundamental Regolith Features
+• Berms: Constructed walls used to shield landed assets from ejecta
+• Subgrade landing surfaces: Flat, level, excavated, rock free landing zones
+  designed to reduce landing hazards
+• Ramps: Sloped surfaces to provide trafficable transitions between elevations
+• Berm cut-throughs: Passages designed to allow mobility platforms and cabling
+  through berms
+• Foundations: Flat, level, rock free, compacted locations for class II or III
+  infrastructure
+• Overburden: Protective burial layer on an unpressurized shelter to provide
+  meteoroid, radiation, and thermal shielding
+                      Single Use Landing Zone Design
+  • 15 m LZ diameter based on 5 m landing accuracy and 5 m lander diameter
+  • Center distances of 19.9 m based on LZ diam, 8 m standoff distance from ejecta impacted
+    face of berm to landed lander*, and berm base width of 4.9 m
+  • Depth of LZ is 0.8 m to balance regolith cut and fill mass, provide surrounding region some
+    protection from ejecta, and access densified regolith for the landing surface
+  • 1 m wide 20°sloped accessways between the landing surface and natural grade
+  • Open debate on landing on natural vs excavated sub-grade surfaces
+
+
+
+
+*Goudarzi, N. (2026).
+(manuscript in preparation).
+“Optimization of Lunar
+Materials for Launch and
+Landing Pads: NASA STTR
+Phase I Final Report (Contract
+80NSSC24PB220)”. Blueshift,
+LLC d/b/a Outward
+Technologies.
+                                                 Berm Design
+• Height is 2.5 m which is the
+  assumed lander height with
+  VSAT stowed
+   – Rational is to protect landed
+     asset from any lateral debris
+   – May be overly conservative for
+     3°ejecta angle
+• Crest is 1 m for IPEx tracks to laterally overlap for
+  compaction uniformity and eliminate ruts
+• Side wall angle is 52°based on max “dumped”
+  regolith angle (FS=1)* assuming limited
+  compaction from repeated traversals
+• 50% relative bulk density (1.4 g/cm3) based on 30-
+  40% RD* with 10-20% densification from repeated
+  traversals                              *Heiken, G. H., Vaniman, D. T., and French, B. M. (1991). Lunar sourcebook: a user’s guide to the Moon.
+                                                                 Cambridge University Press, Cambridge, UK and New York, NY.
+                  Berm Construction Test
+• A feasibility test of teleoperated robotic berm construction was completed with
+  RASSOR 2.0 in Earth ambient with Black Point-1 simulant and had an average
+  RD of 61% achieved by repeated trafficking
+        Industrial Area Berm Layout
+Berm length, or arc length, is sized so that every lander receives full berm height protection
+regardless of where it lands within its 5 m landing accuracy circle
+ Shelter Foundation & Overburden Design
+• A shelter structure was notionally designed based on NASA’s ARMADAS Project voxels to
+  accommodate 2x IPEx, CPEx, and other customers. The structure footprint is 17.4 m2 and fits
+  within a 7 x 4 m rectangular area.
+• A level and compacted regolith foundation extends 1 m beyond the rectangular area assumed to
+  be compacted to 80% RD.
+• 1 m of regolith overburden covers the shelter to mitigate radiation and meteoroid impacts as well
+  as provide a stable thermal environment
+• A ramp ≥ 1 m in width with 20°slope is used to emplace overburden
+Reusable LLP Foundation and Berm Design
+                           • 20 m diameter flat, level, rock free
+                             regolith foundation, 1.6 m below
+                             grade and compacted to 80% RD
+                           • 15 m diameter durable pad surface
+                             built using TBD technology
+                           • Large berm protects full height and
+                             width of Industrial Area
+                           • Shorter semi-circle berm protects
+                             surrounding region from 6°ejecta
+                             angle
+                           • Two 9 m wide accessways with
+                             5°slope for cargo and/or spent
+                             lander transport
+                             – Spent lander transport method TBD
+                                Conclusions
+• The Lunar Innovation Park is a near term, feasible, Moon Base concept with regolith features
+  to enable extreme proximity landings and collocate minimum viable surface infrastructure
+• Several site plan and bulk regolith feature factors need continued investigation including:
+   – Site fidelity and geotechnical stability: Higher resolution lunar features such as slope,
+     roughness, and rock distribution must be evaluated along with the long-term stability of bulk
+     regolith features against seismic activity and thermal pumping
+   – Ejecta dynamics: Knowledge of primary ejecta effects on bulk regolith features and
+     secondary ejecta trajectories must continue to be refined
+   – Lander trajectory and contamination: Development and analysis of lander flyover and
+     ascent/descent trajectories to ensure compatibility with the Park layout
+   – Landing zone design: Trade landing on natural vs improved surface
+Lunar Innovation Park
+

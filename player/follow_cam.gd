@@ -38,6 +38,7 @@ var room := false  # the owner says the target is in a room: the lens goes into 
 var first := 0.0  # 0 the follow camera, 1 the eye: eased over fp_ease_s, smoothstepped by the lens
 var eye := Vector3.ZERO  # the eye in the target's space, y up, z forward along the view (negative is ahead)
 var reveal := 1.0  # 0 while the lens could cut the drawn body, then up to 1 over fp_reveal_s: caps `fade`
+var show_body := false  # a cut is on (player.perform): another camera films the body, so it is drawn even in first person
 
 
 func setup(tuning: Dictionary) -> void:
@@ -288,6 +289,9 @@ class Lens extends Camera3D:
 			var clear: bool = p.distance_to(p.clamp(rig.shell.position, rig.shell.end)) > rig._near_radius()
 			rig.reveal = move_toward(rig.reveal, 1.0, delta / rig.t.fp_reveal_s) if clear and rig.first < 1.0 else 0.0
 			rig.fade = minf(rig.fade, rig.reveal)
+		if rig.show_body:
+			rig.reveal = 1.0
+			rig.fade = 1.0
 
 	## Toward the eye: position lerped, rotation slerped, one smoothstep for both. The lens above sits on the arm's
 	## free line from the pivot, so the straight path from it to the eye stays in what the arm already cleared (the

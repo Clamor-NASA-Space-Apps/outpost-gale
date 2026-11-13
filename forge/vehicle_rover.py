@@ -106,6 +106,24 @@ smooth(cyl("beacon", 0.05, 0.06, (0.55, -1.45, 3.02), LIGHT, 16))
 bar("dish_stalk", (-0.55, -1.4, 2.78), (-0.55, -1.4, 2.9), 0.025, METAL)
 smooth(bevel(cyl("dish", 0.17, 0.04, (-0.55, -1.4, 2.93), METAL, 16, rot=(0.6, 0, 0)), width=0.01))
 
+# Charge socket on the right flank (-X), over the middle wheels and under the window line, where the bay's charger
+# reaches it (SAC21, NTRS 20210026448: the crew "connect the PR to the surface power grid to recharge batteries").
+# The empty `port_charge` sits on the socket's face, its +Y (glTF -Z, the game's forward) pointing out: world.gd
+# puts the charger's plug there while the rover is parked in its bay. Under `body`, so it rides the springs.
+CP = (-1.15, 0.2, 1.42)
+socket = [bevel(box("charge_socket", (0.05, 0.18, 0.16), (CP[0] - 0.015, CP[1], CP[2]), TRIM), width=0.01, segments=1),
+          smooth(cyl("charge_socket_ring", 0.045, 0.012, (CP[0] - 0.044, CP[1], CP[2]), HAZ, 16, rot=(0, math.pi / 2, 0))),
+          smooth(cyl("charge_socket_well", 0.03, 0.012, (CP[0] - 0.048, CP[1], CP[2]), METAL, 16, rot=(0, math.pi / 2, 0)))]
+socket = join("charge_socket", socket)
+cport = bpy.data.objects.new("port_charge", None)
+bpy.context.scene.collection.objects.link(cport)
+cport.location, cport.rotation_euler = (CP[0] - 0.054, CP[1], CP[2]), (0, 0, math.pi / 2)
+body_node = bpy.data.objects["body"]
+bpy.context.view_layer.update()
+mw = cport.matrix_world.copy()
+cport.parent = body_node
+cport.matrix_world = mw
+
 # Six wheel pairs. Each pair is one node so code can spin it (local X) and steer it (local up)
 n = 0
 for y in AXLES:

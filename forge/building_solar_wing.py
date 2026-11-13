@@ -51,4 +51,10 @@ box_ = [bevel(box("junction", (0.25, 0.5, 0.6), (JX, 0, 0.5), mat("body")), widt
         box("junction_post", (0.08, 0.08, 0.25), (JX, 0, 0.1), mat("metal")),
         bar("lead", (JX + 0.1, 0, 0.4), (-HALF + 0.3, 0, AX - 0.1), 0.02, mat("trim"))]
 join("junction-col", box_)
+# the field cable runs box to box along the rows' north ends and on into the battery bank (world.json cables.ends):
+# a conduit out of each side of the box and down into a ground gland box, port_w on -Y (west in the field), port_e on
+# +Y. Out at the sides and from 0.4 m up: a 40 m row tilts to the ground's plane, and where the ground at its end
+# stands higher the world lifts the gland box onto it (world.gd _glands()), up under the conduit's level run
+for s, name in ((-1, "port_w"), (1, "port_e")):
+    port(name, (JX, s * 0.42), (JX, s * 0.25, 0.42), r=0.025, size=(0.14, 0.14))
 done("building_solar_wing")

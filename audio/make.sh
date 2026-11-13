@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Builds every file in audio/ from the downloads in assets-cache (and our own synthesis), once, with ffmpeg.
-# Usage (from the project folder): nice -n 10 taskset -c 5-7 bash audio/make.sh [music|radio]   (only audio/music/, or
-# only the radio sounds)
+# Usage (from the project folder): nice -n 10 bash audio/make.sh [music|radio|sfx]   (only audio/music/, only the radio
+# sounds, or only the use-spot sounds)
 # Why baked: a Godot web build plays audio in Sample mode, where bus effects do not run (design/research/alive.md 4.3),
 # so every muffle is in the file. `<name>.ogg` is the clear copy (Habitat bus, full air), `<name>_out.ogg` the one
 # heard on Mars through a helmet (Outside bus). Credits: ASSETS.md, Sound.
@@ -47,25 +47,42 @@ loop() { # in.wav xf out.ogg
 # clear: music is not a sound in the Mars air, so nothing here is muffled. About -16 LUFS under a -1.5 dBFS ceiling;
 # the level in play is data/tuning.json `audio.music`. Picks and licences: assets-cache/music/README.md.
 M=../../../../assets-cache/music
-tune() { # in filter out.ogg
+tune() { # in filter out.ogg [vorbis quality, 3]
 	ffmpeg -v error -y -i "$1" -af "$2" -ar 44100 -ac 2 "$T/m.wav"
 	local i
 	i=$(ffmpeg -nostats -i "$T/m.wav" -af ebur128 -f null - 2>&1 | sed -n 's/^ *I: *\(-*[0-9.]*\) LUFS/\1/p' | tail -1)
 	ffmpeg -v error -y -i "$T/m.wav" -af "volume=$(python3 -c "print(-16 - $i)")dB,alimiter=limit=0.84:attack=5:release=80:level=false" \
-		-c:a libvorbis -q:a 3 "music/$3"
+		-c:a libvorbis -q:a "${4:-3}" "music/$3"
 }
 music() {
 	mkdir -p music
 	# ours (Apache-2.0, assets-cache/music/ours/make_motifs.py): a 20 ms fade in against a click, 0.3 s out at the end
 	END="areverse,afade=t=in:d=0.3,areverse"
-	for f in first_step airlock_sealed discovery mission_lost quiet; do
+	for f in first_step airlock_sealed discovery mission_lost quiet dawn sleep storm; do
 		tune "$M/ours/$f.ogg" "afade=t=in:d=0.02,$END" "$f.ogg"
 	done
 	# Kilua Boy's Sunset Walk is 48 bars of 1.6 s (its hits land on 12.8, 25.6, 49.6, 51.2 s, measured from the
 	# loudness envelope). Its first 16 bars: the soft intro and the first melody, which ends in a quiet bar before
 	# the downbeat at 25.6 s. Cut just before that downbeat, and fade the quiet bar out after the last hits (22.2 s).
 	tune "$M/oga-kiluaboy-sunset-walk/SunsetWalk.ogg" "atrim=0:25.55,asetpts=N/SR/TB,afade=t=in:d=0.02,afade=t=out:st=22.75:d=2.8" sunset.ogg
+	# The beds (audio.gd `bed()`): one phrase now and then, minutes of rest between, so they stay rare. Played far
+	# under the cues, so Vorbis q1 is plenty. Exploration Theme is 56 bars of 2.4 s; its sections turn at 41.7 and
+	# 80.4 s (the loudness envelope dips there), so three phrases of about 16 bars each.
+	local ex="$M/oga-cleytonkauffman-exploration-theme/Exploration Theme/Exploration Theme.ogg"
+	bedcut "$ex" 0 41.6 bed_eva_1.ogg
+	bedcut "$ex" 41.7 80.3 bed_eva_2.ogg
+	bedcut "$ex" 80.4 118.8 bed_eva_3.ogg
+	# Lifewave 2k breathes in phrases of about 12 s with quiet dips between; its music starts at 4.8 s, and its
+	# dips at 47.2 and 86.6 s close the first two long phrases.
+	local lw="$M/oga-cynicmusic-lifewave-2k/006_lifeWave2k_0.mp3"
+	bedcut "$lw" 4.8 47.2 bed_hab_1.ogg
+	bedcut "$lw" 47.3 86.6 bed_hab_2.ogg
 	du -ch music/*.ogg | tail -1
+}
+bedcut() { # in from to out.ogg: a phrase eased in over 1.5 s and out over 3 s
+	local d
+	d=$(python3 -c "print($3 - $2)")
+	tune "$1" "atrim=$2:$3,asetpts=N/SR/TB,afade=t=in:d=1.5,afade=t=out:st=$(python3 -c "print($d - 3)"):d=3" "$4" 1
 }
 
 # The suit radio (our own synthesis, wordless): heard through the headset, so clear, but squeezed into a radio's
@@ -90,12 +107,56 @@ radio() {
 	shot "$T/rp.wav" "$band" radio_pip.ogg
 }
 
+# The use spots' sounds (design/plans/next-lanes.md 4.4), named in audio.gd SOUNDS. Spots indoors (the galley, the
+# greenhouse, the toilet, the desk) get only the clear copy; ones that can happen outside also get `_out`.
+sfx() {
+	nice -n 10 python3 -I make_sfx.py "$T"
+	for f in curtain pour sip crinkle rattle leaf suction brush beep; do
+		shot "$T/$f.wav" "anull" "$f.ogg"
+	done
+	for f in latch ratchet valve zip; do
+		shot "$T/$f.wav" "anull" "$f.ogg"
+		shot "$T/$f.wav" "$OUT" "${f}_out.ogg"
+	done
+	# a rock sample knocked loose (rubberduck bfh1_rock_hit_01, CC0)
+	shot "$S/oga-rubberduck-breaking-falling-hit/bfh1_rock_hit_01.ogg" "anull" rock.ogg
+	shot "$S/oga-rubberduck-breaking-falling-hit/bfh1_rock_hit_01.ogg" "$OUT" rock_out.ogg
+	# a knee on gravel (TinyWorlds gravel step, CC0): through the suit outside, like the boots
+	shot "$S/oga-tinyworlds-different-steps/gravel.ogg" "anull" kneel.ogg
+	shot "$S/oga-tinyworlds-different-steps/gravel.ogg" "$BODY" kneel_out.ogg
+	# soil patted over a seed: a Fantozzi sand step slowed to 0.7
+	shot "$S/oga-fantozzi-footsteps/Fantozzi-footsteps/flac/Fantozzi-SandL1.flac" "aresample=44100,asetrate=44100*0.7,aresample=44100" pat.ogg
+	# the O2 valve venting (bart's steam hiss #1, CC0)
+	shot "$S/oga-bart-steam-hisses/steam hisses - Marker #1.wav" "afade=t=out:st=1.2:d=0.6" vent.ogg
+	shot "$S/oga-bart-steam-hisses/steam hisses - Marker #1.wav" "afade=t=out:st=1.2:d=0.6,$OUT" vent_out.ogg
+	# the suit's air refilling: 0new4y's gas leak loop (CC0), softened, 3.2 s
+	shot "$S/oga-0new4y-gas-leak/compressed_gas_leak.ogg" "aloop=loop=1:size=88200,atrim=0:3.2,lowpass=f=2500,afade=t=in:d=0.3,afade=t=out:st=2.6:d=0.6" refill.ogg
+	# the hose connector: a click, then the coupling seats (Kenney click_001, rubberduck bfh1_metal_hit_01)
+	ffmpeg -v error -y -i "$K/interface-sounds/Audio/click_001.ogg" -i "$S/oga-rubberduck-breaking-falling-hit/bfh1_metal_hit_01.ogg" \
+		-filter_complex "[0]aresample=32000,pan=mono|c0=c0[a];[1]aresample=32000,pan=mono|c0=c0,volume=0.3,adelay=40[b];[a][b]amix=inputs=2:normalize=0:duration=longest" "$T/c.wav"
+	shot "$T/c.wav" "anull" connect.ogg
+	# the desk screens waking (Kenney computerNoise_000, CC0), its first 1.5 s
+	shot "$K/sci-fi-sounds/Audio/computerNoise_000.ogg" "atrim=0:1.5,afade=t=out:st=1.0:d=0.5" screens.ogg
+	# the suit check's three ticks (Kenney confirmation_001..003, CC0), half a second apart
+	ffmpeg -v error -y -i "$K/interface-sounds/Audio/confirmation_001.ogg" -i "$K/interface-sounds/Audio/confirmation_002.ogg" \
+		-i "$K/interface-sounds/Audio/confirmation_003.ogg" -filter_complex \
+		"[0]aresample=32000,pan=mono|c0=c0[a];[1]aresample=32000,pan=mono|c0=c0,adelay=500[b];[2]aresample=32000,pan=mono|c0=c0,adelay=1000[c];[a][b][c]amix=inputs=3:normalize=0:duration=longest" "$T/t.wav"
+	shot "$T/t.wav" "anull" ticks.ogg
+	# hard work in the suit: craigsmith's respirator loop (Freesound 675559, CC0) under the breaths, a seamless loop
+	ffmpeg -v error -y -i "$S/freesound-craigsmith-675559/675559__craigsmith__s26-03-respirator-loopable.wav" -af "lowpass=f=3000" -ac 1 "$T/x.wav"
+	loop "$T/x.wav" 1 exert.ogg
+}
+
 if [ "${1:-}" = music ]; then
 	music
 	exit 0
 fi
 if [ "${1:-}" = radio ]; then
 	radio
+	exit 0
+fi
+if [ "${1:-}" = sfx ]; then
+	sfx
 	exit 0
 fi
 
@@ -182,5 +243,6 @@ for pair in "maximize_003:pip_go" "question_002:pip_hello"; do
 done
 
 radio
+sfx
 music
 du -ch ./*.ogg | tail -1

@@ -28,6 +28,7 @@
   "plant": "#76a83c",
   "romaine": "#7e2a3a",
   "grow": "#e04fd2",
+  "growlight": "#e889d6",
   "visor": "#b8913c",
   "sky": "#6a3a2c",
   "horizon": "#7e4a3a",
@@ -443,7 +444,7 @@
   "gaming": {
    "msaa": 4,
    "scale": 1,
-   "shadows": 2,
+   "shadows": 4,
    "shadowMap": 4096,
    "shadowRange": 60,
    "shadowFilter": 4,

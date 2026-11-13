@@ -8,15 +8,20 @@ const Interactions := preload("res://sandbox/interactions.gd")
 const Audio := preload("res://audio/audio.gd")
 const Pip := preload("res://sandbox/pip.gd")
 const Settings := preload("res://ui/settings.gd")
-# sky states: DESIGN.md and its DESIGN.<state>.md siblings, as token files
+const SkyClock := preload("res://world/sky_clock.gd")
+const Cover := preload("res://ui/cover.gd")
+# sky states: DESIGN.md and its DESIGN.<state>.md siblings, as token files; the sky clock blends them by the sun
 const SKIES := ["design", "design.sunset", "design.night", "design.storm"]
+const SKY_PHASES := ["noon", "dusk", "night", "storm"]  # where _sky(i) puts the clock: each key at its own look
 const VIEWS := {
 	# [from, at] in metres from the patch centre; heights are added from the ground
 	"base": [Vector3(-26, 16, 24), Vector3(4, 0, -2)],
+	"overview": [Vector3(0, 150, 110), Vector3(0, 0, -35)],  # the whole outpost from high up: lander to reactor
 	"horizon": [Vector3(-14, 1.7, -14), Vector3(30, 3, 22)],
+	"west": [Vector3(14, 1.7, 2), Vector3(-60, 4, -6)],  # toward the setting sun, past the base (the dusk's blue glow)
 	"airlock": [Vector3(-2.5, 1.7, 7.5), Vector3(0, 1.2, 2.5)],
-	"rover": [Vector3(-16, 3.0, 8), Vector3(-10, 1.2, 0)],
-	"greenhouse": [Vector3(-9.5, 5.5, -1.5), Vector3(-14, 0.4, -6)],
+	"rover": [Vector3(16, 3.0, 16), Vector3(10, 1.2, 8)],
+	"greenhouse": [Vector3(-6, 5.5, 9), Vector3(-11, 0.4, 0)],
 	"hab_in": [Vector3(0.3, 2.0, 1.4), Vector3(0.6, 1.1, -2.0)],  # inside HAB 1: the life-support wall and bunks
 	"hab_desk": [Vector3(0.9, 2.0, -0.6), Vector3(-2.0, 1.0, 0.9)],  # inside HAB 1: galley, Veggie, desk and map
 }
@@ -25,6 +30,7 @@ const VIEWS := {
 const FP_VIEWS := {
 	"hab_fp": ["hab1", Vector3(0.0, 0.3, -1.3), 180.0, -12.0],
 	"greenhouse_fp": ["greenhouse", Vector3(0.0, 0.22, -2.0), 180.0, -12.0],
+	"shelter_fp": ["shelter", Vector3(0.0, 0.1, -0.45), 180.0, -12.0],
 }
 
 @onready var world: Node3D = $World
@@ -35,13 +41,14 @@ var pip: Node3D  # world.json item `pip`, driven by sandbox/pip.gd
 var fps_label: Label  # the frame rate on screen, to read off a phone (game-feel-gate row 16)
 var tuning: Dictionary
 var design: Dictionary
-var sky := 0
+var sky := 0  # the SKIES key that leads the clock's blend
+var clock: SkyClock  # world/sky_clock.gd: the hour every part of the look follows
 var quality := ""
 var overrides := {}  # the player's own graphics knobs on top of the preset (ui/settings.gd)
 var settings: CanvasLayer
 var view := "default"
 var hop := 0  # the next landmark the teleport key goes to
-var cover: ColorRect  # over the screen while new shaders compile (load, a sky or quality switch)
+var cover: Cover  # over the screen while new shaders compile (load, a sky or quality switch)
 var _warming := false
 var _rewarm := false
 var _netted: Array[Node3D] = []  # besides the hero, what the safety net watches (_physics_process)
@@ -49,9 +56,17 @@ var rescued := 0  # how many times the safety net moved something (tests/edge_te
 
 
 func _ready() -> void:
+	# the project keeps its folder name, the user:// folder where each device saves its settings
+	DisplayServer.window_set_title("Outpost Gale")
 	tuning = JSON.parse_string(FileAccess.get_file_as_string("res://data/tuning.json"))
 	Controls.register(tuning.input.stick_deadzone)
 	design = _design(SKIES[0])
+	# one rig for the whole sol: the day's materials, with the night's lamps and real sky, turned by the clock. Its
+	# stars run on the clock's own seconds (timeScale 1)
+	var night := _design("design.night")
+	design.lighting.lamp = night.lighting.lamp
+	design.lighting.celestial = night.lighting.celestial.duplicate()
+	design.lighting.celestial.timeScale = 1
 	Forge.HouseStyle.apply_lighting(self, design)
 	# this device's last choice (ui/settings.gd), else the preset for it: `phone` on a phone (the A16)
 	var saved := Settings.saved()
@@ -100,13 +115,31 @@ func _ready() -> void:
 	var top := CanvasLayer.new()
 	top.layer = 128
 	add_child(top)
-	cover = ColorRect.new()
-	cover.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	cover.mouse_filter = Control.MOUSE_FILTER_STOP  # a click while it is up is not a click on the world
+	cover = Cover.new()
 	top.add_child(cover)
 	settings = Settings.new()
 	add_child(settings)
 	settings.setup(self)
+	clock = SkyClock.new()
+	clock.name = "SkyClock"
+	add_child(clock)
+	var keys := {}
+	for k: String in SKIES:
+		keys[k] = _design(k)
+	clock.setup(self, world, design, keys, tuning.sky)
+	clock.phase_changed.connect(func(state: String) -> void:
+		sky = SKIES.find(state)
+		audio.sky(state))  # the sun going down has its music
+	interactions.used.connect(clock.used)  # a tilted panel sheds its dust
+	sky = SKIES.find(clock.state)
+	# the tools want repeatable pictures: the hour stays put in a tool run, and `hour=H` pins it anywhere
+	for a: String in OS.get_cmdline_user_args():
+		if a.begins_with("--forge-job="):
+			clock.pinned = true
+		elif a.begins_with("hour="):
+			clock.pinned = true
+			clock.set_hour(float(a.trim_prefix("hour=")))
+			clock.refresh()
 	_warm()
 	for n: Node3D in world.items.values():
 		if n.is_in_group("vehicle") or n.is_in_group("carriable"):
@@ -115,7 +148,9 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	fps_label.text = "%d fps  %s  %s" % [Engine.get_frames_per_second(), quality, SKIES[sky].trim_prefix("design.").replace("design", "day")]
+	clock.paused = settings.is_open() or cover.visible  # time waits while the player cannot act
+	var h := clock.hour()
+	fps_label.text = "%d fps  %s  %s %02d:%02d" % [Engine.get_frames_per_second(), quality, clock.phase(), int(h), int(fmod(h, 1.0) * 60.0)]
 
 
 ## The safety net (CONTRACTS.md): a body found under the ground or past world.bound() goes back on top at the nearest
@@ -163,7 +198,7 @@ func _unhandled_input(e: InputEvent) -> void:
 	if e.is_action_pressed("interact"):
 		interactions.interact()  # out of the rover, put down the bag, or use what is in reach
 	elif e.is_action_pressed("debug_sky"):
-		_sky(sky + 1)
+		clock.skip()  # a short time-lapse to the next phase: dawn, noon, dusk, night, a storm
 	elif e.is_action_pressed("fullscreen"):
 		settings.full_screen()
 	elif e.is_action_pressed("debug_quality"):
@@ -181,14 +216,11 @@ func _design(name: String) -> Dictionary:
 	return Forge.HouseStyle.load_design(file if FileAccess.file_exists(file) else "res://design.json")
 
 
+## The clock straight to where SKIES key `i` is the whole look (tests, captures): day at noon, the sunset at its own
+## sun, the night at its own hour, the storm at noon. The probes redraw behind the cover.
 func _sky(i: int) -> void:
-	sky = i % SKIES.size()
-	design = _design(SKIES[sky])
-	Forge.HouseStyle.apply_lighting(self, design)
-	Forge.HouseStyle.set_quality(self, design, quality, overrides)
-	_restyle()
+	clock.jump(SKY_PHASES[i % SKIES.size()])
 	_warm()
-	audio.sky(SKIES[sky])  # the sun going down has its music
 
 
 ## A preset with the player's knobs on top (CONTRACTS.md, Graphics settings). `restyle` for a knob the world reads
@@ -218,19 +250,25 @@ func _warm() -> void:
 	fade.shader = player.fading
 	var at := Transform3D(Basis(), world.get_node("Probe").global_position)
 	world.dust.warm(at * Vector3(0, 0, -8))
-	await Forge.HouseStyle.warm(self, design, at, [fade])
+	cover.progress(0.0)
+	await Forge.HouseStyle.warm(self, design, at, [fade], 3, cover.progress)
 	while _rewarm:
 		_rewarm = false
-		await Forge.HouseStyle.warm(self, design, at, [fade])
+		await Forge.HouseStyle.warm(self, design, at, [fade], 3, cover.progress)
 	_warming = false
 	var t := create_tween()
 	t.tween_property(cover, "color:a", 0.0, 0.25)
-	t.tween_callback(func() -> void: cover.visible = _warming)
+	t.tween_callback(func() -> void:
+		cover.visible = _warming
+		if not _warming:
+			cover.finish())
 
 
 func _restyle() -> void:
 	world.restyle(design)
 	player.restyle(design)
+	if clock:
+		clock.restyled()  # the world's lamps, probes' ambient and weather follow the hour again
 
 
 ## True while the cover is up (Forge waits for it before a picture).
@@ -244,7 +282,7 @@ func render_game_to_text() -> Dictionary:
 	s.merge(audio.state())
 	if pip:
 		s.merge(pip.state_text())
-	s.merge({"sky": SKIES[sky], "quality": quality, "fps": Engine.get_frames_per_second(), "view": view})
+	s.merge({"sky": clock.report(), "quality": quality, "fps": Engine.get_frames_per_second(), "view": view})
 	return s
 
 
@@ -254,6 +292,13 @@ func place(pos: Vector3, yaw_deg: float) -> void:
 
 
 func set_view(v: String) -> void:
+	if "@" in v:  # "base@18.2": the view at that local hour, pinned (a sol of captures)
+		clock.pinned = true
+		clock.set_hour(float(v.get_slice("@", 1)))
+		clock.refresh()
+		set_view(v.get_slice("@", 0))
+		_warm()  # the probes redraw under the new sky, then hand back the camera this view chose
+		return
 	view = v
 	if v == "settings":
 		settings.open()  # over the play view, for a picture of it

@@ -42,4 +42,7 @@ for i in range(4):  # radiator wings, edge-on to the mast, each on two struts
 parts.append(smooth(cyl("mast_cap", 0.18, 0.12, (0, 0, DECK + 9.16), mat("trim"), 16)))
 join("body-col", parts)
 smooth(sphere("beacon-col", 0.1, (0, 0, DECK + 9.3), mat("light"), 12))
+# the 3 kVac line leaves from the deck's rim on the front (+Y, toward the crew), between two legs, down a conduit
+# into a ground gland box where the long field cable plugs in (world.json cables.ends)
+port("port_1", (0, R * 0.75 + 0.3), (0, R * 0.75, DECK - 0.02), r=0.04, size=(0.2, 0.2))
 done("building_reactor")

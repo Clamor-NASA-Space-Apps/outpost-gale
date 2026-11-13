@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://b6m7fcba3u27w"
-path="res://.godot/imported/building_solar_array.glb-fe85434a4739bd9e98e97873cc049303.scn"
+uid="uid://dvg7tx2a2tiw"
+path="res://.godot/imported/prop_charger.glb-b6a2866dcd1d289c2029cb51a5f54cb3.scn"
 
 [deps]
 
-source_file="res://models/building_solar_array.glb"
-dest_files=["res://.godot/imported/building_solar_array.glb-fe85434a4739bd9e98e97873cc049303.scn"]
+source_file="res://models/prop_charger.glb"
+dest_files=["res://.godot/imported/prop_charger.glb-b6a2866dcd1d289c2029cb51a5f54cb3.scn"]
 
 [params]
 

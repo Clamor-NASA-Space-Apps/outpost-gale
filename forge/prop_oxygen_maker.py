@@ -55,7 +55,7 @@ def valve(i, x, z):
 
 parts = skid(W, D, SK)
 for i, (x, g) in enumerate(zip(XS, GAS)):
-    role = "body" if g == "O2" else "trim"
+    role = "panel" if g == "O2" else "trim"  # painted pressure bottles, smooth: in `body` they wore the hull's plates
     parts.append(smooth(cyl(f"bottle{i}", BR, BH, (x, 0, SK + BH / 2), mat(role), 18)))
     parts.append(smooth(sphere(f"bottle_top{i}", BR, (x, 0, SK + BH), mat(role), 16)))
     parts.append(smooth(cyl(f"neck{i}", 0.04, 0.08, (x, 0, SK + BH + BR + 0.02), mat("metal"), 10)))
@@ -63,12 +63,18 @@ for i, (x, g) in enumerate(zip(XS, GAS)):
     parts.append(smooth(cyl(f"band{i}", BR + 0.006, 0.06, (x, 0, SK + BH - 0.12), mat("hazard"), 18)))
 bpy.context.view_layer.update()
 TOP = max((parts[-2].matrix_world @ Vector(c)).z for c in parts[-2].bound_box)  # the valves' tops
-# a frame behind the bottles with two straps across their fronts
+# a box frame round the bottles, as a cylinder rack is built: uprights at the four corners, rails at the back,
+# side bars, and two straps across the fronts that end in the front uprights (they floated when only the back
+# had uprights, 13 Nov playtest). Ends run 5 mm into the uprights so no face lies on a face
+FY = BR + 0.03  # the front uprights' centre line, just clear of the bottles
 for x in (-W / 2 + 0.04, W / 2 - 0.04):
-    parts.append(bevel(box(f"upright{x}", (0.06, 0.06, 1.3), (x, -D / 2 + 0.05, SK + 0.65), mat("metal")), width=0.01, segments=1))
+    for y, tag in ((-D / 2 + 0.05, "b"), (FY, "f")):  # 6 cm posts, unbevelled: the prop budget (4,000)
+        parts.append(box(f"upright{tag}{x}", (0.06, 0.06, 1.3), (x, y, SK + 0.65), mat("metal")))
 for z in (0.45, 1.05):
-    parts.append(box(f"rail{z}", (W - 0.02, 0.05, 0.06), (0, -D / 2 + 0.05, SK + z), mat("metal")))
-    parts.append(box(f"strap{z}", (W - 0.14, 0.03, 0.05), (0, BR + 0.012, SK + z), mat("trim")))
+    parts.append(box(f"rail{z}", (W - 0.07, 0.05, 0.06), (0, -D / 2 + 0.05, SK + z), mat("metal")))
+    parts.append(box(f"strap{z}", (W - 0.07, 0.03, 0.05), (0, FY - 0.01, SK + z), mat("trim")))
+    for x in (-W / 2 + 0.04, W / 2 - 0.04):
+        parts.append(box(f"side{z}{x}", (0.04, FY + D / 2 - 0.05 - 0.05, 0.04), (x, (FY - D / 2 + 0.05) / 2, SK + z), mat("metal")))
 join("body-col", parts)
 
 for i, (x, g) in enumerate(zip(XS, GAS)):  # what is in each bottle, on its front

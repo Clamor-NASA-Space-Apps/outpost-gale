@@ -60,9 +60,14 @@ func restyle(design: Dictionary, weather: Dictionary) -> void:
 					# its own name: it is no role's shared material (house_style's kit maps "light" back on restyle)
 					_blink_mat.resource_name = "light_flash"
 					_lit = _blink_mat.albedo_color
-					_glow = _blink_mat.emission_energy_multiplier
+					_glow = float(m.get_meta("glow", _blink_mat.emission_energy_multiplier))  # full, not the sky clock's daytime glimmer
 				mi.set_surface_override_material(i, _blink_mat)
 	_flash(true, true)
+
+
+## Toward the sun the trackers turn to (x east, y up, z south), zero to lie flat: the sky clock's real sun.
+func aim(sun: Vector3) -> void:
+	_sun = sun
 
 
 func _process(delta: float) -> void:

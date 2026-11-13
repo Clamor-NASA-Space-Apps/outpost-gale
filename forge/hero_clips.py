@@ -6,6 +6,7 @@ is a tucked running leap and its idle a 0.4 m staggered stance: none of them a s
 """
 import json
 import math
+import os
 
 import bpy
 from mathutils import Quaternion, Vector
@@ -13,6 +14,7 @@ from mathutils import Quaternion, Vector
 import hero_rig as R
 
 FPS = 30
+UAL2 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "..", "assets-cache", "quaternius", "ual", "ual2", "UAL2_Standard.glb")
 SRC_FPS = 24  # the glTF importer keys UAL at the scene's default rate
 LEG_K = (0.86 - 0.12) / (0.932 - 0.104)  # our hip-to-ankle over UAL's: scales the pelvis travel
 # Sheet values (data/reality.json): walk 1.0 m/s at 1.5 steps/s, hurry 1.6 m/s at 1.75 steps/s,
@@ -20,6 +22,14 @@ LEG_K = (0.86 - 0.12) / (0.932 - 0.104)  # our hip-to-ankle over UAL's: scales t
 WALK = dict(speed=1.0, cadence=1.5)
 LOPE = dict(speed=1.6, cadence=1.75)
 KNEE_CAP, STANCE, AIR, WORK = 28.0, 0.25, 0.63, 1.10
+# hero.lean.max is 25 degrees (a suited pick-up leaned about 25, skills/suited-locomotion rule 4): actions stay under it
+LEAN_CAP = 24.0
+KNEEL_KNEE = 0.07  # m, the knee joint over the floor when the knee rests on it (measured on the skinned suit, tests/clips_test.gd)
+# Whole-body moves that gravity drives (going down to a kneel or a seat, getting up) play slower on Mars by
+# dynamic similarity, the same Froude scaling as the gait (hero.froude.walk_run): time goes as sqrt(L / g), so a
+# UAL clip made for Earth plays sqrt(9.81 / 3.73) = 1.62 times as long. Arm-only work keeps UAL's timing.
+MARS_T = math.sqrt(9.81 / 3.73)
+KNEEL_BEND = 100.0  # degrees at the front knee in a kneel: a pressurised knee does not "fully buckle" (Norcross 2010)
 STAND_WIDTH = 0.33  # standing suited: 0.355 m (Cullinane 2017, design/research/suit.md)
 SOLE = {s: [(x, 0.11, 0.0), (x, -0.07, 0.0), (x, -0.25, 0.0)] for s, x in (("l", 0.225), ("r", -0.225))}
 SIDES = (("l", 1), ("r", -1))
@@ -43,11 +53,26 @@ def smooth(t):
     return t * t * (3 - 2 * t)
 
 
+def keyed_at(keys, t):
+    """A value through keys [(t, v)], eased between them and held past the ends."""
+    if t <= keys[0][0]:
+        return keys[0][1]
+    for (a, va), (b, vb) in zip(keys, keys[1:]):
+        if t <= b:
+            return va + (vb - va) * smooth((t - a) / (b - a))
+    return keys[-1][1]
+
+
+def godot(v):
+    return [round(v.x, 3), round(v.z, 3), round(-v.y, 3)]
+
+
 class Maker:
     def __init__(self, arm, src):
         self.arm, self.src, self.rig = arm, src, R.Rig(arm)
         self.sole = {s: R.sole_points(self.rig, s, SOLE[s]) for s, _ in SIDES}
         self.report = {}
+        self.upper = [n for n in self.rig.names if n not in ("root", "pelvis") and not n.startswith(("thigh", "calf", "foot", "ball"))]
 
     # Poses
     def zero(self):
@@ -337,6 +362,103 @@ class Maker:
                                  knee_peak=round(max(R.knee_flex(m, s) for m in mats for s, _ in SIDES), 1),
                                  lean=[round(min(map(lean_of, mats)), 1), round(max(map(lean_of, mats)), 1)], **extra)
 
+    # Actions: a UAL clip's upper body on suited legs, the lean capped, the gloves pinned where the work is
+    def compose(self, L, upper=None, lower=None, pins=(), bends=None, spine=1.0, head=0.3, ease=(0.3, 0.3), arms="lr"):
+        """Poses over L seconds. `upper(t)` is a retargeted pose whose spine, head and arms are taken (`spine` and
+        `head` shares of their turn from the stand; a helmet sits on the torso, so the head barely moves; the arms of
+        the sides in `arms`, the others stay in the stand), eased in
+        from the stand over ease[0] s and out over ease[1]; `lower(t, pose)` sets the hips and legs (default: the
+        stand, boots planted). `bends` {bone: [(t, deg)]} adds forward pitch. The lean is capped at LEAN_CAP, then
+        each pin puts a glove where the work is."""
+        n = round(L * FPS)
+        poses = []
+        for i in range(n + 1):
+            t = i * L / n
+            p = self.copy(self.stand_p)
+            src = upper(t) if upper else None
+            if src:
+                env = min(smooth(min(1.0, t / ease[0])) if ease[0] else 1.0, smooth(min(1.0, (L - t) / ease[1])) if ease[1] else 1.0)
+                for b in self.upper:
+                    if b[-2:] in ("_l", "_r") and b[-1] not in arms:
+                        continue
+                    w = env * (spine if b.startswith("spine") else head if b in ("neck_01", "Head") else 1.0)
+                    p[b] = (p[b][0].slerp(src[b][0], w), p[b][1])
+            if lower:
+                lower(t, p)
+            for bone, keys in (bends or {}).items():
+                self.turn(p, bone, rx(keyed_at(keys, t)))
+            for _ in range(3):  # the spine's own turns make the measure move a little: a few rounds settle it
+                over = lean_of(self.rig.fk(p)) - LEAN_CAP
+                if over > 0:
+                    self.turn(p, "spine_01", rx(-over))
+            poses.append(p)
+        for pin in pins:
+            self.pin(poses, L, **pin)
+        return poses
+
+    def copy(self, p):
+        return {k: (q.copy(), v.copy()) for k, (q, v) in p.items()}
+
+    def pin(self, poses, L, side, keys, ease=0.3, keep=0.0, rel=None, pole=None):
+        """The glove of `side` follows `keys` [(t, point, glove direction or None)] (armature space of the stand;
+        with `rel`, carried by that bone as it moves), eased in from the clip's own hand over `ease` s before the
+        first key and back after the last. `keep` adds that share of the clip's own hand motion around its mean
+        over the keys, so a pinned hand still works."""
+        n = len(poses) - 1
+        sx = dict(SIDES)[side]
+        pole = Vector(pole or (sx, 0.3, -0.6))
+        t0, t1 = keys[0][0], keys[-1][0]
+        own = [self.rig.fk(p)["hand_" + side].translation.copy() for p in poses]
+        held = [h for i, h in enumerate(own) if t0 <= i * L / n <= t1]
+        mean = sum(held, Vector()) / len(held)
+        for i, p in enumerate(poses):
+            t = i * L / n
+            w = smooth(max(0.0, min(1.0, (t - t0 + ease) / ease))) if t < t0 else 1.0 - smooth(max(0.0, min(1.0, (t - t1) / ease)))
+            if w <= 0:
+                continue
+            j = max(k for k in range(len(keys)) if keys[k][0] <= max(t, t0))
+            k2 = min(j + 1, len(keys) - 1)
+            u = smooth((t - keys[j][0]) / (keys[k2][0] - keys[j][0])) if k2 != j and t > keys[j][0] else 0.0
+            goal = Vector(keys[j][1]).lerp(Vector(keys[k2][1]), u)
+            d0, d1 = keys[j][2] if len(keys[j]) > 2 else None, keys[k2][2] if len(keys[k2]) > 2 else None
+            m = self.rig.fk(p)
+            frame = (m[rel] @ self.stand_m[rel].inverted()) if rel else None
+            if frame:
+                goal = frame @ goal
+            goal += keep * (own[i] - mean)
+            self.reach(p, side, own[i].lerp(goal, w), pole)
+            if d0 or d1:
+                d = Vector(d0 or d1).normalized().lerp(Vector(d1 or d0).normalized(), u)
+                if frame:
+                    d = frame.to_quaternion() @ d
+                cur = R.bone_dir(self.rig.fk(p), "hand_" + side)
+                self.aim(p, "hand_" + side, cur.lerp(d.normalized(), w))
+
+    def legs_to(self, p, ankles):
+        """Both legs solved so each ankle lands on its point, knees forward, boots flat."""
+        for s, sx in SIDES:
+            self.ik(p, "thigh_" + s, "calf_" + s, "foot_" + s, ankles[s], Vector((sx * 0.15, -1, 0)))
+            m = self.rig.fk(p)
+            rf, rf0 = m["foot_" + s].to_quaternion(), self.rig.rest["foot_" + s].to_quaternion()
+            self.rig.turn(p, m, "foot_" + s, rf0 @ rf.inverted())
+
+    def hips_to(self, p, at, q=None):
+        m = self.rig.fk(p)
+        if q is not None:
+            p["pelvis"] = (q.copy(), p["pelvis"][1])
+            m = self.rig.fk(p)
+        self.rig.shift(p, m, "pelvis", Vector(at) - m["pelvis"].translation)
+
+    def report_action(self, name, poses, L, loop, planted, work=None, **extra):
+        """clips.json row: the measures, the boots that stay put, and where the working glove is at the work time
+        (Godot model space: x, z, -y of Blender's), the point a use spot puts its box on."""
+        if work:
+            t, side = work
+            m = self.rig.fk(poses[round(t / L * (len(poses) - 1))])
+            h = m["hand_" + side].translation
+            extra.update(work_at=round(t / L, 3), hand_bone="hand_" + side, hand=godot(h))
+        self.clip(name, poses, L, loop, planted=planted, **extra)
+
 
 def make_all(arm, src, json_path):
     ual = {a.name: a for a in bpy.data.actions}  # UAL1's, imported with the rig
@@ -427,6 +549,9 @@ def make_all(arm, src, json_path):
     got = mk.measure(cw, period, WALK["speed"])
     mk.report["carry_walk"] = dict(length=round(period, 4), loop=True, speed=WALK["speed"], **got)
 
+    mk.stand_p, mk.stand_m = stand, mk.rig.fk(stand)
+    make_actions(mk, ual)
+
     # drive_sit: UAL's seated driving loop, hips and hands as they come
     d = mk.source(ch["Driving_Loop"], 40.0, round(40 / SRC_FPS * FPS))
     mk.clip("drive_sit", d, 40 / SRC_FPS, True, seat_hip=[round(x, 3) for x in mk.rig.fk(d[0])["pelvis"].translation])
@@ -446,3 +571,224 @@ def make_all(arm, src, json_path):
     for k, v in mk.report.items():
         print("CLIP", k, json.dumps(v))
 
+
+
+def ual2_actions():
+    """UAL2's clips (the same skeleton and rest as UAL1, checked 13 Nov), its objects dropped."""
+    before, acts = set(bpy.data.objects), set(bpy.data.actions)
+    sc = bpy.context.scene
+    fps, sc.render.fps = sc.render.fps, SRC_FPS  # the importer keys at the scene's rate, which make_all has set to ours
+    bpy.ops.import_scene.gltf(filepath=UAL2)
+    sc.render.fps = fps
+    for o in [o for o in bpy.data.objects if o not in before]:
+        bpy.data.objects.remove(o)
+    return {a.name.split(".")[0]: a for a in bpy.data.actions if a not in acts}
+
+
+def make_actions(mk, ual):
+    """The use clips (design/plans/next-lanes.md 1a). Each starts and ends in the stand, so the tree's crossfade
+    in and out is short. UAL gives the motion and its timing; the suit gives the limits (skills/suited-locomotion):
+    boots planted, a lean under hero.lean.max, a kneel instead of a squat, gloves that stop at the visor."""
+    acts = {**ual, **ual2_actions()}
+    chans = {}
+
+    def src(name, scale=1.0):
+        """t (s) -> the UAL clip retargeted at that time, played `scale` times slower."""
+        ch = chans.setdefault(name, R.channels(acts[name]))
+        f0 = acts[name].frame_range[0]
+        return lambda t: R.retarget(mk.src, mk.rig, R.sample(ch, f0 + t / scale * SRC_FPS), LEG_K)
+
+    def length(name, scale=1.0):
+        fr = acts[name].frame_range
+        return (fr[1] - fr[0]) / SRC_FPS * scale
+
+    sm = mk.stand_m
+    A = {s: sm["foot_" + s].translation.copy() for s, _ in SIDES}  # the planted ankles
+    BOTH = ["foot_l", "foot_r"]
+    down = (0, -0.5, -1)  # a glove pointing down and ahead
+    back = (0.3, 1, 0.5)  # a glove pointing back at the helmet or chest
+
+    # consume: the pouch goes up to the visor's front and stops there; the helmet never comes off (no faces)
+    L = length("Consume")
+    visor = (-0.05, -0.42, 1.60)  # wrist; the glove's tips end about 0.14 m short of the visor (y -0.168)
+    ahead = (-0.18, -0.60, 1.36)  # on the way up the glove passes well in front of the chest unit
+    mk.report_action("consume", mk.compose(L, src("Consume"), arms="r", pins=[dict(side="r", rel="spine_03", ease=0.25,
+                     keys=[(0.25, ahead, (0, -1, 0.3)), (0.42, visor, back), (0.95, visor, back), (1.12, ahead, (0, -1, 0.3))])]),
+                     L, False, BOTH, work=(0.7, "r"))
+
+    # plant: the glove to a tray at work height, a press, back (UAL squats to the ground; the rack is at 1.1 m)
+    L = length("Farm_PlantSeed")
+    tray, press = (-0.14, -0.60, WORK + 0.06), (-0.14, -0.60, WORK - 0.04)
+    mk.report_action("plant", mk.compose(L, src("Farm_PlantSeed"), pins=[dict(side="r", ease=0.45,
+                     keys=[(0.8, tray, down), (1.15, press, down), (1.55, press, down), (1.85, tray, down)])]),
+                     L, False, BOTH, work=(1.35, "r"))
+
+    # harvest: both gloves grip the head at the tray, lift it to the chest, hold
+    L = length("Farm_Harvest")
+    pins = []
+    for s, sx in SIDES:
+        pins.append(dict(side=s, ease=0.45, keys=[(0.7, (sx * 0.09, -0.60, WORK), (-sx * 0.3, -0.5, -1)),
+                                                  (1.0, (sx * 0.09, -0.60, WORK), (-sx * 0.3, -0.5, -1)),
+                                                  (1.5, (sx * 0.10, -0.46, WORK + 0.14), (-sx * 0.5, -1, 0)),
+                                                  (1.9, (sx * 0.10, -0.46, WORK + 0.14), (-sx * 0.5, -1, 0))]))
+    mk.report_action("harvest", mk.compose(L, src("Farm_Harvest"), pins=pins), L, False, BOTH, work=(0.85, "r"))
+
+    # pick_up: a reach to a shelf at table height and back to the chest (UAL's turn to the side halved; a suit
+    # moves slower, so the 0.83 s grab plays over 1.25 s)
+    L = length("PickUp_Table", 1.5)
+    mk.report_action("pick_up", mk.compose(L, src("PickUp_Table", 1.5), spine=0.5, arms="r", pins=[dict(side="r", ease=0.3,
+                     keys=[(0.42, (-0.16, -0.62, 1.00), down), (0.58, (-0.16, -0.62, 1.00), down),
+                           (0.92, (-0.10, -0.44, 1.22), (0.3, -1, 0))])]), L, False, BOTH, work=(0.5, "r"))
+
+    # radio: a glove to the side of the helmet, the call, back down
+    L = length("Idle_TalkingPhone_Loop")
+    ear = (-0.38, -0.14, 1.60)
+    mk.report_action("radio", mk.compose(L, src("Idle_TalkingPhone_Loop"), ease=(0.5, 0.5), arms="", pins=[dict(
+                     side="r", rel="spine_03", ease=0.45, keys=[(0.55, ear, (1, 0.3, 0.7)), (L - 0.6, ear, (1, 0.3, 0.7))])]),
+                     L, False, BOTH, work=(L / 2, "r"))
+
+    # suit_check (keyed): the helmet dips toward the chest unit, two taps on its face, a look up
+    L = 2.4
+    off, tap = (-0.08, -0.54, 1.36), (-0.06, -0.47, 1.36)  # wrist; a tap brings the glove to the unit's face (tests/clips_test.gd)
+    mk.report_action("suit_check", mk.compose(L, bends={"neck_01": [(0.2, 0), (0.6, 10), (1.7, 10), (2.1, 0)]},
+                     pins=[dict(side="r", rel="spine_03", ease=0.4, keys=[(0.55, off, back), (0.8, tap, back), (0.95, off, back),
+                                                                           (1.2, tap, back), (1.45, off, back)])]),
+                     L, False, BOTH, work=(0.8, "r"))
+
+    # brush (keyed): a brush in the right glove sweeps down the front of the right thigh twice, then the left forearm
+    L = 3.0
+    hi, lo = (-0.22, -0.36, 1.04), (-0.24, -0.38, 0.92)
+    arm_hi, arm_lo = (0.10, -0.52, 1.32), (0.18, -0.58, 1.22)
+    brush = [(0.5, hi, down), (0.8, lo, down), (1.0, hi, down), (1.3, lo, down), (1.7, arm_hi, (1, -0.3, -0.5)),
+             (2.0, arm_lo, (1, -0.3, -0.5)), (2.2, arm_hi, (1, -0.3, -0.5)), (2.5, arm_lo, (1, -0.3, -0.5))]
+    mk.report_action("brush", mk.compose(L, bends={"spine_01": [(0.2, 0), (0.5, 14), (1.4, 14), (1.7, 4)]},
+                     pins=[dict(side="r", ease=0.4, keys=brush),
+                           dict(side="l", ease=0.4, keys=[(1.6, (0.24, -0.50, 1.20), (0.2, -1, 0)), (2.6, (0.24, -0.50, 1.20), (0.2, -1, 0))])]),
+                     L, False, BOTH, work=(0.8, "r"))
+
+    # turn_valve (keyed): both gloves on a hand wheel facing the hero, a quarter turn clockwise as the hero sees it
+    L, C, RAD = 2.6, Vector((0, -0.58, 1.02)), 0.13
+    def rim(sx, deg):  # left glove starts at 9 o'clock (+x), right at 3 o'clock; clockwise lifts the left
+        a = math.radians(deg + (0 if sx > 0 else 180))
+        return tuple(C + Vector((math.cos(a), 0, math.sin(a))) * RAD + Vector((sx * 0.02, -0.03, 0)))
+    turn = lambda t: 90 * smooth(max(0.0, min(1.0, (t - 0.8) / 0.8)))
+    pins = [dict(side=s, ease=0.4, keys=[(t, rim(sx, turn(t)), (0, -1, 0)) for t in (0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.9)])
+            for s, sx in SIDES]
+    mk.report_action("turn_valve", mk.compose(L, bends={"spine_01": [(0.3, 0), (0.6, 6), (2.0, 6), (2.3, 0)]}, pins=pins),
+                     L, False, BOTH, work=(1.2, "r"), wheel=godot(C), wheel_radius=RAD)
+
+    # kneel: UAL's Fixing_Kneeling gives the timing of going down and getting up; the suit gives the kneel itself
+    # (the left boot stays, the right knee goes down behind on the floor, the front knee at KNEEL_BEND, "all done
+    # in one continuous motion", skills/suited-locomotion rule 4)
+    fix = src("Fixing_Kneeling", MARS_T)
+    n_src = round(length("Fixing_Kneeling") * SRC_FPS)
+    z = [mk.rig.fk(fix(f / SRC_FPS * MARS_T))["pelvis"].translation.z for f in range(n_src + 1)]
+    depth = [max(0.0, min(1.0, (z[0] - v) / (z[0] - min(z)))) for v in z]
+    t_down = next(f for f, k in enumerate(depth) if k > 0.97) / SRC_FPS * MARS_T
+    t_up = max(f for f, k in enumerate(depth) if k > 0.97) / SRC_FPS * MARS_T
+    t_end = n_src / SRC_FPS * MARS_T
+    rest = mk.rig.rest
+    a = (rest["calf_l"].translation - rest["thigh_l"].translation).length
+    b = (rest["foot_l"].translation - rest["calf_l"].translation).length
+    P0 = sm["pelvis"].translation.copy()
+    hip = {s: sm["thigh_" + s].translation - P0 for s, _ in SIDES}
+    # the thigh tipped so the hips sit a little ahead of the knee; the shin rises 30 degrees behind it, so the boot,
+    # square to the shin and pointed back only as far as its toe needs to clear the floor, keeps its shape (a boot
+    # turned flat under a near-level shin folded the ankle shut and crushed the boot, 13 Nov review)
+    lean_t, shin = math.radians(-5), math.radians(30)
+    z_hip = KNEEL_KNEE + a * math.cos(lean_t)
+    d = mk.leg_reach(KNEEL_BEND)
+    dz, dx = z_hip - A["l"].z, P0.x + hip["l"].x - A["l"].x
+    P1 = Vector((P0.x, A["l"].y + math.sqrt(max(0.0, d * d - dz * dz - dx * dx)) - hip["l"].y, z_hip - hip["l"].z))
+    knee = P1 + hip["r"] + Vector((0, -a * math.sin(lean_t), -a * math.cos(lean_t)))
+    ank1 = knee + Vector((0, b * math.cos(shin), b * math.sin(shin)))
+    probe = mk.copy(mk.stand_p)
+    mk.hips_to(probe, P1)
+    mk.legs_to(probe, {"l": A["l"], "r": ank1})
+    probe["foot_r"] = (Quaternion(), probe["foot_r"][1])  # the ankle as it rests: boot square to the shin
+    lo, hi = 0.0, 90.0
+    for _ in range(25):  # the least the boot points back before its toe is off the floor
+        mid = (lo + hi) / 2
+        q = mk.copy(probe)
+        mk.rig.turn(q, mk.rig.fk(q), "foot_r", rx(mid))
+        lo, hi = (mid, hi) if min(v.z for v in mk.soles(mk.rig.fk(q), "r")) < 0 else (lo, mid)
+    mk.rig.turn(probe, mk.rig.fk(probe), "foot_r", rx(hi))
+    boot = probe["foot_r"][0].copy()  # its turn from the shin, kneeling
+
+    def kneeling(hold):
+        """(length, t -> source time, t -> kneel 0..1) for a kneel held `hold` s at the bottom."""
+        L = t_down + hold + (t_end - t_up)
+        def at(t):
+            return t if t < t_down else (min(t_up, t_down + (t - t_down)) if t < t_down + hold else t_up + (t - t_down - hold))
+        def k(t):
+            f = at(t) / MARS_T * SRC_FPS
+            i = min(int(f), n_src - 1)
+            return depth[i] + (depth[i + 1] - depth[i]) * (f - i)
+        return L, at, k
+
+    def kneel_lower(k_of):
+        def lower(t, p):
+            k = smooth(k_of(t))
+            mk.hips_to(p, P0.lerp(P1, k))
+            mk.legs_to(p, {"l": A["l"], "r": A["r"].lerp(ank1, k) + Vector((0, 0, 0.15 * math.sin(math.pi * k)))})
+            # the boot turns from flat to its kneeling turn with the kneel; where that would dip its toe under the
+            # floor on the way (the ankle is still low), it stays nearer flat (flat clears: the ankle is never under
+            # its standing height)
+            flat = p["foot_r"][0].copy()
+            low = lambda w: min(v.z for v in mk.soles(mk.rig.fk({**p, "foot_r": (flat.slerp(boot, w), p["foot_r"][1])}), "r"))
+            w = k
+            if low(w) < 0.01:
+                lo, hi = 0.0, k
+                for _ in range(20):
+                    mid = (lo + hi) / 2
+                    lo, hi = (mid, hi) if low(mid) >= 0.01 else (lo, mid)
+                w = lo
+            p["foot_r"] = (flat.slerp(boot, w), p["foot_r"][1])
+        return lower
+
+    # kneel_pick: down, the right glove reaches as low as the suit lets it beside the front boot, closes, comes up
+    # to the chest, then up. Lean capped at 24 degrees and arms 0.53 m to the wrist: the glove gets to about
+    # 0.4 m over the floor, not to it (Apollo crews used tongs and scoops for this)
+    H = 0.9
+    L, at, k = kneeling(H)
+    low = (-0.30, P1.y - 0.42, 0.20)
+    grab = [(t_down + 0.2, low, (0, -0.3, -1)), (t_down + 0.5, low, (0, -0.3, -1))]
+    chest = (-0.12, -0.44, 1.22)
+    kp = mk.compose(L, lower=kneel_lower(k), bends={"spine_01": [(t_down * 0.5, 0), (t_down, 30), (t_down + 0.55, 30), (t_down + H, 6)]},
+                    pins=[dict(side="r", ease=0.4, keys=grab),
+                          dict(side="r", rel="spine_03", ease=0.3, keys=[(t_down + 0.75, chest, (0.3, -1, 0)), (t_down + H, chest, (0.3, -1, 0))]),
+                          dict(side="l", ease=0.45, keys=[(t_down, tuple(P1 + Vector((0.16, -0.34, 0.05))), down), (t_down + H, tuple(P1 + Vector((0.16, -0.34, 0.05))), down)])])
+    mk.report_action("kneel_pick", kp, L, False, ["foot_l"], work=(t_down + 0.35, "r"))
+
+    # fix_kneel: the same kneel, both gloves busy at a low panel in front, moving as UAL's do
+    H = 1.3
+    L, at, k = kneeling(H)
+    panel = P1.y - 0.55
+    fk_ = mk.compose(L, lambda t: fix(at(t)), lower=kneel_lower(k), spine=0.4,
+                     pins=[dict(side=s, ease=0.45, keep=0.5, keys=[(t_down + 0.1, (sx * 0.13, panel, 0.62), (0, -1, -0.3)),
+                                                                   (t_down + H - 0.1, (sx * 0.13, panel, 0.62), (0, -1, -0.3))])
+                           for s, sx in SIDES])
+    mk.report_action("fix_kneel", fk_, L, False, ["foot_l"], work=(t_down + H / 2, "r"))
+
+    # sitting: UAL's hips (down onto a seat behind, about 0.5 m up) with the boots planted where they stood
+    def sit_lower(at_src):
+        def lower(t, p):
+            q = at_src(t)
+            m = mk.rig.fk(q)
+            mk.hips_to(p, m["pelvis"].translation, q["pelvis"][0])
+            mk.legs_to(p, A)
+        return lower
+    for name, clip, scale, ease, loop in (("sit_down", "Sitting_Enter", MARS_T, (0.3, 0), False),
+                                          ("sit_idle", "Sitting_Idle_Loop", 1.0, (0, 0), True),
+                                          ("sit_to_stand", "Sitting_Exit", MARS_T, (0, 0.3), False)):
+        L = length(clip, scale)
+        f = src(clip, scale)
+        # the chest folds less than UAL's: a full fold put the chest unit on the gloves resting on the thighs
+        # getting up, UAL's gloves push on the thighs right under the chest unit as it leans: the arms keep the stand's
+        poses = mk.compose(L, f, lower=sit_lower(f), ease=ease, spine=0.6, arms="" if name == "sit_to_stand" else "lr")
+        if loop:
+            poses = poses[:-1]
+        extra = {}
+        if name == "sit_idle":
+            extra["seat_hip"] = godot(mk.rig.fk(poses[0])["pelvis"].translation)
+        mk.report_action(name, poses, L, loop, BOTH, **extra)

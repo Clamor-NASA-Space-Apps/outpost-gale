@@ -1,7 +1,7 @@
 extends "res://addons/forge/test.gd"
 ## The sound bed listens to the game (skills/living-atmosphere, Checks): godot --headless --path . -s tests/audio_test.gd
 
-const KEYS := ["started", "inside", "buses", "breath", "gust", "steps", "lastStep", "music", "radio"]
+const KEYS := ["started", "inside", "buses", "breath", "gust", "steps", "lastStep", "music", "bed", "radio"]
 
 var game: Node3D
 var audio: Node
@@ -24,6 +24,7 @@ func play() -> bool:
 	root.add_child(game)
 	await frames(5)
 	audio = game.audio
+	audio._bed_next = 1e9  # no bed phrase until the bed checks below ask for one: they would count as music here
 	var player: Node3D = game.player
 	check(audio.started, "the bed starts at once outside a browser")
 
@@ -140,7 +141,7 @@ func play() -> bool:
 	await process_frame
 	await process_frame
 	check(audio.cue == "", "once per change into sunset, not on every switch (%s)" % audio.cue)
-	check(audio.music("discovery") and audio.cue == "discovery", "discovery plays when called (no event calls it yet)")
+	check(audio.music("discovery") and audio.cue == "discovery", "discovery plays when called")
 	for q: AudioStreamPlayer in playing_music():
 		check(q.bus == "Music", "music plays on the Music bus")
 	# the greenhouse is a room too: inside it the sound is indoors, as the camera is (data/world.json rooms)
@@ -151,7 +152,127 @@ func play() -> bool:
 	player.place(gh.to_global(Vector3(0.0, 0.3, -6.5)), 0.0)  # outside its door
 	await frames(2)
 	check(player.room == "" and not audio._inside_now(), "outside the greenhouse door the sound is outdoors")
+	await names_and_files(player)
+	await cues_and_beds(player, indoors)
 	return true
+
+
+## Every name anything asks for is in SOUNDS, and every file a name plays loads: a missing one fails here instead of
+## playing nothing (the curtain, 13 Nov).
+func names_and_files(player: Node3D) -> void:
+	for sound: String in audio.SOUNDS:
+		for step: String in audio.SOUNDS[sound]:
+			var f := step.get_slice("@", 0)
+			check(audio._stream(f) != null or audio._stream(f + "_out") != null, "sound '%s' plays %s, and it loads" % [sound, f])
+	var asked: Array[String] = ["door_open", "door_close", "put_down", "pip_go", "pip_hello", "radio_pip"]
+	for it: Node3D in game.get_tree().get_nodes_in_group("interactable"):
+		if not it.kind in ["door", "spot"]:  # a door says open or close; a use spot says its row's `sound`
+			asked.append(it.kind)
+	asked.append_array(sounds_in(game.world.data))
+	for s: String in asked:
+		check(audio.SOUNDS.has(s), "'%s' is asked for and named in SOUNDS" % s)
+	for c: String in audio.CUES:
+		var m: AudioStream = audio._stream("music/" + c)
+		check(m != null and not m.loop and m.get_length() > 3.0, "cue %s loads" % c)
+	for b: String in audio.BEDS:
+		for ph: String in audio.BEDS[b]:
+			var m: AudioStream = audio._stream("music/" + ph)
+			check(m != null and not m.loop and m.get_length() > 20.0, "bed phrase %s loads" % ph)
+	check(audio._exert.playing and audio._exert.stream.loop, "the respirator loops under the breaths")
+	var at: Vector3 = player.body.global_position
+	audio.used("curtain", at)
+	audio.used("drink", at)
+	await frames(1)
+	check(heard("curtain.ogg") and heard("pour.ogg") and not heard("sip.ogg"), "the curtain swishes, the pour starts")
+	await seconds(2.0)
+	check(heard("sip.ogg"), "and the sip comes at its time")
+
+
+## Cues past the gap when forced, the dawn after a sleep, the first sample's discovery, the storm, and the beds.
+func cues_and_beds(player: Node3D, indoors: Vector3) -> void:
+	var at: Vector3 = player.body.global_position
+	audio.stop_music()
+	audio._cue_end = -1e9
+	check(audio.music("quiet") and not audio.music("dawn"), "a cue waits for the one playing")
+	var cut: AudioStreamPlayer = audio._cue_player
+	check(audio.music("dawn", true) and audio.cue == "dawn", "force passes a playing cue and the gap")
+	await seconds(audio.t.music.fade_s + 0.3)
+	check(cut.volume_db < -50.0, "and the cue it cut fades out (%.0f dB)" % cut.volume_db)
+	audio.stop_music()
+	check(audio.cue == "" and not audio.music("quiet"), "stopped, the gap still counts")
+	audio.wake()
+	audio.used("door_open", at)
+	check(audio.cue == "dawn", "after a sleep the next door opens on dawn, gap or not (%s)" % audio.cue)
+	audio.stop_music()
+	audio._cue_end = -1e9
+	audio.used("door_open", at)
+	check(audio.cue == "", "only that door (%s)" % audio.cue)
+	audio.used("sample", at)
+	check(audio.cue == "discovery", "the first rock sample of a session plays discovery (%s)" % audio.cue)
+	audio.stop_music()
+	audio._cue_end = -1e9
+	audio.used("sample", at)
+	check(audio.cue == "", "once a session (%s)" % audio.cue)
+	audio.sky("design")
+	audio.sky("design.storm")
+	check(audio.cue == "storm", "the sky turning to storm plays storm (%s)" % audio.cue)
+	audio.stop_music()
+	audio._cue_end = -1e9
+
+	# beds: outside on foot, a phrase when the rest is over; a cue starts over it and it ducks
+	player.place(game.world.landmark("spawn").pos, 0.0)
+	await seconds(audio.t.fade_s + 0.2)
+	audio._bed_next = audio._time
+	await process_frame
+	await process_frame
+	check(audio.bed_name.begins_with("bed_eva"), "outside, a bed phrase plays once its rest is over (%s)" % audio.bed_name)
+	var bq: AudioStreamPlayer = audio._bed
+	check(bq != null and bq.bus == "Music" and bq.playing, "on the Music bus")
+	check(not audio.bed("eva"), "one phrase at a time")
+	check(audio._bed_next > audio._time + float(audio.t.bed.rest_s[0]), "and a rest of minutes is booked after it")
+	check(audio.music("discovery"), "a cue starts over a bed: a bed never blocks a cue")
+	await seconds(audio.t.music.fade_s + 0.5)
+	var ducked: float = float(audio.t.bed.db) - float(audio.t.bed.duck_db)
+	check(absf(bq.volume_db - ducked) < 0.5, "the bed ducks under the cue (%.1f dB, want %.1f)" % [bq.volume_db, ducked])
+	player.place(indoors, 180.0)
+	await seconds(0.3)
+	check(audio.bed_name == "", "going in lets the outside bed go")
+	await seconds(float(audio.t.bed.fade_s) + 0.3)
+	check(bq.volume_db < -50.0, "faded out (%.0f dB)" % bq.volume_db)
+	audio._bed_next = audio._time
+	audio.stop_music()
+	audio._cue_end = -1e9
+	await process_frame
+	await process_frame
+	check(audio.bed_name.begins_with("bed_hab"), "inside a room the habitat bed plays (%s)" % audio.bed_name)
+
+	# a cutscene ducks the world, not the music
+	audio.duck(true)
+	await seconds(audio.t.fade_s + 0.2)
+	check(absf(bus("Habitat") - float(audio.t.duck_db)) < 0.5 and bus("Music") > -1.0, "duck: the world down (%.1f dB), the music not" % bus("Habitat"))
+	audio.duck(false)
+	await seconds(audio.t.fade_s + 0.2)
+	check(bus("Habitat") > -1.0, "and back up")
+
+
+func heard(file: String) -> bool:
+	return game.get_tree().get_nodes_in_group("one_shot").any(func(q: Node) -> bool:
+		return is_instance_valid(q) and q.stream.resource_path.get_file() == file and q.playing)
+
+
+## The sound names data/world.json asks for: every `sound` (a use spot's row) and the machines' `servo`.
+func sounds_in(v: Variant) -> Array[String]:
+	var out: Array[String] = []
+	if v is Dictionary:
+		for k: Variant in v:
+			if k in ["sound", "servo"] and v[k] is String:
+				out.append(v[k])
+			else:
+				out.append_array(sounds_in(v[k]))
+	elif v is Array:
+		for e: Variant in v:
+			out.append_array(sounds_in(e))
+	return out
 
 
 func playing_music() -> Array:

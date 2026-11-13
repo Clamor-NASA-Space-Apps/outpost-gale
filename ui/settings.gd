@@ -36,7 +36,7 @@ const ADVANCED := {
 		["Medium", {"glow": 0.4, "particles": 0.75, "lamps": 4}],
 		["High", {"glow": 0.5, "particles": 1.0, "lamps": -1}]],
 	"V-Sync": [["On", {"vsync": true}], ["Off", {"vsync": false}]],
-	"Frame cap": [["None", {"maxFps": 0}], ["30 fps", {"maxFps": 30}], ["60 fps", {"maxFps": 60}],
+	"Frame cap": [["None", {"maxFps": 0}], ["30 fps", {"maxFps": 30}], ["45 fps", {"maxFps": 45}], ["60 fps", {"maxFps": 60}],
 		["120 fps", {"maxFps": 120}]],
 }
 const VOLUMES := {"master": "All sound", "music": "Music", "effects": "Suit and world"}

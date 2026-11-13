@@ -52,4 +52,6 @@ for s in (-1, 1):
 join("mount-col", mount)
 bevel(box("drive_box", (0.3, 0.25, 0.3), (0, -0.3, 0.6), mat("body")), width=0.02)
 status_light("dish_light", (0, -0.17, 0.68), (0.14, 0.04, 0.05))
+# the feed: from the pedestal's +X side over the base plate into a ground gland box past it (world.json cables.ends)
+port("port_1", (0.8, 0), (0.2, 0, 0.55))
 done("building_dish")
