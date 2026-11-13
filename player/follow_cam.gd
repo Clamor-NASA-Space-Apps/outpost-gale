@@ -230,7 +230,7 @@ func inside() -> bool:
 
 ## The target's height as a share of the frame, 0 when it is hidden or behind the lens, or seen from its own eye.
 func on_screen(feet: Vector3, tall: float) -> float:
-	if faded.is_empty() or not faded[0].visible or first > 0.0 or lens.is_position_behind(feet):
+	if faded.is_empty() or faded[0].cast_shadow == GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY or first > 0.0 or lens.is_position_behind(feet):
 		return 0.0
 	var a := lens.unproject_position(feet)
 	var b := lens.unproject_position(feet + Vector3.UP * tall)

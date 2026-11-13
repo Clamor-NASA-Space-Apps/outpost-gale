@@ -269,11 +269,13 @@ func _process(_delta: float) -> void:
 	if f == shown:
 		return
 	shown = f
+	# hidden from the lens (first person indoors), the suit still stands in the sun and casts its shadow (Ravindu,
+	# 14 Nov). Solid while it does: the fading copy's depth prepass drops anything under 0.99 opacity from the shadow
 	for mi in meshes:
-		mi.visible = f > 0.0
+		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON if f > 0.0 else GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY
 		for i in mi.mesh.get_surface_count():
 			var m := mi.get_surface_override_material(i) as ShaderMaterial
-			m.shader = HeroShader if f >= 1.0 else fading
+			m.shader = HeroShader if f >= 1.0 or f <= 0.0 else fading
 			m.set_shader_parameter("opacity", f)
 
 

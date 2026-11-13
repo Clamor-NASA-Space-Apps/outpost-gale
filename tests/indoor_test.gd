@@ -149,6 +149,7 @@ func room(id: String) -> void:
 	# no part of the hero is drawn in first person, looking level or down at the feet
 	var lens: Camera3D = player.cam.lens
 	check(not drawn(), "%s: the hero is not drawn in first person (fade %.2f)" % [id, player.shown])
+	check(casting(GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY), "%s: in first person the hidden suit still casts its shadow (every mesh shadows only)" % id)
 	player.cam.look(0.0, 200.0)  # as far down as the eye's range goes
 	await frames(10)
 	check(not drawn(), "%s: the hero is not drawn looking down" % id)
@@ -186,9 +187,14 @@ func room(id: String) -> void:
 		await tick()
 	check(player.room == "" and player.cam.first == 0.0, "%s: walking out returns the follow camera (first %.2f)" % [id, player.cam.first])
 	check(drawn() and player.shown == 1.0, "%s: the hero is drawn solid again outside (fade %.2f)" % [id, player.shown])
+	check(casting(GeometryInstance3D.SHADOW_CASTING_SETTING_ON), "%s: outside, the suit is drawn and casts again" % id)
 	check(jump <= 0.25, "%s: the hero fades in, it does not pop (largest step %.2f in a frame)" % [id, jump])
 	check(cuts == 0, "%s: the hero was drawn with the lens close enough to cut it on %d frames" % [id, cuts])
 	check(not player.state().cam.inside, "%s: outside, the lens is in no solid" % id)
+
+
+func casting(how: int) -> bool:
+	return player.meshes.all(func(m: MeshInstance3D) -> bool: return m.visible and m.cast_shadow == how)
 
 
 ## One physics frame, then the cut and pop tallies. The lens moved in that frame's physics and the hero's fade was
@@ -205,7 +211,7 @@ func tick() -> void:
 
 
 func drawn() -> bool:
-	return player.meshes.any(func(m: MeshInstance3D) -> bool: return m.visible)
+	return player.meshes.any(func(m: MeshInstance3D) -> bool: return m.visible and m.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY)
 
 
 ## The door's distance from the item's centre along its front: where the plan's edge meets the front axis.
