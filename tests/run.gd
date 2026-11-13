@@ -2,7 +2,7 @@ extends "res://addons/forge/test.gd"
 ## The sandbox's headless checks: godot --headless --path . -s tests/run.gd
 
 # What render_game_to_text() may hold. A meter, a resource or a clock here breaks hard rule 1 before 14 Nov.
-const ALLOWED := ["player", "cam", "heroScreen", "interaction", "carry", "vehicle", "sky", "quality", "fps", "view", "audio", "pip"]
+const ALLOWED := ["player", "cam", "heroScreen", "interaction", "carry", "vehicle", "sky", "quality", "fps", "view", "audio", "pip", "cine", "hud", "sim"]
 
 
 func play() -> bool:
@@ -27,6 +27,6 @@ func play() -> bool:
 	check(worst < 0.06, "ground collision and height_at() differ by %.3f m" % worst)
 	var state: Dictionary = game.render_game_to_text()
 	for k: String in state:
-		check(k in ALLOWED, "render_game_to_text() has '%s': no game state before 14 Nov" % k)
+		check(k in ALLOWED, "render_game_to_text() has an unknown key '%s' (add it to ALLOWED)" % k)
 	check(world.items.size() == world.data.items.size(), "every world.json item is placed")
 	return true

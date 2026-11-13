@@ -10,6 +10,10 @@ const Pip := preload("res://sandbox/pip.gd")
 const Settings := preload("res://ui/settings.gd")
 const SkyClock := preload("res://world/sky_clock.gd")
 const Cover := preload("res://ui/cover.gd")
+const SimNode := preload("res://sim/sim_node.gd")
+const Beats := preload("res://cine/beats.gd")
+const Cine := preload("res://cine/cine.gd")
+const GameHud := preload("res://ui/game_hud.tscn")
 # sky states: DESIGN.md and its DESIGN.<state>.md siblings, as token files; the sky clock blends them by the sun
 const SKIES := ["design", "design.sunset", "design.night", "design.storm"]
 const SKY_PHASES := ["noon", "dusk", "night", "storm"]  # where _sky(i) puts the clock: each key at its own look
@@ -53,6 +57,11 @@ var _warming := false
 var _rewarm := false
 var _netted: Array[Node3D] = []  # besides the hero, what the safety net watches (_physics_process)
 var rescued := 0  # how many times the safety net moved something (tests/edge_test.gd)
+var sim: SimNode  # the rules (sim/): every meter; the HUD and the beats only read it or ask it
+var hud: Control  # ui/game_hud.tscn: meters, PIP's bubble, compass, maps, cards
+var beats: Beats  # cine/beats.gd: PIP's guided sequences from data/beats.json
+var cine: Cine  # cine/cine.gd: sleep, rover trips, the launch
+var offers := {}  # data/beats.json `offers`: what each choice card holds and which rules it sets
 
 
 func _ready() -> void:
@@ -140,6 +149,7 @@ func _ready() -> void:
 			clock.pinned = true
 			clock.set_hour(float(a.trim_prefix("hour=")))
 			clock.refresh()
+	_wire()
 	_warm()
 	for n: Node3D in world.items.values():
 		if n.is_in_group("vehicle") or n.is_in_group("carriable"):
@@ -148,7 +158,10 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	clock.paused = settings.is_open() or cover.visible  # time waits while the player cannot act
+	# time waits while the player cannot act: the look clock and the rules alike
+	clock.paused = settings.is_open() or cover.visible or hud.is_open() or hud.map_open()
+	sim.paused = clock.paused or cine.busy()
+	hud.show_prompt(interactions.prompt_label.text if interactions.prompt_label.visible else "")
 	var h := clock.hour()
 	fps_label.text = "%d fps  %s  %s %02d:%02d" % [Engine.get_frames_per_second(), quality, clock.phase(), int(h), int(fmod(h, 1.0) * 60.0)]
 
@@ -178,7 +191,7 @@ func _physics_process(_delta: float) -> void:
 
 ## The nearest spot to `p` inside world.bound(), lifted onto the ground when it is under it by more than `below`.
 func _net(p: Vector3) -> Vector3:
-	var r: Rect2 = world.bound()
+	var r: Rect2 = world.bound(0.0, p)  # the base, or the field site the hero is at
 	var q := Vector2(p.x, p.z).clamp(r.position, r.end)
 	var ground: float = world.height_at(q.x, q.y)
 	if q == Vector2(p.x, p.z) and p.y >= ground - float(world.data.bound.below):
@@ -195,6 +208,8 @@ func _flash() -> void:
 
 
 func _unhandled_input(e: InputEvent) -> void:
+	if cine.busy():
+		return  # E mid-shot would take the hero out of the rover
 	if e.is_action_pressed("interact"):
 		interactions.interact()  # out of the rover, put down the bag, or use what is in reach
 	elif e.is_action_pressed("debug_sky"):
@@ -293,6 +308,9 @@ func busy() -> bool:
 func render_game_to_text() -> Dictionary:
 	var s: Dictionary = player.state()
 	s.merge(interactions.state(), true)
+	s.merge(cine.state())
+	s["hud"] = hud.snapshot()
+	s["sim"] = sim.sim.state()
 	s.merge(audio.state())
 	if pip:
 		s.merge(pip.state_text())
@@ -347,3 +365,58 @@ func set_view(v: String) -> void:
 	at.y += world.height_at(at.x, at.z)
 	$ViewCam.look_at_from_position(from, at)
 	$ViewCam.current = true
+
+
+## The game's parts plugged together: the rules, the HUD, PIP's beats and the cinematics (design/plans/event-ready.md).
+## Each part owns its folder; this is the only place they meet.
+func _wire() -> void:
+	sim = SimNode.new()
+	sim.name = "Sim"
+	add_child(sim)
+	hud = GameHud.instantiate()
+	fps_label.get_parent().add_child(hud)
+	fps_label.get_parent().move_child(fps_label, -1)
+	fps_label.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT)  # the minimap owns the top right now
+	fps_label.offset_top = -40
+	fps_label.offset_left = 12
+	fps_label.offset_right = 460
+	fps_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	interactions.prompt_label.visible = false
+	hud.bind(sim)
+	hud.bind_view(player.cam.lens, player.body)
+	if pip:
+		hud.bind_speaker(pip, player.cam.lens)
+	hud.cue.connect(audio.ui)
+	settings.cue.connect(audio.ui)
+	# only the ids the rules know reach them: `used` also carries sound names (door_open, bag)
+	var uses: Dictionary = sim.sim.d.uses
+	interactions.used.connect(func(what: String, _pos: Vector3) -> void:
+		if uses.has(what):
+			sim.use(what))
+	beats = Beats.new()
+	beats.name = "Beats"
+	add_child(beats)
+	beats.setup(world, player, interactions, clock)
+	interactions.used.connect(beats.used)
+	beats.line.connect(hud.say)
+	offers = JSON.parse_string(FileAccess.get_file_as_string("res://data/beats.json")).get("offers", {})
+	beats.choice_offered.connect(func(id: String) -> void:
+		hud.offer_choice(offers.get(id, {}).get("title", id), offers.get(id, {}).get("options", [])))
+	hud.chosen.connect(func(title: String, index: int) -> void:
+		for id: String in offers:
+			if offers[id].get("title", id) == title:
+				for rule: String in offers[id].options[index].get("apply", []):
+					sim.apply(rule)
+				beats.notify("chose:" + id))
+	cine = Cine.new()
+	cine.name = "Cine"
+	add_child(cine)
+	cine.setup(self)
+	cine.slept.connect(func(kind: StringName, _hours: float) -> void:
+		sim.use("sleep_night" if kind == &"night" else "nap"))
+	cine.arrived.connect(func(_l: String) -> void:
+		player.bound = world.bound(0.0, player.body.global_position))
+	# the opening plays when a person starts the game, never in a test or a tool run
+	if get_tree().current_scene == self and not Array(OS.get_cmdline_user_args()).any(
+			func(a: String) -> bool: return a.begins_with("--forge-job=")):
+		beats.start_opening.call_deferred()
