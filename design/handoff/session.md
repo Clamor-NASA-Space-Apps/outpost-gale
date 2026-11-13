@@ -33,6 +33,7 @@ Everything committed is pushed: game repo `main` on origin, factory `tooling/` b
   `keep` kit role, clean quit with sound. All 8 suites 0 failed, feel-probe 0 failed (my own runs).
 
 ## RESUME HERE (13 Nov 2026, about 07:15; power cut 08:30 to 17:30 at Ravindu's)
+**What is left, in one list: `design/handoff/whats-left.md`.**
 Everything is committed and pushed: game `wip/polish-stripes` (and `main` if the merge line below says so), factory
 `godot` d8153ec. Builds of 737e67a (Windows, Linux, web zip) are in `~/outpost-gale-builds` (served on :8000).
 - **Merged tonight** (lanes C, F, G, H, I, J, K, L, M, plus audio D and hero clips A from `design/plans/next-lanes.md`):
