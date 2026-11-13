@@ -940,6 +940,14 @@ static func warm(root: Node, design: Dictionary, at: Transform3D, extra: Array =
 			lamp.omni_range = 1.5  # the variant does not depend on the reach; keep the other group out of it
 			lamp.position = spot + Vector3(0, 0.5, 0)
 			stage.add_child(lamp)
+			# a spot in reach (a helmet or head lamp) is its own light pass, so its variant compiles here too
+			var cone := SpotLight3D.new()
+			cone.light_color = lamp.light_color
+			cone.spot_range = 1.5
+			cone.spot_angle = 60.0
+			cone.position = lamp.position
+			cone.rotation_degrees.x = -90.0
+			stage.add_child(cone)
 		var k := 0
 		for m: Material in mats:
 			var u: Dictionary = mats[m]

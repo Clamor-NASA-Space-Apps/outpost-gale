@@ -247,3 +247,13 @@ the start through `world.sound`), and optionally `on` (the item part it stands a
 `used(kind, pos)` is emitted once, when the clip runs to its end; a move key that cuts it short emits nothing and puts
 the props back. sandbox.gd passes only the ids the rules know to `sim.use()`.
 
+
+## The Sol 1 tutorial (14 Nov 2026)
+- `beats` (cine/beats.gd) signals: `line(line_id, opts{keys, fact})` -> `hud.say`; `task(id)` -> `hud.set_tasks(beats.tasks())`;
+  `objective(target)` ("pip", a landmark, an item id, "" clears) -> the HUD waypoint; `shot(name)` -> `cine.shot`;
+  `close_door(item)` is news only (beats shuts it through `interactions.set_door`). The root answers with
+  `beats.notify("shot_done:<name>" | "dismissed" | "map_open" | "map_closed")`.
+- `cine.shot(name, args := {})` (data/cine.json `shots`: dawn_reveal, focus_pip, look_around) and `signal shot_done(name)`,
+  once per call, even when refused. The cinematics' state var is `cine.beat` (state() still says "shot").
+- `interactions.set_door(item_id, open)`: swings a door by its own path, waiting for a clear swing; never pushes the hero.
+- `player.allow(actions: Array)`: `[]` allows all, `["none"]` none; families "move" and "look". Esc and settings always work.

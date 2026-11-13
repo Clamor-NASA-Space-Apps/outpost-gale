@@ -50,9 +50,10 @@ def fit_out(IX, IY, F, C):
     x0, x1, y0 = -wx, -wx + L, -wy
     cx, cy = (x0 + x1) / 2, y0 + D / 2
     _b("bunk_base", (L - 0.04, D - 0.02, 0.32), (cx, cy, z0 + 0.16), "panel", 0.01)  # closed: stowage
-    _b("bunk_plate", (L - 0.04, D - 0.02, 0.03), (cx, cy, z0 + 1.24), "panel", 0.006)
-    _b("bunk_end", (0.03, D - 0.02, 1.7), (x1 - 0.015, cy, z0 + 0.85), "panel", 0.006)  # the foot, beside the rack
-    for k, top in enumerate((0.32, 1.255)):
+    _b("bunk_plate", (L - 0.04, D - 0.02, 0.03), (cx, cy, z0 + 1.32), "panel", 0.006)
+    _b("bunk_end", (0.03, D - 0.02, 1.78), (x1 - 0.015, cy, z0 + 0.89), "panel", 0.006)  # the foot, beside the rack
+    # 0.88 m from the lower mattress to the plate: an adult sits up in bed (HAB 1's berths, forge/hab_interior.py)
+    for k, top in enumerate((0.32, 1.335)):
         z = z0 + top
         # a dark mattress, so the white pillow and the blue sleeping bag show on it (HAB 1's berths)
         _b(f"mattress{k}", (L - 0.1, D - 0.08, 0.1), (cx - 0.01, cy, z + 0.047), "trim", 0.035, 2)
@@ -61,13 +62,13 @@ def fit_out(IX, IY, F, C):
         fold.rotation_euler.y = math.radians(12)
         _b(f"pillow{k}", (0.34, D - 0.28, 0.09), (x0 + 0.27, cy, z + 0.13), "suit", 0.04, 2)
     for s, x in ((0, x0 + 0.03), (1, x1 - 0.06)):  # front posts of the frame
-        _bar(f"bunk_post{s}", (x, y0 + D + 0.005, z0), (x, y0 + D + 0.005, z0 + 1.72), 0.02, "metal")
-    _bar("bunk_rail", (x0 + 0.03, y0 + D + 0.005, z0 + 1.52), (x1 - 0.5, y0 + D + 0.005, z0 + 1.52), 0.015, "metal")
+        _bar(f"bunk_post{s}", (x, y0 + D + 0.005, z0), (x, y0 + D + 0.005, z0 + 1.8), 0.02, "metal")
+    _bar("bunk_rail", (x0 + 0.03, y0 + D + 0.005, z0 + 1.6), (x1 - 0.5, y0 + D + 0.005, z0 + 1.6), 0.015, "metal")
     lx = x1 - 0.3  # the ladder to the upper bunk, at the foot end
     for s in (-1, 1):
-        _bar(f"ladder_rail{s}", (lx + s * 0.16, y0 + D + 0.03, z0), (lx + s * 0.16, y0 + D + 0.03, z0 + 1.26), 0.015, "metal")
+        _bar(f"ladder_rail{s}", (lx + s * 0.16, y0 + D + 0.03, z0), (lx + s * 0.16, y0 + D + 0.03, z0 + 1.34), 0.015, "metal")
     for i in range(3):
-        _bar(f"ladder_rung{i}", (lx - 0.16, y0 + D + 0.03, z0 + 0.42 + i * 0.27), (lx + 0.16, y0 + D + 0.03, z0 + 0.42 + i * 0.27), 0.012, "metal")
+        _bar(f"ladder_rung{i}", (lx - 0.16, y0 + D + 0.03, z0 + 0.42 + i * 0.3), (lx + 0.16, y0 + D + 0.03, z0 + 0.42 + i * 0.3), 0.012, "metal")
 
     # water and food on a rack at the bunks' foot, in reach from both
     rx0, ry1 = x1 + 0.03, y0 + 0.5

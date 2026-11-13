@@ -11,9 +11,14 @@ const Rover := preload("res://sandbox/rover.gd")
 const CARRIABLES := 64
 const WALLS := 2  # what hides a thing from the hands (CONTRACTS.md collision layers: statics)
 const POINTED := 2 | 4 | 16 | 64  # what the view's centre can rest on: statics, thin statics, vehicles, carriables
+# Art direction for the hands (second playtest, 13 Nov: doors, the rover and bags moved with no hands on them):
+const GRIP := 0.35  # share of the reach clip (clips.json interact, which names no work_at) when the glove is on the handle
+const PICK := &"kneel_pick"  # down to a bag on the ground and up again: its glove is at 0.44 m at work_at
+const FADE_S := 0.3  # s of the fade to dark and back through the rover's hatch
+const HATCH_OPEN_S := 0.45  # s the rover's hatch swings before the fade: most of its way (tuning.interact.move_s is all of it)
 
-## A thing used: its sound name ("door_open", "door_close", "panel", "bag", "rover", "put_down") the moment it is
-## used; for a use spot, the row's `kind` (the action id: drink, eat, sample...) once its clip has run to its end.
+## A thing used: its sound name ("door_open", "door_close", "panel", "grab", "rover", "set_down") the moment it
+## happens (a door's when it starts to move, a bag's when the glove takes it or it lands); for a use spot, the row's `kind` (the action id: drink, eat, sample...) once its clip has run to its end.
 signal used(what: String, pos: Vector3)
 const VERBS := ["appear", "take", "turn", "glow", "puff"]  # what a use spot's `steps` may do to its props
 
@@ -115,6 +120,10 @@ var _left := 0.0  # s of its clip left
 var _tweens: Array[Tween] = []  # the playing spot's timeline and its steps' motions: all stopped by a reset
 var _ride := {}  # prop -> the node it rides with after a `take` (the glove, the tongs, a tube)
 var _sockets := {}  # bone name -> its BoneAttachment3D on the hero: where hand props go
+var _swinging := {}  # door Interactable -> {goal: rad, wait: bool, delay: s, moved: bool}: doors on their way
+var _seq := 0.0  # s left of a pick-up, a put-down or a trip through the rover's hatch: E waits for it
+var _rover_hatch: Interactable  # the rover's hatch leaf, swung by _swing() as a door is; never a target itself
+var _fade: ColorRect  # the hatch's fade to dark
 
 
 func setup(w: Node3D, p: Node3D, t: Dictionary, sheet: Dictionary) -> void:
@@ -140,13 +149,20 @@ func setup(w: Node3D, p: Node3D, t: Dictionary, sheet: Dictionary) -> void:
 				part.set_meta("rest", part.rotation.x)
 				_add("panel", part)
 		if item.is_in_group("carriable"):
-			_add("bag", item)
+			_add("bag", item).row = {"clip": String(PICK)}  # its stand() puts the kneeling glove on the bag
 		elif id == "rover":
 			item.set_script(Rover)
 			item.setup(world, sheet, tuning)
 			var it := _add("rover", item)
 			it.shape = _hatch(item)
 			it.global_position = it.middle()
+			var leaf := item.find_child("hatch", true, false) as Node3D  # world.json `moving`: it keeps its own node
+			if leaf:
+				_rover_hatch = Interactable.new()
+				_rover_hatch.kind = "hatch"
+				_rover_hatch.thing = leaf
+				_rover_hatch.shut = leaf.transform
+				item.add_child(_rover_hatch)
 	# use spots: an empty node at the item's origin is the thing, the row's box its shape (the parts are welded into
 	# one mesh, next-lanes.md section 0 finding 3)
 	var uses: Dictionary = world.data.get("uses", {})
@@ -201,6 +217,12 @@ func setup(w: Node3D, p: Node3D, t: Dictionary, sheet: Dictionary) -> void:
 	prompt_label.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	prompt_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	layer.add_child(prompt_label)
+	_fade = ColorRect.new()
+	_fade.color = Color.BLACK
+	_fade.modulate.a = 0.0
+	_fade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_fade.set_anchors_preset(Control.PRESET_FULL_RECT)
+	layer.add_child(_fade)
 
 
 ## An interactable for `thing`, under its item (a door's stays put while it swings); its box from the thing's
@@ -228,8 +250,8 @@ func _add(kind: String, thing: Node3D) -> Interactable:
 
 
 ## The rover is boarded at its rear hatch, as a pressurised rover is (NASA's SEV: a rear hatch or suitports), so its
-## box is the hatch's, in the rover's space. The drawn hatch was merged into one mesh (world.gd _merge), so each
-## part's own mesh is read from the model file; the part's place is still in the tree.
+## box is the hatch's and its frame's, in the rover's space. The frame was merged into one mesh (world.gd _merge), so
+## each part's own mesh is read from the model file; the part's place is still in the tree.
 func _hatch(rover: Node3D) -> AABB:
 	var src: Node = load(world.data.prefabs[rover.get_meta("prefab")]).instantiate()
 	var inv := rover.global_transform.affine_inverse()
@@ -253,6 +275,9 @@ func _item_of(n: Node) -> Node3D:
 
 
 func _physics_process(delta: float) -> void:
+	_seq = maxf(_seq - delta, 0.0)
+	for it: Interactable in _swinging.keys():
+		_door_step(it, delta)
 	var text := ""
 	if playing and not playing.row.has("seat") and _left > 0.15 and player.cut.get("clip") != StringName(playing.row.clip):
 		_reset(playing)  # a move key cut the clip short: no action done, every prop back
@@ -336,8 +361,18 @@ func _owner(n: Node) -> Interactable:
 
 ## The interact action: out of the rover, put down what is carried, or use the target.
 func interact() -> void:
+	if _seq > 0.0:
+		return  # a pick-up, a put-down or the hatch is under way
 	if player.vehicle:
-		player.exit()
+		# the reverse of boarding: the hatch opens, out through it in a fade, and it shuts once the hero is clear
+		_hatch_swing(true)
+		_seq = HATCH_OPEN_S + FADE_S * 2.0
+		var tw := create_tween()
+		tw.tween_interval(HATCH_OPEN_S)
+		tw.tween_callback(func() -> void: _hatch_fade(func() -> void:
+			player.exit()
+			_hatch_swing(false, true)))
+		used.emit("rover", player.vehicle.global_position)
 	elif carried:
 		_put_down()
 	elif target and not playing:
@@ -348,12 +383,15 @@ func use(it: Interactable) -> void:
 	if it.kind == "spot":
 		_play(it)
 		return
-	player.act()  # the reach clip, only when something is really used
 	var s: float = tuning.interact.move_s
+	if it.kind in ["curtain", "panel"]:
+		player.act()  # the reach clip, only when something is really used
 	match it.kind:
 		"door":
-			it.open = not it.open
-			create_tween().tween_property(it.thing, "rotation:y", deg_to_rad(tuning.interact.door_open_deg) if it.open else 0.0, s)
+			# the hand goes to the handle (out of the swing first), then the door moves: never by itself
+			var length: float = _reach_door(it)
+			_swing(it, not it.open, false, length * GRIP)
+			return  # its sound plays when it starts to move
 		"curtain":  # slides along its rail, motion only (hard rule 1)
 			it.open = not it.open
 			var axis: int = it.thing.get_meta("rail")
@@ -365,26 +403,224 @@ func use(it: Interactable) -> void:
 			it.step = (it.step + 1) % tilts.size()
 			create_tween().tween_property(it.thing, "rotation:x", deg_to_rad(tilts[it.step]), s)
 		"bag":
-			carried = it.thing
-			(carried as CollisionObject3D).collision_layer = 0
-			carried.reparent(player.body, false)
-			carried.position = Vector3(0, hold - 0.15, -tuning.interact.carry_ahead)  # less half the bag, so it rests on the hands
-			carried.rotation = Vector3.ZERO
+			_pick_up(it)
+			return
 		"rover":
-			player.enter(it.thing)
-	used.emit(("door_open" if it.open else "door_close") if it.kind == "door" else it.kind, it.thing.global_position)
+			# to the hatch, a hand on it and it swings open, then through it in a fade: the hero is aboard when the view
+			# comes back, and the hatch shuts behind (14 Nov playtest: "entering the rover is instant, no animation")
+			var length: float = player.perform(&"interact", Transform3D(Basis.looking_at(-it.thing.global_basis.z * Vector3(1, 0, 1)), it.thing.exit_point()))
+			_seq = length * GRIP + HATCH_OPEN_S + FADE_S * 2.0
+			var tw := create_tween()
+			tw.tween_interval(length * GRIP)
+			tw.tween_callback(func() -> void:
+				if length > 0.0 and player.cut.get("clip") != &"interact":
+					_fade_out()  # walked off before the hand was on the hatch: not boarded
+					tw.kill()
+					return
+				_hatch_swing(true))
+			tw.tween_interval(HATCH_OPEN_S)
+			tw.tween_callback(func() -> void:
+				_hatch_fade(func() -> void:
+					player.enter(it.thing)
+					_hatch_swing(false))
+				used.emit("rover", it.thing.global_position))
+			return
+	used.emit(it.kind, it.thing.global_position)
 
 
+## The rover's hatch open or shut, with a door's motion and sounds (_swing()); `wait` holds it until the hero is clear.
+func _hatch_swing(open: bool, wait := false) -> void:
+	if _rover_hatch:
+		_swing(_rover_hatch, open, wait)
+
+
+## Dark over FADE_S, `then` at the darkest, light again: stepped through the open hatch.
+func _hatch_fade(then: Callable) -> void:
+	_seq = maxf(_seq, FADE_S * 2.0)
+	var tw := create_tween()
+	tw.tween_property(_fade, "modulate:a", 1.0, FADE_S)
+	tw.tween_callback(then)
+	tw.tween_property(_fade, "modulate:a", 0.0, FADE_S)
+
+
+## A pick-up, a put-down or a trip through the hatch is under way (E waits for it).
+func busy() -> bool:
+	return _seq > 0.0
+
+
+func _fade_out() -> void:
+	_seq = 0.0
+	_fade.modulate.a = 0.0
+
+
+## The reach for a door's handle: the hero turns to it in place, or, standing where the door will swing, first steps
+## back out of the swing (a person opening a door toward them steps aside); its length, 0 if refused.
+func _reach_door(it: Interactable) -> float:
+	var thing: Node3D = it.thing
+	var free: float = it.shape.position.x if absf(it.shape.position.x) > absf(it.shape.end.x) else it.shape.end.x
+	var handle := thing.global_transform * Vector3(free * 0.85, hold, it.shape.get_center().z)
+	var hinge := thing.global_position
+	var feet: Vector3 = player.body.global_position
+	var at := feet
+	var shut: Transform3D = thing.get_parent().global_transform * it.shut
+	# how far into the swing's side of the shut face the feet are (a positive turn swings a leaf on -x to +z)
+	var side: float = ((shut.affine_inverse() * feet).z - it.shape.get_center().z) * -signf(free) * signf(float(tuning.interact.door_open_deg))
+	var out := (feet - hinge) * Vector3(1, 0, 1)
+	var leaf := 0.0  # the farthest the leaf reaches from its hinge
+	for i in 8:
+		var c := it.shape.get_endpoint(i)
+		leaf = maxf(leaf, Vector2(c.x, c.z).length())
+	var clear := leaf + float(player.breadth) / 2.0 + 0.03
+	if side > -float(player.breadth) / 2.0 and out.length() < clear and out.length() > 0.01:
+		at = hinge + out.normalized() * clear
+		at.y = feet.y
+	var to := (handle - at) * Vector3(1, 0, 1)
+	var length: float = player.perform(&"interact", Transform3D(Basis.looking_at(to) if to.length() > 0.01 else player.body.global_basis, at))
+	if length > 0.0 and at != feet:
+		# the whole step out of the swing, past perform's glide_max (sized for use spots): short of it the door
+		# stalls part open at the hero (the Sol 1 start is 0.7 m inside it). Still a slide that walls stop.
+		player.cut.move = (at - feet) * Vector3(1, 0, 1)
+	return length
+
+
+## Down to the bag, the glove on it at the clip's work_at, up with it, and into the carry on the chest.
+func _pick_up(it: Interactable) -> void:
+	var bag: Node3D = it.thing
+	var length: float = player.perform(PICK, it.stand())
+	if length == 0.0:
+		return
+	carried = bag
+	_seq = length
+	var grab: float = float(player.model.clips[PICK].work_at) * length
+	var tw := create_tween()
+	tw.tween_interval(grab)
+	tw.tween_callback(func() -> void:
+		if player.cut.get("clip") != PICK:
+			carried = null  # walked off before the glove reached it
+			_seq = 0.0
+			tw.kill()
+			return
+		(bag as CollisionObject3D).collision_layer = 0
+		used.emit("grab", bag.global_position)
+		var from := bag.global_position
+		var glove := _socket(PICK)
+		var lift := create_tween()
+		lift.tween_method(func(k: float) -> void: bag.global_position = from.lerp(glove.global_position, smoothstep(0.0, 1.0, k)), 0.0, 1.0, 0.25)
+		lift.tween_callback(func() -> void: _ride[bag] = glove))
+	tw.tween_interval(maxf(length - grab - 0.25, 0.0))
+	# from the glove to the chest's hold, then the player carries it there (player.gd _carry())
+	var from := []
+	tw.tween_callback(func() -> void:
+		_ride.erase(bag)
+		from.append(bag.global_transform))
+	tw.tween_method(func(k: float) -> void:
+		var hold_at: Transform3D = player.model.bag_transform()
+		bag.global_transform = (from[0] as Transform3D).interpolate_with(Transform3D(hold_at.basis, hold_at.origin - hold_at.basis * _centre(bag)), smoothstep(0.0, 1.0, k)), 0.0, 1.0, 0.25)
+	tw.tween_callback(func() -> void: bag.reparent(player.body))
+
+
+## A bag's drawn centre in its own space (player.gd _carry() holds it there).
+func _centre(bag: Node3D) -> Vector3:
+	for mi: MeshInstance3D in bag.find_children("*", "MeshInstance3D", true, false):
+		return bag.global_transform.affine_inverse() * mi.global_transform * mi.get_aabb().get_center()
+	return Vector3.ZERO
+
+
+## Opens or closes `item_id`'s door as E does, with its sound and motion, but never on the hero: it waits until the
+## hero is clear of its whole swing before it starts (the tutorial shutting HAB 1's hatch behind the hero).
+func set_door(item_id: String, open: bool) -> void:
+	for part: Node3D in world.items[item_id].get_meta("parts"):
+		var it: Interactable = by_thing.get(part)
+		if it and it.kind == "door" and it.open != open:
+			_swing(it, open, true)
+
+
+## A door never pushes or traps the hero (13 Nov playtest: HAB 1's hatch swung into the hero at the Sol 1 start
+## and shoved it into the frame). It swings the way its frame lets it (inward: outward its leaf meets the frame's
+## stop), and it moves a step a frame only where its shape at the next step is clear of the hero, so it stops at the
+## hero and goes on once the way is clear.
+## The bodies are AnimatableBody3D moved by transform: the engine pushes a body out of one moved into it.
+func _swing(it: Interactable, open: bool, wait: bool, delay := 0.0) -> void:
+	it.open = open
+	var goal := it.shut.basis.get_euler().y + (deg_to_rad(float(tuning.interact.door_open_deg)) if open else 0.0)
+	_swinging[it] = {"goal": goal, "wait": wait, "delay": delay, "moved": false}
+	_door_step(it, 1.0 / Engine.physics_ticks_per_second)  # the first step now: the sound starts with the press
+
+
+func _door_step(it: Interactable, delta: float) -> void:
+	var m: Dictionary = _swinging[it]
+	if m.delay > 0.0:
+		m.delay -= delta
+		return  # the hand is on its way to the handle
+	var now: float = it.thing.rotation.y
+	if m.wait:
+		var n := ceili(absf(m.goal - now) / deg_to_rad(5.0))
+		for i in n + 1:
+			if _hits_hero(it, lerpf(now, m.goal, float(i) / maxf(n, 1))):
+				return
+		m.wait = false
+	var to := move_toward(now, m.goal, deg_to_rad(float(tuning.interact.door_open_deg)) / float(tuning.interact.move_s) * delta)
+	if _hits_hero(it, to):
+		return  # held at the hero
+	it.thing.rotation.y = to
+	if not m.moved:
+		m.moved = true
+		used.emit("door_open" if it.open else "door_close", it.thing.global_position)
+	if to == m.goal:
+		_swinging.erase(it)
+
+
+## Whether the door's collision at rotation `y` would touch the hero (a 2 cm gap counts).
+func _hits_hero(it: Interactable, y: float) -> bool:
+	var hero: CharacterBody3D = player.body
+	if hero.collision_layer == 0:
+		return false
+	var thing: Node3D = it.thing
+	var at: Transform3D = thing.get_parent().global_transform * Transform3D(Basis(Vector3.UP, y - thing.rotation.y) * thing.basis, thing.position)
+	var space := hero.get_world_3d().direct_space_state
+	var q := PhysicsShapeQueryParameters3D.new()
+	q.collision_mask = hero.collision_layer
+	q.margin = 0.02
+	for cs: CollisionShape3D in thing.find_children("*", "CollisionShape3D", true, false):
+		q.shape = cs.shape
+		q.transform = at * thing.global_transform.affine_inverse() * cs.global_transform
+		if space.intersect_shape(q, 1).size():
+			return true
+	return false
+
+
+## Down on one knee, the bag from the chest to the glove, let go beside the hero at work_at, and it falls the last
+## few centimetres under Mars gravity onto its rest in the dust (world.rest()), with a puff.
 func _put_down() -> void:
+	var bag := carried
 	var hero: Node3D = player.body
-	var at: Vector3 = hero.global_position - hero.global_basis.z * (float(tuning.interact.carry_ahead) + 0.4)
-	carried.reparent(world, false)
-	carried.global_position = Vector3(at.x, world.height_at(at.x, at.z), at.z)
-	carried.global_rotation = Vector3(0, hero.global_rotation.y, 0)
-	world.rest(carried)  # in the dust under all of it, not on the height at its middle
-	used.emit("put_down", carried.global_position)
-	(carried as CollisionObject3D).collision_layer = CARRIABLES
-	carried = null
+	var length: float = player.perform(PICK, hero.global_transform)
+	_seq = length + 0.6
+	bag.reparent(self)
+	var from := bag.global_transform
+	var tw := create_tween()
+	var grip := _socket(PICK)
+	tw.tween_method(func(k: float) -> void: bag.global_position = from.origin.lerp(grip.global_position, smoothstep(0.0, 1.0, k)), 0.0, 1.0, maxf(float(player.model.clips[PICK].work_at) * length, 0.05))
+	tw.tween_callback(func() -> void:
+		# beside the knee, clear of the body: the drop must not land on the hero
+		var p := bag.global_position
+		var away := (p - hero.global_position) * Vector3(1, 0, 1)
+		away = away if away.length() > 0.05 else -hero.global_basis.z
+		var at: Vector3 = hero.global_position + away.normalized() * maxf(away.length(), float(player.breadth) / 2.0 + 0.3)
+		var held := bag.global_transform
+		bag.global_transform = Transform3D(Basis(Vector3.UP, hero.global_rotation.y), Vector3(at.x, world.height_at(at.x, at.z), at.z))
+		world.rest(bag)  # in the dust under all of it, not on the height at its middle
+		var rest := bag.global_transform
+		bag.global_transform = held
+		carried = null
+		var fall := sqrt(2.0 * maxf(held.origin.y - rest.origin.y, 0.01) / float(player.gravity))
+		var drop := create_tween()
+		drop.tween_property(bag, "global_transform", rest, fall).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+		drop.tween_callback(func() -> void:
+			bag.reparent(world)
+			(bag as CollisionObject3D).collision_layer = CARRIABLES
+			world.puff(rest.origin, Vector3.UP * 0.2, 0.5)
+			used.emit("set_down", rest.origin)))
 
 
 ## A use spot: the hero glides to its stand and plays its clip (or sits), its sound starts, and its `steps` run on

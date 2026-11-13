@@ -17,7 +17,7 @@ from shapes import bar, bevel, box, cut, cyl, finish, join, label, mat, prism, r
 reset()
 R, W = 0.495, 0.30                 # SEV wheel: 39 in across, 12 in wide
 HUB_X, AXLES = 1.0, (1.55, 0.0, -1.55)
-BODY, TRIM, METAL, GLASS, LIGHT, HAZ = (mat(n) for n in ("body", "trim", "metal", "glass", "light", "hazard"))
+BODY, TRIM, METAL, GLASS, LIGHT, HAZ, PANEL = (mat(n) for n in ("body", "trim", "metal", "glass", "light", "hazard", "panel"))
 FLOOR, ROOF, BACK = 1.10, 2.75, -1.2   # the cabin's inside: floor, ceiling, rear wall (2-3 cm skins)
 MAT_TOP = FLOOR + 0.015                # the floor mat the boots stand on
 # the driver's hips: boots on the mat (the seated hero's boots are 0.542 m under its hips, its helmet 1.03 m
@@ -74,13 +74,25 @@ for s in (-1, 1):
     bevel(box(f"cushion{s}", (0.52, 0.32, 0.08), (x, y + 0.03, hz - 0.23), TRIM), width=0.03, segments=2)
     bevel(box(f"seat_back{s}", (0.5, 0.07, 0.95), (x, y - 0.6, hz + 0.25), TRIM), width=0.03, segments=2)
     for k in (-1, 1):  # the back's frame down to the base: the pack hangs in the gap between
-        bar(f"seat_strut{s}{k}", (x + k * 0.2, y - 0.58, hz - 0.2), (x + k * 0.2, y - 0.05, hz - 0.27), 0.018, METAL)
+        bar(f"seat_strut{s}{k}", (x + k * 0.2, y - 0.58, hz - 0.2), (x + k * 0.2, y - 0.05, hz - 0.27), 0.018, METAL, 6)  # 6 sides: the yoke's triangles
     box(f"screen{s}", (0.36, 0.02, 0.2), (x, 1.74, 1.72), LIGHT).rotation_euler = (math.radians(-35), 0, 0)
 dash = bevel(box("dashboard", (2.1, 0.34, 0.14), (0, 1.8, 1.58), TRIM), width=0.03, segments=2)
 dash.rotation_euler = (math.radians(-20), 0, 0)
 bevel(box("rear_rack", (2.0, 0.06, 1.3), (0, BACK + 0.03, 1.85), TRIM), width=0.02, segments=1)
 for z in (1.55, 2.15):
     box(f"rack_light{z}", (1.6, 0.02, 0.04), (0, BACK + 0.07, z), LIGHT)
+# The driver's yoke on a column out of the dashboard, in front of the driver's seat (-X): a pressurised rover is
+# driven from the front of its cabin, and a yoke reads as steering to a kid at a glance (13 Nov playtest: "no
+# steering", the cabin had seats and screens only). Hands on its grips sit about 0.3 m over the hips
+# and 0.5 m ahead. Its own node `yoke`, origin on the column's top, so code can turn it; never `wheel_*` (rover.gd
+# finds the wheels by that name)
+YK = (HIP[0], 1.36, 1.88)
+yoke = [bar("yoke_column", (YK[0], 1.7, 1.63), YK, 0.025, PANEL, 6),  # one material: one draw call
+        bevel(box("yoke_hub", (0.08, 0.05, 0.08), YK, PANEL), width=0.01, segments=1)]
+yoke += [bar("yoke_bar", (YK[0] - 0.16, YK[1] - 0.02, YK[2]), (YK[0] + 0.16, YK[1] - 0.02, YK[2]), 0.016, PANEL, 6)]
+yoke += [bar(f"yoke_grip{s}", (YK[0] + s * 0.16, YK[1] - 0.02, YK[2] - 0.07), (YK[0] + s * 0.16, YK[1] - 0.02, YK[2] + 0.09), 0.02, PANEL, 6) for s in (-1, 1)]  # white: dark on the dark dash it did not show
+bpy.context.view_layer.update()  # bar() sets its rotation after placing: matrix_world is stale until now
+settle(join("yoke", yoke), YK)
 seat = bpy.data.objects.new("seat", None)  # sandbox/rover.gd puts the driver's hips here
 seat.location = HIP
 bpy.context.scene.collection.objects.link(seat)
@@ -94,8 +106,13 @@ for s in (-1, 1):
         smooth(bevel(o, width=0.015, segments=2))
     bevel(box(f"suitport_lamp{s}", (0.12, 0.03, 0.04), (s * 0.68, -1.87, 2.45), LIGHT))
 bevel(box("hatch_frame", (0.58, 0.05, 1.28), (0, -1.8, 1.82), TRIM), width=0.05)
-bevel(box("hatch", (0.48, 0.07, 1.16), (0, -1.81, 1.82), BODY), width=0.06)
-bar("hatch_handle", (-0.12, -1.86, 1.75), (0.12, -1.86, 1.75), 0.018, METAL)
+# the hatch leaf and its handle as one node `hatch` in one material (one draw call), its origin on the hinge at its
+# outer face's +X edge: sandbox/interactions.gd swings it open outward (about the game's up) when the hand is on it
+# and shut again behind the crew (data/world.json `moving`)
+leaf = bevel(box("hatch", (0.48, 0.07, 1.16), (0, -1.81, 1.82), BODY), width=0.06)
+handle = bar("hatch_handle", (-0.12, -1.86, 1.75), (0.12, -1.86, 1.75), 0.018, BODY)
+bpy.context.view_layer.update()  # bar() sets its rotation after placing: matrix_world is stale until now
+settle(join("hatch", [leaf, handle]), (0.24, -1.845, 1.82))
 console = bevel(box("console", (0.36, 0.22, 0.5), (-0.85, -2.05, 1.29), TRIM))
 box("console_screen", (0.26, 0.02, 0.14), (-0.85, -2.165, 1.44), LIGHT).rotation_euler = (-0.3, 0, 0)
 
@@ -104,7 +121,7 @@ bevel(box("radiator", (1.6, 1.6, 0.05), (0, -0.7, 2.81), TRIM))
 bar("mast", (0.55, -1.45, 2.78), (0.55, -1.45, 2.99), 0.03, METAL)
 smooth(cyl("beacon", 0.05, 0.06, (0.55, -1.45, 3.02), LIGHT, 16))
 bar("dish_stalk", (-0.55, -1.4, 2.78), (-0.55, -1.4, 2.9), 0.025, METAL)
-smooth(bevel(cyl("dish", 0.17, 0.04, (-0.55, -1.4, 2.93), METAL, 16, rot=(0.6, 0, 0)), width=0.01))
+smooth(bevel(cyl("dish", 0.17, 0.04, (-0.55, -1.4, 2.93), METAL, 12, rot=(0.6, 0, 0)), width=0.01))  # 12 sides: the yoke's triangles
 
 # Charge socket on the right flank (-X), over the middle wheels and under the window line, where the bay's charger
 # reaches it (SAC21, NTRS 20210026448: the crew "connect the PR to the surface power grid to recharge batteries").

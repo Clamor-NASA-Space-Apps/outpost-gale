@@ -5,7 +5,9 @@ extends AnimatableBody3D
 ## it pauses for a hero in its path, steers round solids, bags and the rover, backs off from a rover on the move, and
 ## never parks in a doorway or drives into a building. Kinematic: the hero bumps into it and cannot push it.
 ## The beats (cine/beats.gd) can take it over: drive somewhere and park (order), look at something (point_at), wave,
-## or lead the hero ("follow me": it stops and looks back while the hero falls behind), then release it to potter again.
+## or lead the hero ("follow me": at the hero's pace, a few metres ahead, stopping to look back while the hero falls
+## behind), then release it to potter again. While the beats hold it, a hero walking into it makes it back off, and
+## it can turn and wave to call (call_out) or plead when it is ignored (nag).
 ## Motion, lights and a beep only: nothing here changes game state (hard rule 1).
 ## Speed, acceleration and turn rate: reality.json pip.*; behaviour and timing: world.json `pip` (art direction).
 
@@ -29,7 +31,7 @@ var top: float  # m/s
 var accel: float  # m/s2
 var turn: float  # rad/s, in place
 var radius: float  # m, a wheel's (from the model)
-var state := "look"  # drive, look, wait, greet, flee; behind (leading, the hero fell back)
+var state := "look"  # drive, look, wait, greet, flee; behind (leading, the hero fell back); back (out of the hero's way)
 var stop := ""  # the stop it drives to or looks at; "hero" for a greeting
 var reached: Array[String] = []  # every stop arrived at, in order (for checks)
 var passed := 0  # via points driven through (for checks)
@@ -38,8 +40,8 @@ var yaw := 0.0
 var target := Vector3.ZERO
 var gaze := Vector3.ZERO  # what the head looks at when nothing nearer is worth it
 var led := false  # the beats lead it: no wandering and no visits, it holds still between their orders
-var leading := false  # a "follow me" order: it waits while the hero is more than lead_m.x away, goes on within lead_m.y
-var lead_m := Vector2.ZERO
+var leading := false  # a "follow me" order (lead_m): waits past x m, goes on within y, full speed within z
+var lead_m := Vector3.ZERO
 var gave_up := 0  # orders it could not get through to and tried again (checks: never)
 var _order := {}  # the order it is driving: {at: Vector3, face: Vector3 (INF for the hero), wave: bool}
 var _rng := RandomNumberGenerator.new()
@@ -79,6 +81,18 @@ var _scan_t := 0.0
 var _head_ang := Vector3.ZERO
 var _travel := 0.0  # metres since the last wheel print
 var _was := Vector3.ZERO
+## Set by the beats (data/beats.json pip): a hero closing in on a held PIP makes it back off once within back_m plus
+## back_lead seconds of the hero's closing speed, for at most back_s. 0: never.
+var back_m := 0.0
+var back_s := 0.0
+var back_lead := 0.0
+var _model_y := 0.0
+var _held := "look"  # the parked state a back-off returns to
+var _back_t := 0.0
+var _back_stuck := 0.0  # s backing off without moving
+var _call := 0.0  # seconds its head stays on the hero after a call or a nag
+var _sulk := 0.0  # seconds of the sad bounce left
+var _mood := {}  # the nag's look: bounce_m, bounce_hz, droop_deg (data/beats.json nag)
 
 
 func setup(w: Node3D, hero: Node3D) -> void:
@@ -93,6 +107,7 @@ func setup(w: Node3D, hero: Node3D) -> void:
 	collision_mask = STATICS | THIN | HERO | VEHICLES | CARRIABLES
 	_shape = find_children("*", "CollisionShape3D", false, false)[0]
 	_model = get_child(0)
+	_model_y = _model.position.y
 	_head = find_child("head", true, false)
 	for n: String in ["eye_l", "eye_r"]:
 		_eyes.append(find_child(n, true, false))
@@ -152,6 +167,15 @@ func _physics_process(delta: float) -> void:
 		_hello()
 	_near = near
 	_rover_check()
+	# held by the beats, a hero walking into it: out of the way, sooner the faster the hero closes in (a lead driving
+	# away already is)
+	var closing: float = player.last_vel.dot(Vector3(-to_hero.x, 0.0, -to_hero.y).normalized())
+	if led and walking and state not in ["flee", "back"] and closing > float(p.still_speed) \
+			and to_hero.length() < back_m + closing * back_lead and not (state == "drive" and v > 0.3 and _ahead(-to_hero) > 0.5):
+		_held = state if state in ["look", "greet"] else "greet"
+		state = "back"
+		_back_t = 0.0
+		v = 0.0
 	match state:
 		"look", "greet":
 			_brake(delta)
@@ -175,6 +199,8 @@ func _physics_process(delta: float) -> void:
 			if to_hero.length() < lead_m.y:
 				state = "drive"
 				_since = 0.0
+		"back":
+			_back(delta, to_hero)
 		"drive", "flee":
 			if state == "drive" and stop != "hero" and _wants_greet(to_hero):
 				_greet(hero, to_hero)
@@ -221,17 +247,17 @@ func _ground(at: Array) -> Vector3:
 
 
 ## The nodes `from` reaches in a clear straight line.
-func _reach(from: Vector3) -> Array[int]:
+func _reach(from: Vector3, mask := STATICS | THIN) -> Array[int]:
 	var out: Array[int] = []
 	for j in _nodes.size():
-		if _nodes[j].distance_to(from) > 0.01 and _clear(from, _nodes[j]):
+		if _nodes[j].distance_to(from) > 0.01 and _clear(from, _nodes[j], mask):
 			out.append(j)
 	return out
 
 
 ## A straight drive from a to b passes no solid (with `clearance` either side), no doorway and no building. Movers
 ## (the hero, bags, the rover) are left to the feelers: they move.
-func _clear(a: Vector3, b: Vector3) -> bool:
+func _clear(a: Vector3, b: Vector3, mask := STATICS | THIN) -> bool:
 	var d := Vector3(b.x - a.x, 0.0, b.z - a.z)
 	var n := ceili(d.length() / 0.25)
 	for i in n + 1:
@@ -240,7 +266,7 @@ func _clear(a: Vector3, b: Vector3) -> bool:
 			return false
 	var q := PhysicsShapeQueryParameters3D.new()
 	q.shape = _shape.shape
-	q.collision_mask = STATICS | THIN
+	q.collision_mask = mask
 	q.motion = b - a
 	var side := Vector3(-d.z, 0.0, d.x).normalized() * float(p.clearance)
 	for o: Vector3 in [Vector3.ZERO, side, -side]:
@@ -251,11 +277,11 @@ func _clear(a: Vector3, b: Vector3) -> bool:
 
 
 ## The shortest way from `from` to `to` through the route graph (Dijkstra over a dozen or two nodes), else straight.
-func _route(from: Vector3, to: Vector3) -> Array[Vector3]:
-	if _clear(from, to):
+func _route(from: Vector3, to: Vector3, mask := STATICS | THIN) -> Array[Vector3]:
+	if _clear(from, to, mask):
 		return [to]
-	var a := _reach(from)
-	var b := _reach(to)
+	var a := _reach(from, mask)
+	var b := _reach(to, mask)
 	var dist: Array[float] = []
 	var prev: Array[int] = []
 	dist.resize(_nodes.size())
@@ -390,13 +416,20 @@ func _drive(delta: float, to_hero: Vector2) -> void:
 		else:
 			_arrive()
 		return
-	if leading and state == "drive" and to_hero.length() > lead_m.x:
-		state = "behind"  # stop and look back; a beep the first time in a while
-		if _hello_cool <= 0.0:
-			_hello()
-		return
+	var pace := top
+	if leading and state == "drive" and stop == "order":
+		if to_hero.length() > lead_m.x:
+			state = "behind"  # stop and look back; a beep the first time in a while
+			if _hello_cool <= 0.0:
+				_hello()
+			return
+		# the hero's pace: full speed while the hero is close behind, slowing as the gap grows, then a stop to look
+		# back at lead_m.x (a floor, or it crept on forever just short of it and counted as stuck)
+		pace = top * clampf((lead_m.x - to_hero.length()) / (lead_m.x - lead_m.z), 0.3, 1.0)
 	_patience -= delta
-	if state == "drive" and _patience <= 0.0 and _blocked_by_hero(to_hero):
+	# held by the beats it never stops for the hero: it steers round a hero standing in the way and backs off from one
+	# walking into it (a wait there kept a kid at its side and PIP in place for good, 13 Nov)
+	if state == "drive" and not led and _patience <= 0.0 and _blocked_by_hero(to_hero):
 		state = "wait"
 		_timer = float(p.wait_s)
 		gaze = _hero()
@@ -408,11 +441,12 @@ func _drive(delta: float, to_hero: Vector2) -> void:
 		_since = 0.0
 	elif _since > float(p.stuck_s):
 		if _replanned:
-			gave_up += 1 if led else 0
+			gave_up += 1 if led and stop == "order" else 0  # a flee from a rover driving off is no order given up
 			_look_around(1.0)
 		else:
 			_replanned = true  # something moved into the way: one new route from here, then give up
-			_path = _route(global_position, target)
+			# round the movers too this time (a parked rover the feelers could not get past, 14 Nov)
+			_path = _route(global_position, target, STATICS | THIN | VEHICLES | CARRIABLES)
 			_best = INF
 			_since = 0.0
 		return
@@ -423,7 +457,7 @@ func _drive(delta: float, to_hero: Vector2) -> void:
 	var err := wrapf(_steer - yaw, -PI, PI)
 	var new_yaw := yaw + clampf(err, -turn * delta, turn * delta)
 	# slower in a turn, and slowing to a stop at the target
-	var want := top * clampf(cos(err) * 1.5 - 0.5, 0.0, 1.0)
+	var want := pace * clampf(cos(err) * 1.5 - 0.5, 0.0, 1.0)
 	want = minf(want, sqrt(2.0 * accel * maxf(left - float(p.arrive_m) * 0.5, 0.0)))
 	v = move_toward(v, want, accel * delta)
 	_move(new_yaw, v * delta)
@@ -472,12 +506,19 @@ func _move(new_yaw: float, step: float) -> void:
 	q.shape = _shape.shape
 	q.collision_mask = collision_mask
 	q.exclude = [get_rid()]
-	q.transform = _at(global_position, new_yaw) * _shape.transform
-	if space.intersect_shape(q, 1).is_empty():
-		yaw = wrapf(new_yaw, -PI, PI)
+	# 3% smaller, as pip_test measures an overlap: touching (a rover it backed up against) is not one, and a turn
+	# refused at a touch froze PIP there for good
+	var turn_by := wrapf(new_yaw - yaw, -PI, PI)
+	# the other way round when this way is blocked: a corner against a rover swings into it one way, out the other
+	# (PIP backed against the rover froze, turning into it every frame, 14 Nov)
+	for by: float in ([turn_by, -turn_by] if turn_by != 0.0 else [0.0]):
+		q.transform = (_at(global_position, yaw + by) * _shape.transform).scaled_local(Vector3.ONE * 0.97)
+		if space.intersect_shape(q, 1).is_empty():
+			yaw = wrapf(yaw + by, -PI, PI)
+			break
 	var dir := Vector3(-sin(yaw), 0.0, -cos(yaw))
 	var moved := 0.0
-	if step > 0.0:
+	if step != 0.0:  # negative: backing up
 		var to := global_position + dir * step
 		# into a doorway or a building never; out of one (a flee or a greeting that ended there) always
 		var into := _no_go(Vector2(to.x, to.z)) and not _no_go(Vector2(global_position.x, global_position.z))
@@ -541,7 +582,8 @@ func _life(delta: float, hero: Vector3, to_hero: Vector2) -> void:
 		var g: float = p.glance_m
 		_scan = Vector3(_rng.randf_range(-g, g), _rng.randf_range(-g, g) * 0.5, _rng.randf_range(-g, g))
 	var look := gaze + _scan
-	if _near or state in ["greet", "wait", "behind"]:
+	_call -= delta
+	if _near or _call > 0.0 or state in ["greet", "wait", "behind", "back"]:
 		look = hero
 	elif state in ["drive", "flee"]:
 		look = global_position - global_basis.z * 3.0 + _scan * 0.5
@@ -549,6 +591,9 @@ func _life(delta: float, hero: Vector3, to_hero: Vector2) -> void:
 	var lim := deg_to_rad(float(p.head_yaw_deg))
 	var want := Vector3(clampf(atan2(d.y, Vector2(d.x, d.z).length()), -deg_to_rad(float(p.head_pitch_deg)), deg_to_rad(float(p.head_pitch_deg))),
 		clampf(atan2(-d.x, -d.z), -lim, lim), deg_to_rad(float(p.tilt_deg)) * (1.0 if state == "greet" else 0.0))
+	_sulk -= delta
+	if _sulk > 0.0:
+		want.x = -deg_to_rad(float(_mood.droop_deg))  # head down
 	_head_ang = _head_ang.move_toward(want, deg_to_rad(float(p.head_deg_s)) * delta)
 	_head.rotation = _head_ang
 	# eyes: a blink now and then, sometimes a double
@@ -569,6 +614,8 @@ func _life(delta: float, hero: Vector3, to_hero: Vector2) -> void:
 	# a happy wiggle: the model rocks on its wheels, the body (and its collision) stays put
 	_wiggle -= delta
 	_model.rotation.y = sin(TAU * float(p.wiggle_hz) * _wiggle) * deg_to_rad(float(p.wiggle_deg)) if _wiggle > 0.0 else 0.0
+	# a sad bounce on its springs when ignored; the body and its collision stay put
+	_model.position.y = absf(sin(TAU * float(_mood.bounce_hz) * _sulk)) * float(_mood.bounce_m) + _model_y if _sulk > 0.0 else _model_y
 
 
 func _glow(k: float) -> void:
@@ -614,17 +661,86 @@ func _ground_fx() -> void:
 
 ## The beats' order: drive to `at` and park, then look at `face` (INF: at the hero) and wave if asked. `lead` makes it
 ## a "follow me" (x: wait when the hero is this far, y: go on once back within this). Emits `arrived` on parking.
-func order(at: Vector3, face := Vector3.INF, wave_after := false, lead := Vector2.ZERO) -> void:
+func order(at: Vector3, face := Vector3.INF, wave_after := false, lead := Vector3.ZERO) -> void:
 	led = true
-	leading = lead != Vector2.ZERO
+	leading = lead != Vector3.ZERO
 	lead_m = lead
+	# a spot in a doorway or a building (a landmark at a door): the nearest free ground on the way there, never
+	# an order dropped where it stands (13 Nov playtest: PIP stopped leading and the kid was lost)
+	var from := Vector2(global_position.x, global_position.z)
+	var to := Vector2(at.x, at.z)
+	for i in 80:
+		if not _no_go(to):
+			break
+		to = to.move_toward(from, 0.25)
+	at = Vector3(to.x, world.height_at(to.x, to.y), to.y)
 	_order = {"at": at, "face": face, "wave": wave_after}
 	stop = ""
 	_go("order", at)
-	if stop != "order":  # the spot is in a doorway or a building (the beats' data): it parks where it is
-		push_warning("PIP: order to %s is a no-go spot, arriving where it is" % at)
+	if stop != "order":
+		push_warning("PIP: order to %s has no free ground, arriving where it is" % at)
 		stop = "order"
 		_arrive()
+
+
+## Out of the way of a hero walking into it: forward or in reverse, whichever is less of a turn, until the hero is
+## back_m + 1 m off (or a few seconds, cornered); then back to the order or to watching.
+func _back(delta: float, to_hero: Vector2) -> void:
+	_back_t += delta
+	_back_stuck = _back_stuck + delta if v < 0.05 and _back_t > 0.5 else 0.0
+	if to_hero.length() > back_m + 1.0 or _back_t > back_s or _back_stuck > 0.5:  # clear, or cornered
+		v = 0.0
+		if _order.is_empty():
+			state = _held
+			_timer = INF
+		else:
+			_go("order", _order.at)
+		return
+	var away := -to_hero.normalized()
+	if not _order.is_empty():
+		# straight back would undo the way to its order (pushed into a corner by a kid walking at it): sideways
+		# instead, to the side the order lies on
+		var goal := Vector2(_order.at.x - global_position.x, _order.at.z - global_position.z).normalized()
+		if goal.dot(away) < 0.0:
+			var side := Vector2(-away.y, away.x)
+			away = (away * 0.5 + side * signf(side.dot(goal) + 1e-3)).normalized()
+	# leading, with the kid coming up behind on the way: forward, turning as it goes (backing up facing the kid it
+	# never turned round, and backed into the rover); otherwise whichever of forward or reverse is less of a turn
+	var on_way := leading and not _order.is_empty() and away.dot(Vector2(_order.at.x - global_position.x, _order.at.z - global_position.z)) > 0.0
+	var sgn := 1.0 if on_way or _ahead(away) >= 0.0 else -1.0
+	var err := wrapf(atan2(-away.x, -away.y) + (0.0 if sgn > 0.0 else PI) - yaw, -PI, PI)
+	var floor_k := 0.4 if on_way else 0.0  # a skid steer arcs: some speed while it turns
+	v = move_toward(v, top * clampf(cos(err) * 1.5 - 0.5, floor_k, 1.0), accel * delta)
+	_move(yaw + clampf(err, -turn * delta, turn * delta), sgn * v * delta)
+
+
+## How much a flat direction points along its heading (1 ahead, -1 behind).
+func _ahead(dir: Vector2) -> float:
+	return Vector2(-sin(yaw), -cos(yaw)).dot(dir.normalized())
+
+
+## A lead's call (the beats, every few seconds): the head turns to the hero, a wave.
+func call_out() -> void:
+	_call = 1.5
+	wave()
+
+
+## Ignored by the hero (the beats): level 1 a look and a beep, 2 a wave as well, 3 a sad bounce with its head down.
+## `cfg` is data/beats.json nag: its sounds by level and the bounce's look.
+func nag(level: int, cfg: Dictionary) -> void:
+	_mood = cfg
+	_call = 2.0
+	_flash = float(p.flashes) / float(p.flash_hz)
+	if level >= 2:
+		_wiggle = float(p.wiggle_s)
+	if level >= 3:
+		_sulk = float(cfg.sulk_s)
+	sound.emit(cfg.sounds[level - 1], global_position)
+
+
+## The hero did what was asked: no more sulking.
+func calm() -> void:
+	_sulk = 0.0
 
 
 ## The beats: stop where it is and turn to look at `at`.
@@ -644,6 +760,7 @@ func wave() -> void:
 
 ## The beats are done with it: back to pottering about.
 func release() -> void:
+	calm()
 	led = false
 	leading = false
 	_order = {}

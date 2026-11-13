@@ -7,6 +7,7 @@ const KEYS := {
 	"move_forward": [KEY_W, KEY_UP], "move_back": [KEY_S, KEY_DOWN],
 	"move_left": [KEY_A, KEY_LEFT], "move_right": [KEY_D, KEY_RIGHT],
 	"hurry": [KEY_SHIFT], "jump": [KEY_SPACE], "interact": [KEY_E],
+	"lamp": [KEY_H],  # the helmet lights; L would also turn the view (look_right)
 	"look_left": [KEY_J], "look_right": [KEY_L], "look_up": [KEY_I], "look_down": [KEY_K],
 	"debug_sky": [KEY_B], "debug_teleport": [KEY_T], "debug_quality": [KEY_G],
 	"fullscreen": [KEY_F],  # F11 is the browser's; a web page may go full screen only from a key or a tap

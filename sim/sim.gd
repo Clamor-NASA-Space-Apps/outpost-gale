@@ -15,6 +15,7 @@ var water_kg := 0.0
 var food_kg := 0.0
 var battery_kwh := 0.0
 var power_in_kw := 0.0
+var solar_in_kw := 0.0  # the panels' share of power_in_kw (the HUD shows a brushed wing's gain)
 var power_out_kw := 0.0
 var dose_msv := 0.0
 var suit_air_min := 0.0
@@ -65,7 +66,7 @@ func state() -> Dictionary:
 	for e in active:
 		ev.append({"id": e.id, "label": e.label, "source": e.source, "live": e.live})
 	return {"sol": sol, "hour": hour, "o2_kg": o2_kg, "water_kg": water_kg, "food_kg": food_kg,
-		"battery_pct": 100.0 * battery_kwh / n("power", "battery_kwh"), "power_in_kw": power_in_kw,
+		"battery_pct": 100.0 * battery_kwh / n("power", "battery_kwh"), "power_in_kw": power_in_kw, "solar_in_kw": solar_in_kw,
 		"power_out_kw": power_out_kw, "dose_msv": dose_msv, "suit_air_min": suit_air_min, "panel_dust": panel_dust,
 		"tau": tau, "events": ev, "failing": failing()}
 
@@ -226,7 +227,8 @@ func _power() -> Dictionary:
 	power_out_kw = 0.0
 	for k: String in loads:
 		power_out_kw += loads[k]
-	power_in_kw = solar_kw(tau) + (n("power", "reactor_kw") if knobs.reactor else 0.0)
+	solar_in_kw = solar_kw(tau)
+	power_in_kw = solar_in_kw + (n("power", "reactor_kw") if knobs.reactor else 0.0)
 	return loads
 
 
@@ -316,6 +318,11 @@ func start(event_id: String) -> void:
 	e["id"] = event_id
 	e["t0"] = now()
 	e["log"] = _log(event_id, "event", e.label)
+	if e.has("dust_to"):  # a moment, not a lasting event: wind left dust on the panels
+		var was := panel_dust
+		panel_dust = maxf(panel_dust, float(e.dust_to))
+		causes[e.log].effect["panel_dust"] = panel_dust - was
+		return
 	active.append(e)
 
 

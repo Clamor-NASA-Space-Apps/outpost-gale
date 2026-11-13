@@ -122,7 +122,10 @@ func play() -> bool:
 	player.place(indoors, 180.0)
 	await seconds(0.5)
 	game.interactions.use(door)  # the hero closes the airlock behind them
-	await frames(1)
+	for i in 120:  # the hand reaches the handle first, then the door moves and its sound plays
+		await frames(1)
+		if audio.cue != "":
+			break
 	check(audio.cue == "airlock_sealed", "closing the airlock inside plays airlock_sealed (%s)" % audio.cue)
 	var sealed: Array = playing_music().filter(func(q: Node) -> bool: return q not in first)
 	check(not audio.music("discovery") and playing_music().size() == first.size() + 1, "a cue never starts over another")
@@ -164,7 +167,7 @@ func names_and_files(player: Node3D) -> void:
 		for step: String in audio.SOUNDS[sound]:
 			var f := step.get_slice("@", 0)
 			check(audio._stream(f) != null or audio._stream(f + "_out") != null, "sound '%s' plays %s, and it loads" % [sound, f])
-	var asked: Array[String] = ["door_open", "door_close", "put_down", "pip_go", "pip_hello", "radio_pip"]
+	var asked: Array[String] = ["door_open", "door_close", "grab", "set_down", "pip_go", "pip_hello", "radio_pip"]
 	for it: Node3D in game.get_tree().get_nodes_in_group("interactable"):
 		if not it.kind in ["door", "spot"]:  # a door says open or close; a use spot says its row's `sound`
 			asked.append(it.kind)

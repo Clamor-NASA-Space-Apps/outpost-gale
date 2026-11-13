@@ -3,7 +3,7 @@ extends CanvasLayer
 ## hurry, hop and use, and a look drag anywhere else. Shown on a touch screen, and from the first touch.
 ## Plain StyleBoxFlat from design.json colours until the HUD theme lands: setting `theme` on `root` swaps them.
 
-const BUTTONS := [["hurry", "Hurry"], ["jump", "Hop"], ["interact", "Use"]]
+const BUTTONS := [["hurry", "Hurry"], ["jump", "Hop"], ["interact", "Use"], ["lamp", "Lights"]]
 
 var root: Control
 var pad: Control  # the look area under everything else

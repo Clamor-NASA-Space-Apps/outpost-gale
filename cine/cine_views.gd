@@ -3,6 +3,11 @@ extends Node3D
 ##   node ../../tools/capture-view.mjs . captures/cine_sleep --scene res://cine/cine_views.tscn --scale 0.5 --views sleep_drone@22,sleep_drone@2,sleep_drone@5,sleep_drone@6.3,wake@6.4,wake_door@6.4
 ##   node ../../tools/capture-view.mjs . captures/cine_trip --scene res://cine/cine_views.tscn --scale 0.5 --views trip_drive,trip_title -- hour=11
 ##   node ../../tools/capture-view.mjs . captures/cine_launch --scene res://cine/cine_views.tscn --scale 0.5 --views launch_out,launch_window -- hour=20.5
+##   node ../../tools/capture-view.mjs . captures/k --scene res://cine/cine_views.tscn --scale 0.5 --views dawn_reveal,look_around,focus_pip -- hour=6.5 speed=4
+## The sunrise (the opening's pre-dawn 05:48, then the shot runs the clock): --views airlock@5.8,dawn_reveal@1.5,
+## dawn_reveal@3.0,dawn_reveal@4.6,dawn_reveal@6.0,sleep_drone@6.05,sleep_drone@6.3 -- speed=4
+## The tutorial shots (cine.shot()) start with the hero just out of HAB 1's door, facing out, and hold the picture
+## `SHOT_AT` seconds in; `name@s` picks another moment.
 ## sleep_drone@H: the drone shot where the lapse is at hour H (a night from 22:00); wake: the hero on the bench, filmed
 ## from across HAB 1; wake_door: standing at the bench facing the open hatch, first person. The others play the real
 ## shot and hold the picture until it reaches the beat (busy()).
@@ -15,12 +20,16 @@ var _want := ""  # the beat the picture waits for, "" for none
 var _after := 0.0  # seconds into it
 var _since := 0.0
 var _hold := 0.0  # seconds a pose needs to settle (a sit)
+var _start := ""  # a tutorial shot to start once the one on screen is over
+var _placed := false  # the hero is out of HAB 1 for it, the lens settling
 
 
 func _ready() -> void:
 	game = load("res://sandbox/sandbox.tscn").instantiate()
 	add_child(game)
 	for a in OS.get_cmdline_user_args():
+		if a.begins_with("speed="):  # software GL under load draws about 1 fps: game seconds per real frame go up
+			Engine.time_scale = float(a.trim_prefix("speed="))
 		if a.begins_with("hour="):
 			game.clock.pinned = true
 			game.clock.set_hour(float(a.trim_prefix("hour=")))
@@ -35,7 +44,21 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	_hold = maxf(_hold - delta, 0.0)
-	_since = _since + delta if _want != "" and cine.shot == _want else 0.0
+	if _start != "" and not cine.busy():  # the shot before it is over: put the hero out, let the lens settle, go
+		if not _placed:
+			var out: Vector3 = game.world.items.hab1.to_global(Vector3(0.0, 0.0, -7.0))
+			game.place(Vector3(out.x, 0.1, out.z), -180.0)
+			game.player.cam.snap(game.player.yaw)
+			game.set_view("default")  # the shot leaves from the play camera, not a preset view shot before it
+			if _start == "focus_pip" and game.pip:
+				game.pip.order(game.player.body.global_position + Vector3(1.0, 0.0, 6.0), game.player.body.global_position)
+			_hold = 2.0
+			_placed = true
+		elif _hold == 0.0:
+			cine.shot(_start)
+			_start = ""
+			_placed = false
+	_since = _since + delta if _want != "" and cine.beat == _want else 0.0
 
 
 func render_game_to_text() -> Dictionary:
@@ -45,10 +68,20 @@ func render_game_to_text() -> Dictionary:
 
 
 func busy() -> bool:
-	return game.busy() or _hold > 0.0 or (_want != "" and (cine.shot != _want or _since < _after))
+	return game.busy() or _hold > 0.0 or _start != "" or (_want != "" and (cine.beat != _want or _since < _after))
+
+
+const SHOT_AT := {"dawn_reveal": 3.6, "look_around": 3.6, "focus_pip": 1.5}
 
 
 func set_view(v: String) -> void:
+	if cine.cfg.shots.has(v.get_slice("@", 0)):
+		var name := v.get_slice("@", 0)
+		if cine.beat != name:
+			_start = name
+		_want = name
+		_after = float(v.get_slice("@", 1)) if "@" in v else float(SHOT_AT[name])
+		return
 	if "@" in v:
 		game.clock.pinned = true
 		game.clock.set_hour(float(v.get_slice("@", 1)))

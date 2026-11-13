@@ -26,7 +26,7 @@ const PRESETS := {
 const TABS := [["Graphics", "sun"], ["Sound", "live"], ["Controls", "hop"], ["Screen", "device_laptop"]]
 # the Controls tab: what each key does, read from the input map (player/controls.gd registers it)
 const KEYS := [["Walk", ["move_forward", "move_left", "move_back", "move_right"]], ["Hurry", ["hurry"]],
-	["Hop", ["jump"]], ["Use", ["interact"]], ["Look", ["look_left", "look_up", "look_down", "look_right"]],
+	["Hop", ["jump"]], ["Use", ["interact"]], ["Look", ["look_left", "look_up", "look_down", "look_right"]], ["Lights", ["lamp"]],
 	["Map", ["map"]], ["Full screen", ["fullscreen"]], ["Settings", ["settings"]]]
 const APPLY_S := 1.0  # a fine-tune pick goes on this long after the last one
 const WIDTH := 747.0  # the mockup's 1120 px at 1080p, on the 720 px canvas

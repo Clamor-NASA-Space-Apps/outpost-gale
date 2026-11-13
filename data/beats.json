@@ -1,11 +1,18 @@
 {
-  "_note": "The beat runner's script (cine/beats.gd, design/typical-day.md section 2). A sequence is an ordered list of beats. A beat starts by running `do`, giving PIP its `pip` order and emitting its `line` (an id the HUD looks up: the words are written at the event), then waits; when `wait` is met (or after `max_s`) it emits beat_done(id) and the next beat starts, or the one named in `then` (\"end\" stops the sequence). wait: {time: s} | {place: {at, r}} (the hero within r m of a spot) | {action: name} | {event: name}; actions and events both arrive through notify(name): jump and look (the view turned look_deg) are watched by the runner, lift and use:<what> come from the interactions, pip_arrived from PIP, chose:<id> from the rules. pip: go_to (drive and park; wave and point_at then happen on arrival), follow_me (lead there, waiting while the hero is more than lead_wait_m behind, going on within lead_resume_m), point_at (stop and look), wave. do: clock:dawn (jump the look to dawn and pin it), clock:run (let it run), clock:skip (the time-lapse to the next phase), open:<item> (open its door), hero:<start> (put the hero at a `starts` row), ghost:on|off (the Earth jump beside the hero), offer:<choice id> (choice_offered; the rules own it). A spot is [x, z], a PIP stop id (world.json pip.stops), a landmark, an item id, `pip` or `hero`; a look point is [x, z, height], a stop id (its look), an item id or `hero`. All numbers here are art direction",
+  "_note": "The beat runner's script (cine/beats.gd, design/typical-day.md section 2). A sequence is an ordered list of beats. A beat starts by applying `allow` (player.allow: only these actions work; [] everything, [\"none\"] nothing; names are input actions or their family, move and look; a beat without `allow` keeps the last one; the sequence's end allows everything), running `do`, giving PIP its `pip` order, emitting its `task` (a line id for the Today list, kept until the next one), its `objective` (\"pip\", a landmark or an item id; null clears it) and its `line` (an id the HUD looks up) with opts {keys: `keys`, fact: `fact`}, then waits; when `wait` is met (or after `max_s`) it emits beat_done(id) and the next beat starts, or the one named in `then` (\"end\" stops the sequence). wait: {time: s} | {place: {at, r}} (the hero within r m of a spot) | {action: name or [names]} | {event: name or [names]} (a list waits for all); `fact: true` also waits for \"dismissed\" (the HUD's Enter or tap). Actions and events all arrive through notify(name): jump and look (the view turned look_deg) are watched by the runner, and so are move_forward, move_back, move_left, move_right and hurry (held hold_s, hurry only while really hurrying); lift and use:<what> come from the interactions, pip_arrived from PIP, chose:<id> from the rules, dismissed, map_open and map_closed from the HUD, shot_done:<name> from the cinematics. A beat with a job for the kid (keys, a fact, an objective or `nag`) pleads when ignored: at nag.at_s PIP says nag.lines (or the beat's own `nag` ids) with the beat's keys, and plays sounds and the sad bounce by level; the beat's line comes back after back_s; getting nearer a place by 1 m calms it. While PIP leads (follow_me) it calls pip.call_line every call_s. pip: go_to (drive and park; wave and point_at then happen on arrival), follow_me (lead there at the hero's pace: full speed while the hero is within lead_near_m, slowing to a stop at lead_wait_m, going on within lead_resume_m), point_at (stop and look), wave. While the beats hold PIP, a hero walking into it makes it back off once within back_m plus back_lead_s seconds of the hero's closing speed (at most back_s). do: clock:dawn (jump the look to dawn and pin it), clock:<hour> (put the look at that hour of this sol and pin it), clock:run (let it run), clock:skip (the time-lapse to the next phase), open:<item> (open its door), close:<item> (shut it, interactions.set_door), shot:<name> (a camera shot: dawn_reveal, focus_pip, look_around), hero:<start> (put the hero at a `starts` row), walk:<spot> (the hero walks there on its own at walk speed through the real controller, input still blocked; the spot as \"x,z\" or an id; it ends with the beat, so wait on the place), ghost:on|off (the Earth jump beside the hero), offer:<choice id> (choice_offered; the rules own it). A spot is [x, z], a PIP stop id (world.json pip.stops), a landmark, an item id, `pip` or `hero`; a look point is [x, z, height], a stop id (its look), an item id or `hero`. All numbers here are art direction. The opening wakes at clock:5.8, pre-dawn (the sun 3 deg under the horizon, blue twilight, not night): the sun clears the crater rim at about 06:08 seen from dawn_reveal's wide view (cine.gd sunrise_hour()), and the shot runs the clock on so it breaks over the rim while the kid watches, however slowly the walk-out went (the walk is automatic). At the old clock:dawn (06:19) the sun was already 3 deg over the rim",
   "watch": {
-    "look_deg": 120
+    "look_deg": 120,
+    "hold_s": 0.4
   },
   "pip": {
-    "lead_wait_m": 5.0,
-    "lead_resume_m": 3.0
+    "lead_wait_m": 4.0,
+    "lead_resume_m": 3.5,
+    "lead_near_m": 2.5,
+    "back_m": 1.5,
+    "back_s": 4.0,
+    "back_lead_s": 0.8,
+    "call_s": 6.0,
+    "call_line": "pip.this_way"
   },
   "ghost": {
     "_note": "the faint hero beside the real one doing the same hop on Earth (cine/beats_ghost.gd): color a DESIGN.md token, alpha its opacity, side_m to the hero's right, linger_s shown after it lands (the hero is still in the air for about 0.4 s of it)",
@@ -16,12 +23,12 @@
   },
   "starts": {
     "airlock": {
-      "_note": "inside HAB 1, at its door, facing out (item space; the model's door is on its -Z front)",
+      "_note": "inside HAB 1, at its door, facing out, clear of the hatch's inward swing (item space; the model's door is on its -Z front)",
       "item": "hab1",
       "at": [
         0.0,
         0.3,
-        -1.3
+        -0.35
       ],
       "yaw": 0.0
     }
@@ -30,11 +37,19 @@
     {
       "id": "wake",
       "do": [
-        "clock:dawn",
+        "clock:5.8",
         "hero:airlock",
         "ghost:off"
       ],
+      "allow": [
+        "none"
+      ],
+      "task": "task.step_outside",
       "pip": {
+        "go_to": [
+          -2.5,
+          8.0
+        ],
         "point_at": "airlock"
       },
       "wait": {
@@ -51,37 +66,68 @@
       }
     },
     {
-      "id": "step_out",
-      "line": "sol1.thin_air",
+      "id": "walk_out",
+      "do": [
+        "walk:0,7.5"
+      ],
       "wait": {
         "place": {
           "at": [
             0.0,
-            4.5
+            7.5
           ],
-          "r": 1.5
+          "r": 0.6
         },
-        "max_s": 45
+        "max_s": 20
+      }
+    },
+    {
+      "id": "outside",
+      "do": [
+        "close:hab1",
+        "shot:dawn_reveal"
+      ],
+      "allow": [
+        "none"
+      ],
+      "line": "sol1.thin_air",
+      "wait": {
+        "event": "shot_done:dawn_reveal",
+        "max_s": 20
       }
     },
     {
       "id": "pip_hello",
+      "do": [
+        "shot:focus_pip"
+      ],
+      "task": "task.meet_pip",
       "pip": {
         "go_to": [
-          -2.0,
+          0.0,
           9.0
         ],
         "wave": true
       },
       "line": "sol1.good_morning",
       "wait": {
-        "event": "pip_arrived",
-        "max_s": 40
+        "event": [
+          "shot_done:focus_pip",
+          "pip_arrived"
+        ],
+        "max_s": 30
       }
     },
     {
       "id": "walk_to_me",
       "line": "sol1.walk_to_me",
+      "keys": [
+        "W"
+      ],
+      "allow": [
+        "move_forward"
+      ],
+      "objective": "pip",
       "wait": {
         "place": {
           "at": "pip",
@@ -90,11 +136,65 @@
       }
     },
     {
-      "id": "look_around",
+      "id": "side_steps",
+      "line": "sol1.keys_ad",
+      "keys": [
+        "A",
+        "D"
+      ],
+      "allow": [
+        "move_forward",
+        "move_left",
+        "move_right"
+      ],
+      "task": "task.learn_moves",
+      "objective": null,
+      "wait": {
+        "action": [
+          "move_left",
+          "move_right"
+        ]
+      }
+    },
+    {
+      "id": "back_step",
+      "line": "sol1.key_s",
+      "keys": [
+        "S"
+      ],
+      "allow": [
+        "move"
+      ],
+      "wait": {
+        "action": "move_back"
+      }
+    },
+    {
+      "id": "look_shot",
+      "do": [
+        "shot:look_around"
+      ],
+      "allow": [
+        "none"
+      ],
       "line": "sol1.look_around",
       "wait": {
-        "action": "look",
-        "max_s": 25
+        "event": "shot_done:look_around",
+        "max_s": 20
+      }
+    },
+    {
+      "id": "look_mouse",
+      "line": "sol1.look_mouse",
+      "keys": [
+        "Mouse"
+      ],
+      "allow": [
+        "move",
+        "look"
+      ],
+      "wait": {
+        "action": "look"
       }
     },
     {
@@ -103,40 +203,119 @@
         "ghost:on"
       ],
       "line": "sol1.try_jump",
+      "keys": [
+        "Space"
+      ],
+      "allow": [
+        "move",
+        "look",
+        "jump"
+      ],
       "wait": {
         "action": "jump"
       }
     },
     {
-      "id": "jump_named",
+      "id": "jump_fact",
       "line": "sol1.weigh_less",
-      "wait": {
-        "time": 4.0
-      }
+      "fact": true
     },
     {
-      "id": "lift",
+      "id": "hurry",
       "do": [
         "ghost:off"
       ],
+      "task": "task.lift_bag",
       "pip": {
         "go_to": "bags",
         "point_at": "bags"
       },
+      "line": "sol1.hurry",
+      "keys": [
+        "Shift",
+        "W"
+      ],
+      "allow": [
+        "move",
+        "look",
+        "jump",
+        "hurry"
+      ],
+      "objective": "bag1",
+      "wait": {
+        "action": "hurry"
+      }
+    },
+    {
+      "id": "lift",
       "line": "sol1.can_you_lift",
+      "keys": [
+        "E"
+      ],
+      "allow": [
+        "move",
+        "look",
+        "jump",
+        "hurry",
+        "interact"
+      ],
       "wait": {
         "action": "lift"
       }
     },
     {
-      "id": "lift_named",
+      "id": "lift_fact",
       "line": "sol1.easy_here",
+      "fact": true,
+      "objective": null
+    },
+    {
+      "id": "map",
+      "task": "task.follow_solar",
+      "line": "sol1.map_open",
+      "keys": [
+        "M"
+      ],
+      "allow": [
+        "move",
+        "look",
+        "jump",
+        "hurry",
+        "interact",
+        "map"
+      ],
+      "objective": "solar",
       "wait": {
-        "time": 3.0
+        "event": "map_open"
       }
     },
     {
-      "id": "sun",
+      "id": "map_close",
+      "line": "sol1.map_close",
+      "keys": [
+        "M"
+      ],
+      "wait": {
+        "event": "map_closed"
+      }
+    },
+    {
+      "id": "follow_solar",
+      "pip": {
+        "follow_me": "solar"
+      },
+      "line": "sol1.follow_solar",
+      "allow": [],
+      "objective": "pip",
+      "wait": {
+        "place": {
+          "at": "solar",
+          "r": 5.0
+        }
+      }
+    },
+    {
+      "id": "sun_fact",
       "do": [
         "clock:run"
       ],
@@ -144,18 +323,31 @@
         "point_at": "solar"
       },
       "line": "sol1.sunlight_power",
-      "wait": {
-        "time": 8.0
-      }
+      "fact": true,
+      "objective": null
+    },
+    {
+      "id": "o2_lead",
+      "pip": {
+        "point_at": "oxygen"
+      },
+      "line": "sol1.o2_maker_is",
+      "fact": true
+    },
+    {
+      "id": "lamps_lead",
+      "pip": {
+        "point_at": "greenhouse"
+      },
+      "line": "sol1.lamps_are",
+      "fact": true
     },
     {
       "id": "choice",
       "do": [
         "offer:sol1_power"
       ],
-      "pip": {
-        "point_at": "oxygen"
-      },
+      "task": "task.choose_power",
       "line": "sol1.every_choice",
       "wait": {
         "action": "chose:sol1_power"
@@ -163,10 +355,12 @@
     },
     {
       "id": "follow_me",
+      "task": "task.follow_garden",
       "pip": {
         "follow_me": "greenhouse"
       },
       "line": "sol1.follow_me",
+      "objective": "pip",
       "wait": {
         "place": {
           "at": "greenhouse",
@@ -176,6 +370,29 @@
       "then": "end"
     }
   ],
+  "nag": {
+    "_note": "PIP ignored: the plea times (s since the step began or the kid last got nearer), its lines and sounds by level (audio.gd SOUNDS names), the sad bounce at level 3 (s, m up, bounces a second, head down)",
+    "at_s": [
+      10,
+      25,
+      45
+    ],
+    "lines": [
+      "nag.gentle",
+      "nag.loud",
+      "nag.sad"
+    ],
+    "sounds": [
+      "pip_hello",
+      "radio_pip",
+      "beep"
+    ],
+    "back_s": 4.0,
+    "sulk_s": 2.5,
+    "bounce_m": 0.05,
+    "bounce_hz": 0.75,
+    "droop_deg": 20
+  },
   "offers": {
     "_note": "Each choice a beat offers (offer:<id>): the card's title line id, its options (text line id, the rules sim choices it applies, costs shown as icons). Costs stay empty until each number has a factcheck row (workspace hard rule 3).",
     "sol1_power": {

@@ -132,15 +132,6 @@ def _wc_icon(x, y_left, z_foot):
     return parts
 
 
-def _cwc(name, at_, along_y=True):
-    """One water bag lying flat: a soft white Nomex pillow with its dark carry strap round the middle."""
-    L, W, T = CWC
-    size = (W, L - 0.005, T) if along_y else (L - 0.005, W, T)
-    _b(name, size, at_, "suit", 0.06, 2)
-    strap = (W + 0.006, 0.04, T - 0.02) if along_y else (0.04, W + 0.006, T - 0.02)
-    _b(name + "_strap", strap, at_, "trim")
-
-
 def _mount(parts, ang, w, ri):
     """Parts built with their back on local x = 0, front toward -x, width along y, onto the wall chord at
     `ang` degrees: the back plane goes as far out as its corners allow inside the wall's inner radius."""
@@ -204,12 +195,17 @@ def fit_out(F, RI, CEIL):
 
     def berths():  # two stacked, 2.0 m long; each about 2.0 x 0.9 x 0.8 m inside, like the ISS crew quarters
         W, D = 2.0, 0.9
-        BASE, MID, ROOF = 0.30, 1.1, 1.98  # the lower bed's base top, the upper bed's plate, the roof plate
+        # the lower bed's base top, the upper bed's plate, the roof plate. The lower mattress top at 0.40 m is a chair's
+        # seat height; 0.90 m over it to the plate lets an adult sit up in bed (seated height about 0.87 to 0.93 m,
+        # ANSUR II means, reported), where 0.70 m (13 Nov playtest) only let one lie. The upper mattress top at 1.43 m
+        # is a bunk bed's, reached by the ladder; 0.81 m over it, the roof's top 6 cm under the ceiling lights
+        BASE, MID, ROOF = 0.30, 1.30, 2.24
         cx = -D / 2
         # a dark padded back, so the white water bags in front of it read as bags: white on white, only their straps showed
-        _b("berth_back", (0.03, W, ROOF + 0.02), (-0.03, 0, z0 + (ROOF + 0.02) / 2), "trim")
+        # back, ends and roof plate end 5 mm apart in height: level with each other their tops flickered (coplanar-check)
+        _b("berth_back", (0.03, W - 0.01, ROOF + 0.03), (-0.03, 0, z0 + (ROOF + 0.03) / 2), "trim")
         for s in (-1, 1):  # head and foot walls, soft white blankets on a frame
-            _b(f"berth_end{s}", (D - 0.04, 0.03, ROOF + 0.02), (cx - 0.01, s * (W / 2 - 0.015), z0 + (ROOF + 0.02) / 2), "suit", 0.01)
+            _b(f"berth_end{s}", (D - 0.04, 0.03, ROOF + 0.025), (cx - 0.01, s * (W / 2 - 0.015), z0 + (ROOF + 0.025) / 2), "suit", 0.01)
             _bar(f"berth_post{s}", (-D + 0.02, s * (W / 2 - 0.015), z0), (-D + 0.02, s * (W / 2 - 0.015), z0 + ROOF + 0.02), 0.022, "metal")
         _b("berth_base", (D - 0.06, W - 0.06, BASE), (cx - 0.01, 0, z0 + BASE / 2), "panel", 0.01)  # a closed base: stowage
         _b("berth_roof", (D - 0.04, W - 0.06, 0.03), (cx - 0.01, 0, z0 + ROOF + 0.005), "panel")
@@ -221,7 +217,7 @@ def fit_out(F, RI, CEIL):
             # wall side, tidy as a headboard; the mattress lies in front of them
             for i, y in enumerate((-0.72, -0.24, 0.24, 0.72)):
                 c = (-0.05 - CWC[2] / 2, y, z0 + top + CWC[1] / 2 + 0.003)
-                _b(f"cwc{k}{i}", (CWC[2], CWC[0] - 0.006, CWC[1]), c, "suit", 0.07, 2)
+                smooth(_b(f"cwc{k}{i}", (CWC[2], CWC[0] - 0.006, CWC[1]), c, "suit", 0.07), 60)  # one bevel step, smoothed: HAB 1's triangle budget
                 _b(f"cwc_strap{k}{i}", (CWC[2] + 0.006, 0.04, CWC[1] - 0.02), c, "trim")  # its carry strap: white on white read as one slab
             mx = (-0.05 - CWC[2] - D + 0.06) / 2  # the mattress between the bags and the front
             mw = D - 0.06 - 0.05 - CWC[2]
@@ -230,7 +226,7 @@ def fit_out(F, RI, CEIL):
             _b(f"sleeping_bag{k}", (mw - 0.08, W - 0.5, 0.07), (mx, 0.2, z0 + top + 0.115), "bedding", 0.03)
             fold = _b(f"bag_fold{k}", (mw - 0.08, 0.22, 0.03), (mx, -0.43, z0 + top + 0.16), "bedding", 0.012)  # the top turned back
             fold.rotation_euler.x = math.radians(-12)
-            _b(f"pillow{k}", (mw - 0.22, 0.32, 0.09), (mx, -W / 2 + 0.24, z0 + top + 0.13), "suit", 0.04, 2)
+            smooth(_b(f"pillow{k}", (mw - 0.22, 0.32, 0.09), (mx, -W / 2 + 0.24, z0 + top + 0.13), "suit", 0.04), 60)
             # head end: a reading light in its housing, a shelf on two brackets with a tablet on it
             hz = z0 + top + 0.5
             _b(f"reading_housing{k}", (0.18, 0.03, 0.07), (mx, -W / 2 + 0.042, hz + 0.05), "trim", 0.008)
@@ -243,13 +239,14 @@ def fit_out(F, RI, CEIL):
             scr = box(f"tablet_screen{k}", (0.17, 0.004, 0.11), (mx - 0.1, -W / 2 + 0.078, hz - 0.04), mat("glass"))
             scr.rotation_euler.x = math.radians(-15)
             U.append(scr)
-            # a curtain on a rail across the front, drawn back to the foot end
-            _bar(f"curtain_rail{k}", (-D + 0.01, -W / 2 + 0.02, z0 + top + 0.76), (-D + 0.01, W / 2 - 0.02, z0 + top + 0.76), 0.01, "metal")
-            _curtain(f"curtain{k}", 0.5, 0.66, -D + 0.035, W / 2 - 0.55, z0 + top + 0.74, 3)
+            # a curtain on a rail across the front, 8 cm under the plate over it, drawn back to the foot end
+            rail = (ROOF if k else MID) - 0.08
+            _bar(f"curtain_rail{k}", (-D + 0.01, -W / 2 + 0.02, z0 + rail), (-D + 0.01, W / 2 - 0.02, z0 + rail), 0.01, "metal")
+            _curtain(f"curtain{k}", 0.5, rail - top - 0.12, -D + 0.035, W / 2 - 0.55, z0 + rail - 0.02, 3)
         for s in (-1, 1):  # ladder to the upper bed, at the foot end
             _bar(f"ladder_rail{s}", (-D - 0.02, 0.62 + s * 0.17, z0), (-D - 0.02, 0.62 + s * 0.17, z0 + MID + 0.03), 0.015, "metal")
-        for i in range(3):
-            _bar(f"ladder_rung{i}", (-D - 0.02, 0.45, z0 + 0.32 + i * 0.27), (-D - 0.02, 0.79, z0 + 0.32 + i * 0.27), 0.012, "metal")
+        for i in range(4):  # rungs 25 cm apart, the last a step under the upper mattress
+            _bar(f"ladder_rung{i}", (-D - 0.02, 0.45, z0 + 0.30 + i * 0.25), (-D - 0.02, 0.79, z0 + 0.30 + i * 0.25), 0.012, "metal")
     unit(berths, 218, 2.0)
 
     def toilet():  # a cubicle on NASA's UWMS toilet: a small seat with its lid up, the urine hose with its funnel in a
@@ -278,25 +275,65 @@ def fit_out(F, RI, CEIL):
         _b("wc_sign", (0.012, 0.5, 0.16), (-D - 0.004, 0, z0 + H - 0.1), "trim", 0.004)
         loose.extend(_wc_icon(-D - 0.011, 0.22, z0 + H - 0.145))
         loose.append(flat_label("wc_word", "TOILET", 0.075, (-D - 0.013, -0.06, z0 + H - 0.1), "light", 0, 90, 0))  # flat, 3 mm proud
-        # the UWMS: a short white pedestal, a seat with its dark opening, the lid up against the back wall
-        _c("wc_unit", 0.17, 0.4, (-0.38, -0.06, z0 + 0.2), "panel", 16)
-        _c("wc_seat", 0.17, 0.03, (-0.38, -0.06, z0 + 0.415), "panel", 16)
-        _c("wc_hole", 0.08, 0.004, (-0.38, -0.06, z0 + 0.434), "trim", 10)  # its underside 2 mm over the seat
-        lid = _c("wc_lid", 0.16, 0.025, (0, 0, 0), "panel", 16)
+        # the hygiene station, after the ISS's UWMS (a compact unit "about 28 inches tall", Smithsonian 2020, with "a urine
+        # funnel and seat" and the hose "cradled", Space.com 2020): its cabinet on the back wall (fan and separator behind
+        # an air grille, a status lamp), in front of it a seat on a pedestal, sat on as on Earth in 0.38 g, the lid up
+        # against the cabinet, the funnel on its hose in a cradle on the cabinet's side, a grab bar on each side wall and
+        # a wipes box. A plain cylinder with a disc on it read as a can, not a toilet (13 Nov playtest)
+        CX, SY, E = -0.42, -0.04, 1.15  # the bowl's centre, how much longer than wide it is
+        _b("wc_cabinet", (0.16, 0.56, 1.02), (-0.11, 0, z0 + 0.51), "panel", 0.015)
+        _face("wc_grille", 0.26, 0.14, (-0.193, -0.1, z0 + 0.93), GRILLES)
+        _b("wc_controls", (0.012, 0.12, 0.07), (-0.196, 0.2, z0 + 0.97), "trim", 0.003)
+        loose.append(box("wc_lamp", (0.006, 0.05, 0.016), (-0.205, 0.2, z0 + 0.98), mat("light")))
+        # a narrow foot under a wider oval bowl, the dark seat ring on it with the opening's floor inside
+        foot = _c("wc_foot", 0.11, 0.28, (CX, SY, z0 + 0.14), "panel", 12)
+        bowl = _c("wc_bowl", 0.16, 0.12, (CX, SY, z0 + 0.34), "panel", 12)  # 12 sides, smoothed: the triangle budget
+        seat = _c("wc_seat", 0.18, 0.03, (CX, SY, z0 + 0.415), "trim", 12)
+        cut(seat, cyl("wc_seat_hole", 0.095, 0.1, (CX, SY, z0 + 0.415), None, 12))
+        hole = _c("wc_hole", 0.1, 0.004, (CX, SY, z0 + 0.405), "trim", 12)
+        for o in (foot, bowl, seat, hole):
+            o.scale.x = E
+        lid = _c("wc_lid", 0.18, 0.022, (0, 0, 0), "trim", 12)  # up, on its hinge at the seat's back; dark as the seat, or it vanished on the white cabinet
         lid.rotation_euler.y = math.radians(90)
-        lid.location = (-0.2, -0.06, z0 + 0.6)
-        _b("wc_cradle", (0.06, 0.08, 0.12), (-0.03, 0.26, z0 + 0.95), "trim", 0.01)
-        _bar("wc_hose", (-0.33, 0.08, z0 + 0.3), (-0.06, 0.26, z0 + 0.9), 0.022, "trim")
-        U.append(smooth(cone("wc_funnel", 0.05, 0.12, (-0.06, 0.26, z0 + 1.04), mat("panel"), 12, (math.pi, 0, 0))))
-        _c("urine_tank", 0.1, 0.45, (-0.14, -0.24, z0 + 0.225), "panel", 12)
+        lid.scale.x = E
+        lid.location = (-0.203, SY, z0 + 0.43 + 0.18 * E)
+        # the funnel on its hose, hung in a cradle on the cabinet; yellow, so it reads against the white
+        _b("wc_cradle", (0.09, 0.07, 0.1), (-0.235, 0.2, z0 + 0.76), "trim", 0.01)
+        hose = [(-0.2, 0.2, z0 + 0.25), (-0.3, 0.27, z0 + 0.4), (-0.31, 0.26, z0 + 0.6), (-0.26, 0.2, z0 + 0.75)]
+        for i in range(3):
+            _bar(f"wc_hose{i}", hose[i], hose[i + 1], 0.02, "trim")
+        U.append(smooth(cone("wc_funnel", 0.06, 0.13, (-0.26, 0.2, z0 + 0.8), mat("hazard"), 12, (math.pi, 0, 0))))
+        # grab bars: a bar on two stand-offs on each side wall, where a hand falls from the seat
+        for s in (-1, 1):
+            yb = s * (W / 2 - 0.09)
+            _bar(f"wc_grab{s}", (-0.62, yb, z0 + 0.72), (-0.32, yb, z0 + 0.72), 0.014, "metal")
+            for x in (-0.6, -0.34):
+                _bar(f"wc_grab_post{s}{x}", (x, yb, z0 + 0.72), (x, s * (W / 2 - 0.035), z0 + 0.72), 0.01, "metal")
+        _b("wc_wipes", (0.16, 0.06, 0.1), (-0.62, W / 2 - 0.07, z0 + 0.98), "panel", 0.01)
+        _b("wc_wipe", (0.05, 0.012, 0.035), (-0.62, W / 2 - 0.106, z0 + 0.99), "suit")
     unit(toilet, 162, 0.8)
 
     def galley():  # ISS crews heat food in a suitcase-like warmer and have no fridge (factcheck row 115)
         W, D, H = 1.6, 0.6, 0.92
-        _b("galley_cabinet", (D - 0.02, W - 0.4, H - 0.02), (-D / 2, 0.2, z0 + (H - 0.02) / 2), "panel", 0.015)
+        # the pantry under the counter, open to the room: two rows of soft bins on a toe plinth and a shelf, food
+        # pouches standing in them (foil for the ready-to-eat ones, white for the ones you add water to, as ISS food
+        # comes), a coloured tag on each bin. Three closed doors read as an empty cupboard (13 Nov playtest)
+        _b("galley_cabinet", (0.2, W - 0.4, H - 0.02), (-0.11, 0.2, z0 + (H - 0.02) / 2), "panel", 0.015)  # the back
         _b("galley_top", (D + 0.02, W - 0.38, 0.04), (-D / 2, 0.2, z0 + H - 0.01), "trim", 0.01)
-        for i, y in enumerate((-0.2, 0.2, 0.6)):
-            _b(f"galley_door{i}", (0.02, 0.36, 0.6), (-D + 0.005, y, z0 + 0.42), "trim", 0.005)
+        for s, y in ((-1, -0.385), (1, 0.785)):  # end panels, their fronts flush with the shelf's (one material)
+            _b(f"galley_end{s}", (0.38, 0.03, H - 0.03), (-0.4, y, z0 + (H - 0.03) / 2), "panel")
+        _b("galley_plinth", (0.34, 1.14, 0.06), (-0.38, 0.2, z0 + 0.03), "trim")  # its front 4 cm back: a toe kick
+        _b("galley_shelf", (0.38, 1.14, 0.02), (-0.4, 0.2, z0 + 0.45), "panel")
+        tags = ("hazard", "bedding", "stripe")
+        for row, zb in enumerate((0.06, 0.46)):
+            zt = zb + 0.22  # the bins' top
+            for i, by in enumerate((-0.18, 0.2, 0.58)):
+                _b(f"bin{row}{i}", (0.34, 0.36, 0.22), (-0.39, by, z0 + zb + 0.11), "trim")
+                _b(f"bin_tag{row}{i}", (0.006, 0.14, 0.05), (-0.563, by, z0 + zt - 0.05), tags[(i + row) % 3])
+                foil, white = ("metal", "suit") if (i + row) % 2 else ("suit", "metal")
+                for k, (px, py, ph, role) in enumerate(((-0.48, by - 0.08, 0.17, foil), (-0.48, by + 0.08, 0.17, foil), (-0.32, by, 0.2, white))):
+                    p = _b(f"pouch{row}{i}{k}", (0.02, 0.13, ph), (px, py, z0 + zt + ph / 2 - 0.05), role)
+                    p.rotation_euler.y = math.radians(-8 if k < 2 else 6)  # leaning, as pouches stand in a bag
         _b("warmer", (0.3, 0.42, 0.2), (-0.3, -0.18, z0 + H + 0.115), "metal", 0.02)
         _bar("warmer_handle", (-0.46, -0.3, z0 + H + 0.14), (-0.46, -0.06, z0 + H + 0.14), 0.012, "trim")
         _b("dispenser", (0.2, 0.18, 0.36), (-0.12, 0.14, z0 + H + 0.18), "panel", 0.01)

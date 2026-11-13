@@ -2,12 +2,14 @@ extends Node
 ## The cinematics (design/plans/next-lanes.md section 3, design/plans/event-ready.md row C): the sleep time-lapse, the
 ## rover-trip skip and the launch, one method each. They move the look clock, the camera and what you see, and count
 ## nothing (hard rule 1): the rules listen to `slept` and `arrived` and do their own counting. Knobs: data/cine.json.
-## Text is ids only (story words come on 14 Nov). Lane P owns `cine/beats*`; this file is lane C's.
+## Text is ids only (story words come on 14 Nov). Lane P owns `cine/beats*`; this file is lane C's. The tutorial's
+## camera shots (shot()) are lane K's.
 
 signal slept(kind: StringName, hours: float)  # the lapse is over: the sim counts the hours (lane S)
 signal show_card(ledger: Dictionary)  # at the wake, for the ledger card (lane H)
 signal arrived(landmark: String)
 signal launched
+signal shot_done(name: String)  # a tutorial shot (shot()) is over and the play camera is back: once per call
 
 const HouseStyle := preload("res://addons/forge/house_style.gd")
 const Hud := preload("res://ui/hud.gd")
@@ -20,7 +22,7 @@ var audio: Node
 var cfg: Dictionary
 var cam := Camera3D.new()
 var picker: Control
-var shot := ""  # the beat on screen ("" when none): sleep_drone, wake, trip_drive, trip_title, launch_*
+var beat := ""  # the beat on screen ("" when none): sleep_drone, wake, trip_drive, trip_title, launch_*, a shot's name
 var t := 0.0  # seconds into the current beat
 var _black := ColorRect.new()
 var _title: Label
@@ -28,6 +30,7 @@ var _prev: Camera3D  # the camera in use before a shot, given back after it
 var _holding := false
 var _was_driven := false
 var _frozen := {}  # node -> its process_mode before a shot froze it
+var _rim_bins: Array = []  # _rim(): the crater rim's vertices by bearing
 
 
 func setup(g: Node3D) -> void:
@@ -65,11 +68,11 @@ func setup(g: Node3D) -> void:
 
 ## True while the picker is open or a shot plays: the root ignores E and the clock waits.
 func busy() -> bool:
-	return picker.visible or shot != ""
+	return picker.visible or beat != ""
 
 
 func state() -> Dictionary:
-	return {"cine": {"shot": shot, "t": snappedf(t, 0.01), "picker": picker.visible}}
+	return {"cine": {"shot": beat, "t": snappedf(t, 0.01), "picker": picker.visible}}
 
 
 ## A bed spot (data/world.json `uses`, kind `bed`, no clip: it reports at once) used: the picker, with the clock held
@@ -83,7 +86,7 @@ func _used(what: String, _pos: Vector3) -> void:
 ## The sleep time-lapse: a night to the fixed wake hour, or a nap of `nap_h`. Lights out, a drone shot of the base
 ## while the look clock runs on, then the wake in HAB 1: the hero on the bench by the hatch, the lights up.
 func sleep(kind: StringName) -> void:
-	if shot != "":
+	if beat != "":
 		return
 	var c: Dictionary = cfg.sleep
 	_take_clock()
@@ -128,7 +131,7 @@ func sleep(kind: StringName) -> void:
 	await HouseStyle._redraw_probes(game, Transform3D(Basis(), world.get_node("Probe").global_position))
 	if sitting.time_left > 0.0:
 		await sitting.timeout
-	shot = "wake"
+	beat = "wake"
 	var w: Array = c.wake_cam
 	cam.look_at_from_position(hab.to_global(_v(w[0])), hab.to_global(_v(w[1])))
 	cam.make_current()
@@ -181,7 +184,7 @@ func _room_light(k: float) -> void:
 ## From the rover: it drives away from a camera left standing, the screen goes black on a title card (an id; `args`
 ## fill its {sol} and {km}), and the rover stands at `landmark` (data/world.json landmarks) with the hero at the wheel.
 func trip_to(landmark: String, args := {}) -> void:
-	if shot != "" or not world.data.landmarks.has(landmark):
+	if beat != "" or not world.data.landmarks.has(landmark):
 		push_warning("cine: no trip to '%s'" % landmark)
 		return
 	var rover: Node3D = player.vehicle if player.vehicle else world.items.get("rover")
@@ -201,7 +204,7 @@ func trip_to(landmark: String, args := {}) -> void:
 	_fade(1.0, float(cfg.fade_out_s))
 	await _run(float(cfg.fade_out_s), watch)
 	Input.action_release(&"move_forward")
-	shot = "trip_title"
+	beat = "trip_title"
 	_title.text = tr(c.title_id).format(args)
 	_title.show()
 	await _wait(float(c.title_s))
@@ -223,7 +226,7 @@ func trip_to(landmark: String, args := {}) -> void:
 ## outside with dust, then the window: the base and Gale fall away and the view turns to Earth. After it the sandbox
 ## carries on: the rocket back on its pad, the hero where they boarded.
 func launch() -> void:
-	if shot != "":
+	if beat != "":
 		return
 	var c: Dictionary = cfg.launch
 	var item: Node3D = world.items.get("mav")
@@ -262,7 +265,7 @@ func launch() -> void:
 	var b := deg_to_rad(float(c.out_bearing))
 	var eye := pad + Vector3(sin(b), 0.0, -cos(b)) * float(c.out_m)
 	eye.y = world.height_at(eye.x, eye.z) + 1.7
-	shot = "launch_out"
+	beat = "launch_out"
 	cam.look_at_from_position(eye, start + Vector3.UP * float(c.look_h))
 	cam.make_current()
 	_fade(0.0, float(cfg.fade_in_s))
@@ -276,7 +279,7 @@ func launch() -> void:
 		cam.look_at(rocket.global_position + up * float(c.look_h), up))
 	_plume(pad, 0.0)
 	await _fade(1.0, float(cfg.fade_out_s))
-	shot = "launch_window"
+	beat = "launch_window"
 	_title.text = tr(c.caption_id)
 	_title.set_anchors_and_offsets_preset(Control.PRESET_CENTER_BOTTOM)  # under Earth, not over it
 	_title.offset_top = -140
@@ -299,7 +302,7 @@ func launch() -> void:
 	await _fade(1.0, float(cfg.fade_out_s))
 	_title.hide()
 	_title.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
-	shot = "launch_back"
+	beat = "launch_back"
 	launched.emit()
 	if made:
 		rocket.queue_free()
@@ -312,6 +315,166 @@ func launch() -> void:
 	_give_camera()
 	await _fade(0.0, float(cfg.fade_in_s))
 	_end()
+
+
+## A tutorial camera shot (data/cine.json `shots`: dawn_reveal, focus_pip, look_around): from the camera in use
+## through the shot's keys and back to exactly where it was, one spline in time eased at both ends, the hero frozen
+## (and PIP, unless the shot films it rolling up), the look clock held. Refused (busy(), or no such shot):
+## shot_done still fires, a frame later, so a caller waiting on it never hangs. `args` is not read yet.
+func shot(name: String, _args := {}) -> void:
+	if busy() or not cfg.shots.has(name):
+		push_warning("cine: no shot '%s' now" % name)
+		shot_done.emit.call_deferred(name)
+		return
+	var c: Dictionary = cfg.shots[name]
+	_begin(name)
+	var from: Camera3D = _prev if is_instance_valid(_prev) else player.cam.lens
+	var home := {"eye": from.global_position, "rot": from.global_basis.get_rotation_quaternion(), "fov": from.fov,
+		"shift": float(from.get("shift")) if "shift" in from else 0.0}
+	_freeze([player, null if c.get("pip_moves", false) else game.pip])
+	_take_clock()
+	if c.has("music"):
+		audio.music(c.music, audio.cue != c.music)  # the dawn cue may already be on from the door (audio.wake())
+	var ts: Array[float] = [0.0]
+	for k: Dictionary in c.keys:
+		ts.append(ts[-1] + float(k.s))
+	ts.append(ts[-1] + float(c.back_s))
+	var total := ts[-1]
+	var near := cam.near
+	cam.near = from.near
+	# a sunrise shot runs the held clock on so the sun breaks over the rim `break_s` in, from whatever hour it finds
+	# (only ever forward: a clock already past the rise keeps its hour)
+	var rise: Dictionary = c.get("sunrise", {})
+	var day: float = clock.hours - clock.hour()
+	var h0: float = clock.hour()
+	var up := sunrise_hour() if not rise.is_empty() else 0.0
+	var lapse := not rise.is_empty() and h0 < up - 0.01
+	var step := func(k: float) -> void:
+		var poses := [home]
+		for key: Dictionary in c.keys:
+			poses.append(_key(key))  # every frame: PIP may be moving
+		poses.append(home)
+		_pose(poses, ts, total * smoothstep(0.0, 1.0, k))
+		if lapse:
+			var s := k * total
+			var b := float(rise.break_s)
+			clock.set_hour(day + (lerpf(h0, up, s / b) if s < b else up + (s - b) * float(rise.h_per_s)))
+	step.call(0.0)
+	cam.make_current()
+	await _run(total, step)
+	_thaw()
+	_give_clock()
+	cam.near = near
+	cam.projection = Camera3D.PROJECTION_PERSPECTIVE  # the other beats set only the fov
+	cam.fov = float(cfg.fov)
+	_end()
+	shot_done.emit(name)
+
+
+## The hour of the sol the sun's centre clears the skyline, seen from dawn_reveal's sunrise key (`sunrise.key`, a fixed
+## eye: a ground or world ref).
+func sunrise_hour() -> float:
+	var c: Dictionary = cfg.shots.dawn_reveal
+	var eye := _at(c.keys[int(c.sunrise.key)].eye)
+	var lo := 0.0
+	var hi := 12.0
+	for i in 24:
+		var mid := (lo + hi) / 2.0
+		if sun_clear(mid, eye) > 0.0:
+			hi = mid
+		else:
+			lo = mid
+	return (hi + lo) / 2.0
+
+
+## Degrees the sun's centre stands over the skyline at its own azimuth, seen from `eye`, at local hour `h`: the patch
+## marched out along that way, then the backdrop's crater rim (models/terrain_backdrop.glb).
+func sun_clear(h: float, eye: Vector3) -> float:
+	var sun: Vector3 = HouseStyle.sun_at(clock._C, h).normalized()  # the sky the clock places the sun in
+	var way := Vector2(sun.x, sun.z).normalized()
+	var top := -90.0
+	for d in range(2, 300, 2):
+		var p := Vector2(eye.x, eye.z) + way * d
+		top = maxf(top, rad_to_deg(atan2(world.height_at(p.x, p.y) - eye.y, d)))
+	var bin := int(fposmod(rad_to_deg(atan2(way.x, -way.y)), 360.0))
+	for i in range(bin - 1, bin + 2):  # the rim's vertices lie about 2 deg apart
+		for v: Vector3 in _rim()[posmod(i, 360)]:
+			var flat := Vector2(v.x - eye.x, v.z - eye.z)
+			top = maxf(top, rad_to_deg(atan2(v.y - eye.y, flat.length())))
+	return rad_to_deg(asin(sun.y)) - top
+
+
+## The backdrop's vertices in world metres, by whole degrees of bearing from the patch centre (read once).
+func _rim() -> Array:
+	if _rim_bins.is_empty():
+		_rim_bins.resize(360)
+		for i in 360:
+			_rim_bins[i] = []
+		var back: Node3D = load("res://models/terrain_backdrop.glb").instantiate()
+		for mi: MeshInstance3D in back.find_children("*", "MeshInstance3D", true, false):
+			var x := Transform3D()
+			var n: Node = mi
+			while n is Node3D:  # out of the tree, so no global_transform
+				x = (n as Node3D).transform * x
+				n = n.get_parent()
+			for v: Vector3 in mi.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]:
+				var g := x * v
+				_rim_bins[int(fposmod(rad_to_deg(atan2(g.x, -g.z)), 360.0))].append(g)
+		back.free()
+	return _rim_bins
+
+
+## One key of a shot: where the eye is and what it looks at, each [ref, [x, y, z]] (data/cine.json shots._note).
+func _key(key: Dictionary) -> Dictionary:
+	var eye := _at(key.eye)
+	if key.eye[0] == "hero":
+		eye = _clear(eye)
+	return {"eye": eye, "rot": Basis.looking_at(_at(key.look) - eye).get_rotation_quaternion(),
+		"fov": float(key.get("fov", cfg.fov)), "shift": 0.0}
+
+
+func _at(r: Array) -> Vector3:
+	var o := Vector3(r[1][0], r[1][1], r[1][2])
+	match r[0]:
+		"hero":  # the hero's feet, turned the way the play camera faces (-Z ahead, +Z back toward the lens)
+			return player.body.global_position + Basis(Vector3.UP, player.cam.yaw) * o
+		"ground":
+			return _ground(r[1])
+		"world":
+			return o
+	return world.items[r[0]].to_global(o)
+
+
+## A point near the hero pulled in front of whatever stands between it and the hero's head, as the spring arm does.
+func _clear(eye: Vector3) -> Vector3:
+	var head: Vector3 = player.body.global_position + Vector3.UP * float(cfg.shot_margin[1])
+	var q := PhysicsRayQueryParameters3D.create(head, eye)
+	q.exclude = [player.body.get_rid()]
+	var hit := world.get_world_3d().direct_space_state.intersect_ray(q)
+	return eye if hit.is_empty() else hit.position + (head - eye).normalized() * float(cfg.shot_margin[0])
+
+
+## The cine camera at `tau` seconds along the keys at times `ts`: position, turn, fov and the lens's frame shift each
+## on a cubic through time (Barry-Goldman, the engine's own), so the camera never stops at a key.
+func _pose(p: Array, ts: Array[float], tau: float) -> void:
+	var n := p.size()
+	var i := 0
+	while i < n - 2 and tau > ts[i + 1]:
+		i += 1
+	var a := maxi(i - 1, 0)
+	var b := mini(i + 2, n - 1)
+	var span := ts[i + 1] - ts[i]
+	var w := clampf((tau - ts[i]) / span, 0.0, 1.0)
+	var pre := ts[a] - ts[i]
+	var post := ts[b] - ts[i]
+	var eye: Vector3 = p[i].eye.cubic_interpolate_in_time(p[i + 1].eye, p[a].eye, p[b].eye, w, span, pre, post)
+	var rot: Quaternion = p[i].rot.spherical_cubic_interpolate_in_time(p[i + 1].rot, p[a].rot, p[b].rot, w, span, pre, post)
+	var f := {}
+	for k: String in ["fov", "shift"]:
+		f[k] = cubic_interpolate_in_time(p[i][k], p[i + 1][k], p[a][k], p[b][k], w, span, pre, post)
+	cam.global_transform = Transform3D(Basis(rot.normalized()), eye)
+	var h := 2.0 * cam.near * tan(deg_to_rad(f.fov) / 2.0)  # the lens's own off-axis frustum (follow_cam.gd Lens)
+	cam.set_frustum(h, Vector2(0.0, f.shift * h), cam.near, cam.far)
 
 
 ## Toward Earth in the scene's axes at the clock's hour, from the night sky's own planet (DESIGN.night.md celestial,
@@ -342,7 +505,7 @@ func _plume(pad: Vector3, k: float) -> void:
 
 func _begin(name: String) -> void:
 	_prev = get_viewport().get_camera_3d()
-	shot = name
+	beat = name
 	t = 0.0
 
 
@@ -353,7 +516,7 @@ func _give_camera() -> void:
 
 func _end() -> void:
 	_give_camera()
-	shot = ""
+	beat = ""
 	t = 0.0
 
 

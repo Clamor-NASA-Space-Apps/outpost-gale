@@ -36,6 +36,7 @@ func play() -> bool:
 	await turn_beside()
 	await corner()
 	await step_up()
+	await off_rim()
 	await pad_walk()
 	await drive()
 	restyle()
@@ -261,6 +262,23 @@ func step_up() -> void:
 		else:
 			check(y < top - 0.1, "a %.2f m step stops the hero (feet at %.2f, top at %.2f)" % [step * k, y, top])
 		b.free()
+
+
+## A thin plate's rim is no floor (friend's playtest, 14 Nov: the hero stood floating on a tilted panel's edge):
+## put on top with the rim under one side of the feet, the hero slips off it and lands on the ground.
+func off_rim() -> void:
+	var world: Node3D = game.get_node("World")
+	var at := STEPS + Vector2(0, 6)
+	var b := box(at, Vector3(0.05, 1.0, 2.0))
+	var top: float = b.position.y + 0.6
+	game.place(Vector3(at.x, 0, at.y), 0)
+	player.body.global_position = Vector3(at.x + radius * 0.6, top + 0.02, at.y)
+	player.body.velocity = Vector3.ZERO
+	await frames(120)
+	var y: float = player.body.global_position.y
+	var ground: float = world.height_at(player.body.global_position.x, player.body.global_position.z)
+	check(y < ground + 0.1, "slips off a thin rim to the ground (feet at %.2f, rim at %.2f, ground %.2f)" % [y, top, ground])
+	b.free()
 
 
 ## Across each build pad on three headings: up its edge in one step, then over the pavers' seams with the feet on

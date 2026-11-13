@@ -99,7 +99,81 @@ func play() -> bool:
 	check(gap > 1.0 and gap < 2.5, "it parks beside the hero, not on it (%.2f m)" % gap)
 	check(sounds.has("pip_hello"), "and beeps hello (%s)" % [sounds])
 	check(pip._near, "its head is on the hero")
+	await _lead(world, player, pip)
 	return true
+
+
+## Held by the beats (data/beats.json pip numbers): PIP leads at the hero's pace, a kid walking right after it never
+## comes within 1.5 m, it never gives up, and a kid walking into it parked makes it back off, never stepped on.
+func _lead(world: Node3D, player: Node3D, pip: Node3D) -> void:
+	var b: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/beats.json")).pip
+	pip.back_m = float(b.back_m)
+	pip.back_s = float(b.back_s)
+	pip.back_lead = float(b.back_lead_s)
+	var from := Vector3(2.0, world.height_at(2.0, 9.5), 9.5)  # a via point east of HAB 1, the solar stop 18 m east
+	pip.yaw = -PI / 2.0
+	pip._place(from, pip.yaw)
+	player.place(Vector3(-1.0, world.height_at(-1.0, 9.5) + 0.05, 9.5), -90.0)
+	var arrived := [false]
+	pip.arrived.connect(func() -> void: arrived[0] = true, CONNECT_ONE_SHOT)
+	var gave: int = pip.gave_up
+	pip.order(Vector3(20.0, 0.0, 3.0), Vector3.INF, false, Vector3(b.lead_wait_m, b.lead_resume_m, b.lead_near_m))
+	var gap := INF
+	var hits := 0
+	var speeds: Array[float] = []
+	var held := false
+	for i in 60 * 60:
+		await frames(1)
+		if arrived[0]:
+			break
+		var d := Vector2(pip.global_position.x - player.body.global_position.x, pip.global_position.z - player.body.global_position.z)
+		gap = minf(gap, d.length())
+		hits += 1 if _overlaps(pip) else 0
+		if pip.state == "drive" and d.length() < 3.0 and i > 120:
+			speeds.append(pip.v)
+		# a kid walking straight after PIP, never stopping short of it
+		player.cam.yaw = atan2(-d.x, -d.y)
+		if not held:
+			held = true
+			action(&"move_forward", true)
+	action(&"move_forward", false)
+	var mean := 0.0
+	for v in speeds:
+		mean += v / speeds.size()
+	print("  lead: closest %.2f m, pace %.2f m/s over %d frames" % [gap, mean, speeds.size()])
+	check(arrived[0], "PIP leads all the way to its spot (at %.1f, %.1f)" % [pip.global_position.x, pip.global_position.z])
+	check(pip.gave_up == gave, "it never gives up on the lead (%d)" % (pip.gave_up - gave))
+	check(gap > 1.5, "a kid walking right after it never comes within 1.5 m (%.2f m)" % gap)
+	check(mean > 0.9 and mean < 1.2, "it leads at the hero's walking pace (%.2f m/s)" % mean)
+	check(hits == 0, "and never overlaps anything on the way (%d frames)" % hits)
+	# parked: a kid walking straight into it from the open side
+	await frames(60)
+	var at: Vector3 = pip.global_position
+	var start := Vector3.INF
+	for k in 8:
+		var dir := Vector3(sin(TAU * k / 8.0), 0.0, cos(TAU * k / 8.0))
+		var p := at + dir * 6.0
+		if pip._clear(at, p):
+			start = Vector3(p.x, world.height_at(p.x, p.z) + 0.05, p.z)
+			break
+	if not check(start != Vector3.INF, "open ground round PIP's spot"):
+		return
+	player.place(start, 0.0)
+	await frames(10)
+	gap = INF
+	var backed := false
+	action(&"move_forward", true)
+	for i in 60 * 8:
+		await frames(1)
+		var d := Vector2(pip.global_position.x - player.body.global_position.x, pip.global_position.z - player.body.global_position.z)
+		gap = minf(gap, d.length())
+		backed = backed or pip.state == "back"
+		player.cam.yaw = atan2(-d.x, -d.y)
+	action(&"move_forward", false)
+	print("  parked: closest %.2f m" % gap)
+	check(backed, "a kid walking into a parked PIP makes it back off")
+	check(gap > 0.8, "and the kid never steps on it (%.2f m)" % gap)
+	pip.release()
 
 
 ## PIP's hull, 3% smaller (a touch is not an overlap), against everything it must keep out of.

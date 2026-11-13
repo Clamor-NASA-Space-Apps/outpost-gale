@@ -19,6 +19,7 @@ const BAR_H := 4.0  # 6 mockup px
 var bar := Control.new()
 var tile_icon: Hud.Icon
 var num: Label
+var gain: Label  # a sudden rise in what feeds the meter ("+0.7 kW"), fading beside the number
 
 
 func _ready() -> void:
@@ -31,7 +32,10 @@ func _ready() -> void:
 	num = Hud.label("", "HudNum")
 	num.custom_minimum_size.x = 38
 	num.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	for k: Control in [tile_icon, bar, num]:
+	gain = Hud.label("", "HudNum")
+	gain.add_theme_color_override("font_color", Hud.color("light"))
+	gain.modulate.a = 0.0
+	for k: Control in [tile_icon, bar, num, gain]:
 		add_child(k)
 	Hud.nudge(self)  # the icon on the number's capitals
 	_show()
@@ -43,6 +47,15 @@ func set_icon(n: String) -> void:
 		icon_name = n
 		if not low():
 			tile_icon.art = Hud.icon_texture(n)
+
+
+## A gain the battery percent is too slow to show (a cleaned wing feeds a 140 kWh battery): the kid sees it now.
+func bump(text: String) -> void:
+	gain.text = text
+	var t := create_tween()
+	t.tween_property(gain, "modulate:a", 1.0, 0.2)
+	t.tween_interval(2.5)
+	t.tween_property(gain, "modulate:a", 0.0, 0.6)
 
 
 func low() -> bool:

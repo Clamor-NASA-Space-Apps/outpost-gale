@@ -177,6 +177,10 @@ func follow(delta: float, travel: Vector3, facing: float, on_floor: bool) -> voi
 	q.exclude = excluded
 	var free: float = get_world_3d().direct_space_state.cast_motion(q)[0] * wanted
 	var squeeze := clampf(inverse_lerp(wanted, t.lift_full, free), 0.0, 1.0)
+	# looking up, the arm swings down behind the hero and meets the ground, which is no wall: lifting then dragged
+	# the view back to eye level and the night sky could not be watched (Ravindu, 14 Nov). The arm shortens instead
+	if pitch > deg_to_rad(t.pitch_default):
+		squeeze = 0.0
 	lift = lerpf(lift, (deg_to_rad(t.pitch_min) - pitch) * squeeze, 1.0 - exp(-t.ease_rate * delta))
 	# the ground some way ahead pitches the view: up a dune shows the crest, down one the floor (Nesky #26)
 	var fwd: Vector3 = Vector3(-sin(yaw), 0.0, -cos(yaw)) * t.slope_ahead

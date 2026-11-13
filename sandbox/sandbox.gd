@@ -61,6 +61,7 @@ var sim: SimNode  # the rules (sim/): every meter; the HUD and the beats only re
 var hud: Control  # ui/game_hud.tscn: meters, PIP's bubble, compass, maps, cards
 var beats: Beats  # cine/beats.gd: PIP's guided sequences from data/beats.json
 var cine: Cine  # cine/cine.gd: sleep, rover trips, the launch
+var lamp_hinted := false  # PIP explains the helmet lights once, the first time they come on by themselves
 var offers := {}  # data/beats.json `offers`: what each choice card holds and which rules it sets
 
 
@@ -163,6 +164,8 @@ func _process(_delta: float) -> void:
 	sim.paused = clock.paused or cine.busy()
 	hud.visible = not settings.is_open()
 	hud.show_prompt(interactions.prompt_label.text.trim_prefix("[E]  "))  # empty when nothing is in reach; the HUD draws its own E key
+	if not cine.busy():
+		world.room_shadow(player.room != "")  # indoors the sun's shadow reaches the room only (world.gd)
 	var h := clock.hour()
 	fps_label.text = "%d fps  %s  %s %02d:%02d" % [Engine.get_frames_per_second(), quality, clock.phase(), int(h), int(fmod(h, 1.0) * 60.0)]
 
@@ -171,6 +174,10 @@ func _process(_delta: float) -> void:
 ## spot inside. The bound and the braking keep everything on the real ground, so this is for what nobody foresaw (a
 ## body pushed through a floor). The hero moves behind a short fade when that is far, so no teleport shows.
 func _physics_process(_delta: float) -> void:
+	# behind the shelter's water walls the rules halve the dose (sim shelter knob)
+	var inside: bool = player.room == "shelter"
+	if inside != bool(sim.sim.knobs.sheltered):
+		sim.apply("shelter_in" if inside else "shelter_out")
 	if player.vehicle == null:
 		var p: Vector3 = player.body.global_position
 		var to := _net(p)
@@ -418,8 +425,48 @@ func _wire() -> void:
 	cine.setup(self)
 	cine.slept.connect(func(kind: StringName, _hours: float) -> void:
 		sim.use("sleep_night" if kind == &"night" else "nap"))
-	cine.arrived.connect(func(_l: String) -> void:
-		player.bound = world.bound(0.0, player.body.global_position))
+	# a night's sleep ends the sol's beats and starts the next sol's (data/sols.json), once the lapse is over and the
+	# rules have counted the new sol (the connection above runs first)
+	cine.slept.connect(func(kind: StringName, _h: float) -> void:
+		if kind != &"night":
+			return
+		while cine.busy():
+			await get_tree().process_frame
+		beats.notify("slept")
+		await get_tree().physics_frame
+		await get_tree().physics_frame
+		beats.start_sol(sim.sim.sol))
+	cine.arrived.connect(func(l: String) -> void:
+		player.bound = world.bound(0.0, player.body.global_position)
+		beats.notify("arrived:" + l))
+	beats.trip.connect(func(l: String) -> void: cine.trip_to(l, {"sol": sim.sim.sol, "km": 8.8}))
+	# the tutorial: PIP's beats drive the Today list, the waypoint and the camera shots; the HUD and the shots answer
+	beats.task.connect(func(_id: String) -> void: hud.set_tasks(beats.tasks()))
+	beats.objective.connect(func(t: String) -> void:
+		if t == "":
+			hud.clear_objective()
+		elif t == "pip" or world.data.landmarks.has(t):
+			hud.set_objective(t)
+		elif world.items.has(t):
+			hud.set_objective_node(world.items[t], "", t))
+	hud.dismissed.connect(func(_id: String) -> void: beats.notify("dismissed"))
+	hud.map_toggled.connect(func(open: bool) -> void: beats.notify("map_open" if open else "map_closed"))
+	beats.shot.connect(cine.shot)
+	cine.shot_done.connect(func(n: String) -> void: beats.notify("shot_done:" + n))
+	# the sols past the first (data/sols.json): Earth's mail, the rules' events, quiet sols skipped with the ledger
+	beats.send_mail.connect(hud.send_mail)
+	hud.cue.connect(func(n: String) -> void:
+		if n == "mail":
+			beats.notify("mail_arrived"))
+	sim.changed.connect(func(st: Dictionary) -> void:
+		for e: Dictionary in st.events:
+			beats.notify("event:" + String(e.id)))
+	player.lamps_changed.connect(func(on: bool, auto: bool) -> void:
+		if on and auto and not lamp_hinted:
+			lamp_hinted = true
+			hud.say("hint.suit_lights", {"keys": ["H"]}))
+	beats.skip_sols.connect(func(n: int) -> void: hud.show_ledger(sim.skip_sols(n)))
+	hud.ledger_closed.connect(func() -> void: beats.notify("ledger_closed"))
 	# the opening plays when a person starts the game (through ui/boot.tscn), never in a test script (no current
 	# scene) or a tool run (--forge-job)
 	if get_tree().current_scene != null and not Array(OS.get_cmdline_user_args()).any(

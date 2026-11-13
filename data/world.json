@@ -426,13 +426,13 @@
   "rover": "ground.sink.soft"
  },
  "graded": {
-  "_note": "prefabs whose footprint (standin size) is graded level before the ground is built (world/terrain.gd _grade()), as crews prepare a site before they lay a slab on it: NASA's ASPECT project 'will develop tools and methods to clear, level, and compact the lunar surface' (https://www.nasa.gov/?p=96252, design/research/pages/pad-grading/). Without it a 0.15 m pad on a slope was buried at its uphill side and the ground came up through it; the greenhouse's and the shelter's floors showed the ground through them the same way (13 Nov playtest)",
-  "prefabs": ["build_pad", "greenhouse", "storm_shelter"]
+  "_note": "prefabs whose footprint (standin size) is graded level before the ground is built (world/terrain.gd _grade()), as crews prepare a site before they lay a slab on it: NASA's ASPECT project 'will develop tools and methods to clear, level, and compact the lunar surface' (https://www.nasa.gov/?p=96252, design/research/pages/pad-grading/). Without it a 0.15 m pad on a slope was buried at its uphill side and the ground came up through it; the greenhouse's and the shelter's floors showed the ground through them the same way (13 Nov playtest), and HAB 1's doorway (14 Nov: deck 2 mm over the ground)",
+  "prefabs": ["build_pad", "greenhouse", "storm_shelter", "habitat"]
  },
  "shadow_min": 0.6,
  "_swept_range_m": "metres from the camera to a ground cell's centre (the patch centre for the base) beyond which its swept surfaces (floors, HAB 1's fit-out: DESIGN.md weathering.clean) are not drawn: seen only through doorways, they cost a draw call each from anywhere (world.gd _merge). Art direction",
  "swept_range_m": 30,
- "moving": "^(door|dish|tell|head|status_bar|curtain|plug|charge_light|ascent)$|^(panel|wheel)_[0-9]+$",
+ "moving": "^(door|dish|tell|head|status_bar|curtain|plug|charge_light|ascent|hatch)$|^(panel|wheel)_[0-9]+$",
  "blink": {
   "_note": "status lights that flash on their own (world/machines.gd): nodes named by `nodes` keep their own mesh and a copy of the light role. hz and duty: an obstruction beacon flashes 20 to 40 times a minute (FAA L-864 red 20 to 40, L-865 white 40, https://www.faa.gov/documentLibrary/media/Advisory_Circular/150-5345-43GH.pdf, from a search summary); WCAG 2.3.1 allows at most 3 flashes in any second. off: the share of the light left when it is dark",
   "nodes": "^(cap|beacon)$",

@@ -9,9 +9,11 @@ const FollowCam := preload("res://player/follow_cam.gd")
 const Touch := preload("res://player/touch.gd")
 const Controls := preload("res://player/controls.gd")
 const HeroShader := preload("res://player/hero.gdshader")
+const SuitLamps := preload("res://player/suit_lamps.gd")
 const HERO_LAYER := 8
 const MASK := 1 | 2 | 4 | 16 | 64  # ground, statics, thin, vehicles, carriables (CONTRACTS.md)
 const OVERLAP := 2 | 4 | 16 | 64  # what the drawn body must never be inside; the step lift keeps the floor out
+const EDGE_SLIDE := 1.5  # m/s off a rim the body only rests on: a slip, quicker than a careful walk
 # The model and its clips (names, loops, foot contacts). Another hero swaps these and nothing else.
 const MODEL := "res://models/character_suited.glb"
 const CLIPS := "res://data/clips.json"
@@ -20,6 +22,8 @@ const EYE_ROLE := "visor"  # the surface the eye sits behind in first person
 ## A foot pressed onto the ground: each plant of a walk or run, and both feet on landing. `pos` is under the
 ## foot at the floor, `yaw_deg` the heading (CONTRACTS.md), `foot` is "foot_l" or "foot_r".
 signal footstep(pos: Vector3, yaw_deg: float, foot: String)
+## The helmet lights went on or off: `auto` by the sun or a door, else by the `lamp` press (player/suit_lamps.gd).
+signal lamps_changed(on: bool, auto: bool)
 
 const FEET := ["foot_l", "foot_r"]  # in the order of clips.json feet: left, right
 
@@ -75,6 +79,13 @@ var room := ""  # the one the body is in, "" outside
 ## yaw0, yaw1: the turn, firm: no move key ends it}. Input moves nothing while it plays.
 var cut := {}
 var seated := false  # on a seat (sit): input moves nothing; a move key stands the hero up
+## The tutorial's lock (allow()): only these may act; empty, everything may.
+var allowed: Array = []
+var _gate: Gate
+var lamps: SuitLamps
+var lamps_on: bool:
+	get:
+		return lamps.on
 
 
 func _ready() -> void:
@@ -139,9 +150,53 @@ func _ready() -> void:
 	cam.setup(tuning.camera)
 	cam.eye = Vector3(0.0, model.eye.y, model.eye.z)  # centred; the forward part turns with the view, not the body
 	cam.follow_target(body, [body.get_rid()], meshes, tuning.camera.distance, tuning.camera.pivot_height, model.bounds)
+	lamps = SuitLamps.new()
+	lamps.setup(self, model.skeleton, model.eye, design)
 	touch = Touch.new()
 	add_child(touch)
-	touch.setup(tuning, design.colors, cam.look)
+	touch.setup(tuning, design.colors, func(right: float, down: float) -> void:
+		if may(&"look_left"):
+			cam.look(right, down))
+
+
+## A tutorial step allows only `actions` (cine/beats.gd): [] allows everything again, ["none"] nothing. A name is an
+## input action or its family ("move" is move_forward and the other three, "look" the look keys, the mouse and a
+## touch drag); jump, hurry, interact and map are the rest. A blocked action does nothing, from keys, a pad or a touch
+## button (its button hides); Esc and the settings always work.
+func allow(actions: Array) -> void:
+	allowed = actions.duplicate()
+	if _gate == null:
+		_gate = Gate.new()
+		_gate.player = self
+		tree_exiting.connect(_gate.queue_free)
+		# last child of the root: its _input runs before every other node's (the HUD takes M in its _input)
+		get_tree().root.add_child.call_deferred(_gate)
+	for b: Control in touch.root.find_children("*", "Button", true, false):
+		b.visible = may(b.name)
+	touch.stick.visible = [&"move_forward", &"move_back", &"move_left", &"move_right"].any(may)
+
+
+func may(action: StringName) -> bool:
+	if action == &"lamp":
+		return allowed != ["none"]  # the helmet lights stay the player's in every lesson
+	return allowed.is_empty() or action == &"settings" or allowed.any(func(a: String) -> bool:
+		return action == StringName(a) or action.begins_with(a + "_"))
+
+
+## Eats the events of blocked actions before anything else sees them (polled input is gated where it is read).
+class Gate extends Node:
+	const ACTIONS: Array[StringName] = [&"move_forward", &"move_back", &"move_left", &"move_right", &"look_left",
+		&"look_right", &"look_up", &"look_down", &"jump", &"hurry", &"interact", &"map"]
+	var player: Node
+
+	func _input(e: InputEvent) -> void:
+		if player.allowed.is_empty():
+			return
+		var blocked: bool = e is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED and not player.may(&"look_left")
+		for a in ACTIONS:
+			blocked = blocked or InputMap.has_action(a) and e.is_action(a) and not player.may(a)
+		if blocked:
+			get_viewport().set_input_as_handled()
 
 
 ## One cylinder round the suited body, lifted by the step height, and a ray from it to the feet that walks the
@@ -264,13 +319,16 @@ func _live(delta: float, accel: Vector3) -> void:
 
 func _walk(delta: float) -> void:
 	var stick := Input.get_vector(&"move_left", &"move_right", &"move_forward", &"move_back")
+	if not allowed.is_empty():
+		stick.x *= float(may(&"move_left") if stick.x < 0.0 else may(&"move_right"))
+		stick.y *= float(may(&"move_forward") if stick.y < 0.0 else may(&"move_back"))
 	var glide := Vector3.ZERO
 	var busy := seated or not cut.is_empty()
 	if busy:
 		glide = _busy(stick, delta)
 		stick = Vector2.ZERO
 	var want := cam.ground_basis() * Vector3(stick.x, 0.0, stick.y)
-	var top := (hurry if Input.is_action_pressed(&"hurry") else walk) * stick.length()
+	var top := (hurry if Input.is_action_pressed(&"hurry") and may(&"hurry") else walk) * stick.length()
 	if stick != Vector2.ZERO:
 		var diff := wrapf(atan2(-want.x, -want.z) - yaw, -PI, PI)
 		# grip limits a turn at speed (a / v), the legs limit it standing still
@@ -291,7 +349,7 @@ func _walk(delta: float) -> void:
 		speed = minf(speed, Vector2(body.velocity.x, body.velocity.z).length())
 
 	coyote = tuning.input.coyote if on_floor else coyote - delta
-	buffer = tuning.input.jump_buffer if Input.is_action_just_pressed(&"jump") else buffer - delta
+	buffer = tuning.input.jump_buffer if Input.is_action_just_pressed(&"jump") and may(&"jump") else buffer - delta
 	if buffer > 0.0 and coyote > 0.0 and launch < 0.0 and not busy:
 		buffer = 0.0
 		coyote = 0.0
@@ -327,6 +385,9 @@ func _walk(delta: float) -> void:
 	# a landing after real air time: a teleport's settle or a curb's single frame off the floor is not one
 	_steps(steps, on_floor and not was_on_floor and coyote <= 0.0)
 	_room()
+	for a: StringName in [&"look_left", &"look_right", &"look_up", &"look_down"]:
+		if not may(a):
+			Input.action_release(a)  # the camera polls them next
 	cam.follow(delta, Vector3(real.x, 0.0, real.z), yaw, on_floor)
 
 
@@ -371,12 +432,10 @@ func _settle(before: Vector3, may_drop: bool) -> bool:
 	var at := body.global_position
 	var q := PhysicsRayQueryParameters3D.create(at + Vector3.UP * step, at + Vector3.DOWN * step, MASK & ~4, [body.get_rid()])
 	var hit := body.get_world_3d().direct_space_state.intersect_ray(q)
-	if hit.is_empty():
-		return body.is_on_floor()
-	var y: float = hit.position.y
 	# up onto any lip (a bevelled curb edge is steep where the ray meets it), down only onto a walkable slope
-	if y <= at.y and hit.normal.angle_to(Vector3.UP) > body.floor_max_angle:
-		return body.is_on_floor()
+	if hit.is_empty() or hit.position.y <= at.y and hit.normal.angle_to(Vector3.UP) > body.floor_max_angle:
+		return _off_edge()
+	var y: float = hit.position.y
 	if y > at.y:
 		var standing := Transform3D(body.global_basis, Vector3(at.x, y + body.safe_margin, at.z))
 		if body.test_move(standing, Vector3.ZERO):
@@ -387,6 +446,21 @@ func _settle(before: Vector3, may_drop: bool) -> bool:
 	body.global_position.y = y
 	body.velocity.y = 0.0
 	return true
+
+
+## The engine counts a capsule resting on a thin edge as a floor (a tilted solar panel's rim): with nothing to
+## stand on under the middle of the body, the body slides off the edge it rests on and falls (friend's playtest,
+## 14 Nov: the hero stood floating on a panel edge).
+func _off_edge() -> bool:
+	if not body.is_on_floor():
+		return false
+	for i in body.get_slide_collision_count():
+		var c := body.get_slide_collision(i)
+		var away := body.global_position - c.get_position()
+		away.y = 0.0
+		if c.get_normal().angle_to(Vector3.UP) <= body.floor_max_angle and away.length() > 0.001:
+			body.global_position += away.normalized() * EDGE_SLIDE * get_physics_process_delta_time()
+	return false
 
 
 ## A boot lands on its clip's measured touchdown (clips.json, low and still: skills/suited-locomotion section
@@ -578,7 +652,8 @@ func inside() -> Array:
 func state() -> Dictionary:
 	var feet := body.global_position
 	return {
-		"player": {"pos": feet, "speed": moved, "onFloor": on_floor, "gait": gait, "inside": [] if vehicle else inside(), "room": room},
+		"player": {"pos": feet, "speed": moved, "onFloor": on_floor, "gait": gait, "inside": [] if vehicle else inside(), "room": room,
+			"lamps": {"on": lamps.on, "auto": lamps.auto}},
 		"cam": {"inside": cam.inside(), "dist": cam.dist, "first": cam.first},
 		"heroScreen": 0.0 if vehicle else cam.on_screen(feet, model.bounds.end.y),
 		"interaction": {"target": "", "prompt": ""},

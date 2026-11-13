@@ -4,7 +4,7 @@ extends "res://addons/forge/test.gd"
 ## in the shelter, a storm dims the sun, the sleep ledger adds up over 5 sols, and top_causes() ranks what cost most.
 
 const Sim := preload("res://sim/sim.gd")
-const KEYS := ["sol", "hour", "o2_kg", "water_kg", "food_kg", "battery_pct", "power_in_kw", "power_out_kw", "dose_msv",
+const KEYS := ["sol", "hour", "o2_kg", "water_kg", "food_kg", "battery_pct", "power_in_kw", "solar_in_kw", "power_out_kw", "dose_msv",
 	"suit_air_min", "panel_dust", "tau", "events", "failing"]
 
 var base: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/sim.json"))

@@ -4,12 +4,12 @@
  "fade_in_s": 0.5,
  "fov": 55.0,
  "sleep": {
-  "_note": "wake_h: a night ends at 06:30 local solar time, 22:00 plus NASA's 8.5 h sleep (factcheck row 208); nap_h: 20 min, between 10 min with no grogginess and NASA's 26 min pilot nap (rows 194, 195). lapse_s = clamp(lapse_per_h x hours, lapse_s). The drone moves from `from` to `to` looking from `at` to `at_to` (smoothstep, no orbit): over HAB 1, high enough that the crater wall leaves the top of the frame to the stars. shadow_range: m the sun's shadows reach for the drone shot (the phone preset's 25 m stops short of HAB 1). room_light: HAB 1's light while the crew sleeps, a share of its own. bench: the donning bench in HAB 1 (forge/hab_interior.py donning(): wall angle 129, 0.4 m deep, seat 0.47 m up) [x, seat y, z, face x, face z]: the hero sits facing into the room. hatch: [x, z] of the hatch's inner face, which the hero turns to after standing up. wake_cam: [from, at] in HAB 1's space, the shot of the hero waking on the bench; wake_hold_s on the bench before standing",
+  "_note": "wake_h: a night ends at 06:30 local solar time, 22:00 plus NASA's 8.5 h sleep (factcheck row 208); nap_h: 20 min, between 10 min with no grogginess and NASA's 26 min pilot nap (rows 194, 195). lapse_s = clamp(lapse_per_h x hours, lapse_s). The drone moves from `from` to `to` looking from `at` to `at_to` (smoothstep, no orbit): over HAB 1, high enough that the crater wall leaves the top of the frame to the stars, ending west of the base looking east (bearing 93 deg) so a night's lapse ends on the sun breaking over the rim (bearing 81 deg) behind the base, about a second before the wake (06:08 of the 06:30 end). shadow_range: m the sun's shadows reach for the drone shot (the phone preset's 25 m stops short of HAB 1). room_light: HAB 1's light while the crew sleeps, a share of its own. bench: the donning bench in HAB 1 (forge/hab_interior.py donning(): wall angle 129, 0.4 m deep, seat 0.47 m up) [x, seat y, z, face x, face z]: the hero sits facing into the room. hatch: [x, z] of the hatch's inner face, which the hero turns to after standing up. wake_cam: [from, at] in HAB 1's space, the shot of the hero waking on the bench; wake_hold_s on the bench before standing",
   "wake_h": 6.5,
   "nap_h": 0.3333,
   "lapse_per_h": 0.9,
   "lapse_s": [4.0, 9.0],
-  "drone": {"from": [-24, 14, -20], "to": [-14, 9, -27], "at": [3, 5.5, 4], "at_to": [4, 5, 6]},
+  "drone": {"from": [-24, 14, -20], "to": [-30, 9, 3], "at": [3, 5.5, 4], "at_to": [20, 5, 6]},
   "shadow_range": 60.0,
   "room_light": 0.15,
   "deck_y": 0.42,
@@ -41,5 +41,25 @@
   "plume_v": 4.0,
   "stand_in": [1.5, 7.0],
   "caption_id": "cine_launch_window"
+ },
+ "shot_margin": [0.5, 1.6],
+ "shots": {
+  "_note": "Tutorial camera shots (cine.gd shot(name)): the camera leaves the play camera, passes each key in turn (s: seconds from the key before) and comes back to the play camera's exact pose over back_s, one cubic through time eased at both ends. eye and look are [ref, [x, y, z]]: ref 'hero' is the hero's feet turned the way the play camera faces (-Z ahead, +Z back toward the lens), and an eye there is pulled in front of anything between it and the head (shot_margin: [m kept clear, head height m]); 'ground' is world metres with y over the ground there; 'world' is world metres as they are; any other ref is a world.json item in its own space (y over its origin). The 'world' point [2053, 518, 2341] is Mount Sharp's summit on the backdrop (models/terrain_backdrop.glb's highest vertex: bearing 139 deg, 3.1 km). fov per key (default the cine fov). music: a cue started with the shot. sunrise (dawn_reveal): the held look clock runs on from the hour it finds so the sun's centre clears the skyline seen from key `key` (the rim at about 1.2 deg on the sun's bearing, 81 deg) `break_s` seconds in, then at h_per_s local hours a real second (the sun climbs about 14.8 deg an hour there, so 1.5 deg a second: it sits about 1.5 deg under the rim as the camera comes round at about 2 s and stands about 6 deg over it at the end); a clock already past the rise is left alone, never turned back. pip_moves: PIP keeps driving (the shot films it rolling up); otherwise it freezes with the hero. Art direction: dawn_reveal looks from west of the base toward the dawn sun (bearing about 80 deg at 06:30) and Mount Sharp, the solar field between them; look_around turns clockwise from the greenhouse past HAB 1, the rover and the solar field to Mount Sharp",
+  "dawn_reveal": {"music": "dawn", "back_s": 1.8, "sunrise": {"key": 2, "break_s": 3.0, "h_per_s": 0.1}, "keys": [
+   {"s": 1.4, "eye": ["hero", [-1.5, 5.0, 2.5]], "look": ["ground", [10, 2, 14]]},
+   {"s": 1.6, "eye": ["ground", [-31, 9, 2]], "look": ["ground", [18, 3, 15]], "fov": 58},
+   {"s": 2.2, "eye": ["ground", [-28, 8, 8]], "look": ["ground", [20, 5, 10]], "fov": 58}
+  ]},
+  "focus_pip": {"pip_moves": true, "back_s": 1.0, "keys": [
+   {"s": 1.0, "eye": ["hero", [1.0, 1.9, 1.6]], "look": ["pip", [0, 0.35, 0]], "fov": 45},
+   {"s": 1.0, "eye": ["hero", [0.9, 1.7, 1.2]], "look": ["pip", [0, 0.35, 0]], "fov": 42}
+  ]},
+  "look_around": {"back_s": 1.4, "keys": [
+   {"s": 1.4, "eye": ["hero", [-0.8, 3.0, 2.0]], "look": ["greenhouse", [0, 1.5, 0]]},
+   {"s": 1.4, "eye": ["hero", [-0.4, 3.3, 1.6]], "look": ["hab1", [0, 2.0, 0]]},
+   {"s": 1.5, "eye": ["hero", [0.3, 3.5, 1.4]], "look": ["rover", [0, 1.2, 0]]},
+   {"s": 1.2, "eye": ["hero", [0.7, 3.6, 1.6]], "look": ["wing3", [0, 1.0, 0]]},
+   {"s": 1.2, "eye": ["hero", [1.0, 3.6, 2.0]], "look": ["world", [2053, 518, 2341]]}
+  ]}
  }
 }

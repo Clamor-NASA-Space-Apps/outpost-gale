@@ -1126,3 +1126,33 @@ func _model_in(parent: Node3D, id: String, design: Dictionary) -> Node3D:
 	parent.add_child(m)
 	m.queue_free()
 	return m
+
+
+## Inside a room the sun's shadow reaches only ROOM_SHADOW_M from the eye: the room and the hero in it. With the
+## preset's 40 m, the splits drew every caster in the base seen through the greenhouse dome (gh_eye_b: 140 of 240
+## draw calls, 14 Nov). The preset's reach and splits come back on leaving; a quality change made inside is taken as
+## the new preset (set_quality writes the reach, so it differs from ours). Not called while a cinematic runs: the sleep
+## lapse widens the reach itself and puts back what it found.
+const ROOM_SHADOW_M := 8.0  # the greenhouse dome is 6.8 m across, HAB 1 4.8 m: any wall plus the hero's shadow
+var _sun_out := {}  # the reach and splits outside, while a room's are in force
+var _sun: DirectionalLight3D  # the rig's sun, a sibling (HouseStyle.apply_lighting on the game root)
+
+
+func room_shadow(inside: bool) -> void:
+	if _sun == null:
+		for n: Node in get_parent().get_children():
+			if n is DirectionalLight3D and n.has_meta("house_rig"):
+				_sun = n
+	if _sun == null:
+		return
+	var sun := _sun
+	if inside and sun.directional_shadow_max_distance != ROOM_SHADOW_M:
+		_sun_out = {"far": sun.directional_shadow_max_distance, "s1": sun.directional_shadow_split_1,
+			"s2": sun.directional_shadow_split_2, "s3": sun.directional_shadow_split_3}
+		sun.directional_shadow_max_distance = ROOM_SHADOW_M
+	elif not inside and not _sun_out.is_empty():
+		sun.directional_shadow_max_distance = _sun_out.far
+		sun.directional_shadow_split_1 = _sun_out.s1
+		sun.directional_shadow_split_2 = _sun_out.s2
+		sun.directional_shadow_split_3 = _sun_out.s3
+		_sun_out = {}

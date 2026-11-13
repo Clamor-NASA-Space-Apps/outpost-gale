@@ -58,6 +58,15 @@ panes = hemisphere("panes-col", "glass")
 panes.modifiers.new("t", "SOLIDIFY").thickness = 0.04
 applied(panes)
 cut(panes, tunnel_hole())
+# then only the outer sheet: glass is blended and two-sided (surface.gdshader SEE), so from inside the second
+# sheet was a second full-screen blended layer, each drawn again for the sun and the grow light (13 Nov: the lag
+# inside). The solid only made the doorway cut clean; the thin faces at its edges stay
+bm = bmesh.new()
+bm.from_mesh(panes.data)
+# the solid grew inward from the sphere, so the inner sheet's corners lie under RD from the hemisphere's centre (its origin)
+bmesh.ops.delete(bm, geom=[f for f in bm.faces if all(v.co.length < RD - 0.02 for v in f.verts)], context="FACES")
+bm.to_mesh(panes.data)
+bm.free()
 struts = hemisphere("struts", "metal")
 w = struts.modifiers.new("w", "WIREFRAME")
 w.thickness, w.offset, w.use_even_offset = 0.09, 0.0, True

@@ -101,14 +101,18 @@
    "factcheck": "assets-cache/data-snapshots/noaa-xray-flares-latest_2026-11-07.json; the dose is row 37's scaled by peak X-ray flux (1.45e-5 / 1.2e-3 W/m2): no source, an X-ray class does not set a particle dose", "placeholder": true},
   "dust_storm": {"label": "Dust storm", "kind": "storm", "tau_peak": 8.5, "rise_h": 48, "e_fold_sols": 43, "chance_per_sol": 0.000498,
    "source": "Curiosity at Gale, 2018 global storm (ARCHIVED 2018)", "live": false,
-   "factcheck": "row 182 (peak opacity 8.5, clears with an e-fold of 43 sols), row 40 (a global storm about every 3 Mars years = 1 / 2009 sols, our maths); rise_h is ours", "placeholder_keys": ["rise_h"]}
+   "factcheck": "row 182 (peak opacity 8.5, clears with an e-fold of 43 sols), row 40 (a global storm about every 3 Mars years = 1 / 2009 sols, our maths); rise_h is ours", "placeholder_keys": ["rise_h"]},
+  "dust_gust": {"label": "Night wind dusted the panels", "kind": "gust", "dust_to": 0.33, "chance_per_sol": 0,
+   "source": "Gale's strong night winds, and wind moving dust on and off solar panels", "live": false,
+   "factcheck": "row 177 (Gale night winds about 21 m/s, most active 17:00 to 23:00); row 181 (Spirit's power 'went up by about 50 percent' when wind cleared its panels, so dust that heavy left 1 / 1.5 of the power: 0.33 lost); all of it laid down in one night is art direction. A gust is a moment (sim.gd start()): it raises panel_dust to dust_to and is not an active event", "placeholder_keys": ["dust_to"]}
  },
  "schedule": {
-  "_note": "when events happen: the story's",
+  "_note": "when events happen: the story's. Sol 5's flare comes half an hour after the 06:30 wake, so the kid has the morning's hour to reach the shelter (row 35). Sol 2's night gust dusts the wings, so the morning's power is lower and a brush lifts it (data/sols.json Sol 2)",
   "placeholder": true,
   "list": [
-   {"sol": 5, "hour": 10, "event": "flare_x12"},
-   {"sol": 8, "hour": 9, "event": "dust_storm"}
+   {"sol": 5, "hour": 7, "event": "flare_x12"},
+   {"sol": 8, "hour": 9, "event": "dust_storm"},
+   {"sol": 2, "hour": 3, "event": "dust_gust"}
   ]
  },
  "seed": {"value": 2026, "placeholder": true}

@@ -20,6 +20,8 @@ const SUPPLIES := ["o2_kg", "water_kg", "food_kg"]
 # Crew health is radiation only, and reaches 0 at 1 Sv: about +5% lifetime risk of fatal cancer, and what a 500-day
 # stay at Gale adds up to (factcheck rows 32, 33). A 30-sol stay at 0.67 mSv a day costs about 2 points.
 const DOSE_FULL_MSV := 1000.0
+const GAIN_STEP := 1.05  # solar power rising 5% between two states shows as a "+kW" beside the power meter
+const GAIN_MIN_KW := 0.1  # and by this much: at dawn a tiny solar number climbs fast in percent
 const TOAST_S := 6.0
 const ALERT_GAP_S := 6.0  # the alert and danger cues repeat no more often than this
 const PLACES := preload("res://ui/components/full_map.gd").PLACES
@@ -37,6 +39,8 @@ const SOURCES := {
 
 var lines: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/lines.json"))
 var state := {}
+var _power_in := 0.0
+var _power_hour := 0.0
 var stock := {}  # the most of each supply seen so far: Life support's 100%
 var start_unix := Time.get_unix_time_from_system()  # sol 1 is the day the game is played
 var frame := Control.new()  # everything sits inside its margins
@@ -214,6 +218,14 @@ func bind(node: Object) -> void:
 func show_state(s: Dictionary) -> void:
 	state = s
 	meters.power.value = roundi(float(s.battery_pct))
+	# the sun climbs a fraction of a percent a state; a step this big is a hand at work (a brushed wing). Solar only:
+	# the reactor's steady 10 kW hid a wing's +0.4 kW
+	var power_in := float(s.get("solar_in_kw", 0.0))
+	var hour := float(s.sol) * Hud.SOL_H + float(s.hour)
+	if power_in > _power_in * GAIN_STEP and power_in - _power_in > GAIN_MIN_KW and hour - _power_hour < 0.05:  # never in a time-lapse
+		meters.power.bump("+%.1f kW" % (power_in - _power_in))
+	_power_in = power_in
+	_power_hour = hour
 	# Life support is the supply that is shortest against the most we have had, and shows that supply's icon
 	var worst := ""
 	var left := 1.0

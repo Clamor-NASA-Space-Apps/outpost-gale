@@ -200,6 +200,12 @@ func _process(delta: float) -> void:
 	if _since_look >= 1.0 / float(_cfg.look_hz) or dh > 0.05:
 		_update_look(false)
 		_since_look = 0.0
+	elif dh != 0.0:
+		# the disc keeps pace with the light and the stars every frame (a global: the cubemap is left alone); at
+		# look_hz alone it stepped like a slideshow in a fast-forward (Ravindu, 14 Nov)
+		var s := HouseStyle.sun_at(_C, hour())
+		RenderingServer.global_shader_parameter_set(&"forge_sky_sun_dir", s)
+		RenderingServer.global_shader_parameter_set(&"forge_sky_twilight_dir", Vector3(s.x, 0.0, s.z).normalized())
 	if float(_cfg.sun_step_deg) <= 0.0:
 		if hours != _lit_at:  # a still clock leaves the light, and the sky's reflections, alone
 			_lit_at = hours

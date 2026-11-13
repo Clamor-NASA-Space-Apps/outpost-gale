@@ -231,6 +231,8 @@ func _skinned_points(model: Node3D, role := "") -> PackedVector3Array:
 	var out := PackedVector3Array()
 	var to_model := model.global_transform.affine_inverse() * skeleton.global_transform
 	for mi: MeshInstance3D in skeleton.find_children("*", "MeshInstance3D", true, false):
+		if mi.skin == null:
+			continue  # a held prop on a hand bone (a meal, a tool) is not the body
 		var binds: Array[Transform3D] = []
 		for i in mi.skin.get_bind_count():
 			var bone := mi.skin.get_bind_bone(i)

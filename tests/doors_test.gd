@@ -10,11 +10,16 @@ extends "res://addons/forge/test.gd"
 ## HAB 1's toilet curtain, at several headings, each within reach and facing it gets its prompt, shut and open;
 ## out of reach, facing away or behind a wall gets none; a door opens and closes from either side in any order;
 ## in first person inside HAB 1 the view, not the body, picks the door.
+## Then, never pushed (13 Nov playtest: HAB 1's hatch swung into the hero at the Sol 1 start and trapped it in the
+## frame): the hero stands at points across each doorway and swing path, on both sides, and at the Sol 1 start; each
+## door opened and closed there moves the hero no more than PUSH and never leaves it in a collider, a door held at
+## the hero finishes once it steps away, and set_door() waits for a clear swing.
 
 const ENTERABLE := ["hab1", "greenhouse", "shelter"]  # world.json items a person walks into
 const START := 7.0  # m in front of the building's centre, along its front
 const INSIDE := 1.5  # m from the centre that counts as inside
 const TURNS := [-20.0, 0.0, 20.0]  # degrees off facing the thing: a player never lines up exactly
+const PUSH := 0.03  # m the hero may shift while a door moves: settling, not a shove
 
 var game: Node3D
 var world: Node3D
@@ -24,7 +29,7 @@ var wait := 0  # frames a door or curtain takes to move
 
 
 func _init() -> void:
-	watchdog = 240.0
+	watchdog = 600.0  # game seconds: --fixed-fps 60 runs them faster than real time
 
 
 func play() -> bool:
@@ -34,19 +39,27 @@ func play() -> bool:
 	world = game.get_node("World")
 	player = game.get_node("Player")
 	box = game.get_node("Interactions")
-	wait = int(60 * (0.2 + float(game.tuning.interact.move_s)))
+	# the hand reaches the handle (box.GRIP of the reach clip), then the door swings
+	wait = int(60 * (0.2 + float(game.tuning.interact.move_s) + box.GRIP * float(player.model.clips.interact.length)))
 	for id: String in ENTERABLE:
 		var door := _door(id)
 		if door:
 			await grid(door, world.items[id])
 	await curtain()
+	for id: String in ENTERABLE:
+		var door := _door(id)
+		if door:
+			await no_push(door, world.items[id])
+			await approach(door)
+	await start_spot()
+	await set_door()
 	await first_person()
 	for id: String in ENTERABLE:
 		var item: Node3D = world.items[id]
 		for it: Node in item.find_children("*", "", true, false):
 			if it.is_in_group("interactable") and it.kind == "door" and not it.open:
 				box.use(it)  # as the player opens it: one press
-	await frames(int(60 * 0.2) + int(60 * float(game.tuning.interact.move_s)))
+	await frames(wait)
 	for id: String in ENTERABLE:
 		var item: Node3D = world.items[id]
 		var front := -item.global_basis.z.normalized()  # a model's front faces -Z
@@ -253,3 +266,151 @@ func first_person() -> void:
 	box.interact()
 	await frames(wait)
 	check(not door.open, "and closes it")
+
+
+func _shut(door: Node3D) -> void:
+	box._swinging.erase(door)
+	door.open = false
+	door.thing.rotation.y = door.shut.basis.get_euler().y
+
+
+## Swings `door` the other way with the hero where it stands (the door's own motion: E also steps the hero out of
+## the swing, start_spot() checks that); a line in `bad` if the door moved the hero or left it in a collider.
+func _use_still(door: Node3D, label: String, bad: Array[String]) -> void:
+	var settle := await _settled()
+	var p0: Vector3 = player.body.global_position
+	box._swing(door, not door.open, false)
+	var worst := Vector3.ZERO
+	for i in wait:
+		await frames(1)
+		var d: Vector3 = (player.body.global_position - p0).abs()
+		worst = Vector3(maxf(worst.x, Vector2(d.x, d.z).length()), maxf(worst.y, d.y), 0)
+	var inside: Array = player.state().player.inside
+	if Vector2(worst.x, worst.y).length() > PUSH or not inside.is_empty():
+		bad.append("%s: moved %.3f m (across %.3f, up or down %.3f; settled in %d frames), inside %s" % [label, Vector2(worst.x, worst.y).length(), worst.x, worst.y, settle, inside])
+
+
+## Waits until the hero is still (under 2 mm in 5 frames, at most 2 s): a spot put down on a lip or a step of the
+## graded ground settles for a while, and that is not the door's doing. The frames it took.
+func _settled() -> int:
+	for i in 24:
+		var p: Vector3 = player.body.global_position
+		await frames(5)
+		if player.body.global_position.distance_to(p) < 0.002:
+			return i * 5
+	return 120
+
+
+func no_push(door: Node3D, item: Node3D) -> void:
+	var id := str(item.name)
+	var f := _frame(door)
+	var w: float = maxf(door.shape.size.x, door.shape.size.z)
+	var bad: Array[String] = []
+	var tried := [0, 0]
+	var held := 0
+	for side in [-1, 1]:
+		for d: float in [0.0, 0.35, 0.75, 1.15]:
+			for t: float in [-0.4, 0.0, 0.4]:
+				var at := _spot(f, w, side, d, t)
+				var label := "%s side %d d %.2f t %.2f" % [id, side, d, t]
+				# opened with the hero here: it swings away from the hero
+				_shut(door)
+				if d > 0.0 and await _stand(door, at, 0.0):
+					tried[0] += 1
+					await _use_still(door, label + " open", bad)
+				# opened from the other side, it swings toward here; closed with the hero here, in its swing path
+				_shut(door)
+				await _stand(door, _spot(f, w, -side, 1.0, 0.0), 0.0)
+				box._swing(door, true, false)
+				await frames(wait)
+				if not await _stand(door, at, 0.0):
+					continue  # where the open door or the frame is
+				tried[1] += 1
+				var was: float = door.thing.rotation.y
+				await _use_still(door, label + " close", bad)
+				if absf(door.thing.rotation.y - door.shut.basis.get_euler().y) > 0.01:
+					held += 1  # held at the hero: it finishes once the hero steps away
+					await _stand(door, _spot(f, w, -side, 2.0, 0.0), 0.0)  # through to the side it never swings into
+					await frames(wait)
+					check(absf(door.thing.rotation.y - door.shut.basis.get_euler().y) < 0.01, "%s: a door held at the hero shuts once it steps away (at %.0f deg, was %.0f)" % [label, rad_to_deg(door.thing.rotation.y), rad_to_deg(was)])
+	_shut(door)
+	check(tried[0] >= 8 and tried[1] >= 8, "%s: the hero stands at %d spots to open it and %d in its swing to close it" % [id, tried[0], tried[1]])
+	check(held > 0, "%s: some spots are in the swing, where the closing door stops at the hero (%d)" % [id, held])
+	check(bad.is_empty(), "%s: no door push moves the hero over %.2f m or leaves it in a collider %s" % [id, PUSH, bad])
+
+
+## The Sol 1 opening: the hero starts in HAB 1's airlock and the hatch opens (data/beats.json `starts.airlock`).
+func start_spot() -> void:
+	var s: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/beats.json")).starts.airlock
+	var item: Node3D = world.items[s.item]
+	var door := _door(s.item)
+	_shut(door)
+	player.place(item.to_global(Vector3(s.at[0], s.at[1], s.at[2])), -rad_to_deg(item.global_rotation.y) + float(s.yaw))
+	await frames(30)
+	var bad: Array[String] = []
+	await _use_still(door, "the Sol 1 start", bad)
+	check(door.open and bad.is_empty(), "the hatch opens at the Sol 1 start without moving the hero %s" % [bad])
+	# as the tutorial and E open it: the hand to the handle, a step back out of the swing, then all the way open
+	_shut(door)
+	var start: Vector3 = item.to_global(Vector3(s.at[0], s.at[1], s.at[2]))
+	player.place(start, -rad_to_deg(item.global_rotation.y) + float(s.yaw))
+	await frames(30)
+	var p0: Vector3 = player.body.global_position
+	box.use(door)
+	await frames(wait + 30)
+	var goal: float = door.shut.basis.get_euler().y + deg_to_rad(float(game.tuning.interact.door_open_deg))
+	var moved: float = Vector2(player.body.global_position.x - p0.x, player.body.global_position.z - p0.z).length()
+	check(absf(door.thing.rotation.y - goal) < 0.02, "E at the Sol 1 start: the hatch opens all the way (%.0f of %.0f deg)" % [rad_to_deg(door.thing.rotation.y), rad_to_deg(goal)])
+	check(moved < 0.9 and player.state().player.inside.is_empty(), "the hero only steps back out of its swing (%.2f m), in no collider" % moved)
+	_shut(door)
+
+
+## set_door(): opens and closes with its sound, and a close waits until the hero is clear of the swing.
+func set_door() -> void:
+	var door := _door("hab1")
+	var f := _frame(door)
+	var hab: Node3D = world.items["hab1"]
+	var inner := 1 if (f * Vector3(0, 0, 1)).distance_to(hab.global_position) < (f * Vector3(0, 0, -1)).distance_to(hab.global_position) else -1
+	var heard: Array[String] = []
+	var hear := func(what: String, _p: Vector3) -> void: heard.append(what)
+	box.used.connect(hear)
+	_shut(door)
+	await _stand(door, _spot(f, 1.0, -inner, 0.9, 0.0), 0.0)
+	box.set_door("hab1", true)
+	await frames(wait)
+	check(door.open and absf(door.thing.rotation.y) > 1.0 and heard == ["door_open"], "set_door opens it, with its sound (%s)" % [heard])
+	# the hero steps in, into the open hatch's swing, and the tutorial shuts it behind them
+	var swung: float = door.thing.rotation.y
+	if not check(await _stand(door, _spot(f, 1.0, inner, 0.75, 0.0), 0.0), "the hero stands inside in the hatch's swing"):
+		return
+	heard.clear()
+	await frames(10)
+	var p0: Vector3 = player.body.global_position
+	box.set_door("hab1", false)
+	await frames(wait)
+	check(not door.open and is_equal_approx(door.thing.rotation.y, swung) and heard.is_empty(), "set_door waits while the hero is in the swing (%.0f deg, %s)" % [rad_to_deg(door.thing.rotation.y), heard])
+	check(player.body.global_position.distance_to(p0) < PUSH, "and does not move the hero (%.3f m)" % player.body.global_position.distance_to(p0))
+	await _stand(door, _spot(f, 1.0, inner, 2.4, 0.0), 0.0)
+	await frames(wait)
+	check(absf(door.thing.rotation.y) < 0.01 and heard == ["door_close"], "once the hero is clear it shuts, with its sound (%s)" % [heard])
+	box.set_door("hab1", false)
+	await frames(2)
+	check(heard == ["door_close"], "set_door to the state it is in does nothing")
+	box.used.disconnect(hear)
+
+
+## Only E opens a door (second playtest, 13 Nov: "every door opens by itself as the hero approaches"): the hero
+## walks at a shut door from 3 m out, on both sides, and up against it; it stays shut.
+func approach(door: Node3D) -> void:
+	var f := _frame(door)
+	for side in [-1, 1]:
+		_shut(door)
+		var at := _spot(f, 1.0, side, 3.0, 0.0)
+		if not await _stand(door, at, 0.0):
+			continue
+		action(&"move_forward", true)
+		await frames(150)
+		action(&"move_forward", false)
+		await frames(5)
+		check(not door.open and is_equal_approx(door.thing.rotation.y, door.shut.basis.get_euler().y), "%s side %d: walked up to, the door stays shut: only E opens it" % [door.name, side])
+	_shut(door)

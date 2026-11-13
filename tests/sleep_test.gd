@@ -86,7 +86,7 @@ func play() -> bool:
 	var card: Button = cine.picker.cards[0]
 	tap(card.get_global_rect().get_center())
 	await idle(1.0)
-	check(cine.shot == "sleep_drone", "Night starts the drone shot (%s)" % cine.shot)
+	check(cine.beat == "sleep_drone", "Night starts the drone shot (%s)" % cine.beat)
 	check(audio.cue == "sleep", "the sleep cue plays (%s)" % audio.cue)
 	check(pip == null or pip.process_mode == Node.PROCESS_MODE_DISABLED, "PIP is frozen for the lapse")
 	check(clock.driven, "the cine drives the look clock")
