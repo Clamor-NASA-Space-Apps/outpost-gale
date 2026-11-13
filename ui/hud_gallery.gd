@@ -1,11 +1,12 @@
 extends Control
 ## Every HUD component, laid out as the game would show it, at laptop and phone sizes. Mock values only.
-## Keys: L switches laptop and phone, 1 to 6 (or Left and Right) switch the page.
-## Pages: hud (the play HUD), comms (Ask Earth, data badges), event (event and fact cards), lost (mission lost and replay chain), log, credits.
+## Keys: L switches laptop and phone, 1 to 7 (or Left and Right) switch the page. On the sleep page the arrows move
+## the picker's focus instead, so use the number keys there.
+## Pages: hud (the play HUD), comms (Ask Earth, data badges), event (event and fact cards), lost (mission lost and replay chain), log, credits, sleep (the sleep picker).
 ## capture-view views: "laptop" and "phone" show the hud page; "<layout>_<page>" any other, e.g. "phone_event".
 
 const Hud := preload("res://ui/hud.gd")
-const PAGES: Array[String] = ["hud", "comms", "event", "lost", "log", "credits"]
+const PAGES: Array[String] = ["hud", "comms", "event", "lost", "log", "credits", "sleep"]
 # iPhone 16 in landscape is 852 x 393 pt; on the 720 px tall canvas that is 1561 x 720.
 const PHONE := Vector2(1561, 720)
 const LAPTOP := Vector2(1280, 720)
@@ -111,6 +112,7 @@ func _build() -> void:
 	_scrim("log")
 	_pin(_component("log", "mission_log"), Control.PRESET_CENTER)
 	_component("credits", "credits")
+	_component("sleep", "sleep_picker").open()
 
 
 func _scrim(p: String) -> void:

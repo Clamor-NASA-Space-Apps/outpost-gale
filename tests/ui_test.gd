@@ -52,10 +52,57 @@ func play() -> bool:
 	var toast: Script = load("res://ui/components/alert_toast.gd")
 	var pulse: float = toast.get_script_constant_map().PULSE_SECONDS
 	check(1.0 / pulse <= MAX_FLASHES, "the alert pulses %.1f times a second" % (1.0 / pulse))
+	g.queue_free()
+	await _sleep_picker()
 	_no_colour_literals("res://ui/")
 	_no_colour_literals("res://ui/components/")
 	_loading_tokens()
 	return true
+
+
+## The sleep picker alone: big cards, arrows move focus, accept and taps pick, cancel closes.
+func _sleep_picker() -> void:
+	var p: Control = load("res://ui/components/sleep_picker.tscn").instantiate()
+	root.add_child(p)
+	var got: Array[StringName] = []
+	p.chosen.connect(func(kind: StringName) -> void: got.append(kind))
+	p.cancelled.connect(func() -> void: got.append(&"cancelled"))
+	p.open()
+	await frames(2)
+	var night: Button = p.cards[0]
+	var nap: Button = p.cards[1]
+	for b: Button in [night, nap, p.not_now]:
+		var s := b.get_global_rect().size
+		check(minf(s.x, s.y) >= TARGET or b == p.not_now and s.y >= Hud.BUTTON_H, "sleep picker %s is %s, a target needs %.0f" % [b.name, s, TARGET])
+	check(night.has_focus(), "the picker opens with Night in focus")
+	for step: Array in [[&"ui_right", nap], [&"ui_left", night], [&"ui_down", p.not_now]]:
+		action(step[0])
+		action(step[0], false)
+		await frames(1)
+		check((step[1] as Button).has_focus(), "%s moves the picker's focus to %s" % [step[0], (step[1] as Button).name])
+	for want: StringName in [&"night", &"nap"]:
+		p.open()
+		await frames(1)
+		if want == &"nap":
+			action(&"ui_right")
+			action(&"ui_right", false)
+		action(&"ui_accept")
+		action(&"ui_accept", false)
+		await frames(1)
+		check(got.back() == want, "ui_accept on the card emits chosen(%s), got %s" % [want, got])
+		check(not p.visible, "the picker closes after a choice")
+	p.open()
+	await frames(2)
+	tap(nap.get_global_rect().get_center())
+	await frames(1)
+	check(got.back() == &"nap", "a tap on Nap emits chosen(nap), got %s" % [got])
+	p.open()
+	await frames(1)
+	action(&"ui_cancel")
+	action(&"ui_cancel", false)
+	await frames(1)
+	check(got.back() == &"cancelled" and not p.visible, "ui_cancel closes the picker and emits cancelled, got %s" % [got])
+	p.queue_free()
 
 
 ## The web shell (web/shell.html) and the boot splash colour (project.godot) cannot read design.json, so they hold
