@@ -96,7 +96,9 @@ Groups: `floor` (anything walkable on top), `wall` (blocks), `thin` (layer 3), `
 - `Forge.HouseStyle.set_quality(root, design, level, overrides := {})`: a preset (`phone`, `older`, `laptop`,
   `gaming`, `max`, weakest first, named for the hardware they suit) with any knobs on top (`{"msaa": 4, "shadows": 0}`). Then `sandbox._restyle()` (the world reads `trail`, `particles`,
   `ground`), then `sandbox._warm()`: a knob marked `recompile` compiles shaders, which the web build cannot cache,
-  so the cover goes up while they compile. The sandbox's `G` key does all three.
+  so the cover goes up while they compile. The sandbox's `G` key does all three through `sandbox.set_graphics()`,
+  which puts the cover up and waits two frames before `set_quality` (it can stall for seconds), so the knobs land a
+  few frames after the call: read them after `busy()` goes false.
 - `Forge.HouseStyle.knobs(design) -> {name: {values, default, recompile, game, value, preset}}`: the list a settings
   screen is built from. `value` is in force, `preset` is the preset's own. `HouseStyle.KNOBS` holds the table.
 - Knobs: `msaa` 0/2/4/8; `pixels` 3D budget in Mpx (0 = none), `scale` a cap under it; `shadows` 0/1/2/4 splits
@@ -114,6 +116,10 @@ Groups: `floor` (anything walkable on top), `wall` (blocks), `thin` (layer 3), `
 
 ## Which inits await
 None. `world.build()` is synchronous (it loads everything it needs before returning); the player is placed after it.
+The main scene is `ui/boot.tscn`: natively it draws the splash and a bar at once, loads `models/`, `textures/` and
+`data/` images on the main thread, a slice each frame, then adds `sandbox.tscn`, whose build finds them in memory. A tool run and the web
+build go straight to the sandbox; tests load `sandbox.tscn` themselves. The Master bus is silent until the first
+cover lifts (`audio.lift()`, a 1 s fade).
 
 ## Settings, music and PIP (12 Nov 2026)
 - `sandbox.set_graphics(level, overrides, restyle := true, warm := true)`: the one way to change graphics (G key and

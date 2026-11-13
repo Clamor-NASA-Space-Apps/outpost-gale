@@ -184,6 +184,20 @@ const engine = new Engine(GODOT_CONFIG);
 		statusOverlay.remove();
 	};
 
+	// a phone plays full screen and landscape. A browser allows both only inside a press, and the engine reads input
+	// a frame later, outside it, so the page asks itself. iPhone Safari has neither for a page: ignored there.
+	if (matchMedia('(pointer: coarse)').matches) {
+		document.getElementById('canvas').addEventListener('pointerup', function () {
+			const page = document.documentElement;
+			if (document.fullscreenElement || !page.requestFullscreen) {
+				return;
+			}
+			page.requestFullscreen({ navigationUI: 'hide' })
+				.then(() => screen.orientation && screen.orientation.lock && screen.orientation.lock('landscape'))
+				.catch(() => {});
+		}, { once: true });
+	}
+
 	function displayFailureNotice(err) {
 		console.error(err);
 		statusLine.textContent = 'The game could not start.';

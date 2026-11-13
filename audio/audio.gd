@@ -84,6 +84,7 @@ var _wind: AudioStreamPlayer
 var _rover_loops: Dictionary = {}  # "motor" or "wheels" -> its players
 var _streams: Dictionary = {}
 var volume := {"master": 1.0, "music": 1.0, "effects": 1.0}  # the player's own levels (ui/settings.gd), 0 to 1
+var _lift := 0.0  # 0 while the splash and the first build are up (no wind over a loading bar), 1 once lift() has faded in
 var cue := ""  # the music cue playing now, "" in silence
 var _cue_end := -1e9  # _time the last cue ends; the next may start tuning `music.gap_s` after it
 var _cue_player: AudioStreamPlayer
@@ -118,6 +119,7 @@ func setup(w: Node3D, p: Node3D, tuning: Dictionary) -> void:
 	world = w
 	player = p
 	t = tuning
+	_master(0.0)  # nothing is heard until lift()
 	for b: String in BUSES:
 		if AudioServer.get_bus_index(b) < 0:
 			AudioServer.add_bus()
@@ -299,7 +301,19 @@ func sky(name: String, setting := true) -> void:
 ## A level from the settings screen, 0 to 1: `master`, `music` or `effects` (the suit and the world).
 func set_volume(which: String, v: float) -> void:
 	volume[which] = clampf(v, 0.0, 1.0)
-	AudioServer.set_bus_volume_db(0, linear_to_db(maxf(volume.master, 0.0001)))
+	_master(_lift)
+
+
+## The cover is down for the first time: the sound fades in over a second. Later covers keep it on.
+func lift() -> void:
+	if _lift == 0.0:
+		_lift = 0.0001  # a second call before the first step starts no second fade
+		create_tween().tween_method(_master, 0.0001, 1.0, 1.0)
+
+
+func _master(k: float) -> void:
+	_lift = k
+	AudioServer.set_bus_volume_db(0, linear_to_db(maxf(volume.master * k, 0.0001)))
 
 
 ## A world sound at `pos`, by its SOUNDS name: each of its files at its time.

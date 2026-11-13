@@ -128,8 +128,9 @@ func play() -> bool:
 	action(&"settings")
 	await frames(1)
 	action(&"settings", false)
-	check(not s.is_open() and Settings._same(knob("glow").value, 0.0), "Esc applies what waits")
+	check(not s.is_open() and game.busy(), "Esc closes and puts the cover up")
 	await settle()
+	check(Settings._same(knob("glow").value, 0.0), "Esc applies what waits")  # behind the cover (set_graphics)
 	s.open()
 
 	# sound and the FPS switch apply at once

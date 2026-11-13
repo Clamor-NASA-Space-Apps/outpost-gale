@@ -228,6 +228,15 @@ func _sky(i: int) -> void:
 func set_graphics(level: String, over: Dictionary, restyle := true, warm := true) -> void:
 	quality = level
 	overrides = over
+	if warm:
+		# the cover is drawn before the switch, which can stall for seconds while shaders compile (13 Nov playtest:
+		# "not responding"): the player sees the bar, not a frozen frame
+		_cover_up()
+		cover.progress(0.0)
+		await get_tree().process_frame
+		await get_tree().process_frame
+		if quality != level or overrides != over:
+			return  # a later switch came in while this one waited; it puts its own on
 	Forge.HouseStyle.set_quality(self, design, quality, overrides)
 	if restyle:
 		_restyle()
@@ -239,9 +248,7 @@ func set_graphics(level: String, over: Dictionary, restyle := true, warm := true
 ## no shader cache: skills/frame-budget). The stage stands inside the reflection probe, so the probe's variants
 ## compile too, and the hero's fade copy is drawn with it.
 func _warm() -> void:
-	cover.color = Color.html(design.colors.surface)
-	cover.visible = true
-	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE  # nothing to look at behind it
+	_cover_up()
 	if _warming:
 		_rewarm = true  # a second switch while the first warms: once more when it ends
 		return
@@ -261,7 +268,14 @@ func _warm() -> void:
 	t.tween_callback(func() -> void:
 		cover.visible = _warming
 		if not _warming:
-			cover.finish())
+			cover.finish()
+			audio.lift())  # silent until the player first sees the base
+
+
+func _cover_up() -> void:
+	cover.color = Color.html(design.colors.surface)
+	cover.visible = true
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE  # nothing to look at behind it
 
 
 func _restyle() -> void:

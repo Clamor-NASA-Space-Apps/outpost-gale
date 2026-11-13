@@ -73,7 +73,7 @@ static func _path() -> String:
 	return file
 
 
-## What this device chose last time: {level, overrides, volume, fps}, each checked; {} when nothing was saved. Only the
+## What this device chose last time: {level, overrides, volume, fps, full}, each checked; {} when nothing was saved. Only the
 ## knobs Advanced can set come back, so a knob the screen no longer shows can never stay changed out of sight.
 static func saved() -> Dictionary:
 	var c := ConfigFile.new()
@@ -81,6 +81,8 @@ static func saved() -> Dictionary:
 		return {}
 	var level := str(c.get_value("graphics", "level", ""))
 	var out := {"level": OLD.get(level, level), "overrides": {}, "volume": {}, "fps": c.get_value("hud", "fps", true) == true}
+	if c.has_section_key("display", "full"):
+		out.full = c.get_value("display", "full") == true  # read by ui/boot.gd; a game never asked starts full screen
 	var o: Variant = c.get_value("graphics", "overrides", {})
 	if o is Dictionary and not OLD.has(level):
 		var shown := _knobs()
@@ -111,6 +113,8 @@ func save() -> void:
 		c.set_value("graphics", "level", game.quality)
 		c.set_value("graphics", "overrides", game.overrides)
 		c.set_value("hud", "fps", game.fps_label.visible)
+		if not OS.has_feature("web"):  # a browser leaves full screen on its own, and enters it only on a press
+			c.set_value("display", "full", _full())
 		for k: String in VOLUMES:
 			c.set_value("sound", k, game.audio.volume[k])
 		c.save(_path())  # ponytail: a failure (a private window's storage) only forgets the choice for next time
@@ -406,6 +410,8 @@ func _flow(kids: Array) -> HFlowContainer:
 func full_screen() -> void:
 	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED if _full() else DisplayServer.WINDOW_MODE_FULLSCREEN)
 	_full_text()  # a desktop window switches at once; the web's switch lands later, through _fit()
+	if not OS.has_feature("web"):
+		save()  # the next start opens the same way (ui/boot.gd)
 
 
 func _full() -> bool:
