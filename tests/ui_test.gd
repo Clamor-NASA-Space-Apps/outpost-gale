@@ -9,6 +9,7 @@ const Hud := preload("res://ui/hud.gd")
 const MAX_WORDS := 8  # Kid UX: at most 8 words per card line
 const MIN_CONTRAST := 4.5  # XAG 102 and WCAG 1.4.3 for text (design/research/sizes.md B)
 const MAX_FLASHES := 3.0  # per second, Kid UX
+const MAX_DRAWS := 40  # the play HUD's share of the A16's frame (the 3D base already takes about 150)
 const NARROW := 360.0  # the narrowest phone width in dp a card must fit
 const Delay := preload("res://ui/radio_delay.gd")
 const Fake := preload("res://ui/fake_state.gd")
@@ -54,16 +55,19 @@ func play() -> bool:
 					check(words <= MAX_WORDS or "Bubble" in String(g.get_path_to(c)), "%s has %d words: '%s'" % [where, words, l.text])
 					# text over the glass carries a dark edge (the theme's Label outline): it is measured against that edge
 					# laid over the panel and the world, since the edge is what touches every letter
-					var edge := l.get_theme_color("font_outline_color") if l.get_theme_constant("outline_size") >= 2 else Color.TRANSPARENT
+					var edge := l.get_theme_color("font_outline_color") if l.get_theme_constant("outline_size") >= 2 or l.has_node("Edge") else Color.TRANSPARENT
 					var panel := _panel_of(l)
+					var under := backdrops
 					if check(panel != null or edge.a > 0.0, "%s sits on the bare world with no panel or edge behind it" % where):
-						_contrast(l.get_theme_color("font_color"), panel, backdrops, where, edge)
+						_contrast(l.get_theme_color("font_color"), panel, under, where, edge)
 	check(buttons > 0, "the gallery has buttons")
 	check(aligned > 0, "icon rows were measured")
 	print("checked %d buttons and %d labels over %d views" % [buttons, labels, g.PAGES.size() * 2])
 	var toast: Script = load("res://ui/components/alert_toast.gd")
 	var pulse: float = toast.get_script_constant_map().PULSE_SECONDS
 	check(1.0 / pulse <= MAX_FLASHES, "the alert pulses %.1f times a second" % (1.0 / pulse))
+	await _draws(g)
+	await _apart(g)
 	g.queue_free()
 	await _bound()
 	await _narrow()
@@ -73,6 +77,47 @@ func play() -> bool:
 	_no_colour_literals("res://ui/components/")
 	_loading_tokens()
 	return true
+
+
+## In the play state no two HUD parts lie on each other, in either layout: the corner panels, the compass, the
+## minimap, the gear's place and the "?", the mail, the prompt and the phone's touch controls. PIP's bubble and the
+## waypoint float over the world on purpose and are left out.
+func _apart(g: Control) -> void:
+	var h: Control = g.game_hud
+	var gear := Button.new()  # a stand-in for the settings screen's gear, docked as the sandbox docks the real one
+	g.add_child(gear)
+	h.dock_gear(gear)
+	for layout: String in ["laptop", "phone"]:
+		g.set_view(layout)
+		await process_frame
+		await process_frame
+		check(h.gear_slot.get_global_rect().encloses(gear.get_global_rect().grow(-0.5)), "%s: the gear sits in its place" % layout)
+		var parts := {"status": h.status, "tasks": h.tasks, "alert": h.toast, "compass": h.compass, "minimap": h.minimap,
+			"gear": h.gear_slot, "sources": h.source_button, "mail": h.mail, "prompt": h.prompt}
+		for i in g.touch.size():
+			parts["touch %d" % i] = g.touch[i]
+		var names := parts.keys().filter(func(n: String) -> bool: return (parts[n] as Control).is_visible_in_tree())
+		for i in names.size():
+			for j in range(i + 1, names.size()):
+				var a: Rect2 = (parts[names[i]] as Control).get_global_rect()
+				var b: Rect2 = (parts[names[j]] as Control).get_global_rect()
+				check(not a.intersects(b), "%s: %s %s overlaps %s %s" % [layout, names[i], a, names[j], b])
+
+
+## The busiest play page (bubble, waypoint, alert, mail, minimap, compass, tasks, prompt all up) in each layout draws
+## in at most MAX_DRAWS calls, the gallery's backdrop and touch controls included. Needs a display: under
+## `godot --headless` nothing draws, so run it with `xvfb-run -a godot --path . -s tests/ui_test.gd` to measure.
+func _draws(g: Control) -> void:
+	if DisplayServer.get_name() == "headless":
+		print("draw calls: skipped (headless draws nothing; run under xvfb-run to measure)")
+		return
+	for layout: String in ["laptop", "phone"]:
+		g.set_view(layout)
+		for i in 3:
+			await process_frame
+		var n := int(Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME))
+		print("draw calls, %s play page: %d" % [layout, n])
+		check(n > 0 and n <= MAX_DRAWS, "the %s play page draws in %d calls, at most %d" % [layout, n, MAX_DRAWS])
 
 
 ## The play HUD bound to a fake sim: every value it is sent shows, and each card opens, answers and closes.
@@ -399,19 +444,36 @@ func _panel_of(n: Control) -> StyleBox:
 			s = c.get_theme_stylebox("normal")
 		elif c is PanelContainer:
 			s = c.get_theme_stylebox("panel")
-		var flat := s as StyleBoxFlat
-		if flat and flat.draw_center and flat.bg_color.a > 0.0:
-			return flat
+		if s and _fill_of(s).a > 0.0:
+			return s
 		at = at.get_parent()
 	return null
 
 
+## The colour a style fills its middle with: a flat style's bg, or an atlas nine-patch's centre pixel (ui/atlas.gd).
+func _fill_of(s: StyleBox) -> Color:
+	if s is StyleBoxFlat:
+		var f := s as StyleBoxFlat
+		return f.bg_color if f.draw_center else Color.TRANSPARENT
+	if s is StyleBoxTexture:
+		var t := s as StyleBoxTexture
+		if not _images.has(t.texture):
+			_images[t.texture] = t.texture.get_image()
+		var img: Image = _images[t.texture]
+		var c := t.region_rect.get_center()
+		return img.get_pixel(int(c.x), int(c.y)).srgb_to_linear().linear_to_srgb() if img else Color.TRANSPARENT
+	return Color.TRANSPARENT
+
+
+var _images := {}
+
+
 func _contrast(text: Color, style: StyleBox, backdrops: Array[Color], where: String, edge := Color.TRANSPARENT) -> void:
-	var flat := style as StyleBoxFlat
-	if not check(flat != null or edge.a > 0.0, "%s has no flat style to measure" % where):
+	var fill := _fill_of(style) if style else Color.TRANSPARENT
+	if not check(fill.a > 0.0 or edge.a > 0.0, "%s has no style to measure" % where):
 		return
 	for under: Color in backdrops:
-		var bg := under.lerp(Color(flat.bg_color, 1.0), flat.bg_color.a) if flat else under
+		var bg := under.lerp(Color(fill, 1.0), fill.a)
 		bg = bg.lerp(Color(edge, 1.0), edge.a)
 		var r := _ratio(text, bg)
 		check(r >= MIN_CONTRAST, "%s text contrast %.2f:1 over %s" % [where, r, under.to_html(false)])
@@ -423,12 +485,13 @@ func _ratio(a: Color, b: Color) -> float:
 	return (maxf(la, lb) + 0.05) / (minf(la, lb) + 0.05)
 
 
-## ui/theme.tres (from design.json) is the one place HUD colours come from. theme_builder.gd reads the
-## tokens, so it is the one script allowed to make colours; Color.TRANSPARENT is allowed everywhere.
+## ui/theme.tres (from design.json) is the one place HUD colours come from. theme_builder.gd and atlas.gd (the shapes
+## it bakes) read the tokens, so they are the scripts allowed to make colours; Color.TRANSPARENT and Color.WHITE (no
+## tint: an atlas shape keeps its own colour) are allowed everywhere.
 func _no_colour_literals(dir: String) -> void:
-	var re := RegEx.create_from_string("Color\\(|Color\\.(?!TRANSPARENT)[A-Z]|#[0-9a-fA-F]{6}\\b|Color\\.html|color\\(\"[^\"]+\", *[0-9.]+\\)")
+	var re := RegEx.create_from_string("Color\\(|Color\\.(?!TRANSPARENT|WHITE)[A-Z]|#[0-9a-fA-F]{6}\\b|Color\\.html|color\\(\"[^\"]+\", *[0-9.]+\\)")
 	for f: String in DirAccess.get_files_at(dir):
-		if not f.ends_with(".gd") or f == "theme_builder.gd":
+		if not f.ends_with(".gd") or f in ["theme_builder.gd", "atlas.gd"]:
 			continue
 		var src := FileAccess.get_file_as_string(dir + f)
 		for line: String in src.split("\n"):

@@ -172,6 +172,7 @@ func setup(g: Node) -> void:
 	panel = Hud.panel("HudMenu", _build())
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	root.add_child(panel)
+	Hud.layer(root, 1)  # batched draw order and the words' dark edge, as the HUD (ui/hud.gd)
 	for c: Node in panel.find_children("*", "Control", true, false):
 		if c is BaseButton or c is Range:  # a tick as the pointer or the keys reach it, once per arrival
 			(c as Control).mouse_entered.connect(cue.emit.bind("tick"))
@@ -661,8 +662,9 @@ func _fit() -> void:
 	shade.size = root.size
 	# Android's back swipe starts 30 dp in from a side: 60 px of a phone's 720 (addons/forge/test.gd EDGE), either way up
 	var m := Vector2(60.0 / Hud.PHONE_SCALE if phone else 24.0, 20.0)
-	gear.position = Vector2(root.size.x - m.x - Hud.BUTTON_H, m.y)
-	gear.size = Vector2(Hud.BUTTON_H, Hud.BUTTON_H)
+	if gear.get_parent() == root:  # once the HUD docks it (game_hud.gd dock_gear) the HUD places it
+		gear.position = Vector2(root.size.x - m.x - Hud.BUTTON_H, m.y)
+		gear.size = Vector2(Hud.BUTTON_H, Hud.BUTTON_H)
 	var room := root.size - 2.0 * m
 	(body as BoxContainer).vertical = room.x < 620.0  # portrait: the tabs go above the page
 	compact = phone or room.x < 620.0  # a finger or a narrow screen gets steppers, a laptop the approved switches

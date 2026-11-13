@@ -29,30 +29,35 @@ func set_tasks(t: Array) -> void:
 		box.custom_minimum_size = Vector2(BOX, BOX)
 		box.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		box.set_meta("icon", true)  # Hud.row centres it on the line's capitals
+		box.set_meta("shapes", true)
 		box.draw.connect(_draw_box.bind(box, state))
 		var l := Hud.label(task[0], "HudTextDim" if state == "done" else "HudText", true)
+		var row := Hud.row([box, l], 7)
 		if state == "done":
-			l.draw.connect(func() -> void:
+			# the strike over the words: its own node, drawn after all the text (meta "over", Hud.layer), so every
+			# struck line in the HUD shares one draw call and no font's batch is broken
+			var strike := Control.new()
+			strike.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			strike.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+			strike.set_meta("over", true)
+			strike.draw.connect(func() -> void:
 				var w := minf(l.size.x, l.get_theme_font("font").get_string_size(l.text, HORIZONTAL_ALIGNMENT_LEFT, -1, l.get_theme_font_size("font_size")).x)
-				l.draw_line(Vector2(0, l.size.y * 0.55), Vector2(w, l.size.y * 0.55), Hud.color("on-surface-variant"), 1.0))
-		list.add_child(Hud.row([box, l], 7))
+				Hud.blit(strike, "white", Rect2(0, l.size.y * 0.55, w, 1.0), Hud.color("on-surface-variant")))
+			l.add_child(strike)
+			l.resized.connect(strike.queue_redraw)
+		list.add_child(row)
+	Hud.layer(list)
 
 
 func _draw_box(b: Control, state: String) -> void:
-	var r := Rect2(Vector2.ZERO, b.size)
-	var s := StyleBoxFlat.new()
-	s.set_corner_radius_all(3)
-	s.set_border_width_all(1)
-	s.draw_center = state == "done"
-	s.bg_color = Hud.color("accent")
-	s.border_color = Hud.color({"done": "accent", "now": "primary"}.get(state, "on-surface-variant"))
+	var r := Rect2(Vector2.ZERO, b.size).grow(2.0)  # the atlas box has a px of air round its 12 px square
+	var c := b.size * 0.5
 	if state == "now":
-		s.shadow_color = Hud.color("hud-glow-amber")
-		s.shadow_size = 5
-	b.draw_style_box(s, r)
-	var c := r.get_center()
+		Hud.blit(b, "glow_dot", r.grow(5.0), Hud.color("hud-glow-amber"))
 	if state == "done":
-		b.draw_polyline(PackedVector2Array([c + Vector2(-3.5, 0), c + Vector2(-1, 2.5), c + Vector2(3.5, -2.5)]), Hud.color("on-primary"), 1.5, true)
-	elif state == "now":
-		var d := 3.0
-		b.draw_colored_polygon(PackedVector2Array([c + Vector2(0, -d), c + Vector2(d, 0), c + Vector2(0, d), c + Vector2(-d, 0)]), Hud.color("primary"))
+		Hud.blit(b, "box_fill", r, Hud.color("accent"))
+		Hud.blit_at(b, "icon_check", c, 11.0, Hud.color("on-primary"))
+	else:
+		Hud.blit(b, "box_line", r, Hud.color("primary" if state == "now" else "on-surface-variant"))
+	if state == "now":
+		Hud.blit_at(b, "diamond", c, 7.0, Hud.color("primary"))

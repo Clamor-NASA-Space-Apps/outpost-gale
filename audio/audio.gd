@@ -223,7 +223,8 @@ func _process(delta: float) -> void:
 func used(what: String, pos: Vector3) -> void:
 	_one_shot("chirp", "UI", t.chirp_db)  # the suit acknowledges, no words
 	_hold(_stream("chirp"))
-	play(what, pos)
+	if SOUNDS.has(what):
+		play(what, pos)  # a use spot's own sound already played at its start (world.sound); its id ends here
 	if what == "door_close" and _in_room():
 		music("airlock_sealed")  # shut in, safe
 	elif what == "door_open" and _dawn:

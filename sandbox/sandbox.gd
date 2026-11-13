@@ -161,6 +161,7 @@ func _process(_delta: float) -> void:
 	# time waits while the player cannot act: the look clock and the rules alike
 	clock.paused = settings.is_open() or cover.visible or hud.is_open() or hud.map_open()
 	sim.paused = clock.paused or cine.busy()
+	hud.visible = not settings.is_open()
 	hud.show_prompt(interactions.prompt_label.text if interactions.prompt_label.visible else "")
 	var h := clock.hour()
 	fps_label.text = "%d fps  %s  %s %02d:%02d" % [Engine.get_frames_per_second(), quality, clock.phase(), int(h), int(fmod(h, 1.0) * 60.0)]
@@ -374,7 +375,9 @@ func _wire() -> void:
 	sim.name = "Sim"
 	add_child(sim)
 	hud = GameHud.instantiate()
-	fps_label.get_parent().add_child(hud)
+	var layer := fps_label.get_parent() as CanvasLayer
+	layer.layer = 101  # over settings (100) so its docked gear shows; hidden while settings is open; under the cover (128)
+	layer.add_child(hud)
 	fps_label.get_parent().move_child(fps_label, -1)
 	fps_label.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT)  # the minimap owns the top right now
 	fps_label.offset_top = -40
@@ -388,6 +391,7 @@ func _wire() -> void:
 		hud.bind_speaker(pip, player.cam.lens)
 	hud.cue.connect(audio.ui)
 	settings.cue.connect(audio.ui)
+	hud.dock_gear(settings.gear)
 	# only the ids the rules know reach them: `used` also carries sound names (door_open, bag)
 	var uses: Dictionary = sim.sim.d.uses
 	interactions.used.connect(func(what: String, _pos: Vector3) -> void:

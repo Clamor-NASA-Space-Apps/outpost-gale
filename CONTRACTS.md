@@ -238,3 +238,12 @@ cover lifts (`audio.lift()`, a 1 s fade).
 
 - `graded.prefabs` (world.json): items of these prefabs have their footprint (standin size) laid level before the ground
   is built (`terrain.gd _grade()`), so a pad on a slope is neither buried nor torn by the ground.
+
+## Use spots (data/world.json `uses`, sandbox/interactions.gd)
+A row: `kind` (the action id the rules know, sim/sim.json `uses`), `prompt`, `clip` (data/clips.json), `sound` (played at
+the start through `world.sound`), and optionally `on` (the item part it stands at), `face`, `grip`, `seat`, `props`
+(made in code or a GLB, placed in the item's space but outside its node), `steps` (verbs `appear`, `take`, `turn`,
+`glow`, `puff`), `needs`, `hold_s`, `favour_deg` (a pick bonus so a nearby door keeps its prompt).
+`used(kind, pos)` is emitted once, when the clip runs to its end; a move key that cuts it short emits nothing and puts
+the props back. sandbox.gd passes only the ids the rules know to `sim.use()`.
+

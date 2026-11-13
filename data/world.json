@@ -1,5 +1,5 @@
 {
- "note": "The sandbox base. pos is [x, z] in metres from the patch centre (+X east, -Z north), yaw degrees clockwise from north. Heights come from the terrain. Laid out as a real surface outpost (design/research/layout.md): HAB 1, the greenhouse and the storm shelter with their doors on one yard south of the airlock, the gas bottles at the airlock, the power yard (battery bank) east between the sun-tracking wing field and the users, the dish north in open sky, the rover in a charging bay by the power yard, and the two things NASA keeps 1 km off (the reactor, the lander) in opposite corners of the play area (play_half), about 190 m out. Curiosity is a landmark toward Mount Sharp (it is really far up the mountain).",
+ "note": "The sandbox base. pos is [x, z] in metres from the patch centre (+X east, -Z north), yaw degrees clockwise from north. Heights come from the terrain. Laid out as a real surface outpost (design/research/layout.md): HAB 1, the greenhouse and the storm shelter with their doors on one yard south of the airlock, the gas bottles at the airlock, the power yard (battery bank) east between the sun-tracking wing field and the users, the dish north in open sky, the rover in a charging bay by the power yard, and the two things NASA keeps 1 km off (the reactor, the lander) in opposite corners of the play area (play_half), about 190 m out. Curiosity and Mont Mercou stand at their own field sites (`sites`), reached by rover: they are really 14.3 km and 8.8 km away.",
  "prefabs": {
   "habitat": "res://models/building_habitat.glb",
   "battery_bank": "res://models/prop_battery_bank.glb",
@@ -26,7 +26,12 @@
   "solar_wing": "res://models/building_solar_wing.glb",
   "reactor": "res://models/building_reactor.glb",
   "gale_map": "res://models/prop_gale_map.glb",
-  "mont_mercou": "res://models/rock_mont_mercou.glb"
+  "mont_mercou": "res://models/rock_mont_mercou.glb",
+  "mav": "res://models/building_mav.glb",
+  "trash_can": "res://models/prop_trash_can.glb",
+  "sample_box": "res://models/prop_sample_box.glb",
+  "weather_mast": "res://models/prop_weather_mast.glb",
+  "relay_antenna": "res://models/prop_relay_antenna.glb"
  },
  "standin": {
   "habitat": [
@@ -277,10 +282,11 @@
    "id": "curiosity",
    "prefab": "curiosity",
    "pos": [
-    80,
-    95
+    -15000,
+    0
    ],
-   "yaw": 320
+   "yaw": 180,
+   "_note": "at its sol 5070 spot on Mount Sharp, the curiosity field site's middle (data/world.json sites), heading back south on its route (team blog, sols 5063 to 5069). Look and photograph only: it is working, driven from Earth"
   },
   {"id": "battery2", "prefab": "battery_bank", "pos": [15.1, 2], "yaw": 270},
   {"id": "battery3", "prefab": "battery_bank", "pos": [16.2, 2], "yaw": 270},
@@ -292,7 +298,12 @@
   {"id": "wing6", "prefab": "solar_wing", "pos": [63.5, 28.6], "yaw": 90},
   {"id": "reactor", "prefab": "reactor", "pos": [135, -135], "yaw": 225},
   {"id": "charger", "prefab": "charger", "pos": [12.6, 8.2], "yaw": 270},
-  {"id": "mercou", "prefab": "mont_mercou", "pos": [-40, 38], "yaw": 45}
+  {"id": "mercou", "prefab": "mont_mercou", "pos": [-14, 15002], "yaw": 45, "_note": "at the mercou field site, beside the site's middle, where Curiosity stood on sols 3049 to 3079 (data/world.json sites)"},
+  {"id": "mav", "prefab": "mav", "pos": [-135, 135], "yaw": 45, "_note": "the ride home on its own lander (forge/building_mav.py). Real: landers about 1 km apart (SAC21, NTRS 20210026448), here the south-west corner of the play area, 191 m out and 270 m from the crew lander, as the reactor and the lander are (design/research/layout.md); the fuel gauge and hatch face the base"},
+  {"id": "trash", "prefab": "trash_can", "pos": [-128.5, -138.5], "yaw": 180, "_note": "the one disposal spot, next to the crew lander (SAC21: 'next to the lander as its permanent disposal location'), its label toward the rover track's end"},
+  {"id": "samples", "prefab": "sample_box", "pos": [4.6, 7.4], "yaw": 20},
+  {"id": "weather", "prefab": "weather_mast", "pos": [-3, 18.5], "yaw": 0, "_note": "south of the yard in open ground, clear of the rover track; its panel faces north, the sun's side at Gale"},
+  {"id": "relay", "prefab": "relay_antenna", "pos": [2.5, -17.5], "yaw": 180, "_note": "beside the dish, west of it, off the dish's cable"}
  ],
  "landmarks": {
   "spawn": [
@@ -330,22 +341,26 @@
    -123,
    320
   ],
-  "curiosity": [
-   72,
-   86,
-   140
-  ],
+  "curiosity": [-14994, -8, 217],
   "edge": [
    140,
    0,
    90
   ],
-  "mercou": [
-   -33,
-   31,
-   225
-  ],
-  "reactor": [120, -120, 45]
+  "mercou": [0, 14985, 220],
+  "reactor": [120, -120, 45],
+  "mav": [-124, 124, 225],
+  "site_mercou": [0, 14985, 220],
+  "site_mercou_rover": [12, 14965, 200],
+  "site_curiosity": [-14994, -8, 217],
+  "site_curiosity_rover": [-14985, -30, 200]
+ },
+ "sites": {
+  "_note": "field sites the crew visits by rover with a time skip (cine trip_to): each a separate walkable patch of real HiRISE ground (tools/site_terrain.py from a 1 m DTM window, terrain.gd add_site()), placed far from the base in world space, past the camera's 8 km far plane and the fog, so neither is ever seen from the other (15 km out: the base's backdrop reaches 6.2 km, a ring 3.6 km). The real distance lives in km, bearing and up_m (from the base; research/junior-astronaut/mission-collisions.md, our great-circle maths on NASA's MSL waypoint file), never in world metres. half: m from a site's centre that anything that moves may go (world.bound(margin, at)); its patch is 200 m across. ring: m the site's own slope carries on past its edge into the fog, with no collision. Landmarks: site_<id> where the hero looks from, site_<id>_rover where the rover arrives",
+  "half": 90,
+  "ring": 3600,
+  "mercou": {"terrain": "res://data/site_mercou.json", "centre": [0, 15000], "label": "Mont Mercou", "km": 8.8, "bearing": 190, "up_m": 430, "dtm": "DTEEC_040770_1755_039280_1755_U01", "lat": -4.7353, "lon": 137.4126},
+  "curiosity": {"terrain": "res://data/site_curiosity.json", "centre": [-15000, 0], "label": "Curiosity, sol 5070", "km": 14.3, "bearing": 192, "up_m": 1030, "dtm": "DTEEC_019698_1750_019988_1750_U01", "lat": -4.8257, "lon": 137.3892}
  },
  "cables": {
   "_note": "power cables laid on the ground (world.gd _lay_cables): polylines of [x, z], draped on height_at() every step m, width and height in metres, in a DESIGN.md role; rocks keep off them as off paths. Each line runs between two devices, `ends` in the same order: 'item:node' names the empty in the device's model where it plugs in (port_1 when left out), and the line's first and last points move onto it, so the cable ends inside the gland box on the ground that the model carries, under a conduit up into the device (forge/base_kit.py port(); a cable stopping beside its device read as unplugged, 13 Nov playtest). Power runs source to yard to user: the reactor and the wings into the battery bank (battery..battery3, the power yard east of HAB 1; each cabinet has port_n and port_s on its north and south ends), and out of it to each user (the greenhouse and the yard light through HAB 1). Layout and its sources: design/research/layout.md. In order: the reactor's 3 kVac line (real: 1 km, NTRS 20250000841; our ground is real and swept to 150 m, so it comes from the north-east corner of that, 191 m out) into battery3; the wing field's header from battery3 to wing 1's junction box, then box to box along the rows' north ends (each box has port_w and port_e, the field's combiner chain; wing 6's port_e stays capped); HAB 1 (its east feed box, port_e2); HAB 1 on to the greenhouse round the north side, clear of both doors; the dish; the north work light; the rover's charging post in its bay (SAC21: the crew 'connect the PR to the surface power grid to recharge batteries'; the post's own lead to the rover is `charger`); the yard light, off HAB 1's port_e1. No line crosses a path, the lander track or a doorway (tests/world_test.gd), so no cover ramp is needed. Size and routes are ours",
@@ -398,7 +413,8 @@
   "_note": "how an item collides; anything not named here is a static (layer 2, or 3 when narrower than the hero)",
   "rover": "vehicle",
   "pip": "vehicle",
-  "cargo_bag": "carriable"
+  "cargo_bag": "carriable",
+  "sample_box": "carriable"
  },
  "sink": {
   "_note": "how far each prefab sits in the dust: a reality.json row id per prefab, else default (skills/shadows-and-grounding, Sink). support: metres above an item's lowest drawn point that still count as resting on the ground (feet, skids, bevelled bottom edges). level: prefabs crews build level (floors, foundations, tracking mounts); everything else tilts to the ground under it, as a lander's legs or a bag do. Vehicles only touch: their drivers set them on their wheels, sunk by their own row here (rover). Rocks: reality.json rock.embed",
@@ -406,6 +422,7 @@
   "level": ["habitat", "greenhouse", "storm_shelter", "build_pad", "dish", "telltale"],
   "default": "ground.sink.soft",
   "lander": "ground.sink.foot",
+  "mav": "ground.sink.foot",
   "rover": "ground.sink.soft"
  },
  "graded": {
@@ -415,7 +432,7 @@
  "shadow_min": 0.6,
  "_swept_range_m": "metres from the camera to a ground cell's centre (the patch centre for the base) beyond which its swept surfaces (floors, HAB 1's fit-out: DESIGN.md weathering.clean) are not drawn: seen only through doorways, they cost a draw call each from anywhere (world.gd _merge). Art direction",
  "swept_range_m": 30,
- "moving": "^(door|dish|tell|head|status_bar|curtain|plug|charge_light)$|^(panel|wheel)_[0-9]+$",
+ "moving": "^(door|dish|tell|head|status_bar|curtain|plug|charge_light|ascent)$|^(panel|wheel)_[0-9]+$",
  "blink": {
   "_note": "status lights that flash on their own (world/machines.gd): nodes named by `nodes` keep their own mesh and a copy of the light role. hz and duty: an obstruction beacon flashes 20 to 40 times a minute (FAA L-864 red 20 to 40, L-865 white 40, https://www.faa.gov/documentLibrary/media/Advisory_Circular/150-5345-43GH.pdf, from a search summary); WCAG 2.3.1 allows at most 3 flashes in any second. off: the share of the light left when it is dark",
   "nodes": "^(cap|beacon)$",
@@ -601,7 +618,17 @@
   "sh_eye_in": ["shelter", [0, 1.66, -0.9], [-0.3, 1.0, 1.25]],
   "sh_eye_left": ["shelter", [0.6, 1.66, -0.3], [-1.3, 1.45, -0.2]],
   "sh_eye_rack": ["shelter", [0.75, 1.66, -0.75], [1.0, 0.9, 1.0]],
-  "sh_eye_door": ["shelter", [-0.2, 1.66, 0.4], [0, 1.3, -1.24]]
+  "sh_eye_door": ["shelter", [-0.2, 1.66, 0.4], [0, 1.3, -1.24]],
+  "_w": "lane W's capture views of its items (13 Nov): each from in front of the item; sky_earth from the yard north of HAB 1 up into the west-south-west evening sky, where Earth and Venus stand after sunset (capture it at an evening hour, sky_earth@19.6)",
+  "mav_eye": ["mav", [6, 2.5, -24], [0, 5, 0]],
+  "trash_eye": ["trash", [2, 2.2, -8], [-2, 1.2, 3]],
+  "samples_eye": ["samples", [0.9, 1.2, -1.6], [0, 0.1, 0]],
+  "weather_eye": ["weather", [1.2, 1.8, -4.5], [0, 1.1, 0]],
+  "relay_eye": ["relay", [2.5, 2.0, -6], [-2, 1.2, 1]],
+  "curiosity_eye": ["curiosity", [1.5, 1.9, -5], [0, 1.0, 0]],
+  "sky_earth": ["hab1", [0, 2, 8], [100, 30, -32]],
+  "site_mercou_eye": ["mercou", [14, 3.5, -22], [0, 2.5, 0]],
+  "site_curiosity_wide": ["curiosity", [8, 5, -30], [0, 1, 6]]
  },
  "rooms": {
   "_note": "the buildings whose inside puts the view in first person (player.gd _room, skills/third-person-camera Into first person indoors): each item id's floor plan in its own space, circles [x, z, r] and rects [x0, z0, x1, z1], measured from the models (12 Nov). hab1: building_habitat.glb floor x and z +-2.40, the door's inner face at z -2.16. greenhouse: building_greenhouse.glb floor +-3.28 (the dome), and the vestibule x +-1.0 from the door's inner face at z -4.46 to the dome. shelter (13 Nov): building_storm_shelter.glb, the bags' inside faces at x +-1.3, the back at z 1.25, the door frame's inner face at z -1.24. The doorway band is the hero's own radius either side of these lines",
@@ -615,9 +642,59 @@
   "hab1": ["veggie", "gale_map"]
  },
  "uses": {
-  "_note": "use spots (design/plans/next-lanes.md section 0): per item, rows in the item's own space. box: [x0,y0,z0,x1,y1,z1] what E aims at; stand: [x, z, yaw_deg] where the hero glides to, facing the stand's -Z; clip (data/clips.json), sound (audio.gd SOUNDS), prompt. Motion and sound only, no game state (hard rule 1). HAB 1's galley is unit(galley, 351, 1.6) in forge/hab_interior.py: the dispenser and its nozzle, worked out from _mount (wall chord at 351 degrees, back plane 2.21 m out)",
+  "_note": "use spots (design/plans/next-lanes.md section 0; sandbox/interactions.gd): per item, rows in the item's own space. kind: the action id `used` names once the clip has run to its end (the rules hook). box: [x0,y0,z0,x1,y1,z1] what E aims at, or `on`: a prop's own box; stand: [x, z, yaw_deg] where the hero glides to, facing the stand's -Z, or without it where the clip's `grip` point (clips.json, default hand) meets the box, facing `face` (yaw_deg) or the way the hero comes; `seat` [x, z]: sit with the hips there. clip (data/clips.json), sound (audio.gd SOUNDS, played at the start), prompt. props: parts or made props (interactions.gd _prop); steps: [fraction of the clip, verb, prop, args] with the verbs appear, take, turn, glow, puff; `needs`: a prop that must still be there; a prop named again in a later row of the item is the same one ({} will do). Motion and sound only, no game state (hard rule 1). HAB 1's units are placed from forge/hab_interior.py _mount (galley 351, desk 34, valves 58, brush 113, donning 129 degrees); the shelter's from forge/shelter_interior.py",
   "hab1": [
-   {"kind": "drink", "prompt": "Drink", "box": [1.92, 1.34, 0.06, 2.2, 1.69, 0.32], "stand": [1.22, 0.05, -99], "clip": "consume", "sound": "drink"}
+   {"kind": "drink", "prompt": "Drink", "box": [1.92, 1.34, 0.06, 2.2, 1.69, 0.32], "stand": [1.22, 0.05, -99], "clip": "consume", "sound": "drink", "props": {"pouch": {"at": [1.938, 1.38, 0.165], "rot": [0, -9, 0], "hidden": true, "clean": true, "meshes": [{"box": [0.012, 0.15, 0.1], "role": "suit"}, {"cyl": [0.004, 0.06], "at": [0, 0.1, 0.03], "role": "trim"}]}}, "steps": [[0.0, "appear", "pouch", 0.25], [0.2, "take", "pouch", 0.35, "hand"]]},
+   {"kind": "eat", "prompt": "Eat", "box": [1.68, 1.34, 0.34, 2.04, 1.54, 0.71], "stand": [1.167, 0.367, -99], "clip": "consume", "sound": "eat", "props": {"lid": {"at": [2.006, 1.537, 0.5], "rot": [0, -9, 0], "hidden": true, "clean": true, "meshes": [{"box": [0.3, 0.02, 0.42], "at": [-0.15, 0.013, 0], "role": "metal"}, {"cyl": [0.012, 0.24], "at": [-0.29, 0.03, 0], "rot": [90, 0, 0], "role": "trim"}]}, "inside": {"at": [1.858, 1.541, 0.477], "rot": [0, -9, 0], "hidden": true, "clean": true, "meshes": [{"box": [0.27, 0.004, 0.39], "role": "trim"}]}, "food": {"at": [1.858, 1.56, 0.477], "rot": [0, -9, 0], "hidden": true, "clean": true, "meshes": [{"box": [0.12, 0.025, 0.16], "role": "metal"}]}}, "steps": [[0.0, "glow", "lid", true], [0.0, "glow", "inside", true], [0.0, "turn", "lid", "z", -100, 0.3], [0.12, "appear", "food", 0.12], [0.2, "take", "food", 0.35, "hand"], [0.55, "turn", "lid", "z", 0, 0.3], [0.78, "glow", "inside", false], [0.78, "glow", "lid", false]]},
+   {"kind": "refill_air", "prompt": "Fill suit air", "box": [1.0, 1.4, -2.09, 1.41, 1.9, -1.77], "stand": [0.817, -1.307, -32], "clip": "interact", "sound": "suit_air", "props": {"hose": {"hidden": true, "clean": true, "meshes": [{"line": [[1.103, 1.722, -1.954], [0.95, 1.62, -1.52]], "r": 0.014, "role": "trim"}]}, "lamp": {"at": [1.2, 1.852, -1.927], "rot": [0, 58, 0], "hidden": true, "clean": true, "meshes": [{"box": [0.006, 0.04, 0.08], "role": "light"}]}}, "steps": [[0.15, "appear", "hose", 0.2], [0.35, "glow", "lamp", true]]},
+   {"kind": "radio", "prompt": "Call base", "box": [1.16, 1.14, -1.66, 2.16, 1.88, -0.58], "stand": [1.083, -0.731, -56], "clip": "radio", "sound": "call", "props": {"screen_l": {"at": [1.885, 1.742, -0.994], "rot": [0, 34, 0], "hidden": true, "clean": true, "meshes": [{"box": [0.004, 0.22, 0.38], "role": "light"}]}, "screen_r": {"at": [1.628, 1.742, -1.376], "rot": [0, 34, 0], "hidden": true, "clean": true, "meshes": [{"box": [0.004, 0.22, 0.38], "role": "light"}]}}, "steps": [[0.05, "glow", "screen_l", true], [0.15, "glow", "screen_r", true]]},
+   {"kind": "suit_check", "prompt": "Suit check", "box": [-1.73, 1.8, -2.02, -1.09, 2.35, -1.46], "stand": [-0.954, -1.178, 39], "clip": "suit_check", "sound": "suit_check"},
+   {"kind": "brush", "prompt": "Brush off dust", "box": [-0.97, 1.29, -2.19, -0.82, 1.45, -2.03], "stand": [-0.605, -1.426, 23], "clip": "brush", "sound": "brush", "props": {"brush": {"hand": true, "hidden": true, "at": [0, 0.08, 0], "meshes": [{"cyl": [0.013, 0.3], "at": [0, 0.05, 0], "role": "trim"}, {"box": [0.05, 0.07, 0.1], "at": [0, 0.23, 0.02], "role": "trim"}]}}, "steps": [[0.05, "appear", "brush", 0.2], [0.35, "puff", "brush"], [0.6, "puff", "brush"]]},
+   {"kind": "sit", "prompt": "Sit", "box": [-1.76, 0.4, -2.04, -0.88, 0.87, -1.22], "seat": [-1.319, -1.629], "face": -141, "clip": "sit_down", "sound": "kneel"},
+   {"kind": "bed", "prompt": "Sleep", "box": [-1.66, 0.9, 0.42, -0.71, 1.45, 1.43], "stand": [-0.63, 0.49, 128], "clip": "", "sound": "curtain", "_why": "the lower berth (unit(berths, 218, 2.0) in forge/hab_interior.py): the air over its mattress, 1.25 to 1.75 m out along 218 degrees; E opens the sleep picker (cine/cine.gd)"}
+  ],
+  "shelter": [
+   {"kind": "sit", "prompt": "Sit", "box": [-1.29, 0.49, 0.45, 0.7, 0.8, 1.2], "seat": [-0.3, 0.62], "face": 0, "clip": "sit_down", "sound": "kneel"},
+   {"kind": "radio", "prompt": "Call base", "box": [-1.23, 1.33, -0.93, -1.1, 1.79, -0.17], "stand": [-0.62, -0.47, 90], "clip": "radio", "sound": "call", "props": {"screen": {"at": [-1.231, 1.562, -0.47], "hidden": true, "clean": true, "meshes": [{"box": [0.004, 0.3, 0.48], "role": "light"}]}}, "steps": [[0.05, "glow", "screen", true]]},
+   {"kind": "sample", "prompt": "Take a sample", "on": "pebble", "needs": "pebble", "clip": "kneel_pick", "sound": "sample", "props": {"pebble": {"model": "res://models/rock_small_b.glb", "scale": 0.18, "at": [-3.0, 0, 0.5], "ground": true, "keep": true, "layer": 2}, "flag": {"ground": true, "at": [-2.82, 0, 0.6], "meshes": [{"cyl": [0.003, 0.6], "at": [0, 0.3, 0], "role": "metal"}, {"box": [0.002, 0.08, 0.11], "at": [0, 0.55, 0.057], "role": "hazard"}]}, "case": {"model": "res://models/prop_sample_case.glb", "solid": true, "at": [-2.55, 0, 0.95], "ground": true}, "lid": {"in": "case", "part": "lid"}, "tube": {"hidden": true, "meshes": [{"cyl": [0.025, 0.12], "role": "glass"}, {"cyl": [0.028, 0.025], "at": [0, 0.07, 0], "role": "metal"}], "at": [-2.55, 0.15, 0.95], "ground": true}, "tongs": {"hand": true, "hidden": true, "at": [0, 0.06, 0], "meshes": [{"box": [0.007, 0.26, 0.007], "at": [-0.008, 0.12, 0], "rot": [0, 0, 2], "role": "metal"}, {"box": [0.007, 0.26, 0.007], "at": [0.008, 0.12, 0], "rot": [0, 0, -2], "role": "metal"}, {"box": [0.024, 0.04, 0.012], "at": [0, 0.0, 0], "role": "trim"}]}}, "steps": [[0.04, "appear", "tongs", 0.2], [0.3, "take", "pebble", 0.6, "tongs"], [0.5, "turn", "lid", "x", 100, 0.4], [0.52, "appear", "tube", 0.15], [0.54, "take", "tube", 0.4, "hand"], [0.66, "take", "pebble", 0.3, "tube"], [0.76, "take", "tube", 0.45, "case"], [0.9, "turn", "lid", "x", 0, 0.3], [0.9, "glow", "pebble", false]]}
+  ],
+  "greenhouse": [
+   {"kind": "harvest", "prompt": "Pick lettuce", "box": [-1.4, 1.05, -0.1, -1.1, 1.2, 0.2], "face": 90, "clip": "harvest", "sound": "harvest", "props": {"leaf": {"at": [-1.25, 1.14, 0.05], "rot": [20, 0, 0], "hidden": true, "meshes": [{"box": [0.09, 0.004, 0.13], "role": "plant"}]}}, "steps": [[0.3, "appear", "leaf", 0.1], [0.34, "take", "leaf", 0.4, "hand"]]},
+   {"kind": "harvest", "prompt": "Pick lettuce", "box": [1.1, 1.05, -0.1, 1.4, 1.2, 0.2], "face": -90, "clip": "harvest", "sound": "harvest", "props": {"leaf": {"at": [1.25, 1.14, 0.05], "rot": [20, 0, 0], "hidden": true, "meshes": [{"box": [0.09, 0.004, 0.13], "role": "plant"}]}}, "steps": [[0.3, "appear", "leaf", 0.1], [0.34, "take", "leaf", 0.4, "hand"]]},
+   {"kind": "plant", "prompt": "Plant seeds", "box": [-1.4, 1.04, -0.42, -1.1, 1.18, -0.18], "face": 90, "clip": "plant", "sound": "plant", "props": {"packet": {"hand": true, "hidden": true, "at": [0, 0.08, 0], "meshes": [{"box": [0.06, 0.09, 0.006], "role": "hazard"}]}, "sprout": {"model": "res://models/prop_lettuce_1.glb", "like": "slot_1", "at": [-1.25, 1.03, -0.25], "hidden": true, "keep": true}}, "steps": [[0.05, "appear", "packet", 0.2], [0.55, "appear", "sprout", 0.8]]},
+   {"kind": "plant", "prompt": "Plant seeds", "box": [1.1, 1.04, -0.42, 1.4, 1.18, -0.18], "face": -90, "clip": "plant", "sound": "plant", "props": {"packet": {"hand": true, "hidden": true, "at": [0, 0.08, 0], "meshes": [{"box": [0.06, 0.09, 0.006], "role": "hazard"}]}, "sprout": {"model": "res://models/prop_lettuce_1.glb", "like": "slot_1", "at": [1.25, 1.03, -0.25], "hidden": true, "keep": true}}, "steps": [[0.05, "appear", "packet", 0.2], [0.55, "appear", "sprout", 0.8]]}
+  ],
+  "oxygen": [
+   {"kind": "o2_valve", "prompt": "Open O2 valve", "box": [-0.97, 0.87, -0.42, -0.67, 1.17, -0.24], "face": 180, "grip": "wheel", "clip": "turn_valve", "sound": "o2_valve", "props": {"wheel": {"at": [-0.82, 1.02, -0.33], "solid": true,"meshes": [{"torus": [0.115, 0.14], "rot": [90, 0, 0], "role": "accent"}, {"box": [0.24, 0.018, 0.012], "role": "metal"}, {"box": [0.018, 0.24, 0.012], "role": "metal"}, {"cyl": [0.015, 0.1], "at": [0, 0, 0.05], "rot": [90, 0, 0], "role": "metal"}]}, "lamp": {"at": [-0.82, 1.2, -0.245], "hidden": true, "meshes": [{"box": [0.035, 0.035, 0.006], "role": "light"}]}}, "steps": [[0.35, "turn", "wheel", "z", -90, 0.9], [0.75, "glow", "lamp", true]]}
+  ],
+  "battery": [
+   {"kind": "repair", "prompt": "Fix battery", "box": [-0.25, 0.2, -0.45, 0.25, 0.9, -0.33], "stand": [0, -0.85, 180], "clip": "fix_kneel", "sound": "repair", "props": {"leaf": {"at": [-0.25, 0.55, -0.425], "hidden": true, "meshes": [{"box": [0.48, 0.66, 0.012], "at": [0.24, 0, 0], "role": "body"}, {"cyl": [0.012, 0.2], "at": [0.42, 0, -0.03], "role": "metal"}]}, "cavity": {"at": [0, 0.55, -0.416], "hidden": true, "meshes": [{"box": [0.48, 0.66, 0.004], "role": "trim"}]}, "driver": {"hand": true, "hidden": true, "at": [0, 0.06, 0], "meshes": [{"cyl": [0.014, 0.1], "role": "hazard"}, {"cyl": [0.003, 0.12], "at": [0, 0.11, 0], "role": "metal"}]}, "blink": {"at": [0.55, 0.97, -0.386], "hidden": true, "meshes": [{"box": [0.21, 0.07, 0.004], "role": "trim"}]}}, "steps": [[0.12, "glow", "cavity", true], [0.12, "glow", "leaf", true], [0.12, "turn", "leaf", "y", 100, 0.5], [0.25, "appear", "driver", 0.2], [0.72, "turn", "leaf", "y", 0, 0.5], [0.86, "glow", "cavity", false], [0.86, "glow", "leaf", false], [0.88, "glow", "blink", true], [0.94, "glow", "blink", false]]}
+  ],
+  "dish": [
+   {"kind": "dish", "prompt": "Check the dish", "box": [-0.15, 0.45, 0.175, 0.15, 0.75, 0.425], "stand": [0, 0.95, 0], "clip": "interact", "sound": "dish", "hold_s": 3.0, "props": {"dish": {"part": "dish", "back_s": 3.0}}, "steps": [[0.2, "turn", "dish", "x", "earth", 3.0]]}
+  ],
+  "wing1": [
+   {"kind": "clean_panel", "prompt": "Clean panel", "favour_deg": 10, "box": [-19.6, 1.1, -1.3, -18.6, 1.6, -0.9], "stand": [-19.1, -1.95, 180], "clip": "interact", "sound": "brush", "props": {"brush": {"hand": true, "hidden": true, "at": [0, 0.08, 0], "meshes": [{"cyl": [0.013, 0.3], "at": [0, 0.05, 0], "role": "trim"}, {"box": [0.05, 0.07, 0.1], "at": [0, 0.23, 0.02], "role": "trim"}]}}, "steps": [[0.05, "appear", "brush", 0.2], [0.4, "puff", "brush"], [0.7, "puff", "brush"]]}
+  ],
+  "wing2": [
+   {"kind": "clean_panel", "prompt": "Clean panel", "favour_deg": 10, "box": [-19.6, 1.1, -1.3, -18.6, 1.6, -0.9], "stand": [-19.1, -1.95, 180], "clip": "interact", "sound": "brush", "props": {"brush": {"hand": true, "hidden": true, "at": [0, 0.08, 0], "meshes": [{"cyl": [0.013, 0.3], "at": [0, 0.05, 0], "role": "trim"}, {"box": [0.05, 0.07, 0.1], "at": [0, 0.23, 0.02], "role": "trim"}]}}, "steps": [[0.05, "appear", "brush", 0.2], [0.4, "puff", "brush"], [0.7, "puff", "brush"]]}
+  ],
+  "wing3": [
+   {"kind": "clean_panel", "prompt": "Clean panel", "favour_deg": 10, "box": [-19.6, 1.1, -1.3, -18.6, 1.6, -0.9], "stand": [-19.1, -1.95, 180], "clip": "interact", "sound": "brush", "props": {"brush": {"hand": true, "hidden": true, "at": [0, 0.08, 0], "meshes": [{"cyl": [0.013, 0.3], "at": [0, 0.05, 0], "role": "trim"}, {"box": [0.05, 0.07, 0.1], "at": [0, 0.23, 0.02], "role": "trim"}]}}, "steps": [[0.05, "appear", "brush", 0.2], [0.4, "puff", "brush"], [0.7, "puff", "brush"]]}
+  ],
+  "wing4": [
+   {"kind": "clean_panel", "prompt": "Clean panel", "favour_deg": 10, "box": [-19.6, 1.1, -1.3, -18.6, 1.6, -0.9], "stand": [-19.1, -1.95, 180], "clip": "interact", "sound": "brush", "props": {"brush": {"hand": true, "hidden": true, "at": [0, 0.08, 0], "meshes": [{"cyl": [0.013, 0.3], "at": [0, 0.05, 0], "role": "trim"}, {"box": [0.05, 0.07, 0.1], "at": [0, 0.23, 0.02], "role": "trim"}]}}, "steps": [[0.05, "appear", "brush", 0.2], [0.4, "puff", "brush"], [0.7, "puff", "brush"]]}
+  ],
+  "wing5": [
+   {"kind": "clean_panel", "prompt": "Clean panel", "favour_deg": 10, "box": [-19.6, 1.1, -1.3, -18.6, 1.6, -0.9], "stand": [-19.1, -1.95, 180], "clip": "interact", "sound": "brush", "props": {"brush": {"hand": true, "hidden": true, "at": [0, 0.08, 0], "meshes": [{"cyl": [0.013, 0.3], "at": [0, 0.05, 0], "role": "trim"}, {"box": [0.05, 0.07, 0.1], "at": [0, 0.23, 0.02], "role": "trim"}]}}, "steps": [[0.05, "appear", "brush", 0.2], [0.4, "puff", "brush"], [0.7, "puff", "brush"]]}
+  ],
+  "wing6": [
+   {"kind": "clean_panel", "prompt": "Clean panel", "favour_deg": 10, "box": [-19.6, 1.1, -1.3, -18.6, 1.6, -0.9], "stand": [-19.1, -1.95, 180], "clip": "interact", "sound": "brush", "props": {"brush": {"hand": true, "hidden": true, "at": [0, 0.08, 0], "meshes": [{"cyl": [0.013, 0.3], "at": [0, 0.05, 0], "role": "trim"}, {"box": [0.05, 0.07, 0.1], "at": [0, 0.23, 0.02], "role": "trim"}]}}, "steps": [[0.05, "appear", "brush", 0.2], [0.4, "puff", "brush"], [0.7, "puff", "brush"]]}
+  ],
+  "mercou": [
+   {"kind": "sample", "prompt": "Take a sample", "on": "pebble", "needs": "pebble", "clip": "kneel_pick", "sound": "sample", "props": {"pebble": {"model": "res://models/rock_small_a.glb", "scale": 0.18, "at": [1.06, 0, -20.86], "ground": true, "keep": true, "layer": 2}, "flag": {"ground": true, "at": [1.24, 0, -20.76], "meshes": [{"cyl": [0.003, 0.6], "at": [0, 0.3, 0], "role": "metal"}, {"box": [0.002, 0.08, 0.11], "at": [0, 0.55, 0.057], "role": "hazard"}]}, "case": {"model": "res://models/prop_sample_case.glb", "solid": true, "at": [1.41, 0, -19.52], "ground": true}, "lid": {"in": "case", "part": "lid"}, "tube": {"hidden": true, "meshes": [{"cyl": [0.025, 0.12], "role": "glass"}, {"cyl": [0.028, 0.025], "at": [0, 0.07, 0], "role": "metal"}], "at": [1.41, 0.15, -19.52], "ground": true}, "tongs": {"hand": true, "hidden": true, "at": [0, 0.06, 0], "meshes": [{"box": [0.007, 0.26, 0.007], "at": [-0.008, 0.12, 0], "rot": [0, 0, 2], "role": "metal"}, {"box": [0.007, 0.26, 0.007], "at": [0.008, 0.12, 0], "rot": [0, 0, -2], "role": "metal"}, {"box": [0.024, 0.04, 0.012], "at": [0, 0.0, 0], "role": "trim"}]}}, "steps": [[0.04, "appear", "tongs", 0.2], [0.3, "take", "pebble", 0.6, "tongs"], [0.5, "turn", "lid", "x", 100, 0.4], [0.52, "appear", "tube", 0.15], [0.54, "take", "tube", 0.4, "hand"], [0.66, "take", "pebble", 0.3, "tube"], [0.76, "take", "tube", 0.45, "case"], [0.9, "turn", "lid", "x", 0, 0.3], [0.9, "glow", "pebble", false]]},
+   {"kind": "sample", "prompt": "Take a sample", "on": "pebble", "needs": "pebble", "clip": "kneel_pick", "sound": "sample", "props": {"pebble": {"model": "res://models/rock_small_b.glb", "scale": 0.18, "at": [3.68, 0, -20.36], "ground": true, "keep": true, "layer": 2}, "flag": {"ground": true, "at": [3.86, 0, -20.26], "meshes": [{"cyl": [0.003, 0.6], "at": [0, 0.3, 0], "role": "metal"}, {"box": [0.002, 0.08, 0.11], "at": [0, 0.55, 0.057], "role": "hazard"}]}, "case": {}, "lid": {}, "tube": {}, "tongs": {}}, "steps": [[0.04, "appear", "tongs", 0.2], [0.3, "take", "pebble", 0.6, "tongs"], [0.5, "turn", "lid", "x", 100, 0.4], [0.52, "appear", "tube", 0.15], [0.54, "take", "tube", 0.4, "hand"], [0.66, "take", "pebble", 0.3, "tube"], [0.76, "take", "tube", 0.45, "case"], [0.9, "turn", "lid", "x", 0, 0.3], [0.9, "glow", "pebble", false]]},
+   {"kind": "sample", "prompt": "Take a sample", "on": "pebble", "needs": "pebble", "clip": "kneel_pick", "sound": "sample", "props": {"pebble": {"model": "res://models/rock_small_a.glb", "scale": 0.18, "at": [0.35, 0, -18.03], "ground": true, "keep": true, "layer": 2}, "flag": {"ground": true, "at": [0.53, 0, -17.93], "meshes": [{"cyl": [0.003, 0.6], "at": [0, 0.3, 0], "role": "metal"}, {"box": [0.002, 0.08, 0.11], "at": [0, 0.55, 0.057], "role": "hazard"}]}, "case": {}, "lid": {}, "tube": {}, "tongs": {}}, "steps": [[0.04, "appear", "tongs", 0.2], [0.3, "take", "pebble", 0.6, "tongs"], [0.5, "turn", "lid", "x", 100, 0.4], [0.52, "appear", "tube", 0.15], [0.54, "take", "tube", 0.4, "hand"], [0.66, "take", "pebble", 0.3, "tube"], [0.76, "take", "tube", 0.45, "case"], [0.9, "turn", "lid", "x", 0, 0.3], [0.9, "glow", "pebble", false]]}
   ]
  }
 }

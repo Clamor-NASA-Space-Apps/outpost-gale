@@ -21,11 +21,29 @@ func _ready() -> void:
 	var text := Hud.col([title_label, line_label], 0)
 	text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	add_child(Hud.row([Hud.icon(icon_name, 22, "on_primary"), text], 9))
-	var glow: StyleBoxFlat = get_theme_stylebox("panel", "HudPanelAlert").duplicate()
-	add_theme_stylebox_override("panel", glow)
-	var t := create_tween().set_loops().set_trans(Tween.TRANS_SINE)
-	t.tween_property(glow, "shadow_size", 14, PULSE_SECONDS * 0.5)
-	t.tween_property(glow, "shadow_size", 3, PULSE_SECONDS * 0.5)
+	# the pulse: a second glow from the atlas over the style's own, its strength rising and falling; a node of its own
+	# (first, so under the icon and words), drawn with the other shapes in one call (Hud.layer)
+	var pulse := Control.new()
+	pulse.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	pulse.set_meta("shapes", true)
+	pulse.draw.connect(func() -> void:
+		var k := 0.5 - 0.5 * cos(TAU * fposmod(Time.get_ticks_msec() / 1000.0, PULSE_SECONDS) / PULSE_SECONDS)
+		var g := 12.0
+		var m := Color.WHITE  # no tint: the glow's colour is in the atlas; only its strength moves
+		m.a = k
+		var box := Rect2(-pulse.position, size)  # the whole toast, from the pulse node's own corner
+		Hud.blit(pulse, "alert_glow", box.grow(g), m))
+	add_child(pulse)
+	move_child(pulse, 0)
+	_pulse = pulse
+
+
+var _pulse: Control
+
+
+func _process(_delta: float) -> void:
+	if visible:
+		_pulse.queue_redraw()
 
 
 func say(t: String, l: String) -> void:

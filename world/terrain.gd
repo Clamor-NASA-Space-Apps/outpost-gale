@@ -33,6 +33,10 @@ var _cmap := PackedByteArray()  # the contact map (contacts())
 var _ctex: ImageTexture
 var skirt_y := 0.0  # the patch's skirt reaches down to here: under the lowest backdrop vertex near the edge (_seat())
 var grades: Array[Dictionary] = []  # footprints laid level before the ground is built (_grade(), set by world.gd)
+# field sites far from the base (add_site()): {origin, step, cols, rows, heights, skirt, mid}, each read by height_at()
+# within SITE_REACH of its middle. Sites stand further than that from the base and from each other (world.json sites)
+var sites: Array[Dictionary] = []
+const SITE_REACH := 5000.0
 
 
 func build(design: Dictionary) -> void:
@@ -56,10 +60,125 @@ func build(design: Dictionary) -> void:
 		mi.set_instance_shader_parameter("backdrop", 1.0)  # not drawn over the patch (terrain.gdshader)
 		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF  # too far out to shade anything we see
 	add_child(back)
+	var main := _patch()
 	for i in range(0, rows - 1, CHUNK):
 		for j in range(0, cols - 1, CHUNK):
-			_chunk(i, j)
-	_collision()
+			_chunk(i, j, main)
+	_collision(main)
+
+
+## The base patch as the dictionary _chunk() and _collision() build from.
+func _patch() -> Dictionary:
+	return {"name": "patch", "origin": origin, "step": step, "cols": cols, "rows": rows, "heights": heights, "skirt": skirt_y}
+
+
+## A field site (data/site_*.json, made by tools/site_terrain.py): its own patch with collision, a skirt, and a ring
+## of ground out to `ring` metres that carries the site's own slope on past its edge into the fog, where the base has
+## its backdrop. Drawn with the same material as the base. A site is a separate small walkable area, never seen
+## from the base: further away than the camera's far plane.
+func add_site(file: String, ring: float) -> void:
+	var d: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(file))
+	var h := PackedFloat32Array(d.heights)
+	var lo := INF
+	for v in h:
+		lo = minf(lo, v)
+	var p := {"name": "site%d" % sites.size(), "origin": Vector2(d.origin[0], d.origin[1]), "step": float(d.step), "cols": int(d.size[0]), "rows": int(d.size[1]), "heights": h, "skirt": lo - 2.0}
+	p.mid = p.origin + Vector2(p.cols - 1, p.rows - 1) * p.step / 2.0
+	sites.append(p)
+	for i in range(0, p.rows - 1, CHUNK):
+		for j in range(0, p.cols - 1, CHUNK):
+			_chunk(i, j, p)
+	_collision(p)
+	_ring(p, ring)
+
+
+## The ring round a site: squares from the patch's edge out to `far`, every RING_STEP metres along each side. Its
+## inner square sits SEAM under the lowest edge height near each point, so it never shows over the patch; outward
+## it eases over 300 m from the edge's heights to the plane that fits the site (its real slope, carried on: an
+## extrapolation, hidden in the fog past a few hundred metres). No collision: world.json sites `half` keeps bodies
+## on the patch.
+const RING_STEP := 8.0
+func _ring(p: Dictionary, far: float) -> void:
+	var half: float = (p.cols - 1) * p.step / 2.0
+	var mid: Vector2 = p.mid
+	# the plane h = a + b x + c z (x, z from the middle) through the site, least squares; x and z are centred, so
+	# a, b and c come out one by one
+	var sh := 0.0
+	var sx := 0.0
+	var sz := 0.0
+	var xx := 0.0
+	var zz := 0.0
+	for i in p.rows:
+		for j in p.cols:
+			var v: float = p.heights[i * p.cols + j]
+			var x: float = j * p.step - half
+			var z: float = i * p.step - half
+			sh += v
+			sx += v * x
+			sz += v * z
+			xx += x * x
+			zz += z * z
+	var a: float = sh / (p.rows * p.cols)
+	var b := sx / xx
+	var c := sz / zz
+	var per: int = int(2.0 * half / RING_STEP)  # points along one side
+	var edge: Array[Vector2] = []  # the square's outline at half 1, clockwise from the north-west corner
+	for s in 4:
+		for k in per:
+			var t := -1.0 + 2.0 * k / per
+			edge.append([Vector2(t, -1), Vector2(1, t), Vector2(-t, 1), Vector2(-1, -t)][s])
+	var n := edge.size()
+	var rings := 24
+	var verts := PackedVector3Array()
+	for r in rings:
+		var d := half * pow(far / half, float(r) / (rings - 1))
+		for e: Vector2 in edge:
+			var q := e * d
+			var plane := a + b * q.x + c * q.y
+			var at := mid + q
+			var t := clampf((d - half) / 300.0, 0.0, 1.0)
+			var near := plane
+			if t < 1.0:
+				# the lowest edge height within a ring step of this point: the patch's edge between two samples
+				var along := Vector2(1, 0) if absf(e.y) == 1.0 else Vector2(0, 1)
+				near = INF
+				for k in range(-4, 5):
+					var w := mid + e * half + along * k * RING_STEP / 4.0
+					near = minf(near, _tri(p, w.x, w.y))
+				near -= SEAM
+			verts.append(Vector3(at.x, lerpf(near, plane, t) - d * d / (2.0 * 3396190.0), at.y))
+	var norms := PackedVector3Array()
+	norms.resize(verts.size())
+	var idx := PackedInt32Array()
+	for r in rings:
+		for k in n:
+			var o := r * n + k
+			var along := verts[r * n + (k + 1) % n] - verts[r * n + (k - 1 + n) % n]
+			var out := verts[mini(r + 1, rings - 1) * n + k] - verts[maxi(r - 1, 0) * n + k]
+			var nm := along.cross(out).normalized()
+			norms[o] = nm if nm.y > 0.0 else -nm
+			if r < rings - 1:
+				var q := [o, r * n + (k + 1) % n, o + n, r * n + (k + 1) % n, (r + 1) * n + (k + 1) % n, o + n]
+				for f in [0, 3]:
+					# Godot draws clockwise faces, whose (v1 - v0) x (v2 - v0) points down for ground seen from above
+					if (verts[q[f + 1]] - verts[q[f]]).cross(verts[q[f + 2]] - verts[q[f]]).y > 0.0:
+						idx.append_array([q[f], q[f + 2], q[f + 1]])
+					else:
+						idx.append_array([q[f], q[f + 1], q[f + 2]])
+	var arrays := []
+	arrays.resize(Mesh.ARRAY_MAX)
+	arrays[Mesh.ARRAY_VERTEX] = verts
+	arrays[Mesh.ARRAY_NORMAL] = norms
+	arrays[Mesh.ARRAY_INDEX] = idx
+	var mesh := ArrayMesh.new()
+	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	mesh.surface_set_material(0, material)
+	var mi := MeshInstance3D.new()
+	mi.mesh = mesh
+	mi.name = p.name + "_ring"
+	mi.set_instance_shader_parameter("backdrop", 1.0)
+	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF  # far out, like the backdrop
+	add_child(mi)
 
 
 ## Colours and the detail strength from the design in force (a theme or quality switch calls it again).
@@ -102,7 +221,11 @@ func restyle(design: Dictionary) -> void:
 ## each cell from its (j+1, i) corner to its (j, i+1) corner; measured against the heightmap shape). A bilinear
 ## blend was up to 2 cm off them on 2 m cells, so things set on it hovered over the drawn ground or sank.
 ## Outside the patch: its edge.
+## Near a field site (SITE_REACH): that site's patch.
 func height_at(x: float, z: float) -> float:
+	for s: Dictionary in sites:
+		if absf(x - s.mid.x) < SITE_REACH and absf(z - s.mid.y) < SITE_REACH:
+			return _tri(s, x, z)
 	var fx := clampf((x - origin.x) / step, 0.0, cols - 1.001)
 	var fz := clampf((z - origin.y) / step, 0.0, rows - 1.001)
 	var j := int(fx)
@@ -113,6 +236,25 @@ func height_at(x: float, z: float) -> float:
 	var b := heights[i * cols + j + 1]
 	var c := heights[(i + 1) * cols + j]
 	var e := heights[(i + 1) * cols + j + 1]
+	if u + v <= 1.0:
+		return a + (b - a) * u + (c - a) * v
+	return e + (c - e) * (1.0 - u) + (b - e) * (1.0 - v)
+
+
+## height_at() on patch `p` (the same split of each cell).
+static func _tri(p: Dictionary, x: float, z: float) -> float:
+	var cl: int = p.cols
+	var h: PackedFloat32Array = p.heights
+	var fx := clampf((x - p.origin.x) / p.step, 0.0, cl - 1.001)
+	var fz := clampf((z - p.origin.y) / p.step, 0.0, p.rows - 1.001)
+	var j := int(fx)
+	var i := int(fz)
+	var u := fx - j
+	var v := fz - i
+	var a := h[i * cl + j]
+	var b := h[i * cl + j + 1]
+	var c := h[(i + 1) * cl + j]
+	var e := h[(i + 1) * cl + j + 1]
 	if u + v <= 1.0:
 		return a + (b - a) * u + (c - a) * v
 	return e + (c - e) * (1.0 - u) + (b - e) * (1.0 - v)
@@ -143,14 +285,22 @@ func _h(i: int, j: int) -> float:
 	return heights[clampi(i, 0, rows - 1) * cols + clampi(j, 0, cols - 1)]
 
 
-func _chunk(i0: int, j0: int) -> void:
+static func _hp(p: Dictionary, i: int, j: int) -> float:
+	return p.heights[clampi(i, 0, p.rows - 1) * p.cols + clampi(j, 0, p.cols - 1)]
+
+
+func _chunk(i0: int, j0: int, p: Dictionary) -> void:
 	var n := CHUNK + 1
+	var o: Vector2 = p.origin
+	var st: float = p.step
+	var rows_p: int = p.rows
+	var cols_p: int = p.cols
 	var verts := PackedVector3Array()
 	var norms := PackedVector3Array()
 	for i in range(i0, i0 + n):
 		for j in range(j0, j0 + n):
-			verts.append(Vector3(origin.x + j * step, _h(i, j), origin.y + i * step))
-			norms.append(Vector3(_h(i, j - 1) - _h(i, j + 1), 2.0 * step, _h(i - 1, j) - _h(i + 1, j)).normalized())
+			verts.append(Vector3(o.x + j * st, _hp(p, i, j), o.y + i * st))
+			norms.append(Vector3(_hp(p, i, j - 1) - _hp(p, i, j + 1), 2.0 * st, _hp(p, i - 1, j) - _hp(p, i + 1, j)).normalized())
 	var idx := PackedInt32Array()
 	for i in CHUNK:
 		for j in CHUNK:
@@ -158,8 +308,8 @@ func _chunk(i0: int, j0: int) -> void:
 			idx.append_array([a, a + 1, a + n, a + 1, a + n + 1, a + n])
 	# a skirt down from the patch's outer edges to skirt_y, shaded as the ground at the edge: from outside, the step
 	# down to the backdrop (_seat()) shows ground, never the sky through the discarded backdrop
-	for e: Array in [[i0 == 0, 0, 1, Vector3.FORWARD], [i0 + CHUNK == rows - 1, CHUNK * n, 1, Vector3.BACK],
-			[j0 == 0, 0, n, Vector3.LEFT], [j0 + CHUNK == cols - 1, CHUNK, n, Vector3.RIGHT]]:
+	for e: Array in [[i0 == 0, 0, 1, Vector3.FORWARD], [i0 + CHUNK == rows_p - 1, CHUNK * n, 1, Vector3.BACK],
+			[j0 == 0, 0, n, Vector3.LEFT], [j0 + CHUNK == cols_p - 1, CHUNK, n, Vector3.RIGHT]]:
 		if not e[0]:
 			continue
 		var top: int = e[1]
@@ -168,9 +318,9 @@ func _chunk(i0: int, j0: int) -> void:
 			var a := top + k * by
 			var b := a + by
 			var lo := verts.size()
-			for p: int in [a, b]:
-				verts.append(Vector3(verts[p].x, skirt_y, verts[p].z))
-				norms.append(norms[p])
+			for q: int in [a, b]:
+				verts.append(Vector3(verts[q].x, p.skirt, verts[q].z))
+				norms.append(norms[q])
 			# Godot draws clockwise faces: their (v1 - v0) x (v2 - v0) points away from the viewer, here inward
 			var tri := [a, b, lo]
 			if (verts[b] - verts[a]).cross(verts[lo] - verts[a]).dot(e[3]) > 0.0:
@@ -187,7 +337,9 @@ func _chunk(i0: int, j0: int) -> void:
 	mesh.surface_set_material(0, material)
 	var mi := MeshInstance3D.new()
 	mi.mesh = mesh
-	mi.name = "patch_%d_%d" % [i0, j0]
+	mi.name = "%s_%d_%d" % [p.name, i0, j0]
+	if p.name != "patch":
+		mi.set_instance_shader_parameter("backdrop", 1.0)  # it never draws over the base's patch, as the backdrop
 	add_child(mi)
 
 
@@ -242,24 +394,25 @@ func _seat(mesh: Mesh) -> ArrayMesh:
 	return out
 
 
-func _collision() -> void:
+func _collision(p: Dictionary) -> void:
 	# HeightMapShape3D puts its samples 1 unit apart, so the shape is scaled by the step and the heights are
 	# divided by it: a uniform scale, which Jolt takes
 	var shape := HeightMapShape3D.new()
-	shape.map_width = cols
-	shape.map_depth = rows
-	var scaled := PackedFloat32Array(heights)
+	var st: float = p.step
+	shape.map_width = p.cols
+	shape.map_depth = p.rows
+	var scaled := PackedFloat32Array(p.heights)
 	for k in scaled.size():
-		scaled[k] /= step
+		scaled[k] /= st
 	shape.map_data = scaled
 	var body := StaticBody3D.new()
-	body.name = "ground"
+	body.name = "ground" if p.name == "patch" else "ground_" + p.name
 	body.collision_layer = 1  # CONTRACTS.md: layer 1 is the ground
 	body.collision_mask = 0
 	var col := CollisionShape3D.new()
 	col.shape = shape
-	col.scale = Vector3.ONE * step
-	col.position = Vector3(origin.x + (cols - 1) * step / 2.0, 0.0, origin.y + (rows - 1) * step / 2.0)
+	col.scale = Vector3.ONE * st
+	col.position = Vector3(p.origin.x + (p.cols - 1) * st / 2.0, 0.0, p.origin.y + (p.rows - 1) * st / 2.0)
 	body.add_child(col)
 	add_child(body)
 

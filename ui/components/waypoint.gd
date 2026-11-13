@@ -23,6 +23,7 @@ var dist_label: Label
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	set_meta("shapes", true)
 	name_label = Hud.label("", "HudText")
 	dist_label = Hud.label("", "HudNumAmber")
 	tag = Hud.panel("HudPanel", Hud.row([name_label, dist_label], 6))
@@ -77,9 +78,7 @@ func _draw() -> void:
 	var r := Rect2(tag.position, tag.size)
 	if docked:
 		var edge := r.get_center() + dir * (minf(r.size.x / maxf(absf(dir.x), 1e-4), r.size.y / maxf(absf(dir.y), 1e-4)) * 0.5)
-		var side := dir.orthogonal() * 9.0
-		draw_colored_polygon(PackedVector2Array([edge + dir * ARROW, edge + side, edge - side]), Hud.color("primary"))
+		Hud.blit_at(self, "arrow", edge + dir * ARROW * 0.5, ARROW * 1.4, Hud.color("primary"), dir.angle())
 		return
-	var d := anchor
-	draw_circle(d, 9.0, Hud.color("hud-glow-amber"))
-	draw_colored_polygon(PackedVector2Array([d + Vector2(0, -6), d + Vector2(6, 0), d + Vector2(0, 6), d + Vector2(-6, 0)]), Hud.color("primary"))
+	Hud.blit_at(self, "glow_dot", anchor, 26.0, Hud.color("hud-glow-amber"))
+	Hud.blit_at(self, "diamond", anchor, 13.0, Hud.color("primary"))

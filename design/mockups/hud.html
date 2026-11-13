@@ -36,7 +36,9 @@ svg.arcs { position: absolute; inset: 0; pointer-events: none; }
 
 /* top-left: sol and meters */
 .status { position: absolute; top: 40px; left: 44px; padding: 14px 18px; width: 300px; display: flex; flex-direction: column; gap: 10px; }
-.status .sol { display: flex; align-items: baseline; gap: 10px; }
+.status .sol { display: flex; align-items: center; gap: 8px; }
+.status .sol .id { display: flex; align-items: center; gap: 10px; }
+.status .sol .num, .status .sol .cap { line-height: 1; }
 .status .sol .num { font-size: 30px; }
 .meter { display: grid; grid-template-columns: 22px 1fr auto; gap: 10px; align-items: center; }
 .bar { height: 6px; border-radius: 3px; background: rgba(246,236,220,0.15); overflow: hidden; }
@@ -101,7 +103,7 @@ svg.arcs { position: absolute; inset: 0; pointer-events: none; }
 <div class="heading">208°  SSW</div>
 
 <div class="status glass">
-  <div class="sol"><span class="cap">Sol</span><span class="num">3</span><img class="icon" src="file:///home/ravindu644/Documents/NASA-Space-apps/tooling/projects/junior-astronaut-mission-trainer/ui/icons/clock.svg" style=" margin-left:auto; width:18px;height:18px; opacity:.7"><span class="num" style="font-size:18px;color:var(--ink2)">06:52</span></div>
+  <div class="sol"><span class="id"><span class="cap">Sol</span><span class="num">3</span></span><img class="icon" src="file:///home/ravindu644/Documents/NASA-Space-apps/tooling/projects/junior-astronaut-mission-trainer/ui/icons/clock.svg" style=" margin-left:auto; width:18px;height:18px; opacity:.7"><span class="num" style="font-size:18px;color:var(--ink2)">06:52</span></div>
   <div class="meter"><img class="icon" src="file:///home/ravindu644/Documents/NASA-Space-apps/tooling/projects/junior-astronaut-mission-trainer/ui/icons/power.svg" style=""><div class="bar"><i style="width:82%"></i></div><span class="num">82%</span></div>
   <div class="meter"><img class="icon" src="file:///home/ravindu644/Documents/NASA-Space-apps/tooling/projects/junior-astronaut-mission-trainer/ui/icons/oxygen.svg" style=""><div class="bar"><i style="width:64%"></i></div><span class="num">64%</span></div>
   <div class="meter"><img class="icon" src="file:///home/ravindu644/Documents/NASA-Space-apps/tooling/projects/junior-astronaut-mission-trainer/ui/icons/health.svg" style=""><div class="bar"><i class="warn" style="width:38%"></i></div><span class="num">38%</span></div>

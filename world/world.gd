@@ -77,6 +77,8 @@ func build(design: Dictionary) -> void:
 			terrain.grades.append({"at": Vector2(it.pos[0], it.pos[1]), "half": Vector2(s[0], s[2]) / 2.0, "yaw": -deg_to_rad(float(it.get("yaw", 0)))})
 	add_child(terrain)
 	terrain.build(design)
+	for id: String in _site_ids():
+		terrain.add_site(data.sites[id].terrain, float(data.sites.ring))
 	for it: Dictionary in data.items:
 		items[it.id] = _item(it, design)
 	_plant(design, sheet)
@@ -270,14 +272,28 @@ func height_at(x: float, z: float) -> float:
 
 ## Where anything that moves may go, x and z (data/world.json `bound`), `margin` metres further in: inside it the
 ## drawn ground, its collision and height_at() are one surface (the patch); past it there is only the backdrop.
-func bound(margin := 0.0) -> Rect2:
-	var h := float(data.bound.half) - margin
-	return Rect2(-h, -h, 2.0 * h, 2.0 * h)
+## With `at`, the bound of the area nearest it: the base, or a field site (data/world.json `sites`, its own `half`).
+func bound(margin := 0.0, at := Vector3.ZERO) -> Rect2:
+	var c := Vector2.ZERO
+	var h := float(data.bound.half)
+	var q := Vector2(at.x, at.z)
+	for id: String in _site_ids():
+		var sc := Vector2(data.sites[id].centre[0], data.sites[id].centre[1])
+		if q.distance_to(sc) < q.distance_to(c):
+			c = sc
+			h = float(data.sites.half)
+	h -= margin
+	return Rect2(c.x - h, c.y - h, 2.0 * h, 2.0 * h)
 
 
-## How far `p` is past bound(margin), metres (0 inside).
+## The field sites' ids (data/world.json `sites`).
+func _site_ids() -> Array:
+	return data.get("sites", {}).keys().filter(func(k: String) -> bool: return data.sites[k] is Dictionary)
+
+
+## How far `p` is past the bound of its area, metres (0 inside).
 func past(p: Vector3, margin := 0.0) -> float:
-	var r := bound(margin)
+	var r := bound(margin, p)
 	var q := Vector2(p.x, p.z)
 	return q.distance_to(q.clamp(r.position, r.end))
 

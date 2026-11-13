@@ -5,6 +5,7 @@ extends RefCounted
 
 const THEME: Theme = preload("res://ui/theme.tres")
 const HudPanel := preload("res://ui/hud_panel.gd")
+const Icon := preload("res://ui/icon.gd")
 # The phone layout draws the HUD 1.4 times larger (PHONE_SCALE): body text then lands near iOS's 17 pt
 # default on an iPhone 16, and a 72 px button is 101 scene px, above the 96 px a 48 dp touch target
 # needs (addons/forge/test.gd TARGET).
@@ -49,17 +50,207 @@ static func color(name: String, alpha := 1.0) -> Color:
 	return c
 
 
-## A white-stroke icon from ui/icons, tinted by modulate so one file serves every colour.
+## A white-stroke icon from the atlas, tinted by its own draw colour (ui/icon.gd) so one region serves every colour.
 static func icon(name: String, size := 32.0, tint := "primary") -> TextureRect:
-	var r := TextureRect.new()
-	r.texture = load("res://ui/icons/%s.svg" % name)
+	var r: TextureRect = Icon.new()
+	r.art = icon_texture(name)
 	r.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	r.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	r.custom_minimum_size = Vector2(size, size)
-	r.self_modulate = color(tint)
+	r.tint = color(tint)
 	r.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	r.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return r
+
+
+## An icon as a region of the HUD's one texture (ui/atlas.gd), so icons batch with the panels; the SVG if the atlas
+## has none (a new icon before ui/theme_builder.gd ran again).
+static func icon_texture(name: String) -> Texture2D:
+	if THEME.has_icon("icon_" + name, "HudAtlas"):
+		return THEME.get_icon("icon_" + name, "HudAtlas")
+	return load("res://ui/icons/%s.svg" % name)
+
+
+## A shape from the atlas (white, tinted by `col`) drawn into `rect` on `ci`: "white", "diamond", "dot", "glow_dot",
+## "ring", "box_line", "box_fill", "caret", "arrow", "hero", "disc_ring". One texture for all of them: one batch.
+static func blit(ci: CanvasItem, name: String, rect: Rect2, col := Color.WHITE) -> void:
+	var t := THEME.get_icon(name, "HudAtlas") as AtlasTexture
+	ci.draw_texture_rect_region(t.atlas, rect, t.region, col)
+
+
+## A shape from the atlas centred on `at`, `size` px across, turned by `angle` (radians).
+static func blit_at(ci: CanvasItem, name: String, at: Vector2, size: float, col := Color.WHITE, angle := 0.0) -> void:
+	if angle == 0.0:
+		blit(ci, name, Rect2(at - Vector2(size, size) * 0.5, Vector2(size, size)), col)
+		return
+	ci.draw_set_transform(at, angle)
+	blit(ci, name, Rect2(-Vector2(size, size) * 0.5, Vector2(size, size)), col)
+	ci.draw_set_transform(Vector2.ZERO)
+
+
+## The atlas's rounded bar, nine-sliced so its ends stay round at any length (meter fills and tracks); `glow` draws
+## the soft halo under a fill instead. A nine-patch from the one texture: it batches with every other shape.
+static func pill(ci: CanvasItem, rect: Rect2, col: Color, glow := false) -> void:
+	var key := "pill_glow" if glow else "pill"
+	if not _boxes.has(key):
+		var t := THEME.get_icon(key, "HudAtlas") as AtlasTexture
+		var s := StyleBoxTexture.new()
+		s.texture = t.atlas
+		s.region_rect = t.region
+		s.set_texture_margin_all(7.0 if glow else 2.0)  # ui/atlas.gd: radius 2, and a 5 px glow round the glowing one
+		s.set_expand_margin_all(5.0 if glow else 0.0)
+		_boxes[key] = s
+	(_boxes[key] as StyleBoxTexture).modulate_color = col
+	ci.draw_style_box(_boxes[key], rect)
+
+
+static var _boxes := {}
+
+
+## Draw order for batching. The 2D renderer draws by z_index, then tree order, and starts a new draw call whenever the
+## texture or the kind of draw changes (a nine-patch, a rect, a line). Every shape in the HUD comes from the one atlas,
+## and each font weight is its own texture. So within a layer (`base`; -1 takes the nearest ancestor's "hud_layer"):
+## panels and bars (nine-patches) at base, icons and drawn shapes (rects; a node with meta "shapes") at base + 1, then
+## each font at base + 2 + its rank. Absolute z, so the same font in every component draws in one call.
+## A node that draws its own words names its theme variation in meta "text_font".
+static func layer(root: Node, base := -1) -> void:
+	if base < 0:
+		var at := root
+		while at and not at.has_meta("hud_layer"):
+			at = at.get_parent()
+		base = at.get_meta("hud_layer") if at else 0
+	root.set_meta("hud_layer", base)
+	for n: Node in root.find_children("*", "", true, false):
+		if (n is Label or n is RichTextLabel) and not String((n as Control).theme_type_variation).begins_with("OnFill"):
+			edge(n as Control)  # dark text on a solid fill needs none
+	var nodes: Array = [root]
+	nodes.append_array(root.find_children("*", "CanvasItem", true, false))
+	for n: Node in nodes:
+		var ci := n as CanvasItem
+		if ci == null:
+			continue
+		var font: Font = null
+		var size := 0
+		var outline := 0
+		if n is Label:
+			font = (n as Label).get_theme_font("font")
+			size = (n as Label).get_theme_font_size("font_size")
+			outline = (n as Label).get_theme_constant("outline_size")
+		elif n is RichTextLabel:
+			font = (n as RichTextLabel).get_theme_font("normal_font")
+			size = (n as RichTextLabel).get_theme_font_size("normal_font_size")
+			outline = (n as RichTextLabel).get_theme_constant("outline_size")
+		elif n.has_meta("text_font"):
+			var v: String = n.get_meta("text_font")
+			font = (n as Control).get_theme_font("font", v)
+			size = (n as Control).get_theme_font_size("font_size", v)
+			outline = 0  # draws its edges from the fill glyphs too (Hud.edge)
+		ci.z_as_relative = false
+		if n.has_meta("edge_of"):
+			ci.z_index = (n.get_parent() as CanvasItem).z_index  # with its label: same texture, same batch
+			continue
+		if font:
+			ci.z_index = base + 2 + _rank(font, size, outline)
+		elif n is TextureRect or n.has_meta("shapes"):
+			ci.z_index = base + 1
+		else:
+			ci.z_index = base
+		if n.has_meta("under"):
+			ci.z_index = base - 1  # drawn under the panels: the visor arcs, the minimap's picture
+		elif n.has_meta("over"):
+			ci.z_index = base + 90  # drawn over the words: a strike through them
+
+
+static var _ranks := {}
+
+
+## One rank per texture a text draws from: its font file and weight, its size and its outline (a dynamic font keeps
+## one glyph texture per size and per outline width).
+static func _rank(f: Font, size: int, outline: int) -> int:
+	var key := "%d/%d" % [size, outline]
+	var base: Font = f
+	while base is FontVariation:
+		key += str((base as FontVariation).variation_opentype)
+		base = (base as FontVariation).base_font
+	key = (base.resource_path if base else "") + key
+	if not _ranks.has(key):
+		_ranks[key] = _ranks.size() + 1
+	return _ranks[key]
+
+
+## The dark edge round a label's letters (the theme's hud-text-edge), so words read over a bright sky. Not Godot's
+## outline: an outlined line draws from a second glyph texture, so every label breaks the text's batch twice (the v2
+## HUD's 181 draw calls). Here a child drawn behind the label lays the same words 8 times, 1.5 px out all round, from
+## the label's own glyph texture: the edge and the words batch into one draw call per font.
+static func edge(l: Control) -> void:
+	if l.has_node("Edge"):
+		return
+	var e := Control.new()
+	e.name = "Edge"
+	e.show_behind_parent = true
+	e.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	e.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	e.set_meta("edge_of", true)
+	e.draw.connect(_draw_edge.bind(e, l))
+	l.add_child(e)
+	l.draw.connect(e.queue_redraw)  # new words or a new size: the edge follows on the next frame
+
+
+const EDGE_R := 1.5  # px: the old outline_size 3 drew 1.5 px each side
+
+
+static func _draw_edge(e: Control, l: Control) -> void:
+	var rich := l is RichTextLabel
+	var text: String = (l as RichTextLabel).get_parsed_text() if rich else (l as Label).text
+	if text == "" or not l.is_visible_in_tree():
+		return
+	var f := l.get_theme_font("normal_font" if rich else "font")
+	var s := l.get_theme_font_size("normal_font_size" if rich else "font_size")
+	var p := TextParagraph.new()
+	p.add_string(text, f, s)
+	p.width = l.size.x
+	if rich or (l as Label).autowrap_mode != TextServer.AUTOWRAP_OFF:
+		p.break_flags = TextServer.BREAK_MANDATORY | TextServer.BREAK_WORD_BOUND | TextServer.BREAK_ADAPTIVE
+	else:
+		p.break_flags = TextServer.BREAK_MANDATORY
+	var align := HORIZONTAL_ALIGNMENT_LEFT if rich else (l as Label).horizontal_alignment
+	var gap := 0.0 if rich else float(l.get_theme_constant("line_spacing"))
+	var lines := p.get_line_count()
+	var tall := 0.0
+	for i in lines:
+		tall += p.get_line_size(i).y + (gap if i > 0 else 0.0)
+	var y := 0.0
+	if not rich and (l as Label).vertical_alignment == VERTICAL_ALIGNMENT_CENTER:
+		y = floorf((l.size.y - tall) * 0.5)
+	elif not rich and (l as Label).vertical_alignment == VERTICAL_ALIGNMENT_BOTTOM:
+		y = l.size.y - tall
+	var col := l.get_theme_color("font_outline_color")
+	col.a = 1.0 - pow(1.0 - col.a, 1.0 / 3.0)  # about three copies overlap at a letter's edge: together they make its alpha
+	# words not typed yet (PIP's bubble, meta "typed" and "ghost") get an edge as faint as they are
+	var typed: int = l.get_meta("typed", text.length())
+	var faint := col
+	faint.a *= float(l.get_meta("ghost", 1.0))
+	var ts := TextServerManager.get_primary_interface()
+	var ci := e.get_canvas_item()
+	for i in lines:
+		var w := p.get_line_width(i)
+		var x := 0.0 if align == HORIZONTAL_ALIGNMENT_LEFT else ((l.size.x - w) * (1.0 if align == HORIZONTAL_ALIGNMENT_RIGHT else 0.5))
+		var rid := p.get_line_rid(i)
+		var range_i := p.get_line_range(i)
+		# where the typed words end on this line, in px from its start
+		var cut := w
+		if typed < range_i.y:
+			cut = 0.0 if typed <= range_i.x else ts.shaped_text_get_grapheme_bounds(rid, typed).x
+		var base := Vector2(x, y + p.get_line_ascent(i))
+		for k in 8:
+			var o := base + Vector2.from_angle(k * TAU / 8.0) * EDGE_R
+			# the clips are px from the line's start and cut whole glyphs: typed up to the cut, faint from it
+			if cut >= w:
+				ts.shaped_text_draw(rid, ci, o, -1.0, -1.0, col)  # all typed: no clip (a clip cuts the last glyph)
+			elif cut > 0.0:
+				ts.shaped_text_draw(rid, ci, o, -1.0, cut - 0.5, col)
+			if cut < w:
+				ts.shaped_text_draw(rid, ci, o, maxf(cut, 0.01), -1.0, faint)
+		y += p.get_line_size(i).y + gap
 
 
 static func label(text: String, variation := "", wrap := false) -> Label:

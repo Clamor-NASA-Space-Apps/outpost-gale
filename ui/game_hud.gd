@@ -61,8 +61,12 @@ var touch := DisplayServer.is_touchscreen_available():
 			# a phone's Use and Hop buttons hold the bottom right, so there the prompt sits at the bottom centre
 			prompt.size_flags_horizontal = Control.SIZE_SHRINK_CENTER if v else Control.SIZE_SHRINK_END
 			# 48 px under a mouse, 96 scene px for a finger (addons/forge/test.gd TARGET) under PHONE_SCALE
-			var b := 96.0 / Hud.PHONE_SCALE if v else 48.0
+			var b := ceilf(96.0 / Hud.PHONE_SCALE) if v else 48.0
 			source_button.custom_minimum_size = Vector2(b, b)
+			gear_slot.custom_minimum_size = Vector2(b, b)
+			for g: Node in gear_slot.get_children():
+				(g as Control).custom_minimum_size = Vector2(b, b)
+				(g as Control).size = Vector2(b, b)
 var world: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/world.json"))
 var _cue_at := {}  # cue name -> the time it last played
 var mail: Control
@@ -70,6 +74,7 @@ var mail_sol := -1  # the sol the mail went out, -1 for none
 var toast: Control
 var bubble: Control  # PIP's speech bubble (components/speech_bubble.gd)
 var source_button := Button.new()
+var gear_slot := Control.new()  # where the settings gear sits; dock_gear() puts the real one in it
 var modal := Control.new()  # a card and the scrim that keeps clicks off the world behind it
 var holder := CenterContainer.new()
 var card: Control  # the open card, or null
@@ -100,22 +105,28 @@ func _ready() -> void:
 	toast.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	toast.hide()
 	source_button.name = "SourceButton"
-	source_button.text = "?"
+	# the "?" is a label on the button, not its text: then it draws with the other words, not between two shapes
+	var q := Hud.label("?", "SolNum")
+	q.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	q.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	source_button.add_child(q)
 	source_button.tooltip_text = "Where this comes from"
 	source_button.theme_type_variation = "ChoiceButton"
 	source_button.custom_minimum_size = Vector2(Hud.BUTTON_H, Hud.BUTTON_H)
 	source_button.focus_mode = Control.FOCUS_NONE
 	source_button.pressed.connect(show_sources)
-	var gap := Control.new()  # the settings gear's place (ui/settings.gd)
-	gap.custom_minimum_size = Vector2(Hud.BUTTON_H, Hud.BUTTON_H)
-	gap.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var buttons := _quiet(Hud.col([gap, source_button], 12))
-	var corner := _quiet(Hud.row([], 14))
+	# the settings gear and the "?" stack left of the minimap's disc: clear of the disc, the compass and the screen's
+	# corner on a laptop and a phone (the gear is the settings screen's own button, docked here by dock_gear())
+	gear_slot.name = "GearSlot"
+	gear_slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var buttons := _quiet(Hud.col([gear_slot, source_button], 12))
+	buttons.name = "Buttons"
+	buttons.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	var corner := _quiet(Hud.row([buttons], 14))
 	corner.size_flags_horizontal = Control.SIZE_SHRINK_END
 	minimap = _scene("minimap", corner)
 	minimap.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	minimap.pressed.connect(open_map)
-	corner.add_child(buttons)
 	var right := _quiet(Hud.col([corner], 12))
 	mail = _scene("ask_earth", right)
 	mail.size_flags_horizontal = Control.SIZE_SHRINK_END
@@ -148,6 +159,13 @@ func _ready() -> void:
 	get_viewport().size_changed.connect(_fit)
 	_fit()
 	touch = touch
+	# draw order for batching (Hud.layer): each layer's panels, then its shapes, then its words by font; the waypoint
+	# and PIP's bubble ride over the panels, the cards and the map over everything
+	# (layers 100 apart: a layer's panels, shapes and every font rank fit under the next; 0 is under them all)
+	Hud.layer(self, 1)
+	Hud.layer(waypoint, 101)
+	Hud.layer(bubble, 101)
+	Hud.layer(modal, 201)
 
 
 func _scene(n: String, parent: Control = null) -> Control:
@@ -243,6 +261,17 @@ func bind_speaker(node: Node3D, cam: Camera3D) -> void:
 	bubble.follow(node, cam)
 
 
+## The settings screen's gear button lives in the HUD's button column (left of the minimap), so it never sits on
+## the minimap or the compass: ui/settings.gd stops placing it once it has moved.
+func dock_gear(gear: Button) -> void:
+	gear.get_parent().remove_child(gear)
+	gear_slot.add_child(gear)
+	gear.position = Vector2.ZERO
+	gear.theme_type_variation = &"ChoiceButton"  # the same glass key as the "?" under it
+	touch = touch  # sizes it as the "?" beside it
+	Hud.layer(gear, 1)
+
+
 ## The play camera and the hero's body: the compass, the minimap, the waypoint and distances follow them.
 func bind_view(cam: Camera3D, body: Node3D) -> void:
 	camera = cam
@@ -309,6 +338,7 @@ func open_map() -> void:
 	_map_marks()
 	full_map.closed.connect(close_map)
 	add_child(full_map)
+	Hud.layer(full_map, 301)
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE  # the map is used with the pointer
 	_cue("map_open")
 	map_toggled.emit(true)
@@ -462,6 +492,7 @@ func _open(c: Control, full := false) -> void:
 	if "width" in c:
 		c.width = minf(c.width, size.x - 40.0)
 	(modal if full else holder).add_child(c)
+	Hud.layer(c, 201)
 	modal.show()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE  # a card is used with the pointer
 	var b := c.find_children("*", "Button", true, false)

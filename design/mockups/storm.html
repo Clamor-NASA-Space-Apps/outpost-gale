@@ -1,0 +1,163 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face { font-family: Lexend; src: url("file:///home/ravindu644/Documents/NASA-Space-apps/tooling/projects/junior-astronaut-mission-trainer/ui/fonts/Lexend-latin-wght.woff2"); font-weight: 100 900; }
+@font-face { font-family: Exo2; src: url("file:///home/ravindu644/Documents/NASA-Space-apps/tooling/projects/junior-astronaut-mission-trainer/ui/fonts/Exo2-wght.ttf"); font-weight: 100 900; }
+:root {
+  --amber: #f0a640; --teal: #2ed3c0; --light: #8ef7ea; --ink: #f6ecdc; --ink2: #c9b8a2; --danger: #ff4d4d;
+  --glass: rgba(22, 15, 12, 0.34); --glass-hi: rgba(255, 255, 255, 0.06); --stroke: rgba(142, 247, 234, 0.45);
+}
+* { box-sizing: border-box; margin: 0; }
+body { margin: 0; background: #000; }
+#frame { width: 1920px; height: 1080px; overflow: hidden; font-family: Lexend; color: var(--ink);
+  background: #000 url("file:///home/ravindu644/Pictures/Outpost%20Gale/17_dust_storm.png") 0 0 / 100% 100%; position: relative; }
+.glass { background: linear-gradient(180deg, var(--glass-hi), transparent 40%), var(--glass);
+  border: 1.5px solid var(--stroke); border-radius: 10px; box-shadow: 0 0 18px rgba(46, 211, 192, 0.12), inset 0 1px 0 rgba(255,255,255,0.12); }
+.icon { width: 22px; height: 22px; display: inline-block; flex: none; }
+.num { font-family: Exo2; font-weight: 700; letter-spacing: 0.02em; }
+.cap { font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink2); }
+
+/* visor arcs */
+svg.arcs { position: absolute; inset: 0; pointer-events: none; }
+
+/* compass */
+.compass { position: absolute; top: 34px; left: 50%; transform: translateX(-50%); width: 760px; height: 54px; overflow: hidden;
+  -webkit-mask: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent); }
+.compass .tape { position: absolute; top: 0; left: 0; height: 100%; white-space: nowrap; }
+.tick { position: absolute; top: 8px; width: 2px; height: 10px; background: rgba(246,236,220,0.55); }
+.tick.big { height: 16px; top: 6px; background: var(--ink); }
+.tick b { position: absolute; top: 18px; left: 50%; transform: translateX(-50%); font: 700 17px Exo2; color: var(--ink); }
+.tick b.n { color: var(--amber); }
+.caret { position: absolute; top: 84px; left: 50%; transform: translateX(-50%); width: 0; height: 0;
+  border: 8px solid transparent; border-bottom: 10px solid var(--light); }
+.cmark { position: absolute; top: 2px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.diamond { width: 14px; height: 14px; background: var(--amber); transform: rotate(45deg); box-shadow: 0 0 10px rgba(240,166,64,0.8); }
+.heading { position: absolute; top: 98px; left: 50%; transform: translateX(-50%); font: 700 16px Exo2; color: var(--light); }
+
+/* top-left: sol and meters */
+.status { position: absolute; top: 40px; left: 44px; padding: 14px 18px; width: 300px; display: flex; flex-direction: column; gap: 10px; }
+.status .sol { display: flex; align-items: center; gap: 8px; }
+.status .sol .id { display: flex; align-items: center; gap: 10px; }
+.status .sol .num, .status .sol .cap { line-height: 1; }
+.status .sol .num { font-size: 30px; }
+.meter { display: grid; grid-template-columns: 22px 1fr auto; gap: 10px; align-items: center; }
+.bar { height: 6px; border-radius: 3px; background: rgba(246,236,220,0.15); overflow: hidden; }
+.bar i { display: block; height: 100%; border-radius: 3px; background: var(--light); box-shadow: 0 0 8px var(--teal); }
+.bar i.warn { background: var(--amber); box-shadow: 0 0 8px var(--amber); }
+.meter .num { font-size: 17px; min-width: 52px; text-align: right; }
+
+/* objectives */
+.tasks { position: absolute; top: 250px; left: 44px; width: 300px; padding: 12px 18px; display: flex; flex-direction: column; gap: 9px; }
+.task { display: flex; align-items: center; gap: 10px; font-size: 17px; }
+.task .box { width: 18px; height: 18px; border: 2px solid var(--ink2); border-radius: 4px; flex: none; }
+.task.now { color: var(--ink); }
+.task.now .box { border-color: var(--amber); box-shadow: 0 0 8px rgba(240,166,64,0.6); }
+.task.done { color: var(--ink2); text-decoration: line-through; }
+.task.done .box { background: var(--teal); border-color: var(--teal); }
+
+/* minimap */
+.mini { position: absolute; top: 34px; right: 44px; width: 236px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.disc { width: 236px; height: 236px; border-radius: 50%; position: relative; overflow: hidden; border: 2px solid var(--stroke);
+  box-shadow: 0 0 22px rgba(46,211,192,0.18); background: #2a1a12; }
+.disc .map { position: absolute; inset: -60%; background: url("file:///home/ravindu644/Documents/NASA-Space-apps/tooling/projects/junior-astronaut-mission-trainer/models/prop_gale_map_gale_1024.jpg") center / cover;
+  opacity: 0.72; filter: saturate(0.8) contrast(1.1); transform: rotate(-28deg); }
+.disc::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle, transparent 55%, rgba(22,15,12,0.55)); }
+.me { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform: translate(-50%, -60%);
+  border-left: 9px solid transparent; border-right: 9px solid transparent; border-bottom: 20px solid var(--light); filter: drop-shadow(0 0 6px var(--teal)); z-index: 2; }
+.pin { position: absolute; z-index: 2; }
+.disc .nlet { position: absolute; top: 6px; left: 50%; transform: translateX(-50%); font: 700 15px Exo2; color: var(--amber); z-index: 2; }
+.mini .row { display: flex; gap: 8px; align-items: center; }
+.key { font: 700 14px Exo2; padding: 3px 8px; border: 1.5px solid var(--ink2); border-radius: 5px; color: var(--ink); background: rgba(22,15,12,0.45); }
+
+/* world waypoint */
+.wp { position: absolute; display: flex; flex-direction: column; align-items: center; gap: 6px; transform: translate(-50%, -100%); }
+.wp .lbl { padding: 5px 12px; font-size: 16px; display: flex; gap: 8px; align-items: baseline; }
+.wp .lbl .num { color: var(--amber); }
+
+/* PIP bubble */
+.bubble { position: absolute; left: 1250px; top: 330px; width: 380px; padding: 14px 18px 16px; border-left: 4px solid var(--teal); }
+.bubble .who { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.bubble .who .cap { color: var(--light); }
+.wave { display: flex; gap: 3px; align-items: center; height: 16px; margin-left: auto; }
+.wave i { width: 3px; border-radius: 2px; background: var(--teal); }
+.bubble p { font-size: 22px; line-height: 30px; font-weight: 500; }
+.bubble p .typing { color: rgba(246,236,220,0.35); }
+.tail { position: absolute; left: 1296px; top: 452px; width: 3px; height: 120px; background: linear-gradient(var(--stroke), transparent); }
+.tail::after { content: ""; position: absolute; bottom: -6px; left: -5px; width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--light); }
+
+/* interaction prompt */
+.prompt { position: absolute; right: 44px; bottom: 120px; padding: 10px 16px; display: flex; gap: 12px; align-items: center; font-size: 19px; }
+.prompt .key { font-size: 17px; border-color: var(--amber); color: var(--amber); }
+
+.note { position: absolute; left: 44px; bottom: 34px; font-size: 14px; color: rgba(246,236,220,0.6); }
+</style></head>
+<body><div id="frame">
+<svg class="arcs" viewBox="0 0 1920 1080">
+  <path d="M430 128 Q960 70 1490 128" fill="none" stroke="rgba(142,247,234,0.35)" stroke-width="1.5"/>
+  <path d="M120 960 Q960 1040 1800 960" fill="none" stroke="rgba(142,247,234,0.25)" stroke-width="1.5"/>
+  <path d="M930 1001 h60 l-8 9 h-44 z" fill="rgba(142,247,234,0.55)"/>
+</svg>
+
+<div class="compass"><div class="tape" id="tape"></div></div>
+<div class="caret"></div>
+<div class="heading">208°  SSW</div>
+
+<div class="status glass">
+  <div class="sol"><span class="id"><span class="cap">Sol</span><span class="num">8</span></span><img class="icon" src="file:///home/ravindu644/Documents/NASA-Space-apps/tooling/projects/junior-astronaut-mission-trainer/ui/icons/clock.svg" style=" margin-left:auto; width:18px;height:18px; opacity:.7"><span class="num" style="font-size:18px;color:var(--ink2)">11:20</span></div>
+  <div class="meter"><img class="icon" src="file:///home/ravindu644/Documents/NASA-Space-apps/tooling/projects/junior-astronaut-mission-trainer/ui/icons/power.svg" style=""><div class="bar"><i class="warn" style="width:31%"></i></div><span class="num" style="color:var(--amber)">31%</span></div>
+  <div class="meter"><img class="icon" src="file:///home/ravindu644/Documents/NASA-Space-apps/tooling/projects/junior-astronaut-mission-trainer/ui/icons/oxygen.svg" style=""><div class="bar"><i style="width:64%"></i></div><span class="num">64%</span></div>
+  <div class="meter"><img class="icon" src="file:///home/ravindu644/Documents/NASA-Space-apps/tooling/projects/junior-astronaut-mission-trainer/ui/icons/health.svg" style=""><div class="bar"><i style="width:96%"></i></div><span class="num">96%</span></div>
+</div>
+
+<div class="tasks glass">
+  <span class="cap">Today</span>
+  <div class="task done"><span class="box"></span>Close the greenhouse</div>
+  <div class="task now"><span class="box"></span>Get inside HAB 1</div>
+  <div class="task"><span class="box"></span>Save power for the night</div>
+</div>
+
+<div class="glass" style="position:absolute; top:410px; left:44px; width:300px; padding:12px 16px; border-color:rgba(255,77,77,0.75); box-shadow:0 0 22px rgba(255,77,77,0.35); background:rgba(70,12,10,0.55); display:flex; gap:12px; align-items:flex-start">
+  <img src="file:///home/ravindu644/Documents/NASA-Space-apps/tooling/projects/junior-astronaut-mission-trainer/ui/icons/storm.svg" style="width:28px">
+  <div><div style="font-weight:700; font-size:18px">Dust storm</div><div style="font-size:15px; color:var(--ink2)">Sunlight down. Solar power falling.</div></div></div>
+<div class="mini">
+  <div class="disc">
+    <div class="map"></div>
+    <span class="nlet">N</span>
+    <div class="me"></div>
+    <div class="pin" style="left:156px; top:72px"><div class="diamond" style="width:12px;height:12px"></div></div>
+    <div class="pin" style="left:128px; top:128px; width:10px; height:10px; border-radius:50%; background:var(--teal); box-shadow:0 0 8px var(--teal)"></div>
+  </div>
+  <div class="row"><span class="cap" style="color:var(--ink)">Landing plain</span><span class="key">M</span><span class="cap">Map</span></div>
+</div>
+
+<div class="wp" style="left:1048px; top:385px">
+  <div class="lbl glass"><span>HAB 1</span><span class="num">22 m</span></div>
+  <div class="diamond"></div>
+</div>
+
+<div class="bubble glass">
+  <div class="who"><img class="icon" src="file:///home/ravindu644/Documents/NASA-Space-apps/tooling/projects/junior-astronaut-mission-trainer/ui/icons/pip.svg" style=" filter:sepia(1) hue-rotate(120deg) saturate(4) brightness(1.1)"><span class="cap">PIP</span>
+    <span class="wave"><i style="height:6px"></i><i style="height:14px"></i><i style="height:9px"></i><i style="height:16px"></i><i style="height:5px"></i></span></div>
+  <p>The dust is blocking the sun! Let's get<span class="typing"> inside, quick.</span></p>
+</div>
+<div class="tail"></div>
+
+<div class="prompt glass"><span class="key">E</span><span>Open HAB 1</span></div>
+
+
+<script>
+  // a compass tape centred on 208 degrees: 4 px per degree
+  const tape = document.getElementById('tape'), ppd = 4, head = 208, w = 760;
+  const names = {0:'N',45:'NE',90:'E',135:'SE',180:'S',225:'SW',270:'W',315:'NW'};
+  for (let d = Math.ceil((head - 100) / 5) * 5; d <= head + 100; d += 5) {
+    const a = ((d % 360) + 360) % 360, x = w / 2 + (d - head) * ppd;
+    const t = document.createElement('div'); t.className = 'tick' + (a % 45 === 0 ? ' big' : ''); t.style.left = x + 'px';
+    if (a % 45 === 0) t.innerHTML = `<b class="${a === 0 ? 'n' : ''}">${names[a]}</b>`;
+    else if (a % 15 === 0) t.innerHTML = `<b style="font-size:12px;font-weight:500;color:rgba(246,236,220,0.6)">${a}</b>`;
+    tape.appendChild(t);
+  }
+  const mark = (deg, html) => { const m = document.createElement('div'); m.className = 'cmark'; m.style.left = (w / 2 + (deg - head) * ppd) + 'px'; m.innerHTML = html; tape.appendChild(m); };
+  mark(196, '<div class="diamond" style="width:11px;height:11px"></div>');
+  mark(190, '<div style="width:10px;height:10px;border-radius:50%;background:var(--teal);box-shadow:0 0 8px var(--teal)"></div>');
+</script>
+</div></body></html>

@@ -109,6 +109,12 @@ func _build() -> void:
 	cam.position = HERO_AT + Vector3(0, 1.6, 0) + cam.basis.z * 4.0  # 4 m behind the hero's head
 	game_hud.bind_speaker(pip_spot, cam)
 	game_hud.bind_view(cam, hero)
+	var gear := Button.new()  # a stand-in for the settings screen's gear, docked as the sandbox docks the real one
+	gear.icon = load("res://ui/icons/settings.svg")
+	gear.expand_icon = true
+	gear.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	add_child(gear)
+	game_hud.dock_gear(gear)
 	pip_mark = Hud.icon("pip", 56, "accent")
 	add_child(pip_mark)
 	shown.speech.append(game_hud)
@@ -150,6 +156,10 @@ func _build() -> void:
 	_pin(_component("log", "mission_log"), Control.PRESET_CENTER)
 	_component("credits", "credits")
 	_component("sleep", "sleep_picker").open()
+	# the other pages draw as the game would (Hud.layer: batched draw order and the text's dark edge)
+	for p: String in PAGES:
+		if p != "hud":
+			Hud.layer(pages[p], 1)
 
 
 ## Cards whose text wraps go in a CenterContainer: it sizes them again on every sort, where an anchored card keeps

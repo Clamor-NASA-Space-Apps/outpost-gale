@@ -50,12 +50,20 @@ func _ready() -> void:
 	_mat.set_shader_parameter("ground", Hud.color("surface-container"))
 	_mat.set_shader_parameter("rim", Hud.color("hud-scrim-menu"))
 	pic.material = _mat
+	pic.set_meta("under", true)  # its own shader: one draw call, under the shapes (Hud.layer)
 	disc.add_child(pic)
 	var marks_layer := Control.new()  # over the picture: the ring, N, the markers and the hero
 	marks_layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	marks_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	marks_layer.draw.connect(_draw_marks.bind(marks_layer))
+	marks_layer.set_meta("shapes", true)
 	disc.add_child(marks_layer)
+	var north := Control.new()  # the N, in its own node so the font's words batch apart from the atlas shapes
+	north.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	north.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	north.set_meta("text_font", "CompassNorth")
+	north.draw.connect(_draw_north.bind(north))
+	disc.add_child(north)
 	add_child(disc)
 	area_label = Hud.label(area, "CapInk")
 	key = Hud.panel("HudKey", Hud.label("M", "KeyText"))
@@ -77,6 +85,7 @@ func show_view(h: float, at: Dictionary, m: Dictionary, area_name: String) -> vo
 	_mat.set_shader_parameter("centre", Vector2(0.5 + hero.x / PICTURE_M, 0.5 + hero.z / PICTURE_M))
 	_mat.set_shader_parameter("turn", deg_to_rad(heading))
 	disc.get_child(1).queue_redraw()
+	disc.get_child(2).queue_redraw()
 
 
 ## A world point (x, z) on the disc, relative to its centre, and whether it fits inside `r`.
@@ -89,21 +98,19 @@ func to_disc(p: Vector2, r: float) -> Vector2:
 func _draw_marks(c: Control) -> void:
 	var o := c.size * 0.5
 	var r := DISC * 0.5
-	c.draw_arc(o, r - 1.0, 0.0, TAU, 64, Hud.color("hud-glow"), 6.0, true)
-	c.draw_arc(o, r - 1.0, 0.0, TAU, 64, Hud.color("hud-stroke"), 1.5, true)
+	Hud.blit_at(c, "disc_ring", o, 172.0 * (r - 1.0) / 78.5)  # the atlas ring is 78.5 px round in 172
+	if marks.get("objective") != null:
+		Hud.blit_at(c, "diamond", o + to_disc(marks.objective, r - 8.0), 11.0, Hud.color("primary"))
+	if marks.get("pip") != null:
+		Hud.blit_at(c, "dot", o + to_disc(marks.pip, r - 6.0), 8.0, Hud.color("accent"))
+	# the hero: an arrow at the middle, pointing where the hero faces against where the camera looks
+	Hud.blit_at(c, "hero", o, 19.0, Hud.color("light"), deg_to_rad(float(hero.yaw) - heading))
+
+
+func _draw_north(c: Control) -> void:
+	var o := c.size * 0.5
 	var f := get_theme_font("font", "CompassNorth")
 	var fs := get_theme_font_size("font_size", "CompassNorth")
-	var north := o + Vector2(0, -(r - 12.0)).rotated(-deg_to_rad(heading))
+	var north := o + Vector2(0, -(DISC * 0.5 - 12.0)).rotated(-deg_to_rad(heading))
 	var w := f.get_string_size("N", HORIZONTAL_ALIGNMENT_LEFT, -1, fs)
 	c.draw_string(f, north + Vector2(-w.x * 0.5, w.y * 0.3), "N", HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Hud.color("primary"))
-	if marks.get("objective") != null:
-		var d := o + to_disc(marks.objective, r - 8.0)
-		c.draw_colored_polygon(PackedVector2Array([d + Vector2(0, -5), d + Vector2(5, 0), d + Vector2(0, 5), d + Vector2(-5, 0)]), Hud.color("primary"))
-	if marks.get("pip") != null:
-		c.draw_circle(o + to_disc(marks.pip, r - 6.0), 3.5, Hud.color("accent"))
-	# the hero: an arrow at the middle, pointing where the hero faces against where the camera looks
-	var a := deg_to_rad(float(hero.yaw) - heading)
-	var tip := Vector2(0, -8).rotated(a)
-	var side := Vector2(5, 5).rotated(a)
-	var back := Vector2(-5, 5).rotated(a)
-	c.draw_colored_polygon(PackedVector2Array([o + tip, o + side, o + Vector2(0, 2).rotated(a), o + back]), Hud.color("light"))

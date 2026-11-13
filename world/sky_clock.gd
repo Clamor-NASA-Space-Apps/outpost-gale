@@ -390,7 +390,7 @@ func _show_coat() -> void:
 
 ## A tilt by hand (sandbox/interactions.gd "panel") sheds that panel's dust over `shed_s`.
 func used(what: String, pos: Vector3) -> void:
-	if what != "panel" or _panels.is_empty():
+	if not (what == "panel" or what == "clean_panel") or _panels.is_empty():  # tilted or brushed, the dust comes off
 		return
 	var near: Dictionary = _panels[0]
 	for p in _panels:

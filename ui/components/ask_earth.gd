@@ -24,6 +24,7 @@ func _ready() -> void:
 	track.custom_minimum_size = Vector2(100, 18)
 	track.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	track.draw.connect(_draw_track)
+	track.set_meta("shapes", true)
 	sent_label = Hud.label("", "HudNumAmber")
 	reply_label = Hud.label("", "HudNumAmber")
 	way_label = Hud.label("", "HudSmall", true)
@@ -74,11 +75,11 @@ func _draw_track() -> void:
 	var dashes := 12
 	var step := track.size.x / dashes
 	for i in dashes:
-		track.draw_line(Vector2(i * step + 2, y), Vector2(i * step + step * 0.55, y), Hud.color("hud-ink-faint"), 1.5)
+		Hud.blit(track, "white", Rect2(i * step + 2, y - 0.75, step * 0.55 - 2, 1.5), Hud.color("hud-ink-faint"))
 	# the message: a teal diamond out to Earth, then the reply back; it points the way it travels, so the
 	# direction reads without colour
 	var p := progress()
 	var there := 1.0 - absf(1.0 - 2.0 * p)
 	var x := there * (track.size.x - 16.0) + 8.0
 	var dir := 1.0 if p < 0.5 else -1.0
-	track.draw_colored_polygon(PackedVector2Array([Vector2(x - 5 * dir, y - 6), Vector2(x + 7 * dir, y), Vector2(x - 5 * dir, y + 6)]), Hud.color("accent"))
+	Hud.blit_at(track, "arrow", Vector2(x, y), 14.0, Hud.color("accent"), 0.0 if dir > 0.0 else PI)

@@ -4,13 +4,18 @@ extends Node3D
 ## Every usable thing is an Interactable node in group `interactable` (CONTRACTS.md). The target is measured to the
 ## thing's shape, from either side, not to one spot beside it (skills/character-body, Using things): a door that
 ## offered E at one point outside could not be closed from inside (13 Nov playtest).
+## Use spots (data/world.json `uses`) play a clip, run their props through a timeline of verbs and, once the clip
+## has run to its end, emit `used(action_id)`: the rules hook (sim.use, 14 Nov). Their sound plays at the start.
 
 const Rover := preload("res://sandbox/rover.gd")
 const CARRIABLES := 64
 const WALLS := 2  # what hides a thing from the hands (CONTRACTS.md collision layers: statics)
 const POINTED := 2 | 4 | 16 | 64  # what the view's centre can rest on: statics, thin statics, vehicles, carriables
 
-signal used(what: String, pos: Vector3)  # for the sound: "door_open", "door_close", "panel", "bag", "rover", "put_down", a spot's `sound`
+## A thing used: its sound name ("door_open", "door_close", "panel", "bag", "rover", "put_down") the moment it is
+## used; for a use spot, the row's `kind` (the action id: drink, eat, sample...) once its clip has run to its end.
+signal used(what: String, pos: Vector3)
+const VERBS := ["appear", "take", "turn", "glow", "puff"]  # what a use spot's `steps` may do to its props
 
 
 class Interactable extends Node3D:
@@ -22,6 +27,8 @@ class Interactable extends Node3D:
 	var step := 0
 	var box: Node  # the interactions node, which knows the hero and the world
 	var row: Dictionary  # a use spot's world.json `uses` row (kind `spot`)
+	var props := {}  # a spot's props by name (row `props`): parts of the item, or made here
+	var rest := {}  # prop name -> [transform, visible] before a use: where the reset puts it back
 
 	func prompt() -> String:
 		match kind:
@@ -34,8 +41,9 @@ class Interactable extends Node3D:
 		return ""
 
 	func can_use(_hero: Node3D) -> bool:
-		if kind == "spot":  # one use at a time, and never from a seat
-			return not box.player.seated and box.player.cut.is_empty()
+		if kind == "spot":  # one use at a time, and never from a seat; a sample taken is gone (row `needs`)
+			var needs: String = row.get("needs", "")
+			return not box.player.seated and box.player.cut.is_empty() and box.playing == null and (needs == "" or (props[needs] as Node3D).visible)
 		return not (kind == "bag" and box.carried != null)
 
 	func use(_hero: Node3D) -> void:
@@ -59,9 +67,23 @@ class Interactable extends Node3D:
 		return thing.global_transform * shape.get_center()
 
 	## A spot's stand point (global, floor origin, facing its -Z), from the row's [x, z, yaw_deg] in the item's space.
+	## Without one, where the clip's glove (row `grip`, a clips.json point: `hand`, `wheel`) meets the box's middle,
+	## facing the row's `face` (yaw_deg) or, without it, the way the hero comes from; a `seat` row ([x, z]) puts the
+	## seated hips there instead.
 	func stand() -> Transform3D:
-		var s: Array = row.stand
-		return thing.global_transform * Transform3D(Basis(Vector3.UP, deg_to_rad(s[2])), Vector3(s[0], 0.0, s[1]))
+		if row.has("stand"):
+			var s: Array = row.stand
+			return thing.global_transform * Transform3D(Basis(Vector3.UP, deg_to_rad(s[2])), Vector3(s[0], 0.0, s[1]))
+		var at := shape.get_center()
+		if row.has("seat"):
+			at = Vector3(row.seat[0], 0.0, row.seat[1])
+		var b := Basis(Vector3.UP, deg_to_rad(float(row.get("face", 0.0))))
+		if not row.has("face"):
+			var to := at - thing.to_local(box.player.body.global_position)
+			to.y = 0.0
+			b = Basis.looking_at(to) if to.length() > 0.01 else Basis.IDENTITY
+		var p: Vector3 = box.player.model.point(&"sit_idle", "seat_hip") if row.has("seat") else box.player.model.point(StringName(row.clip), row.get("grip", "hand"))
+		return thing.global_transform * Transform3D(b, Vector3(at.x, 0.0, at.z) - b * Vector3(p.x, 0.0, p.z))
 
 	## Where the hands at `p` could touch it, in each pose: the nearest point, the middle, and both ends of its longest
 	## level side at the hands' height (an open door seen past a jamb shows only its far edge).
@@ -87,12 +109,19 @@ var carried: Node3D = null
 var prompt_label: Label
 var hold: float  # m, the hands' height over the feet (reality.json hero.reach.work)
 var by_thing := {}  # thing -> its Interactable, to name what a ray hit
+var design: Dictionary  # the sandbox's look: role materials for the props made here
+var playing: Interactable = null  # the use spot whose clip and props are playing
+var _left := 0.0  # s of its clip left
+var _tweens: Array[Tween] = []  # the playing spot's timeline and its steps' motions: all stopped by a reset
+var _ride := {}  # prop -> the node it rides with after a `take` (the glove, the tongs, a tube)
+var _sockets := {}  # bone name -> its BoneAttachment3D on the hero: where hand props go
 
 
 func setup(w: Node3D, p: Node3D, t: Dictionary, sheet: Dictionary) -> void:
 	world = w
 	player = p
 	tuning = t
+	design = get_parent().get("design") if get_parent() else {}
 	hold = 1.0
 	for r: Dictionary in sheet.rows:
 		if r.id == "hero.reach.work":
@@ -122,16 +151,27 @@ func setup(w: Node3D, p: Node3D, t: Dictionary, sheet: Dictionary) -> void:
 	# one mesh, next-lanes.md section 0 finding 3)
 	var uses: Dictionary = world.data.get("uses", {})
 	for id: String in uses:
-		if id.begins_with("_"):
+		if id.begins_with("_") or not world.items.has(id):
 			continue
+		var item: Node3D = world.items[id]
+		var shared := {}  # a prop by name, for a later row of the item that names it with {}: one case for a site's pebbles
 		for row: Dictionary in uses[id]:
 			var spot := Node3D.new()
 			spot.name = "use_" + row.kind
-			world.items[id].add_child(spot)
+			item.add_child(spot)
 			var it := _add("spot", spot)
-			var b: Array = row.box
 			it.row = row
-			it.shape = AABB(Vector3(b[0], b[1], b[2]), Vector3(b[3] - b[0], b[4] - b[1], b[5] - b[2]))
+			var specs: Dictionary = row.get("props", {})
+			for name: String in specs:
+				if not (specs[name] as Dictionary).is_empty():
+					shared[name] = _prop(item, specs[name], shared, StringName(row.get("clip", "")))
+				it.props[name] = shared[name]
+			if row.has("on"):  # the box of a prop made here (a pebble on the ground)
+				var on: Node3D = it.props[row.on]
+				it.shape = (spot.global_transform.affine_inverse() * on.global_transform * _drawn(on)).grow(0.05)
+			else:
+				var b: Array = row.box
+				it.shape = AABB(Vector3(b[0], b[1], b[2]), Vector3(b[3] - b[0], b[4] - b[1], b[5] - b[2]))
 			it.global_position = it.middle()
 	var layer := CanvasLayer.new()
 	add_child(layer)
@@ -193,14 +233,18 @@ func _item_of(n: Node) -> Node3D:
 	return n
 
 
-func _physics_process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	var text := ""
-	target = null if player.vehicle or carried else _pick()
+	if playing and not playing.row.has("seat") and _left > 0.15 and player.cut.get("clip") != StringName(playing.row.clip):
+		_reset(playing)  # a move key cut the clip short: no action done, every prop back
+	_left -= delta
+	# while a spot plays it stays the target (no prompt): what was used is still known when its action is done
+	target = playing if playing else (null if player.vehicle or carried else _pick())
 	if player.vehicle:
 		text = "Get out"
 	elif carried:
 		text = "Put down bag"
-	elif target:
+	elif target and not playing:
 		text = target.prompt()
 		target.global_position = target.middle()  # a swung door's middle, for the helmet's look
 	player.attention = target  # the helmet turns toward what can be used
@@ -245,7 +289,9 @@ func _pick() -> Interactable:
 		var to := it.nearest(from + aim * from.distance_to(it.nearest(from))) - from
 		if not first:
 			to.y = 0.0
-		var a := (aim.angle_to(to) if to.length() > 0.01 else 0.0) - (stick if it == target else 0.0)
+		# a spot on a bigger usable thing (clean a panel row that also tilts) counts `favour_deg` nearer the aim, or
+		# the row's box, round it on every side, would always take the prompt from it
+		var a := (aim.angle_to(to) if to.length() > 0.01 else 0.0) - (stick if it == target else 0.0) - deg_to_rad(float(it.row.get("favour_deg", 0.0)))
 		if a < half and a < best_a:
 			best = it
 			best_a = a
@@ -275,14 +321,13 @@ func interact() -> void:
 		player.exit()
 	elif carried:
 		_put_down()
-	elif target:
+	elif target and not playing:
 		target.use(player.body)
 
 
 func use(it: Interactable) -> void:
-	if it.kind == "spot":  # ponytail: clip and sound only; the cut camera and the prop verbs come with the full lane
-		player.perform(StringName(it.row.clip), it.stand())
-		used.emit(it.row.sound, it.middle())
+	if it.kind == "spot":
+		_play(it)
 		return
 	player.act()  # the reach clip, only when something is really used
 	var s: float = tuning.interact.move_s
@@ -321,6 +366,248 @@ func _put_down() -> void:
 	used.emit("put_down", carried.global_position)
 	(carried as CollisionObject3D).collision_layer = CARRIABLES
 	carried = null
+
+
+## A use spot: the hero glides to its stand and plays its clip (or sits), its sound starts, and its `steps` run on
+## one timeline as fractions of the clip: [at, verb, prop, args...]. Once the clip has run to its end the action is
+## done (`used`); `hold_s` after the last step every prop goes back to where it was, but a `keep` prop keeps its state.
+func _play(it: Interactable) -> void:
+	var row := it.row
+	var length := 0.0
+	if row.has("seat"):
+		var st := it.stand()
+		var front := -st.basis.z
+		player.place(Vector3(st.origin.x, player.body.global_position.y, st.origin.z), -rad_to_deg(atan2(-front.x, -front.z)))
+		player.sit(true)
+		length = float(player.model.clips.sit_down.length)
+	elif str(row.get("clip", "")) != "":
+		length = player.perform(StringName(row.clip), it.stand())
+		if length == 0.0:
+			return
+	if row.has("sound"):
+		world.sound.emit(row.sound, it.middle())  # the sound now; `used` names the action once it is done
+	if length == 0.0:
+		used.emit(row.kind, it.middle())  # a spot with no motion (a bed: the cine takes over)
+		return
+	for name: String in it.props:
+		var p: Node3D = it.props[name]
+		it.rest[name] = [p.transform, p.visible]
+	playing = it
+	_left = length
+	var timeline := _tween().set_parallel(true)
+	var end := length
+	for s: Array in row.get("steps", []):
+		var at := float(s[0]) * length
+		timeline.tween_callback(_step.bind(it, s)).set_delay(at)
+		end = maxf(end, at + (float(s[3]) if s.size() > 3 and s[1] in ["appear", "take"] else float(s[5]) if s.size() > 5 else 0.0))
+	timeline.tween_callback(_done.bind(it)).set_delay(maxf(length - 0.1, 0.0))
+	timeline.tween_callback(_reset.bind(it)).set_delay(end + float(row.get("hold_s", 0.1)))  # the props' last pose held
+
+
+func _done(it: Interactable) -> void:
+	if it == playing and (player.seated if it.row.has("seat") else player.cut.get("clip") == StringName(it.row.clip)):
+		used.emit(it.row.kind, it.middle())
+
+
+## One step of a spot's timeline. appear [prop, s]: grows from nothing. take [prop, s, to]: eases to `to` (the
+## glove, `hand`, or another prop) and rides with it. turn [prop, axis, deg, s]: to `deg` from where it rested about
+## its own x, y or z (`earth`: the elevation that points at Earth now). glow [prop, on]: shown or hidden (a lit
+## pane). puff [prop]: a puff of dust there.
+func _step(it: Interactable, s: Array) -> void:
+	var p: Node3D = it.props[s[2]]
+	match s[1]:
+		"appear":
+			var full := p.scale
+			p.scale = full * 0.01
+			p.visible = true
+			_tween().tween_property(p, "scale", full, float(s[3]))
+		"take":
+			var to: Node3D = _socket(StringName(it.row.clip)) if s.size() < 5 or s[4] == "hand" else it.props[s[4]]
+			var from := p.global_position
+			_ride.erase(p)
+			var tw := _tween()
+			tw.tween_method(func(k: float) -> void: p.global_position = from.lerp(to.global_position, smoothstep(0.0, 1.0, k)), 0.0, 1.0, float(s[3]))
+			tw.tween_callback(func() -> void: _ride[p] = to)
+		"turn":
+			var axis: int = ["x", "y", "z"].find(s[3])
+			var rest: Transform3D = it.rest[s[2]][0]
+			var deg := _earth_x() - rest.basis.get_euler()[axis] if str(s[4]) == "earth" else deg_to_rad(float(s[4]))
+			_tween().tween_property(p, "rotation:" + str(s[3]), rest.basis.get_euler()[axis] + deg, float(s[5]))
+		"glow":
+			p.visible = bool(s[3])
+		"puff":
+			world.puff(p.global_position, Vector3.UP * 0.4, 1.0)
+
+
+## Every prop of a spot back where it rested (turned parts ease back), but a `keep` prop keeps what it became.
+func _reset(it: Interactable) -> void:
+	if it == playing:
+		playing = null
+		_left = 0.0
+	for tw: Tween in _tweens:
+		tw.kill()  # a step still moving, or one yet to come, would undo the reset
+	_tweens.clear()
+	var specs: Dictionary = it.row.get("props", {})
+	for name: String in it.rest:
+		var p: Node3D = it.props[name]
+		_ride.erase(p)
+		var was: Array = it.rest[name]
+		if not specs[name].get("keep", false):
+			p.visible = was[1]
+		if p.transform.basis.is_equal_approx(was[0].basis):
+			p.transform = was[0]
+		else:
+			create_tween().tween_property(p, "transform", was[0], float(specs[name].get("back_s", 0.5)))
+	it.rest.clear()
+
+
+func _tween() -> Tween:
+	_tweens.append(create_tween())
+	return _tweens[-1]
+
+
+func _process(_delta: float) -> void:
+	for p: Node3D in _ride:
+		if is_instance_valid(_ride[p]):
+			p.global_position = _ride[p].global_position
+
+
+## The rotation about x that points the comms dish at Earth now (rad): Earth's elevation in the night design's real
+## sky at the clock's hour (house_style.gd _sky_frame, as sun_at() does for the sun), between 5 and 85 degrees. The
+## dish rests at rotation -(90 - elevation) (forge/building_dish.py). Elevation only: its turret is welded to the mount.
+func _earth_x() -> float:
+	var C: Dictionary = design.get("lighting", {}).get("celestial", {})
+	var hour: float = get_parent().clock.hour() if get_parent() and get_parent().get("clock") else 12.0
+	var earth: Array = C.get("planets", []).filter(func(q: Dictionary) -> bool: return q.get("name") == "Earth")
+	var el := 40.0
+	if earth.size():
+		var f := Forge.HouseStyle._sky_frame(C)
+		var d: Vector3 = (f.frame as Basis).transposed() * f.dir.call([earth[0].ra, earth[0].dec])
+		var th := atan2(f.sun_eq.y, f.sun_eq.x) + deg_to_rad((hour - 12.0) * 15.0)
+		var lat: float = f.lat
+		el = rad_to_deg(asin(d.dot(Vector3(cos(lat) * cos(th), cos(lat) * sin(th), sin(lat)))))
+	return -deg_to_rad(90.0 - clampf(el, 5.0, 85.0))
+
+
+## The hero's glove for a clip (clips.json `hand_bone`, else the right hand): a bone attachment hand props ride on.
+func _socket(clip: StringName) -> Node3D:
+	var bone: String = player.model.clips.get(clip, {}).get("hand_bone", "hand_r")
+	if not _sockets.has(bone):
+		var a := BoneAttachment3D.new()
+		a.name = "socket_" + bone
+		a.bone_name = bone
+		player.model.skeleton.add_child(a)
+		_sockets[bone] = a
+	return _sockets[bone]
+
+
+## A spot's prop from its row spec, in the item's space: `part` (a node of the item, or of the prop `in`), `model`
+## (a GLB path, `scale`, or the scale of `like`'s plant: a slot's lettuce), or `meshes` (built-in shapes in roles:
+## {box: size | cyl: [r, h] | torus: [inner, outer] | line: [from, to], r, at, rot, role}). `at` [x, y, z], `rot`
+## degrees, `ground` sets it on the terrain (`at`'s y over it), `hand` puts it in the glove, `hidden` until a step shows it, `solid` gives
+## it a box to walk into, `layer` its
+## render layers (2: the ground's family, a pebble).
+func _prop(item: Node3D, spec: Dictionary, made: Dictionary, clip: StringName) -> Node3D:
+	if spec.has("part"):
+		var owner: Node3D = made[spec["in"]] if spec.has("in") else item
+		var part: Node3D = owner.find_child(spec.part, true, false)
+		assert(part != null, "uses: no part %s" % spec.part)
+		return part
+	var n: Node3D
+	var k := float(spec.get("scale", 1.0))
+	if spec.has("model"):
+		n = (load(spec.model) as PackedScene).instantiate()
+		for b: Node in n.find_children("*", "CollisionObject3D", true, false):
+			b.free()  # a pebble's import body (-convcol) sat on layer 1: something to stand on in the tongs
+		Forge.HouseStyle.apply(n, design, false)
+		if spec.has("like"):
+			var slot: Node = item.find_child(spec.like, true, false)
+			k = (slot.get_child(0) as Node3D).scale.x if slot and slot.get_child_count() else k
+	else:
+		n = Node3D.new()
+		for m: Dictionary in spec.meshes:
+			n.add_child(_mesh(m, bool(spec.get("clean", false))))
+	# placed in the item's space but kept out of its subtree: a case on the ground is not one of the item's feet,
+	# and the item's merge and checks see only its own model
+	var a: Array = spec.get("at", [0, 0, 0])
+	var local := Transform3D(Basis.from_euler(Vector3(spec.rot[0], spec.rot[1], spec.rot[2]) * PI / 180.0, EULER_ORDER_YXZ) if spec.has("rot") else Basis.IDENTITY, Vector3(a[0], a[1], a[2]))
+	if spec.get("hand", false):
+		_socket(clip).add_child(n)
+		n.transform = local
+	else:
+		add_child(n)
+		n.global_transform = item.global_transform * local
+	n.scale = Vector3.ONE * k
+	if spec.get("ground", false):
+		var g := n.global_position
+		n.global_position.y = world.height_at(g.x, g.z) + float(a[1])  # `at`'s y: how far over the ground
+	for mi: MeshInstance3D in n.find_children("*", "MeshInstance3D", true, false):
+		mi.layers = int(spec.get("layer", 1))
+		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF if spec.get("hand", false) else mi.cast_shadow
+	if spec.get("solid", false):  # walked into, not through: a box on the thin layer (CONTRACTS.md collision layers)
+		var body := StaticBody3D.new()
+		body.collision_layer = world.THIN
+		body.collision_mask = 0
+		var col := CollisionShape3D.new()
+		var box_shape := BoxShape3D.new()
+		var d := _drawn(n)
+		box_shape.size = d.size
+		col.shape = box_shape
+		col.position = d.get_center()
+		body.add_child(col)
+		n.add_child(body)
+	n.visible = not spec.get("hidden", false)
+	return n
+
+
+func _mesh(m: Dictionary, clean: bool) -> MeshInstance3D:
+	var mi := MeshInstance3D.new()
+	var at: Array = m.get("at", [0, 0, 0])
+	mi.position = Vector3(at[0], at[1], at[2])
+	if m.has("box"):
+		var b := BoxMesh.new()
+		b.size = Vector3(m.box[0], m.box[1], m.box[2])
+		mi.mesh = b
+	elif m.has("torus"):
+		var t := TorusMesh.new()
+		t.inner_radius = m.torus[0]
+		t.outer_radius = m.torus[1]
+		mi.mesh = t
+	else:  # a rod: cyl [r, h] standing on y, or a line between two points
+		var c := CylinderMesh.new()
+		c.radial_segments = 12
+		c.top_radius = m.cyl[0] if m.has("cyl") else m.r
+		c.bottom_radius = c.top_radius
+		c.height = m.cyl[1] if m.has("cyl") else 1.0
+		mi.mesh = c
+		if m.has("line"):
+			var p0 := Vector3(m.line[0][0], m.line[0][1], m.line[0][2])
+			var p1 := Vector3(m.line[1][0], m.line[1][1], m.line[1][2])
+			c.height = p0.distance_to(p1)
+			var y := (p1 - p0).normalized()
+			var x := y.cross(Vector3.UP if absf(y.y) < 0.9 else Vector3.RIGHT).normalized()
+			mi.transform = Transform3D(Basis(x, y, x.cross(y)), (p0 + p1) / 2.0)
+			return _role(mi, m, clean)
+	if m.has("rot"):
+		mi.rotation_degrees = Vector3(m.rot[0], m.rot[1], m.rot[2])
+	return _role(mi, m, clean)
+
+
+func _role(mi: MeshInstance3D, m: Dictionary, clean: bool) -> MeshInstance3D:
+	mi.material_override = Forge.HouseStyle.role(design, m.role, false, clean)
+	return mi
+
+
+## A prop's drawn box in its own space.
+func _drawn(n: Node3D) -> AABB:
+	var out := AABB()
+	var first := true
+	for mi: MeshInstance3D in n.find_children("*", "MeshInstance3D", true, false):
+		if mi.mesh:
+			var b: AABB = n.global_transform.affine_inverse() * mi.global_transform * mi.get_aabb()
+			out = b if first else out.merge(b)
+			first = false
+	return out
 
 
 func state() -> Dictionary:

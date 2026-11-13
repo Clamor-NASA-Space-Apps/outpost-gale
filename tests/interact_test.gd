@@ -197,16 +197,22 @@ func galley() -> void:
 	box.used.connect(hear)
 	box.interact()
 	await frames(2)
-	box.used.disconnect(hear)
 	check(player.cut.get("clip") == &"consume", "E plays the consume clip (cut %s)" % [player.cut])
 	check(not spot.can_use(player.body), "mid-drink the spot is not offered again")
-	check(heard == ["drink"], "it sounds drink, pour then sip (%s)" % [heard])
 	var extra: Array = game.render_game_to_text().keys().filter(func(k: String) -> bool: return not k in keys)
 	check(extra.is_empty(), "no new state keys (%s)" % [extra])
+	await frames(20)
+	var pouch: Node3D = spot.props.pouch
+	check(pouch.visible, "the pouch shows under the nozzle")
 	action(&"move_forward")
 	await frames(3)
 	action(&"move_forward", false)
+	await frames(2)
+	box.used.disconnect(hear)
 	check(player.cut.is_empty(), "a move key ends the drink")
+	# cut short, the drink was not had: no action for the rules, and the pouch goes back (tests/uses_test.gd plays it out)
+	check(heard.is_empty(), "a drink cut short names no action (%s)" % [heard])
+	check(not pouch.visible and box.playing == null, "and its pouch is put away")
 
 
 ## Drives the rover straight across `at` (x, z) from 8 m before it (room to reach top speed) to `beyond` + 4 m past

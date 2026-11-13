@@ -5,6 +5,8 @@ extends SceneTree
 ## Components read colours with Hud.color(name), which looks them up under the "Hud" type here.
 
 const OUT := "res://ui/theme.tres"
+const ATLAS := "res://ui/atlas.res"  # ui/atlas.gd's picture, lossless; a resource, so it loads with no import step
+const Atlas := preload("res://ui/atlas.gd")
 # Typography tokens are CSS px for a page. The HUD canvas is 720 px tall, and 28 px at 1080p
 # (Game Accessibility Guidelines, design/research/sizes.md B) is 18.7 px here: x1.2 puts the
 # smallest token (label, 16) on that floor and keeps the ratios DESIGN.md set.
@@ -18,6 +20,8 @@ const GLASS_STROKE := 1  # 1.5 mockup px
 const GLOW := 18  # mockup px
 
 var tokens: Dictionary
+var atlas: Dictionary  # ui/atlas.gd build(): regions, margins, expand
+var atlas_tex: Texture2D
 var ts := TextServerManager.get_primary_interface()
 
 
@@ -32,6 +36,41 @@ func _initialize() -> void:
 ## A token's colour with its own alpha (an 8-digit hex keeps it).
 func c(name: String) -> Color:
 	return Color.html(tokens.colors[name])
+
+
+## The HUD's one texture (ui/atlas.gd), saved beside the theme; every region becomes a "HudAtlas" icon in the theme,
+## an AtlasTexture of that one texture, so whatever draws from it batches into one draw call.
+func _atlas(t: Theme) -> void:
+	atlas = Atlas.new(tokens).build()
+	var img: Image = atlas.image
+	img.generate_mipmaps()
+	var tex := PortableCompressedTexture2D.new()
+	tex.keep_compressed_buffer = true  # else it saves empty
+	tex.create_from_image(img, PortableCompressedTexture2D.COMPRESSION_MODE_LOSSLESS)
+	ResourceSaver.save(tex, ATLAS)
+	atlas_tex = ResourceLoader.load(ATLAS, "", ResourceLoader.CACHE_MODE_REPLACE)
+	for n: String in atlas.regions:
+		var r: Array = atlas.regions[n]
+		var at := AtlasTexture.new()
+		at.atlas = atlas_tex
+		at.region = Rect2(r[0], r[1], r[2], r[3])
+		t.set_icon(n, "HudAtlas", at)
+
+
+## A nine-patch from the atlas: the region's corners stay whole, its glow draws past the box like a shadow did, and
+## `pad` (mockup px) is the content margin as glass() sets it.
+func patch(n: String, pad := Vector2(18, 14)) -> StyleBoxTexture:
+	var s := StyleBoxTexture.new()
+	var r: Array = atlas.regions[n]
+	s.texture = atlas_tex
+	s.region_rect = Rect2(r[0], r[1], r[2], r[3])
+	s.set_texture_margin_all(atlas.margins[n])
+	s.set_expand_margin_all(atlas.expand[n])
+	s.content_margin_left = g(pad.x)
+	s.content_margin_right = g(pad.x)
+	s.content_margin_top = g(pad.y)
+	s.content_margin_bottom = g(pad.y)
+	return s
 
 
 ## A 1080p mockup size on the 720 px canvas.
@@ -88,13 +127,13 @@ func box(bg: Color, border := Color.TRANSPARENT, glow := Color.TRANSPARENT, cut 
 	return s
 
 
-func circle(bg: Color, border: Color, width := 3) -> StyleBoxFlat:
-	var s := StyleBoxFlat.new()
-	s.bg_color = bg
-	s.border_color = border
-	s.set_border_width_all(width)
-	s.set_corner_radius_all(9999)
-	s.corner_detail = 24
+## The archive tag (the play HUD's COMPUTED and ARCHIVED marks) as an atlas nine-patch, with tag()'s margins.
+func _tag_patch() -> StyleBoxTexture:
+	var s := patch("tag_archive")
+	s.content_margin_left = 14
+	s.content_margin_right = 14
+	s.content_margin_top = 2
+	s.content_margin_bottom = 2
 	return s
 
 
@@ -110,6 +149,7 @@ func tag(bg: Color) -> StyleBoxFlat:
 
 func build() -> Theme:
 	var t := Theme.new()
+	_atlas(t)
 	var lex := "res://ui/fonts/Lexend-latin-wght.woff2"
 	var exo := "res://ui/fonts/Exo2-wght.ttf"
 	var body := px("body")
@@ -129,9 +169,10 @@ func build() -> Theme:
 
 	t.set_color("font_color", "Label", c("on-surface"))
 	t.set_constant("line_spacing", "Label", 2)
-	# text over in-game glass sees the world through it: a soft dark edge keeps it readable on a bright sky
+	# The dark edge round the HUD's words: its colour here, drawn by Hud.edge() (not Godot's outline, which draws from a
+	# second glyph texture and breaks batching: the v2 HUD's 181 draw calls)
 	t.set_color("font_outline_color", "Label", c("hud-text-edge"))
-	t.set_constant("outline_size", "Label", 3)
+	t.set_constant("outline_size", "Label", 0)
 	var labels := {
 		"Caption": [font(lex, 500), label, c("on-surface-variant")],
 		"Heading": [font(exo, 700), roundi(heading * 0.85), c("on-surface")],
@@ -175,32 +216,28 @@ func build() -> Theme:
 		t.set_font("font", v, labels[v][0])
 		t.set_font_size("font_size", v, labels[v][1])
 		t.set_color("font_color", v, labels[v][2])
-		if v.begins_with("OnFill"):
-			t.set_constant("outline_size", v, 0)  # dark text on a solid fill needs no dark edge
 
 	# Panels: in-game glass (HudPanel) lets the world through; menu glass (HudMenu: cards, settings, the map) holds
 	# more back. "highlight" is the line ui/hud_panel.gd draws along the top inside edge.
 	var none := Color.TRANSPARENT
 	var panels := {
-		"HudPanel": glass(c("hud-glass"), c("hud-stroke"), c("hud-glow")),
+		"HudPanel": patch("glass"),
 		"HudMenu": glass(c("hud-glass-menu"), c("hud-stroke"), c("hud-glow"), Vector2(30, 26)),
-		"HudPanelAlert": glass(c("danger"), none, c("hud-glow-danger")),
+		"HudPanelAlert": patch("alert"),
 		"HudPanelLost": glass(c("hud-glass-menu"), c("danger"), c("hud-glow-danger"), Vector2(30, 26)),
 		"HudPanelSoft": glass(c("hud-glass-menu"), c("hud-stroke-faint"), none, Vector2(12, 10)),
-		"HudKey": glass(c("hud-key"), c("on-surface-variant"), none, Vector2(8, 3)),
-		"HudKeyAmber": glass(c("hud-key"), c("primary"), none, Vector2(8, 3)),
+		"HudKey": patch("key", Vector2(8, 3)),
+		"HudKeyAmber": patch("key_amber", Vector2(8, 3)),
 		"SegGroup": glass(none, c("hud-stroke"), none, Vector2(0, 0)),
 		"Tag": tag(c("primary")),
 		"TagLive": tag(c("accent")),
 		"TagDanger": tag(c("danger")),
-		"TagArchive": tag(c("outline-variant")),
+		"TagArchive": _tag_patch(),
 	}
 	for v: String in panels:
 		t.set_type_variation(v, "PanelContainer")
 		t.set_stylebox("panel", v, panels[v])
 		t.set_color("highlight", v, c("hud-highlight") if v.begins_with("Hud") else none)
-	(panels.HudKey as StyleBoxFlat).set_corner_radius_all(g(5))
-	(panels.HudKeyAmber as StyleBoxFlat).set_corner_radius_all(g(5))
 	(panels.SegGroup as StyleBoxFlat).set_corner_radius_all(g(7))
 
 	var focus := box(Color.TRANSPARENT, c("accent"))
@@ -231,9 +268,9 @@ func build() -> Theme:
 		t.set_color(state, "ChoiceButton", c("on-surface"))
 	for state: String in ["icon_normal_color", "icon_hover_color", "icon_pressed_color", "icon_focus_color"]:
 		t.set_color(state, "ChoiceButton", c("accent"))  # a mark on a choice (the preset in use) is teal, "on"
-	t.set_stylebox("normal", "ChoiceButton", glass(c("hud-glass-menu"), c("hud-stroke"), c("hud-glow"), Vector2(14, 8)))
-	t.set_stylebox("hover", "ChoiceButton", glass(c("hud-glass-menu").lerp(c("accent"), 0.12), c("light"), c("hud-glow"), Vector2(14, 8)))
-	t.set_stylebox("pressed", "ChoiceButton", glass(c("hud-glass-menu").lerp(c("accent"), 0.22), c("light"), none, Vector2(14, 8)))
+	t.set_stylebox("normal", "ChoiceButton", patch("choice", Vector2(14, 8)))
+	t.set_stylebox("hover", "ChoiceButton", patch("choice_hover", Vector2(14, 8)))
+	t.set_stylebox("pressed", "ChoiceButton", patch("choice_pressed", Vector2(14, 8)))
 	# a stepper's arrow at the end of its range: a faint outline and faint text, no fill (the shape changes, too)
 	t.set_stylebox("disabled", "ChoiceButton", glass(none, c("hud-stroke-faint"), none, Vector2(14, 8)))
 	t.set_color("font_disabled_color", "ChoiceButton", c("hud-ink-ghost"))
@@ -287,8 +324,8 @@ func build() -> Theme:
 	# Touch skins for the player lane: round, see-through so the world shows, teal because usable.
 	t.set_type_variation("TouchButton", "Button")
 	for st: String in ["normal", "hover", "focus"]:
-		t.set_stylebox(st, "TouchButton", circle(c("hud-glass"), c("hud-stroke"), 2))
-	t.set_stylebox("pressed", "TouchButton", circle(c("hud-seg-on"), c("light")))
+		t.set_stylebox(st, "TouchButton", patch("touch", Vector2.ZERO))
+	t.set_stylebox("pressed", "TouchButton", patch("touch_pressed", Vector2.ZERO))
 	t.set_font("font", "TouchButton", font(exo, 700))
 	t.set_constant("icon_max_width", "TouchButton", 44)
 	t.set_color("font_outline_color", "TouchButton", c("hud-text-edge"))  # its word sits on see-through glass
@@ -298,7 +335,7 @@ func build() -> Theme:
 			"icon_normal_color", "icon_hover_color", "icon_pressed_color", "icon_focus_color"]:
 		t.set_color(state, "TouchButton", c("on-surface"))  # the icon too: Button's on-primary was dark on dark
 	t.set_type_variation("StickBase", "Panel")
-	t.set_stylebox("panel", "StickBase", circle(c("hud-glass"), c("hud-stroke"), 2))
+	t.set_stylebox("panel", "StickBase", patch("stick_base", Vector2.ZERO))
 	t.set_type_variation("StickKnob", "Panel")
-	t.set_stylebox("panel", "StickKnob", circle(c("accent"), c("light"), 3))
+	t.set_stylebox("panel", "StickKnob", patch("stick_knob", Vector2.ZERO))
 	return t

@@ -108,6 +108,67 @@ def status_light(name, loc, size=(0.16, 0.05, 0.05)):
             box(name, size, (loc[0], loc[1] + 0.01, loc[2]), mat("light"))]
 
 
+def descent_stage(deck, pad, k=1.0):
+    """The descent stage every lander stands on (building_lander.py, building_mav.py): an eight-bay deck drum with
+    its top at `deck`, four tanks under it, four legs on footpads `pad` out, the engine. `k` widens the drum, tanks
+    and legs for a wider load. Returns the parts, for the recipe to join with what it carries."""
+    body = [bevel(cyl("deck", 2.1 * k, 0.5, (0, 0, deck - 0.25), mat("trim"), 8), width=0.04)]
+    for i in range(8):  # equipment bays around the drum
+        a = 22.5 + 45 * i
+        b = bevel(box(f"bay{i}", (0.18, 1.1 * k, 0.36), at(1.98 * k, a, deck - 0.27), mat("body")), width=0.02)
+        b.rotation_euler.z = math.radians(a)
+        body.append(b)
+    for i in range(4):  # propellant tanks under the deck, and the legs between them
+        body.append(smooth(sphere(f"tank{i}", 0.55 * k, at(1.05 * k, 45 + 90 * i, deck - 1.0), mat("metal"), 20)))
+        a = 90 * i
+        # the leg ends in a ball joint seated on its footpad: it stopped 23 cm above the pad, which read as a
+        # floating leg once the pads sat in the dust
+        top, foot = at(1.9 * k, a, deck - 0.4), at(pad, a, 0.2)
+        body.append(smooth(bar(f"leg{i}", top, foot, 0.08, mat("metal"), 12)))
+        body.append(smooth(sphere(f"leg_joint{i}", 0.11, at(pad, a, 0.17), mat("metal"), 12)))
+        body.append(smooth(bar(f"strut{i}", at(1.0 * k, a, deck - 0.5), at(pad - 0.4 * k, a, 1.4), 0.05, mat("metal"), 10)))
+        body.append(smooth(cyl(f"footpad{i}", 0.38, 0.12, at(pad, a, 0.06), mat("metal"), 20)))
+        f = (0.6 - 0.2) / (deck - 0.4 - 0.2)  # the band sits on the leg, 0.6 m up
+        body.append(smooth(cyl(f"leg_band{i}", 0.1, 0.2, at(pad - f * (pad - 1.9 * k), a, 0.6), mat("hazard"), 12)))
+    body.append(smooth(cone("engine", 0.6, 0.85, (0, 0, deck - 1.45), mat("metal"), 24)))
+    return body
+
+
+def porch(deck, y0, light=True):
+    """A porch at deck level on the front (+Y) at `y0` out, with rails, and a ladder down to the ground."""
+    box("porch-col", (1.2, 0.8, 0.08), (0, y0 + 0.4, deck - 0.046), mat("metal"))  # 6 mm under the deck, never flush
+    y1 = y0 + 0.8
+    for s in (-1, 1):
+        bar(f"porch_rail{s}", (s * 0.6, y0, deck + 0.9), (s * 0.6, y1, deck + 0.9), 0.025, mat("metal"))
+        bar(f"porch_post{s}", (s * 0.6, y1, deck), (s * 0.6, y1, deck + 0.9), 0.025, mat("metal"))
+        smooth(bar(f"ladder_rail{s}", (s * 0.25, y1, deck), (s * 0.25, y1 + 0.7, 0.0), 0.025, mat("metal")))
+    for i in range(1, 10):
+        f = i / 10
+        bar(f"rung{i}", (-0.25, y1 + 0.7 * f, deck * (1 - f)), (0.25, y1 + 0.7 * f, deck * (1 - f)), 0.018, mat("metal"))
+    if light:
+        status_light("porch_light", (0.0, y0 + 0.05, deck + 0.35), (0.2, 0.04, 0.05))
+
+
+# A Small Pressurized Logistics Container (SPLC): NASA's 30-sol plan carries them on the lander deck, docks one on a
+# suit port of the rover to unload it, then fills the empty one "with trash" and parks it "next to the lander as its
+# permanent disposal location" (SAC21, NTRS 20210026448). No drawing was found (base-gap.md section 6): the size is
+# ours, a can a suit port's 1 m hatch can dock to, its docking collar on top.
+SPLC_R, SPLC_H = 0.55, 1.4
+
+
+def splc(name, x, y, z, role="body"):
+    """One logistics can standing at (x, y) on a floor at z: the drum, two bands, the docking collar and its lid,
+    two handles. Returns the parts."""
+    parts = [smooth(bevel(cyl(name, SPLC_R, SPLC_H, (x, y, z + SPLC_H / 2), mat(role), 32), width=0.03))]
+    for k, h in enumerate((0.25, SPLC_H - 0.25)):
+        parts.append(smooth(cyl(f"{name}_band{k}", SPLC_R + 0.012, 0.06, (x, y, z + h), mat("trim"), 32)))
+    parts.append(smooth(bevel(cyl(f"{name}_collar", 0.42, 0.1, (x, y, z + SPLC_H + 0.04), mat("metal"), 32), width=0.015)))
+    parts.append(smooth(bevel(cyl(f"{name}_lid", 0.36, 0.05, (x, y, z + SPLC_H + 0.1), mat("trim"), 32), width=0.012)))
+    for s in (-1, 1):
+        parts.append(smooth(bar(f"{name}_handle{s}", (x + s * (SPLC_R + 0.005), y - 0.12, z + 0.85), (x + s * (SPLC_R + 0.005), y + 0.12, z + 0.85), 0.018, mat("metal"))))
+    return parts
+
+
 SHEET = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "reality.json")
 
 
@@ -164,7 +225,7 @@ COL = ("-col", "-convcol", "-colonly", "-convcolonly")
 def moves(o):
     """Parts the game moves get their own bodies in the engine, so they carry no collision suffix; their children
     move with them."""
-    return o.name in ("door", "dish", "tell", "curtain", "plug", "charge_light") or o.name.startswith("panel_") or (o.parent is not None and moves(o.parent))
+    return o.name in ("door", "dish", "tell", "curtain", "plug", "charge_light", "ascent") or o.name.startswith("panel_") or (o.parent is not None and moves(o.parent))
 
 
 def done(name, solid=True):

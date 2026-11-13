@@ -17,14 +17,14 @@ const BAR_H := 4.0  # 6 mockup px
 @export var low_below := 30
 
 var bar := Control.new()
-var tile_icon: TextureRect
+var tile_icon: Hud.Icon
 var num: Label
 
 
 func _ready() -> void:
 	add_theme_constant_override("separation", 7)
 	tooltip_text = title
-	tile_icon = Hud.icon(icon_name, 15, "on_surface")
+	tile_icon = Hud.icon(icon_name, 15, "on_surface") as Hud.Icon
 	bar.custom_minimum_size = Vector2(60, 10)
 	bar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	bar.draw.connect(_draw_bar)
@@ -42,7 +42,7 @@ func set_icon(n: String) -> void:
 	if n != icon_name:
 		icon_name = n
 		if not low():
-			tile_icon.texture = load("res://ui/icons/%s.svg" % n)
+			tile_icon.art = Hud.icon_texture(n)
 
 
 func low() -> bool:
@@ -51,8 +51,8 @@ func low() -> bool:
 
 func _show() -> void:
 	var l := low()
-	tile_icon.texture = load("res://ui/icons/%s.svg" % ("alert" if l else icon_name))
-	tile_icon.self_modulate = Hud.color("danger" if l else "on_surface")
+	tile_icon.art = Hud.icon_texture("alert" if l else icon_name)
+	tile_icon.tint = Hud.color("danger" if l else "on_surface")
 	num.text = "%d%%%s" % [value, "!" if l else ""]
 	if l:
 		num.add_theme_color_override("font_color", Hud.color("danger"))
@@ -66,16 +66,10 @@ func _fill() -> Color:
 
 
 func _draw_bar() -> void:
-	var y := (bar.size.y - BAR_H) * 0.5
-	var track := StyleBoxFlat.new()
-	track.bg_color = Hud.color("hud-track")
-	track.set_corner_radius_all(int(BAR_H * 0.5))
-	bar.draw_style_box(track, Rect2(0, y, bar.size.x, BAR_H))
+	var r := Rect2(0, (bar.size.y - BAR_H) * 0.5, bar.size.x, BAR_H)
+	Hud.pill(bar, r, Hud.color("hud-track"))
 	if value <= 0:
 		return
-	var fill := StyleBoxFlat.new()
-	fill.bg_color = _fill()
-	fill.set_corner_radius_all(int(BAR_H * 0.5))
-	fill.shadow_color = Hud.color("hud-glow-danger" if low() else ("hud-glow-amber" if value < warn_below else "hud-glow"))
-	fill.shadow_size = 5
-	bar.draw_style_box(fill, Rect2(0, y, bar.size.x * value / 100.0, BAR_H))
+	var fill := Rect2(r.position, Vector2(r.size.x * value / 100.0, BAR_H))
+	Hud.pill(bar, fill, Hud.color("hud-glow-danger" if low() else ("hud-glow-amber" if value < warn_below else "hud-glow")), true)
+	Hud.pill(bar, fill, _fill())

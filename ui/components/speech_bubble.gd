@@ -39,6 +39,7 @@ var _player := AudioStreamPlayer.new()
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	set_meta("shapes", true)  # the line to PIP, his ring, the teal edge: rects from the atlas (Hud.layer)
 	label = RichTextLabel.new()
 	label.bbcode_enabled = false
 	label.fit_content = true
@@ -48,14 +49,13 @@ func _ready() -> void:
 	label.add_theme_font_override("normal_font", get_theme_font("font", "BubbleText"))
 	label.add_theme_font_size_override("normal_font_size", get_theme_font_size("font_size", "BubbleText"))
 	label.add_theme_color_override("font_outline_color", get_theme_color("font_outline_color", "Label"))
-	label.add_theme_constant_override("outline_size", get_theme_constant("outline_size", "Label"))
 	wave.custom_minimum_size = Vector2(22, 12)
 	wave.draw.connect(_draw_wave)
+	wave.set_meta("shapes", true)
 	var who := Hud.row([Hud.icon("pip", 15, "accent"), Hud.label("PIP", "CapLight"), Hud.spacer(), wave], 6)
 	panel = Hud.panel("HudPanel", Hud.col([who, label], 4))
 	panel.name = "Bubble"
 	panel.custom_minimum_size.x = WIDTH
-	panel.draw.connect(_draw_edge)
 	add_child(panel)
 	_player.stream = _chirp()
 	_player.bus = &"UI" if AudioServer.get_bus_index(&"UI") >= 0 else &"Master"
@@ -92,6 +92,8 @@ func typing() -> bool:
 
 ## The typed letters in ink, the rest as a faint copy: the layout is the whole line from the first letter.
 func _show_text() -> void:
+	label.set_meta("typed", typed)  # the dark edge (Hud.edge) is faint under the faint words too
+	label.set_meta("ghost", Hud.color("hud-ink-ghost").a)
 	label.clear()
 	label.push_color(Hud.color("on-surface"))
 	label.add_text(text.substr(0, typed))
@@ -148,22 +150,25 @@ func _place() -> void:
 
 ## The thin line down to a ring on PIP or, docked, an arrow on the side that faces him.
 func _draw() -> void:
-	if not visible or speaker == null:
+	if not visible:
 		return
 	var r := Rect2(panel.position, panel.size)
+	# the teal left edge (4 mockup px), inside the glass's rounded corner; drawn here, over the panel's nine-patch
+	Hud.blit(self, "white", Rect2(r.position + Vector2(0, 3), Vector2(3, r.size.y - 6)), Hud.color("accent"))
+	if speaker == null:
+		return
 	if docked:
 		var edge := r.get_center() + dir * (minf(r.size.x / maxf(absf(dir.x), 1e-4), r.size.y / maxf(absf(dir.y), 1e-4)) * 0.5)
 		var side := dir.orthogonal() * 12.0
-		draw_colored_polygon(PackedVector2Array([edge + dir * ARROW * 0.8, edge + side, edge - side]), Hud.color("light"))
+		Hud.blit_at(self, "arrow", edge + dir * ARROW * 0.4, ARROW * 1.1, Hud.color("light"), dir.angle())
 		return
 	var top := Vector2(clampf(anchor.x, r.position.x + 12.0, r.end.x - 12.0), r.end.y)
-	draw_line(top, anchor, Hud.color("hud-stroke"), 2.0, true)
-	draw_arc(anchor, 4.0, 0.0, TAU, 16, Hud.color("light"), 1.5, true)
-
-
-## The teal left edge (4 mockup px), inside the glass's rounded corner.
-func _draw_edge() -> void:
-	panel.draw_rect(Rect2(0, 3, 3, panel.size.y - 6), Hud.color("accent"))
+	# the line down to PIP: an atlas bar turned along it, then a ring on him
+	var v := anchor - top
+	draw_set_transform(top, v.angle())
+	Hud.blit(self, "white", Rect2(0, -1, v.length(), 2), Hud.color("hud-stroke"))
+	draw_set_transform(Vector2.ZERO)
+	Hud.blit_at(self, "ring", anchor, 11.0, Hud.color("light"))
 
 
 ## Five bars that bounce while PIP talks and rest low when he is quiet.
@@ -172,7 +177,7 @@ func _draw_wave() -> void:
 	for i in BARS:
 		var k := 0.35 + 0.65 * absf(sin(_t * 9.0 + i * 1.7)) if typing() else 0.3 + 0.1 * (i % 2)
 		var bh := maxf(2.0, h * k)
-		wave.draw_rect(Rect2(i * 4.5, (h - bh) * 0.5, 2.0, bh), Hud.color("accent"))
+		Hud.blit(wave, "white", Rect2(i * 4.5, (h - bh) * 0.5, 2.0, bh), Hud.color("accent"))
 
 
 func _play_chirp() -> void:
