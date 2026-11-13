@@ -1,6 +1,6 @@
 # AGENTS.md: Outpost Gale (Junior Astronaut Mission Trainer)
 
-`CLAUDE.md` is a symlink to this file. Three files apply here, and each adds to the ones above it:
+`CLAUDE.md` holds one line, `@AGENTS.md`, which loads this file (a real file, not a symlink, so it works on Windows). Three files apply here, and each adds to the ones above it:
 1. the workspace `AGENTS.md`, two folders above `tooling/`: hard rules, verified facts, team, dates;
 2. `tooling/AGENTS.md`: the factory workflow, design language, code rules and tools;
 3. this file: what only this game needs.
