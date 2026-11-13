@@ -1,0 +1,45 @@
+{
+ "_note": "cine/cine.gd knobs (design/plans/next-lanes.md section 3; event-ready.md row C). Art direction unless a row says where it comes from. Points [x, y, z] in world metres from the patch centre with y over the ground at that x, z; hab points in HAB 1's own space (its door toward -Z, y over the model's lowest point, the deck at 0.40 m). Text is ids only: the words are story and come on 14 Nov (tr() shows the id until a translation names it).",
+ "fade_out_s": 0.6,
+ "fade_in_s": 0.5,
+ "fov": 55.0,
+ "sleep": {
+  "_note": "wake_h: a night ends at 06:30 local solar time, 22:00 plus NASA's 8.5 h sleep (factcheck row 208); nap_h: 20 min, between 10 min with no grogginess and NASA's 26 min pilot nap (rows 194, 195). lapse_s = clamp(lapse_per_h x hours, lapse_s). The drone moves from `from` to `to` looking from `at` to `at_to` (smoothstep, no orbit): over HAB 1, high enough that the crater wall leaves the top of the frame to the stars. shadow_range: m the sun's shadows reach for the drone shot (the phone preset's 25 m stops short of HAB 1). room_light: HAB 1's light while the crew sleeps, a share of its own. bench: the donning bench in HAB 1 (forge/hab_interior.py donning(): wall angle 129, 0.4 m deep, seat 0.47 m up) [x, seat y, z, face x, face z]: the hero sits facing into the room. hatch: [x, z] of the hatch's inner face, which the hero turns to after standing up. wake_cam: [from, at] in HAB 1's space, the shot of the hero waking on the bench; wake_hold_s on the bench before standing",
+  "wake_h": 6.5,
+  "nap_h": 0.3333,
+  "lapse_per_h": 0.9,
+  "lapse_s": [4.0, 9.0],
+  "drone": {"from": [-24, 14, -20], "to": [-14, 9, -27], "at": [3, 5.5, 4], "at_to": [4, 5, 6]},
+  "shadow_range": 60.0,
+  "room_light": 0.15,
+  "deck_y": 0.42,
+  "bench": [-1.319, 0.872, -1.629, 0.6293, 0.7771],
+  "hatch": [0.0, -2.16],
+  "wake_cam": [[0.9, 1.9, 0.5], [-1.1, 1.15, -1.45]],
+  "wake_hold_s": 2.0
+ },
+ "trip": {
+  "_note": "The rover drives away from a camera left where it stood (cam: m behind, m to its right, m over the ground) for drive_s (from a standstill at the sheet's 1 m/s2 to its 2.8 m/s, about 10 m: small in the frame), the screen goes black, the title holds title_s, then the rover stands at the landmark. title_id: the card's text id; trip_to()'s args fill {sol} and {km} once the story writes them",
+  "cam": [6.0, 3.0, 1.8],
+  "drive_s": 5.0,
+  "title_s": 2.5,
+  "title_id": "cine_trip_title"
+ },
+ "launch": {
+  "_note": "The ascent: the hero boards, an outside shot from out_m away on bearing out_bearing (degrees from north, clockwise) at eye height, the engine kicks dust for ignite_s, the rocket climbs at accel m/s2 for climb_s (tracked by the camera), then the window: a camera beside the rocket (window: m out toward the base, m up) looking back at HAB 1 for window_s, turning toward Earth (the night sky's own planet, DESIGN.night.md celestial) over the last part from turn_at. Earth shows only with the sun down, as on the real Mars. Plume: plume_n dust streams plume_r m out from the pad, thrown at plume_v m/s",
+  "out_m": 45.0,
+  "out_bearing": 200.0,
+  "look_h": 4.0,
+  "ignite_s": 1.5,
+  "climb_s": 5.0,
+  "accel": 3.0,
+  "window": [4.0, 3.0],
+  "window_s": 6.0,
+  "turn_at": 0.55,
+  "plume_n": 6,
+  "plume_r": 2.0,
+  "plume_v": 4.0,
+  "stand_in": [1.5, 7.0],
+  "caption_id": "cine_launch_window"
+ }
+}
