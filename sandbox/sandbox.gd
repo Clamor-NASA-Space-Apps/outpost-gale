@@ -416,7 +416,8 @@ func _wire() -> void:
 		sim.use("sleep_night" if kind == &"night" else "nap"))
 	cine.arrived.connect(func(_l: String) -> void:
 		player.bound = world.bound(0.0, player.body.global_position))
-	# the opening plays when a person starts the game, never in a test or a tool run
-	if get_tree().current_scene == self and not Array(OS.get_cmdline_user_args()).any(
+	# the opening plays when a person starts the game (through ui/boot.tscn), never in a test script (no current
+	# scene) or a tool run (--forge-job)
+	if get_tree().current_scene != null and not Array(OS.get_cmdline_user_args()).any(
 			func(a: String) -> bool: return a.begins_with("--forge-job=")):
 		beats.start_opening.call_deferred()
