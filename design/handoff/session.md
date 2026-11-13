@@ -67,7 +67,15 @@ Everything is committed and pushed: game `wip/polish-stripes` (and `main` if the
   the hero: the first of the Gaming preset's 4 splits ends there (house_style `_fit_split`: split_1 = fit * 0.4); shots
   `design/handoff/shots/shadow_step_*.png`. Splits now blend (`blend_splits_wrong.png` looked wrong only because the
   panels had tilted); confirm the step is gone, else push split_1 out past the hero.
-  (b) tall thin spikes from straight-edged objects' shadows (`shadow_spike.png`): not diagnosed.
+  (b) tall thin spikes from straight-edged objects' shadows (`shadow_spike.png`). Diagnosis (13 Nov 07:58, reasoned, not
+  yet proven by a capture): a low sun. A shadow texel stretches by 1/sin(elevation) on level ground (6x at 10 deg, 11x at
+  5 deg), `_fit_split` grows the near split as the sun drops (1.8/tan(el)), and normal bias scales with the texel, so
+  edges near the sun's direction stair-step and corners throw one-texel slivers. It began with the sky clock (the sun
+  was fixed at 40 deg). Fix to try first: the shadow-casting light never goes below about 15 deg (clamp `to.y` in
+  `set_look()`; the sky disc stays real), or fade `shadow_opacity` below about 8 deg; also cap `fit` near 0.35 and scale
+  normal bias down at low sun. Prove with greenhouse captures at 8.4 h and 12 h, before and after.
+  (c) `hero_lit_in_shadow.png` is not a bug: proven the hero receives shadows; with a low sun the wing shadow is a thin
+  layer near the ground, so legs are shadowed and the chest is in sun.
 - **Bucket list (each several hours):** the rest of props and use spots (pouch, cut camera, eat/plant/harvest/sample/
   valve/radio/dish/repair/brush rows, split moving parts, turn/take/appear/glow verbs); sleep cine (drone time-lapse,
   wake indoors at 06:30, wire the picker); ground speckle at low sun (SPECULAR 0 ruled out: albedo or shade() next);
