@@ -21,9 +21,11 @@ func _ready() -> void:
 	custom_minimum_size.x = 200  # 300 mockup px
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	sol_label = Hud.label("%d" % sol, "SolNum")
-	sol_label.tooltip_text = "Sol %d of %d" % [sol, sols]
 	time_label = Hud.label(time, "HudNumDim")
-	var body := Hud.col([Hud.row([Hud.label("Sol", "Cap"), sol_label, Hud.spacer(), Hud.icon("clock", 12, "on_surface_variant"), time_label], 6)], 7)
+	# "SOL", the number, the clock icon and the time all centred on one line (mockup .status .sol, align-items: center)
+	var top := Hud.row([Hud.label("Sol", "Cap"), sol_label, Hud.spacer(), Hud.icon("clock", 12, "on_surface_variant"), time_label], 6)
+	top.name = "SolRow"
+	var body := Hud.col([top], 7)
 	for m: Array in [["power", "power", "Power"], ["life", "oxygen", "Life support"], ["health", "health", "Crew health"]]:
 		var n: Control = Meter.instantiate()
 		n.name = m[2].replace(" ", "")

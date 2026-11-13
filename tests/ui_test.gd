@@ -45,6 +45,8 @@ func play() -> bool:
 					if b.text:
 						var edge := b.get_theme_color("font_outline_color") if b.get_theme_constant("outline_size") >= 2 else Color.TRANSPARENT
 						_contrast(b.get_theme_color("font_color"), b.get_theme_stylebox("normal"), backdrops, where, edge)
+				elif c is HBoxContainer:
+					_aligned(c as HBoxContainer, where)
 				elif c is Label:
 					labels += 1
 					var l := c as Label
@@ -57,6 +59,7 @@ func play() -> bool:
 					if check(panel != null or edge.a > 0.0, "%s sits on the bare world with no panel or edge behind it" % where):
 						_contrast(l.get_theme_color("font_color"), panel, backdrops, where, edge)
 	check(buttons > 0, "the gallery has buttons")
+	check(aligned > 0, "icon rows were measured")
 	print("checked %d buttons and %d labels over %d views" % [buttons, labels, g.PAGES.size() * 2])
 	var toast: Script = load("res://ui/components/alert_toast.gd")
 	var pulse: float = toast.get_script_constant_map().PULSE_SECONDS
@@ -354,6 +357,36 @@ func _loading_tokens() -> void:
 		check(colors.get(m.get_string(1), "") == m.get_string(2), "web/shell.html --%s is %s, design.json says %s" % [m.get_string(1), m.get_string(2), colors.get(m.get_string(1), "nothing")])
 	var bg: Color = ProjectSettings.get_setting("application/boot_splash/bg_color")
 	check(bg.to_html(false) == Hud.color("surface").to_html(false), "the boot splash colour %s is not the surface token" % bg.to_html(false))
+
+
+var aligned := 0
+
+
+## An icon beside text sits on the text's capitals (Hud.nudge), within 2 px.
+func _aligned(b: HBoxContainer, where: String) -> void:
+	var label: Label = null
+	for k: Node in b.get_children():
+		if k is Label:
+			label = k
+			break
+	if label == null or not label.is_visible_in_tree():
+		return
+	var k := label.get_global_transform_with_canvas().get_scale().y
+	if b.name == "SolRow":
+		# the status card's top row: every word's capitals and every icon on the row's own centre
+		var mid := b.get_global_rect().get_center().y
+		for n: Node in b.get_children():
+			var c := n as Control
+			if not c.is_visible_in_tree() or not (c is Label or c is TextureRect):
+				continue
+			var y := c.get_global_rect().get_center().y + (Hud.cap_drop(c as Label) * k if c is Label else 0.0)
+			check(absf(y - mid) <= 2.0, "%s: %s sits %.1f px off the row's centre" % [where, (c as Label).text if c is Label else "the icon", y - mid])
+	var caps := label.get_global_rect().get_center().y + Hud.cap_drop(label) * k
+	for n: Node in b.get_children():
+		if (n is TextureRect or n.has_meta("icon")) and (n as Control).is_visible_in_tree():
+			aligned += 1
+			var y := (n as Control).get_global_rect().get_center().y
+			check(absf(y - caps) <= 2.0, "%s: an icon sits %.1f px off the capitals of '%s'" % [where, y - caps, label.text])
 
 
 ## The style a text sits on: its own button, or the nearest panel above it with a fill.

@@ -172,6 +172,7 @@ func _mark(c: Control, kind: String, p: Vector2) -> void:
 func _swatch(kind: String) -> Control:
 	var s := Control.new()
 	s.custom_minimum_size = Vector2(16, 16)
+	s.set_meta("icon", true)
 	s.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	s.draw.connect(func() -> void: _mark(s, kind, s.size * 0.5))
 	return s

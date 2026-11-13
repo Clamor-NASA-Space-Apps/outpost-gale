@@ -33,6 +33,7 @@ func _ready() -> void:
 	num.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	for k: Control in [tile_icon, bar, num]:
 		add_child(k)
+	Hud.nudge(self)  # the icon on the number's capitals
 	_show()
 
 

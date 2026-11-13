@@ -60,7 +60,9 @@ static var file := ""
 
 var game: Node
 var draft := {}  # the fine-tune choices as knob overrides, put on by apply()
-var rows := {}  # fine-tune row name -> its SegButtons, one per option
+var rows := {}  # fine-tune row name -> its SegButtons, one per option (the laptop's switches)
+var steppers := {}  # fine-tune row name -> [<, value, >, the row]: a phone's or a narrow screen's "<  High  >"
+var compact := false  # touch or narrow: steppers in place of switches (_fit)
 var cards := {}  # preset id -> Button
 var sliders := {}  # volume name -> HSlider
 var tabs: Array[Button] = []
@@ -233,6 +235,10 @@ func _refresh() -> void:
 		var i := current(r)  # -1 (a mix no option names) lights none
 		for j: int in rows[r].size():
 			(rows[r][j] as Button).set_pressed_no_signal(j == i)
+		var st: Array = steppers[r]
+		(st[1] as Label).text = String(ADVANCED[r][i][0]) if i >= 0 else "Mixed"
+		(st[0] as Button).disabled = i == 0  # at an end the arrow greys and stops: a shape change too, not colour alone
+		(st[2] as Button).disabled = i == ADVANCED[r].size() - 1
 	_onoff(fps_buttons, game.fps_label.visible)
 	_full_text()
 	for i: int in tabs.size():
@@ -266,6 +272,13 @@ func _values(r: String, over: Dictionary) -> Dictionary:
 ## Option `i` of row `r` as overrides: a knob it leaves out is the preset's.
 func _option(r: String, i: int) -> Dictionary:
 	return ADVANCED[r][i][1]
+
+
+## A stepper's arrow: the option before (-1) or after (+1) the one in force; from a mix, the first or last.
+func step(r: String, d: int) -> void:
+	var i := current(r)
+	var n: int = ADVANCED[r].size()
+	choose(r, (0 if d > 0 else n - 1) if i < 0 else clampi(i + d, 0, n - 1))
 
 
 ## A fine-tune pick: it goes on APPLY_S later (or when the screen closes), behind the cover.
@@ -359,8 +372,9 @@ func _build() -> Control:
 
 
 func _graphics() -> Control:
-	var deck := GridContainer.new()  # five equal cards in a row, as in the mockup
+	var deck := GridContainer.new()  # five equal cards in a row, as in the mockup; 3 + 2 on a narrow screen (_sizes)
 	deck.columns = 5
+	deck.set_meta("deck", true)
 	deck.add_theme_constant_override("h_separation", 7)
 	deck.add_theme_constant_override("v_separation", 7)
 	for id: String in game.design.quality:
@@ -465,7 +479,19 @@ func _row(r: String) -> Control:
 	rows[r] = segs
 	var line := _line(r, group)
 	line.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	return line
+	# the compact form: the name, then "<  High  >", one touch target high (_sizes shows one form or the other)
+	var minus := _button("<", step.bind(r, -1), &"ChoiceButton")
+	var plus := _button(">", step.bind(r, 1), &"ChoiceButton")
+	var value := Hud.label("", "MenuStrong")
+	value.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	value.custom_minimum_size.x = 80.0
+	var name := Hud.label(r, "MenuText")
+	name.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var stepper := Hud.row([name, minus, value, plus], 8)
+	steppers[r] = [minus, value, plus, stepper]
+	var both := Hud.col([line, stepper], 0)
+	both.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	return both
 
 
 ## An On / Off switch as two segments; `on` gets true or false.
@@ -524,7 +550,17 @@ func _sizes() -> void:
 			(c as Control).custom_minimum_size.x = Hud.BUTTON_H if phone else 0.0
 	for c: Node in root.find_children("*", "GridContainer", true, false):
 		if c.has_meta("fine"):
-			(c as GridContainer).columns = 1 if phone else 2
+			(c as GridContainer).columns = 1 if compact else 2
+		elif c.has_meta("deck"):
+			(c as GridContainer).columns = 3 if body and (body as BoxContainer).vertical else 5  # 3 + 2 when narrow
+	for r: String in steppers:
+		var st: Array = steppers[r]
+		(st[3] as Control).visible = compact
+		(st[3] as Control).get_parent().get_child(0).visible = not compact
+		for b: Button in [st[0], st[2]]:
+			# exactly a 48 dp target on a phone (96 scene px under PHONE_SCALE, addons/forge/test.gd TARGET), 48 px under a mouse
+			var t := 96.0 / Hud.PHONE_SCALE if phone else 48.0
+			b.custom_minimum_size = Vector2(t, t)
 	# a flow asks only for its widest child: on a laptop ask for the whole line, so a switch never wraps there
 	for c: Node in root.find_children("*", "HFlowContainer", true, false):
 		if c.has_meta("flow"):
@@ -615,9 +651,10 @@ func _fit() -> void:
 	var m := Vector2(60.0 / Hud.PHONE_SCALE if phone else 24.0, 20.0)
 	gear.position = Vector2(root.size.x - m.x - Hud.BUTTON_H, m.y)
 	gear.size = Vector2(Hud.BUTTON_H, Hud.BUTTON_H)
-	_sizes()
 	var room := root.size - 2.0 * m
 	(body as BoxContainer).vertical = room.x < 620.0  # portrait: the tabs go above the page
+	compact = phone or room.x < 620.0  # a finger or a narrow screen gets steppers, a laptop the approved switches
+	_sizes()
 	# as tall as the open page needs, up to the screen; past that the page scrolls
 	scroll.custom_minimum_size.y = 0.0
 	var need: float = pages[page].get_combined_minimum_size().y

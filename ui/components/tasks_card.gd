@@ -28,6 +28,7 @@ func set_tasks(t: Array) -> void:
 		var box := Control.new()
 		box.custom_minimum_size = Vector2(BOX, BOX)
 		box.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		box.set_meta("icon", true)  # Hud.row centres it on the line's capitals
 		box.draw.connect(_draw_box.bind(box, state))
 		var l := Hud.label(task[0], "HudTextDim" if state == "done" else "HudText", true)
 		if state == "done":

@@ -59,6 +59,7 @@ func _ready() -> void:
 	add_child(disc)
 	area_label = Hud.label(area, "CapInk")
 	key = Hud.panel("HudKey", Hud.label("M", "KeyText"))
+	key.set_meta("icon", true)
 	hint = Hud.label("Map", "Cap")
 	var row := Hud.row([area_label, key, hint], 5)
 	row.alignment = BoxContainer.ALIGNMENT_CENTER

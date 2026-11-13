@@ -79,7 +79,44 @@ static func row(kids: Array, sep := 10) -> HBoxContainer:
 	b.add_theme_constant_override("separation", sep)
 	for k: Control in kids:
 		b.add_child(k)
+	b.ready.connect(nudge.bind(b), CONNECT_ONE_SHOT)
 	return b
+
+
+# Cap height over the em, from each font's OS/2 table (sCapHeight / unitsPerEm): Lexend 700/1000, Exo 2 690/1000.
+const CAP := {"Lexend": 0.70, "Exo2": 0.69}
+
+
+## How far below the middle of a label's box its capitals' middle sits (the label centres its line in its box, and the
+## line holds descenders and accents, so its middle is not the letters' middle).
+static func cap_drop(l: Label) -> float:
+	var f := l.get_theme_font("font")
+	var s := l.get_theme_font_size("font_size")
+	var base: Font = f
+	while base is FontVariation:
+		base = (base as FontVariation).base_font
+	var cap: float = CAP.Exo2 if base and "Exo2" in base.resource_path else CAP.Lexend
+	return (f.get_ascent(s) - f.get_descent(s) - cap * s) * 0.5
+
+
+## In a row, every icon (a TextureRect, or a control with meta "icon") sits centred on the capitals of the row's first
+## label, not on its box. Hud.row calls it once the row is in the tree; a row made another way calls it itself.
+static func nudge(b: Container) -> void:
+	var label: Label = null
+	for k: Node in b.get_children():
+		if k is Label:
+			label = k
+			break
+	if label == null:
+		return
+	var dy := cap_drop(label)
+	for k: Node in b.get_children():
+		if k is TextureRect or k.has_meta("icon"):
+			var c := k as Control
+			c.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+			c.offset_transform_enabled = true
+			c.offset_transform_visual_only = false
+			c.offset_transform_position = Vector2(0, dy)
 
 
 static func col(kids: Array, sep := 8) -> VBoxContainer:

@@ -18,6 +18,7 @@ func _ready() -> void:
 	theme_type_variation = "HudPanel"
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	key = Hud.panel("HudKeyAmber", Hud.row([Hud.label("E", "KeyAmber"), Hud.icon("use", 14, "primary")], 0))
+	key.set_meta("icon", true)
 	line = Hud.label("", "PromptText")
 	add_child(Hud.row([key, line], 8))
 	touch = touch

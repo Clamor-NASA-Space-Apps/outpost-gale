@@ -200,8 +200,24 @@ func play() -> bool:
 			check(small.is_empty(), "%s %s: every button is at least %.0f px (%s)" % [size, s.tabs[i].text, need, small])
 			check(shown.encloses(s.panel.get_global_rect()), "%s %s: the panel fits the screen" % [size, s.tabs[i].text])
 			check(on_screen(s.close_button), "%s: the Esc chip is on screen" % size)
+			if i == 0:
+				# a phone gets "<  High  >" steppers, one touch target high (56 dp at most), never the 96 px squares
+				var most := 112.0 * minf(shown.size.x, shown.size.y) / 720.0  # 56 dp: TARGET is 48 dp
+				for r: String in s.steppers:
+					var row: Control = s.steppers[r][3]
+					check(row.is_visible_in_tree() and not s.rows[r][0].is_visible_in_tree(), "%s %s: a stepper, not a switch" % [size, r])
+					check(row.get_global_rect().size.y <= most + 0.5, "%s %s: the row is %.0f px, at most %.0f" % [size, r, row.get_global_rect().size.y, most])
+				var deck: Control = s.cards.values()[0].get_parent()
+				check(deck.get_global_rect().size.y <= 2.0 * 90.0 * 2.0 * minf(shown.size.x, shown.size.y) / 720.0 + 0.5, "%s: the device cards stay low (%s)" % [size, deck.get_global_rect().size])
 		for l: Label in s.root.find_children("*", "Label", true, false):
 			check(l.text.split(" ", false).size() <= 8, "at most 8 words: '%s'" % l.text)
+	# a stepper walks the options and stops at the ends
+	var r0: String = s.steppers.keys()[0]
+	s.choose(r0, 0)
+	s.steppers[r0][2].pressed.emit()
+	check(s.current(r0) == 1 and s.steppers[r0][1].text == Settings.ADVANCED[r0][1][0], "> steps %s to its second option (%s)" % [r0, s.steppers[r0][1].text])
+	s.steppers[r0][0].pressed.emit()
+	check(s.current(r0) == 0 and s.steppers[r0][0].disabled, "< steps back, and stops at the first")
 	s.show_tab(0)
 	await shape(SHAPES[0])
 	s.phone = false

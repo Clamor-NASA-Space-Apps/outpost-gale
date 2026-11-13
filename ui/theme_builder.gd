@@ -234,6 +234,9 @@ func build() -> Theme:
 	t.set_stylebox("normal", "ChoiceButton", glass(c("hud-glass-menu"), c("hud-stroke"), c("hud-glow"), Vector2(14, 8)))
 	t.set_stylebox("hover", "ChoiceButton", glass(c("hud-glass-menu").lerp(c("accent"), 0.12), c("light"), c("hud-glow"), Vector2(14, 8)))
 	t.set_stylebox("pressed", "ChoiceButton", glass(c("hud-glass-menu").lerp(c("accent"), 0.22), c("light"), none, Vector2(14, 8)))
+	# a stepper's arrow at the end of its range: a faint outline and faint text, no fill (the shape changes, too)
+	t.set_stylebox("disabled", "ChoiceButton", glass(none, c("hud-stroke-faint"), none, Vector2(14, 8)))
+	t.set_color("font_disabled_color", "ChoiceButton", c("hud-ink-ghost"))
 
 	# Settings: a tab (teal edge and tint when open), a segment of a switch, a device card (amber when picked).
 	var flat := glass(none, none, none, Vector2(14, 11))
