@@ -4,12 +4,16 @@ extends AnimatableBody3D
 ## thing, comes over to a hero who stands still nearby, looks up at a hero who comes close, and keeps out of the way:
 ## it pauses for a hero in its path, steers round solids, bags and the rover, backs off from a rover on the move, and
 ## never parks in a doorway or drives into a building. Kinematic: the hero bumps into it and cannot push it.
+## The beats (cine/beats.gd) can take it over: drive somewhere and park (order), look at something (point_at), wave,
+## or lead the hero ("follow me": it stops and looks back while the hero falls behind), then release it to potter again.
 ## Motion, lights and a beep only: nothing here changes game state (hard rule 1).
 ## Speed, acceleration and turn rate: reality.json pip.*; behaviour and timing: world.json `pip` (art direction).
 
 # "pip_go" setting out, "pip_hello" noticing the hero (audio.play); "radio_pip" a chirp on the suit radio when it sets
 # out to visit the hero or notices them (audio.radio(): rare, and only once the air is clear)
 signal sound(what: String, pos: Vector3)
+## It parked at the end of an order from the beats.
+signal arrived
 
 const STATICS := 2
 const THIN := 4
@@ -25,7 +29,7 @@ var top: float  # m/s
 var accel: float  # m/s2
 var turn: float  # rad/s, in place
 var radius: float  # m, a wheel's (from the model)
-var state := "look"  # drive, look, wait, greet, flee
+var state := "look"  # drive, look, wait, greet, flee; behind (leading, the hero fell back)
 var stop := ""  # the stop it drives to or looks at; "hero" for a greeting
 var reached: Array[String] = []  # every stop arrived at, in order (for checks)
 var passed := 0  # via points driven through (for checks)
@@ -33,6 +37,11 @@ var v := 0.0
 var yaw := 0.0
 var target := Vector3.ZERO
 var gaze := Vector3.ZERO  # what the head looks at when nothing nearer is worth it
+var led := false  # the beats lead it: no wandering and no visits, it holds still between their orders
+var leading := false  # a "follow me" order: it waits while the hero is more than lead_m.x away, goes on within lead_m.y
+var lead_m := Vector2.ZERO
+var gave_up := 0  # orders it could not get through to and tried again (checks: never)
+var _order := {}  # the order it is driving: {at: Vector3, face: Vector3 (INF for the hero), wave: bool}
 var _rng := RandomNumberGenerator.new()
 var _shape: CollisionShape3D
 var _model: Node3D
@@ -160,6 +169,12 @@ func _physics_process(delta: float) -> void:
 			elif _timer <= 0.0:
 				_patience = float(p.patience_s)  # drive round the hero now, as round anything else
 				state = "drive"
+		"behind":
+			_brake(delta)
+			_face(hero, delta)
+			if to_hero.length() < lead_m.y:
+				state = "drive"
+				_since = 0.0
 		"drive", "flee":
 			if state == "drive" and stop != "hero" and _wants_greet(to_hero):
 				_greet(hero, to_hero)
@@ -174,7 +189,7 @@ func _hero() -> Vector3:
 
 
 func _wants_greet(to_hero: Vector2) -> bool:
-	return _still > float(p.still_s) and _greet_cool <= 0.0 and to_hero.length() < float(p.greet_m) \
+	return not led and _still > float(p.still_s) and _greet_cool <= 0.0 and to_hero.length() < float(p.greet_m) \
 		and to_hero.length() > float(p.greet_stand_m) + 0.5
 
 
@@ -280,6 +295,12 @@ func _route(from: Vector3, to: Vector3) -> Array[Vector3]:
 ## The next stop: none of the last two it saw, nearer ones more often (each stop's weight over `near_m` plus the
 ## distance), so it potters round the base and only now and then sets off on a long trip.
 func _next() -> void:
+	if led:  # an order cut short (a flee, no way through) is driven again; with none it holds still
+		if _order.is_empty():
+			_timer = INF
+		else:
+			_go("order", _order.at)
+		return
 	var recent := reached.slice(-2) + [stop]
 	var stops: Array = p.stops.filter(func(s: Dictionary) -> bool: return s.id not in recent)
 	var weights: Array[float] = []
@@ -306,7 +327,16 @@ func _look_around(seconds: float) -> void:
 
 func _arrive() -> void:
 	reached.append(stop)
-	if stop == "hero":
+	if stop == "order":
+		state = "greet" if _order.face == Vector3.INF else "look"  # greet: turned to the hero, head up and tilted
+		gaze = _order.face if _order.face != Vector3.INF else _hero()
+		_timer = INF
+		if _order.wave:
+			wave()
+		_order = {}
+		leading = false
+		arrived.emit()
+	elif stop == "hero":
 		state = "greet"
 		_timer = float(p.greet_s)
 		_greet_cool = float(p.greet_cool_s)
@@ -360,6 +390,11 @@ func _drive(delta: float, to_hero: Vector2) -> void:
 		else:
 			_arrive()
 		return
+	if leading and state == "drive" and to_hero.length() > lead_m.x:
+		state = "behind"  # stop and look back; a beep the first time in a while
+		if _hello_cool <= 0.0:
+			_hello()
+		return
 	_patience -= delta
 	if state == "drive" and _patience <= 0.0 and _blocked_by_hero(to_hero):
 		state = "wait"
@@ -373,6 +408,7 @@ func _drive(delta: float, to_hero: Vector2) -> void:
 		_since = 0.0
 	elif _since > float(p.stuck_s):
 		if _replanned:
+			gave_up += 1 if led else 0
 			_look_around(1.0)
 		else:
 			_replanned = true  # something moved into the way: one new route from here, then give up
@@ -505,7 +541,7 @@ func _life(delta: float, hero: Vector3, to_hero: Vector2) -> void:
 		var g: float = p.glance_m
 		_scan = Vector3(_rng.randf_range(-g, g), _rng.randf_range(-g, g) * 0.5, _rng.randf_range(-g, g))
 	var look := gaze + _scan
-	if _near or state in ["greet", "wait"]:
+	if _near or state in ["greet", "wait", "behind"]:
 		look = hero
 	elif state in ["drive", "flee"]:
 		look = global_position - global_basis.z * 3.0 + _scan * 0.5
@@ -574,6 +610,44 @@ func _ground_fx() -> void:
 		var c := global_transform * Vector3(0.0, 0.0, absf(_hubs[0].z) * z)
 		discs.append(Vector4(c.x, c.z, s[0], s[1]))
 	world.touch(self, discs)
+
+
+## The beats' order: drive to `at` and park, then look at `face` (INF: at the hero) and wave if asked. `lead` makes it
+## a "follow me" (x: wait when the hero is this far, y: go on once back within this). Emits `arrived` on parking.
+func order(at: Vector3, face := Vector3.INF, wave_after := false, lead := Vector2.ZERO) -> void:
+	led = true
+	leading = lead != Vector2.ZERO
+	lead_m = lead
+	_order = {"at": at, "face": face, "wave": wave_after}
+	stop = ""
+	_go("order", at)
+	if stop != "order":  # the spot is in a doorway or a building (the beats' data): it parks where it is
+		push_warning("PIP: order to %s is a no-go spot, arriving where it is" % at)
+		stop = "order"
+		_arrive()
+
+
+## The beats: stop where it is and turn to look at `at`.
+func point_at(at: Vector3) -> void:
+	led = true
+	leading = false
+	_order = {}
+	gaze = at
+	_look_around(INF)
+
+
+## A hello: two flashes, a beep and a wiggle.
+func wave() -> void:
+	_hello()
+	_wiggle = float(p.wiggle_s)
+
+
+## The beats are done with it: back to pottering about.
+func release() -> void:
+	led = false
+	leading = false
+	_order = {}
+	_look_around(1.0)
 
 
 func state_text() -> Dictionary:

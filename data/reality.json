@@ -17,6 +17,16 @@
    "source": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html"
   },
   {
+   "id": "world.gravity.earth",
+   "real": [
+    9.78,
+    9.83
+   ],
+   "value": 9.82,
+   "unit": "m/s2",
+   "source": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/marsfact.html (Earth column: surface gravity mean 9.82, equator 9.78, pole 9.83). Only the ghost of the same hop on Earth uses it (cine/beats_ghost.gd)"
+  },
+  {
    "id": "hero.leg",
    "real": [
     0.8,
