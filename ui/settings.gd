@@ -146,7 +146,7 @@ func setup(g: Node) -> void:
 	gear.custom_minimum_size = Vector2(Hud.BUTTON_H, Hud.BUTTON_H)
 	gear.pressed.connect(toggle)
 	root.add_child(gear)
-	shade.color = Hud.color("surface", 0.5)
+	shade.color = Hud.color("shade")
 	shade.mouse_filter = Control.MOUSE_FILTER_STOP  # the world under it takes no clicks or look drags
 	root.add_child(shade)
 	panel = Hud.panel("HudPanel", _build(), true)

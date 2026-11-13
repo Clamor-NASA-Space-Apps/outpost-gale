@@ -25,7 +25,7 @@ Judges play about five minutes, so the wow, the first lesson and the first choic
 | 0:00 | Black, then breathing in a helmet. The airlock finishes its cycle with a hiss, the outer hatch slides open on the dawn. Zen music | "I'm really there" | nothing yet |
 | 0:20 | The kid steps out. Mount Sharp on the horizon, long shadows, dust in the light. Footsteps are faint outside, loud inside | Mars is quiet and huge | "Air here is very thin. Sound fades fast." |
 | 0:45 | PIP rolls up, waves: "Good morning, Commander!" It asks the kid to walk to it, then look around (the controls, taught by doing) | The controls | "Walk to me." |
-| 1:30 | "Try a jump!" The hero floats up and comes down slowly. A faint ghost shows the same jump on Earth, half as high | Lightness | "You weigh less here. Mars pulls 0.38 as hard as Earth." |
+| 1:30 | "Try a jump!" The hero floats up and comes down slowly. A faint ghost does the same jump under Earth's pull: about a third as high, and back down three times sooner | Lightness | "You weigh less here. Mars pulls 0.38 as hard as Earth." |
 | 2:15 | A cargo bag the size of the hero: "Can you lift that?" The kid can | Strength, surprise | "On Earth that's too heavy. Here, easy." |
 | 3:00 | The sun is up. The solar wings turn to face it. Power meter climbs | The base is alive | "Sunlight is our power. Mars gets less than half of Earth's." |
 | 3:45 | First choice: PIP shows the oxygen maker and the greenhouse lights. Power for both is short this morning. The kid picks one | Responsibility | "Every choice costs something." |

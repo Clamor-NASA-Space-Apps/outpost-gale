@@ -18,7 +18,7 @@ var buttons: Array[Button] = []
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var scrim := ColorRect.new()
-	scrim.color = Hud.color("surface", 0.8)
+	scrim.color = Hud.color("scrim_full")
 	scrim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(scrim)
 	var grid := GridContainer.new()

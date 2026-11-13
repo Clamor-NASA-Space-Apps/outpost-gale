@@ -3,6 +3,6 @@
 [ext_resource type="Script" path="res://ui/components/replay_chain.gd" id="1"]
 [ext_resource type="Theme" path="res://ui/theme.tres" id="2"]
 
-[node name="ReplayChain" type="HBoxContainer"]
+[node name="ReplayChain" type="BoxContainer"]
 theme = ExtResource("2")
 script = ExtResource("1")

@@ -10,6 +10,36 @@ const HudPanel := preload("res://ui/hud_panel.gd")
 # needs (addons/forge/test.gd TARGET).
 const BUTTON_H := 72.0
 const PHONE_SCALE := 1.4
+const SOL_H := 24.6597  # Earth hours in a sol, the sim's clock (NSSDC, factcheck row 6)
+# The sim's state keys a kid can see a cost, a ledger row or a source for: [icon, name, unit, scale shown].
+# panel_dust is 0 to 1 in the state and shown in percent.
+const KEYS := {
+	"battery_pct": ["battery", "Battery", "%", 1.0],
+	"o2_kg": ["oxygen", "Oxygen", "kg", 1.0],
+	"water_kg": ["water", "Water", "kg", 1.0],
+	"food_kg": ["food", "Food", "kg", 1.0],
+	"dose_msv": ["radiation", "Radiation", "mSv", 1.0],
+	"panel_dust": ["storm", "Panel dust", "%", 100.0],
+	"suit_air_min": ["oxygen", "Suit air", "min", 1.0],
+	"energy_in_kwh": ["sun", "Sun power made", "kWh", 1.0],
+	"energy_out_kwh": ["power", "Power used", "kWh", 1.0],
+	"health": ["health", "Crew health", "", 1.0],
+	"science": ["science", "Science", "", 1.0],
+}
+
+
+## A signed amount with its unit, as a kid reads it: "-4.2 kg", "+10 %", "-1" ("55.4 kWh" for energy totals).
+static func amount(key: String, v: float) -> String:
+	var k: Array = KEYS.get(key, ["", "", "", 1.0])
+	v *= k[3]
+	# energy made and used are totals, not changes: a "+" on "Power used" would read as a gain
+	var plus := "+" if v > 0.0 and not key.begins_with("energy_") else ""
+	return plus + num(v) + (" " + k[2] if k[2] else "")
+
+
+## One decimal below 100 ("16.7", "2.4"), whole numbers above, and no ".0".
+static func num(v: float) -> String:
+	return String.num(v, 0 if absf(v) >= 100.0 else 1).trim_suffix(".0")
 
 
 ## Theme colour by its design.json name ("on-surface" and "on_surface" both work).
@@ -89,3 +119,9 @@ static func spacer() -> Control:
 	s.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	s.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return s
+
+
+## "14 Nov 2026": the workspace writes absolute dates this way.
+static func date(unix: float) -> String:
+	var d := Time.get_date_dict_from_unix_time(int(unix))
+	return "%d %s %d" % [d.day, ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][d.month - 1], d.year]

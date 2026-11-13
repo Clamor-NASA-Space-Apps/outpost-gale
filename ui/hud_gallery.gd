@@ -1,12 +1,18 @@
 extends Control
 ## Every HUD component, laid out as the game would show it, at laptop and phone sizes. Mock values only.
-## Keys: L switches laptop and phone, 1 to 7 (or Left and Right) switch the page. On the sleep page the arrows move
+## Keys: L switches laptop and phone, 1 to 9 (or Left and Right) switch the page. On the sleep page the arrows move
 ## the picker's focus instead, so use the number keys there.
-## Pages: hud (the play HUD), comms (Ask Earth, data badges), event (event and fact cards), lost (mission lost and replay chain), log, credits, sleep (the sleep picker).
+## Pages: hud (ui/game_hud.tscn bound to ui/fake_state.gd: meters, clock, subtitle, mail, alert), comms (visor mail,
+## data badges), event (the choice card, a fact card), ledger (the sleep ledger), sources (where this comes from),
+## lost (mission lost and the three causes), log, credits, sleep (the sleep picker), speech (the play HUD with PIP
+## behind the camera, so his bubble docks at the edge; on the hud page it rides above the PIP marker).
 ## capture-view views: "laptop" and "phone" show the hud page; "<layout>_<page>" any other, e.g. "phone_event".
 
 const Hud := preload("res://ui/hud.gd")
-const PAGES: Array[String] = ["hud", "comms", "event", "lost", "log", "credits", "sleep"]
+const PAGES: Array[String] = ["hud", "comms", "event", "ledger", "sources", "lost", "log", "credits", "sleep", "speech"]
+# where the stand-in PIP stands for the camera at the origin: in view on the hud page, behind and left on speech
+const PIP_AT := {"hud": Vector3(1.6, -1.0, -6.0), "speech": Vector3(-4.0, -0.5, 3.0)}
+const Fake := preload("res://ui/fake_state.gd")
 # iPhone 16 in landscape is 852 x 393 pt; on the 720 px tall canvas that is 1561 x 720.
 const PHONE := Vector2(1561, 720)
 const LAPTOP := Vector2(1280, 720)
@@ -20,7 +26,11 @@ var bezel := Panel.new()
 var hud := Control.new()  # drawn PHONE_SCALE times larger on the phone
 var pages := {}
 var shown := {}  # page -> the component nodes on it, for render_game_to_text()
-var toast: Control
+var game_hud: Control
+var fake := Fake.new()
+var cam := Camera3D.new()  # projects the stand-in PIP to the screen, as the play camera does in the game
+var pip_spot := Node3D.new()
+var pip_mark: TextureRect  # where PIP would be on screen
 var touch: Array[Control] = []
 
 
@@ -81,9 +91,18 @@ func _grow(anchor: float) -> Control.GrowDirection:
 
 
 func _build() -> void:
-	_pin(_component("hud", "status_panel"), Control.PRESET_TOP_LEFT)
-	_pin(_component("hud", "sol_clock"), Control.PRESET_TOP_RIGHT)
-	toast = _component("hud", "alert_toast")
+	game_hud = load("res://ui/game_hud.tscn").instantiate()
+	pages.hud.add_child(game_hud)
+	shown.hud.append(game_hud)
+	game_hud.start_unix = 1794657600.0  # 14 Nov 2026, so the mail's delay in a capture does not move with the date
+	add_child(fake)
+	game_hud.bind(fake)
+	add_child(cam)
+	add_child(pip_spot)
+	game_hud.bind_speaker(pip_spot, cam)
+	pip_mark = Hud.icon("pip", 56, "accent")
+	add_child(pip_mark)
+	shown.speech.append(game_hud)
 	var stick := _component("hud", "touch_stick")
 	_pin(stick, Control.PRESET_BOTTOM_LEFT)
 	var buttons := Hud.row([], 20)
@@ -94,19 +113,27 @@ func _build() -> void:
 	touch = [stick, use, hop]
 
 	var comms := Hud.col([], 16)
-	pages.comms.add_child(comms)
+	_center("comms").add_child(comms)
 	_component("comms", "ask_earth", {}, comms)
 	_component("comms", "data_badge", {"name": "LiveBadge"}, comms)
 	_component("comms", "data_badge", {"name": "ArchivedBadge", "live": false, "date": "Weather, 20 May 2024"}, comms)
-	_pin(comms, Control.PRESET_CENTER)
 
 	_scrim("event")
 	var cards := Hud.row([], 24)
 	cards.alignment = BoxContainer.ALIGNMENT_CENTER
 	cards.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	pages.event.add_child(cards)
-	for c: String in ["event_card", "fact_card"]:
-		_component("event", c, {"size_flags_vertical": Control.SIZE_SHRINK_CENTER}, cards)
+	# mock words and costs: the real ones are the story's, written at the event
+	var options := [
+		{"text": "Make oxygen", "costs": {"battery_pct": -20}},
+		{"text": "Greenhouse lights", "costs": {"battery_pct": -10, "o2_kg": -0.8}},
+		{"text": "Save the battery", "costs": {"food_kg": -1.2, "health": -1}},
+	]
+	_component("event", "event_card", {"size_flags_vertical": Control.SIZE_SHRINK_CENTER, "icon_name": "power", "title": "Not enough power!", "line": "Pick one to run this morning.", "options": options}, cards)
+	_component("event", "fact_card", {"size_flags_vertical": Control.SIZE_SHRINK_CENTER}, cards)
+	for p: String in ["ledger", "sources"]:
+		_scrim(p)
+		_component(p, p + "_card", {}, _center(p))
 
 	_component("lost", "mission_lost")
 	_scrim("log")
@@ -115,9 +142,19 @@ func _build() -> void:
 	_component("sleep", "sleep_picker").open()
 
 
+## Cards whose text wraps go in a CenterContainer: it sizes them again on every sort, where an anchored card keeps
+## the tall size its wrapping labels asked for before they had a width.
+func _center(p: String) -> CenterContainer:
+	var c := CenterContainer.new()
+	c.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	pages[p].add_child(c)
+	c.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	return c
+
+
 func _scrim(p: String) -> void:
 	var s := ColorRect.new()
-	s.color = Hud.color("surface", 0.45)
+	s.color = Hud.color("scrim")
 	s.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	pages[p].add_child(s)
 	s.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -170,7 +207,7 @@ func _apply() -> void:
 	for p: String in PAGES:
 		var c: Control = pages[p]
 		c.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		c.visible = p == page
+		c.visible = p == page or p == "hud" and page == "speech"
 		if p != "hud":
 			continue  # the other pages are centred and their scrims cover the whole screen
 		c.offset_left = m.x
@@ -179,8 +216,20 @@ func _apply() -> void:
 		c.offset_bottom = -m.y
 	for t in touch:
 		t.visible = phone
-	# on a phone the top row is full, so the alert sits low, between the stick and the buttons
-	_pin(toast, Control.PRESET_CENTER_BOTTOM if phone else Control.PRESET_CENTER_TOP)
+	pip_spot.position = PIP_AT.get(page, PIP_AT.hud)
+	pip_mark.visible = page == "hud"
+	pip_mark.position = cam.unproject_position(pip_spot.position) - pip_mark.custom_minimum_size * 0.5
+	if page in PIP_AT:
+		_mock()
+
+
+## The play HUD's moving parts, put up again whenever its page shows (they time out by themselves in play).
+func _mock() -> void:
+	game_hud.say("sol1_try_jump")
+	game_hud.bubble.label.visible_characters = game_hud.bubble.label.text.length()  # typed out, for a still picture
+	game_hud.alert("Solar storm", "ARCHIVED data. Tap ? for its source.")
+	game_hud.send_mail()
+	game_hud.mail.set_now(fake.values.hour + 0.1)
 
 
 func _unhandled_input(e: InputEvent) -> void:
@@ -215,4 +264,4 @@ func render_game_to_text() -> Dictionary:
 	for n: Control in shown[page]:
 		if n.is_visible_in_tree():
 			names.append(String(n.name))
-	return {"view": layout if page == "hud" else "%s_%s" % [layout, page], "layout": layout, "page": page, "components": names}
+	return {"view": layout if page == "hud" else "%s_%s" % [layout, page], "layout": layout, "page": page, "components": names, "hud": game_hud.snapshot()}

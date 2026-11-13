@@ -19,7 +19,7 @@ func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	# the scrim takes every click while the picker is open, so nothing behind it gets used by accident
 	var scrim := ColorRect.new()
-	scrim.color = Hud.color("surface", 0.45)
+	scrim.color = Hud.color("scrim")
 	scrim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(scrim)
 	var row := Hud.row([_card(&"night", "Night", _draw_moon), _card(&"nap", "Nap 20 min", _draw_nap)], 20)

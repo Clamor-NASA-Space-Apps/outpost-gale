@@ -1,25 +1,80 @@
 extends "res://ui/hud_panel.gd"
-## "Ask Earth": a message on its way to mission control, with the radio delay as a countdown.
-## Static mock: the countdown never ticks here (no timers before 14 Nov).
+## Visor mail: a message to mission control and when the reply can come back. The delay is the real one-way
+## light time for the game's date (ui/radio_delay.gd, from JPL's planet orbits), labelled COMPUTED with that date
+## (workspace rule 4). The diamond rides to Earth and back as the clock moves (set_now).
 
 const Hud := preload("res://ui/hud.gd")
+const Delay := preload("res://ui/radio_delay.gd")
 
-@export var wait := "20:00"
-@export var progress := 0.0  # 0 = just sent, 1 = arrived
+@export var sent_hour := 7.0
+@export var now_hour := 7.15
+@export var date_unix := 1794657600.0  # 14 Nov 2026 12:00 UTC, the event's first day; the HUD passes the game's date
 
+var minutes := 0.0  # one way
 var track := Control.new()
+var sent_label: Label
+var reply_label: Label
+var way_label: Label
+var date_label: Label
 
 
 func _ready() -> void:
 	theme_type_variation = "HudPanel"
+	custom_minimum_size.x = 360  # its captions wrap, so they ask for no width of their own
 	track.custom_minimum_size = Vector2(150, 30)
 	track.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	track.draw.connect(_draw_track)
+	sent_label = Hud.label("", "SmallNumber")
+	reply_label = Hud.label("", "SmallNumber")
+	way_label = Hud.label("", "Caption", true)
+	date_label = Hud.label("", "Caption", true)
 	var path := Hud.row([Hud.icon("dish", 30, "accent"), track, Hud.icon("earth", 30, "on_surface")], 8)
-	var count := Hud.row([Hud.label("Reaches Earth in", "Caption"), Hud.spacer(), Hud.label(wait, "Number")], 10)
-	# workspace fact table: NASA, "a communication delay of up to 20 minutes one way" (factcheck row 13)
-	var why := Hud.label("Radio takes up to 20 minutes, one way.", "Caption")
-	add_child(Hud.col([Hud.row([Hud.tag("TagLive", "dish", ""), Hud.label("Ask Earth", "Heading")], 10), path, count, why], 6))
+	add_child(Hud.col([
+		Hud.row([Hud.tag("TagLive", "dish", ""), Hud.label("Mail to Earth", "Heading")], 10),
+		path,
+		_flow([Hud.row([Hud.label("Sent", "Caption"), sent_label], 8), Hud.row([Hud.label("Reply about", "Caption"), reply_label], 8)]),
+		way_label,
+		Hud.row([Hud.tag("TagArchive", "clock", "COMPUTED", "TagText"), date_label], 8),
+	], 6))
+	send(sent_hour, date_unix)
+
+
+## One line where it fits, two where it does not.
+static func _flow(kids: Array) -> HFlowContainer:
+	var f := HFlowContainer.new()
+	f.add_theme_constant_override("h_separation", 18)
+	for k: Control in kids:
+		f.add_child(k)
+	return f
+
+
+## A message leaves at `hour` (Mars clock) on the day `unix`.
+func send(hour: float, unix: float) -> void:
+	sent_hour = hour
+	date_unix = unix
+	minutes = Delay.minutes(unix)
+	# the sim's clock counts Earth hours through a 24.66 h sol, so the delay's minutes add on as they are
+	sent_label.text = _clock(hour)
+	reply_label.text = _clock(hour + 2.0 * minutes / 60.0)
+	way_label.text = "Radio takes %d min each way" % roundi(minutes)
+	date_label.text = "%s, JPL orbits" % Hud.date(unix)
+	set_now(now_hour)
+
+
+## The clock now, counted from the sent sol's midnight (the next sol's 01:00 is 1 + one sol's hours).
+func set_now(hour: float) -> void:
+	now_hour = hour
+	track.queue_redraw()
+
+
+## 0 just sent, 0.5 at Earth, 1 the reply is home.
+func progress() -> float:
+	return clampf((now_hour - sent_hour) * 60.0 / (2.0 * maxf(minutes, 0.01)), 0.0, 1.0)
+
+
+static func _clock(hour: float) -> String:
+	var m := roundi(fposmod(hour, 24.0) * 60.0)
+	return "%02d:%02d" % [(m / 60) % 24, m % 60]
 
 
 func _draw_track() -> void:
@@ -28,6 +83,10 @@ func _draw_track() -> void:
 	var step := track.size.x / dashes
 	for i in dashes:
 		track.draw_line(Vector2(i * step + 2, y), Vector2(i * step + step * 0.55, y), Hud.color("outline-variant"), 3.0)
-	# the message: a teal diamond, teal because it is live
-	var x := clampf(progress, 0.0, 1.0) * (track.size.x - 16.0) + 8.0
-	track.draw_colored_polygon(PackedVector2Array([Vector2(x, y - 9), Vector2(x + 9, y), Vector2(x, y + 9), Vector2(x - 9, y)]), Hud.color("accent"))
+	# the message: a teal diamond out to Earth, then the reply back; it points the way it travels, so the
+	# direction reads without colour
+	var p := progress()
+	var there := 1.0 - absf(1.0 - 2.0 * p)
+	var x := there * (track.size.x - 16.0) + 8.0
+	var dir := 1.0 if p < 0.5 else -1.0
+	track.draw_colored_polygon(PackedVector2Array([Vector2(x - 8 * dir, y - 9), Vector2(x + 10 * dir, y), Vector2(x - 8 * dir, y + 9)]), Hud.color("accent"))

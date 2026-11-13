@@ -1,0 +1,54 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face { font-family: Lexend; src: url("file:///home/ravindu644/Documents/NASA-Space-apps/tooling/projects/junior-astronaut-mission-trainer/ui/fonts/Lexend-latin-wght.woff2"); font-weight: 100 900; }
+@font-face { font-family: Exo2; src: url("file:///home/ravindu644/Documents/NASA-Space-apps/tooling/projects/junior-astronaut-mission-trainer/ui/fonts/Exo2-wght.ttf"); font-weight: 100 900; }
+:root {
+  --amber: #f0a640; --teal: #2ed3c0; --light: #8ef7ea; --ink: #f6ecdc; --ink2: #c9b8a2; --danger: #ff4d4d;
+  --glass: rgba(22, 15, 12, 0.34); --glass-hi: rgba(255, 255, 255, 0.06); --stroke: rgba(142, 247, 234, 0.45);
+}
+* { box-sizing: border-box; margin: 0; }
+body { margin: 0; background: #000; }
+#frame { width: 1920px; height: 1080px; overflow: hidden; font-family: Lexend; color: var(--ink);
+  background: #000 url("file:///home/ravindu644/Pictures/Outpost%20Gale/11_inside_hab1.png") 0 0 / 100% 100%; position: relative; }
+.glass { background: linear-gradient(180deg, var(--glass-hi), transparent 40%), var(--glass);
+  border: 1.5px solid var(--stroke); border-radius: 10px; box-shadow: 0 0 18px rgba(46, 211, 192, 0.12), inset 0 1px 0 rgba(255,255,255,0.12); }
+.icon { width: 22px; height: 22px; display: inline-block; flex: none; }
+.num { font-family: Exo2; font-weight: 700; letter-spacing: 0.02em; }
+.cap { font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink2); }
+
+
+#frame::before { content:""; position:absolute; inset:0; background: rgba(10,7,6,0.55); }
+.panel { --glass: rgba(22, 15, 12, 0.72); position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:1120px; padding:26px 30px 24px; display:grid; grid-template-columns: 190px 1fr; gap: 28px; }
+h1 { font-size:26px; font-weight:700; grid-column:1/3; display:flex; align-items:center; gap:12px; }
+h1 .key { margin-left:auto; }
+.tabs { display:flex; flex-direction:column; gap:6px; }
+.tab { display:flex; gap:12px; align-items:center; padding:11px 14px; border-radius:8px; font-size:18px; color:var(--ink2); }
+.tab img { width:20px; opacity:.7; }
+.tab.on { color:var(--ink); background: rgba(142,247,234,0.10); box-shadow: inset 3px 0 0 var(--teal); }
+.tab.on img { opacity:1; }
+.devs { display:grid; grid-template-columns: repeat(5, 1fr); gap:10px; margin: 8px 0 22px; }
+.dev { padding:14px 10px 12px; display:flex; flex-direction:column; align-items:center; gap:6px; text-align:center; }
+.dev img { width:30px; opacity:.8; } .dev b { font-size:16px; font-weight:600; } .dev span { font-size:13px; color:var(--ink2); }
+.dev.on { border-color: var(--amber); box-shadow: 0 0 16px rgba(240,166,64,0.35), inset 0 0 0 1px rgba(240,166,64,0.4); }
+.dev.on img { opacity:1; }
+.grid { display:grid; grid-template-columns: 1fr 1fr; gap: 12px 28px; }
+.row { display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:16px; }
+.seg { display:flex; border:1.5px solid var(--stroke); border-radius:7px; overflow:hidden; }
+.seg i { font-style:normal; font: 600 14px Exo2; padding:7px 11px; color:var(--ink2); border-left:1px solid rgba(142,247,234,0.18); }
+.seg i:first-child { border-left:0; }
+.seg i.on { background: rgba(46,211,192,0.22); color: var(--ink); box-shadow: inset 0 -2px 0 var(--teal); }
+.foot { grid-column:1/3; display:flex; align-items:center; gap:14px; padding-top:6px; border-top:1px solid rgba(142,247,234,0.15); font-size:15px; color:var(--ink2); }
+.btn { margin-left:auto; padding:10px 22px; border-radius:8px; background: var(--amber); color:#1a0f05; font-weight:700; font-size:17px; }
+</style></head><body><div id="frame">
+<div class="panel glass">
+  <h1><img src="file:///home/ravindu644/Documents/NASA-Space-apps/tooling/projects/junior-astronaut-mission-trainer/ui/icons/settings.svg" style="width:26px">Settings<span class="key" style="font-size:15px">Esc</span></h1>
+  <div class="tabs"><div class="tab on"><img src="file:///home/ravindu644/Documents/NASA-Space-apps/tooling/projects/junior-astronaut-mission-trainer/ui/icons/sun.svg">Graphics</div><div class="tab"><img src="file:///home/ravindu644/Documents/NASA-Space-apps/tooling/projects/junior-astronaut-mission-trainer/ui/icons/live.svg">Sound</div><div class="tab"><img src="file:///home/ravindu644/Documents/NASA-Space-apps/tooling/projects/junior-astronaut-mission-trainer/ui/icons/hop.svg">Controls</div><div class="tab"><img src="file:///home/ravindu644/Documents/NASA-Space-apps/tooling/projects/junior-astronaut-mission-trainer/ui/icons/device_laptop.svg">Screen</div></div>
+  <div>
+    <div class="cap">Your device</div>
+    <div class="devs"><div class="dev glass"><img src="file:///home/ravindu644/Documents/NASA-Space-apps/tooling/projects/junior-astronaut-mission-trainer/ui/icons/device_phone.svg"><b>Phone</b><span>Budget phones</span></div><div class="dev glass"><img src="file:///home/ravindu644/Documents/NASA-Space-apps/tooling/projects/junior-astronaut-mission-trainer/ui/icons/device_older.svg"><b>Older laptop</b><span>2015 to 2018</span></div><div class="dev glass"><img src="file:///home/ravindu644/Documents/NASA-Space-apps/tooling/projects/junior-astronaut-mission-trainer/ui/icons/device_laptop.svg"><b>Laptop</b><span>No graphics card</span></div><div class="dev glass on"><img src="file:///home/ravindu644/Documents/NASA-Space-apps/tooling/projects/junior-astronaut-mission-trainer/ui/icons/device_gaming.svg"><b>Gaming PC</b><span>With a graphics card</span></div><div class="dev glass"><img src="file:///home/ravindu644/Documents/NASA-Space-apps/tooling/projects/junior-astronaut-mission-trainer/ui/icons/device_max.svg"><b>Max</b><span>Everything on</span></div></div>
+    <div class="cap" style="margin-bottom:12px">Fine tune</div>
+    <div class="grid"><div class="row"><span>Shadows</span><div class="seg"><i class="">Off</i><i class="">Low</i><i class="">Medium</i><i class="on">High</i><i class="">Ultra</i></div></div><div class="row"><span>Anti-aliasing</span><div class="seg"><i class="">Off</i><i class="">2x</i><i class="on">4x</i><i class="">8x</i></div></div><div class="row"><span>Resolution</span><div class="seg"><i class="on">Auto</i><i class="">50%</i><i class="">75%</i><i class="">100%</i></div></div><div class="row"><span>Effects</span><div class="seg"><i class="">Low</i><i class="">Medium</i><i class="on">High</i></div></div><div class="row"><span>Frame cap</span><div class="seg"><i class="">None</i><i class="">30</i><i class="">45</i><i class="on">60</i></div></div><div class="row"><span>V-Sync</span><div class="seg"><i class="on">On</i><i class="">Off</i></div></div></div>
+  </div>
+  <div class="foot"><span>Changes apply behind the cover, in a moment.</span><span class="btn">Back to Mars</span></div>
+</div>
+
+</div></body></html>

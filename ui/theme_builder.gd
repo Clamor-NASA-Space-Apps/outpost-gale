@@ -94,6 +94,12 @@ func build() -> Theme:
 	for n: String in ["primary", "on-primary", "accent", "light", "danger", "on-surface", "on-surface-variant",
 			"surface", "surface-container", "outline-variant", "sky", "horizon", "ground"]:
 		t.set_color(n.replace("-", "_"), "Hud", c(n))  # theme item names take no dashes
+	# The see-through layers, by role: the one place in ui/ their alpha lives, so a new look changes them here and
+	# every component follows (a component asks for Hud.color("scrim"), never for a colour with an alpha of its own).
+	for o: Array in [["scrim", "surface", 0.45], ["scrim_strong", "surface", 0.6], ["scrim_full", "surface", 0.8],
+			["shade", "surface", 0.5], ["segment_off", "outline-variant", 0.7], ["track", "surface-container", 0.9],
+			["track_edge", "primary", 0.6]]:
+		t.set_color(o[0], "Hud", c(o[1], o[2]))
 
 	t.set_color("font_color", "Label", c("on-surface"))
 	t.set_constant("line_spacing", "Label", 2)
