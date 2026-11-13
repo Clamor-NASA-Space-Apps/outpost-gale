@@ -355,7 +355,6 @@ static func apply_lighting(parent: Node, design: Dictionary) -> Dictionary:
 	sun.shadow_enabled = true
 	# every shadow split draws each caster again, and a phone pays for it: two splits, no farther than the fog shows
 	sun.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS
-	sun.directional_shadow_blend_splits = true  # no step where one split meets the next (set_quality)
 	sun.directional_shadow_max_distance = minf(float(L.get("fog", {}).get("far", 60)), 60.0)
 	sun.shadow_normal_bias = 4.0  # a split now covers more ground per texel; the default of 2 left ripples on flat tops
 	# shadow_blur is not read by the Compatibility renderer (4.7.2 source): the filter is set_quality's `shadowFilter`
@@ -818,10 +817,6 @@ static func set_quality(root: Node, design: Dictionary, level: String, overrides
 			rig.shadow_enabled = splits > 0
 			rig.directional_shadow_mode = {1: DirectionalLight3D.SHADOW_ORTHOGONAL, 4: DirectionalLight3D.SHADOW_PARALLEL_4_SPLITS}.get(
 				splits, DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS)
-			# the seam where one split hands over to the next is a step in every straight shadow edge that crosses it, and
-			# it moves with the camera: four splits put the first seam a few metres ahead, right by a followed hero
-			# (13 Nov playtest). Blending fades one split into the next across the seam
-			rig.directional_shadow_blend_splits = splits > 1
 			rig.light_energy = rig.get_meta("energy")[rig.shadow_enabled]
 			rig.set_meta("shadow_map", map)  # the engine keeps no getter for it; this is for checks
 			rig.directional_shadow_max_distance = minf(float(q.get("shadowRange", 60)), float(design.lighting.get("fog", {}).get("far", 60)))
