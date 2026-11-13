@@ -2,7 +2,7 @@
 
 Draft 1, 13 Nov 2026, for the team to read, change and argue with. Then the facts get checked again, and the words are
 wired into the game in Colombo. Every number has a row in `research/junior-astronaut/factcheck.md` (shown as `#row`);
-anything marked ⏳ is still being checked (`research/junior-astronaut/story-feasibility.md`). Systems that make it
+the survival mechanics were checked on 13 Nov (`research/junior-astronaut/story-feasibility.md`, rows 251 to 280); ⚠️ marks our own maths or inference. Systems that make it
 work are already built: rules sim, PIP's beats, HUD, use spots, cinematics (`design/plans/event-ready.md`).
 
 ## 0. TL;DR 🚀
@@ -42,10 +42,10 @@ These are systems, not lectures. Each one shows on the HUD and each one can end 
 | Rule | What the kid sees and feels | How it goes wrong | Fact |
 |---|---|---|---|
 | **Suit air** | The suit air timer on the visor while outside | Run out far from a hatch | suit 6.5 to 8 h (factcheck EVA rows) |
-| **Effort** | Sprinting is possible, but the heart-rate number climbs, breathing gets loud, the suit air timer drops faster, and the hero slows down until they rest | Sprint everywhere and the walk home becomes impossible | ⏳ heart rate and oxygen per effort |
-| **Suit battery** | A small battery icon on the visor | Fans and radio stop: back to the hatch now | ⏳ backpack battery hours |
-| **Rover battery** | The rover's charge and a range ring on the map | Battery flat in the middle of nowhere: walk home, and the walk is longer than the suit's air | ⏳ rover kWh and range; #216 "20 km radius" |
-| **The walk-home ring** | The map shows how far you could walk back on your suit's air. Driving outside it is allowed, but PIP warns you | Rover breaks outside the ring | ⏳ Apollo walkback rule |
+| **Effort** | Sprinting is possible, but breathing gets loud, a heart-rate number climbs (a feel meter only), the suit air and cooling drain about 2.5 times faster, and the hero overheats and slows until they rest. Riding the rover is the cheapest way to travel | Sprint everywhere and the walk home becomes impossible | #254 (hard walk 599 vs calm 233 kcal/h, O₂ 0.4 vs 0.15 lb/h), #255, #258, #259, #260 |
+| **Suit battery** | A small battery icon on the visor that drains with time (fans, pump, radio), not with effort | Rarely the first limit: air and cooling run out sooner | #262, #263 ⚠️, #264 |
+| **Rover battery** | The rover's charge (200 kWh for long trips, about 1 kWh per km plus the cabin's life support) and a range ring on the map. The reactor refills it in about 2 sols | The battery also runs the cabin's air: run it flat and you lose both your ride and your shelter. NASA always keeps a drive-home reserve | #270, #271 ⚠️, #272, #216 |
+| **The walk-home ring** | The map shows how far you could walk back (Apollo's rule: 6 miles, about 9.7 km, "the distance we could walk back in a pinch"). Mont Mercou is inside it, Curiosity is outside. NASA's plan keeps all trips within 20 km | Rover breaks outside the ring | #266, #267, #268 |
 | **Base power** | Sun, dust on the panels, battery bank, the reactor | Dark, cold night with an empty battery | #21, #160, #180, #210 |
 | **Oxygen, water, food** | The life support meter, the morning check | Choices that starve the oxygen maker | #23, #25, #112, #163 |
 | **Radiation** | The crew health meter, the flare alert | Staying outside during a flare | #37 (not deadly, "30 chest X-rays"), #35 |
@@ -116,7 +116,7 @@ first harvest, a tiny salad. Reward moment, music swells.
 **Sol 20, "The long drive."** The big trip: Curiosity is 14.3 km away and about 1 km higher, up Mount Sharp. Within
 NASA's 20 km radius (#216), but outside the walk-home ring. PIP: "If the rover stops out there, we can't walk back.
 Charge it full."
-- You do: plan charge, food, suit air; the crew sleeps a night in the pressurised rover (⏳ SAC21 rover living).
+- You do: plan charge, food, suit air; the crew sleeps a night in the pressurised rover, as NASA's plan does (#269). NASA would also bring a small open rover as a backup; ours is the crewmate on the radio and the reserve charge (#268).
 - You lose: battery, time. You gain: the climax.
 
 **Sol 21, "The old friend."** Drive up the slope at dawn. A shape on the ridge: Curiosity, dusty, still working after
@@ -150,16 +150,17 @@ Only when you are outside and near PIP; a small "PIP shows you" moment, never fo
 - Phobos rises in the **west**, crosses in about 4 hours, twice a sol; Deimos is a slow star (#178, #179, #225).
   **The "satellite" moving across our sky at night is Phobos**, and that is a great PIP moment.
 - Earth: a bright point after sunset (W's sky). "Everyone you know is on that dot."
-- The Milky Way on clear nights (⏳ dust and visibility).
+- A faint Milky Way high overhead on clear nights; dust dims stars near the horizon by 3 to 4 magnitudes (#278, #279, #280 ⚠️).
 - Dust devils on the plain (#176).
 - The sol is 39 minutes longer than an Earth day (#198).
 - Your jump, your shadow, the quiet outside.
-- The ship waiting in orbit as a moving star at twilight (⏳ only if the maths says it could be seen; otherwise PIP
-  points to where it is on the map instead).
+- The ship waiting in orbit: once every 5 sols it swoops low (250 km) and could show as a fast bright point for about
+  an hour and a half; the rest of the time it is too far to see (#273, #274, #275 ⚠️, #277 ⚠️). Make it a rare event:
+  "Look! That's our ride home."
 
 ## 6. Corrections to our first ideas 🧭
 - **The night "satellite"** is Phobos, a real moon of Mars (#178). The mothership in orbit is real in NASA's plan, but
-  whether you could see it is still being checked.
+  you could see it only around its low pass, once every 5 sols (#277 ⚠️).
 - **"Blue sky at dawn and dusk":** the whole sky is not blue. The glow **near the sun** is blue at sunset (#168).
 - **Lettuce for food:** it takes 33 days, longer than the stay, so robots planted it before us; the kid's own crop is
   microgreens and radishes (#119, #121, #29).
@@ -174,5 +175,5 @@ Only when you are outside and near PIP; a small "PIP shows you" moment, never fo
 3. Should the low-battery choice on Sol 22 be able to lose the mission, or only cost time and food?
 4. Does the sample puzzle on Sol 26 feel fun or like homework? Playtest it.
 5. The final line on the result card.
-6. Waiting on the feasibility check: effort and heart rate, the suit battery, the rover battery and range, the walk-home
-   ring, the orbiting ship, the Milky Way.
+6. Heart rate: real crews' heart rates rose with excitement too (#257, #260), so in the game it is a feel meter and the
+   air use follows effort. Keep it, or drop it to keep the HUD calm?
