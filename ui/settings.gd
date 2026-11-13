@@ -63,6 +63,8 @@ var draft := {}  # the fine-tune choices as knob overrides, put on by apply()
 var rows := {}  # fine-tune row name -> its SegButtons, one per option (the laptop's switches)
 var steppers := {}  # fine-tune row name -> [<, value, >, the row]: a phone's or a narrow screen's "<  High  >"
 var compact := false  # touch or narrow: steppers in place of switches (_fit)
+var wide := false  # compact and wider than tall (a phone held sideways): three columns, labels on top, slim tabs
+var tab_column: Control
 var cards := {}  # preset id -> Button
 var sliders := {}  # volume name -> HSlider
 var tabs: Array[Button] = []
@@ -355,7 +357,8 @@ func _build() -> Control:
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.add_child(each)
-	column.custom_minimum_size.x = 127  # the mockup's 190 px tab column
+	column.custom_minimum_size.x = 127  # the mockup's 190 px tab column (slimmer on a sideways phone, _sizes)
+	tab_column = column
 	body = BoxContainer.new()  # side by side; stacked on a narrow (portrait) screen (_fit)
 	body.add_theme_constant_override("separation", 19)
 	body.add_child(column)
@@ -481,13 +484,19 @@ func _row(r: String) -> Control:
 	line.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	# the compact form: the name, then "<  High  >", one touch target high (_sizes shows one form or the other)
 	var minus := _button("<", step.bind(r, -1), &"ChoiceButton")
+	minus.set_meta("arrow", true)
 	var plus := _button(">", step.bind(r, 1), &"ChoiceButton")
+	plus.set_meta("arrow", true)
 	var value := Hud.label("", "MenuStrong")
 	value.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	value.custom_minimum_size.x = 80.0
 	var name := Hud.label(r, "MenuText")
 	name.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	var stepper := Hud.row([name, minus, value, plus], 8)
+	# name and arrows side by side, or the name on top on a sideways phone (_sizes turns it)
+	var stepper := BoxContainer.new()
+	stepper.add_theme_constant_override("separation", 2)
+	stepper.add_child(name)
+	stepper.add_child(Hud.row([minus, value, plus], 8))
 	steppers[r] = [minus, value, plus, stepper]
 	var both := Hud.col([line, stepper], 0)
 	both.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -550,13 +559,16 @@ func _sizes() -> void:
 			(c as Control).custom_minimum_size.x = Hud.BUTTON_H if phone else 0.0
 	for c: Node in root.find_children("*", "GridContainer", true, false):
 		if c.has_meta("fine"):
-			(c as GridContainer).columns = 1 if compact else 2
+			# a sideways phone: three narrow columns, so the tab fits with no scrolling
+			(c as GridContainer).columns = 3 if wide else (1 if compact else 2)
 		elif c.has_meta("deck"):
 			(c as GridContainer).columns = 3 if body and (body as BoxContainer).vertical else 5  # 3 + 2 when narrow
 	for r: String in steppers:
 		var st: Array = steppers[r]
 		(st[3] as Control).visible = compact
 		(st[3] as Control).get_parent().get_child(0).visible = not compact
+		(st[3] as BoxContainer).vertical = wide
+		(st[1] as Label).custom_minimum_size.x = 64.0 if wide else 80.0
 		for b: Button in [st[0], st[2]]:
 			# exactly a 48 dp target on a phone (96 scene px under PHONE_SCALE, addons/forge/test.gd TARGET), 48 px under a mouse
 			var t := 96.0 / Hud.PHONE_SCALE if phone else 48.0
@@ -654,6 +666,13 @@ func _fit() -> void:
 	var room := root.size - 2.0 * m
 	(body as BoxContainer).vertical = room.x < 620.0  # portrait: the tabs go above the page
 	compact = phone or room.x < 620.0  # a finger or a narrow screen gets steppers, a laptop the approved switches
+	wide = compact and room.x > room.y
+	# slim tabs on a sideways phone: the icon over a short word, about 72 dp wide
+	tab_column.custom_minimum_size.x = 72.0 * 2.0 / Hud.PHONE_SCALE if wide else 127.0
+	for t: Button in tabs:
+		t.alignment = HORIZONTAL_ALIGNMENT_CENTER if wide else HORIZONTAL_ALIGNMENT_LEFT
+		t.vertical_icon_alignment = VERTICAL_ALIGNMENT_TOP if wide else VERTICAL_ALIGNMENT_CENTER
+		t.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER if wide else HORIZONTAL_ALIGNMENT_LEFT
 	_sizes()
 	# as tall as the open page needs, up to the screen; past that the page scrolls
 	scroll.custom_minimum_size.y = 0.0

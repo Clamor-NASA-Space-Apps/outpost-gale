@@ -202,11 +202,18 @@ func play() -> bool:
 			check(on_screen(s.close_button), "%s: the Esc chip is on screen" % size)
 			if i == 0:
 				# a phone gets "<  High  >" steppers, one touch target high (56 dp at most), never the 96 px squares
-				var most := 112.0 * minf(shown.size.x, shown.size.y) / 720.0  # 56 dp: TARGET is 48 dp
+				var dp := 2.0 * minf(shown.size.x, shown.size.y) / 720.0  # canvas px per dp: TARGET (96) is 48 dp
 				for r: String in s.steppers:
 					var row: Control = s.steppers[r][3]
+					var arrows: Control = s.steppers[r][0].get_parent()
 					check(row.is_visible_in_tree() and not s.rows[r][0].is_visible_in_tree(), "%s %s: a stepper, not a switch" % [size, r])
+					check(arrows.get_global_rect().size.y <= 56.0 * dp + 0.5, "%s %s: the stepper is %.0f px, at most 56 dp" % [size, r, arrows.get_global_rect().size.y])
+					# a sideways phone puts the name over the stepper: 13 dp of words, then the 48 dp stepper
+					var most := (66.0 if s.wide else 56.0) * dp
 					check(row.get_global_rect().size.y <= most + 0.5, "%s %s: the row is %.0f px, at most %.0f" % [size, r, row.get_global_rect().size.y, most])
+				if size.x > size.y:
+					var need_h: float = s.pages[0].get_combined_minimum_size().y
+					check(need_h <= s.scroll.size.y + 0.5, "%s: the Graphics tab fits with no scrolling (%.0f of %.0f px)" % [size, need_h, s.scroll.size.y])
 				var deck: Control = s.cards.values()[0].get_parent()
 				check(deck.get_global_rect().size.y <= 2.0 * 90.0 * 2.0 * minf(shown.size.x, shown.size.y) / 720.0 + 0.5, "%s: the device cards stay low (%s)" % [size, deck.get_global_rect().size])
 		for l: Label in s.root.find_children("*", "Label", true, false):
