@@ -270,6 +270,17 @@
       "objective": null
     },
     {
+      "id": "set_down",
+      "task": "task.set_down",
+      "line": "sol1.set_down",
+      "keys": [
+        "E"
+      ],
+      "wait": {
+        "ever": "use:set_down"
+      }
+    },
+    {
       "id": "map",
       "task": "task.follow_solar",
       "line": "sol1.map_open",
@@ -371,13 +382,18 @@
     }
   ],
   "nag": {
-    "_note": "PIP ignored: the plea times (s since the step began or the kid last got nearer), its lines and sounds by level (audio.gd SOUNDS names), the sad bounce at level 3 (s, m up, bounces a second, head down)",
+    "_note": "PIP ignored: the plea times (s since the step began or the kid last got nearer), its lines by level (`lines` for a key step, `place_lines` for a step that waits on a place: only there does 'Over here!' fit) and sounds by level (audio.gd SOUNDS names), the sad bounce at level 3 (s, m up, bounces a second, head down)",
     "at_s": [
       10,
       25,
       45
     ],
     "lines": [
+      "nag.gentle",
+      "nag.try",
+      "nag.sad"
+    ],
+    "place_lines": [
       "nag.gentle",
       "nag.loud",
       "nag.sad"

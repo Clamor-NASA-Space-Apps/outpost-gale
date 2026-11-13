@@ -27,6 +27,7 @@ var world: Node3D
 var player: Node3D
 var interactions: Node3D
 var clock: Node  # world/sky_clock.gd
+var holds_clock := false  # a clock:<hour> holds the sky (the opening): the rules wait too, so the HUD's hour matches it
 var pip: Node3D  # sandbox/pip.gd
 var data: Dictionary
 var _sols := {}  # data/sols.json, read on the first start_sol()
@@ -218,7 +219,7 @@ func _plead(delta: float) -> void:
 	if _nag_t >= float(at[_next_nag]):
 		_nag = _next_nag + 1
 		pip.nag(_nag, n)
-		_say(beat.get("nag", n.lines)[_nag - 1], true)
+		_say(beat.get("nag", n.place_lines if beat.get("wait", {}).has("place") else n.lines)[_nag - 1], true)
 		_next_nag += 1
 		if _next_nag == at.size():
 			_next_nag = 1  # the loud one again, after the same wait as from the gentle one
@@ -319,6 +320,7 @@ func _do(command: String) -> void:
 	var arg := command.get_slice(":", 1)
 	match command.get_slice(":", 0):
 		"clock":
+			holds_clock = arg.is_valid_float()
 			if arg == "run":
 				clock.pinned = false
 			elif arg == "skip":

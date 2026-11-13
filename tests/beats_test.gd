@@ -3,7 +3,7 @@ extends "res://addons/forge/test.gd"
 ## godot --headless --path . --fixed-fps 60 -s tests/beats_test.gd
 ## The hero walks out of the airlock on its own (input blocked), the hatch shuts, the real dawn shot catches the sun
 ## breaking over the crater rim; then input actions walk the hero through the rest as a kid would: to PIP, A and D, S, a look
-## round, a hop (the Earth ghost beside it rises 0.38 as high and lands sooner), a hurry, a bag lifted, the map, after
+## round, a hop (the Earth ghost beside it rises 0.38 as high and lands sooner), a hurry, a bag lifted and set down, the map, after
 ## PIP to the solar farm, the facts dismissed, the choice answered, then after PIP to the greenhouse. On the way: a
 ## blocked action does nothing, an ignored step makes PIP plead louder and calm down once the kid does it, a fact
 ## waits for its dismiss. Every beat ends, in the data's order, inside its time; PIP never gives up an order, leads
@@ -12,7 +12,7 @@ extends "res://addons/forge/test.gd"
 # s each beat may take here: its own wait plus the walking
 const BUDGET := {"wake": 4, "hatch": 3, "walk_out": 20, "outside": 12, "pip_hello": 32, "walk_to_me": 20,
 	"side_steps": 60, "back_step": 4, "look_shot": 4, "look_mouse": 6, "try_jump": 4, "jump_fact": 6, "hurry": 10,
-	"lift": 40, "lift_fact": 2, "map": 2, "map_close": 2, "follow_solar": 120, "sun_fact": 2, "o2_lead": 2,
+	"lift": 40, "lift_fact": 2, "set_down": 10, "map": 2, "map_close": 2, "follow_solar": 120, "sun_fact": 2, "o2_lead": 2,
 	"lamps_lead": 2, "choice": 2, "follow_me": 180}
 
 var game: Node3D
@@ -112,7 +112,7 @@ func play() -> bool:
 	var pleas := await _until(func() -> bool: return beats._nag >= 3, 50.0, func() -> void:
 		sulked[0] = sulked[0] or pip._sulk > 0.0)
 	var said := lines.filter(func(id: String) -> bool: return id.begins_with("nag."))
-	check(pleas and said == ["nag.gentle", "nag.loud", "nag.sad"], "an ignored step pleads gently, louder, then sad (%s)" % [said])
+	check(pleas and said == ["nag.gentle", "nag.try", "nag.sad"], "an ignored key step pleads gently, louder (no 'Over here!'), then sad (%s)" % [said])
 	await frames(2)
 	check(sulked[0] or pip._sulk > 0.0, "PIP bounces sadly at the third plea")
 	await frames(60 * 5)
@@ -187,6 +187,14 @@ func play() -> bool:
 	_stop()
 	check(game.interactions.carried != null, "the hero lifted a bag")
 	await _beat("lift_fact", func() -> void: beats.notify("dismissed"))
+	# PIP asks for the bag back on the ground: one E once the pick-up has finished
+	var put := [false]
+	await _beat("set_down", func() -> void:
+		if not put[0] and game.interactions._seq <= 0.0:
+			put[0] = true
+			action(&"interact", true)
+			action(&"interact", false))
+	check(game.interactions.carried == null, "the bag is down again")
 	await _beat("map", func() -> void:
 		action(&"map", true)
 		action(&"map", false))

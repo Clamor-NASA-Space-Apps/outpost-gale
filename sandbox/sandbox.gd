@@ -162,7 +162,7 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	# time waits while the player cannot act: the look clock and the rules alike
 	clock.paused = settings.is_open() or cover.visible or hud.is_open() or hud.map_open()
-	sim.paused = clock.paused or cine.busy()
+	sim.paused = clock.paused or cine.busy() or beats.holds_clock  # the opening holds the sky at dawn: the HUD hour waits with it
 	hud.visible = not settings.is_open()
 	hud.show_prompt(interactions.prompt_label.text.trim_prefix("[E]  "))  # empty when nothing is in reach; the HUD draws its own E key
 	if not cine.busy():
