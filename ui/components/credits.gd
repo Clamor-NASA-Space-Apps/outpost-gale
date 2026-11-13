@@ -18,7 +18,7 @@ var buttons: Array[Button] = []
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var scrim := ColorRect.new()
-	scrim.color = Hud.color("scrim_full")
+	scrim.color = Hud.color("hud-scrim-full")
 	scrim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(scrim)
 	var grid := GridContainer.new()
@@ -33,7 +33,7 @@ func _ready() -> void:
 	back.custom_minimum_size = Vector2(200, Hud.BUTTON_H)
 	buttons.append(back)
 	var foot := Hud.row([Hud.label("Not made or endorsed by NASA.", "Caption"), Hud.spacer(), back], 16)
-	var card := Hud.panel("HudPanel", Hud.col([Hud.label("Credits", "Title"), grid, foot], 18), true)
+	var card := Hud.panel("HudPanel", Hud.col([Hud.label("Credits", "Title"), grid, foot], 18))
 	card.custom_minimum_size.x = 760
 	var center := CenterContainer.new()
 	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)

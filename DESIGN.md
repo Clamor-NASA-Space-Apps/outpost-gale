@@ -34,6 +34,30 @@ colors:
   horizon: "#f6d9a6"
   ground: "#9a5f3d"
   shade: "#7d86ad"
+  hud-glass: "#160f0c57"
+  hud-glass-menu: "#160f0cb8"
+  hud-stroke: "#8ef7ea73"
+  hud-stroke-faint: "#8ef7ea2e"
+  hud-glow: "#2ed3c01f"
+  hud-glow-amber: "#f0a64059"
+  hud-glow-danger: "#ff4d4d59"
+  hud-text-edge: "#160f0cd9"
+  hud-highlight: "#ffffff1f"
+  hud-arc: "#8ef7ea59"
+  hud-arc-faint: "#8ef7ea40"
+  hud-ink-faint: "#f6ecdc8c"
+  hud-ink-dim: "#f6ecdc99"
+  hud-ink-ghost: "#f6ecdc59"
+  hud-track: "#f6ecdc26"
+  hud-tab-on: "#8ef7ea1a"
+  hud-seg-on: "#2ed3c038"
+  hud-key: "#160f0c73"
+  hud-scrim: "#160f0c73"
+  hud-scrim-strong: "#160f0c99"
+  hud-scrim-full: "#160f0ccc"
+  hud-scrim-menu: "#0a07068c"
+  hud-cover-track: "#251914e6"
+  hud-cover-edge: "#f0a64099"
 typography:
   headline:
     fontFamily: Lexend
@@ -79,6 +103,74 @@ components:
     typography: "{typography.label}"
     rounded: "{rounded.sm}"
     padding: 8px 16px
+  # The glass HUD (design/mockups/hud.html and settings.html, approved 13 Nov 2026): tint, a 1.5 px stroke, a soft
+  # outer glow and a top highlight, radius 10, no blur (phones). Each translucent token is one of these parts.
+  hud-panel:
+    backgroundColor: "{colors.hud-glass}"
+    rounded: 10px
+    padding: 14px 18px
+  hud-menu:
+    backgroundColor: "{colors.hud-glass-menu}"
+    rounded: 10px
+    padding: 26px 30px
+  hud-stroke:
+    backgroundColor: "{colors.hud-stroke}"
+    width: 1.5px
+  hud-divider:
+    backgroundColor: "{colors.hud-stroke-faint}"
+    height: 1px
+  hud-glow:
+    backgroundColor: "{colors.hud-glow}"
+    size: 18px
+  hud-glow-picked:
+    backgroundColor: "{colors.hud-glow-amber}"
+    size: 16px
+  hud-glow-alert:
+    backgroundColor: "{colors.hud-glow-danger}"
+    size: 18px
+  hud-text-outline:
+    backgroundColor: "{colors.hud-text-edge}"
+    size: 2px
+  hud-highlight:
+    backgroundColor: "{colors.hud-highlight}"
+    height: 1px
+  hud-visor-arc:
+    backgroundColor: "{colors.hud-arc}"
+    height: 1.5px
+  hud-visor-arc-low:
+    backgroundColor: "{colors.hud-arc-faint}"
+    height: 1.5px
+  hud-compass-tick:
+    backgroundColor: "{colors.hud-ink-faint}"
+    width: 2px
+    height: 10px
+  hud-compass-number:
+    textColor: "{colors.hud-ink-dim}"
+  hud-bubble-untyped:
+    textColor: "{colors.hud-ink-ghost}"
+  hud-meter-track:
+    backgroundColor: "{colors.hud-track}"
+    height: 6px
+    rounded: 3px
+  hud-tab-open:
+    backgroundColor: "{colors.hud-tab-on}"
+  hud-segment-on:
+    backgroundColor: "{colors.hud-seg-on}"
+  hud-key:
+    backgroundColor: "{colors.hud-key}"
+    rounded: 5px
+  hud-scrim:
+    backgroundColor: "{colors.hud-scrim}"
+  hud-scrim-strong:
+    backgroundColor: "{colors.hud-scrim-strong}"
+  hud-scrim-full:
+    backgroundColor: "{colors.hud-scrim-full}"
+  hud-scrim-menu:
+    backgroundColor: "{colors.hud-scrim-menu}"
+  hud-cover-track:
+    backgroundColor: "{colors.hud-cover-track}"
+  hud-cover-edge:
+    backgroundColor: "{colors.hud-cover-edge}"
 materials:
   body: { color: "{colors.body}", roughness: 0.55, metalness: 0.1, detail: { texture: "textures/body_albedo.jpg", normal: "textures/body_normal.jpg", roughness: "textures/body_rough.jpg", textureSize: 2.0, strength: 0.8, pattern: grain, size: 2.0 } }
   trim: { color: "{colors.trim}", roughness: 0.75, metalness: 0, detail: { texture: "textures/trim_albedo.jpg", normal: "textures/trim_normal.jpg", roughness: "textures/trim_rough.jpg", textureSize: 0.75, strength: 0.6, pattern: grain, size: 0.75 } }

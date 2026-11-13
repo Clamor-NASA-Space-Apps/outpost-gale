@@ -24,7 +24,7 @@ var button := Button.new()
 
 
 func _ready() -> void:
-	theme_type_variation = "HudPanel"
+	theme_type_variation = "HudMenu"
 	custom_minimum_size.x = width
 	var list := Hud.col([], 10)
 	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL

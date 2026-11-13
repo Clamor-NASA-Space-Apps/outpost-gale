@@ -1,8 +1,9 @@
 extends "res://addons/forge/test.gd"
 ## The settings screen (ui/settings.gd): godot --headless --path . -s tests/settings_test.gd --fixed-fps 60
-## Five preset cards, each preset named by every Advanced row, an Advanced choice waits for an Apply that is always on
-## screen and then saves with a "Saved" mark, the choices survive a restart (old saves map to the new presets), the
-## buttons are touch targets on a phone either way up, and nothing it adds is game state.
+## Four tabs that switch pages, five preset cards, each preset named by every fine-tune row, a fine-tune pick that goes
+## on a moment later (or on close) and saves with a "Saved" mark, every former option still there, the Esc chip that
+## closes it, the choices kept across a restart (old saves map to the new presets), touch targets on a phone either
+## way up, and nothing it adds is game state.
 
 const Settings := preload("res://ui/settings.gd")
 const HouseStyle := preload("res://addons/forge/house_style.gd")
@@ -44,15 +45,13 @@ func sun() -> DirectionalLight3D:
 	return null
 
 
-## Pick option `name` of Advanced row `r` with its arrows, as a player would.
+## Pick option `name` of fine-tune row `r` with its segment, as a player would.
 func pick(r: String, name: String) -> void:
 	var names: Array = Settings.ADVANCED[r].map(func(o: Array) -> String: return o[0])
-	for i in 8:
-		var at: int = s.current(r)
-		if at >= 0 and names[at] == name:
-			return
-		(s.rows[r].plus if at < names.find(name) else s.rows[r].minus).pressed.emit()
-	check(false, "%s reaches %s" % [r, name])
+	var i := names.find(name)
+	if check(i >= 0 and s.rows[r][i].is_visible_in_tree(), "%s has a %s segment on screen" % [r, name]):
+		s.rows[r][i].pressed.emit()
+	check(s.current(r) == i and s.rows[r][i].button_pressed, "%s shows %s picked" % [r, name])
 
 
 func on_screen(c: Control) -> bool:
@@ -77,17 +76,41 @@ func play() -> bool:
 	action(&"settings", false)
 	check(s.is_open(), "Esc opens it")
 
-	# the main page: a card per preset, the FPS switch, sound; Advanced folded away and short
+	# the Graphics tab: a card per preset, fine tune beside; the other tabs hold sound, keys and the screen switches
+	await frames(2)
+	check(s.page == 0 and s.pages[0].is_visible_in_tree() and s.tabs[0].button_pressed, "it opens on Graphics")
 	check(s.cards.keys() == game.design.quality.keys(), "a card per preset, weakest first (%s)" % [s.cards.keys()])
 	for id: String in s.cards:
-		check(Settings.PRESETS.has(id), "preset %s has a name, an icon and a line" % id)
+		check(Settings.PRESETS.has(id) and on_screen(s.cards[id]), "preset %s has a name, an icon and a line, on screen" % id)
 	check(s.cards[game.quality].button_pressed and s.cards[game.quality].get_meta("check").visible, "the preset in force is checked")
-	check(not s.advanced.is_visible_in_tree(), "Advanced starts folded")
-	check(s.rows.size() <= 6, "at most six Advanced choices (%d)" % s.rows.size())
-	for k: String in ["master", "music", "effects"]:
+	check(s.rows.size() == Settings.ADVANCED.size() and s.rows.size() <= 6, "six fine-tune rows (%d)" % s.rows.size())
+	for r: String in s.rows:  # every option of the old Advanced rows is a segment
+		check(s.rows[r].size() == Settings.ADVANCED[r].size() and s.rows[r].all(func(b: Button) -> bool: return b.is_visible_in_tree()), "%s shows every option" % r)
+	var tab_has := [s.cards.values()[0], s.sliders.music, null, s.fps_buttons[0]]
+	for i: int in s.tabs.size():
+		s.tabs[i].pressed.emit()
+		await frames(2)
+		check(s.page == i and s.tabs[i].button_pressed and s.pages.filter(func(p: Control) -> bool: return p.visible).size() == 1, "tab %s opens its page alone" % s.tabs[i].text)
+		if tab_has[i]:
+			check(on_screen(tab_has[i]), "tab %s holds its options" % s.tabs[i].text)
+	check(s.pages[2].find_children("*", "Label", true, false).any(func(l: Label) -> bool: return l.text == "E"), "Controls lists the keys (E for Use)")
+	for k: String in ["master", "music", "effects", "interface"]:
 		check(s.sliders.has(k), "a slider for %s" % k)
+	var cues: Array[String] = []
+	s.cue.connect(func(n: String) -> void: cues.append(n))
+	s.tabs[1].mouse_entered.emit()
+	s.tabs[1].pressed.emit()
+	s.tabs[0].pressed.emit()
+	check(cues == ["tick", "select", "select"], "a hover ticks, a pick selects (%s)" % [cues])
+	check(OS.has_feature("web_ios") or s.full_buttons.size() == 2, "a full screen switch")
+	s.tabs[0].pressed.emit()
 	await frames(2)
-	check(on_screen(s.apply_button) and on_screen(s.reset_button), "Apply and Reset are on screen with nothing changed")
+	check(on_screen(s.close_button) and s.close_button.get_global_rect().size.y >= 48.0, "the Esc chip is on screen, a 48 px target")
+	click(s.close_button.get_global_rect().get_center())
+	await frames(1)
+	check(not s.is_open(), "the Esc chip closes it")
+	s.open()
+	await frames(2)
 
 	# every preset names one choice in every row, so no row reads "Custom" before the player touches it
 	for id: String in game.design.quality:
@@ -101,28 +124,23 @@ func play() -> bool:
 	s.cards[HouseStyle.default_quality(game.design)].pressed.emit()
 	await settle()
 
-	# 13 Nov playtest: "doesn't show the save button even after I save something"
-	s.fold_button.pressed.emit()
-	await frames(2)
-	check(s.advanced.is_visible_in_tree(), "Advanced folds out")
+	# a fine-tune pick goes on a moment later, behind the cover, and says Saved
 	var msaa_before := view.msaa_3d
 	pick("Anti-aliasing", "8x")
 	pick("Shadows", "Off")
 	pick("Resolution", "50%")
 	pick("Frame cap", "30 fps")
 	await frames(2)
-	check(view.msaa_3d == msaa_before, "a choice waits for Apply")
-	check(s.rows["Anti-aliasing"].wait.visible, "and says so")
-	check(on_screen(s.apply_button) and not s.apply_button.disabled, "Apply is offered, on screen")
-	s.apply_button.pressed.emit()
-	check(game.busy(), "Apply puts the cover up while shaders compile")
-	check(s.saved_tag.visible, "Apply says Saved")
+	check(view.msaa_3d == msaa_before and s.waiting(), "the picks wait a moment, so they share one cover")
+	await s.timer.timeout
+	check(game.busy(), "then go on behind the cover while shaders compile")
+	check(s.saved_tag.visible, "and say Saved")
 	await settle()
 	check(view.msaa_3d == MSAA[8], "Apply sets anti-aliasing")
 	check(not sun().shadow_enabled, "Apply turns shadows off")
 	check(is_equal_approx(view.scaling_3d_scale, 0.5), "Apply sets the resolution (%.2f)" % view.scaling_3d_scale)
 	check(Engine.max_fps == 30, "Apply sets the frame cap")
-	check(s.apply_button.disabled and on_screen(s.apply_button) and not s.rows["Anti-aliasing"].wait.visible, "nothing waits after Apply")
+	check(not s.waiting(), "nothing waits after")
 	check(Settings._same(Settings.saved().overrides.get("msaa"), 8), "the choice is saved (%s)" % [Settings.saved().overrides])
 	pick("Effects", "Low")
 	action(&"settings")
@@ -130,19 +148,21 @@ func play() -> bool:
 	action(&"settings", false)
 	check(not s.is_open() and game.busy(), "Esc closes and puts the cover up")
 	await settle()
-	check(Settings._same(knob("glow").value, 0.0), "Esc applies what waits")  # behind the cover (set_graphics)
+	check(Settings._same(knob("glow").value, 0.0), "Esc applies what waits at once")  # behind the cover (set_graphics)
 	s.open()
 
 	# sound and the FPS switch apply at once
 	s.sliders.music.value = 50
 	s.sliders.master.value = 20
+	s.sliders.interface.value = 30
 	await frames(2)
+	check(is_equal_approx(game.audio.volume.interface, 0.3) and is_equal_approx(Settings.saved().volume.interface, 0.3), "the interface slider sets and saves its level")
 	check(is_equal_approx(game.audio.volume.music, 0.5), "the music slider sets its level")
 	var music_db: float = game.audio.t.bus_db.Music + linear_to_db(0.5)
 	check(absf(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("Music")) - music_db) < 0.1, "the Music bus follows")
 	check(absf(AudioServer.get_bus_volume_db(0) - linear_to_db(0.2)) < 0.1, "the Master bus follows")
-	s.fps_button.pressed.emit()
-	check(not game.fps_label.visible and Settings.saved().fps == false, "Show FPS off hides the counter, saved")
+	s.fps_buttons[1].pressed.emit()
+	check(not game.fps_label.visible and Settings.saved().fps == false and s.fps_buttons[1].button_pressed, "Show FPS off hides the counter, saved")
 
 	# kept per device, and read back by a fresh start
 	var kept: Dictionary = game.overrides.duplicate()
@@ -153,33 +173,36 @@ func play() -> bool:
 	await start()
 	check(game.quality == level and Settings._same_dict(game.overrides, kept), "a restart starts on the saved choices (%s)" % [game.overrides])
 	check(view.msaa_3d == MSAA[int(knob("msaa").value)], "and the engine with them")
-	check(is_equal_approx(game.audio.volume.music, 0.5) and not game.fps_label.visible, "and the saved sound and FPS switch")
+	check(is_equal_approx(game.audio.volume.music, 0.5) and is_equal_approx(game.audio.volume.get("interface", 0.0), 0.3) and not game.fps_label.visible, "and the saved sound and FPS switch")
 
 	# reset, and a preset undoes the player's frame pacing
 	s.open()
-	s.reset_button.pressed.emit()
+	s.cards[game.quality].pressed.emit()  # the card in force is the reset
 	await settle()
-	check(game.overrides.is_empty() and s.draft.is_empty(), "reset clears the player's choices")
+	check(game.overrides.is_empty() and s.draft.is_empty(), "its preset card clears the player's choices")
 	check(Engine.max_fps == 0, "and the frame cap with them")
-	s.fps_button.pressed.emit()
+	s.fps_buttons[0].pressed.emit()
 
-	# touch targets: a phone in landscape (2400 x 1080, 1600 x 720 on the canvas) and in portrait, Advanced open
+	# touch targets: a phone in landscape (2400 x 1080, 1600 x 720 on the canvas) and in portrait, every tab
 	s.phone = true
-	s.advanced.visible = true
 	for size: Vector2i in [Vector2i(2400, 1080), Vector2i(1080, 2400)]:
 		var shown := await shape(size)
-		s._fit()
-		await frames(2)
 		var need := TARGET * minf(shown.size.x, shown.size.y) / 720.0
-		var small := []
-		for b: Button in s.root.find_children("*", "Button", true, false):
-			if b.is_visible_in_tree() and b.get_global_rect().size.y < need - 0.5:
-				small.append(b.text)
-		check(small.is_empty(), "%s: every button is at least %.0f px tall (%s)" % [size, need, small])
-		check(shown.encloses(s.panel.get_global_rect()), "%s: the panel fits the screen" % size)
-		check(on_screen(s.apply_button), "%s: Apply is on screen" % size)
+		for i: int in s.tabs.size():
+			s.show_tab(i)
+			s._fit()
+			await frames(2)
+			var small := []
+			for b: Button in s.root.find_children("*", "Button", true, false):
+				var r := b.get_global_rect()
+				if b.is_visible_in_tree() and minf(r.size.x, r.size.y) < need - 0.5:
+					small.append("%s %s" % [b.text, r.size])
+			check(small.is_empty(), "%s %s: every button is at least %.0f px (%s)" % [size, s.tabs[i].text, need, small])
+			check(shown.encloses(s.panel.get_global_rect()), "%s %s: the panel fits the screen" % [size, s.tabs[i].text])
+			check(on_screen(s.close_button), "%s: the Esc chip is on screen" % size)
 		for l: Label in s.root.find_children("*", "Label", true, false):
 			check(l.text.split(" ", false).size() <= 8, "at most 8 words: '%s'" % l.text)
+	s.show_tab(0)
 	await shape(SHAPES[0])
 	s.phone = false
 	s._fit()

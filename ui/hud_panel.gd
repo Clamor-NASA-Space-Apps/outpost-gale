@@ -1,20 +1,11 @@
 extends PanelContainer
-## A HUD panel. The theme draws the box with two cut corners; this adds the visor display's corner
-## brackets on the two square corners, in the panel variation's "bracket" colour.
-
-@export var brackets := true
-
-const ARM := 18.0
-const GAP := 5.0
-const WIDTH := 3.0
+## A HUD panel. The theme draws the glass (tint, stroke, glow); this adds the top highlight, a faint line inside the
+## top edge, in the variation's "highlight" colour (a flat style has one border colour, so it cannot carry it).
 
 
 func _draw() -> void:
-	if not brackets:
+	var col := get_theme_color("highlight", theme_type_variation)
+	if col.a <= 0.0:
 		return
-	var col := get_theme_color("bracket", theme_type_variation)
-	var r := Rect2(Vector2.ZERO, size).grow(GAP)
-	var a := r.position
-	var b := r.end
-	draw_polyline([a + Vector2(0, ARM), a, a + Vector2(ARM, 0)], col, WIDTH)
-	draw_polyline([b - Vector2(0, ARM), b, b - Vector2(ARM, 0)], col, WIDTH)
+	var r := float((get_theme_stylebox("panel") as StyleBoxFlat).corner_radius_top_left) if get_theme_stylebox("panel") is StyleBoxFlat else 0.0
+	draw_line(Vector2(r, 1.5), Vector2(size.x - r, 1.5), col, 1.0)

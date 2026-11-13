@@ -1,13 +1,17 @@
 extends Control
-## The play HUD on the visor: three meters, the sol clock and suit air, PIP's subtitles, visor mail, an alert, and
-## the cards (a choice, the sleep ledger, the causes of a lost mission, where the numbers come from). It holds no
-## rules: bind() a node with `signal changed(state: Dictionary)` (the sim's state keys) and it shows what it gets.
+## The play HUD on the visor (design/mockups/hud.png): the status card (sol, clock, three meters), Today's tasks, the
+## compass tape, the minimap and the full map (M), the objective's waypoint, PIP's speech bubble, the use prompt,
+## visor mail, an alert, and the cards (a choice, the sleep ledger, the causes of a lost mission, where the numbers
+## come from). It holds no rules: bind() a node with `signal changed(state: Dictionary)` (the sim's state keys) and
+## it shows what it gets. Every HUD event emits `cue(name)` once (audio/audio.gd UI_SOUNDS); the sandbox plays it.
 ## Under a CanvasLayer it fills the screen and draws PHONE_SCALE larger on a touch screen, with margins clear of the
 ## settings gear and the back swipe; inside another Control (ui/hud_gallery.tscn) it fills that.
 
 signal chosen(id: String, index: int)
 signal retry
 signal ledger_closed
+signal cue(name: String)  # a HUD sound: audio.ui(name)
+signal map_toggled(open: bool)
 
 const Hud := preload("res://ui/hud.gd")
 const Delay := preload("res://ui/radio_delay.gd")
@@ -16,6 +20,8 @@ const SUPPLIES := ["o2_kg", "water_kg", "food_kg"]
 # stay at Gale adds up to (factcheck rows 32, 33). A 30-sol stay at 0.67 mSv a day costs about 2 points.
 const DOSE_FULL_MSV := 1000.0
 const TOAST_S := 6.0
+const ALERT_GAP_S := 6.0  # the alert and danger cues repeat no more often than this
+const PLACES := preload("res://ui/components/full_map.gd").PLACES
 # What the "where this comes from" card says beside each number, with its factcheck row
 const SOURCES := {
 	"battery_pct": "Sunlight 43% of Earth's: NASA fact sheet",  # row 15
@@ -34,7 +40,31 @@ var stock := {}  # the most of each supply seen so far: Life support's 100%
 var start_unix := Time.get_unix_time_from_system()  # sol 1 is the day the game is played
 var frame := Control.new()  # everything sits inside its margins
 var meters := {}  # power, life, health
-var clock: Control
+var clock: Control  # the status card: sol, time, suit air
+var status: Control
+var tasks: Control
+var compass: Control
+var minimap: Control
+var waypoint: Control
+var prompt: Control
+var full_map: Control  # open while the full map shows, else null
+var camera: Camera3D
+var hero: Node3D
+var pip: Node3D
+var objective := ""  # the landmark id the waypoint points at, "" for none
+var touch := DisplayServer.is_touchscreen_available():
+	set(v):
+		touch = v
+		if minimap:
+			minimap.touch = v
+			prompt.touch = v
+			# a phone's Use and Hop buttons hold the bottom right, so there the prompt sits at the bottom centre
+			prompt.size_flags_horizontal = Control.SIZE_SHRINK_CENTER if v else Control.SIZE_SHRINK_END
+			# 48 px under a mouse, 96 scene px for a finger (addons/forge/test.gd TARGET) under PHONE_SCALE
+			var b := 96.0 / Hud.PHONE_SCALE if v else 48.0
+			source_button.custom_minimum_size = Vector2(b, b)
+var world: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/world.json"))
+var _cue_at := {}  # cue name -> the time it last played
 var mail: Control
 var mail_sol := -1  # the sol the mail went out, -1 for none
 var toast: Control
@@ -53,13 +83,19 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(frame)
-	# Containers only, so every part takes its least size again whenever the alert, mail or a subtitle comes and goes.
-	# Left: the meters, the alert below (clear of the phone's stick). Right: the clock and the source button beside
-	# the settings gear, the mail below (clear of the phone's action buttons). Bottom: PIP's subtitle.
-	var left := _quiet(Hud.col([], 12))
-	var status: Control = _scene("status_panel", left)
+	_scene("visor_arcs", self).name = "VisorArcs"
+	move_child(get_node("VisorArcs"), 0)  # behind everything
+	# Containers only, so every part takes its least size again whenever the alert, mail or a task comes and goes.
+	# Left: the status card, Today, the alert (clear of the phone's stick). Right: the minimap, the source button under
+	# the settings gear's place, the mail below (clear of the phone's action buttons). Bottom right: the use prompt.
+	var left := _quiet(Hud.col([], 10))
+	status = _scene("status_panel", left)
 	status.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	meters = {"power": status.get_node("Meters/Power"), "life": status.get_node("Meters/LifeSupport"), "health": status.get_node("Meters/CrewHealth")}
+	clock = status
+	meters = status.meters
+	tasks = _scene("tasks_card", left)
+	tasks.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	tasks.hide()
 	toast = _scene("alert_toast", left)
 	toast.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	toast.hide()
@@ -71,16 +107,16 @@ func _ready() -> void:
 	source_button.focus_mode = Control.FOCUS_NONE
 	source_button.pressed.connect(show_sources)
 	var gap := Control.new()  # the settings gear's place (ui/settings.gd)
-	gap.custom_minimum_size = Vector2(Hud.BUTTON_H, 0)
+	gap.custom_minimum_size = Vector2(Hud.BUTTON_H, Hud.BUTTON_H)
 	gap.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var buttons := _quiet(Hud.row([], 16))
-	buttons.size_flags_horizontal = Control.SIZE_SHRINK_END
-	clock = _scene("sol_clock", buttons)
-	clock.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
-	buttons.add_child(source_button)
-	buttons.add_child(gap)
-	source_button.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
-	var right := _quiet(Hud.col([buttons], 16))
+	var buttons := _quiet(Hud.col([gap, source_button], 12))
+	var corner := _quiet(Hud.row([], 14))
+	corner.size_flags_horizontal = Control.SIZE_SHRINK_END
+	minimap = _scene("minimap", corner)
+	minimap.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	minimap.pressed.connect(open_map)
+	corner.add_child(buttons)
+	var right := _quiet(Hud.col([corner], 12))
 	mail = _scene("ask_earth", right)
 	mail.size_flags_horizontal = Control.SIZE_SHRINK_END
 	mail.hide()
@@ -88,15 +124,22 @@ func _ready() -> void:
 		c.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	var top := _quiet(Hud.row([left, Hud.spacer(), right], 16))
 	top.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	frame.add_child(top)
-	top.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	prompt = load("res://ui/components/prompt.tscn").instantiate()
+	prompt.size_flags_horizontal = Control.SIZE_SHRINK_END
+	frame.add_child(_quiet(Hud.col([top, prompt], 0)))
+	frame.get_child(0).set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	compass = _scene("compass")
+	compass.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP, Control.PRESET_MODE_MINSIZE)
+	compass.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	compass.hide()  # shown once a camera is bound (bind_view)
+	waypoint = _scene("waypoint", self)
 	bubble = _scene("speech_bubble", self)  # over the whole screen: it follows PIP, or docks at an edge
 	modal.name = "Modal"
 	modal.hide()
 	add_child(modal)
 	modal.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var scrim := ColorRect.new()
-	scrim.color = Hud.color("scrim")
+	scrim.color = Hud.color("hud-scrim")
 	scrim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	modal.add_child(scrim)
 	holder.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -104,6 +147,7 @@ func _ready() -> void:
 	modal.add_child(holder)
 	get_viewport().size_changed.connect(_fit)
 	_fit()
+	touch = touch
 
 
 func _scene(n: String, parent: Control = null) -> Control:
@@ -166,7 +210,10 @@ func show_state(s: Dictionary) -> void:
 	stock.suit = maxf(stock.get("suit", 0.0), suit)
 	clock.show_time(int(s.sol), float(s.hour), suit if suit < stock.suit else -1.0)
 	if mail_sol >= 0:
+		var was: float = mail.progress()
 		mail.set_now(float(s.hour) + (int(s.sol) - mail_sol) * Hud.SOL_H)
+		if was < 1.0 and mail.progress() >= 1.0:
+			_cue("mail")  # the reply is home
 	var now := {}
 	for e: Dictionary in s.get("events", []):
 		now[e.id] = true
@@ -176,7 +223,7 @@ func show_state(s: Dictionary) -> void:
 	var failing: Array = s.get("failing", [])
 	for k: String in failing:
 		if k not in _failing:
-			alert("%s ran out!" % Hud.KEYS.get(k, ["", k])[1], line("failing_" + k))
+			alert("%s ran out!" % Hud.KEYS.get(k, ["", k])[1], line("failing_" + k), "danger")
 	_failing = failing.duplicate()
 
 
@@ -186,15 +233,130 @@ func line(id: String) -> String:
 
 
 func say(line_id: String) -> void:
+	_cue("pip_open")
 	bubble.speak(line(line_id))
 
 
 ## PIP speaks from `node`, seen through `camera`: his bubble rides above him on screen.
-func bind_speaker(node: Node3D, camera: Camera3D) -> void:
-	bubble.follow(node, camera)
+func bind_speaker(node: Node3D, cam: Camera3D) -> void:
+	pip = node
+	bubble.follow(node, cam)
 
 
-func alert(title: String, text := "") -> void:
+## The play camera and the hero's body: the compass, the minimap, the waypoint and distances follow them.
+func bind_view(cam: Camera3D, body: Node3D) -> void:
+	camera = cam
+	hero = body
+	waypoint.follow(cam, body)
+	compass.show()
+
+
+## The objective: a landmark from data/world.json `landmarks`, named by a data/lines.json id (or by the place's own
+## name when label_id is ""). The waypoint, the compass and the maps point at it.
+func set_objective(landmark_id: String, label_id := "") -> void:
+	if not world.landmarks.has(landmark_id):
+		push_error("hud: no landmark '%s' in data/world.json" % landmark_id)
+		return
+	if landmark_id != objective:
+		_cue("objective_new")
+	objective = landmark_id
+	var l: Array = world.landmarks[landmark_id]
+	# landmarks carry no height; near the base the hero's own height is close enough for a marker floating over it
+	waypoint.point(Vector3(l[0], hero.global_position.y if hero else 0.0, l[1]), line(label_id) if label_id else PLACES.get(landmark_id, landmark_id.capitalize()))
+
+
+## The objective reached: its warm cue, and the waypoint goes.
+func complete_objective() -> void:
+	if objective:
+		_cue("objective_done")
+	clear_objective()
+
+
+func clear_objective() -> void:
+	objective = ""
+	waypoint.hide()
+
+
+## Today's list: [{label_id, state: "done" | "now" | "next"}], words from data/lines.json. A task newly done ticks.
+func set_tasks(list: Array) -> void:
+	var before: Array = tasks.tasks
+	var rows: Array = list.map(func(t: Dictionary) -> Array: return [line(t.label_id), t.state])
+	for i in rows.size():
+		if rows[i][1] == "done" and (i >= before.size() or before[i][1] != "done"):
+			_cue("task_tick")
+			break
+	tasks.set_tasks(rows)
+	tasks.visible = not rows.is_empty()
+
+
+## The use prompt at the bottom right ("Open the greenhouse"); "" hides it.
+func show_prompt(text: String) -> void:
+	prompt.say(text)
+
+
+func map_open() -> bool:
+	return full_map != null
+
+
+## The full map over the play view; M, Esc, its close chip or a second M closes it.
+func open_map() -> void:
+	if full_map:
+		return
+	full_map = load("res://ui/components/full_map.tscn").instantiate()
+	full_map.width = minf(720.0, size.x - 40.0)
+	full_map.height = size.y
+	full_map.touch = touch
+	_map_marks()
+	full_map.closed.connect(close_map)
+	add_child(full_map)
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE  # the map is used with the pointer
+	_cue("map_open")
+	map_toggled.emit(true)
+
+
+func close_map() -> void:
+	if not full_map:
+		return
+	full_map.queue_free()
+	full_map = null
+	_cue("map_close")
+	map_toggled.emit(false)
+
+
+func _map_marks() -> void:
+	if hero:
+		full_map.hero = Vector2(hero.global_position.x, hero.global_position.z)
+		full_map.yaw = Hud.bearing(-hero.global_transform.basis.z)
+	full_map.pip = Vector2(pip.global_position.x, pip.global_position.z) if pip else null
+	var l: Array = world.landmarks.get(objective, [])
+	full_map.objective = Vector2(l[0], l[1]) if objective else null
+
+
+func _input(e: InputEvent) -> void:
+	if e.is_action_pressed("map") and not e.is_echo():
+		if full_map:
+			close_map()
+		else:
+			open_map()
+		get_viewport().set_input_as_handled()
+	elif full_map and (e.is_action_pressed("ui_cancel") or InputMap.has_action("settings") and e.is_action_pressed("settings")):
+		close_map()  # Esc closes the map before it would open the settings
+		get_viewport().set_input_as_handled()
+
+
+## Every HUD event's sound, once: the same cue twice in a moment plays once, and the alert and danger cues wait
+## ALERT_GAP_S between them.
+func _cue(n: String) -> void:
+	var now := Time.get_ticks_msec() / 1000.0
+	var gap := ALERT_GAP_S if n in ["alert", "danger"] else 0.15
+	if now - float(_cue_at.get(n, -1e9)) < gap:
+		return
+	_cue_at[n] = now
+	cue.emit(n)
+
+
+func alert(title: String, text := "", sound := "alert") -> void:
+	_cue(sound)
 	toast.say(title, text)
 	toast.show()
 	_toast_left = TOAST_S
@@ -230,8 +392,10 @@ func offer_choice(id: String, options: Array) -> void:
 		return {"text": lines.get(t, t), "costs": o.get("costs", {})})
 	c.chosen.connect(func(i: int) -> void:
 		close_card()
+		_cue("choice_made")
 		chosen.emit(id, i))
 	_open(c)
+	_cue("choice_open")
 
 
 ## The sleep ledger: the sim's skip_sols() result.
@@ -242,6 +406,7 @@ func show_ledger(d: Dictionary) -> void:
 		close_card()
 		ledger_closed.emit())
 	_open(c)
+	_cue("ledger_open")
 
 
 ## The mission-lost card with what led there: the sim's top_causes() ({label, sol, effect}) or plain strings.
@@ -314,9 +479,36 @@ func _icon_of(effect: Dictionary) -> String:
 
 
 func _process(delta: float) -> void:
+	_follow_view()
 	if toast.visible:
 		_toast_left -= delta
 		toast.visible = _toast_left > 0.0
+
+
+## The compass and the minimap turn with the camera; their markers ride with the objective and PIP.
+func _follow_view() -> void:
+	if camera == null or hero == null:
+		return
+	var heading := Hud.bearing(-camera.global_transform.basis.z)
+	var at := hero.global_position
+	var obj = null
+	if objective:
+		var l: Array = world.landmarks[objective]
+		obj = Vector2(l[0], l[1])
+	var p = Vector2(pip.global_position.x, pip.global_position.z) if pip else null
+	compass.heading = heading
+	compass.marks = {"objective": Hud.bearing(Vector3(obj.x - at.x, 0, obj.y - at.z)) if obj != null else null,
+		"pip": Hud.bearing(Vector3(p.x - at.x, 0, p.y - at.z)) if p != null else null}
+	minimap.show_view(heading, {"x": at.x, "z": at.z, "yaw": Hud.bearing(-hero.global_transform.basis.z)}, {"objective": obj, "pip": p}, _area(at))
+
+
+## The area under the minimap: a field site's name when the hero is at one (world.json `sites`), else the base's plain.
+func _area(at: Vector3) -> String:
+	for id: String in ["mercou", "curiosity"]:
+		var c: Array = world.sites[id].centre
+		if Vector2(at.x, at.z).distance_to(Vector2(c[0], c[1])) < 1000.0:
+			return String(world.sites[id].label).get_slice(",", 0)
+	return "Landing plain"
 
 
 ## For render_game_to_text(): what the HUD shows now.
@@ -324,8 +516,14 @@ func snapshot() -> Dictionary:
 	return {
 		"meters": {"power": meters.power.value, "life": meters.life.value, "lifeIcon": meters.life.icon_name, "health": meters.health.value},
 		"sol": clock.sol, "time": clock.time, "suit": clock.suit_label.text if clock.suit.visible else "",
-		"subtitle": bubble.label.text if bubble.visible else "",
-		"bubble": {"typed": bubble.label.visible_characters, "docked": bubble.docked, "at": bubble.panel.position.round()} if bubble.visible else {},
+		"subtitle": bubble.text if bubble.visible else "",
+		"bubble": {"typed": bubble.typed, "docked": bubble.docked, "at": bubble.panel.position.round()} if bubble.visible else {},
+		"heading": compass.readout() if compass.visible else "",
+		"area": minimap.area,
+		"objective": {"id": objective, "label": waypoint.place, "m": waypoint.metres(), "docked": waypoint.docked} if objective else {},
+		"tasks": tasks.tasks if tasks.visible else [],
+		"prompt": prompt.line.text if prompt.visible else "",
+		"map": full_map != null,
 		"alert": toast.title if toast.visible else "",
 		"mail": {"sent": mail.sent_label.text, "reply": mail.reply_label.text, "minutes": snappedf(mail.minutes, 0.1)} if mail.visible else {},
 		"card": String(card.name) if card else "",

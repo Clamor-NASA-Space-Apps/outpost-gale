@@ -61,7 +61,15 @@ const SOUNDS := {
 const CUES := ["first_step", "airlock_sealed", "sunset", "discovery", "mission_lost", "quiet", "dawn", "sleep", "storm"]
 const BEDS := {"eva": ["bed_eva_1", "bed_eva_2", "bed_eva_3"], "habitat": ["bed_hab_1", "bed_hab_2"]}
 var _storm_heard := false  # the storm's cue played and the storm has not ended (a night in between keeps it)
-const SKY_CUES := {"design.sunset": "sunset", "design.storm": "storm"}  # the sky turning plays its cue, once a change
+const SKY_CUES := {"design.sunset": "sunset", "design.storm": "storm"}
+# The HUD's own cues and their levels in dB on the UI bus: calm and quieter than the world. The sounds are made in
+# code (ui/ui_sounds.gd); ui/game_hud.gd and ui/settings.gd emit `cue(name)`, which the sandbox connects to ui().
+const UI_SOUNDS := {
+	"objective_new": -14.0, "objective_done": -13.0, "task_tick": -18.0, "pip_open": -18.0, "mail": -16.0,
+	"alert": -12.0, "danger": -11.0, "choice_open": -17.0, "choice_made": -16.0, "ledger_open": -16.0,
+	"map_open": -17.0, "map_close": -18.0, "tick": -22.0, "select": -18.0,
+}
+const UiSounds := preload("res://ui/ui_sounds.gd")  # the sky turning plays its cue, once a change
 
 var world: Node3D
 var player: Node3D
@@ -83,7 +91,8 @@ var _listener := AudioListener3D.new()
 var _wind: AudioStreamPlayer
 var _rover_loops: Dictionary = {}  # "motor" or "wheels" -> its players
 var _streams: Dictionary = {}
-var volume := {"master": 1.0, "music": 1.0, "effects": 1.0}  # the player's own levels (ui/settings.gd), 0 to 1
+var volume := {"master": 1.0, "music": 1.0, "effects": 1.0, "interface": 1.0}  # the player's own levels (ui/settings.gd), 0 to 1
+var _ui := {}  # UI_SOUNDS name -> its sound, made on the first ui() call
 var _lift := 0.0  # 0 while the splash and the first build are up (no wind over a loading bar), 1 once lift() has faded in
 var cue := ""  # the music cue playing now, "" in silence
 var _cue_end := -1e9  # _time the last cue ends; the next may start tuning `music.gap_s` after it
@@ -520,7 +529,8 @@ func _in_room() -> bool:
 func _bus(b: String, gain: float) -> void:
 	var world_bus := b in ["Suit", "Outside", "Habitat"]
 	var down := float(t.duck_db) * _duck if world_bus else 0.0
-	AudioServer.set_bus_volume_db(AudioServer.get_bus_index(b), t.bus_db[b] + down + linear_to_db(maxf(gain * (volume.music if b == "Music" else volume.effects), 0.0001)))
+	var level: float = volume.music if b == "Music" else (volume.interface if b == "UI" else volume.effects)
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index(b), t.bus_db[b] + down + linear_to_db(maxf(gain * level, 0.0001)))
 
 
 func _stream(sound: String) -> AudioStream:
@@ -559,6 +569,23 @@ func _at(sound: String, bus: String, pos: Vector3, db: float, parent: Node) -> A
 func _one_shot(sound: String, bus: String, db: float, pitch := 1.0) -> void:
 	var q := _flat(sound, bus, db)
 	q.pitch_scale = pitch
+	q.play()
+	_free_after(q)
+
+
+## A HUD cue by its UI_SOUNDS name, on the UI bus (the settings' Interface level).
+func ui(name: String) -> void:
+	if not UI_SOUNDS.has(name):
+		push_error("audio: no HUD cue '%s' in UI_SOUNDS" % name)
+		return
+	if _ui.is_empty():
+		_ui = UiSounds.build()
+	var q := AudioStreamPlayer.new()
+	q.add_to_group("sound")
+	q.stream = _ui[name]
+	q.bus = "UI"
+	q.volume_db = UI_SOUNDS[name]
+	add_child(q)
 	q.play()
 	_free_after(q)
 

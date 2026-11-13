@@ -92,10 +92,9 @@ static func col(kids: Array, sep := 8) -> VBoxContainer:
 
 ## A themed panel around one child. Variations live in theme_builder.gd: HudPanel, HudPanelAlert,
 ## HudPanelLost, HudPanelSoft, Tag, TagLive, TagDanger, TagArchive.
-static func panel(variation: String, child: Control, brackets := false) -> PanelContainer:
+static func panel(variation: String, child: Control) -> PanelContainer:
 	var p: PanelContainer = HudPanel.new()
 	p.theme_type_variation = variation
-	p.brackets = brackets
 	p.add_child(child)
 	p.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return p
@@ -125,3 +124,33 @@ static func spacer() -> Control:
 static func date(unix: float) -> String:
 	var d := Time.get_date_dict_from_unix_time(int(unix))
 	return "%d %s %d" % [d.day, ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][d.month - 1], d.year]
+
+
+## Where a world point lands on `c` (a full-screen HUD control), seen through `cam`: {at: Vector2 in c's space,
+## on: in view and inside c shrunk by `inset`, dir: the screen direction toward it}. Behind the camera only its side
+## counts (dir is left or right, else down), so a marker docks at an edge's middle, clear of a phone's stick and
+## buttons in the bottom corners. The speech bubble and the waypoint both use it.
+static func project(c: Control, cam: Camera3D, world: Vector3, inset := 0.0) -> Dictionary:
+	var local := cam.global_transform.affine_inverse() * world
+	var at := Vector2(c.size.x * 0.5, c.size.y)
+	var dir := Vector2.DOWN
+	var front := local.z < 0.0
+	if front:
+		at = c.get_global_transform_with_canvas().affine_inverse() * cam.unproject_position(world)
+		dir = Vector2(local.x, -local.y).normalized()
+	elif absf(local.x) > 0.05:
+		dir = Vector2(signf(local.x), 0.0)
+	var on := front and Rect2(Vector2.ZERO, c.size).grow(-inset).has_point(at)
+	return {"at": at, "on": on, "dir": dir if dir != Vector2.ZERO else Vector2.DOWN}
+
+
+## The spot on c's edge, `inset` in, where a box of `box` size sits when it docks toward `dir`.
+static func dock(c: Control, dir: Vector2, box: Vector2, inset: float) -> Vector2:
+	var half := (c.size - box) * 0.5 - Vector2(inset, inset)
+	var t := minf(half.x / maxf(absf(dir.x), 1e-4), half.y / maxf(absf(dir.y), 1e-4))
+	return c.size * 0.5 + dir * t - box * 0.5
+
+
+## Compass bearing in degrees (0 north, clockwise) of a flat world direction (+X east, -Z north, CONTRACTS.md).
+static func bearing(v: Vector3) -> float:
+	return fposmod(rad_to_deg(atan2(v.x, -v.z)), 360.0)

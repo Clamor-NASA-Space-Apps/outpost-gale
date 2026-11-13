@@ -1,9 +1,9 @@
 extends Control
-## PIP's speech bubble: a full-rect overlay holding one panel. With a speaker (follow()) the panel sits above the
-## speaker's head, projected to the screen each frame, with a tail down to it; when the speaker is off screen or behind
-## the camera the panel docks at the nearest screen edge with an arrow toward him. Without one it rests at the bottom
-## centre, like a subtitle. Text types in letter by letter with a short synthesised chirp every few letters, so it
-## reads as his voice. Colours come from the HudPanel style in ui/theme.tres.
+## PIP's speech bubble (design/mockups/hud.png): glass with a teal left edge, "PIP" and a voice wave that moves while
+## he talks, the line typed in letter by letter over its own faint copy, so the bubble never changes size. With a
+## speaker (follow()) it floats above his head, projected each frame, with a thin line down to a ring on him; off
+## screen or behind the camera it docks at the nearest edge with an arrow toward him. Without one it rests at the
+## bottom centre, like a subtitle. A short synthesised chirp every few letters reads as his voice.
 
 signal finished  # the line has been typed and read
 
@@ -12,32 +12,50 @@ const CHARS_PER_S := 30.0
 const CHIRP_EVERY := 3  # letters per chirp
 const HOLD_MIN_S := 2.5
 const HOLD_S_PER_WORD := 0.4  # a slow young reader's pace, so the line stays up long enough
-const MAX_W := 440.0
-const TAIL := 26.0  # how far the panel floats above the point it speaks from
-const EDGE := 12.0  # the gap the docked panel keeps from the screen edge
+const WIDTH := 253.0  # 380 mockup px
+const TAIL := 60.0  # how far the bubble floats above the point it speaks from
+const EDGE := 12.0  # the gap the docked bubble keeps from the screen edge
 const ARROW := 30.0  # the docked arrow's length
+const BARS := 5
 
 var panel: PanelContainer
-var label: Label
+var label: RichTextLabel
+var wave := Control.new()
 var speaker: Node3D
 var camera: Camera3D
 var head := 0.0  # metres from the speaker's origin to just above its top
+var text := ""
+var typed := 0  # letters shown so far
 var docked := false
 var dir := Vector2.DOWN  # docked: which way the speaker is
 var anchor := Vector2.ZERO  # in this control's space: the point the tail touches
 var chirps := 0  # how many have played, for the tests
 var _typed := 0.0
 var _hold := 0.0
+var _t := 0.0
 var _player := AudioStreamPlayer.new()
 
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	label = Hud.label("", "", true)
-	label.visible_characters_behavior = TextServer.VC_CHARS_AFTER_SHAPING  # the layout holds while letters appear
-	panel = Hud.panel("HudPanel", Hud.row([Hud.icon("pip", 34, "accent"), label], 12))
+	label = RichTextLabel.new()
+	label.bbcode_enabled = false
+	label.fit_content = true
+	label.scroll_active = false
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	label.add_theme_font_override("normal_font", get_theme_font("font", "BubbleText"))
+	label.add_theme_font_size_override("normal_font_size", get_theme_font_size("font_size", "BubbleText"))
+	label.add_theme_color_override("font_outline_color", get_theme_color("font_outline_color", "Label"))
+	label.add_theme_constant_override("outline_size", get_theme_constant("outline_size", "Label"))
+	wave.custom_minimum_size = Vector2(22, 12)
+	wave.draw.connect(_draw_wave)
+	var who := Hud.row([Hud.icon("pip", 15, "accent"), Hud.label("PIP", "CapLight"), Hud.spacer(), wave], 6)
+	panel = Hud.panel("HudPanel", Hud.col([who, label], 4))
 	panel.name = "Bubble"
+	panel.custom_minimum_size.x = WIDTH
+	panel.draw.connect(_draw_edge)
 	add_child(panel)
 	_player.stream = _chirp()
 	_player.bus = &"UI" if AudioServer.get_bus_index(&"UI") >= 0 else &"Master"
@@ -58,91 +76,103 @@ func follow(node: Node3D, cam: Camera3D) -> void:
 	head = top + 0.2
 
 
-func speak(text: String) -> void:
-	label.text = text
-	label.visible_characters = 0
+func speak(line: String) -> void:
+	text = line
+	typed = 0
 	_typed = 0.0
-	_hold = maxf(HOLD_MIN_S, text.split(" ", false).size() * HOLD_S_PER_WORD)
-	var w := label.get_theme_font("font").get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, label.get_theme_font_size("font_size")).x
-	panel.custom_minimum_size.x = clampf(w + 90.0, 160.0, MAX_W)  # 90: the icon, the gap and the panel's margins
+	_hold = maxf(HOLD_MIN_S, line.split(" ", false).size() * HOLD_S_PER_WORD)
+	_show_text()
 	show()
 	_place()  # in place on its first frame, not at the corner
 
 
 func typing() -> bool:
-	return visible and label.visible_characters < label.text.length()
+	return visible and typed < text.length()
+
+
+## The typed letters in ink, the rest as a faint copy: the layout is the whole line from the first letter.
+func _show_text() -> void:
+	label.clear()
+	label.push_color(Hud.color("on-surface"))
+	label.add_text(text.substr(0, typed))
+	label.pop()
+	label.push_color(Hud.color("hud-ink-ghost"))
+	label.add_text(text.substr(typed))
+	label.pop()
 
 
 func _process(delta: float) -> void:
 	if not visible:
 		return
-	var n := label.text.length()
-	if label.visible_characters < n:
+	_t += delta
+	if typed < text.length():
 		_typed += delta * CHARS_PER_S
-		var before := label.visible_characters
-		label.visible_characters = mini(int(_typed), n)
-		for i in range(before, label.visible_characters):
-			if label.text[i] != " " and i % CHIRP_EVERY == 0:
+		var before := typed
+		typed = mini(int(_typed), text.length())
+		for i in range(before, typed):
+			if text[i] != " " and i % CHIRP_EVERY == 0:
 				_play_chirp()
 				break  # one chirp a frame at most
+		if typed != before:
+			_show_text()
 	else:
 		_hold -= delta
 		if _hold <= 0.0:
 			hide()
 			finished.emit()
 			return
+	wave.queue_redraw()
 	_place()
 
 
 func _place() -> void:
 	panel.size = panel.get_combined_minimum_size()
-	var box := Rect2(Vector2.ZERO, size)
 	var ps := panel.size
 	docked = false
 	if speaker == null or camera == null or not is_instance_valid(speaker):
 		anchor = Vector2(size.x * 0.5, size.y)
-		panel.position = Vector2((size.x - ps.x) * 0.5, size.y - ps.y)
+		panel.position = Vector2((size.x - ps.x) * 0.5, size.y - ps.y - EDGE)
 		queue_redraw()
 		return
-	var world := speaker.global_position + Vector3.UP * head
-	var local := camera.global_transform.affine_inverse() * world
-	var to_view := get_global_transform_with_canvas().affine_inverse()
-	if local.z < 0.0:
-		anchor = to_view * camera.unproject_position(world)
-	docked = local.z >= 0.0 or not box.grow(-EDGE).has_point(anchor)
+	var p := Hud.project(self, camera, speaker.global_position + Vector3.UP * head, EDGE)
+	anchor = p.at
+	docked = not p.on
 	if docked:
-		# toward him on the screen's plane. From behind the camera only his side counts, so the bubble docks at the
-		# left or right edge's middle, clear of a phone's stick and buttons in the bottom corners
-		if local.z < 0.0:
-			dir = Vector2(local.x, -local.y).normalized()
-		else:
-			dir = Vector2(signf(local.x), 0.0) if absf(local.x) > 0.05 else Vector2.DOWN
-		var c := size * 0.5
-		var half := (size - ps) * 0.5 - Vector2(EDGE, EDGE) - dir.abs() * ARROW  # room for the arrow on screen
-		var t := minf(half.x / maxf(absf(dir.x), 1e-4), half.y / maxf(absf(dir.y), 1e-4))
-		panel.position = c + dir * t - ps * 0.5
+		dir = p.dir
+		panel.position = Hud.dock(self, dir, ps, EDGE + ARROW)  # room for the arrow on screen
 	else:
 		panel.position = Vector2(anchor.x - ps.x * 0.5, anchor.y - TAIL - ps.y)
 		panel.position = panel.position.clamp(Vector2(EDGE, EDGE), size - ps - Vector2(EDGE, EDGE))
 	queue_redraw()
 
 
-## The tail (a wedge from the panel to the speaker) or, docked, an arrow on the panel's side that faces him.
+## The thin line down to a ring on PIP or, docked, an arrow on the side that faces him.
 func _draw() -> void:
 	if not visible or speaker == null:
 		return
-	var style := panel.get_theme_stylebox("panel", "HudPanel") as StyleBoxFlat
 	var r := Rect2(panel.position, panel.size)
 	if docked:
-		var c := r.get_center()
-		var edge := c + dir * (minf(r.size.x / maxf(absf(dir.x), 1e-4), r.size.y / maxf(absf(dir.y), 1e-4)) * 0.5)
-		var side := dir.orthogonal() * 16.0
-		draw_colored_polygon(PackedVector2Array([edge + dir * ARROW, edge + side, edge - side]), style.border_color)
+		var edge := r.get_center() + dir * (minf(r.size.x / maxf(absf(dir.x), 1e-4), r.size.y / maxf(absf(dir.y), 1e-4)) * 0.5)
+		var side := dir.orthogonal() * 12.0
+		draw_colored_polygon(PackedVector2Array([edge + dir * ARROW * 0.8, edge + side, edge - side]), Hud.color("light"))
 		return
-	var base := Vector2(clampf(anchor.x, r.position.x + 20.0, r.end.x - 20.0), r.end.y - 2.0)
-	var pts := PackedVector2Array([base + Vector2(-12, 0), base + Vector2(12, 0), anchor])
-	draw_colored_polygon(pts, style.bg_color)
-	draw_polyline(PackedVector2Array([pts[0], anchor, pts[1]]), style.border_color, 2.0, true)
+	var top := Vector2(clampf(anchor.x, r.position.x + 12.0, r.end.x - 12.0), r.end.y)
+	draw_line(top, anchor, Hud.color("hud-stroke"), 2.0, true)
+	draw_arc(anchor, 4.0, 0.0, TAU, 16, Hud.color("light"), 1.5, true)
+
+
+## The teal left edge (4 mockup px), inside the glass's rounded corner.
+func _draw_edge() -> void:
+	panel.draw_rect(Rect2(0, 3, 3, panel.size.y - 6), Hud.color("accent"))
+
+
+## Five bars that bounce while PIP talks and rest low when he is quiet.
+func _draw_wave() -> void:
+	var h := wave.size.y
+	for i in BARS:
+		var k := 0.35 + 0.65 * absf(sin(_t * 9.0 + i * 1.7)) if typing() else 0.3 + 0.1 * (i % 2)
+		var bh := maxf(2.0, h * k)
+		wave.draw_rect(Rect2(i * 4.5, (h - bh) * 0.5, 2.0, bh), Hud.color("accent"))
 
 
 func _play_chirp() -> void:

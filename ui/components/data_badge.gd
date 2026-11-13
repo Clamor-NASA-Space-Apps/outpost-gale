@@ -11,6 +11,5 @@ const Hud := preload("res://ui/hud.gd")
 
 func _ready() -> void:
 	theme_type_variation = "HudPanel"
-	brackets = false
 	var t := Hud.tag("TagLive", "live", "LIVE") if live else Hud.tag("TagArchive", "archive", "ARCHIVED", "TagText")
 	add_child(Hud.row([t, Hud.label(source if live else date, "Caption")], 12))

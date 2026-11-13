@@ -9,8 +9,13 @@ const OUT := "res://ui/theme.tres"
 # (Game Accessibility Guidelines, design/research/sizes.md B) is 18.7 px here: x1.2 puts the
 # smallest token (label, 16) on that floor and keeps the ratios DESIGN.md set.
 const TYPE_SCALE := 1.2
-const CHAMFER := 14  # the cut corner every panel and button shares
+const CHAMFER := 14  # the cut corner the tags and the old cards share
 const STROKE := 2
+# The glass look (design/mockups/hud.html, approved 13 Nov 2026) is drawn at 1080p; the HUD canvas is 720 px tall,
+# so every mockup px is two thirds of a canvas px (g()).
+const RADIUS := 10  # mockup px
+const GLASS_STROKE := 1  # 1.5 mockup px
+const GLOW := 18  # mockup px
 
 var tokens: Dictionary
 var ts := TextServerManager.get_primary_interface()
@@ -24,18 +29,41 @@ func _initialize() -> void:
 	quit(0 if err == OK else 1)
 
 
-func c(name: String, alpha := 1.0) -> Color:
-	var col := Color.html(tokens.colors[name])
-	col.a = alpha
-	return col
+## A token's colour with its own alpha (an 8-digit hex keeps it).
+func c(name: String) -> Color:
+	return Color.html(tokens.colors[name])
+
+
+## A 1080p mockup size on the 720 px canvas.
+static func g(mockup_px: float) -> int:
+	return maxi(1, roundi(mockup_px * 720.0 / 1080.0))
+
+
+## A glass panel: the tint, a thin bright stroke and a soft outer glow, no blur (phones). The top highlight is drawn
+## by ui/hud_panel.gd, since a flat style has one border colour.
+func glass(bg: Color, border: Color, glow: Color, pad := Vector2(18, 14)) -> StyleBoxFlat:
+	var s := StyleBoxFlat.new()
+	s.bg_color = bg
+	s.border_color = border
+	s.set_border_width_all(GLASS_STROKE if border.a > 0.0 else 0)
+	s.set_corner_radius_all(g(RADIUS))
+	s.shadow_color = glow
+	s.shadow_size = g(GLOW) if glow.a > 0.0 else 0
+	s.anti_aliasing = true
+	s.content_margin_left = g(pad.x)
+	s.content_margin_right = g(pad.x)
+	s.content_margin_top = g(pad.y)
+	s.content_margin_bottom = g(pad.y)
+	return s
 
 
 func px(style: String) -> int:
 	return roundi(float(String(tokens.typography[style].fontSize).trim_suffix("px")) * TYPE_SCALE)
 
 
-func font(path: String, weight: int, tabular := false) -> FontVariation:
+func font(path: String, weight: int, tabular := false, spacing := 0) -> FontVariation:
 	var f := FontVariation.new()
+	f.spacing_glyph = spacing  # the mockup's letter-spaced capitals
 	f.base_font = load(path)
 	f.variation_opentype = {ts.name_to_tag("wght"): weight}
 	if tabular:
@@ -91,18 +119,19 @@ func build() -> Theme:
 	t.default_font = font(lex, 400)
 	t.default_font_size = body
 
-	for n: String in ["primary", "on-primary", "accent", "light", "danger", "on-surface", "on-surface-variant",
-			"surface", "surface-container", "outline-variant", "sky", "horizon", "ground"]:
+	# every hud-* token (the glass, its strokes and glows, the scrims: each with its alpha, in DESIGN.md) and the base
+	# colours the HUD uses. A component asks for Hud.color("hud-scrim"), never for a colour with an alpha of its own.
+	var names: Array = ["primary", "on-primary", "accent", "light", "danger", "on-surface", "on-surface-variant",
+			"surface", "surface-container", "outline-variant", "sky", "horizon", "ground"]
+	names.append_array(tokens.colors.keys().filter(func(k: String) -> bool: return k.begins_with("hud-")))
+	for n: String in names:
 		t.set_color(n.replace("-", "_"), "Hud", c(n))  # theme item names take no dashes
-	# The see-through layers, by role: the one place in ui/ their alpha lives, so a new look changes them here and
-	# every component follows (a component asks for Hud.color("scrim"), never for a colour with an alpha of its own).
-	for o: Array in [["scrim", "surface", 0.45], ["scrim_strong", "surface", 0.6], ["scrim_full", "surface", 0.8],
-			["shade", "surface", 0.5], ["segment_off", "outline-variant", 0.7], ["track", "surface-container", 0.9],
-			["track_edge", "primary", 0.6]]:
-		t.set_color(o[0], "Hud", c(o[1], o[2]))
 
 	t.set_color("font_color", "Label", c("on-surface"))
 	t.set_constant("line_spacing", "Label", 2)
+	# text over in-game glass sees the world through it: a soft dark edge keeps it readable on a bright sky
+	t.set_color("font_outline_color", "Label", c("hud-text-edge"))
+	t.set_constant("outline_size", "Label", 3)
 	var labels := {
 		"Caption": [font(lex, 500), label, c("on-surface-variant")],
 		"Heading": [font(exo, 700), roundi(heading * 0.85), c("on-surface")],
@@ -114,33 +143,65 @@ func build() -> Theme:
 		"SmallNumber": [font(exo, 700, true), label + 3, c("primary")],
 		"TagText": [font(exo, 700), label, c("on-surface")],
 		"OnFillBody": [font(lex, 500), label + 1, c("on-primary")],
+		# the glass HUD, sizes from design/mockups/hud.html and settings.html (1080p px)
+		"Cap": [font(lex, 600, false, 2), g(13), c("on-surface-variant")],
+		"CapInk": [font(lex, 600, false, 2), g(13), c("on-surface")],
+		"CapLight": [font(lex, 600, false, 2), g(13), c("light")],
+		"HudText": [font(lex, 400), g(17), c("on-surface")],
+		"HudTextDim": [font(lex, 400), g(17), c("on-surface-variant")],
+		"HudNum": [font(exo, 700, true), g(17), c("on-surface")],
+		"HudNumDim": [font(exo, 700, true), g(18), c("on-surface-variant")],
+		"HudNumAmber": [font(exo, 700, true), g(16), c("primary")],
+		"SolNum": [font(exo, 700, true), g(30), c("on-surface")],
+		"Compass": [font(exo, 700), g(17), c("on-surface")],
+		"CompassNorth": [font(exo, 700), g(17), c("primary")],
+		"CompassSmall": [font(lex, 500), g(12), c("hud-ink-dim")],
+		"CompassHeading": [font(exo, 700, true), g(16), c("light")],
+		"BubbleText": [font(lex, 500), g(22), c("on-surface")],
+		"PromptText": [font(lex, 400), g(19), c("on-surface")],
+		"KeyText": [font(exo, 700), g(14), c("on-surface")],
+		"KeyAmber": [font(exo, 700), g(17), c("primary")],
+		"MenuTitle": [font(lex, 700), g(26), c("on-surface")],
+		"MenuText": [font(lex, 400), g(16), c("on-surface")],
+		"MenuSmall": [font(lex, 400), g(13), c("on-surface-variant")],
+		"MenuFoot": [font(lex, 400), g(15), c("on-surface-variant")],
+		"MenuStrong": [font(lex, 600), g(16), c("on-surface")],
+		"HudSmall": [font(lex, 400), g(14), c("on-surface-variant")],
+		"OnFillTitle": [font(exo, 700), g(18), c("on-primary")],
+		"OnFillText": [font(lex, 500), g(15), c("on-primary")],
 	}
 	for v: String in labels:
 		t.set_type_variation(v, "Label")
 		t.set_font("font", v, labels[v][0])
 		t.set_font_size("font_size", v, labels[v][1])
 		t.set_color("font_color", v, labels[v][2])
+		if v.begins_with("OnFill"):
+			t.set_constant("outline_size", v, 0)  # dark text on a solid fill needs no dark edge
 
-	# Panels. "bracket" is the colour hud_panel.gd draws its corner brackets in.
+	# Panels: in-game glass (HudPanel) lets the world through; menu glass (HudMenu: cards, settings, the map) holds
+	# more back. "highlight" is the line ui/hud_panel.gd draws along the top inside edge.
+	var none := Color.TRANSPARENT
 	var panels := {
-		"HudPanel": [box(c("surface", 0.92), c("primary", 0.45), c("primary", 0.14)), c("primary")],
-		"HudPanelAlert": [box(c("danger"), c("on-primary", 0.35), c("danger", 0.55)), c("danger")],
-		"HudPanelLost": [box(c("surface", 0.94), c("danger", 0.8), c("danger", 0.22)), c("danger")],
-		"HudPanelSoft": [box(c("surface-container", 0.95), c("outline-variant")), c("outline-variant")],
-		"Tag": [tag(c("primary")), c("primary")],
-		"TagLive": [tag(c("accent")), c("accent")],
-		"TagDanger": [tag(c("danger")), c("danger")],
-		"TagArchive": [tag(c("outline-variant")), c("outline-variant")],
+		"HudPanel": glass(c("hud-glass"), c("hud-stroke"), c("hud-glow")),
+		"HudMenu": glass(c("hud-glass-menu"), c("hud-stroke"), c("hud-glow"), Vector2(30, 26)),
+		"HudPanelAlert": glass(c("danger"), none, c("hud-glow-danger")),
+		"HudPanelLost": glass(c("hud-glass-menu"), c("danger"), c("hud-glow-danger"), Vector2(30, 26)),
+		"HudPanelSoft": glass(c("hud-glass-menu"), c("hud-stroke-faint"), none, Vector2(12, 10)),
+		"HudKey": glass(c("hud-key"), c("on-surface-variant"), none, Vector2(8, 3)),
+		"HudKeyAmber": glass(c("hud-key"), c("primary"), none, Vector2(8, 3)),
+		"SegGroup": glass(none, c("hud-stroke"), none, Vector2(0, 0)),
+		"Tag": tag(c("primary")),
+		"TagLive": tag(c("accent")),
+		"TagDanger": tag(c("danger")),
+		"TagArchive": tag(c("outline-variant")),
 	}
 	for v: String in panels:
 		t.set_type_variation(v, "PanelContainer")
-		t.set_stylebox("panel", v, panels[v][0])
-		t.set_color("bracket", v, panels[v][1])
-	var hud: StyleBoxFlat = t.get_stylebox("panel", "HudPanel")
-	hud.content_margin_left = 20
-	hud.content_margin_right = 20
-	hud.content_margin_top = 14
-	hud.content_margin_bottom = 16
+		t.set_stylebox("panel", v, panels[v])
+		t.set_color("highlight", v, c("hud-highlight") if v.begins_with("Hud") else none)
+	(panels.HudKey as StyleBoxFlat).set_corner_radius_all(g(5))
+	(panels.HudKeyAmber as StyleBoxFlat).set_corner_radius_all(g(5))
+	(panels.SegGroup as StyleBoxFlat).set_corner_radius_all(g(7))
 
 	var focus := box(Color.TRANSPARENT, c("accent"))
 	focus.draw_center = false
@@ -154,10 +215,10 @@ func build() -> Theme:
 		t.set_color(state, "Button", c("on-primary"))
 	t.set_color("font_disabled_color", "Button", c("on-surface-variant"))
 	t.set_color("icon_normal_color", "Button", c("on-primary"))
-	t.set_stylebox("normal", "Button", box(c("primary"), Color.TRANSPARENT, c("primary", 0.25)))
-	t.set_stylebox("hover", "Button", box(c("primary").lightened(0.18), Color.TRANSPARENT, c("primary", 0.4)))
-	t.set_stylebox("pressed", "Button", box(c("primary").darkened(0.15)))
-	t.set_stylebox("disabled", "Button", box(c("outline-variant")))
+	t.set_stylebox("normal", "Button", glass(c("primary"), none, c("hud-glow-amber"), Vector2(22, 10)))
+	t.set_stylebox("hover", "Button", glass(c("primary").lightened(0.18), none, c("hud-glow-amber"), Vector2(22, 10)))
+	t.set_stylebox("pressed", "Button", glass(c("primary").darkened(0.15), none, none, Vector2(22, 10)))
+	t.set_stylebox("disabled", "Button", glass(c("outline-variant"), none, none, Vector2(22, 10)))
 	t.set_stylebox("focus", "Button", focus)
 	t.set_constant("h_separation", "Button", 10)
 	t.set_constant("icon_max_width", "Button", 30)
@@ -170,23 +231,71 @@ func build() -> Theme:
 		t.set_color(state, "ChoiceButton", c("on-surface"))
 	for state: String in ["icon_normal_color", "icon_hover_color", "icon_pressed_color", "icon_focus_color"]:
 		t.set_color(state, "ChoiceButton", c("accent"))  # a mark on a choice (the preset in use) is teal, "on"
-	t.set_stylebox("normal", "ChoiceButton", box(c("surface-container", 0.96), c("accent"), c("accent", 0.12)))
-	t.set_stylebox("hover", "ChoiceButton", box(c("surface-container").lerp(c("accent"), 0.12), c("light"), c("accent", 0.3)))
-	t.set_stylebox("pressed", "ChoiceButton", box(c("surface-container").lerp(c("accent"), 0.22), c("light")))
+	t.set_stylebox("normal", "ChoiceButton", glass(c("hud-glass-menu"), c("hud-stroke"), c("hud-glow"), Vector2(14, 8)))
+	t.set_stylebox("hover", "ChoiceButton", glass(c("hud-glass-menu").lerp(c("accent"), 0.12), c("light"), c("hud-glow"), Vector2(14, 8)))
+	t.set_stylebox("pressed", "ChoiceButton", glass(c("hud-glass-menu").lerp(c("accent"), 0.22), c("light"), none, Vector2(14, 8)))
+
+	# Settings: a tab (teal edge and tint when open), a segment of a switch, a device card (amber when picked).
+	var flat := glass(none, none, none, Vector2(14, 11))
+	var tab_on := glass(c("hud-tab-on"), none, none, Vector2(14, 11))
+	tab_on.border_color = c("accent")
+	tab_on.border_width_left = g(3)
+	t.set_type_variation("TabButton", "Button")
+	t.set_font("font", "TabButton", font(lex, 400))
+	t.set_font_size("font_size", "TabButton", g(18))
+	for st: String in ["normal", "hover", "focus"]:
+		t.set_stylebox(st, "TabButton", flat)
+	t.set_stylebox("pressed", "TabButton", tab_on)
+	t.set_stylebox("hover_pressed", "TabButton", tab_on)
+	t.set_stylebox("focus", "TabButton", focus)
+	for st: String in ["font_color", "font_hover_color", "icon_normal_color", "icon_hover_color"]:
+		t.set_color(st, "TabButton", c("on-surface-variant"))
+	for st: String in ["font_pressed_color", "font_hover_pressed_color", "font_focus_color", "icon_pressed_color", "icon_hover_pressed_color", "icon_focus_color"]:
+		t.set_color(st, "TabButton", c("on-surface"))
+	t.set_constant("icon_max_width", "TabButton", g(20))
+	t.set_constant("h_separation", "TabButton", g(12))
+	var seg_on := glass(c("hud-seg-on"), none, none, Vector2(11, 7))
+	seg_on.set_corner_radius_all(0)
+	seg_on.border_color = c("accent")
+	seg_on.border_width_bottom = g(2)
+	var seg := glass(none, none, none, Vector2(11, 7))
+	seg.set_corner_radius_all(0)
+	t.set_type_variation("SegButton", "Button")
+	t.set_font("font", "SegButton", font(exo, 600))
+	t.set_font_size("font_size", "SegButton", g(14))
+	for st: String in ["normal", "hover"]:
+		t.set_stylebox(st, "SegButton", seg)
+	t.set_stylebox("pressed", "SegButton", seg_on)
+	t.set_stylebox("hover_pressed", "SegButton", seg_on)
+	t.set_stylebox("focus", "SegButton", focus)
+	for st: String in ["font_color", "font_hover_color"]:
+		t.set_color(st, "SegButton", c("on-surface-variant"))
+	for st: String in ["font_pressed_color", "font_hover_pressed_color", "font_focus_color"]:
+		t.set_color(st, "SegButton", c("on-surface"))
+	var card := glass(c("hud-glass"), c("hud-stroke"), c("hud-glow"), Vector2(10, 14))
+	var card_on := glass(c("hud-glass"), c("primary"), c("hud-glow-amber"), Vector2(10, 14))
+	t.set_type_variation("DeviceCard", "Button")
+	for st: String in ["normal", "hover"]:
+		t.set_stylebox(st, "DeviceCard", card)
+	t.set_stylebox("pressed", "DeviceCard", card_on)
+	t.set_stylebox("hover_pressed", "DeviceCard", card_on)
+	t.set_stylebox("focus", "DeviceCard", focus)
 
 	# Touch skins for the player lane: round, see-through so the world shows, teal because usable.
 	t.set_type_variation("TouchButton", "Button")
 	for st: String in ["normal", "hover", "focus"]:
-		t.set_stylebox(st, "TouchButton", circle(c("surface", 0.62), c("accent", 0.9)))
-	t.set_stylebox("pressed", "TouchButton", circle(c("accent", 0.45), c("light")))
+		t.set_stylebox(st, "TouchButton", circle(c("hud-glass"), c("hud-stroke"), 2))
+	t.set_stylebox("pressed", "TouchButton", circle(c("hud-seg-on"), c("light")))
 	t.set_font("font", "TouchButton", font(exo, 700))
 	t.set_constant("icon_max_width", "TouchButton", 44)
+	t.set_color("font_outline_color", "TouchButton", c("hud-text-edge"))  # its word sits on see-through glass
+	t.set_constant("outline_size", "TouchButton", 3)
 	t.set_font_size("font_size", "TouchButton", label)
 	for state: String in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color",
 			"icon_normal_color", "icon_hover_color", "icon_pressed_color", "icon_focus_color"]:
 		t.set_color(state, "TouchButton", c("on-surface"))  # the icon too: Button's on-primary was dark on dark
 	t.set_type_variation("StickBase", "Panel")
-	t.set_stylebox("panel", "StickBase", circle(c("surface", 0.4), c("accent", 0.6), 2))
+	t.set_stylebox("panel", "StickBase", circle(c("hud-glass"), c("hud-stroke"), 2))
 	t.set_type_variation("StickKnob", "Panel")
-	t.set_stylebox("panel", "StickKnob", circle(c("accent", 0.85), c("light"), 3))
+	t.set_stylebox("panel", "StickKnob", circle(c("accent"), c("light"), 3))
 	return t

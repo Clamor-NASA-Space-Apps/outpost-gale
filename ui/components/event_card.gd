@@ -20,7 +20,7 @@ var buttons: Array[Button] = []
 
 
 func _ready() -> void:
-	theme_type_variation = "HudPanel"
+	theme_type_variation = "HudMenu"
 	custom_minimum_size.x = width
 	var body := Hud.col([Hud.row([Hud.tag("TagDanger", icon_name, "", "OnFill", 30), Hud.label(title, "Heading", true)], 12)], 12)
 	if line:

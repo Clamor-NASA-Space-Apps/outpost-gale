@@ -14,7 +14,7 @@ var lines: Array[String] = [
 
 
 func _ready() -> void:
-	theme_type_variation = "HudPanel"
+	theme_type_variation = "HudMenu"
 	custom_minimum_size.x = 470
 	var body := Hud.col([Hud.row([Hud.tag("Tag", "science", "", "OnFill", 30), Hud.label("Real NASA fact", "Heading")], 12)], 10)
 	for l in lines:

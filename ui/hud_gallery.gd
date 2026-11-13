@@ -5,13 +5,16 @@ extends Control
 ## Pages: hud (ui/game_hud.tscn bound to ui/fake_state.gd: meters, clock, subtitle, mail, alert), comms (visor mail,
 ## data badges), event (the choice card, a fact card), ledger (the sleep ledger), sources (where this comes from),
 ## lost (mission lost and the three causes), log, credits, sleep (the sleep picker), speech (the play HUD with PIP
-## behind the camera, so his bubble docks at the edge; on the hud page it rides above the PIP marker).
+## behind the camera, so his bubble docks at the edge; on the hud page it rides above the PIP marker), map (the full
+## map over the play HUD). The stand-in hero stands at the spawn and looks west-north-west, toward the greenhouse.
 ## capture-view views: "laptop" and "phone" show the hud page; "<layout>_<page>" any other, e.g. "phone_event".
 
 const Hud := preload("res://ui/hud.gd")
-const PAGES: Array[String] = ["hud", "comms", "event", "ledger", "sources", "lost", "log", "credits", "sleep", "speech"]
+const PAGES: Array[String] = ["hud", "comms", "event", "ledger", "sources", "lost", "log", "credits", "sleep", "speech", "map"]
 # where the stand-in PIP stands for the camera at the origin: in view on the hud page, behind and left on speech
-const PIP_AT := {"hud": Vector3(1.6, -1.0, -6.0), "speech": Vector3(-4.0, -0.5, 3.0)}
+const PIP_AT := {"hud": Vector3(-1.6, -1.2, -6.0), "speech": Vector3(-4.0, -0.5, 3.0), "map": Vector3(-1.6, -1.2, -6.0)}
+const HERO_AT := Vector3(0, 0, 9)  # data/world.json landmark `spawn`
+const HEADING := 280.0
 const Fake := preload("res://ui/fake_state.gd")
 # iPhone 16 in landscape is 852 x 393 pt; on the 720 px tall canvas that is 1561 x 720.
 const PHONE := Vector2(1561, 720)
@@ -30,6 +33,7 @@ var game_hud: Control
 var fake := Fake.new()
 var cam := Camera3D.new()  # projects the stand-in PIP to the screen, as the play camera does in the game
 var pip_spot := Node3D.new()
+var hero := Node3D.new()
 var pip_mark: TextureRect  # where PIP would be on screen
 var touch: Array[Control] = []
 
@@ -52,7 +56,6 @@ func _ready() -> void:
 	add_child(screen)
 	var world := _backdrop()
 	screen.add_child(world)
-	screen.add_child(load("res://ui/components/visor.tscn").instantiate())
 	screen.add_child(hud)
 	for p in PAGES:
 		var c := Control.new()
@@ -99,10 +102,17 @@ func _build() -> void:
 	game_hud.bind(fake)
 	add_child(cam)
 	add_child(pip_spot)
+	add_child(hero)
+	hero.position = HERO_AT
+	hero.rotation.y = -deg_to_rad(HEADING)  # CONTRACTS.md: rotation.y = -yaw
+	cam.rotation.y = hero.rotation.y
+	cam.position = HERO_AT + Vector3(0, 1.6, 0) + cam.basis.z * 4.0  # 4 m behind the hero's head
 	game_hud.bind_speaker(pip_spot, cam)
+	game_hud.bind_view(cam, hero)
 	pip_mark = Hud.icon("pip", 56, "accent")
 	add_child(pip_mark)
 	shown.speech.append(game_hud)
+	shown.map.append(game_hud)
 	var stick := _component("hud", "touch_stick")
 	_pin(stick, Control.PRESET_BOTTOM_LEFT)
 	var buttons := Hud.row([], 20)
@@ -154,7 +164,7 @@ func _center(p: String) -> CenterContainer:
 
 func _scrim(p: String) -> void:
 	var s := ColorRect.new()
-	s.color = Hud.color("scrim")
+	s.color = Hud.color("hud-scrim")
 	s.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	pages[p].add_child(s)
 	s.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -207,7 +217,7 @@ func _apply() -> void:
 	for p: String in PAGES:
 		var c: Control = pages[p]
 		c.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		c.visible = p == page or p == "hud" and page == "speech"
+		c.visible = p == page or p == "hud" and page in ["speech", "map"]
 		if p != "hud":
 			continue  # the other pages are centred and their scrims cover the whole screen
 		c.offset_left = m.x
@@ -216,17 +226,30 @@ func _apply() -> void:
 		c.offset_bottom = -m.y
 	for t in touch:
 		t.visible = phone
-	pip_spot.position = PIP_AT.get(page, PIP_AT.hud)
+	pip_spot.position = cam.transform * PIP_AT.get(page, PIP_AT.hud)
 	pip_mark.visible = page == "hud"
 	pip_mark.position = cam.unproject_position(pip_spot.position) - pip_mark.custom_minimum_size * 0.5
+	game_hud.touch = phone
 	if page in PIP_AT:
 		_mock()
+	if page == "map":
+		game_hud.open_map()
+	else:
+		game_hud.close_map()
 
 
 ## The play HUD's moving parts, put up again whenever its page shows (they time out by themselves in play).
 func _mock() -> void:
+	# the mockup's own placeholder words, so the look is judged on real-length lines (the game's come from lines.json)
 	game_hud.say("sol1_try_jump")
-	game_hud.bubble.label.visible_characters = game_hud.bubble.label.text.length()  # typed out, for a still picture
+	game_hud.bubble.speak("Good morning, Commander! Try a jump. Watch how high")
+	game_hud.bubble.typed = game_hud.bubble.text.length() * 2 / 3  # mostly typed, as the mockup, for a still picture
+	game_hud.bubble._typed = game_hud.bubble.typed
+	game_hud.bubble._show_text()
+	game_hud.set_tasks([{"label_id": "morning_check", "state": "done"}, {"label_id": "sol1_first_choice", "state": "now"}, {"label_id": "brush_dust", "state": "next"}])
+	game_hud.tasks.set_tasks([["Morning check", "done"], ["Pick lettuce", "now"], ["Clean solar panels", "next"]])
+	game_hud.set_objective("greenhouse")
+	game_hud.show_prompt("Open the greenhouse")
 	game_hud.alert("Solar storm", "ARCHIVED data. Tap ? for its source.")
 	game_hud.send_mail()
 	game_hud.mail.set_now(fake.values.hour + 0.1)

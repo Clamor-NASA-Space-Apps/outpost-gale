@@ -43,15 +43,19 @@ func play() -> bool:
 						var h: float = b.get_global_rect().size.y / g.screen.scale.y
 						check(h >= TARGET, "%s is %.0f scene px tall, a touch target needs %.0f" % [where, h, TARGET])
 					if b.text:
-						_contrast(b.get_theme_color("font_color"), b.get_theme_stylebox("normal"), backdrops, where)
+						var edge := b.get_theme_color("font_outline_color") if b.get_theme_constant("outline_size") >= 2 else Color.TRANSPARENT
+						_contrast(b.get_theme_color("font_color"), b.get_theme_stylebox("normal"), backdrops, where, edge)
 				elif c is Label:
 					labels += 1
 					var l := c as Label
 					var words := l.text.split(" ", false).size()
 					check(words <= MAX_WORDS or "Bubble" in String(g.get_path_to(c)), "%s has %d words: '%s'" % [where, words, l.text])
+					# text over the glass carries a dark edge (the theme's Label outline): it is measured against that edge
+					# laid over the panel and the world, since the edge is what touches every letter
+					var edge := l.get_theme_color("font_outline_color") if l.get_theme_constant("outline_size") >= 2 else Color.TRANSPARENT
 					var panel := _panel_of(l)
-					if check(panel != null, "%s sits on the bare world with no panel behind it" % where):
-						_contrast(l.get_theme_color("font_color"), panel, backdrops, where)
+					if check(panel != null or edge.a > 0.0, "%s sits on the bare world with no panel or edge behind it" % where):
+						_contrast(l.get_theme_color("font_color"), panel, backdrops, where, edge)
 	check(buttons > 0, "the gallery has buttons")
 	print("checked %d buttons and %d labels over %d views" % [buttons, labels, g.PAGES.size() * 2])
 	var toast: Script = load("res://ui/components/alert_toast.gd")
@@ -86,9 +90,20 @@ func _bound() -> void:
 	check(s.meters.life == 50 and s.meters.lifeIcon == "oxygen", "life support is the shortest supply (oxygen at half): %s" % [s.meters])
 	check(s.meters.health == 90, "100 mSv takes crew health to 90, got %d" % s.meters.health)
 	check(s.sol == 13 and s.time == "14:30" and s.suit == "5 h 00 min", "clock and suit air: %s %s '%s'" % [s.sol, s.time, s.suit])
-	check(h.meters.power.low_tag.visible == false, "the LOW tag hides when power recovers")
+	check(not "!" in h.meters.power.num.text, "the low mark goes when power recovers")
+	var cues: Array[String] = []
+	h.cue.connect(func(n: String) -> void: cues.append(n))
 	fake.set_values({"battery_pct": 10.0, "failing": ["o2_kg"]})
-	check(h.meters.power.low_tag.visible and h.snapshot().alert == "Oxygen ran out!", "low power shows LOW, a failing supply an alert: %s" % h.snapshot().alert)
+	check(h.meters.power.num.text == "10%!" and h.snapshot().alert == "Oxygen ran out!", "low power shows its mark, a failing supply an alert: %s %s" % [h.meters.power.num.text, h.snapshot().alert])
+	check(cues == ["danger"], "a supply at zero plays the danger cue once, got %s" % [cues])
+	fake.set_values({"failing": []})
+	fake.set_values({"failing": ["water_kg"]})
+	check(cues == ["danger"], "a second danger within %.0f s stays quiet, got %s" % [h.ALERT_GAP_S, cues])
+	h._cue_at.danger = -1e9  # as if the gap had passed
+	fake.set_values({"failing": []})
+	fake.set_values({"failing": ["food_kg"]})
+	check(cues == ["danger", "danger"], "after the gap the danger cue plays again, got %s" % [cues])
+	await _hud_parts(h, cues)
 	h.say("no_such_line")
 	check(h.snapshot().subtitle == "TBD at event: no_such_line", "say() shows the placeholder line: '%s'" % h.snapshot().subtitle)
 	await _speech(h)
@@ -131,6 +146,78 @@ func _bound() -> void:
 	await frames(1)
 
 
+## The compass, minimap, waypoint, Today, prompt and full map follow a stand-in camera and hero; each HUD event
+## plays its own cue once.
+func _hud_parts(h: Control, cues: Array[String]) -> void:
+	var cam := Camera3D.new()
+	var body := Node3D.new()
+	var pip := Node3D.new()
+	for n: Node3D in [cam, body, pip]:
+		root.add_child(n)
+	body.position = Vector3(0, 0, 9)  # the spawn
+	body.rotation.y = -deg_to_rad(270.0)  # facing west
+	cam.position = Vector3(0, 1.6, 9)
+	cam.rotation.y = body.rotation.y
+	pip.position = Vector3(-5, 0, 4)
+	h.bind_view(cam, body)
+	h.bind_speaker(pip, cam)
+	cues.clear()
+	h.set_objective("greenhouse")  # (-11, 5.2): 11.7 m away, a little north of west
+	h.set_objective("greenhouse")
+	await process_frame
+	await process_frame
+	var s: Dictionary = h.snapshot()
+	check(s.heading.begins_with("270°") and s.heading.ends_with("W"), "the compass reads the camera's heading: '%s'" % s.heading)
+	check(s.objective.m == 12 and s.objective.label == "Greenhouse" and not s.objective.docked, "the waypoint names the place and its distance on screen: %s" % [s.objective])
+	var want := Hud.bearing(Vector3(-11, 0, 5.2 - 9))
+	check(absf(float(h.compass.marks.objective) - want) < 0.5, "the compass marks the objective at %.0f, want %.0f" % [h.compass.marks.objective, want])
+	var d: Vector2 = h.minimap.to_disc(Vector2(-11, 5.2), 999.0)
+	check(d.y < 0.0 and absf(d.x) < absf(d.y), "on the minimap the objective ahead is up: %s" % d)
+	check(s.area == "Landing plain", "the area under the minimap: %s" % s.area)
+	body.rotation.y = 0.0
+	cam.rotation.y = 0.0  # now facing north: the greenhouse is behind-left, off screen
+	cam.position = Vector3(0, 1.6, 9)
+	await process_frame
+	await process_frame
+	check(h.snapshot().objective.docked, "off screen the waypoint docks at an edge")
+	h.set_tasks([{"label_id": "morning_check", "state": "now"}, {"label_id": "brush_dust", "state": "next"}])
+	h.set_tasks([{"label_id": "morning_check", "state": "done"}, {"label_id": "brush_dust", "state": "now"}])
+	check(h.snapshot().tasks.size() == 2 and h.snapshot().tasks[0][1] == "done", "Today lists the tasks: %s" % [h.snapshot().tasks])
+	h.show_prompt("Open the greenhouse")
+	check(h.snapshot().prompt == "Open the greenhouse", "the use prompt shows")
+	h.show_prompt("")
+	check(h.snapshot().prompt == "", "an empty prompt hides it")
+	action(&"map")
+	action(&"map", false)
+	await process_frame
+	check(h.map_open() and h.snapshot().map, "M opens the full map")
+	var lbl: Array = h.full_map.find_children("*", "Label", true, false).map(func(l: Label) -> String: return l.text)
+	check("Mont Mercou  8.8 km" in lbl and "Curiosity  14.3 km" in lbl and "ARCHIVED" in lbl, "the map names the field sites with their real distances: %s" % [lbl])
+	action(&"ui_cancel")
+	action(&"ui_cancel", false)
+	await process_frame
+	check(not h.map_open(), "Esc closes the map")
+	h.complete_objective()
+	check(h.snapshot().objective.is_empty(), "a done objective clears its waypoint")
+	h.say("follow_me")
+	h.offer_choice("choice_power_morning", [{"text": "A", "costs": {}}, {"text": "B", "costs": {}}])
+	h.card.chosen.emit(0)
+	h.show_ledger({"sols": 1})
+	h.close_card()
+	h.bubble.hide()
+	var want_cues := ["objective_new", "task_tick", "map_open", "map_close", "objective_done", "pip_open", "choice_open", "choice_made", "ledger_open"]
+	check(cues == want_cues, "each HUD event plays its cue once:\n  got  %s\n  want %s" % [cues, want_cues])
+	var audio: Script = load("res://audio/audio.gd")
+	for n: String in want_cues + ["mail", "alert", "danger", "tick", "select"]:
+		check(audio.UI_SOUNDS.has(n), "audio.gd UI_SOUNDS has the cue '%s'" % n)
+	var made: Dictionary = load("res://ui/ui_sounds.gd").build()
+	for n: String in audio.UI_SOUNDS:
+		var w: AudioStreamWAV = made.get(n)
+		check(w != null and w.get_length() > 0.02 and w.get_length() < 1.5, "the cue '%s' is made and short (%s s)" % [n, w.get_length() if w else 0.0])
+	for n: Node in [cam, body, pip]:
+		n.queue_free()
+
+
 ## PIP's bubble: it types in with chirps, rides above PIP while he is in view, docks at the edge toward him when he
 ## is behind the camera, and goes once read.
 func _speech(h: Control) -> void:
@@ -148,11 +235,11 @@ func _speech(h: Control) -> void:
 	await process_frame
 	var text: String = h.lines.follow_me
 	check(h.snapshot().subtitle == text, "say() reads data/lines.json")
-	check(b.label.visible_characters < text.length(), "the line types in, not all at once (%d of %d)" % [b.label.visible_characters, text.length()])
+	check(b.typed < text.length(), "the line types in, not all at once (%d of %d)" % [b.typed, text.length()])
 	var p: Rect2 = Rect2(b.panel.position, b.panel.size)
 	check(not b.docked and p.end.y < b.anchor.y and absf(b.anchor.x - b.size.x * 0.5) < 2.0, "PIP in view: the bubble %s sits above him at %s" % [p, b.anchor])
 	await frames(roundi(60.0 * text.length() / b.CHARS_PER_S) + 5)
-	check(b.label.visible_characters == text.length() and b.chirps >= 3, "typed out with chirps (%d letters, %d chirps)" % [b.label.visible_characters, b.chirps])
+	check(b.typed == text.length() and b.chirps >= 3, "typed out with chirps (%d letters, %d chirps)" % [b.typed, b.chirps])
 	pip.position = Vector3(3.0, 0.0, 4.0)  # behind the camera, to its right
 	await process_frame
 	await process_frame
@@ -170,7 +257,7 @@ func _narrow() -> void:
 	var box := Control.new()
 	box.size = Vector2(NARROW, 720)
 	root.add_child(box)
-	for n: String in ["event_card", "ledger_card", "sources_card", "mission_lost", "ask_earth", "alert_toast"]:
+	for n: String in ["event_card", "ledger_card", "sources_card", "mission_lost", "ask_earth", "alert_toast", "tasks_card", "status_panel", "full_map"]:
 		var c: Control = load("res://ui/components/%s.tscn" % n).instantiate()
 		if "width" in c:
 			c.width = NARROW
@@ -178,8 +265,8 @@ func _narrow() -> void:
 			c.options.append({"text": "A third choice with longer words", "costs": {"o2_kg": -2.5, "battery_pct": -10}})
 		box.add_child(c)
 		await frames(2)
-		var card: Control = c.card if n == "mission_lost" else c
-		if n != "mission_lost":
+		var card: Control = c.card if n in ["mission_lost", "full_map"] else c
+		if not n in ["mission_lost", "full_map"]:
 			c.size = Vector2(NARROW, 0)
 			c.reset_size()
 		await frames(2)
@@ -286,12 +373,13 @@ func _panel_of(n: Control) -> StyleBox:
 	return null
 
 
-func _contrast(text: Color, style: StyleBox, backdrops: Array[Color], where: String) -> void:
+func _contrast(text: Color, style: StyleBox, backdrops: Array[Color], where: String, edge := Color.TRANSPARENT) -> void:
 	var flat := style as StyleBoxFlat
-	if not check(flat != null, "%s has no flat style to measure" % where):
+	if not check(flat != null or edge.a > 0.0, "%s has no flat style to measure" % where):
 		return
 	for under: Color in backdrops:
-		var bg := under.lerp(Color(flat.bg_color, 1.0), flat.bg_color.a)
+		var bg := under.lerp(Color(flat.bg_color, 1.0), flat.bg_color.a) if flat else under
+		bg = bg.lerp(Color(edge, 1.0), edge.a)
 		var r := _ratio(text, bg)
 		check(r >= MIN_CONTRAST, "%s text contrast %.2f:1 over %s" % [where, r, under.to_html(false)])
 

@@ -42,8 +42,8 @@ func _ready() -> void:
 	bar.custom_minimum_size.y = 18
 	bar.show_percentage = false  # the line says it in words
 	var track := StyleBoxFlat.new()
-	track.bg_color = Hud.color("track")
-	track.border_color = Hud.color("track_edge")
+	track.bg_color = Hud.color("hud-cover-track")
+	track.border_color = Hud.color("hud-cover-edge")
 	track.set_border_width_all(2)
 	track.set_corner_radius_all(9)
 	var fill := StyleBoxFlat.new()

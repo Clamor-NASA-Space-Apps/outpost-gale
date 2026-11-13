@@ -19,7 +19,7 @@ func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	# the scrim takes every click while the picker is open, so nothing behind it gets used by accident
 	var scrim := ColorRect.new()
-	scrim.color = Hud.color("scrim")
+	scrim.color = Hud.color("hud-scrim")
 	scrim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(scrim)
 	var row := Hud.row([_card(&"night", "Night", _draw_moon), _card(&"nap", "Nap 20 min", _draw_nap)], 20)
@@ -29,7 +29,7 @@ func _ready() -> void:
 	not_now.custom_minimum_size = Vector2(0, Hud.BUTTON_H)
 	not_now.pressed.connect(_cancel)
 	var title := Hud.row([Hud.icon("clock", 30, "accent"), Hud.label("Sleep how long?", "Heading")], 12)
-	var card := Hud.panel("HudPanel", Hud.col([title, row, not_now], 16), true)
+	var card := Hud.panel("HudMenu", Hud.col([title, row, not_now], 16))
 	var center := CenterContainer.new()
 	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	center.add_child(card)

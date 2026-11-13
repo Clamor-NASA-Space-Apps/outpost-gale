@@ -1,23 +1,36 @@
 extends CanvasLayer
-## The settings screen, opened by the gear or Esc. The main page: five graphics presets named for the hardware they
-## suit, a frame-rate switch and the sound levels. "Advanced" folds out six plain choices (ADVANCED), each a bundle
-## of HouseStyle knobs; the preset decides every other knob (13 Nov playtest: a row per knob was "too much").
-## A preset card applies at once. An Advanced choice waits for Apply (or Done), which puts it on behind the cover,
-## where any new shaders compile. Every save shows "Saved". Kept per device in user://.
+## The settings screen, opened by the gear or Esc, in menu glass (design/mockups/settings.html, approved 13 Nov 2026).
+## Tabs on the left: Graphics (five presets named for the hardware they suit, then "Fine tune": six plain choices,
+## ADVANCED, each a bundle of HouseStyle knobs), Sound (three levels), Controls (the keys), Screen (full screen, the
+## frame counter). A preset card applies at once. A fine-tune pick goes on a moment later (APPLY_S, so a few picks
+## share one cover), or when the screen closes; the cover hides any shader compile. Every save shows "Saved". The
+## Esc chip at the top right closes it (a touch player has no Esc). Kept per device in user://.
 ## It changes how the game looks and sounds, never anything the game counts (hard rule 1).
 ## The game it drives (the sandbox) has `design`, `quality`, `overrides`, `audio`, `fps_label` and
 ## `set_graphics(level, overrides, restyle := true, warm := true)`.
+
+## A sound the screen asks for: "tick" when the pointer or focus reaches a control, "select" when a choice is picked.
+## The game plays it (audio.ui); the screen plays nothing itself.
+signal cue(name: String)
 
 const Hud := preload("res://ui/hud.gd")
 const HouseStyle := preload("res://addons/forge/house_style.gd")
 # DESIGN.md quality id -> [name, icon, one line]. Ids missing here still get a card, by their own name.
 const PRESETS := {
-	"phone": ["Phone", "device_phone", "Smooth on budget phones"],
-	"older": ["Older laptop", "device_older", "Laptops from 2015 to 2018"],
-	"laptop": ["Laptop", "device_laptop", "Newer laptops, no graphics card"],
-	"gaming": ["Gaming PC", "device_gaming", "Computers with a graphics card"],
-	"max": ["Max", "device_max", "Everything on, for strong cards"],
+	"phone": ["Phone", "device_phone", "Budget phones"],
+	"older": ["Older laptop", "device_older", "2015 to 2018"],
+	"laptop": ["Laptop", "device_laptop", "No graphics card"],
+	"gaming": ["Gaming PC", "device_gaming", "With a graphics card"],
+	"max": ["Max", "device_max", "Everything on"],
 }
+const TABS := [["Graphics", "sun"], ["Sound", "live"], ["Controls", "hop"], ["Screen", "device_laptop"]]
+# the Controls tab: what each key does, read from the input map (player/controls.gd registers it)
+const KEYS := [["Walk", ["move_forward", "move_left", "move_back", "move_right"]], ["Hurry", ["hurry"]],
+	["Hop", ["jump"]], ["Use", ["interact"]], ["Look", ["look_left", "look_up", "look_down", "look_right"]],
+	["Map", ["map"]], ["Full screen", ["fullscreen"]], ["Settings", ["settings"]]]
+const APPLY_S := 1.0  # a fine-tune pick goes on this long after the last one
+const WIDTH := 747.0  # the mockup's 1120 px at 1080p, on the 720 px canvas
+const SMALL_H := 32.0  # a segment or card row on a laptop (a mouse); a phone gets Hud.BUTTON_H
 const OLD := {"low": "phone", "medium": "laptop", "high": "gaming"}  # levels saved before 13 Nov
 # Advanced: row -> [[shown, {knob: value}], ...]. An option that leaves a knob out keeps the preset's ("Auto"). The
 # DESIGN.md presets are built from these same bundles, so each row names the preset's own choice
@@ -39,29 +52,32 @@ const ADVANCED := {
 	"Frame cap": [["None", {"maxFps": 0}], ["30 fps", {"maxFps": 30}], ["45 fps", {"maxFps": 45}], ["60 fps", {"maxFps": 60}],
 		["120 fps", {"maxFps": 120}]],
 }
-const VOLUMES := {"master": "All sound", "music": "Music", "effects": "Suit and world"}
+const VOLUMES := {"master": "All sound", "music": "Music", "effects": "Suit and world", "interface": "Interface"}
 
 # "" until first asked: user://settings.cfg in the game, "-" (none) in a test or tool run, so a player's saved
 # choices never change what a check measures. A test that checks saving sets its own file first.
 static var file := ""
 
 var game: Node
-var draft := {}  # the Advanced choices as knob overrides, put on by Apply
-var rows := {}  # Advanced row name -> {value: Label, minus, plus, wait}
+var draft := {}  # the fine-tune choices as knob overrides, put on by apply()
+var rows := {}  # fine-tune row name -> its SegButtons, one per option
 var cards := {}  # preset id -> Button
 var sliders := {}  # volume name -> HSlider
+var tabs: Array[Button] = []
+var pages: Array[Control] = []  # one per tab
+var page := 0
 var phone := DisplayServer.is_touchscreen_available()  # drawn larger, with margins clear of the back swipe
 var root := Control.new()  # the screen, scaled for the device (_fit)
 var gear := Button.new()
 var shade := ColorRect.new()
 var panel: PanelContainer
-var apply_button: Button
-var reset_button: Button
-var fps_button: Button
-var full_button: Button  # null where a page cannot go full screen (iPhone Safari)
-var fold_button: Button
-var advanced: Control  # the fold-out
+var close_button: Button  # the Esc chip
+var fps_buttons: Array[Button] = []  # On, Off
+var full_buttons: Array[Button] = []  # On, Off; empty where a page cannot go full screen (iPhone Safari)
 var saved_tag: Control
+var scroll := ScrollContainer.new()
+var body: Control  # the tab column and the page beside it
+var timer := Timer.new()  # waits APPLY_S after a fine-tune pick
 var _flash: Tween
 
 
@@ -116,7 +132,7 @@ func save() -> void:
 		if not OS.has_feature("web"):  # a browser leaves full screen on its own, and enters it only on a press
 			c.set_value("display", "full", _full())
 		for k: String in VOLUMES:
-			c.set_value("sound", k, game.audio.volume[k])
+			c.set_value("sound", k, game.audio.volume.get(k, 1.0))
 		c.save(_path())  # ponytail: a failure (a private window's storage) only forgets the choice for next time
 	saved_tag.visible = true
 	if _flash:
@@ -146,12 +162,22 @@ func setup(g: Node) -> void:
 	gear.custom_minimum_size = Vector2(Hud.BUTTON_H, Hud.BUTTON_H)
 	gear.pressed.connect(toggle)
 	root.add_child(gear)
-	shade.color = Hud.color("shade")
+	shade.color = Hud.color("hud-scrim-menu")
 	shade.mouse_filter = Control.MOUSE_FILTER_STOP  # the world under it takes no clicks or look drags
 	root.add_child(shade)
-	panel = Hud.panel("HudPanel", _build(), true)
+	panel = Hud.panel("HudMenu", _build())
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	root.add_child(panel)
+	for c: Node in panel.find_children("*", "Control", true, false):
+		if c is BaseButton or c is Range:  # a tick as the pointer or the keys reach it, once per arrival
+			(c as Control).mouse_entered.connect(cue.emit.bind("tick"))
+			(c as Control).focus_entered.connect(cue.emit.bind("tick"))
+		if c is BaseButton and c != close_button:
+			(c as BaseButton).pressed.connect(cue.emit.bind("select"))
+	timer.one_shot = true
+	timer.wait_time = APPLY_S
+	timer.timeout.connect(apply)
+	add_child(timer)
 	shade.visible = false
 	panel.visible = false
 	get_viewport().size_changed.connect(_fit)
@@ -173,13 +199,15 @@ func open() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE  # a click on the world captures it again (follow_cam)
 	shade.visible = true
 	panel.visible = true
-	gear.visible = false  # Done closes it; the gear sat under the panel's corner on a phone
+	gear.visible = false  # the Esc chip closes it; the gear sat under the panel's corner on a phone
 	draft = game.overrides.duplicate()
 	_refresh()
+	_fit.call_deferred()  # the page's size settles on the next frame
 
 
-## Done: what still waits for Apply is applied, nothing chosen is lost.
+## The Esc chip, the Esc key or the gear: what still waits is applied, nothing chosen is lost.
 func close() -> void:
+	timer.stop()
 	apply()
 	shade.visible = false
 	panel.visible = false
@@ -202,20 +230,18 @@ func _refresh() -> void:
 		b.set_pressed_no_signal(id == game.quality)
 		b.get_meta("check").visible = id == game.quality  # a shape, not only a colour
 	for r: String in rows:
-		var i := current(r)
-		var n: int = ADVANCED[r].size()
-		rows[r].value.text = "Custom" if i < 0 else ADVANCED[r][i][0]
-		rows[r].minus.disabled = i == 0
-		rows[r].plus.disabled = i == n - 1
-		rows[r].wait.visible = not _same_dict(_values(r, draft), _values(r, game.overrides))
-	apply_button.disabled = not waiting()
-	reset_button.disabled = draft.is_empty() and game.overrides.is_empty()
-	fps_button.text = "On" if game.fps_label.visible else "Off"
+		var i := current(r)  # -1 (a mix no option names) lights none
+		for j: int in rows[r].size():
+			(rows[r][j] as Button).set_pressed_no_signal(j == i)
+	_onoff(fps_buttons, game.fps_label.visible)
 	_full_text()
-	fold_button.text = "Hide advanced" if advanced.visible else "Advanced"
+	for i: int in tabs.size():
+		tabs[i].set_pressed_no_signal(i == page)
+		pages[i].visible = i == page
 	for k: String in sliders:
-		sliders[k].set_value_no_signal(game.audio.volume[k] * 100.0)
-		sliders[k].get_meta("label").text = "%d%%" % roundi(game.audio.volume[k] * 100.0)
+		var v: float = game.audio.volume.get(k, 1.0)
+		sliders[k].set_value_no_signal(v * 100.0)
+		sliders[k].get_meta("label").text = "%d%%" % roundi(v * 100.0)
 
 
 ## Which option of row `r` the draft is on, -1 for none.
@@ -242,11 +268,7 @@ func _option(r: String, i: int) -> Dictionary:
 	return ADVANCED[r][i][1]
 
 
-## One step along row `r`'s options; from "Custom" the first step lands on the first option.
-func step(r: String, by: int) -> void:
-	choose(r, clampi(current(r) + by, 0, ADVANCED[r].size() - 1) if current(r) >= 0 else 0)
-
-
+## A fine-tune pick: it goes on APPLY_S later (or when the screen closes), behind the cover.
 func choose(r: String, i: int) -> void:
 	var kn := HouseStyle.knobs(game.design)
 	var o := _option(r, i)
@@ -257,9 +279,18 @@ func choose(r: String, i: int) -> void:
 		else:
 			draft[k] = v
 	_refresh()
+	if waiting():
+		timer.start()
 
 
-## The Advanced choices on, behind the cover (a shader knob compiles there), and saved.
+func show_tab(i: int) -> void:
+	page = i
+	scroll.scroll_vertical = 0
+	_refresh()
+	_fit.call_deferred()
+
+
+## The fine-tune choices on, behind the cover (a shader knob compiles there), and saved.
 func apply() -> void:
 	if not waiting():
 		return
@@ -268,8 +299,9 @@ func apply() -> void:
 	_refresh()
 
 
-## A preset card: every knob back to it, at once.
+## A preset card: every knob back to it, at once (so the card in force is also "reset to preset").
 func preset(level: String) -> void:
+	timer.stop()
 	draft.clear()
 	game.set_graphics(level, {})
 	save()
@@ -283,116 +315,253 @@ func volume(k: String, percent: float) -> void:
 
 
 func _build() -> Control:
-	var list := Hud.col([], 14)
-	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	var deck := HFlowContainer.new()
-	deck.add_theme_constant_override("h_separation", 8)
-	deck.add_theme_constant_override("v_separation", 8)
-	for id: String in game.design.quality:
-		deck.add_child(_card(id))
-	list.add_child(Hud.label("Graphics", "Heading"))
-	list.add_child(deck)
-	fps_button = _button("", func() -> void:
-		game.fps_label.visible = not game.fps_label.visible
-		save()
-		_refresh(), &"ChoiceButton")
-	fps_button.custom_minimum_size.x = 2 * Hud.BUTTON_H + 130
-	list.add_child(_flow([Hud.label("Show FPS", "", true), fps_button]))
-	if not OS.has_feature("web_ios"):  # iPhone Safari has no full screen for a page; Add to Home Screen is the way
-		full_button = _button("", full_screen, &"ChoiceButton")
-		full_button.custom_minimum_size.x = fps_button.custom_minimum_size.x
-		list.add_child(_flow([Hud.label("Full screen", "", true), full_button]))
-	list.add_child(Hud.label("Sound", "Heading"))
-	for k: String in VOLUMES:
-		list.add_child(_slider(k))
-	advanced = Hud.col([], 14)
-	advanced.visible = false
-	for r: String in ADVANCED:
-		advanced.add_child(_row(r))
-	fold_button = _button("", func() -> void:
-		advanced.visible = not advanced.visible
-		_refresh(), &"ChoiceButton")
-	fold_button.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	fold_button.custom_minimum_size.x = 260
-	list.add_child(fold_button)
-	list.add_child(advanced)
-	var scroll := ScrollContainer.new()
+	var head := Hud.row([Hud.icon("settings", 22, "on_surface"), Hud.label("Settings", "MenuTitle"), Hud.spacer()], 10)
+	close_button = _button("Esc", close, &"ChoiceButton")
+	close_button.icon = load("res://ui/icons/close.svg")
+	close_button.tooltip_text = "Close"
+	close_button.add_theme_constant_override("icon_max_width", 16)
+	close_button.add_theme_font_size_override("font_size", 10)  # the mockup's 15 px key chip
+	close_button.set_meta("seg", true)  # a finger's width on a phone
+	head.add_child(close_button)
+	var column := Hud.col([], 4)
+	for i: int in TABS.size():
+		var t := _button(TABS[i][0], show_tab.bind(i), &"TabButton")
+		t.toggle_mode = true
+		t.icon = load("res://ui/icons/%s.svg" % TABS[i][1])
+		t.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		tabs.append(t)
+		column.add_child(t)
+	var stack := Control.new()  # ponytail: the pages share one scroll; only the open one is visible
+	stack.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var each := Hud.col([], 0)
+	each.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	for p: Control in [_graphics(), _sound(), _controls(), _screen()]:
+		p.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		pages.append(p)
+		each.add_child(p)
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	scroll.add_child(list)
-	var title := Hud.label("Settings", "Title")
-	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	var head := Hud.row([Hud.icon("settings", 40), title, _button("Done", close)], 12)
-	reset_button = _button("Reset to preset", func() -> void: preset(game.quality), &"ChoiceButton")
-	apply_button = _button("Apply", apply)
+	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(each)
+	column.custom_minimum_size.x = 127  # the mockup's 190 px tab column
+	body = BoxContainer.new()  # side by side; stacked on a narrow (portrait) screen (_fit)
+	body.add_theme_constant_override("separation", 19)
+	body.add_child(column)
+	body.add_child(scroll)
+	body.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	saved_tag = Hud.tag("TagLive", "check", "Saved")
 	saved_tag.visible = false
-	var foot := Hud.row([reset_button, Hud.spacer(), saved_tag, apply_button], 12)
-	return Hud.col([head, scroll, foot], 14)
+	var line := ColorRect.new()
+	line.color = Hud.color("hud-stroke-faint")
+	line.custom_minimum_size.y = 1
+	line.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var foot := Hud.row([Hud.label("Changes apply behind the cover, in a moment.", "MenuFoot", true), saved_tag], 12)
+	return Hud.col([head, body, line, foot], 12)
 
 
-## A preset as a big card: its icon, its name, one line, and a check when it is in force.
+func _graphics() -> Control:
+	var deck := GridContainer.new()  # five equal cards in a row, as in the mockup
+	deck.columns = 5
+	deck.add_theme_constant_override("h_separation", 7)
+	deck.add_theme_constant_override("v_separation", 7)
+	for id: String in game.design.quality:
+		deck.add_child(_card(id))
+	var grid := GridContainer.new()  # two columns on a laptop, one on a phone (_sizes)
+	grid.columns = 2
+	grid.set_meta("fine", true)
+	grid.add_theme_constant_override("h_separation", 19)
+	grid.add_theme_constant_override("v_separation", 8)
+	for r: String in ADVANCED:
+		grid.add_child(_row(r))
+	return Hud.col([Hud.label("Your device", "Cap"), deck, Hud.label("Fine tune", "Cap"), grid], 8)
+
+
+func _sound() -> Control:
+	var c := Hud.col([Hud.label("Sound", "Cap")], 8)
+	for k: String in VOLUMES:
+		c.add_child(_slider(k))
+	return c
+
+
+func _controls() -> Control:
+	var grid := GridContainer.new()
+	grid.columns = 2
+	grid.add_theme_constant_override("h_separation", 19)
+	grid.add_theme_constant_override("v_separation", 8)
+	for k: Array in KEYS:
+		var keys: Array[String] = []
+		for a: String in k[1]:
+			if InputMap.has_action(a):
+				for e: InputEvent in InputMap.action_get_events(a):
+					var key := e as InputEventKey
+					if key:
+						keys.append(OS.get_keycode_string(key.physical_keycode if key.physical_keycode else key.keycode))
+						break  # the first key of each action: W A S D, not the arrows too
+		if keys.is_empty():
+			continue
+		grid.add_child(Hud.label(k[0], "MenuText"))
+		var chips := Hud.row([], 6)
+		for name: String in keys:
+			chips.add_child(Hud.panel("HudKey", Hud.label(name, "KeyText")))
+		grid.add_child(chips)
+	return Hud.col([Hud.label("Keys", "Cap"), grid], 8)
+
+
+func _screen() -> Control:
+	var c := Hud.col([Hud.label("Screen", "Cap")], 8)
+	fps_buttons = _switch(func(on: bool) -> void:
+		game.fps_label.visible = on
+		save()
+		_refresh())
+	c.add_child(_line("Show FPS", _group(fps_buttons)))
+	if not OS.has_feature("web_ios"):  # iPhone Safari has no full screen for a page; Add to Home Screen is the way
+		full_buttons = _switch(func(on: bool) -> void:
+			if on != _full():
+				full_screen())
+		c.add_child(_line("Full screen", _group(full_buttons)))
+	return c
+
+
+## A preset as a card: its icon, its name, one line, and a check in the corner when it is in force.
 func _card(id: String) -> Button:
 	var about: Array = PRESETS.get(id, [id.capitalize(), "settings", ""])
-	var b := _button("", preset.bind(id), &"ChoiceButton")
+	var b := _button("", preset.bind(id), &"DeviceCard")
 	b.toggle_mode = true
-	b.custom_minimum_size = Vector2(168, 176)
-	var check := Hud.icon("check", 28, "accent")
+	b.set_meta("h", 76.0)
+	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var check := Hud.icon("check", 16, "primary")
+	check.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	check.offset_left = -22
+	check.offset_right = -6
+	check.offset_top = 6
+	check.offset_bottom = 22
 	b.set_meta("check", check)
-	var name := Hud.label(about[0], "TagText", true)
-	var line := Hud.label(about[2], "Caption", true)
-	line.vertical_alignment = VERTICAL_ALIGNMENT_TOP
-	var inside := Hud.col([Hud.row([Hud.icon(about[1], 44, "accent"), Hud.spacer(), check]), name, line], 6)
-	var pad := MarginContainer.new()
-	pad.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	for side: String in ["left", "right", "top", "bottom"]:
-		pad.add_theme_constant_override("margin_" + side, 12)
-	pad.add_child(inside)
-	for c: Control in [pad, inside] + inside.find_children("*", "Control", true, false):
+	var name := Hud.label(about[0], "MenuStrong")
+	var line := Hud.label(about[2], "MenuSmall", true)
+	for l: Label in [name, line]:
+		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART  # a narrow card takes its line in two
+	var icon := Hud.icon(about[1], 20, "on_surface")
+	icon.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	var inside := Hud.col([icon, name, line], 3)
+	inside.alignment = BoxContainer.ALIGNMENT_CENTER
+	inside.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_KEEP_SIZE, 6)
+	for c: Control in [inside, name, line]:
 		c.mouse_filter = Control.MOUSE_FILTER_IGNORE  # the card takes the click
-	b.add_child(pad)
+	b.add_child(inside)
+	b.add_child(check)
+	b.set_meta("seg", true)  # a finger's width on a phone
 	cards[id] = b
 	return b
 
 
-## An Advanced row: its name (and "On Apply" while it waits) then < value >; on a narrow screen the control wraps.
+## A fine-tune row: its name, then a segmented switch, one button per option.
 func _row(r: String) -> Control:
-	var row := {"wait": Hud.tag("TagLive", "", "On Apply")}
-	var about := Hud.col([Hud.label(r, "", true), row.wait], 4)
-	about.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	about.custom_minimum_size.x = 230
-	row.minus = _button("<", step.bind(r, -1), &"ChoiceButton")
-	row.plus = _button(">", step.bind(r, 1), &"ChoiceButton")
-	row.value = Hud.label("", "SmallNumber")
-	row.value.custom_minimum_size.x = 130
-	row.value.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	rows[r] = row
-	return _flow([about, Hud.row([row.minus, row.value, row.plus], 8)])
+	var segs: Array[Button] = []
+	var group := _group([])
+	for i: int in ADVANCED[r].size():
+		var b := _seg(String(ADVANCED[r][i][0]).trim_suffix(" fps"), choose.bind(r, i))
+		segs.append(b)
+		group.add_child(b)
+	rows[r] = segs
+	var line := _line(r, group)
+	line.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	return line
+
+
+## An On / Off switch as two segments; `on` gets true or false.
+func _switch(on: Callable) -> Array[Button]:
+	var out: Array[Button] = []
+	for v: bool in [true, false]:
+		out.append(_seg("On" if v else "Off", on.bind(v)))
+	return out
+
+
+## A name, then its switch at the right.
+func _line(text: String, group: Control) -> Control:
+	var box := Hud.panel("SegGroup", group)
+	var name := Hud.label(text, "MenuText")
+	name.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	return Hud.row([name, box], 12)
+
+
+## A switch's segments in one line on a laptop; on a narrow phone they may wrap to a second line (_sizes).
+func _group(segs: Array) -> HFlowContainer:
+	var f := HFlowContainer.new()
+	f.alignment = FlowContainer.ALIGNMENT_END
+	f.add_theme_constant_override("h_separation", 0)
+	f.add_theme_constant_override("v_separation", 0)
+	f.set_meta("flow", true)
+	for b: Button in segs:
+		f.add_child(b)
+	return f
+
+
+func _seg(text: String, on: Callable) -> Button:
+	var b := _button(text, on, &"SegButton")
+	b.toggle_mode = true
+	b.set_meta("h", SMALL_H)
+	b.set_meta("seg", true)
+	return b
+
+
+func _onoff(segs: Array[Button], on: bool) -> void:
+	if segs.size() == 2:
+		segs[0].set_pressed_no_signal(on)
+		segs[1].set_pressed_no_signal(not on)
+
+
+## A laptop row's height, or a touch target on a phone.
+func _h(laptop: float) -> float:
+	return maxf(laptop, Hud.BUTTON_H) if phone else laptop
+
+
+## Every control's height (meta "h", its laptop size) for this device; a segment gets a finger's width on a phone.
+func _sizes() -> void:
+	for c: Node in root.find_children("*", "Control", true, false):
+		if c.has_meta("h"):
+			(c as Control).custom_minimum_size.y = _h(c.get_meta("h"))
+		if c.has_meta("seg"):
+			(c as Control).custom_minimum_size.x = Hud.BUTTON_H if phone else 0.0
+	for c: Node in root.find_children("*", "GridContainer", true, false):
+		if c.has_meta("fine"):
+			(c as GridContainer).columns = 1 if phone else 2
+	# a flow asks only for its widest child: on a laptop ask for the whole line, so a switch never wraps there
+	for c: Node in root.find_children("*", "HFlowContainer", true, false):
+		if c.has_meta("flow"):
+			var w := 0.0
+			for b: Control in c.get_children():
+				w += b.get_combined_minimum_size().x
+			(c as Control).custom_minimum_size.x = 0.0 if phone else w
+			# the box hugs its segments on a laptop; on a phone it takes the line, so they can wrap in it
+			(c.get_parent() as Control).size_flags_horizontal = Control.SIZE_EXPAND_FILL if phone else Control.SIZE_SHRINK_END
 
 
 func _slider(k: String) -> Control:
 	var s := HSlider.new()
 	s.max_value = 100
 	s.step = 5
-	s.custom_minimum_size = Vector2(2 * Hud.BUTTON_H + 130, Hud.BUTTON_H)
+	s.custom_minimum_size.x = 240
+	s.set_meta("h", SMALL_H)
 	s.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	var track := StyleBoxFlat.new()
-	track.bg_color = Hud.color("outline-variant")
-	track.set_corner_radius_all(8)
-	track.content_margin_top = 8
-	track.content_margin_bottom = 8
+	track.bg_color = Hud.color("hud-track")
+	track.set_corner_radius_all(3)
+	track.content_margin_top = 3
+	track.content_margin_bottom = 3
 	var fill := track.duplicate() as StyleBoxFlat
-	fill.bg_color = Hud.color("primary")
+	fill.bg_color = Hud.color("accent")
 	s.add_theme_stylebox_override("slider", track)
 	s.add_theme_stylebox_override("grabber_area", fill)
 	s.add_theme_stylebox_override("grabber_area_highlight", fill)
-	var shown := Hud.label("", "SmallNumber")
+	var shown := Hud.label("", "HudNum")
+	shown.custom_minimum_size.x = 44
+	shown.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	s.set_meta("label", shown)
 	s.value_changed.connect(func(v: float) -> void: volume(k, v))
 	sliders[k] = s
-	var name := Hud.label(VOLUMES[k], "", true)
-	name.custom_minimum_size.x = 230
-	return _flow([Hud.row([name, shown], 10), s])
+	var name := Hud.label(VOLUMES[k], "MenuText")
+	name.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	return Hud.row([name, s, shown], 12)
 
 
 func _flow(kids: Array) -> HFlowContainer:
@@ -419,15 +588,14 @@ func _full() -> bool:
 
 
 func _full_text() -> void:
-	if full_button:
-		full_button.text = "On" if _full() else "Off"
+	_onoff(full_buttons, _full())
 
 
 func _button(text: String, on: Callable, variation := &"") -> Button:
 	var b := Button.new()
 	b.text = text
 	b.theme_type_variation = variation
-	b.custom_minimum_size = Vector2(Hud.BUTTON_H, Hud.BUTTON_H)
+	b.set_meta("h", 48.0)  # the close chip and the tabs on a laptop; _sizes() makes it a touch target on a phone
 	b.focus_mode = Control.FOCUS_NONE
 	b.pressed.connect(on)
 	return b
@@ -447,8 +615,20 @@ func _fit() -> void:
 	var m := Vector2(60.0 / Hud.PHONE_SCALE if phone else 24.0, 20.0)
 	gear.position = Vector2(root.size.x - m.x - Hud.BUTTON_H, m.y)
 	gear.size = Vector2(Hud.BUTTON_H, Hud.BUTTON_H)
-	panel.size = Vector2(minf(root.size.x - 2.0 * m.x, 960.0), root.size.y - 2.0 * m.y)
-	panel.position = Vector2((root.size.x - panel.size.x) / 2.0, m.y)
+	_sizes()
+	var room := root.size - 2.0 * m
+	(body as BoxContainer).vertical = room.x < 620.0  # portrait: the tabs go above the page
+	# as tall as the open page needs, up to the screen; past that the page scrolls
+	scroll.custom_minimum_size.y = 0.0
+	var need: float = pages[page].get_combined_minimum_size().y
+	scroll.custom_minimum_size.y = need
+	var over := panel.get_combined_minimum_size().y - room.y
+	if over > 0.0:
+		scroll.custom_minimum_size.y = maxf(80.0, need - over)
+	panel.size = Vector2(minf(room.x, WIDTH), 0.0)
+	panel.reset_size()
+	panel.size.x = maxf(panel.size.x, minf(room.x, WIDTH))
+	panel.position = ((root.size - panel.size) / 2.0).floor()
 
 
 static func _same_dict(a: Dictionary, b: Dictionary) -> bool:

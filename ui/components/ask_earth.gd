@@ -20,32 +20,24 @@ var date_label: Label
 
 func _ready() -> void:
 	theme_type_variation = "HudPanel"
-	custom_minimum_size.x = 360  # its captions wrap, so they ask for no width of their own
-	track.custom_minimum_size = Vector2(150, 30)
+	custom_minimum_size.x = 220  # its captions wrap, so they ask for no width of their own
+	track.custom_minimum_size = Vector2(100, 18)
 	track.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	track.draw.connect(_draw_track)
-	sent_label = Hud.label("", "SmallNumber")
-	reply_label = Hud.label("", "SmallNumber")
-	way_label = Hud.label("", "Caption", true)
-	date_label = Hud.label("", "Caption", true)
-	var path := Hud.row([Hud.icon("dish", 30, "accent"), track, Hud.icon("earth", 30, "on_surface")], 8)
+	sent_label = Hud.label("", "HudNumAmber")
+	reply_label = Hud.label("", "HudNumAmber")
+	way_label = Hud.label("", "HudSmall", true)
+	date_label = Hud.label("", "HudSmall", true)
+	var path := Hud.row([Hud.icon("dish", 16, "accent"), track, Hud.icon("earth", 16, "on_surface")], 6)
 	add_child(Hud.col([
-		Hud.row([Hud.tag("TagLive", "dish", ""), Hud.label("Mail to Earth", "Heading")], 10),
+		Hud.row([Hud.icon("dish", 13, "light"), Hud.label("Mail to Earth", "CapLight")], 6),
 		path,
-		_flow([Hud.row([Hud.label("Sent", "Caption"), sent_label], 8), Hud.row([Hud.label("Reply about", "Caption"), reply_label], 8)]),
+		Hud.row([Hud.label("Sent", "HudSmall"), sent_label], 5),
+		Hud.row([Hud.label("Reply about", "HudSmall"), reply_label], 5),
 		way_label,
-		Hud.row([Hud.tag("TagArchive", "clock", "COMPUTED", "TagText"), date_label], 8),
+		Hud.row([Hud.tag("TagArchive", "clock", "COMPUTED", "CapInk", 12), date_label], 6),
 	], 6))
 	send(sent_hour, date_unix)
-
-
-## One line where it fits, two where it does not.
-static func _flow(kids: Array) -> HFlowContainer:
-	var f := HFlowContainer.new()
-	f.add_theme_constant_override("h_separation", 18)
-	for k: Control in kids:
-		f.add_child(k)
-	return f
 
 
 ## A message leaves at `hour` (Mars clock) on the day `unix`.
@@ -82,11 +74,11 @@ func _draw_track() -> void:
 	var dashes := 12
 	var step := track.size.x / dashes
 	for i in dashes:
-		track.draw_line(Vector2(i * step + 2, y), Vector2(i * step + step * 0.55, y), Hud.color("outline-variant"), 3.0)
+		track.draw_line(Vector2(i * step + 2, y), Vector2(i * step + step * 0.55, y), Hud.color("hud-ink-faint"), 1.5)
 	# the message: a teal diamond out to Earth, then the reply back; it points the way it travels, so the
 	# direction reads without colour
 	var p := progress()
 	var there := 1.0 - absf(1.0 - 2.0 * p)
 	var x := there * (track.size.x - 16.0) + 8.0
 	var dir := 1.0 if p < 0.5 else -1.0
-	track.draw_colored_polygon(PackedVector2Array([Vector2(x - 8 * dir, y - 9), Vector2(x + 10 * dir, y), Vector2(x - 8 * dir, y + 9)]), Hud.color("accent"))
+	track.draw_colored_polygon(PackedVector2Array([Vector2(x - 5 * dir, y - 6), Vector2(x + 7 * dir, y), Vector2(x - 5 * dir, y + 6)]), Hud.color("accent"))

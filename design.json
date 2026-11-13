@@ -33,7 +33,31 @@
   "sky": "#c27d4c",
   "horizon": "#f6d9a6",
   "ground": "#9a5f3d",
-  "shade": "#7d86ad"
+  "shade": "#7d86ad",
+  "hud-glass": "#160f0c57",
+  "hud-glass-menu": "#160f0cb8",
+  "hud-stroke": "#8ef7ea73",
+  "hud-stroke-faint": "#8ef7ea2e",
+  "hud-glow": "#2ed3c01f",
+  "hud-glow-amber": "#f0a64059",
+  "hud-glow-danger": "#ff4d4d59",
+  "hud-text-edge": "#160f0cd9",
+  "hud-highlight": "#ffffff1f",
+  "hud-arc": "#8ef7ea59",
+  "hud-arc-faint": "#8ef7ea40",
+  "hud-ink-faint": "#f6ecdc8c",
+  "hud-ink-dim": "#f6ecdc99",
+  "hud-ink-ghost": "#f6ecdc59",
+  "hud-track": "#f6ecdc26",
+  "hud-tab-on": "#8ef7ea1a",
+  "hud-seg-on": "#2ed3c038",
+  "hud-key": "#160f0c73",
+  "hud-scrim": "#160f0c73",
+  "hud-scrim-strong": "#160f0c99",
+  "hud-scrim-full": "#160f0ccc",
+  "hud-scrim-menu": "#0a07068c",
+  "hud-cover-track": "#251914e6",
+  "hud-cover-edge": "#f0a64099"
  },
  "typography": {
   "headline": {
@@ -103,6 +127,96 @@
    },
    "rounded": "4px",
    "padding": "8px 16px"
+  },
+  "hud-panel": {
+   "backgroundColor": "#160f0c57",
+   "rounded": "10px",
+   "padding": "14px 18px"
+  },
+  "hud-menu": {
+   "backgroundColor": "#160f0cb8",
+   "rounded": "10px",
+   "padding": "26px 30px"
+  },
+  "hud-stroke": {
+   "backgroundColor": "#8ef7ea73",
+   "width": "1.5px"
+  },
+  "hud-divider": {
+   "backgroundColor": "#8ef7ea2e",
+   "height": "1px"
+  },
+  "hud-glow": {
+   "backgroundColor": "#2ed3c01f",
+   "size": "18px"
+  },
+  "hud-glow-picked": {
+   "backgroundColor": "#f0a64059",
+   "size": "16px"
+  },
+  "hud-glow-alert": {
+   "backgroundColor": "#ff4d4d59",
+   "size": "18px"
+  },
+  "hud-text-outline": {
+   "backgroundColor": "#160f0cd9",
+   "size": "2px"
+  },
+  "hud-highlight": {
+   "backgroundColor": "#ffffff1f",
+   "height": "1px"
+  },
+  "hud-visor-arc": {
+   "backgroundColor": "#8ef7ea59",
+   "height": "1.5px"
+  },
+  "hud-visor-arc-low": {
+   "backgroundColor": "#8ef7ea40",
+   "height": "1.5px"
+  },
+  "hud-compass-tick": {
+   "backgroundColor": "#f6ecdc8c",
+   "width": "2px",
+   "height": "10px"
+  },
+  "hud-compass-number": {
+   "textColor": "#f6ecdc99"
+  },
+  "hud-bubble-untyped": {
+   "textColor": "#f6ecdc59"
+  },
+  "hud-meter-track": {
+   "backgroundColor": "#f6ecdc26",
+   "height": "6px",
+   "rounded": "3px"
+  },
+  "hud-tab-open": {
+   "backgroundColor": "#8ef7ea1a"
+  },
+  "hud-segment-on": {
+   "backgroundColor": "#2ed3c038"
+  },
+  "hud-key": {
+   "backgroundColor": "#160f0c73",
+   "rounded": "5px"
+  },
+  "hud-scrim": {
+   "backgroundColor": "#160f0c73"
+  },
+  "hud-scrim-strong": {
+   "backgroundColor": "#160f0c99"
+  },
+  "hud-scrim-full": {
+   "backgroundColor": "#160f0ccc"
+  },
+  "hud-scrim-menu": {
+   "backgroundColor": "#0a07068c"
+  },
+  "hud-cover-track": {
+   "backgroundColor": "#251914e6"
+  },
+  "hud-cover-edge": {
+   "backgroundColor": "#f0a64099"
   }
  },
  "materials": {

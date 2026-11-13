@@ -7,7 +7,7 @@ var entries: Array = [[1, "Landed in Gale crater"], [4, "Cleaned the solar panel
 
 
 func _ready() -> void:
-	theme_type_variation = "HudPanel"
+	theme_type_variation = "HudMenu"
 	custom_minimum_size.x = 460
 	var body := Hud.col([Hud.row([Hud.tag("Tag", "clock", "", "OnFill", 30), Hud.label("Mission log", "Heading")], 12)], 10)
 	for e: Array in entries:

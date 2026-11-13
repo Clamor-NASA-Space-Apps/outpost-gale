@@ -18,7 +18,7 @@ var card: PanelContainer
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var scrim := ColorRect.new()
-	scrim.color = Hud.color("scrim_strong")
+	scrim.color = Hud.color("hud-scrim-strong")
 	scrim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(scrim)
 	var again := Button.new()
@@ -51,7 +51,7 @@ func _ready() -> void:
 		chain,
 		actions,
 	], 16)
-	card = Hud.panel("HudPanelLost", body, true)
+	card = Hud.panel("HudPanelLost", body)
 	card.custom_minimum_size.x = width
 	var center := CenterContainer.new()
 	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
