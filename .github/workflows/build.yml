@@ -1,0 +1,104 @@
+# Every push builds the web, Linux and Windows versions.
+# Web: https://clamor-nasa-space-apps.github.io/<folder>/ (main is "sandbox", other branches use their name, "/" becomes "-").
+# Desktop: the rolling release "build-<folder>" on this repo (release files do not count against the 500 MB artifact quota).
+# Pull requests only build, so a broken export shows before the merge.
+name: build
+on:
+  push:
+    branches: ['**']
+    paths-ignore: ['**.md', 'design/**', 'research/**']
+  pull_request:
+  workflow_dispatch:
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Godot 4.7.2 and the three export templates (cached)
+        id: godot
+        uses: actions/cache@v4
+        with:
+          path: ~/godot
+          key: godot-4.7.2-stable
+      - if: steps.godot.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p ~/godot/templates && cd ~/godot
+          base=https://github.com/godotengine/godot/releases/download/4.7.2-stable
+          curl -sSLo e.zip $base/Godot_v4.7.2-stable_linux.x86_64.zip && unzip -q e.zip && mv Godot_v4.7.2-stable_linux.x86_64 godot && rm e.zip
+          # the full template set is 1.3 GB; the cache keeps only what our presets use
+          curl -sSLo t.tpz $base/Godot_v4.7.2-stable_export_templates.tpz
+          unzip -qj t.tpz templates/version.txt templates/web_nothreads_release.zip templates/linux_release.x86_64 templates/windows_release_x86_64.exe -d templates && rm t.tpz
+      - run: |
+          mkdir -p ~/.local/share/godot/export_templates
+          ln -s ~/godot/templates ~/.local/share/godot/export_templates/4.7.2.stable
+          echo ~/godot >> $GITHUB_PATH
+
+      # Godot reimports only what changed since the restored cache, so every run saves a fresh one
+      - uses: actions/cache@v4
+        with:
+          path: .godot
+          key: import-${{ github.sha }}
+          restore-keys: import-
+      - run: godot --headless --path . --import
+
+      - name: Export
+        run: |
+          mkdir -p build/web build/linux build/windows
+          godot --headless --path . --export-release Web build/web/index.html
+          godot --headless --path . --export-release Linux build/linux/outpost-gale.x86_64
+          godot --headless --path . --export-release Windows build/windows/OutpostGale.exe
+          ls -la build/*
+          test -s build/web/index.pck && test -s build/linux/outpost-gale.x86_64 && test -s build/windows/OutpostGale.exe
+          # GitHub refuses a file over 100 MB in git, and Pages is a git push
+          find build/web -size +95M | grep . && { echo "a web file is over 95 MB"; exit 1; } || true
+
+      - name: Folder name
+        run: |
+          d=${GITHUB_REF_NAME//\//-}; [ "$d" = main ] && d=sandbox
+          echo "DIR=$d" >> $GITHUB_ENV
+
+      - name: Desktop builds to the rolling release
+        if: github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cd build
+          (cd windows && zip -q9 ../OutpostGale-windows-x64.zip OutpostGale.exe)
+          tar -C linux -czf outpost-gale-linux-x86_64.tar.gz outpost-gale.x86_64
+          (cd web && zip -qr9 ../outpost-gale-web.zip .)
+          gh release delete "build-$DIR" --cleanup-tag -y || true
+          gh release create "build-$DIR" --prerelease --target "$GITHUB_SHA" \
+            --title "$GITHUB_REF_NAME, ${GITHUB_SHA::7}" \
+            --notes "Built from $GITHUB_SHA. Play in the browser: https://clamor-nasa-space-apps.github.io/$DIR/" \
+            OutpostGale-windows-x64.zip outpost-gale-linux-x86_64.tar.gz outpost-gale-web.zip
+
+      # The Pages repo holds generated files only: each deploy is one fresh commit (force-pushed), so
+      # 100 MB builds never pile up in its history. The lease makes two branches deploying at once retry.
+      - name: Web build to Pages
+        if: github.event_name != 'pull_request'
+        env:
+          KEY: ${{ secrets.PAGES_DEPLOY_KEY }}
+        run: |
+          eval "$(ssh-agent -s)" && ssh-add - <<< "$KEY"
+          mkdir -p ~/.ssh && ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts 2>/dev/null
+          url=git@github.com:Clamor-NASA-Space-Apps/clamor-nasa-space-apps.github.io.git
+          for try in 1 2 3 4 5; do
+            rm -rf site && git clone -q --depth 1 "$url" site && cd site
+            old=$(git rev-parse HEAD)
+            rm -rf "$DIR" && cp -r ../build/web "$DIR" && touch .nojekyll
+            { echo '<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Outpost Gale builds</title><h1>Outpost Gale</h1><ul>'
+              for d in */; do echo "<li><a href=\"$d\">${d%/}</a></li>"; done; echo '</ul>'; } > index.html
+            git checkout -q --orphan fresh && git add -A
+            git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+              commit -qm "$DIR: ${GITHUB_SHA::7}"
+            git push -q --force-with-lease=main:$old origin fresh:main && exit 0
+            cd .. && sleep $((try * 10))
+          done
+          exit 1

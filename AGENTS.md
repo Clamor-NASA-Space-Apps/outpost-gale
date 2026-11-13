@@ -44,7 +44,9 @@ The organisers allowed the art direction and every asset to be prepared before t
 - `data/terrain*`: one height source for the mesh, the collision and later the game's height queries.
 
 ## Git
-Its own repo. Commits signed off (`git commit -s`), prefixed by area, ending with the workspace's `Co-Authored-By` trailer (AI use must be disclosed). Remote `origin`: `git@100.108.184.127:ravindu644/junior-astronaut-mission-trainer.git` (Gitea), branch `main`. **Push after every commit** (Ravindu, 12 Nov 2026).
+Its own repo. Commits signed off (`git commit -s`), prefixed by area, ending with the workspace's `Co-Authored-By` trailer (AI use must be disclosed). Remotes: `origin` = GitHub `Clamor-NASA-Space-Apps/outpost-gale` (private), `gitea` = the old Gitea mirror; branch `main`. **Push after every commit, to both** (Ravindu, 12 Nov 2026).
+- **Actions** (`.github/workflows/build.yml`) builds web, Linux and Windows on every push. The web build lands at `https://clamor-nasa-space-apps.github.io/<branch>/` (`main` is `sandbox`), and the desktop builds at the release `build-<branch>`. A web file over 95 MB fails the run (Pages is a git push, and git refuses files over 100 MB).
+- **Teammates** work on their own branch, in their own folder (the intro and outro: `cine/intro/`, `cine/outro/`), and open a pull request into `main`. Each branch gets its own preview link.
 
 ## Gotchas
 (Add one line per thing that took more than two tries, with its why.)
