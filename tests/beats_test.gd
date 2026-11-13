@@ -10,10 +10,10 @@ extends "res://addons/forge/test.gd"
 ## at the hero's pace without being caught, and is let go at the end.
 
 # s each beat may take here: its own wait plus the walking
-const BUDGET := {"wake": 4, "hatch": 3, "walk_out": 20, "outside": 12, "pip_hello": 32, "walk_to_me": 20,
+const BUDGET := {"wake": 4, "hatch": 3, "walk_out": 20, "face_dawn": 12, "outside": 22, "pip_hello": 32, "walk_to_me": 20,
 	"side_steps": 60, "back_step": 4, "look_shot": 4, "look_mouse": 6, "try_jump": 4, "jump_fact": 6, "hurry": 10,
-	"lift": 40, "lift_fact": 2, "set_down": 10, "map": 2, "map_close": 2, "follow_solar": 120, "sun_fact": 2, "o2_lead": 2,
-	"lamps_lead": 2, "choice": 2, "follow_me": 180}
+	"lift": 40, "lift_fact": 2, "set_down": 10, "map": 2, "map_close": 2, "follow_solar": 120, "sun_fact": 2, "o2_visit": 120,
+	"o2_fact": 2, "garden_visit": 180, "lamps_fact": 2, "choice": 2}
 
 var game: Node3D
 var world: Node3D
@@ -21,6 +21,7 @@ var player: Node3D
 var pip: Node3D
 var beats: Node  # cine/beats.gd, loaded in play(): it names the Forge autoload, which a test compiles before
 var moving := false
+var crumbs: Array[Vector3] = []  # PIP's tracks, which a following bot walks
 var lines: Array[String] = []
 var shots: Array[String] = []
 
@@ -57,9 +58,9 @@ func play() -> bool:
 	var clock: Node = game.clock
 	var wake_h: float = float(Array(beats.data.opening[0].do).filter(func(c: String) -> bool: return c.begins_with("clock:"))[0].get_slice(":", 1))
 	var cine: Node = game.cine
-	var rim_eye: Vector3 = cine._at(cine.cfg.shots.dawn_reveal.keys[int(cine.cfg.shots.dawn_reveal.sunrise.key)].eye)
+	var rim_eye := func() -> Vector3: return player.body.global_position + Vector3.UP * 1.9  # near the shot's eye
 	check(clock.pinned and absf(clock.hour() - wake_h) < 0.01, "the opening pins the look at its pre-dawn hour (%.2f h)" % clock.hour())
-	check(cine.sun_clear(clock.hour(), rim_eye) < -2.0, "it wakes before the sunrise: the sun %.1f deg under the rim" % cine.sun_clear(clock.hour(), rim_eye))
+	check(cine.sun_clear(clock.hour(), rim_eye.call()) < -2.0, "it wakes before the sunrise: the sun %.1f deg under the rim" % cine.sun_clear(clock.hour(), rim_eye.call()))
 	check(clock.report().sun_el > -12.0, "and not in the night: blue twilight (sun %.1f deg)" % clock.report().sun_el)
 	var inside := await _until(func() -> bool: return player.room == "hab1", 1.0)
 	check(inside, "the hero starts inside HAB 1 (%s)" % player.room)
@@ -88,7 +89,11 @@ func play() -> bool:
 			action(&"move_back", true)  # a kid pulling back: the walk goes on
 		elif tried[0] == 60:
 			action(&"move_back", false))
-	check(player.body.global_position.distance_to(at) > 6.0, "the hero walked out on its own (%.1f m)" % player.body.global_position.distance_to(at))
+	check(player.body.global_position.distance_to(at) > 5.0, "the hero walked out on its own (%.1f m)" % player.body.global_position.distance_to(at))
+	await _beat("face_dawn")
+	var sun: Vector3 = load("res://addons/forge/house_style.gd").sun_at(clock._C, clock.hour())
+	var facing := Vector2(-sin(player.yaw), -cos(player.yaw)).dot(Vector2(sun.x, sun.z).normalized())
+	check(facing > cos(deg_to_rad(25.0)), "the hero ends facing the sunrise (%.2f)" % facing)
 	check(top[0] > player.walk * 0.8 and top[0] < player.walk * 1.15, "at walk speed (%.2f of %.2f m/s)" % [top[0], player.walk])
 	check(not player.touch.stick.visible, "the touch stick stays hidden: the kid is not steering")
 	check(player.allowed == ["none"], "input is blocked again after the walk (%s)" % [player.allowed])
@@ -96,10 +101,11 @@ func play() -> bool:
 	await _beat("outside")
 	await frames(30)
 	check(not hatch_it.open, "the hatch shut behind the hero")
-	check(cine.sun_clear(clock.hour(), rim_eye) > 1.0, "the sun stands over the rim when the shot hands back (%.1f deg)" % cine.sun_clear(clock.hour(), rim_eye))
+	check(cine.sun_clear(clock.hour(), rim_eye.call()) > 1.0, "the sun has risen over the rim when the shot hands back (%.2f deg)" % cine.sun_clear(clock.hour(), rim_eye.call()))
+	check(pip.global_position.distance_to(player.body.global_position) < 3.0, "PIP rolled up beside the hero during the wide (%.1f m)" % pip.global_position.distance_to(player.body.global_position))
 	check(clock.pinned, "and the look holds there until the lessons let it run")
 	var lessons: Array = beats.data.opening.map(func(b: Dictionary) -> String: return b.id)
-	check(lessons.slice(0, 5) == ["wake", "hatch", "walk_out", "outside", "pip_hello"], "control returns with PIP's hello (%s)" % [lessons.slice(0, 5)])
+	check(lessons.slice(0, 6) == ["wake", "hatch", "walk_out", "face_dawn", "outside", "pip_hello"], "control returns with PIP's hello (%s)" % [lessons.slice(0, 6)])
 	await _beat("pip_hello", _answer.bind("focus_pip"))
 	check(pip.reached[-1] == "order", "PIP rolled up to its spot before the beat ended")
 	check(targets.has("pip") and tasks.has("task.meet_pip"), "PIP is the objective and meeting it the task (%s, %s)" % [targets, tasks])
@@ -222,37 +228,34 @@ func play() -> bool:
 	_stop()
 	check(gap[0] > 1.5, "a hero walking after PIP never comes within 1.5 m while it leads (%.2f m)" % gap[0])
 	check(lines.has("pip.this_way"), "PIP calls 'this way' while it leads")
-	for id: String in ["sun_fact", "o2_lead", "lamps_lead"]:
-		check(offered.is_empty(), "no choice yet at %s" % id)
-		await _beat(id, func() -> void: beats.notify("dismissed"))
+	await _beat("sun_fact", func() -> void: beats.notify("dismissed"))
 	check(not clock.pinned, "the clock runs again: the sun rises and the wings turn")
-	check(offered == ["sol1_power"], "the first choice is offered after its lead-in (%s)" % [offered])
-	# the sandbox's own handler of a click on the card runs clean (a string `_note` among the offers broke it: a script
-	# error, and the opening never got past the choice)
-	game.hud.chosen.emit(game.offers.sol1_power.title, 0)
-	beats.notify("chose:sol1_power")  # the rules' answer (lane S)
-	await _beat("choice")
+	# a visit to each thing the choice is about, then the choice (14 Nov playtest: asked before the kid knew them)
+	await _beat("o2_visit", _follow_crumbs)
+	_stop()
+	check(offered.is_empty(), "no choice before the oxygen maker and the lamps are shown")
+	await _beat("o2_fact", func() -> void: beats.notify("dismissed"))
 
 	# follow me: the hero dawdles first, so PIP must stop and wait, then follows PIP's own tracks
-	var crumbs: Array[Vector3] = [player.body.global_position, pip.global_position]
+	crumbs = [player.body.global_position, pip.global_position]
 	var waited := await _until(func() -> bool: return pip.state == "behind", 40.0, func() -> void:
 		if pip.global_position.distance_to(crumbs[-1]) > 0.5:
 			crumbs.append(pip.global_position))  # its tracks from the start: the way round the battery bank too
 	check(waited, "PIP stops and looks back when the hero falls behind (state %s)" % pip.state)
 	var resumed := [false]
-	await _beat("follow_me", func() -> void:
-		if pip.global_position.distance_to(crumbs[-1]) > 0.5:
-			crumbs.append(pip.global_position)
+	await _beat("garden_visit", func() -> void:
 		resumed[0] = resumed[0] or pip.state == "drive"
-		var b: Vector3 = player.body.global_position
-		while crumbs.size() > 1 and _flat(crumbs[0], b) < 0.8:
-			crumbs.pop_front()
-		if _flat(pip.global_position, b) < 2.0:
-			_stop()
-		else:
-			_steer(crumbs[0]))
+		_follow_crumbs())
 	_stop()
 	check(resumed[0], "PIP goes on once the hero catches up")
+	check(offered.is_empty(), "still no choice at the greenhouse door")
+	await _beat("lamps_fact", func() -> void: beats.notify("dismissed"))
+	check(offered == ["sol1_power"], "the power choice comes last, after both visits (%s)" % [offered])
+	# the sandbox's own handler of a click on the card runs clean (a string `_note` among the offers broke it: a script
+	# error, and the opening never got past the choice)
+	game.hud.chosen.emit(game.offers.sol1_power.title, 0)
+	beats.notify("chose:sol1_power")  # the rules' answer (lane S)
+	await _beat("choice")
 
 	var ids: Array[String] = []
 	var own: Array[String] = []
@@ -278,6 +281,19 @@ func play() -> bool:
 	return true
 
 
+## After PIP along its own tracks, stopping 2 m short of it.
+func _follow_crumbs() -> void:
+	if crumbs.is_empty() or pip.global_position.distance_to(crumbs[-1]) > 0.5:
+		crumbs.append(pip.global_position)
+	var b: Vector3 = player.body.global_position
+	while crumbs.size() > 1 and _flat(crumbs[0], b) < 0.8:
+		crumbs.pop_front()
+	if _flat(pip.global_position, b) < 2.0:
+		_stop()
+	else:
+		_steer(crumbs[0])
+
+
 ## Waits for beat `id` to end, calling `each` every tick; past its BUDGET it fails.
 func _beat(id: String, each := Callable()) -> void:
 	if not check(beats.beat.get("id", "") == id, "beat %s is playing (now '%s')" % [id, beats.beat.get("id", "")]):
@@ -286,7 +302,7 @@ func _beat(id: String, each := Callable()) -> void:
 	var f0 := Engine.get_physics_frames()
 	var ok := await _until(func() -> bool: return beats.done.has(id), float(BUDGET[id]), each)
 	var h: Vector3 = player.body.global_position
-	print("  %-12s %5.1f s game, %5.1f s real" % [id, (Engine.get_physics_frames() - f0) / 60.0, (Time.get_ticks_msec() - t0) / 1000.0])
+	print("  %-12s %5.1f s game, %5.1f s real, PIP gave up %d" % [id, (Engine.get_physics_frames() - f0) / 60.0, (Time.get_ticks_msec() - t0) / 1000.0, pip.gave_up])
 	check(ok, "beat %s ends within %d s (hero at %.1f, %.1f; PIP %s at %.1f, %.1f)" % [id, BUDGET[id], h.x, h.z, pip.state,
 		pip.global_position.x, pip.global_position.z])
 

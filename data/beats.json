@@ -68,17 +68,34 @@
     {
       "id": "walk_out",
       "do": [
-        "walk:0,7.5"
+        "walk:0,6.0"
       ],
       "wait": {
         "place": {
           "at": [
             0.0,
-            7.5
+            6.0
           ],
           "r": 0.6
         },
         "max_s": 20
+      }
+    },
+    {
+      "id": "face_dawn",
+      "_note": "a few steps east, so the hero ends facing the sunrise (bearing 81) with its back to the play camera for dawn_reveal",
+      "do": [
+        "walk:3.5,5.5"
+      ],
+      "wait": {
+        "place": {
+          "at": [
+            3.5,
+            5.5
+          ],
+          "r": 0.6
+        },
+        "max_s": 12
       }
     },
     {
@@ -98,9 +115,6 @@
     },
     {
       "id": "pip_hello",
-      "do": [
-        "shot:focus_pip"
-      ],
       "task": "task.meet_pip",
       "pip": {
         "go_to": [
@@ -111,10 +125,7 @@
       },
       "line": "sol1.good_morning",
       "wait": {
-        "event": [
-          "shot_done:focus_pip",
-          "pip_arrived"
-        ],
+        "event": "pip_arrived",
         "max_s": 30
       }
     },
@@ -330,7 +341,6 @@
       "do": [
         "clock:run"
       ],
-      "task": "task.choose_power",
       "pip": {
         "point_at": "solar"
       },
@@ -339,44 +349,74 @@
       "objective": null
     },
     {
-      "id": "o2_lead",
+      "id": "o2_visit",
+      "task": "task.meet_o2",
+      "pip": {
+        "follow_me": [
+          -3.8,
+          3.6
+        ]
+      },
+      "line": "sol1.follow_o2",
+      "objective": "pip",
+      "wait": {
+        "place": {
+          "at": [
+            -3.8,
+            3.6
+          ],
+          "r": 3.5
+        }
+      }
+    },
+    {
+      "id": "o2_fact",
       "pip": {
         "point_at": "oxygen"
       },
-      "line": "sol1.o2_maker_is",
-      "fact": true
+      "line": "sol1.o2_from_water",
+      "fact": true,
+      "objective": null
     },
     {
-      "id": "lamps_lead",
+      "id": "garden_visit",
+      "task": "task.follow_garden",
+      "pip": {
+        "follow_me": [
+          -11.0,
+          6.5
+        ]
+      },
+      "line": "sol1.follow_me",
+      "objective": "pip",
+      "wait": {
+        "place": {
+          "at": [
+            -11.0,
+            5.2
+          ],
+          "r": 4.0
+        }
+      }
+    },
+    {
+      "id": "lamps_fact",
       "pip": {
         "point_at": "greenhouse"
       },
-      "line": "sol1.lamps_are",
-      "fact": true
+      "line": "sol1.lamps_light",
+      "fact": true,
+      "objective": null
     },
     {
       "id": "choice",
+      "task": "task.choose_power",
       "do": [
         "offer:sol1_power"
       ],
       "line": "sol1.every_choice",
       "wait": {
         "action": "chose:sol1_power"
-      }
-    },
-    {
-      "id": "follow_me",
-      "task": "task.follow_garden",
-      "pip": {
-        "follow_me": "greenhouse"
-      },
-      "line": "sol1.follow_me",
-      "objective": "pip",
-      "wait": {
-        "place": {
-          "at": "greenhouse",
-          "r": 4.0
-        }
       },
       "then": "end"
     }

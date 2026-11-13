@@ -104,10 +104,7 @@ func play() -> bool:
 	check(cells.all(func(n: Node3D) -> bool: return n.visible), "every merged cell is drawn again")
 
 	# the tutorial shots: the hero just out of HAB 1's door facing out, PIP called over for its own
-	var hab: Node3D = world.items.hab1
-	var out: Vector3 = hab.to_global(Vector3(0.0, 0.0, -7.0))
-	player.place(Vector3(out.x, world.height_at(out.x, out.z) + 0.1, out.z), -180.0)
-	player.cam.snap(player.yaw)
+	cine.stand_for_dawn()
 	# the opening's pre-dawn wake (data/beats.json), as the beats leave it: pinned
 	var clock: Node = game.clock
 	var wake: String = Array(JSON.parse_string(FileAccess.get_file_as_string("res://data/beats.json")).opening[0].do).filter(
@@ -115,10 +112,10 @@ func play() -> bool:
 	clock.pinned = true
 	clock.set_hour(clock.hours - clock.hour() + float(wake.get_slice(":", 1)))
 	clock.refresh()
-	await shoot(game, cine, "dawn_reveal", 20.0)
+	await shoot(game, cine, "dawn_reveal", 1.0)  # the play camera's own distance: a turn, not a pull-out
 	check(clock.pinned and not clock.driven, "the clock is given back pinned, as the beats left it")
 	var h_end: float = clock.hour()
-	await shoot(game, cine, "dawn_reveal", 20.0)  # again, from a clock already past the rise
+	await shoot(game, cine, "dawn_reveal", 1.0)  # again, from a clock already past the rise
 	check(is_equal_approx(clock.hour(), h_end), "a clock past the sunrise is never turned back (%.3f to %.3f)" % [h_end, clock.hour()])
 	await shoot(game, cine, "look_around", 1.0)  # a pan from beside the hero
 	var pip: Node3D = game.pip
@@ -156,7 +153,7 @@ func shoot(game: Node3D, cine: Node, name: String, far: float) -> void:
 	var c: Dictionary = cine.cfg.shots[name]
 	var total: float = c.back_s
 	for k: Dictionary in c.keys:
-		total += float(k.s)
+		total += 0.0 if k.get("cut", false) else float(k.s)
 	cine.shot(name)
 	var last: Vector3 = lens.global_position
 	var worst := ""
@@ -164,10 +161,11 @@ func shoot(game: Node3D, cine: Node, name: String, far: float) -> void:
 	var left := total + 3.0
 	# a sunrise shot: the sun's centre under the rim at the start, over it by the middle (from its sunrise key)
 	var rise: Dictionary = c.get("sunrise", {})
-	var eye: Vector3 = cine._at(c.keys[int(rise.key)].eye) if rise else Vector3.ZERO
+	var eye: Vector3 = player.body.global_position + Vector3.UP * 1.9  # near the shot's eye
 	var h0: float = game.clock.hour()
-	var rising: bool = not rise.is_empty() and cine.sun_clear(h0, eye) < 0.0
-	var clear := [INF, -INF]  # the sun over the rim: at the first frame, at the middle
+	var rising: bool = not rise.is_empty() and cine.sun_clear(h0, eye) < float(rise.get("peek_deg", 0.0)) - 0.5
+	var clear := [INF, -INF]
+	var cue := {}  # the music cues heard during the shot  # the sun over the rim: at the first frame, at the middle
 	while cine.busy() and left > 0.0:
 		await process_frame
 		left -= root.get_process_delta_time()
@@ -185,17 +183,19 @@ func shoot(game: Node3D, cine: Node, name: String, far: float) -> void:
 		elif worst == "" and at.y < world.height_at(at.x, at.z) + 0.3:
 			worst = "under the ground at %s" % at
 		last = at
+		cue[game.audio.cue] = true
 		away = maxf(away, at.distance_to(before.origin))
 		if rising and clear[0] == INF:
 			clear[0] = cine.sun_clear(game.clock.hour(), eye)
-		if rising and clear[1] == -INF and cine.t >= total / 2.0:
+		if rising and clear[1] == -INF and cine.t >= float(rise.break_s) + 0.1:
 			clear[1] = cine.sun_clear(game.clock.hour(), eye)
 		check(player.process_mode == Node.PROCESS_MODE_DISABLED, "%s freezes the hero" % name)
 		if game.pip and not c.get("pip_moves", false):
 			check(game.pip.process_mode == Node.PROCESS_MODE_DISABLED, "%s freezes PIP" % name)
 	check(not cine.busy(), "%s ends within %.1f s" % [name, total + 3.0])
 	if rising:
-		check(clear[0] < 0.0 and clear[1] > 0.0, "%s: the sun is under the rim at the start and over it by the middle (%.2f, %.2f deg)" % [name, clear[0], clear[1]])
+		var peek := float(rise.get("peek_deg", 0.0))
+		check(clear[0] < peek - 1.0 and absf(clear[1] - peek) < 0.35, "%s: the sun is under the rim at the start and peeks over it at break_s (%.2f, %.2f deg)" % [name, clear[0], clear[1]])
 		check(game.clock.hour() > h0, "%s runs the clock forward (%.3f to %.3f h)" % [name, h0, game.clock.hour()])
 	check(worst == "", "%s keeps the camera clear: %s" % [name, worst])
 	check(away > far, "%s goes out (%.1f m, wants over %.0f)" % [name, away, far])
@@ -207,4 +207,4 @@ func shoot(game: Node3D, cine: Node, name: String, far: float) -> void:
 	check(off < 0.01 and turn < 0.01, "%s leaves the play camera where it was (%.3f m, %.3f rad)" % [name, off, turn])
 	check(player.process_mode != Node.PROCESS_MODE_DISABLED, "%s lets the hero go" % name)
 	if name == "dawn_reveal":
-		check(not game.audio.started or game.audio.cue == "dawn", "the dawn cue plays (%s)" % game.audio.cue)
+		check(not game.audio.started or cue.has("dawn"), "the dawn cue plays (%s)" % [cue.keys()])

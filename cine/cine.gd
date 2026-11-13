@@ -31,6 +31,7 @@ var _holding := false
 var _was_driven := false
 var _frozen := {}  # node -> its process_mode before a shot froze it
 var _rim_bins: Array = []  # _rim(): the crater rim's vertices by bearing
+var _sun_yaw := 0.0  # rotation.y facing the sun, set when a shot starts (the 'sun' ref)
 
 
 func setup(g: Node3D) -> void:
@@ -335,11 +336,17 @@ func shot(name: String, _args := {}) -> void:
 	_take_clock()
 	if c.has("music"):
 		audio.music(c.music, audio.cue != c.music)  # the dawn cue may already be on from the door (audio.wake())
+	# takes: a key with `cut` starts a new one at once (a hard cut); the camera glides only within a take, each eased
 	var ts: Array[float] = [0.0]
+	var cuts: Array[int] = [0]
 	for k: Dictionary in c.keys:
-		ts.append(ts[-1] + float(k.s))
+		if k.get("cut", false):
+			cuts.append(ts.size())
+		ts.append(ts[-1] + (0.0 if k.get("cut", false) else float(k.s)))
 	ts.append(ts[-1] + float(c.back_s))
+	cuts.append(ts.size())
 	var total := ts[-1]
+	var fired := {}  # the shot's timed events (pip_to, beep) that went off
 	var near := cam.near
 	cam.near = from.near
 	# a sunrise shot runs the held clock on so the sun breaks over the rim `break_s` in, from whatever hour it finds
@@ -347,14 +354,25 @@ func shot(name: String, _args := {}) -> void:
 	var rise: Dictionary = c.get("sunrise", {})
 	var day: float = clock.hours - clock.hour()
 	var h0: float = clock.hour()
-	var up := sunrise_hour() if not rise.is_empty() else 0.0
+	_sun_yaw = _yaw_of(HouseStyle.sun_at(clock._C, h0))  # the bearing barely moves over a sunrise: 'sun' keys
+	var up := sunrise_hour(float(rise.get("peek_deg", 0.0))) if not rise.is_empty() else 0.0
 	var lapse := not rise.is_empty() and h0 < up - 0.01
 	var step := func(k: float) -> void:
 		var poses := [home]
 		for key: Dictionary in c.keys:
 			poses.append(_key(key))  # every frame: PIP may be moving
 		poses.append(home)
-		_pose(poses, ts, total * smoothstep(0.0, 1.0, k))
+		var lin := k * total
+		var j := 0
+		while j < cuts.size() - 2 and lin >= ts[cuts[j + 1]]:
+			j += 1
+		var lo := cuts[j]
+		var hi := cuts[j + 1] - 1
+		var e := smoothstep(0.0, 1.0, (lin - ts[lo]) / maxf(ts[hi] - ts[lo], 0.001))
+		_pose(poses, ts, ts[lo] + (ts[hi] - ts[lo]) * e, lo, hi)
+		_events(c, lin, fired)
+		if c.get("arm", false) and k < 1.0:  # like the play camera's spring arm: never behind a wall from the hero
+			cam.global_position = _clear(cam.global_position)
 		if lapse:
 			var s := k * total
 			var b := float(rise.break_s)
@@ -364,6 +382,8 @@ func shot(name: String, _args := {}) -> void:
 	await _run(total, step)
 	_thaw()
 	_give_clock()
+	_title.hide()
+	_title.modulate.a = 1.0
 	cam.near = near
 	cam.projection = Camera3D.PROJECTION_PERSPECTIVE  # the other beats set only the fov
 	cam.fov = float(cfg.fov)
@@ -371,16 +391,35 @@ func shot(name: String, _args := {}) -> void:
 	shot_done.emit(name)
 
 
+## A shot's timed extras at `s` seconds in: `title` [in, out, fade] (cine_title from data/lines.json, faded in and out),
+## `pip_to` [s, ref] (PIP rolls up to that spot, facing the hero), `beep` [s, sound] (at PIP).
+func _events(c: Dictionary, s: float, fired: Dictionary) -> void:
+	if c.has("title"):
+		var tl: Array = c.title
+		var a := clampf(minf((s - float(tl[0])) / float(tl[2]), (float(tl[1]) - s) / float(tl[2])), 0.0, 1.0)
+		if a > 0.0 and not _title.visible:
+			_title.text = _words("cine_title")
+			_title.show()
+		_title.modulate.a = a
+		_title.visible = a > 0.0
+	if c.has("pip_to") and game.pip and s >= float(c.pip_to[0]) and not fired.has("pip_to"):
+		fired["pip_to"] = true
+		game.pip.order(_at(c.pip_to[1]), player.body.global_position + Vector3.UP * 1.6)
+	if c.has("beep") and game.pip and s >= float(c.beep[0]) and not fired.has("beep"):
+		fired["beep"] = true
+		audio.play(c.beep[1], game.pip.global_position)
+
+
 ## The hour of the sol the sun's centre clears the skyline, seen from dawn_reveal's sunrise key (`sunrise.key`, a fixed
 ## eye: a ground or world ref).
-func sunrise_hour() -> float:
+func sunrise_hour(peek := 0.0) -> float:
 	var c: Dictionary = cfg.shots.dawn_reveal
-	var eye := _at(c.keys[int(c.sunrise.key)].eye)
+	var eye: Vector3 = _key(c.keys[int(c.sunrise.key)]).eye
 	var lo := 0.0
 	var hi := 12.0
 	for i in 24:
 		var mid := (lo + hi) / 2.0
-		if sun_clear(mid, eye) > 0.0:
+		if sun_clear(mid, eye) > peek:
 			hi = mid
 		else:
 			lo = mid
@@ -402,6 +441,18 @@ func sun_clear(h: float, eye: Vector3) -> float:
 			var flat := Vector2(v.x - eye.x, v.z - eye.z)
 			top = maxf(top, rad_to_deg(atan2(v.y - eye.y, flat.length())))
 	return rad_to_deg(asin(sun.y)) - top
+
+
+## Where the opening leaves the hero for dawn_reveal (data/beats.json face_dawn): east of HAB 1's door, facing the
+## sunrise; for tests and captures.
+func stand_for_dawn() -> void:
+	var at := Vector3(3.5, 0.0, 5.5)
+	player.place(Vector3(at.x, world.height_at(at.x, at.z) + 0.1, at.z), -rad_to_deg(_yaw_of(HouseStyle.sun_at(clock._C, clock.hour()))))
+	player.cam.snap(player.yaw)
+
+
+func _yaw_of(d: Vector3) -> float:
+	return atan2(-d.x, -d.z)
 
 
 ## The backdrop's vertices in world metres, by whole degrees of bearing from the patch centre (read once).
@@ -426,8 +477,11 @@ func _rim() -> Array:
 
 ## One key of a shot: where the eye is and what it looks at, each [ref, [x, y, z]] (data/cine.json shots._note).
 func _key(key: Dictionary) -> Dictionary:
-	var eye := _at(key.eye)
-	if key.eye[0] == "hero":
+	var eye := _at(key.eye) if key.has("eye") else Vector3.ZERO
+	if key.has("orbit"):  # the play camera's own place: behind the hero, away from what it looks at
+		var to: Vector3 = _at(key.look) - player.body.global_position
+		eye = player.body.global_position + Vector3.UP * float(key.orbit[1]) - Vector3(to.x, 0.0, to.z).normalized() * float(key.orbit[0])
+	if key.has("orbit") or key.eye[0] in ["hero", "sun"]:
 		eye = _clear(eye)
 	return {"eye": eye, "rot": Basis.looking_at(_at(key.look) - eye).get_rotation_quaternion(),
 		"fov": float(key.get("fov", cfg.fov)), "shift": 0.0}
@@ -438,6 +492,8 @@ func _at(r: Array) -> Vector3:
 	match r[0]:
 		"hero":  # the hero's feet, turned the way the play camera faces (-Z ahead, +Z back toward the lens)
 			return player.body.global_position + Basis(Vector3.UP, player.cam.yaw) * o
+		"sun":  # the hero's feet, turned to the rising sun's bearing (-Z toward the sun)
+			return player.body.global_position + Basis(Vector3.UP, _sun_yaw) * o
 		"ground":
 			return _ground(r[1])
 		"world":
@@ -450,19 +506,32 @@ func _clear(eye: Vector3) -> Vector3:
 	var head: Vector3 = player.body.global_position + Vector3.UP * float(cfg.shot_margin[1])
 	var q := PhysicsRayQueryParameters3D.create(head, eye)
 	q.exclude = [player.body.get_rid()]
-	var hit := world.get_world_3d().direct_space_state.intersect_ray(q)
-	return eye if hit.is_empty() else hit.position + (head - eye).normalized() * float(cfg.shot_margin[0])
+	var space := world.get_world_3d().direct_space_state
+	var hit := space.intersect_ray(q)
+	if not hit.is_empty():
+		eye = hit.position + (head - eye).normalized() * float(cfg.shot_margin[0])
+	# a ray through a doorway can end inside the wall beside it: step in while a ball there still touches a solid
+	var ball := PhysicsShapeQueryParameters3D.new()
+	ball.shape = SphereShape3D.new()
+	ball.shape.radius = 0.25
+	ball.exclude = q.exclude
+	for i in 16:
+		ball.transform = Transform3D(Basis(), eye)
+		if space.intersect_shape(ball, 1).is_empty() or eye.distance_to(head) < 0.5:
+			break
+		eye = eye.move_toward(head, 0.25)
+	return eye
 
 
 ## The cine camera at `tau` seconds along the keys at times `ts`: position, turn, fov and the lens's frame shift each
 ## on a cubic through time (Barry-Goldman, the engine's own), so the camera never stops at a key.
-func _pose(p: Array, ts: Array[float], tau: float) -> void:
-	var n := p.size()
-	var i := 0
-	while i < n - 2 and tau > ts[i + 1]:
+func _pose(p: Array, ts: Array[float], tau: float, lo := 0, hi := -1) -> void:
+	hi = p.size() - 1 if hi < 0 else hi
+	var i := lo
+	while i < hi - 1 and tau > ts[i + 1]:
 		i += 1
-	var a := maxi(i - 1, 0)
-	var b := mini(i + 2, n - 1)
+	var a := maxi(i - 1, lo)
+	var b := mini(i + 2, hi)
 	var span := ts[i + 1] - ts[i]
 	var w := clampf((tau - ts[i]) / span, 0.0, 1.0)
 	var pre := ts[a] - ts[i]

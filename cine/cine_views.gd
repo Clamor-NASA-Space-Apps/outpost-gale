@@ -46,9 +46,7 @@ func _process(delta: float) -> void:
 	_hold = maxf(_hold - delta, 0.0)
 	if _start != "" and not cine.busy():  # the shot before it is over: put the hero out, let the lens settle, go
 		if not _placed:
-			var out: Vector3 = game.world.items.hab1.to_global(Vector3(0.0, 0.0, -7.0))
-			game.place(Vector3(out.x, 0.1, out.z), -180.0)
-			game.player.cam.snap(game.player.yaw)
+			cine.stand_for_dawn()
 			game.set_view("default")  # the shot leaves from the play camera, not a preset view shot before it
 			if _start == "focus_pip" and game.pip:
 				game.pip.order(game.player.body.global_position + Vector3(1.0, 0.0, 6.0), game.player.body.global_position)
