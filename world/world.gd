@@ -1097,10 +1097,19 @@ func _plant(design: Dictionary, sheet: Dictionary) -> void:
 		slots.sort_custom(func(a: Node, b: Node) -> bool: return str(a.name).naturalnocasecmp_to(str(b.name)) < 0)
 		var scale_by := 0.0
 		for i in mini(slots.size(), stages.size()):
-			# a prefab id is a model built at its real size (HAB 1's Veggie unit); a number is a lettuce stage
-			var plant := _model(stages[i] if stages[i] is String else "lettuce_%d" % int(stages[i]), design)
+			# a prefab id is a model built at its real size (HAB 1's Veggie unit); a number is a lettuce stage of red
+			# 'Outredgeous', "green_N" stage N of the green variety: the same head with its `romaine` faces in `plant`
+			var green: bool = stages[i] is String and stages[i].begins_with("green_")
+			var prefab: bool = stages[i] is String and not green
+			var plant := _model(stages[i] if prefab else "lettuce_%d" % int(float(str(stages[i]).trim_prefix("green_"))), design)
+			if green:
+				for mi: MeshInstance3D in plant.find_children("*", "MeshInstance3D", true, false):
+					for s in mi.mesh.get_surface_count():
+						var m := mi.get_active_material(s)
+						if m and m.resource_name == "romaine":
+							mi.set_surface_override_material(s, Forge.HouseStyle.role(design, "plant", true, m.get_meta("clean", false)))
 			slots[i].add_child(plant)
-			if stages[i] is String:
+			if prefab:
 				# styled again from the slot's parent, so a slot in a room kept swept (HAB 1's `interior`) keeps it swept
 				Forge.HouseStyle.apply(slots[i].get_parent(), design, true)
 				continue
