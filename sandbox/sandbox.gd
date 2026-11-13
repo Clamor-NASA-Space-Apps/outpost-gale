@@ -162,7 +162,7 @@ func _process(_delta: float) -> void:
 	clock.paused = settings.is_open() or cover.visible or hud.is_open() or hud.map_open()
 	sim.paused = clock.paused or cine.busy()
 	hud.visible = not settings.is_open()
-	hud.show_prompt(interactions.prompt_label.text if interactions.prompt_label.visible else "")
+	hud.show_prompt(interactions.prompt_label.text.trim_prefix("[E]  "))  # empty when nothing is in reach; the HUD draws its own E key
 	var h := clock.hour()
 	fps_label.text = "%d fps  %s  %s %02d:%02d" % [Engine.get_frames_per_second(), quality, clock.phase(), int(h), int(fmod(h, 1.0) * 60.0)]
 
