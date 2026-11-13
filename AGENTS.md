@@ -8,8 +8,8 @@
 ## What it is
 A third-person Godot 4.7 web game for kids aged 7 to 12, for NASA Space Apps 2026 (Colombo, 14 and 15 Nov 2026). You are the commander of a small base in Gale crater on Mars for 30 sols. Three meters (Power, Life support, Crew health), and every choice costs something. Working title: **Outpost Gale**. The full proposal is in `plan.md`, "The game", at the workspace root. The Docmost page "Game design and story" holds the team's decisions. Where they differ, Docmost wins.
 
-## Phase now: look, assets and sandbox (12 and 13 Nov)
-The organisers allowed the art direction and every asset to be prepared before the event: models, the world, the map and the HUD look. We also build a **sandbox**: the assets in a small world where a third-person astronaut walks, drives and interacts, so the physics and control problems are solved at home. **The story, the `sim/` rules (meters, resources), events, the sol clock, game flow and win or lose wait until 14 Nov.** In the sandbox an interaction does one physical thing and changes no game state. The brief for this phase is `design/BRIEF.md`.
+## Phase now: everything but the story (13 Nov)
+The organisers allowed assets (12 Nov) and then the game itself (13 Nov) to be prepared at home. **Everything is built now: systems in `sim/`, meters, the sol clock, PIP's guiding, use spots, cinematics' machinery. At the event we only write the storyline and wire the flow** (workspace hard rule 1). A system that needs a story value takes a placeholder from `data/`, and a test proves it alone. The asset brief stays `design/BRIEF.md`; the day design is `design/typical-day.md`.
 
 ## Files
 | Path | What |
