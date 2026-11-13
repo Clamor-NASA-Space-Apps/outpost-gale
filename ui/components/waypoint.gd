@@ -11,6 +11,8 @@ const LIFT := 1.0  # m above the place's ground point, so the diamond floats ove
 var camera: Camera3D
 var hero: Node3D
 var target := Vector3.ZERO
+var node: Node3D  # a moving objective (point_node), followed every frame
+var below := false  # the label hangs under the place, not over it (PIP's bubble already sits over PIP)
 var place := ""
 var docked := false
 var dir := Vector2.DOWN
@@ -38,11 +40,18 @@ func follow(cam: Camera3D, body: Node3D) -> void:
 
 
 func point(at: Vector3, label: String) -> void:
+	node = null
 	target = at
 	place = label
 	name_label.text = label
 	show()
 	_place()
+
+
+## Follow a moving thing (PIP): the diamond rides over it and the distance counts live.
+func point_node(n: Node3D, label: String) -> void:
+	point(n.global_position, label)
+	node = n
 
 
 func metres() -> int:
@@ -59,18 +68,21 @@ func _process(_delta: float) -> void:
 
 
 func _place() -> void:
+	if node and is_instance_valid(node):
+		target = node.global_position
 	dist_label.text = "%d m" % metres()
 	tag.size = tag.get_combined_minimum_size()
 	if camera == null:
 		return
-	var p := Hud.project(self, camera, target + Vector3.UP * LIFT, EDGE)
+	var p := Hud.project(self, camera, target + Vector3.UP * (0.0 if below else LIFT), EDGE)
 	docked = not p.on
 	dir = p.dir
 	anchor = p.at
 	if docked:
 		tag.position = Hud.dock(self, dir, tag.size, EDGE + ARROW)
 	else:
-		tag.position = (anchor - Vector2(tag.size.x * 0.5, tag.size.y + 16.0)).clamp(Vector2(EDGE, EDGE), size - tag.size - Vector2(EDGE, EDGE))
+		var off := Vector2(tag.size.x * 0.5, -16.0) if below else Vector2(tag.size.x * 0.5, tag.size.y + 16.0)
+		tag.position = (anchor - off).clamp(Vector2(EDGE, EDGE), size - tag.size - Vector2(EDGE, EDGE))
 	queue_redraw()
 
 

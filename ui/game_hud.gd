@@ -12,6 +12,7 @@ signal retry
 signal ledger_closed
 signal cue(name: String)  # a HUD sound: audio.ui(name)
 signal map_toggled(open: bool)
+signal dismissed(line_id: String)  # a fact line (say(id, {fact = true})) closed by Enter or a tap
 
 const Hud := preload("res://ui/hud.gd")
 const Delay := preload("res://ui/radio_delay.gd")
@@ -51,7 +52,9 @@ var full_map: Control  # open while the full map shows, else null
 var camera: Camera3D
 var hero: Node3D
 var pip: Node3D
-var objective := ""  # the landmark id the waypoint points at, "" for none
+var objective := ""  # the landmark id (or "pip", or a tracked node's name) the waypoint points at, "" for none
+var objective_node: Node3D  # a moving objective (set_objective_node), else null
+var _task_states := {}  # label_id -> state, as last set
 var touch := DisplayServer.is_touchscreen_available():
 	set(v):
 		touch = v
@@ -144,7 +147,8 @@ func _ready() -> void:
 	compass.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	compass.hide()  # shown once a camera is bound (bind_view)
 	waypoint = _scene("waypoint", self)
-	bubble = _scene("speech_bubble", self)  # over the whole screen: it follows PIP, or docks at an edge
+	bubble = _scene("speech_bubble", self)
+	bubble.dismissed.connect(func(id: String) -> void: dismissed.emit(id))  # over the whole screen: it follows PIP, or docks at an edge
 	modal.name = "Modal"
 	modal.hide()
 	add_child(modal)
@@ -250,9 +254,17 @@ func line(id: String) -> String:
 	return lines.get(id, "TBD at event: " + id)
 
 
-func say(line_id: String) -> void:
+## PIP says a line from data/lines.json. It stays until the next line or clear_line(). opts: `keys`, the keys it
+## teaches (["W"], ["A", "D"], ["Mouse"], ["Space"], ["Shift"], ["E"], ["M"]), drawn as keycaps under the words (on a
+## phone, the touch control's icon or word); `fact` true: it waits for Enter or a tap, then emits dismissed(line_id).
+func say(line_id: String, opts := {}) -> void:
 	_cue("pip_open")
-	bubble.speak(line(line_id))
+	bubble.touch = touch
+	bubble.speak(line(line_id), line_id, opts.get("keys", []), opts.get("fact", false))
+
+
+func clear_line() -> void:
+	bubble.hide_line()
 
 
 ## PIP speaks from `node`, seen through `camera`: his bubble rides above him on screen.
@@ -283,15 +295,40 @@ func bind_view(cam: Camera3D, body: Node3D) -> void:
 ## The objective: a landmark from data/world.json `landmarks`, named by a data/lines.json id (or by the place's own
 ## name when label_id is ""). The waypoint, the compass and the maps point at it.
 func set_objective(landmark_id: String, label_id := "") -> void:
+	if landmark_id == "pip" and pip:
+		set_objective_node(pip, label_id, "pip")
+		return
 	if not world.landmarks.has(landmark_id):
 		push_error("hud: no landmark '%s' in data/world.json" % landmark_id)
 		return
 	if landmark_id != objective:
 		_cue("objective_new")
 	objective = landmark_id
+	objective_node = null
 	var l: Array = world.landmarks[landmark_id]
 	# landmarks carry no height; near the base the hero's own height is close enough for a marker floating over it
 	waypoint.point(Vector3(l[0], hero.global_position.y if hero else 0.0, l[1]), line(label_id) if label_id else PLACES.get(landmark_id, landmark_id.capitalize()))
+
+
+## A moving objective: the waypoint, the compass mark and the maps follow `node` every frame ("PIP  12 m").
+func set_objective_node(node: Node3D, label_id := "", id := "") -> void:
+	if id == "":
+		id = String(node.name)
+	if id != objective:
+		_cue("objective_new")
+	objective = id
+	objective_node = node
+	waypoint.point_node(node, line(label_id) if label_id else ("PIP" if node == pip else PLACES.get(id, id.capitalize())))
+
+
+## Where the objective is now (world x, z), or null.
+func _objective_xz() -> Variant:
+	if objective_node and is_instance_valid(objective_node):
+		return Vector2(objective_node.global_position.x, objective_node.global_position.z)
+	if objective and world.landmarks.has(objective):
+		var l: Array = world.landmarks[objective]
+		return Vector2(l[0], l[1])
+	return null
 
 
 ## The objective reached: its warm cue, and the waypoint goes.
@@ -303,19 +340,23 @@ func complete_objective() -> void:
 
 func clear_objective() -> void:
 	objective = ""
+	objective_node = null
 	waypoint.hide()
 
 
-## Today's list: [{label_id, state: "done" | "now" | "next"}], words from data/lines.json. A task newly done ticks.
+## Today's list: [{label_id, state: "done" | "now" | "next"}], words from data/lines.json. It shows as soon as it has
+## a task; a new task arrives with the objective_new cue, a task newly done ticks (task_tick).
 func set_tasks(list: Array) -> void:
-	var before: Array = tasks.tasks
-	var rows: Array = list.map(func(t: Dictionary) -> Array: return [line(t.label_id), t.state])
-	for i in rows.size():
-		if rows[i][1] == "done" and (i >= before.size() or before[i][1] != "done"):
-			_cue("task_tick")
-			break
-	tasks.set_tasks(rows)
-	tasks.visible = not rows.is_empty()
+	var now := {}
+	for t: Dictionary in list:
+		now[t.label_id] = t.state
+	if now.keys().any(func(id: String) -> bool: return not _task_states.has(id)):
+		_cue("objective_new")
+	if now.keys().any(func(id: String) -> bool: return now[id] == "done" and _task_states.get(id, "") != "done"):
+		_cue("task_tick")
+	_task_states = now
+	tasks.set_tasks(list.map(func(t: Dictionary) -> Array: return [line(t.label_id), t.state]))
+	tasks.visible = not list.is_empty()
 
 
 ## The use prompt at the bottom right ("Open the greenhouse"); "" hides it.
@@ -358,8 +399,7 @@ func _map_marks() -> void:
 		full_map.hero = Vector2(hero.global_position.x, hero.global_position.z)
 		full_map.yaw = Hud.bearing(-hero.global_transform.basis.z)
 	full_map.pip = Vector2(pip.global_position.x, pip.global_position.z) if pip else null
-	var l: Array = world.landmarks.get(objective, [])
-	full_map.objective = Vector2(l[0], l[1]) if objective else null
+	full_map.objective = _objective_xz()
 
 
 func _input(e: InputEvent) -> void:
@@ -510,6 +550,8 @@ func _icon_of(effect: Dictionary) -> String:
 
 
 func _process(delta: float) -> void:
+	# when the objective is PIP and his bubble is over him, the waypoint's label hangs under him instead
+	waypoint.below = objective_node != null and objective_node == pip and bubble.visible and not bubble.docked
 	_follow_view()
 	if toast.visible:
 		_toast_left -= delta
@@ -522,10 +564,7 @@ func _follow_view() -> void:
 		return
 	var heading := Hud.bearing(-camera.global_transform.basis.z)
 	var at := hero.global_position
-	var obj = null
-	if objective:
-		var l: Array = world.landmarks[objective]
-		obj = Vector2(l[0], l[1])
+	var obj = _objective_xz()
 	var p = Vector2(pip.global_position.x, pip.global_position.z) if pip else null
 	compass.heading = heading
 	compass.marks = {"objective": Hud.bearing(Vector3(obj.x - at.x, 0, obj.y - at.z)) if obj != null else null,
@@ -548,7 +587,8 @@ func snapshot() -> Dictionary:
 		"meters": {"power": meters.power.value, "life": meters.life.value, "lifeIcon": meters.life.icon_name, "health": meters.health.value},
 		"sol": clock.sol, "time": clock.time, "suit": clock.suit_label.text if clock.suit.visible else "",
 		"subtitle": bubble.text if bubble.visible else "",
-		"bubble": {"typed": bubble.typed, "docked": bubble.docked, "at": bubble.panel.position.round()} if bubble.visible else {},
+		"bubble": {"typed": bubble.typed, "docked": bubble.docked, "at": bubble.panel.position.round(), "fact": bubble.fact,
+			"keys": bubble.keys_row.get_children().filter(func(k: Node) -> bool: return not k.is_queued_for_deletion()).size()} if bubble.visible else {},
 		"heading": compass.readout() if compass.visible else "",
 		"area": minimap.area,
 		"objective": {"id": objective, "label": waypoint.place, "m": waypoint.metres(), "docked": waypoint.docked} if objective else {},

@@ -10,9 +10,10 @@ extends Control
 ## capture-view views: "laptop" and "phone" show the hud page; "<layout>_<page>" any other, e.g. "phone_event".
 
 const Hud := preload("res://ui/hud.gd")
-const PAGES: Array[String] = ["hud", "comms", "event", "ledger", "sources", "lost", "log", "credits", "sleep", "speech", "map"]
+const PAGES: Array[String] = ["hud", "comms", "event", "ledger", "sources", "lost", "log", "credits", "sleep", "speech", "map", "fact"]
 # where the stand-in PIP stands for the camera at the origin: in view on the hud page, behind and left on speech
-const PIP_AT := {"hud": Vector3(-1.6, -1.2, -6.0), "speech": Vector3(-4.0, -0.5, 3.0), "map": Vector3(-1.6, -1.2, -6.0)}
+const PIP_AT := {"hud": Vector3(-1.6, -1.2, -6.0), "speech": Vector3(-4.0, -0.5, 3.0), "map": Vector3(-1.6, -1.2, -6.0),
+	"fact": Vector3(-1.6, -1.2, -6.0)}
 const HERO_AT := Vector3(0, 0, 9)  # data/world.json landmark `spawn`
 const HEADING := 280.0
 const Fake := preload("res://ui/fake_state.gd")
@@ -119,6 +120,7 @@ func _build() -> void:
 	add_child(pip_mark)
 	shown.speech.append(game_hud)
 	shown.map.append(game_hud)
+	shown.fact.append(game_hud)
 	var stick := _component("hud", "touch_stick")
 	_pin(stick, Control.PRESET_BOTTOM_LEFT)
 	var buttons := Hud.row([], 20)
@@ -227,7 +229,7 @@ func _apply() -> void:
 	for p: String in PAGES:
 		var c: Control = pages[p]
 		c.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		c.visible = p == page or p == "hud" and page in ["speech", "map"]
+		c.visible = p == page or p == "hud" and page in ["speech", "map", "fact"]
 		if p != "hud":
 			continue  # the other pages are centred and their scrims cover the whole screen
 		c.offset_left = m.x
@@ -250,15 +252,23 @@ func _apply() -> void:
 
 ## The play HUD's moving parts, put up again whenever its page shows (they time out by themselves in play).
 func _mock() -> void:
-	# the mockup's own placeholder words, so the look is judged on real-length lines (the game's come from lines.json)
+	# placeholder words of a real length, so the look is judged on real lines (the game's come from data/lines.json):
+	# the hud page teaches keys, the fact page waits for Enter
 	game_hud.say("sol1_try_jump")
-	game_hud.bubble.speak("Good morning, Commander! Try a jump. Watch how high")
-	game_hud.bubble.typed = game_hud.bubble.text.length() * 2 / 3  # mostly typed, as the mockup, for a still picture
+	game_hud.bubble.touch = game_hud.touch
+	if page == "fact":
+		game_hud.bubble.speak("Mars pulls you 38% as hard as Earth does.", "sol1_mars_gravity", [], true)
+	else:
+		game_hud.bubble.speak("Walk to me. Look around with the mouse.", "sol1_walk_to_me", ["W", "A", "S", "D", "Mouse"])
+	game_hud.bubble.typed = game_hud.bubble.text.length() * (3 if page == "fact" else 2) / 3  # a still picture mid-line
 	game_hud.bubble._typed = game_hud.bubble.typed
 	game_hud.bubble._show_text()
 	game_hud.set_tasks([{"label_id": "morning_check", "state": "done"}, {"label_id": "sol1_first_choice", "state": "now"}, {"label_id": "brush_dust", "state": "next"}])
 	game_hud.tasks.set_tasks([["Morning check", "done"], ["Pick lettuce", "now"], ["Clean solar panels", "next"]])
-	game_hud.set_objective("greenhouse")
+	if page == "fact":
+		game_hud.set_objective("greenhouse")
+	else:
+		game_hud.set_objective("pip")  # the waypoint follows PIP
 	game_hud.show_prompt("Open the greenhouse")
 	game_hud.alert("Solar storm", "ARCHIVED data. Tap ? for its source.")
 	game_hud.send_mail()

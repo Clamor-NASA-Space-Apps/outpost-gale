@@ -4,14 +4,19 @@ extends Control
 ## speaker (follow()) it floats above his head, projected each frame, with a thin line down to a ring on him; off
 ## screen or behind the camera it docks at the nearest edge with an arrow toward him. Without one it rests at the
 ## bottom centre, like a subtitle. A short synthesised chirp every few letters reads as his voice.
+## A line stays up until the next one or hide_line(). Under the words it can show the keys it teaches (keycaps from
+## the atlas; on a touch screen the touch control's icon or a short word), and a fact waits for the player: Enter (or
+## a tap on the bubble) first finishes the typing, then dismisses it (signal dismissed).
 
-signal finished  # the line has been typed and read
+signal finished  # the line is typed out
+signal dismissed(line_id: String)
 
 const Hud := preload("res://ui/hud.gd")
 const CHARS_PER_S := 30.0
 const CHIRP_EVERY := 3  # letters per chirp
-const HOLD_MIN_S := 2.5
-const HOLD_S_PER_WORD := 0.4  # a slow young reader's pace, so the line stays up long enough
+# what a key is on a touch screen: an icon of the touch control, or a short word
+const TOUCH := {"W": "Stick", "A": "Stick", "S": "Stick", "D": "Stick", "Mouse": "Drag", "Space": "icon:hop",
+	"Shift": "Stick far", "E": "icon:use", "M": "Tap map", "Enter": "Tap"}
 const WIDTH := 253.0  # 380 mockup px
 const TAIL := 60.0  # how far the bubble floats above the point it speaks from
 const EDGE := 12.0  # the gap the docked bubble keeps from the screen edge
@@ -30,8 +35,12 @@ var docked := false
 var dir := Vector2.DOWN  # docked: which way the speaker is
 var anchor := Vector2.ZERO  # in this control's space: the point the tail touches
 var chirps := 0  # how many have played, for the tests
+var line_id := ""
+var fact := false  # waits for Enter or a tap
+var touch := false
+var keys_row: HBoxContainer
+var hint_row: HBoxContainer
 var _typed := 0.0
-var _hold := 0.0
 var _t := 0.0
 var _player := AudioStreamPlayer.new()
 
@@ -53,7 +62,11 @@ func _ready() -> void:
 	wave.draw.connect(_draw_wave)
 	wave.set_meta("shapes", true)
 	var who := Hud.row([Hud.icon("pip", 15, "accent"), Hud.label("PIP", "CapLight"), Hud.spacer(), wave], 6)
-	panel = Hud.panel("HudPanel", Hud.col([who, label], 4))
+	keys_row = Hud.row([], 6)
+	hint_row = Hud.row([], 6)
+	hint_row.alignment = BoxContainer.ALIGNMENT_END
+	panel = Hud.panel("HudPanel", Hud.col([who, label, keys_row, hint_row], 6))
+	panel.gui_input.connect(_tapped)
 	panel.name = "Bubble"
 	panel.custom_minimum_size.x = WIDTH
 	add_child(panel)
@@ -76,14 +89,79 @@ func follow(node: Node3D, cam: Camera3D) -> void:
 	head = top + 0.2
 
 
-func speak(line: String) -> void:
+## A line in PIP's voice. `keys`: the key names it teaches ("W", "Mouse", "Space"...); `is_fact`: it waits for
+## Enter or a tap.
+func speak(line: String, id := "", keys: Array = [], is_fact := false) -> void:
 	text = line
+	line_id = id
+	fact = is_fact
 	typed = 0
 	_typed = 0.0
-	_hold = maxf(HOLD_MIN_S, line.split(" ", false).size() * HOLD_S_PER_WORD)
 	_show_text()
+	for c: Node in keys_row.get_children() + hint_row.get_children():
+		c.queue_free()
+	var seen := {}
+	for k: String in keys:
+		var cap := _cap(k)
+		if not seen.has(cap):  # W, A, S and D are all "Stick" on a phone
+			seen[cap] = true
+			keys_row.add_child(_keycap(k))
+	keys_row.visible = not keys.is_empty()
+	if fact:
+		hint_row.add_child(_keycap("Enter"))
+		hint_row.add_child(Hud.label("to continue" if touch else "Continue", "HudText"))
+	hint_row.visible = fact
+	panel.mouse_filter = Control.MOUSE_FILTER_STOP if fact else Control.MOUSE_FILTER_IGNORE  # a fact takes a tap
+	Hud.layer(keys_row)
+	Hud.layer(hint_row)
 	show()
 	_place()  # in place on its first frame, not at the corner
+
+
+func hide_line() -> void:
+	hide()
+	fact = false
+	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+
+func _cap(k: String) -> String:
+	return TOUCH.get(k, k) if touch else k
+
+
+## A key as a small glass keycap; "Mouse" is a mouse drawing; on a touch screen the control's icon or word.
+func _keycap(k: String) -> Control:
+	var cap := _cap(k)
+	if cap.begins_with("icon:"):
+		return Hud.icon(cap.trim_prefix("icon:"), 18, "light")
+	if cap == "Mouse":
+		return Hud.icon("mouse", 18, "light")
+	var key := Hud.panel("HudKey", Hud.label(cap, "HudNum"))
+	key.set_meta("icon", true)
+	return key
+
+
+## Enter (not Space, which is the hop), or a tap or click on the bubble: finish the typing first, then dismiss.
+func _input(e: InputEvent) -> void:
+	if visible and fact and e.is_action_pressed("ui_accept") and not (InputMap.has_action("jump") and e.is_action("jump")):
+		get_viewport().set_input_as_handled()
+		_dismiss()
+
+
+func _tapped(e: InputEvent) -> void:
+	if fact and ((e is InputEventMouseButton and (e as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT) or e is InputEventScreenTouch) and e.is_pressed():
+		panel.accept_event()
+		_dismiss()
+
+
+func _dismiss() -> void:
+	if typing():
+		typed = text.length()
+		_typed = typed
+		_show_text()
+		finished.emit()
+		return
+	hide_line()
+	dismissed.emit(line_id)
 
 
 func typing() -> bool:
@@ -117,12 +195,8 @@ func _process(delta: float) -> void:
 				break  # one chirp a frame at most
 		if typed != before:
 			_show_text()
-	else:
-		_hold -= delta
-		if _hold <= 0.0:
-			hide()
-			finished.emit()
-			return
+			if typed == text.length():
+				finished.emit()
 	wave.queue_redraw()
 	_place()
 

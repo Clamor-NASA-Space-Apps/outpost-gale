@@ -228,7 +228,9 @@ func _hud_parts(h: Control, cues: Array[String]) -> void:
 	await process_frame
 	await process_frame
 	check(h.snapshot().objective.docked, "off screen the waypoint docks at an edge")
+	h._cue_at.clear()  # a test runs events faster than a person: forget the 0.15 s no-stacking window between them
 	h.set_tasks([{"label_id": "morning_check", "state": "now"}, {"label_id": "brush_dust", "state": "next"}])
+	check(h.tasks.is_visible_in_tree(), "Today shows as soon as a task is set")
 	h.set_tasks([{"label_id": "morning_check", "state": "done"}, {"label_id": "brush_dust", "state": "now"}])
 	check(h.snapshot().tasks.size() == 2 and h.snapshot().tasks[0][1] == "done", "Today lists the tasks: %s" % [h.snapshot().tasks])
 	h.show_prompt("Open the greenhouse")
@@ -245,6 +247,20 @@ func _hud_parts(h: Control, cues: Array[String]) -> void:
 	action(&"ui_cancel", false)
 	await process_frame
 	check(not h.map_open(), "Esc closes the map")
+	# a moving objective: PIP, followed live
+	pip.position = Vector3(-3, 0, -2)
+	h._cue_at.clear()
+	h.set_objective("pip")
+	await process_frame
+	await process_frame
+	var m1: int = h.snapshot().objective.m
+	pip.position = Vector3(-3, 0, -20)
+	await process_frame
+	await process_frame
+	var m2: int = h.snapshot().objective.m
+	check(h.snapshot().objective.label == "PIP" and m2 > m1 + 10, "the waypoint follows PIP: %d m, then %d m" % [m1, m2])
+	var want_pip := Hud.bearing(Vector3(-3, 0, -20) - Vector3(0, 0, 9))
+	check(absf(float(h.compass.marks.objective) - want_pip) < 1.0, "the compass mark follows PIP (%.0f, want %.0f)" % [h.compass.marks.objective, want_pip])
 	h.complete_objective()
 	check(h.snapshot().objective.is_empty(), "a done objective clears its waypoint")
 	h.say("follow_me")
@@ -253,7 +269,7 @@ func _hud_parts(h: Control, cues: Array[String]) -> void:
 	h.show_ledger({"sols": 1})
 	h.close_card()
 	h.bubble.hide()
-	var want_cues := ["objective_new", "task_tick", "map_open", "map_close", "objective_done", "pip_open", "choice_open", "choice_made", "ledger_open"]
+	var want_cues := ["objective_new", "objective_new", "task_tick", "map_open", "map_close", "objective_new", "objective_done", "pip_open", "choice_open", "choice_made", "ledger_open"]
 	check(cues == want_cues, "each HUD event plays its cue once:\n  got  %s\n  want %s" % [cues, want_cues])
 	var audio: Script = load("res://audio/audio.gd")
 	for n: String in want_cues + ["mail", "alert", "danger", "tick", "select"]:
@@ -294,8 +310,45 @@ func _speech(h: Control) -> void:
 	p = Rect2(b.panel.position, b.panel.size)
 	var edge := minf(minf(p.position.x, p.position.y), minf(b.size.x - p.end.x, b.size.y - p.end.y))
 	check(b.docked and b.dir.x > 0.0 and edge <= b.EDGE + b.ARROW + 1.0, "PIP behind: the bubble docks at an edge (%s, gap %.0f) pointing %s" % [p, edge, b.dir])
-	await frames(roundi(60.0 * b.HOLD_MIN_S) + 10)
-	check(done[0] and h.snapshot().subtitle == "", "the bubble goes once read and says so")
+	check(done[0], "the bubble says when the line is typed out")
+	await frames(300)  # five seconds: a line no longer times out
+	check(h.snapshot().subtitle == text, "the line stays up until the next one")
+	h.clear_line()
+	check(h.snapshot().subtitle == "", "clear_line() takes it down")
+	pip.position = Vector3(0.0, -0.5, -5.0)
+	# the keys a line teaches, as keycaps under the words; on a phone W, A, S and D are one "Stick"
+	h.say("follow_me", {"keys": ["W", "A", "S", "D"]})
+	await process_frame
+	check(h.snapshot().bubble.keys == 4, "four keycaps under the words: %s" % [h.snapshot().bubble])
+	h.touch = true
+	h.say("follow_me", {"keys": ["W", "A", "S", "D", "Mouse"]})
+	await process_frame
+	check(h.snapshot().bubble.keys == 2, "on a phone, one stick and one drag: %s" % [h.snapshot().bubble])
+	h.touch = false
+	h.say("follow_me", {"keys": ["Mouse", "Space"]})
+	await process_frame
+	var caps: Array = b.keys_row.get_children().filter(func(k: Node) -> bool: return not k.is_queued_for_deletion())
+	check(caps.size() == 2 and caps[0] is TextureRect and caps[1] is PanelContainer, "a mouse drawing and a Space keycap: %s" % [caps])
+	# a fact waits: Enter first finishes the typing, then dismisses; a tap dismisses too
+	var gone: Array[String] = []
+	h.dismissed.connect(func(id: String) -> void: gone.append(id))
+	h.say("event_dust_storm", {"fact": true})
+	await process_frame
+	action(&"ui_accept")
+	action(&"ui_accept", false)
+	await process_frame
+	check(b.typed == b.text.length() and b.visible and gone.is_empty(), "Enter during the typing finishes the line, keeps it up")
+	action(&"ui_accept")
+	action(&"ui_accept", false)
+	await process_frame
+	check(gone == ["event_dust_storm"] and not b.visible, "a second Enter dismisses the fact: %s" % [gone])
+	h.say("event_flare_x12", {"fact": true})
+	await frames(roundi(60.0 * b.text.length() / b.CHARS_PER_S) + 5)
+	await frames(240)
+	check(b.visible, "a fact stays until it is dismissed")
+	tap(b.panel.get_global_rect().get_center())
+	await process_frame
+	check(gone.back() == "event_flare_x12" and not b.visible, "a tap on the bubble dismisses a fact: %s" % [gone])
 	cam.queue_free()
 	pip.queue_free()
 
