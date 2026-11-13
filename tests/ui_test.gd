@@ -155,6 +155,7 @@ func _bound() -> void:
 	h.say("no_such_line")
 	check(h.snapshot().subtitle == "TBD at event: no_such_line", "say() shows the placeholder line: '%s'" % h.snapshot().subtitle)
 	await _speech(h)
+	await _pip_away(h)
 	h.send_mail()
 	var mail: Dictionary = h.snapshot().mail
 	var want := Delay.minutes(h.game_unix())
@@ -165,7 +166,7 @@ func _bound() -> void:
 	h.chosen.connect(func(id: String, i: int) -> void: got.append([id, i]))
 	h.offer_choice("choice_power_morning", [{"text": "follow_me", "costs": {"battery_pct": -20}}, {"text": "Rest", "costs": {"food_kg": -1}}, {"text": "Wait", "costs": {"health": -1}}])
 	await frames(2)
-	check(h.snapshot().card == "EventCard" and h.is_open(), "offer_choice opens the choice card")
+	check(h.snapshot().card == "EventCard" and h.is_open(), "offer_choice opens the choice card: %s %s" % [h.snapshot().card, h.is_open()])
 	var buttons: Array[Button] = h.card.buttons
 	check(buttons.size() == 3 and buttons[0].find_children("*", "Label", true, false)[0].text == h.lines.follow_me, "options read their text from lines.json")
 	click(buttons[1].get_global_rect().get_center())
@@ -351,6 +352,52 @@ func _speech(h: Control) -> void:
 	check(gone.back() == "event_flare_x12" and not b.visible, "a tap on the bubble dismisses a fact: %s" % [gone])
 	cam.queue_free()
 	pip.queue_free()
+
+
+## The hero looking away: PIP behind the hero or behind the camera still has his words and his "PIP 12 m" marker on
+## screen, apart; a choice card opens beside the hero and leaves PIP's bubble and the middle third uncovered.
+func _pip_away(h: Control) -> void:
+	var b: Control = h.bubble
+	var w: Control = h.waypoint
+	var cam := Camera3D.new()
+	var body := Node3D.new()
+	var pip := Node3D.new()
+	for n: Node3D in [cam, body, pip]:
+		root.add_child(n)
+	cam.position = Vector3(0, 2, 4)
+	h.bind_view(cam, body)
+	h.bind_speaker(pip, cam)
+	h.set_objective_node(pip, "", "pip")
+	h.say("follow_me")
+	var screen := Rect2(Vector2.ZERO, h.size)
+	for at: Vector3 in [Vector3(0, 0, -6), Vector3(4, 0, 9), Vector3(-4, 0, 9), Vector3(0, 0, 9)]:  # behind the hero, then behind the camera
+		pip.position = at
+		await frames(2)
+		var bub := Rect2(b.panel.position, b.panel.size)
+		var tag := Rect2(w.tag.position, w.tag.size)
+		check(b.visible and screen.encloses(bub), "PIP at %s: his bubble %s is on screen" % [at, bub])
+		check(w.visible and screen.encloses(tag) and not tag.intersects(bub), "PIP at %s: his marker %s is on screen, clear of the bubble %s" % [at, tag, bub])
+		if at.z > cam.position.z:
+			check(b.docked and w.docked and b.dir.y > 0.0 and bub.end.y > h.size.y * 0.6, "PIP behind the camera docks on the bottom edge: %s %s" % [bub, b.dir])
+			if at.x != 0.0:
+				check(signf(bub.get_center().x - h.size.x * 0.5) == signf(at.x), "PIP behind the camera at %s docks on his side: %s" % [at, bub])
+	for at: Vector3 in [Vector3(2.5, 0, -3), Vector3(-2.5, 0, -3), Vector3(4, 0, 9)]:
+		pip.position = at
+		await frames(2)
+		h.offer_choice("choice_power_morning", [{"text": "follow_me", "costs": {"battery_pct": -20}}, {"text": "Rest", "costs": {"food_kg": -1}}, {"text": "Wait", "costs": {"health": -1}}])
+		await frames(2)
+		var card := Rect2(h.card.position, h.card.size)
+		var bub := Rect2(b.panel.position, b.panel.size)
+		var middle := Rect2(h.size.x / 3.0, 0, h.size.x / 3.0, h.size.y)
+		check(h.is_open() and screen.encloses(card) and not card.intersects(bub), "PIP at %s: the choice card %s leaves his bubble %s clear" % [at, card, bub])
+		check(not card.intersects(middle) and not h.scrim.visible, "the choice card %s stays out of the hero's middle third, with no scrim" % [card])
+		for btn: Button in h.card.buttons:
+			check(btn.size.y >= 48.0, "a choice is %.0f px tall, a touch target needs 48" % btn.size.y)
+		h.close_card()
+	h.clear_line()
+	h.clear_objective()
+	for n: Node in [cam, body, pip]:
+		n.queue_free()
 
 
 ## Each card at the width of a 360 dp phone: it asks for no more, and nothing in it spills past its edge.

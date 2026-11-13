@@ -84,6 +84,8 @@ var source_button := Button.new()
 var gear_slot := Control.new()  # where the settings gear sits; dock_gear() puts the real one in it
 var modal := Control.new()  # a card and the scrim that keeps clicks off the world behind it
 var holder := CenterContainer.new()
+var scrim := ColorRect.new()
+var side_card := false  # the open card is a choice: compact, beside the hero, clear of PIP's bubble, no scrim
 var card: Control  # the open card, or null
 var _events := {}
 var _failing: Array = []
@@ -153,11 +155,11 @@ func _ready() -> void:
 	waypoint = _scene("waypoint", self)
 	bubble = _scene("speech_bubble", self)
 	bubble.dismissed.connect(func(id: String) -> void: dismissed.emit(id))  # over the whole screen: it follows PIP, or docks at an edge
+	waypoint.avoid = bubble.panel
 	modal.name = "Modal"
 	modal.hide()
 	add_child(modal)
 	modal.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	var scrim := ColorRect.new()
 	scrim.color = Hud.color("hud-scrim")
 	scrim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	modal.add_child(scrim)
@@ -472,11 +474,12 @@ func offer_choice(id: String, options: Array) -> void:
 	c.options = options.map(func(o: Dictionary) -> Dictionary:
 		var t: String = o.get("text", "")
 		return {"text": lines.get(t, t), "costs": o.get("costs", {})})
+	c.width = minf(c.width, size.x / 3.0 - 24.0)  # a side third: the hero stays in the middle one
 	c.chosen.connect(func(i: int) -> void:
 		close_card()
 		_cue("choice_made")
 		chosen.emit(id, i))
-	_open(c)
+	_open(c, false, true)
 	_cue("choice_open")
 
 
@@ -529,8 +532,10 @@ func show_sources() -> void:
 
 func close_card() -> void:
 	if card:
+		card.name = &"Closed"  # freed at the frame's end: the next card in the same parent keeps its own name (snapshot)
 		card.queue_free()
 		card = null
+	side_card = false
 	modal.hide()
 
 
@@ -538,18 +543,43 @@ func is_open() -> bool:
 	return modal.visible
 
 
-func _open(c: Control, full := false) -> void:
+func _open(c: Control, full := false, side := false) -> void:
 	close_card()
 	card = c
+	side_card = side
 	if "width" in c:
 		c.width = minf(c.width, size.x - 40.0)
-	(modal if full else holder).add_child(c)
+	(modal if full or side else holder).add_child(c)
+	scrim.visible = not side  # a choice is asked over the play view: PIP's words and the hero stay in sight
 	Hud.layer(c, 201)
 	modal.show()
+	if side:
+		_place_side()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE  # a card is used with the pointer
 	var b := c.find_children("*", "Button", true, false)
 	if b:
 		(b[0] as Button).grab_focus.call_deferred()  # keys and a gamepad work at once
+
+
+## A choice stands in a side third, mid height, on the side away from PIP's bubble; if the bubble still reaches it
+## (docked on that side), it steps above or below the bubble. The middle third, where the hero is, stays clear.
+func _place_side() -> void:
+	const GAP := 16.0
+	card.size = card.get_combined_minimum_size()
+	var s := card.size
+	var y := clampf((size.y - s.y) * 0.5, GAP, maxf(GAP, size.y - s.y - GAP))
+	var spots: Array[Vector2] = [Vector2(size.x - s.x - GAP, y), Vector2(GAP, y)]
+	var b := Rect2(bubble.panel.position, bubble.panel.size).grow(8.0) if bubble.visible else Rect2()
+	if b.has_area() and b.get_center().x > size.x * 0.5:
+		spots.reverse()
+	card.position = spots[0]
+	for p: Vector2 in spots:
+		if not Rect2(p, s).intersects(b):
+			card.position = p
+			return
+	var up := b.position.y - s.y - GAP
+	card.position.y = up if up >= GAP or b.get_center().y > size.y * 0.5 else b.end.y + GAP
+	card.position.y = clampf(card.position.y, GAP, maxf(GAP, size.y - s.y - GAP))
 
 
 ## The icon of the meter an entry cost most.
@@ -564,6 +594,8 @@ func _icon_of(effect: Dictionary) -> String:
 func _process(delta: float) -> void:
 	# when the objective is PIP and his bubble is over him, the waypoint's label hangs under him instead
 	waypoint.below = objective_node != null and objective_node == pip and bubble.visible and not bubble.docked
+	if card and side_card:
+		_place_side()
 	_follow_view()
 	if toast.visible:
 		_toast_left -= delta

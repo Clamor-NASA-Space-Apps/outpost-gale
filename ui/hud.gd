@@ -356,8 +356,8 @@ static func date(unix: float) -> String:
 
 ## Where a world point lands on `c` (a full-screen HUD control), seen through `cam`: {at: Vector2 in c's space,
 ## on: in view and inside c shrunk by `inset`, dir: the screen direction toward it}. Behind the camera only its side
-## counts (dir is left or right, else down), so a marker docks at an edge's middle, clear of a phone's stick and
-## buttons in the bottom corners. The speech bubble and the waypoint both use it.
+## counts (dir is down and to its side, else straight down), so a marker docks on the bottom edge toward the side it
+## lies, as far out as it is up from the middle: clear of the hero and of a phone's stick and buttons in the corners. The speech bubble and the waypoint both use it.
 static func project(c: Control, cam: Camera3D, world: Vector3, inset := 0.0) -> Dictionary:
 	var local := cam.global_transform.affine_inverse() * world
 	var at := Vector2(c.size.x * 0.5, c.size.y)
@@ -367,7 +367,7 @@ static func project(c: Control, cam: Camera3D, world: Vector3, inset := 0.0) -> 
 		at = c.get_global_transform_with_canvas().affine_inverse() * cam.unproject_position(world)
 		dir = Vector2(local.x, -local.y).normalized()
 	elif absf(local.x) > 0.05:
-		dir = Vector2(signf(local.x), 0.0)
+		dir = Vector2(signf(local.x), 1.0).normalized()  # behind the camera: the bottom edge, on the side it lies
 	var on := front and Rect2(Vector2.ZERO, c.size).grow(-inset).has_point(at)
 	return {"at": at, "on": on, "dir": dir if dir != Vector2.ZERO else Vector2.DOWN}
 
