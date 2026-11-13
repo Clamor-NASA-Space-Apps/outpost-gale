@@ -61,6 +61,7 @@ var sim: SimNode  # the rules (sim/): every meter; the HUD and the beats only re
 var hud: Control  # ui/game_hud.tscn: meters, PIP's bubble, compass, maps, cards
 var beats: Beats  # cine/beats.gd: PIP's guided sequences from data/beats.json
 var cine: Cine  # cine/cine.gd: sleep, rover trips, the launch
+var trip_km := 8.8  # the last rover trip's distance, for its title card and the drive home
 var lamp_hinted := false  # PIP explains the helmet lights once, the first time they come on by themselves
 var offers := {}  # data/beats.json `offers`: what each choice card holds and which rules it sets
 
@@ -439,7 +440,13 @@ func _wire() -> void:
 	cine.arrived.connect(func(l: String) -> void:
 		player.bound = world.bound(0.0, player.body.global_position)
 		beats.notify("arrived:" + l))
-	beats.trip.connect(func(l: String) -> void: cine.trip_to(l, {"sol": sim.sim.sol, "km": 8.8}))
+	beats.trip.connect(func(l: String) -> void:
+		var site: Dictionary = world.data.sites.get(l.trim_prefix("site_").trim_suffix("_rover"), {})
+		if site.has("km"):
+			trip_km = float(site.km)  # the trip home shows the same distance
+		cine.trip_to(l, {"sol": sim.sim.sol, "km": trip_km}))
+	beats.liftoff.connect(cine.launch)
+	cine.launched.connect(func() -> void: beats.notify("launched"))
 	# the tutorial: PIP's beats drive the Today list, the waypoint and the camera shots; the HUD and the shots answer
 	beats.task.connect(func(_id: String) -> void: hud.set_tasks(beats.tasks()))
 	beats.objective.connect(func(t: String) -> void:

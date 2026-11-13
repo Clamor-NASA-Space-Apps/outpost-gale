@@ -1,5 +1,5 @@
 {
-  "_note": "Sols past the first (design/story.md section 4, Chapter 1), in data/beats.json's beat schema (its _note). A key per sol: beats.start_sol(sol) plays it when the kid wakes on that sol (after cine's night sleep, the rules' sim.sol). Feel first, then PIP names it (a fact waits for its dismiss); pleas when ignored. Each sol ends with free play: everything allowed, PIP let go (pip.release), the Today list says sleep and points at HAB 1, until the next night's sleep (event slept). Every number PIP says has a factcheck row, named per beat in `fact_rows`. Spots: [27.95, 9.5] is wing1's clean_panel stand, [28.5, 7] open ground south of it, short of the wing rows; [-11, 0.5] just inside the greenhouse's door. pip.place: put PIP at a spot before its order (unseen, the night has passed: a sol may end with PIP far from the base). Sol 2's dust comes from the rules: data/sim.json schedule fires dust_gust at Sol 2, 03:00, overnight. Sol 4: `do: mail` sends the visor mail (beats.send_mail, the HUD's send_mail), and the reply comes back as mail_arrived (the HUD's mail cue); `wait.ever` counts an event that came before its beat, since the valve may take longer than the 22 minute round trip. Sol 5: to_shelter ends 0.6 m from the shelter's middle, where the whole body is inside its room (player.room). Sol 5: the rules' schedule starts the ARCHIVED X12 flare at 07:00 (data/sim.json), the wiring tells the beats event:<id>, and being in the storm shelter's room sets the rules' sheltered knob (half the dose). Sol 6: the quiet sols 6 to 8 are slept through at once (`do: skip:3`, beats.skip_sols: the rules' skip_sols, then the HUD's ledger card); its close comes back as ledger_closed, and the day goes on as Sol 9. The skip lands on Sol 9's morning, so key 6 goes on with Sol 9 'First field trip': plan on the map, board the rover, `do: trip:<landmark>` (beats.trip, cine.trip_to, answered with arrived:<landmark>) to the Mont Mercou site, a sample, and the trip home",
+  "_note": "Sols past the first (design/story.md section 4, Chapter 1), in data/beats.json's beat schema (its _note). A key per sol: beats.start_sol(sol) plays it when the kid wakes on that sol (after cine's night sleep, the rules' sim.sol). Feel first, then PIP names it (a fact waits for its dismiss); pleas when ignored. Each sol ends with free play: everything allowed, PIP let go (pip.release), the Today list says sleep and points at HAB 1, until the next night's sleep (event slept). Every number PIP says has a factcheck row, named per beat in `fact_rows`. Spots: [27.95, 9.5] is wing1's clean_panel stand, [28.5, 7] open ground south of it, short of the wing rows; [-11, 0.5] just inside the greenhouse's door. pip.place: put PIP at a spot before its order (unseen, the night has passed: a sol may end with PIP far from the base). Sol 2's dust comes from the rules: data/sim.json schedule fires dust_gust at Sol 2, 03:00, overnight. Sol 4: `do: mail` sends the visor mail (beats.send_mail, the HUD's send_mail), and the reply comes back as mail_arrived (the HUD's mail cue); `wait.ever` counts an event that came before its beat, since the valve may take longer than the 22 minute round trip. Sol 5: to_shelter ends 0.6 m from the shelter's middle, where the whole body is inside its room (player.room). Sol 5: the rules' schedule starts the ARCHIVED X12 flare at 07:00 (data/sim.json), the wiring tells the beats event:<id>, and being in the storm shelter's room sets the rules' sheltered knob (half the dose). Sol 6: the quiet sols 6 to 8 are slept through at once (`do: skip:3`, beats.skip_sols: the rules' skip_sols, then the HUD's ledger card); its close comes back as ledger_closed, and the day goes on as Sol 9. The skip lands on Sol 9's morning, so key 6 goes on with Sol 9 'First field trip': plan on the map, board the rover, `do: trip:<landmark>` (beats.trip, cine.trip_to, answered with arrived:<landmark>) to the Mont Mercou site, a sample, and the trip home Sol 10: the quiet sols 10 and 11 are slept through (`skip:2`, the rules' storm starts in Sol 11's night, data/sim.json schedule) and the look jumps to the storm under the ledger card (`clock:storm`); key 10 goes on as Sol 12 'The sky turns orange': out to PIP, a dark sky felt first, then named, the storm power choice (beats.json offers sol12_power), the reactor. Sol 13: a dusty suit brushed off in HAB 1 (use brush), then the stormy sols 13 to 16 skipped (`skip:4`), and key 13 goes on as Sol 17: the first salad from the greenhouse (use harvest). The 2018 storm's sky clears with a 43 sol e-fold (row 182), so the storm look and the rules' dim sun stay on past Sol 17: no 'clear sky' line Sol 18: the stormy sols 18 and 19 skipped (`skip:2`), and key 18 goes on as Sol 20 'The long drive' to Curiosity's sol 5070 spot (site_curiosity, 14.3 km, outside the walk-home ring): look, never touch, the trip home (the overnight in the rover and Sol 22's low battery are not played). Sol 21: the calm sols 21 to 25 skipped (`skip:5`), Sol 26: the sample case lifted and carried to the rocket (item mav) and set down, sols 26 to 30 skipped, and on Sol 31 `do: liftoff` (beats.liftoff, cine.launch, answered with launched); PIP's last lines are the result. A skip later in a sequence waits on the `event` ledger_closed, not `ever`: `ever` counts the wake's own ledger",
   "2": [
     {
       "id": "wake",
@@ -613,6 +613,549 @@
       "wait": {
         "event": "slept"
       },
+      "then": "end"
+    }
+  ],
+  "10": [
+    {
+      "id": "wake",
+      "allow": [
+        "none"
+      ],
+      "task": "task.s10_skip",
+      "line": "sol10.quiet",
+      "pip": {
+        "place": "airlock",
+        "go_to": "airlock",
+        "wave": true
+      },
+      "do": [
+        "skip:2",
+        "clock:storm"
+      ],
+      "wait": {
+        "ever": "ledger_closed"
+      }
+    },
+    {
+      "id": "s12_out",
+      "allow": [],
+      "task": "task.s12_storm",
+      "line": "sol12.outside",
+      "objective": "pip",
+      "wait": {
+        "place": {
+          "at": "pip",
+          "r": 3.0
+        }
+      }
+    },
+    {
+      "id": "s12_dark",
+      "line": "sol12.dark",
+      "keys": [
+        "Mouse"
+      ],
+      "objective": null,
+      "wait": {
+        "action": "look"
+      }
+    },
+    {
+      "id": "s12_storm",
+      "line": "sol12.storm",
+      "fact": true
+    },
+    {
+      "id": "s12_wings",
+      "pip": {
+        "point_at": "solar"
+      },
+      "line": "sol12.wings",
+      "fact": true
+    },
+    {
+      "id": "s12_choose",
+      "do": [
+        "offer:sol12_power"
+      ],
+      "task": "task.s12_choose",
+      "line": "sol12.choose",
+      "wait": {
+        "action": "chose:sol12_power"
+      }
+    },
+    {
+      "id": "s12_reactor",
+      "pip": {
+        "point_at": "reactor"
+      },
+      "line": "sol12.reactor",
+      "fact": true,
+      "fact_rows": [
+        210
+      ]
+    },
+    {
+      "id": "s12_planet",
+      "line": "sol12.planet",
+      "fact": true,
+      "fact_rows": [
+        40
+      ]
+    },
+    {
+      "id": "sleep_hint",
+      "task": "task.sleep",
+      "objective": "hab1",
+      "line": "sleep.when_ready",
+      "fact": true
+    },
+    {
+      "id": "free",
+      "allow": [],
+      "pip": {
+        "release": true
+      },
+      "wait": {
+        "event": "slept"
+      },
+      "then": "end"
+    }
+  ],
+  "13": [
+    {
+      "id": "wake",
+      "allow": [],
+      "do": [
+        "clock:run"
+      ],
+      "task": "task.s13_dust",
+      "pip": {
+        "place": "airlock",
+        "go_to": "airlock",
+        "wave": true
+      },
+      "line": "sol13.morning",
+      "objective": "pip",
+      "wait": {
+        "place": {
+          "at": "pip",
+          "r": 3.0
+        }
+      }
+    },
+    {
+      "id": "s13_brush",
+      "line": "sol13.brush",
+      "keys": [
+        "E"
+      ],
+      "objective": "hab1",
+      "wait": {
+        "action": "use:brush"
+      }
+    },
+    {
+      "id": "s13_toxic",
+      "line": "sol13.toxic",
+      "fact": true,
+      "objective": null,
+      "fact_rows": [
+        140
+      ]
+    },
+    {
+      "id": "s13_why",
+      "line": "sol13.why",
+      "fact": true
+    },
+    {
+      "id": "s13_skip",
+      "allow": [
+        "none"
+      ],
+      "task": "task.s13_skip",
+      "line": "sol13.skip",
+      "do": [
+        "skip:4"
+      ],
+      "wait": {
+        "ever": "ledger_closed"
+      }
+    },
+    {
+      "id": "s17_ripe",
+      "allow": [],
+      "task": "task.s17_harvest",
+      "pip": {
+        "follow_me": [
+          -11.0,
+          6.5
+        ]
+      },
+      "line": "sol17.ripe",
+      "objective": "pip",
+      "wait": {
+        "place": {
+          "at": [
+            -11.0,
+            5.2
+          ],
+          "r": 3.0
+        }
+      }
+    },
+    {
+      "id": "s17_go_in",
+      "pip": {
+        "point_at": [
+          -11.0,
+          -2.0,
+          1.2
+        ]
+      },
+      "line": "sol3.go_in",
+      "objective": null,
+      "wait": {
+        "place": {
+          "at": [
+            -11.0,
+            0.5
+          ],
+          "r": 1.5
+        }
+      }
+    },
+    {
+      "id": "s17_pick",
+      "line": "sol17.pick",
+      "keys": [
+        "E"
+      ],
+      "wait": {
+        "action": "use:harvest"
+      }
+    },
+    {
+      "id": "s17_salad",
+      "line": "sol17.salad",
+      "fact": true,
+      "fact_rows": [
+        121
+      ]
+    },
+    {
+      "id": "sleep_hint",
+      "task": "task.sleep",
+      "objective": "hab1",
+      "line": "sleep.when_ready",
+      "fact": true
+    },
+    {
+      "id": "free",
+      "allow": [],
+      "pip": {
+        "release": true
+      },
+      "wait": {
+        "event": "slept"
+      },
+      "then": "end"
+    }
+  ],
+  "18": [
+    {
+      "id": "wake",
+      "allow": [
+        "none"
+      ],
+      "task": "task.s18_skip",
+      "line": "sol18.quiet",
+      "pip": {
+        "place": "airlock",
+        "go_to": "airlock",
+        "wave": true
+      },
+      "do": [
+        "skip:2"
+      ],
+      "wait": {
+        "ever": "ledger_closed"
+      }
+    },
+    {
+      "id": "s20_plan",
+      "allow": [],
+      "task": "task.s20_plan",
+      "line": "sol20.plan",
+      "keys": [
+        "M"
+      ],
+      "objective": "curiosity",
+      "wait": {
+        "event": "map_open"
+      }
+    },
+    {
+      "id": "s20_far",
+      "line": "sol20.far",
+      "keys": [
+        "M"
+      ],
+      "wait": {
+        "event": "map_closed"
+      },
+      "fact_rows": [
+        232
+      ]
+    },
+    {
+      "id": "s20_ring",
+      "line": "sol20.ring",
+      "fact": true,
+      "fact_rows": [
+        266,
+        267
+      ]
+    },
+    {
+      "id": "s20_board",
+      "task": "task.s9_board",
+      "line": "sol20.board",
+      "keys": [
+        "E"
+      ],
+      "objective": "rover",
+      "wait": {
+        "action": "use:rover"
+      }
+    },
+    {
+      "id": "s20_drive",
+      "allow": [
+        "none"
+      ],
+      "do": [
+        "trip:site_curiosity_rover"
+      ],
+      "line": "sol20.drive",
+      "objective": null,
+      "wait": {
+        "ever": "arrived:site_curiosity_rover",
+        "max_s": 40
+      },
+      "fact_rows": [
+        232
+      ]
+    },
+    {
+      "id": "s20_see",
+      "allow": [],
+      "task": "task.s20_see",
+      "line": "sol20.see",
+      "objective": "curiosity",
+      "wait": {
+        "place": {
+          "at": "curiosity",
+          "r": 8.0
+        }
+      }
+    },
+    {
+      "id": "s20_touch",
+      "line": "sol20.touch",
+      "fact": true,
+      "objective": null,
+      "fact_rows": [
+        228
+      ]
+    },
+    {
+      "id": "s20_archived",
+      "line": "sol20.archived",
+      "fact": true,
+      "fact_rows": [
+        229
+      ]
+    },
+    {
+      "id": "s20_lake",
+      "line": "sol20.lake",
+      "fact": true,
+      "fact_rows": [
+        70
+      ]
+    },
+    {
+      "id": "s20_life",
+      "line": "sol20.life",
+      "fact": true,
+      "fact_rows": [
+        246,
+        247
+      ]
+    },
+    {
+      "id": "s20_home",
+      "task": "task.s9_home",
+      "line": "sol20.home",
+      "keys": [
+        "E"
+      ],
+      "objective": "site_curiosity_rover",
+      "wait": {
+        "action": "use:rover"
+      }
+    },
+    {
+      "id": "s20_return",
+      "allow": [
+        "none"
+      ],
+      "do": [
+        "trip:rover"
+      ],
+      "line": "sol9.drive_home",
+      "objective": null,
+      "wait": {
+        "ever": "arrived:rover",
+        "max_s": 40
+      }
+    },
+    {
+      "id": "sleep_hint",
+      "task": "task.sleep",
+      "objective": "hab1",
+      "line": "sleep.when_ready",
+      "fact": true,
+      "allow": []
+    },
+    {
+      "id": "free",
+      "allow": [],
+      "pip": {
+        "release": true
+      },
+      "wait": {
+        "event": "slept"
+      },
+      "then": "end"
+    }
+  ],
+  "21": [
+    {
+      "id": "wake",
+      "allow": [
+        "none"
+      ],
+      "task": "task.s21_skip",
+      "line": "sol21.quiet",
+      "pip": {
+        "place": "airlock",
+        "go_to": "airlock",
+        "wave": true
+      },
+      "do": [
+        "skip:5"
+      ],
+      "wait": {
+        "ever": "ledger_closed"
+      }
+    },
+    {
+      "id": "s26_lift",
+      "allow": [],
+      "task": "task.s26_pack",
+      "line": "sol26.lift",
+      "keys": [
+        "E"
+      ],
+      "objective": "samples",
+      "wait": {
+        "action": "lift"
+      }
+    },
+    {
+      "id": "s26_limit",
+      "line": "sol26.limit",
+      "fact": true,
+      "fact_rows": [
+        213
+      ]
+    },
+    {
+      "id": "s26_carry",
+      "task": "task.s26_carry",
+      "line": "sol26.carry",
+      "objective": "mav",
+      "wait": {
+        "place": {
+          "at": "mav",
+          "r": 12.0
+        }
+      }
+    },
+    {
+      "id": "s26_set",
+      "line": "sol26.set",
+      "keys": [
+        "E"
+      ],
+      "objective": null,
+      "wait": {
+        "action": "use:set_down"
+      }
+    },
+    {
+      "id": "s26_suits",
+      "line": "sol26.suits",
+      "fact": true,
+      "fact_rows": [
+        218
+      ]
+    },
+    {
+      "id": "s26_skip",
+      "allow": [
+        "none"
+      ],
+      "task": "task.s26_skip",
+      "line": "sol26.skip",
+      "do": [
+        "skip:5"
+      ],
+      "wait": {
+        "event": "ledger_closed"
+      }
+    },
+    {
+      "id": "s31_liftoff",
+      "do": [
+        "liftoff"
+      ],
+      "task": "task.s31_home",
+      "line": "sol31.liftoff",
+      "fact_rows": [
+        239
+      ],
+      "wait": {
+        "ever": "launched"
+      }
+    },
+    {
+      "id": "s31_year",
+      "allow": [],
+      "line": "sol31.year",
+      "fact": true,
+      "fact_rows": [
+        244
+      ]
+    },
+    {
+      "id": "s31_labs",
+      "line": "sol31.labs",
+      "fact": true,
       "then": "end"
     }
   ]

@@ -15,6 +15,7 @@ signal shot(name: String)  # a camera shot for the cinematics; they answer notif
 signal close_door(item: String)  # a door shut (for listeners: the door itself is shut here)
 signal skip_sols(count: int)  # `do: skip:<n>`: quiet sols slept through; the rules count them, the HUD shows the ledger
 signal trip(landmark: String)  # `do: trip:<landmark>`: the rover trip (cine.trip_to); it answers notify("arrived:<landmark>")
+signal liftoff  # `do: liftoff`: the crew flies home (cine.launch); it answers notify("launched")
 signal send_mail  # `do: mail`: a message to Earth leaves now (the HUD's visor mail); its reply comes back as mail_arrived
 signal beat_done(id: String)
 signal choice_offered(id: String)
@@ -346,6 +347,8 @@ func _do(command: String) -> void:
 			skip_sols.emit(int(arg))
 		"trip":
 			trip.emit(arg)
+		"liftoff":
+			liftoff.emit()
 		"walk":
 			_walk_to = _spot(Array(arg.split_floats(",")) if "," in arg else arg)
 			_walk_allowed = player.allowed

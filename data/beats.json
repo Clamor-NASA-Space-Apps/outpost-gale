@@ -415,6 +415,38 @@
           "costs": {}
         }
       ]
+    },
+    "sol12_power": {
+      "title": "choice.sol12_power",
+      "options": [
+        {
+          "text": "choice.heat",
+          "apply": [
+            "heater_normal",
+            "o2_maker_off",
+            "greenhouse_off"
+          ],
+          "costs": {}
+        },
+        {
+          "text": "choice.o2_maker",
+          "apply": [
+            "o2_maker_on",
+            "heater_low",
+            "greenhouse_off"
+          ],
+          "costs": {}
+        },
+        {
+          "text": "choice.greenhouse",
+          "apply": [
+            "greenhouse_on",
+            "heater_low",
+            "o2_maker_off"
+          ],
+          "costs": {}
+        }
+      ]
     }
   }
 }

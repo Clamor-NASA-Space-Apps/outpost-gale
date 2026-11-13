@@ -9,7 +9,13 @@ const BUDGET := {"wake": 30, "power_low": 2, "to_wings": 90, "see_dust": 2, "bru
 	"to_greenhouse": 90, "go_in": 40, "robots_planted": 2, "lettuce_days": 2, "plant": 30, "microgreens": 2,
 	"radish": 2, "vitamins": 2, "sent": 2, "light_time": 2, "valve": 60, "fixed": 2, "reply": 40, "reply_home": 2,
 	"dustier": 2, "s9_plan": 2, "s9_far": 2, "s9_board": 60, "s9_drive": 40, "s9_outcrop": 2, "s9_sample": 120,
-	"s9_water": 2, "s9_home": 60, "s9_return": 40, "alert": 5, "to_shelter": 90, "half_dose": 2, "xrays": 2, "stay": 2}
+	"s9_water": 2, "s9_home": 60, "s9_return": 40, "alert": 5, "to_shelter": 90, "half_dose": 2, "xrays": 2, "stay": 2,
+	"s12_out": 90, "s12_dark": 10, "s12_storm": 2, "s12_wings": 2, "s12_choose": 5, "s12_reactor": 2, "s12_planet": 2,
+	"s13_brush": 90, "s13_toxic": 2, "s13_why": 2, "s13_skip": 5, "s17_ripe": 120, "s17_go_in": 40, "s17_pick": 60,
+	"s17_salad": 2, "s20_plan": 2, "s20_far": 2, "s20_ring": 2, "s20_board": 90, "s20_drive": 40, "s20_see": 90,
+	"s20_touch": 2, "s20_archived": 2, "s20_lake": 2, "s20_life": 2, "s20_home": 90, "s20_return": 40, "s26_lift": 60,
+	"s26_limit": 2, "s26_carry": 400, "s26_set": 30, "s26_suits": 2, "s26_skip": 5, "s31_liftoff": 120, "s31_year": 2,
+	"s31_labs": 2}
 
 var game: Node3D
 var world: Node3D
@@ -23,7 +29,7 @@ var targets: Array[String] = []
 
 
 func _init() -> void:
-	watchdog = 1200.0
+	watchdog = 1800.0
 
 
 func play() -> bool:
@@ -42,7 +48,14 @@ func play() -> bool:
 	beats.objective.connect(func(t: String) -> void: targets.append(t))
 	# the wiring sandbox.gd adds (the report's lines): the visor mail, the rules' events, the shelter's knob
 	beats.send_mail.connect(game.hud.send_mail)
-	beats.trip.connect(func(l: String) -> void: game.cine.trip_to(l, {"sol": game.sim.sim.sol, "km": 8.8}))
+	var km := [8.8]  # the last field site's distance (world.json sites): the trip home shows the same
+	beats.trip.connect(func(l: String) -> void:
+		var site: Dictionary = world.data.sites.get(l.trim_prefix("site_").trim_suffix("_rover"), {})
+		if site.has("km"):
+			km[0] = float(site.km)
+		game.cine.trip_to(l, {"sol": game.sim.sim.sol, "km": km[0]}))
+	beats.liftoff.connect(game.cine.launch)
+	game.cine.launched.connect(func() -> void: beats.notify("launched"))
 	game.cine.arrived.connect(func(l: String) -> void: beats.notify("arrived:" + l))
 	game.hud.map_toggled.connect(func(open: bool) -> void: beats.notify("map_open" if open else "map_closed"))
 	beats.skip_sols.connect(func(n: int) -> void: game.hud.show_ledger(game.sim.skip_sols(n)))
@@ -55,7 +68,7 @@ func play() -> bool:
 			beats.notify("event:" + String(e.id)))
 	var sols: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/sols.json"))
 	var words: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/lines.json"))
-	for n: String in ["2", "3", "4", "5", "6"]:
+	for n: String in ["2", "3", "4", "5", "6", "10", "13", "18", "21"]:
 		for b: Dictionary in sols[n]:
 			for k: String in ["line", "task"]:
 				if b.has(k):
@@ -214,6 +227,162 @@ func play() -> bool:
 	await _beat("s9_return")
 	check(_flat(player.body.global_position, world.landmark("rover").pos) < 30.0, "and the trip home ends at the base")
 	await _sleep("sol6")
+
+	# Sol 10: the quiet sols 10 and 11 slept through; the rules' storm started in Sol 11's night, the look is the storm
+	await _wake("sol10")
+	await frames(2)
+	check(sim.sol == 12 and game.hud.is_open(), "two quiet sols skip to Sol 12 with the ledger card open (sol %d)" % sim.sol)
+	var storm: Array = sim.state().events.filter(func(e: Dictionary) -> bool: return e.id == "dust_storm")
+	check(storm.size() == 1 and "ARCHIVED" in String(storm[0].source), "the storm is the real 2018 one, labelled ARCHIVED (%s)" % [storm])
+	check(game.clock.storm_on, "the look turned to the storm under the ledger card")
+	var tau0: float = sim.tau
+	await _beat("wake", func() -> void:
+		if game.hud.is_open():
+			game.hud.close_card()
+			game.hud.ledger_closed.emit())
+
+	# Sol 12: out to PIP, the dark sky felt first, then named; the storm power choice; the reactor
+	await _beat("s12_out", _follow.bind(2.5))
+	_stop()
+	await _beat("s12_dark", func() -> void: player.cam.look(6.0, 0.0))
+	await _beat("s12_storm", _dismiss)
+	var offered: Array[String] = []
+	beats.choice_offered.connect(func(id: String) -> void: offered.append(id))
+	await _beat("s12_wings", _dismiss)
+	var pick: Dictionary = beats.data.offers.sol12_power.options[1]  # the oxygen maker, as a kid might tap
+	await _beat("s12_choose", func() -> void:
+		if offered.has("sol12_power") and not sim.knobs.o2_maker:
+			for rule: String in pick.apply:
+				game.sim.apply(rule)  # what the sandbox's chosen wiring does
+			beats.notify("chose:sol12_power"))
+	check(offered == ["sol12_power"] and sim.knobs.o2_maker and not sim.knobs.greenhouse and sim.knobs.heater_c < 21,
+		"the storm choice was offered and the pick reached the rules (%s, %s)" % [offered, sim.knobs])
+	for id: String in ["s12_reactor", "s12_planet"]:
+		await _beat(id, _dismiss)
+	print("  storm: tau %.2f at the wake, %.2f now, solar %.2f kW" % [tau0, sim.tau, sim.solar_in_kw])
+	check(sim.tau > tau0 and sim.tau > 2.0, "the storm still climbs on Sol 12 (tau %.2f to %.2f)" % [tau0, sim.tau])
+	await _sleep("sol10")
+
+	# Sol 13: out to PIP, back in to brush the dust off, the stormy sols 13 to 16 skipped, Sol 17's first salad
+	await _wake("sol13")
+	await _beat("wake", _follow.bind(2.5))
+	_stop()
+	used_at = -1
+	var hab_brush: Vector3 = world.items.hab1.to_global(Vector3(-0.605, 0.0, -1.426))
+	var at_hatch := [false]
+	await _beat("s13_brush", func() -> void:
+		at_hatch[0] = at_hatch[0] or _flat(player.body.global_position, Vector3(0.0, 0.0, 5.5)) < 0.5
+		if at_hatch[0]:
+			_use("brush", hab_brush)
+		else:
+			_steer(Vector3(0.0, 0.0, 5.5), 0.3))  # square in front of the hatch first
+	_stop()
+	for id: String in ["s13_toxic", "s13_why"]:
+		await _beat(id, _dismiss)
+	await frames(2)
+	check(sim.sol == 17 and game.hud.is_open(), "four stormy sols skip to Sol 17 with the ledger card open (sol %d)" % sim.sol)
+	await _beat("s13_skip", func() -> void:
+		if game.hud.is_open():
+			game.hud.close_card()
+			game.hud.ledger_closed.emit())
+	await _beat("s17_ripe", _follow.bind(2.0))
+	_stop()
+	beats._do("open:greenhouse")
+	var lined_gh := [false]
+	await _beat("s17_go_in", func() -> void:
+		lined_gh[0] = lined_gh[0] or _flat(player.body.global_position, Vector3(-11.0, 0.0, 4.2)) < 0.4
+		_steer(Vector3(-11.0, 0.0, 0.5) if lined_gh[0] else Vector3(-11.0, 0.0, 4.2)))
+	_stop()
+	used_at = -1
+	await _beat("s17_pick", _use.bind("harvest", Vector3(-10.4, 0.0, -2.05)))
+	await _beat("s17_salad", _dismiss)
+	await _sleep("sol13")
+
+	# Sol 18: two dusty sols skipped, on into Sol 20: the long drive to Curiosity, look, never touch, home again
+	await _wake("sol18")
+	await frames(2)
+	check(sim.sol == 20 and game.hud.is_open(), "two sols skip to Sol 20 with the ledger card open (sol %d)" % sim.sol)
+	await _beat("wake", func() -> void:
+		if game.hud.is_open():
+			game.hud.close_card()
+			game.hud.ledger_closed.emit())
+	used_at = -1
+	await _beat("s20_plan", _press.bind(&"map"))
+	await _beat("s20_far", _press.bind(&"map"))
+	await _beat("s20_ring", _dismiss)
+	await _beat("s20_board", _board)
+	await _beat("s20_drive")
+	var cur_site: Vector3 = world.landmark("site_curiosity_rover").pos
+	check(_flat(player.body.global_position, cur_site) < 30.0, "the trip ends at the Curiosity site (%.0f m off)" % _flat(player.body.global_position, cur_site))
+	var rover_cur: Vector3 = world.landmark("curiosity").pos
+	var rv: Node3D = world.items.rover
+	var way: Array[Vector3] = []  # round the parked rover by the side Curiosity is on: past its flank, then on
+	var leg := [0]
+	await _beat("s20_see", func() -> void:
+		if player.vehicle:
+			game.interactions.interact()  # out of the rover (E)
+			return
+		if way.is_empty():
+			var side := signf(rv.to_local(rover_cur).x)
+			way = [rv.to_global(Vector3(4.5 * side, 0.0, 4.0)), rv.to_global(Vector3(4.5 * side, 0.0, -5.0)), rover_cur]
+		if leg[0] < 2 and _flat(player.body.global_position, way[leg[0]]) < 0.8:
+			leg[0] += 1
+		_steer(way[leg[0]], 6.0 if leg[0] == 2 else 0.5))
+	print("  s20_see: vehicle %s, hero %s" % [player.vehicle, player.body.global_position])
+	_stop()
+	for id: String in ["s20_touch", "s20_archived", "s20_lake", "s20_life"]:
+		await _beat(id, _dismiss)
+	await _beat("s20_home", _board)
+	await _beat("s20_return")
+	check(_flat(player.body.global_position, world.landmark("rover").pos) < 30.0, "and the long drive home ends at the base")
+	await _sleep("sol18")
+
+	# Sol 21: five calm sols skipped; Sol 26: the sample case carried to the rocket; Sol 31: liftoff
+	await _wake("sol21")
+	await frames(2)
+	check(sim.sol == 26 and game.hud.is_open(), "five sols skip to Sol 26 with the ledger card open (sol %d)" % sim.sol)
+	await _beat("wake", func() -> void:
+		if game.hud.is_open():
+			game.hud.close_card()
+			game.hud.ledger_closed.emit())
+	var case: Node3D = world.items.samples
+	used_at = -1
+	await _beat("s26_lift", func() -> void:
+		var t: Node = game.interactions.target
+		if _flat(player.body.global_position, case.global_position) > 1.6:
+			_follow_out(case.global_position, 1.2)
+		elif t and t.kind == "bag":
+			_stop()
+			_press(&"interact")
+		else:
+			_steer(case.global_position, 0.6))
+	_stop()
+	check(game.interactions.carried != null and (game.interactions.carried == case or case.is_ancestor_of(game.interactions.carried)
+		or game.interactions.carried.is_ancestor_of(case)), "the hero carries the sample case (%s)" % [game.interactions.carried])
+	await _beat("s26_limit", _dismiss)
+	var mav: Vector3 = world.landmark("mav").pos
+	await _beat("s26_carry", _steer.bind(mav, 0.5))
+	_stop()
+	used_at = -1
+	await _beat("s26_set", func() -> void:
+		if game.interactions.carried and not game.interactions.busy():
+			_press(&"interact"))
+	check(game.interactions.carried == null and _flat(case.global_position, mav) < 14.0, "the case rests by the rocket (%.1f m)" % _flat(case.global_position, mav))
+	await _beat("s26_suits", _dismiss)
+	await frames(2)
+	check(sim.sol == 31 and game.hud.is_open(), "the last sols skip to Sol 31, launch day (sol %d)" % sim.sol)
+	await _beat("s26_skip", func() -> void:
+		if game.hud.is_open():
+			game.hud.close_card()
+			game.hud.ledger_closed.emit())
+	var finished := [false]
+	beats.finished.connect(func(s: String) -> void: finished[0] = finished[0] or s == "sol21", CONNECT_ONE_SHOT)
+	await _beat("s31_liftoff")
+	for id: String in ["s31_year", "s31_labs"]:
+		await _beat(id, _dismiss)
+	check(finished[0], "the game's story ends after the liftoff")
+	var ids: Array = (beats.data.sol21 as Array).map(func(b: Dictionary) -> String: return b.id)
+	check(beats.done == ids, "sol21: every beat ended, in order (%s)" % [beats.done])
 	check(pip.gave_up == 0, "PIP never gave up on an order (%d)" % pip.gave_up)
 	return true
 
@@ -316,6 +485,15 @@ func _board() -> void:
 				_stop()
 				game.interactions.use(it)
 			return
+
+
+## Toward `at`, out of HAB 1 first.
+func _follow_out(at: Vector3, near: float) -> void:
+	var b: Vector3 = player.body.global_position
+	if b.z < 5.8 and absf(b.x) < 2.5:
+		_steer(Vector3(0.0, 0.0, 6.2), 0.4)  # straight out through the hatch first: a turn in it rubs the frame
+	else:
+		_steer(at, near)
 
 
 ## Out of HAB 1 and stand by.

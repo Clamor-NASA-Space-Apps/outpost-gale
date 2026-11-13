@@ -205,7 +205,7 @@ func trip_to(landmark: String, args := {}) -> void:
 	await _run(float(cfg.fade_out_s), watch)
 	Input.action_release(&"move_forward")
 	beat = "trip_title"
-	_title.text = tr(c.title_id).format(args)
+	_title.text = _words(c.title_id).format(args)
 	_title.show()
 	await _wait(float(c.title_s))
 	_title.hide()
@@ -280,7 +280,7 @@ func launch() -> void:
 	_plume(pad, 0.0)
 	await _fade(1.0, float(cfg.fade_out_s))
 	beat = "launch_window"
-	_title.text = tr(c.caption_id)
+	_title.text = _words(c.caption_id)
 	_title.set_anchors_and_offsets_preset(Control.PRESET_CENTER_BOTTOM)  # under Earth, not over it
 	_title.offset_top = -140
 	_title.show()
@@ -582,3 +582,9 @@ func _ground(p: Array) -> Vector3:
 
 func _v(p: Array) -> Vector3:
 	return Vector3(p[0], p[1], p[2])
+
+
+## A card's words from data/lines.json through the HUD, like PIP's (tr() had no table and showed the raw id).
+func _words(id: String) -> String:
+	var hud: Variant = game.get("hud") if game else null
+	return hud.line(id) if hud else tr(id)
