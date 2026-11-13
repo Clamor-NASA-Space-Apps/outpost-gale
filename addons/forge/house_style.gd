@@ -1,4 +1,6 @@
 extends RefCounted
+
+const MIN_CAST_DEG := 15.0  # the lowest a shadow is cast from (set_look())
 ## The DESIGN.md look in Godot. Every project uses this instead of writing its own, so models from the
 ## forge, from kits and from official sources end up in one style under one light rig.
 ##
@@ -470,7 +472,14 @@ static func set_look(parent: Node, design: Dictionary, v: Dictionary) -> void:
 			var to: Vector3 = v.light_dir
 			sun.light_angular_distance = rad_to_deg(v.disc) * 2.0  # the sky draws the disc at the light's own angular size
 			# it shines along its -Z, from the sun toward the scene
-			sun.transform = Transform3D(Basis.looking_at(-to, Vector3.FORWARD if absf(to.y) > 0.999 else Vector3.UP), to * 50.0)
+			# the shadow never comes from below MIN_CAST_DEG: on level ground a shadow-map texel stretches by 1/sin(elevation)
+			# (6x at 10 deg), and a straight edge near the sun's line stair-stepped and threw one-texel spikes at dawn and
+			# dusk (13 Nov playtest). The sky's disc stays at the real sun; the shadows there come out a little short
+			var cast := to
+			var low := sin(deg_to_rad(MIN_CAST_DEG))
+			if cast.y < low and Vector2(cast.x, cast.z).length() > 1e-4:
+				cast = (Vector3(cast.x, 0.0, cast.z).normalized() * cos(deg_to_rad(MIN_CAST_DEG))) + Vector3.UP * low
+			sun.transform = Transform3D(Basis.looking_at(-cast, Vector3.FORWARD if absf(cast.y) > 0.999 else Vector3.UP), cast * 50.0)
 			# `light_shadowed` when the caller solved it already (a cycle, once per burst and not per frame)
 			var shadowed: float = v.light_shadowed if v.has("light_shadowed") else _shadowed(design, parent, v.light_energy, v.light_color, to.y)
 			# a preset that turns the shadow off (set_quality) needs the plain energy back, or the scene goes dim
