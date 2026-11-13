@@ -30,7 +30,7 @@ const ADVANCED := {
 	"Shadows": [["Off", {"shadows": 0}],
 		["Low", {"shadows": 1, "shadowMap": 1024, "shadowRange": 25, "shadowFilter": 2, "normalBias": 2.0}],
 		["Medium", {"shadows": 2, "shadowMap": 2048, "shadowRange": 60, "shadowFilter": 3, "normalBias": 6.0}],
-		["High", {"shadows": 2, "shadowMap": 4096, "shadowRange": 60, "shadowFilter": 4, "normalBias": 4.0}],
+		["High", {"shadows": 4, "shadowMap": 4096, "shadowRange": 60, "shadowFilter": 4, "normalBias": 4.0}],
 		["Ultra", {"shadows": 4, "shadowMap": 4096, "shadowRange": 60, "shadowFilter": 5, "normalBias": 4.0}]],
 	"Effects": [["Low", {"glow": 0.0, "particles": 0.5, "lamps": 2}],
 		["Medium", {"glow": 0.4, "particles": 0.75, "lamps": 4}],
