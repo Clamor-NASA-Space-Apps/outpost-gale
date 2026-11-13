@@ -369,10 +369,11 @@ func interact() -> void:
 		_seq = HATCH_OPEN_S + FADE_S * 2.0
 		var tw := create_tween()
 		tw.tween_interval(HATCH_OPEN_S)
+		var rover: Node3D = player.vehicle
 		tw.tween_callback(func() -> void: _hatch_fade(func() -> void:
 			player.exit()
-			_hatch_swing(false, true)))
-		used.emit("rover", player.vehicle.global_position)
+			_hatch_swing(false, true)
+			used.emit("rover_exit", rover.global_position)))  # not "rover": a beat waiting to board must not end on it
 	elif carried:
 		_put_down()
 	elif target and not playing:
@@ -422,8 +423,8 @@ func use(it: Interactable) -> void:
 			tw.tween_callback(func() -> void:
 				_hatch_fade(func() -> void:
 					player.enter(it.thing)
-					_hatch_swing(false))
-				used.emit("rover", it.thing.global_position))
+					_hatch_swing(false)
+					used.emit("rover", it.thing.global_position)))  # once aboard: a trip may start on it (Sol 9)
 			return
 	used.emit(it.kind, it.thing.global_position)
 
@@ -550,6 +551,7 @@ func _swing(it: Interactable, open: bool, wait: bool, delay := 0.0) -> void:
 func _door_step(it: Interactable, delta: float) -> void:
 	var m: Dictionary = _swinging[it]
 	if m.delay > 0.0:
+		# ponytail: a press then a step at once still opens it (a kid's E then W, audio_test): kept on purpose
 		m.delay -= delta
 		return  # the hand is on its way to the handle
 	var now: float = it.thing.rotation.y

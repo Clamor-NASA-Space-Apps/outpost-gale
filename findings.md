@@ -1,0 +1,6 @@
+- 14 Nov review: beats `walk:` sets allowed ["move"], so a held S may fight the scripted walk; K's beats_test holds S and still walks 6 m: recheck if a playtest sees the walk-out stall.
+- 14 Nov review: `_settle()` reports airborne when the body's centre is over a gap or a steep face but a rim holds it (by design, the slide off); watch for false falling clips at curb lips.
+- 14 Nov review: rover boarding still boards a hero who walks off during HATCH_OPEN_S (after the hand reached the hatch), and boards when perform() refuses (length 0).
+- 14 Nov review: PIP's blocked turn tries the opposite turn, then the next frame steers back: a sway near a corner until the stuck re-plan (pip.gd _move).
+- 14 Nov review (not a bug): "cornered PIP keeps ramming": _move sets v = 0 on a blocked step, so _back_stuck does build.
+- 14 Nov review: a door pressed then walked away from still opens after the reach delay: kept on purpose (E then W at once must open it; cancelling broke audio_test's walk-in).

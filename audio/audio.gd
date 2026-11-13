@@ -30,7 +30,7 @@ const SOUNDS := {
 	"panel": ["servo"],
 	"bag": ["bag_lift"],
 	"put_down": ["bag_drop"],
-	"rover": ["hiss", "door_open", "door_close@1.2"],  # the cab hatch lets the hero in and shuts behind
+	"rover": ["hiss"],  # aboard, the cab pressurises; the hatch's swing plays its own door sounds
 	# the base and PIP on their own
 	"servo": ["servo"],
 	"pip_go": ["pip_go"],
@@ -420,8 +420,6 @@ func _drive() -> void:
 	var driving: bool = player.vehicle == _rover
 	if driving != _driving:
 		_driving = driving
-		if not driving:  # out through the cab hatch; boarding is the interaction's "rover" sound
-			play("door_open", _rover.global_position + Vector3.UP)
 	var k := clampf(absf(_rover.speed()) / maxf(_rover.top, 0.1), 0.0, 1.0)
 	var r: Dictionary = t.rover
 	for q: AudioStreamPlayer3D in _rover_loops.motor:

@@ -330,11 +330,8 @@ func _do(command: String) -> void:
 			else:
 				clock.jump(arg)
 				clock.pinned = true
-		"open":
-			for part: Node3D in world.items[arg].get_meta("parts"):
-				var it: Node = interactions.by_thing.get(part)
-				if part.name == &"door" and it and not it.open:
-					interactions.use(it)
+		"open":  # the airlock cycles it open: no hand reach, no hero glide (set_door waits for a clear swing)
+			interactions.set_door(arg, true)
 		"close":
 			if interactions.has_method("set_door"):
 				interactions.set_door(arg, false)  # waits until the hero is clear of the swing

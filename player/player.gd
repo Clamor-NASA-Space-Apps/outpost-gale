@@ -461,7 +461,9 @@ func _off_edge() -> bool:
 		var away := body.global_position - c.get_position()
 		away.y = 0.0
 		if c.get_normal().angle_to(Vector3.UP) <= body.floor_max_angle and away.length() > 0.001:
-			body.global_position += away.normalized() * EDGE_SLIDE * get_physics_process_delta_time()
+			# off the first rim it rests on, never through a wall beside it
+			body.move_and_collide(away.normalized() * EDGE_SLIDE * get_physics_process_delta_time())
+			break
 	return false
 
 
