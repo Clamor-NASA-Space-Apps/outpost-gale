@@ -40,13 +40,21 @@ jobs:
           ln -s ~/godot/templates ~/.local/share/godot/export_templates/4.7.2.stable
           echo ~/godot >> $GITHUB_PATH
 
-      # Godot reimports only what changed since the restored cache, so every run saves a fresh one
-      - uses: actions/cache@v4
+      # Godot reimports only what changed since the restored cache, so every run saves a fresh one.
+      # Saved right after the import, not at the end: a failed export must not throw away a long import.
+      # A new branch restores main's cache (GitHub scopes caches by branch, with the default branch shared).
+      - uses: actions/cache/restore@v4
         with:
           path: .godot
           key: import-${{ github.sha }}
           restore-keys: import-
-      - run: godot --headless --path . --import
+      - id: import
+        run: godot --headless --path . --import
+      - if: always() && steps.import.outcome == 'success'
+        uses: actions/cache/save@v4
+        with:
+          path: .godot
+          key: import-${{ github.sha }}
 
       - name: Export
         run: |
