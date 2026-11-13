@@ -22,6 +22,9 @@ const THIN := 4
 const HERO := 8
 const VEHICLES := 16
 const CARRIABLES := 64
+const BLOCKERS := STATICS | THIN  # what the route graph keeps clear of: movers move, the feelers take them
+# a stall replans round the movers where they stand now too (cargo bags between HAB 1 and the solar farm, 14 Nov)
+const MOVERS := STATICS | THIN | VEHICLES | CARRIABLES
 const LIFT := 0.03  # m: sweeps start this far up, so a pebble-flat contact with the ground counts as nothing
 
 var world: Node3D
@@ -86,6 +89,7 @@ var _was := Vector3.ZERO
 var back_m := 0.0
 var back_s := 0.0
 var back_lead := 0.0
+var sprint := 0.0  # leading a hurrying hero: this many times the hero's hurry speed (reality.json pip.speed lead_hurry_k)
 var _model_y := 0.0
 var _held := "look"  # the parked state a back-off returns to
 var _back_t := 0.0
@@ -102,6 +106,10 @@ func setup(w: Node3D, hero: Node3D) -> void:
 	top = world.sheet_values["pip.speed"]
 	accel = world.sheet_values["pip.accel"]
 	turn = deg_to_rad(world.sheet_values["pip.turn"])
+	var sheet: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/reality.json"))
+	for r: Dictionary in sheet.rows:
+		if r.id == "pip.speed":
+			sprint = float(r.get("lead_hurry_k", 0.0))
 	_rng.seed = int(p.seed)
 	# it rests on its wheels (_pose), so its sweeps leave the ground out; solids, the hero, bags and the rover block
 	collision_mask = STATICS | THIN | HERO | VEHICLES | CARRIABLES
@@ -247,7 +255,7 @@ func _ground(at: Array) -> Vector3:
 
 
 ## The nodes `from` reaches in a clear straight line.
-func _reach(from: Vector3, mask := STATICS | THIN) -> Array[int]:
+func _reach(from: Vector3, mask := BLOCKERS) -> Array[int]:
 	var out: Array[int] = []
 	for j in _nodes.size():
 		if _nodes[j].distance_to(from) > 0.01 and _clear(from, _nodes[j], mask):
@@ -257,7 +265,7 @@ func _reach(from: Vector3, mask := STATICS | THIN) -> Array[int]:
 
 ## A straight drive from a to b passes no solid (with `clearance` either side), no doorway and no building. Movers
 ## (the hero, bags, the rover) are left to the feelers: they move.
-func _clear(a: Vector3, b: Vector3, mask := STATICS | THIN) -> bool:
+func _clear(a: Vector3, b: Vector3, mask := BLOCKERS) -> bool:
 	var d := Vector3(b.x - a.x, 0.0, b.z - a.z)
 	var n := ceili(d.length() / 0.25)
 	for i in n + 1:
@@ -267,6 +275,7 @@ func _clear(a: Vector3, b: Vector3, mask := STATICS | THIN) -> bool:
 	var q := PhysicsShapeQueryParameters3D.new()
 	q.shape = _shape.shape
 	q.collision_mask = mask
+	q.exclude = [get_rid()]  # PIP is on the vehicles layer: a sweep that counts movers would hit PIP itself
 	q.motion = b - a
 	var side := Vector3(-d.z, 0.0, d.x).normalized() * float(p.clearance)
 	for o: Vector3 in [Vector3.ZERO, side, -side]:
@@ -277,7 +286,7 @@ func _clear(a: Vector3, b: Vector3, mask := STATICS | THIN) -> bool:
 
 
 ## The shortest way from `from` to `to` through the route graph (Dijkstra over a dozen or two nodes), else straight.
-func _route(from: Vector3, to: Vector3, mask := STATICS | THIN) -> Array[Vector3]:
+func _route(from: Vector3, to: Vector3, mask := BLOCKERS) -> Array[Vector3]:
 	if _clear(from, to, mask):
 		return [to]
 	var a := _reach(from, mask)
@@ -425,7 +434,8 @@ func _drive(delta: float, to_hero: Vector2) -> void:
 			return
 		# the hero's pace: full speed while the hero is close behind, slowing as the gap grows, then a stop to look
 		# back at lead_m.x (a floor, or it crept on forever just short of it and counted as stuck)
-		pace = top * clampf((lead_m.x - to_hero.length()) / (lead_m.x - lead_m.z), 0.3, 1.0)
+		# a hurrying hero: PIP hurries too, a little faster than the hero's hurry, so the lead holds (sprint, art direction)
+		pace = _top() * clampf((lead_m.x - to_hero.length()) / (lead_m.x - lead_m.z), 0.3, 1.0)
 	_patience -= delta
 	# held by the beats it never stops for the hero: it steers round a hero standing in the way and backs off from one
 	# walking into it (a wait there kept a kid at its side and PIP in place for good, 13 Nov)
@@ -444,9 +454,8 @@ func _drive(delta: float, to_hero: Vector2) -> void:
 			gave_up += 1 if led and stop == "order" else 0  # a flee from a rover driving off is no order given up
 			_look_around(1.0)
 		else:
-			_replanned = true  # something moved into the way: one new route from here, then give up
-			# round the movers too this time (a parked rover the feelers could not get past, 14 Nov)
-			_path = _route(global_position, target, STATICS | THIN | VEHICLES | CARRIABLES)
+			_replanned = true  # something moved into the way: a new route from here, round the movers too
+			_path = _route(global_position, target, MOVERS)
 			_best = INF
 			_since = 0.0
 		return
@@ -710,8 +719,13 @@ func _back(delta: float, to_hero: Vector2) -> void:
 	var sgn := 1.0 if on_way or _ahead(away) >= 0.0 else -1.0
 	var err := wrapf(atan2(-away.x, -away.y) + (0.0 if sgn > 0.0 else PI) - yaw, -PI, PI)
 	var floor_k := 0.4 if on_way else 0.0  # a skid steer arcs: some speed while it turns
-	v = move_toward(v, top * clampf(cos(err) * 1.5 - 0.5, floor_k, 1.0), accel * delta)
+	v = move_toward(v, _top() * clampf(cos(err) * 1.5 - 0.5, floor_k, 1.0), accel * delta)
 	_move(yaw + clampf(err, -turn * delta, turn * delta), sgn * v * delta)
+
+
+## Its top speed now: leading a hurrying hero it hurries too, a little faster than the hero (sprint, art direction)
+func _top() -> float:
+	return maxf(top, player.hurry * sprint) if leading and player.moved > player.walk * 1.1 else top
 
 
 ## How much a flat direction points along its heading (1 ahead, -1 behind).

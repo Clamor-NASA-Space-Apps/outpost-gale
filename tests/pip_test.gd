@@ -100,7 +100,90 @@ func play() -> bool:
 	check(sounds.has("pip_hello"), "and beeps hello (%s)" % [sounds])
 	check(pip._near, "its head is on the hero")
 	await _lead(world, player, pip)
+	await _sprint(world, player, pip)
+	await _bags(world, player, pip, false)
+	await _bags(world, player, pip, true)
 	return true
+
+
+## A kid sprinting after a leading PIP: it hurries too, a little faster than the hero's hurry. ponytail: the closest
+## gap is printed, not checked: a sprint from 3.5 m back still closes to about 0.8 m once while PIP gets going.
+func _sprint(world: Node3D, player: Node3D, pip: Node3D) -> void:
+	var b: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/beats.json")).pip
+	pip.release()
+	await frames(2)
+	var from := Vector3(2.0, world.height_at(2.0, 9.5), 9.5)
+	pip.yaw = -PI / 2.0
+	pip._place(from, pip.yaw)
+	player.place(Vector3(-1.5, world.height_at(-1.5, 9.5) + 0.05, 9.5), -90.0)
+	await frames(5)
+	var arrived := [false]
+	pip.arrived.connect(func() -> void: arrived[0] = true, CONNECT_ONE_SHOT)
+	pip.order(Vector3(20.0, 0.0, 3.0), Vector3.INF, false, Vector3(b.lead_wait_m, b.lead_resume_m, b.lead_near_m))
+	action(&"move_forward", true)
+	action(&"hurry", true)
+	var gap := INF
+	var top := 0.0
+	for i in 60 * 40:
+		await frames(1)
+		if arrived[0]:
+			break
+		var d := Vector2(pip.global_position.x - player.body.global_position.x, pip.global_position.z - player.body.global_position.z)
+		player.cam.yaw = atan2(-d.x, -d.y)
+		if i > 60 and Vector2(pip.global_position.x - 20.0, pip.global_position.z - 3.0).length() > 4.0:  # not its parking stop
+			gap = minf(gap, d.length())
+		top = maxf(top, pip.v)
+	action(&"move_forward", false)
+	action(&"hurry", false)
+	print("  sprint: closest %.2f m, PIP top %.2f m/s (hero hurry %.2f)" % [gap, top, player.hurry])
+	check(top > player.hurry, "leading a sprinting kid, PIP goes faster than the hero's hurry (%.2f m/s)" % top)
+	pip.release()
+
+
+## From the cargo bags by HAB 1 to the solar farm, the bags where world.json puts them (or one dropped right on the
+## straight way, `dropped`): PIP plans round them and gets there, never giving up (14 Nov playtest: stuck at the bags,
+## "follow me" for ever).
+func _bags(world: Node3D, player: Node3D, pip: Node3D, dropped: bool) -> void:
+	var b: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/beats.json")).pip
+	var from := Vector3(1.4, world.height_at(1.4, 6.0), 6.0)  # the bags stop, where the Sol 1 lift leaves PIP
+	var to := Vector3(20.0, 0.0, 3.0)  # the solar stop
+	if dropped:
+		var bag: Node3D = world.items.bag1
+		var mid := from.lerp(to, 0.3)
+		bag.global_position = Vector3(mid.x, world.height_at(mid.x, mid.z), mid.z)
+		await frames(2)
+	pip.release()
+	await frames(2)
+	pip.yaw = atan2(-(to.x - from.x), -(to.z - from.z))
+	pip._place(from, pip.yaw)
+	player.place(Vector3(-1.0, world.height_at(-1.0, 7.0) + 0.05, 7.0), -90.0)
+	await frames(5)
+	var arrived := [false]
+	pip.arrived.connect(func() -> void: arrived[0] = true, CONNECT_ONE_SHOT)
+	var gave: int = pip.gave_up
+	pip.order(to, Vector3.INF, false, Vector3(b.lead_wait_m, b.lead_resume_m, b.lead_near_m))
+	var hits := 0
+	var held := false
+	for i in 60 * 70:
+		await frames(1)
+		if arrived[0]:
+			break
+		hits += 1 if _overlaps(pip) else 0
+		var d := Vector2(pip.global_position.x - player.body.global_position.x, pip.global_position.z - player.body.global_position.z)
+		player.cam.yaw = atan2(-d.x, -d.y)
+		if d.length() > 2.5 and not held:
+			held = true
+			action(&"move_forward", true)
+		elif d.length() < 2.0 and held:
+			held = false
+			action(&"move_forward", false)
+	if held:
+		action(&"move_forward", false)
+	var how := "one dropped on the way" if dropped else "in their spots"
+	check(arrived[0], "PIP leads from the bags to the solar farm, bags %s (at %.1f, %.1f)" % [how, pip.global_position.x, pip.global_position.z])
+	check(pip.gave_up == gave, "and never gives up on it (%d)" % (pip.gave_up - gave))
+	check(hits == 0, "and never drives into a bag (%d frames)" % hits)
+	pip.release()
 
 
 ## Held by the beats (data/beats.json pip numbers): PIP leads at the hero's pace, a kid walking right after it never

@@ -535,7 +535,8 @@
    "value": 1.1,
    "unit": "m/s",
    "source": "Floor: NASA VIPER, the fastest planetary rover, 'top speed 20cm/s, nominal speed 10 cm/s' (https://ntrs.nasa.gov/citations/20240013903); Curiosity 4 cm/s, Spirit and Opportunity 5 cm/s. Ceiling: robots that drive among people, Pudu BellaBot 'Safety Speed: 0.5-1.2 m/s (Adjustable)' (https://www.pudurobotics.com/en/products/bellabot), Starship delivery robot 'around average walking speed (6kmph)' (https://collection.sciencemuseumgroup.org.uk/objects/co8697500/starship-technologies-self-driving-delivery-robot). Saved: design/research/pages/pip/",
-   "why": "PIP is a helper that potters among the crew and leads a new commander round the base, not a science rover: a robot built to drive among people, at a walking pace a little above the hero's walk (hero.speed.walk 1.0), so a walking kid following it never catches it and steps on it (13 Nov playtest: at 0.5 m/s the kid did)"
+   "why": "PIP is a helper that potters among the crew and leads a new commander round the base, not a science rover: a robot built to drive among people, at a walking pace a little above the hero's walk (hero.speed.walk 1.0), so a walking kid following it never catches it and steps on it (13 Nov playtest: at 0.5 m/s the kid did). Leading a hurrying hero it goes lead_hurry_k times the hero's hurry (hero.speed.hurry 1.6, so 1.76 m/s), past the real ceiling: art direction, so a sprinting kid never catches the guide it follows (14 Nov playtest)",
+   "lead_hurry_k": 1.1
   },
   {
    "id": "pip.accel",

@@ -394,7 +394,7 @@ func open_map() -> void:
 	full_map.closed.connect(close_map)
 	add_child(full_map)
 	Hud.layer(full_map, 301)
-	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE  # the map is used with the pointer
+	_take_pointer()  # the map is used with the pointer
 	_cue("map_open")
 	map_toggled.emit(true)
 
@@ -404,6 +404,7 @@ func close_map() -> void:
 		return
 	full_map.queue_free()
 	full_map = null
+	_give_pointer()
 	_cue("map_close")
 	map_toggled.emit(false)
 
@@ -535,8 +536,26 @@ func close_card() -> void:
 		card.name = &"Closed"  # freed at the frame's end: the next card in the same parent keeps its own name (snapshot)
 		card.queue_free()
 		card = null
+		_give_pointer()
 	side_card = false
 	modal.hide()
+
+
+## The pointer for a card or the map, and the mouse look back when they close (Ravindu, 14 Nov: after a choice the view
+## no longer turned until a click, which read as the game locking the camera). A close comes from a click or a key,
+## so a browser allows the capture there.
+var _looked := false
+
+
+func _take_pointer() -> void:
+	_looked = _looked or Input.mouse_mode == Input.MOUSE_MODE_CAPTURED
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
+
+func _give_pointer() -> void:
+	if _looked and not (card or full_map):
+		_looked = false
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 
 func is_open() -> bool:
@@ -555,7 +574,7 @@ func _open(c: Control, full := false, side := false) -> void:
 	modal.show()
 	if side:
 		_place_side()
-	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE  # a card is used with the pointer
+	_take_pointer()  # a card is used with the pointer
 	var b := c.find_children("*", "Button", true, false)
 	if b:
 		(b[0] as Button).grab_focus.call_deferred()  # keys and a gamepad work at once
