@@ -60,6 +60,7 @@ const SOUNDS := {
 ## Every cue music() may play (audio/music/<name>.ogg), and the beds' phrases in the order they take turns.
 const CUES := ["first_step", "airlock_sealed", "sunset", "discovery", "mission_lost", "quiet", "dawn", "sleep", "storm"]
 const BEDS := {"eva": ["bed_eva_1", "bed_eva_2", "bed_eva_3"], "habitat": ["bed_hab_1", "bed_hab_2"]}
+var _storm_heard := false  # the storm's cue played and the storm has not ended (a night in between keeps it)
 const SKY_CUES := {"design.sunset": "sunset", "design.storm": "storm"}  # the sky turning plays its cue, once a change
 
 var world: Node3D
@@ -284,10 +285,14 @@ func wake() -> void:
 	_dawn = true
 
 
-## The sky state's name (sandbox SKIES): turning to sunset or storm plays its cue, once per change into it.
-func sky(name: String) -> void:
-	if name != _sky and SKY_CUES.has(name):
+## The sky state's name (sandbox SKIES): turning to sunset or storm plays its cue, once per change into it. The sunset
+## key also leads between night and day at dawn, so `setting` (the afternoon) holds its cue to the evening; a storm that
+## outlasts a night does not play again in the morning.
+func sky(name: String, setting := true) -> void:
+	var again := name == "design.storm" and _storm_heard
+	if name != _sky and SKY_CUES.has(name) and (setting or name != "design.sunset") and not again:
 		music(SKY_CUES[name])
+	_storm_heard = name == "design.storm" or (_storm_heard and name == "design.night")
 	_sky = name
 
 

@@ -946,6 +946,9 @@ func _charger(design: Dictionary) -> void:
 	if post == null or rover == null:
 		return
 	var plug := post.find_child("plug", true, false) as MeshInstance3D
+	if plug == null:
+		push_error("charger: the post has no plug")
+		return
 	# it travels to the rover: with a body it would hold the rover where it parked (rover.gd test_move), and
 	# outside the post's tree the post's collision checks do not count it as the post's
 	for b: Node in plug.find_children("*", "CollisionObject3D", true, false):

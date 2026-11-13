@@ -129,7 +129,7 @@ func _ready() -> void:
 	clock.setup(self, world, design, keys, tuning.sky)
 	clock.phase_changed.connect(func(state: String) -> void:
 		sky = SKIES.find(state)
-		audio.sky(state))  # the sun going down has its music
+		audio.sky(state, clock.hour() >= 12.0))  # the sun going down has its music; the sunset key leads at dawn too
 	interactions.used.connect(clock.used)  # a tilted panel sheds its dust
 	sky = SKIES.find(clock.state)
 	# the tools want repeatable pictures: the hour stays put in a tool run, and `hour=H` pins it anywhere
