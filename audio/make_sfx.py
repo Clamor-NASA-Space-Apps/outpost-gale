@@ -76,13 +76,16 @@ def env(n: int, rise: float, fall: float) -> np.ndarray:
 
 
 def curtain() -> np.ndarray:
-    # cloth drawn along a rail: a swish whose colour moves with the folds, and the rings ticking on the rail
+    # soft cloth drawn along a rail: a low, breathy swish whose colour moves with the folds. The metal rings that
+    # ticked on the rail read as "weird" in a playtest (13 Nov night), so they are gone; their random draws stay so
+    # every later sound in this file rebuilds the same
     t = secs(0.75)
-    fc = 1500 + 700 * np.sin(np.pi * t / 0.75) + 250 * slow(len(t), 12)
-    x = sweep(RNG.standard_normal(len(t)), fc, 1.1) * (0.75 + 0.25 * slow(len(t), 18))
-    x *= env(len(t), 0.12, 0.35)
-    for s in np.sort(RNG.uniform(0.05, 0.55, 7)):
-        at(x, s, ping((3600, 5300, 7100), 0.012), RNG.uniform(0.04, 0.08))
+    fc = 700 + 450 * np.sin(np.pi * t / 0.75) + 150 * slow(len(t), 12)
+    x = sweep(RNG.standard_normal(len(t)), fc, 0.8) * (0.8 + 0.2 * slow(len(t), 18))
+    x *= env(len(t), 0.18, 0.4)
+    RNG.uniform(0.05, 0.55, 7)
+    for _ in range(7):
+        RNG.uniform(0.04, 0.08)
     return x
 
 
