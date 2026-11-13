@@ -212,6 +212,21 @@
    },
    "weathering": 0
   },
+  "paver": {
+   "color": "#86716a",
+   "roughness": 0.95,
+   "metalness": 0,
+   "detail": {
+    "texture": "textures/gravel_albedo.jpg",
+    "normal": "textures/gravel_normal.jpg",
+    "roughness": "textures/gravel_rough.jpg",
+    "textureSize": 2.48,
+    "strength": 1,
+    "pattern": "grain",
+    "size": 2.48
+   },
+   "weathering": 0
+  },
   "dust": {
    "color": "#c98a5a",
    "roughness": 1,

@@ -89,6 +89,7 @@ materials:
   bedding: { color: "{colors.bedding}", roughness: 0.9, metalness: 0, weathering: 0, detail: { texture: "textures/suit_albedo.jpg", normal: "textures/suit_normal.jpg", roughness: "textures/suit_rough.jpg", textureSize: 0.4, strength: 0.7, pattern: grain, size: 0.4 } }
   glass: { color: "{colors.glass}", roughness: 0.08, metalness: 0, opacity: 0.15, weathering: 0.35 }
   rock: { color: "{colors.rock}", roughness: 0.95, metalness: 0, detail: { texture: "textures/rock_albedo.jpg", normal: "textures/rock_normal.jpg", roughness: "textures/rock_rough.jpg", textureSize: 1.83, strength: 1.0, pattern: grain, size: 1.83 }, weathering: 0 }
+  paver: { color: "{colors.rock}", roughness: 0.95, metalness: 0, detail: { texture: "textures/gravel_albedo.jpg", normal: "textures/gravel_normal.jpg", roughness: "textures/gravel_rough.jpg", textureSize: 2.48, strength: 1.0, pattern: grain, size: 2.48 }, weathering: 0 }
   dust: { color: "{colors.dust}", roughness: 1, metalness: 0, detail: { texture: "textures/dust_albedo.jpg", normal: "textures/dust_normal.jpg", roughness: "textures/dust_rough.jpg", textureSize: 3.1, strength: 1.0, pattern: grain, size: 3.1, gravel: { texture: "textures/gravel_albedo.jpg", normal: "textures/gravel_normal.jpg", textureSize: 2.48, share: 0.3 }, ripple: { normal: "textures/ripple_normal.jpg", textureSize: 12 } }, weathering: 0 }
   hazard: { color: "{colors.hazard}", roughness: 0.5, metalness: 0 }
   stripe: { color: "{colors.stripe}", roughness: 0.8, metalness: 0 }
@@ -182,6 +183,8 @@ fog, default colours, grey HUD boxes.
 - `accent`: the one cool colour. It marks the hero, things that are on or usable, and the HUD's
   interactive parts. Small share of any frame. `light` is its glowing form.
 - `rock` is the grey stone under the dust; `dust` is the red coat on flat ground. Steep faces show rock.
+- `paver` is sintered regolith laid flat (the build pads): rock's colour with the gravel photo, because the
+  cliff photo on a flat slab read as grey-blue blobs (approved by Ravindu on 13 Nov 2026).
 - `sky`, `horizon`, `ground`, `shade` feed the light rig and fog only. `shade` is the cool ambient that
   keeps shadows from going black or muddy.
 - `grow` is the plant light's magenta glow and nothing else; `romaine` is red leaves and roots only.

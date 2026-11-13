@@ -11,7 +11,7 @@ from base_kit import *  # noqa: E402,F403
 S, T, TILE, GAP = 6.0, 0.15, 2.0, 0.02
 reset()
 
-pavers = [bevel(box(f"paver{i}{j}", (TILE - GAP, TILE - GAP, T), ((i - 1) * TILE, (j - 1) * TILE, T / 2), mat("rock")), width=0.02, segments=1)
+pavers = [bevel(box(f"paver{i}{j}", (TILE - GAP, TILE - GAP, T), ((i - 1) * TILE, (j - 1) * TILE, T / 2), mat("paver")), width=0.02, segments=1)
           for i in range(3) for j in range(3)]
 pavers.append(box("bed", (S - 0.04, S - 0.04, T - 0.03), (0, 0, (T - 0.03) / 2), mat("trim")))  # fills the seams below the top
 join("pad", pavers)
