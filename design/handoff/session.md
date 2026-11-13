@@ -65,8 +65,8 @@ Everything is committed and pushed: game `wip/polish-stripes` (and `main` if the
   full screen by default, landscape on phones).
 - **Open, shadows (top for the next session):** (a) a step in straight shadow edges about 6 m ahead of the camera, by
   the hero: the first of the Gaming preset's 4 splits ends there (house_style `_fit_split`: split_1 = fit * 0.4); shots
-  `design/handoff/shots/shadow_step_*.png`. Blending splits drew shadows in the wrong place in Compatibility
-  (`blend_splits_wrong.png`), reverted. Next: push split_1 out past the hero, or use 2 splits with a bigger map.
+  `design/handoff/shots/shadow_step_*.png`. Splits now blend (`blend_splits_wrong.png` looked wrong only because the
+  panels had tilted); confirm the step is gone, else push split_1 out past the hero.
   (b) tall thin spikes from straight-edged objects' shadows (`shadow_spike.png`): not diagnosed.
 - **Bucket list (each several hours):** the rest of props and use spots (pouch, cut camera, eat/plant/harvest/sample/
   valve/radio/dish/repair/brush rows, split moving parts, turn/take/appear/glow verbs); sleep cine (drone time-lapse,
