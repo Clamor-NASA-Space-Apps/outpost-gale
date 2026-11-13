@@ -57,6 +57,17 @@ Everything is committed and pushed: game `wip/polish-stripes` (and `main` if the
 - **Next lanes** (`design/plans/next-lanes.md`, after Ravindu's playtest): B props and use spots (uses rows in
   world.json, turn/take/appear/glow verbs, split moving parts), C cine and sleep (sleep picker, drone time-lapse,
   wake indoors), then a gate. Hero clips and audio for them are already in.
+- **Since 07:00 (all on main or wip, see git log):** sleep picker card (ui gallery, not wired), first use spot (drink at
+  HAB 1's galley), code-review fixes (sunset cue only at dusk, storm cue once, perform/sit lock, charger guard), greenhouse
+  and shelter sites graded (ground came through their floors), `paver` pads (approved), shadow splits blended (a step in
+  straight shadow edges ~6 m ahead of the hero with 4 splits), Settings High = 4 splits, boot/fullscreen lane Q (see its
+  commit if it landed: boot scene with threaded load, preset switch behind the cover, silence until the cover lifts,
+  full screen by default, landscape on phones).
+- **Bucket list (each several hours):** the rest of props and use spots (pouch, cut camera, eat/plant/harvest/sample/
+  valve/radio/dish/repair/brush rows, split moving parts, turn/take/appear/glow verbs); sleep cine (drone time-lapse,
+  wake indoors at 06:30, wire the picker); ground speckle at low sun (SPECULAR 0 ruled out: albedo or shade() next);
+  dust devil cold compile (169 ms); shelter draw calls (212 looking through a wall); A16 profiling; APK; jumping and
+  climbing (contextual-traversal) if a mission needs high ground.
 - Source SDK 2013 files in `design/research/pages/interaction/` are left uncommitted on purpose (third-party licence).
 
 ## Earlier resume point (12 Nov 2026, about 22:00, stopped for an SSD swap to the i5 laptop: this one throttled again)
