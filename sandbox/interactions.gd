@@ -150,11 +150,16 @@ func setup(w: Node3D, p: Node3D, t: Dictionary, sheet: Dictionary) -> void:
 	# use spots: an empty node at the item's origin is the thing, the row's box its shape (the parts are welded into
 	# one mesh, next-lanes.md section 0 finding 3)
 	var uses: Dictionary = world.data.get("uses", {})
+	var still: Array[Node3D] = []  # props no step moves, shows or hides (a site's flag, a sample case)
+	var turned: Array[Node3D] = []  # parts of a still prop that a step moves (the case's lid)
 	for id: String in uses:
 		if id.begins_with("_") or not world.items.has(id):
 			continue
 		var item: Node3D = world.items[id]
 		var shared := {}  # a prop by name, for a later row of the item that names it with {}: one case for a site's pebbles
+		var stepped := []  # every prop name a step of any of the item's rows acts on
+		for row: Dictionary in uses[id]:
+			stepped.append_array(row.get("steps", []).map(func(s: Array) -> String: return s[2]))
 		for row: Dictionary in uses[id]:
 			var spot := Node3D.new()
 			spot.name = "use_" + row.kind
@@ -163,8 +168,14 @@ func setup(w: Node3D, p: Node3D, t: Dictionary, sheet: Dictionary) -> void:
 			it.row = row
 			var specs: Dictionary = row.get("props", {})
 			for name: String in specs:
-				if not (specs[name] as Dictionary).is_empty():
-					shared[name] = _prop(item, specs[name], shared, StringName(row.get("clip", "")))
+				var spec: Dictionary = specs[name]
+				if not spec.is_empty():
+					var fixed: bool = not (name in stepped or spec.has("part") or spec.get("hand", false) or spec.get("hidden", false) or name in [row.get("on"), row.get("needs")])
+					shared[name] = _prop(item, spec, shared, StringName(row.get("clip", "")), fixed)
+					if fixed:
+						still.append(shared[name])
+					elif spec.has("in"):
+						turned.append(shared[name])
 				it.props[name] = shared[name]
 			if row.has("on"):  # the box of a prop made here (a pebble on the ground)
 				var on: Node3D = it.props[row.on]
@@ -173,6 +184,14 @@ func setup(w: Node3D, p: Node3D, t: Dictionary, sheet: Dictionary) -> void:
 				var b: Array = row.box
 				it.shape = AABB(Vector3(b[0], b[1], b[2]), Vector3(b[3] - b[0], b[4] - b[1], b[5] - b[2]))
 			it.global_position = it.middle()
+	# a still prop is drawn with its ground cell (world.gd join()): a flag and a case cost no draw call of their own
+	var meshes: Array = []
+	for prop: Node3D in still:
+		meshes.append_array(prop.find_children("*", "MeshInstance3D", true, false).filter(func(mi: MeshInstance3D) -> bool:
+			return mi.mesh != null and not turned.any(func(part: Node3D) -> bool: return part == mi or part.is_ancestor_of(mi))))
+	world.join(meshes)
+	for part: Node3D in turned:
+		Forge.HouseStyle.apply(part, design, false)  # it moves, so its detail travels with it (world.gd restyle())
 	var layer := CanvasLayer.new()
 	add_child(layer)
 	prompt_label = Label.new()
@@ -507,7 +526,7 @@ func _socket(clip: StringName) -> Node3D:
 ## degrees, `ground` sets it on the terrain (`at`'s y over it), `hand` puts it in the glove, `hidden` until a step shows it, `solid` gives
 ## it a box to walk into, `layer` its
 ## render layers (2: the ground's family, a pebble).
-func _prop(item: Node3D, spec: Dictionary, made: Dictionary, clip: StringName) -> Node3D:
+func _prop(item: Node3D, spec: Dictionary, made: Dictionary, clip: StringName, still := false) -> Node3D:
 	if spec.has("part"):
 		var owner: Node3D = made[spec["in"]] if spec.has("in") else item
 		var part: Node3D = owner.find_child(spec.part, true, false)
@@ -519,14 +538,14 @@ func _prop(item: Node3D, spec: Dictionary, made: Dictionary, clip: StringName) -
 		n = (load(spec.model) as PackedScene).instantiate()
 		for b: Node in n.find_children("*", "CollisionObject3D", true, false):
 			b.free()  # a pebble's import body (-convcol) sat on layer 1: something to stand on in the tongs
-		Forge.HouseStyle.apply(n, design, false)
+		Forge.HouseStyle.apply(n, design, still)  # still: the cell's own world-space materials, so it merges into them
 		if spec.has("like"):
 			var slot: Node = item.find_child(spec.like, true, false)
 			k = (slot.get_child(0) as Node3D).scale.x if slot and slot.get_child_count() else k
 	else:
 		n = Node3D.new()
 		for m: Dictionary in spec.meshes:
-			n.add_child(_mesh(m, bool(spec.get("clean", false))))
+			n.add_child(_mesh(m, bool(spec.get("clean", false)), still))
 	# placed in the item's space but kept out of its subtree: a case on the ground is not one of the item's feet,
 	# and the item's merge and checks see only its own model
 	var a: Array = spec.get("at", [0, 0, 0])
@@ -541,9 +560,17 @@ func _prop(item: Node3D, spec: Dictionary, made: Dictionary, clip: StringName) -
 	if spec.get("ground", false):
 		var g := n.global_position
 		n.global_position.y = world.height_at(g.x, g.z) + float(a[1])  # `at`'s y: how far over the ground
+	var pieces := n.get_children().filter(func(c: Node) -> bool: return c is MeshInstance3D)
+	if not still and pieces.size() > 1 and not spec.has("model"):
+		# a prop that moves as one (the valve wheel) is drawn as one mesh per material, its pieces kept hidden
+		world._merge(pieces, n)
+		for mi: MeshInstance3D in pieces:
+			mi.visible = false
+	# on the ground, as world.gd _item(): each shadow split draws a caster again, and a pebble's shadow is a few pixels
+	var low: bool = spec.get("ground", false) and _drawn(n).size.y * k < float(world.data.shadow_min)
 	for mi: MeshInstance3D in n.find_children("*", "MeshInstance3D", true, false):
 		mi.layers = int(spec.get("layer", 1))
-		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF if spec.get("hand", false) else mi.cast_shadow
+		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF if spec.get("hand", false) or (low and not still) else mi.cast_shadow
 	if spec.get("solid", false):  # walked into, not through: a box on the thin layer (CONTRACTS.md collision layers)
 		var body := StaticBody3D.new()
 		body.collision_layer = world.THIN
@@ -560,7 +587,7 @@ func _prop(item: Node3D, spec: Dictionary, made: Dictionary, clip: StringName) -
 	return n
 
 
-func _mesh(m: Dictionary, clean: bool) -> MeshInstance3D:
+func _mesh(m: Dictionary, clean: bool, still: bool) -> MeshInstance3D:
 	var mi := MeshInstance3D.new()
 	var at: Array = m.get("at", [0, 0, 0])
 	mi.position = Vector3(at[0], at[1], at[2])
@@ -587,14 +614,14 @@ func _mesh(m: Dictionary, clean: bool) -> MeshInstance3D:
 			var y := (p1 - p0).normalized()
 			var x := y.cross(Vector3.UP if absf(y.y) < 0.9 else Vector3.RIGHT).normalized()
 			mi.transform = Transform3D(Basis(x, y, x.cross(y)), (p0 + p1) / 2.0)
-			return _role(mi, m, clean)
+			return _role(mi, m, clean, still)
 	if m.has("rot"):
 		mi.rotation_degrees = Vector3(m.rot[0], m.rot[1], m.rot[2])
-	return _role(mi, m, clean)
+	return _role(mi, m, clean, still)
 
 
-func _role(mi: MeshInstance3D, m: Dictionary, clean: bool) -> MeshInstance3D:
-	mi.material_override = Forge.HouseStyle.role(design, m.role, false, clean)
+func _role(mi: MeshInstance3D, m: Dictionary, clean: bool, still: bool) -> MeshInstance3D:
+	mi.material_override = Forge.HouseStyle.role(design, m.role, still, clean)
 	return mi
 
 

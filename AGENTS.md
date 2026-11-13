@@ -75,3 +75,6 @@ Its own repo. Commits signed off (`git commit -s`), prefixed by area, ending wit
 - The look runs on `world/sky_clock.gd`: the hour moves in tests, so a test that needs a sky jumps the clock
   (`game._sky(i)`, `clock.jump()`) and pins it if it must hold; tool runs pin it themselves. A jump re-aims the
   trackers, and their servo sounds keep the audio busy for a second: wait before testing a quiet moment (life_test).
+- `xvfb-run godot ...` by hand on this Wayland desktop still opens on the real screen (Godot prefers Wayland):
+  pass `--display-driver x11`, as tools/godot.mjs does. Under xvfb the sandbox draws a few frames a second
+  (software GL), so tests/draw_calls.gd takes about 15 min for a full breakdown; `deep=none` gives the totals only.

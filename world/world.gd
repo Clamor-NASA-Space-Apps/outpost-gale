@@ -540,6 +540,11 @@ func _item(it: Dictionary, design: Dictionary) -> Node3D:
 	var moving: Array = []
 	for p: Node3D in parts:
 		moving.append_array(([p] if p is MeshInstance3D else []) + p.find_children("*", "MeshInstance3D", true, false))
+	for mi: MeshInstance3D in moving:
+		if _swept(mi):
+			# a door's room side: indoors, so no shadow, as _merge() gives the still swept faces; the door's outer
+			# leaf casts the same outline (each shadow split draws a caster again)
+			mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	if kind == "static":
 		_static_parts.append_array(moving)  # every array's panels together, after all items (build())
 	else:
@@ -795,8 +800,20 @@ func _still(n: Node3D) -> Array:
 	var parts: Array[Node3D] = n.get_meta("parts")
 	return n.find_children("*", "MeshInstance3D", true, false).filter(func(mi: MeshInstance3D) -> bool:
 		# a flashing light keeps its own mesh, so its material can change without the rest of the cell; so does a
-		# cable's gland box, which _glands() sets onto the ground after the item rests
-		return mi.mesh != null and mi.skin == null and not _in_part(mi, parts) and not _blink.search(mi.name) and not _gland(mi))
+		# cable's gland box, which _glands() sets onto the ground after the item rests. A mover's port (the rover's
+		# charge socket, on its body) is not a box on the ground: its body merged, 9 draw calls fewer at the base
+		return mi.mesh != null and mi.skin == null and not _in_part(mi, parts) and not _blink.search(mi.name) and not (_gland(mi) and not n is CollisionObject3D))
+
+
+## Every face of `mi` kept swept (DESIGN.md weathering.clean): an indoor or underfoot surface.
+static func _swept(mi: MeshInstance3D) -> bool:
+	if mi.mesh == null or mi.mesh.get_surface_count() == 0:
+		return false
+	for i in mi.mesh.get_surface_count():
+		var m := mi.get_active_material(i)
+		if m == null or not m.get_meta("clean", false):
+			return false
+	return true
 
 
 ## A cable's gland box (forge/base_kit.py port()): the mesh that holds a `port*` empty.
@@ -825,6 +842,33 @@ func _merge_cells() -> void:
 		for mi: MeshInstance3D in cells[key]:
 			mi.visible = false
 		_cells.append(holder)
+
+
+## Still meshes made after the build (a use spot's flag and sample case, sandbox/interactions.gd) merged into the
+## ground cell each stands in: each cell is merged again with them, so it keeps one draw call per material. Each
+## mesh stays, hidden, for its collision and its checks.
+func join(meshes: Array) -> void:
+	var cells: Dictionary = {}  # Vector2i -> meshes
+	for mi: MeshInstance3D in meshes:
+		var p := mi.global_position
+		cells.get_or_add(Vector2i(floori(p.x / CELL + 0.5), floori(p.z / CELL + 0.5)), []).append(mi)
+	for key: Vector2i in cells:
+		var holder: Node3D = get_node_or_null("cell_%d_%d" % [key.x, key.y])
+		if holder == null:
+			holder = Node3D.new()
+			holder.name = "cell_%d_%d" % [key.x, key.y]
+			add_child(holder)
+			_cells.append(holder)
+		var old: Array = holder.get_children().filter(func(c: Node) -> bool: return c is MeshInstance3D)
+		for mi: MeshInstance3D in old:
+			mi.name = "old_" + mi.name  # the new ones take the names restyle() and the checks look for
+		_merge(old + cells[key], holder)
+		for mi: MeshInstance3D in old:
+			mi.free()
+		for mi: MeshInstance3D in cells[key]:
+			mi.visible = false
+		for mi: MeshInstance3D in holder.find_children("merged_swept", "MeshInstance3D", false, false):
+			mi.layers = ROOMS  # as restyle() set the cell's first one
 
 
 ## Where a lamp's light sits: the middle of its `light` role parts, else the top of the model.
@@ -909,6 +953,8 @@ func _lay_cables(design: Dictionary) -> void:
 func _glands(h: float) -> void:
 	var boxes: Array = []
 	for n: Node3D in items.values():
+		if n is CollisionObject3D:
+			continue  # a mover's port rides with it (_still())
 		for mi: MeshInstance3D in n.find_children("*", "MeshInstance3D", true, false):
 			if _gland(mi):
 				var port: Node3D = mi.get_children().filter(func(c: Node) -> bool: return str(c.name).begins_with("port"))[0]
