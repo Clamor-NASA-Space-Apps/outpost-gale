@@ -219,6 +219,9 @@ func play() -> bool:
 		await _beat(id, func() -> void: beats.notify("dismissed"))
 	check(not clock.pinned, "the clock runs again: the sun rises and the wings turn")
 	check(offered == ["sol1_power"], "the first choice is offered after its lead-in (%s)" % [offered])
+	# the sandbox's own handler of a click on the card runs clean (a string `_note` among the offers broke it: a script
+	# error, and the opening never got past the choice)
+	game.hud.chosen.emit(game.offers.sol1_power.title, 0)
 	beats.notify("chose:sol1_power")  # the rules' answer (lane S)
 	await _beat("choice")
 

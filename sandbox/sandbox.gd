@@ -412,6 +412,7 @@ func _wire() -> void:
 	interactions.used.connect(beats.used)
 	beats.line.connect(hud.say)
 	offers = JSON.parse_string(FileAccess.get_file_as_string("res://data/beats.json")).get("offers", {})
+	offers.erase("_note")  # a string: the chosen handler below called .get() on it and a click on a choice did nothing
 	beats.choice_offered.connect(func(id: String) -> void:
 		hud.offer_choice(offers.get(id, {}).get("title", id), offers.get(id, {}).get("options", [])))
 	hud.chosen.connect(func(title: String, index: int) -> void:
