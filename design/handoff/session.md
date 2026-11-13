@@ -32,7 +32,34 @@ Everything committed is pushed: game repo `main` on origin, factory `tooling/` b
   solar trackers, dish nod, status lights, contact shadow + dust rim, devil visible). Factory: halo/twilight tokens,
   `keep` kit role, clean quit with sound. All 8 suites 0 failed, feel-probe 0 failed (my own runs).
 
-## RESUME HERE (12 Nov 2026, about 22:00, stopped for an SSD swap to the i5 laptop: this one throttled again)
+## RESUME HERE (13 Nov 2026, about 07:15; power cut 08:30 to 17:30 at Ravindu's)
+Everything is committed and pushed: game `wip/polish-stripes` (and `main` if the merge line below says so), factory
+`godot` d8153ec. Builds of 737e67a (Windows, Linux, web zip) are in `~/outpost-gale-builds` (served on :8000).
+- **Merged tonight** (lanes C, F, G, H, I, J, K, L, M, plus audio D and hero clips A from `design/plans/next-lanes.md`):
+  sky clock (20 min sol, continuous sun, lamps and work lights by sun elevation, per-panel dust shed by a tilt),
+  new layout (reactor, lander, old arrays gone), cables end in gland boxes on every device, rover charging post,
+  pads graded level (Ravindu approved) and drivable, PIP tracks soft, rover lights at night with crew aboard,
+  Mont Mercou foot tapered, toilet sign, greenhouse rack feet and grow-light feeds, storm shelter interior,
+  13 hero use clips with `player.perform()`/`sit()`, one SOUNDS table, dawn/sleep/storm cues, bed phrases,
+  loading shell and splash (new layout), Gaming preset 4 shadow splits (Ravindu approved).
+- **Gate (13 Nov ~07:00):** every suite 0 failed (day_test needs `--fixed-fps 60`, as its header says; the gate first
+  ran it without and got 10 false failures); style-check 4 DESIGN files + 34 models OK; check_godot_project 0 errors.
+  Sweep: see the merge commit. Not run tonight: web-check, feel-probe on the full sheet, `/code-review medium`.
+- **Ravindu decided (13 Nov ~07:00):** Mount Sharp stays as the real sun lights it (front-lit at noon, pale); toilet
+  is the curtain only, nothing simulated; sleep follows real practice: cards "Night" and "Nap 20 min", a night ends at
+  a fixed 06:30 wake indoors (factcheck rows 187 to 208, next-lanes.md section 3).
+- **Open, for Ravindu:**
+  1. A `paver` role for the pads (rock colour with the dust or gravel photo): the cliff photo reads wrong lying flat.
+  2. Listen: curtain, rover hatch, dawn/sleep/storm cues, pour/sip/crinkle/leaf (synthesised, never heard).
+  3. Ground speckle at low sun: lane F ruled out normals and shadows; next is SPECULAR 0 on the ground photos.
+  4. Dust devil first whirl: a 169 ms compile left on a cold cache (the 98 ms preprocess is fixed).
+  5. Draw calls inside the shelter up to 212 (looking west through the wall at the base).
+- **Next lanes** (`design/plans/next-lanes.md`, after Ravindu's playtest): B props and use spots (uses rows in
+  world.json, turn/take/appear/glow verbs, split moving parts), C cine and sleep (sleep picker, drone time-lapse,
+  wake indoors), then a gate. Hero clips and audio for them are already in.
+- Source SDK 2013 files in `design/research/pages/interaction/` are left uncommitted on purpose (third-party licence).
+
+## Earlier resume point (12 Nov 2026, about 22:00, stopped for an SSD swap to the i5 laptop: this one throttled again)
 Check `lscpu` first (memory laptop-cpu-budget): on the i5-1135G7 agents may use all 8 threads under nice, up to 3 lanes.
 - `main` (game, d91b720) and `godot` (factory) are pushed and fully checked: base for 2 crew, more life, night grit,
   probe redraw, map boundary + safety net, presets, stripes. Factory since then: probe redraw in warm(), tests fail on
