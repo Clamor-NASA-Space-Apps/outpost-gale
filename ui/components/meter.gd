@@ -20,6 +20,7 @@ var bar := Control.new()
 var tile_icon: Hud.Icon
 var num: Label
 var gain: Label  # a sudden rise in what feeds the meter ("+0.7 kW"), fading beside the number
+var _bump: Tween
 
 
 func _ready() -> void:
@@ -35,6 +36,7 @@ func _ready() -> void:
 	gain = Hud.label("", "HudNum")
 	gain.add_theme_color_override("font_color", Hud.color("light"))
 	gain.modulate.a = 0.0
+	gain.visible = false  # a faded gain still took its width from the bar (14 Nov playtest: "the power bar gets shorter")
 	for k: Control in [tile_icon, bar, num, gain]:
 		add_child(k)
 	Hud.nudge(self)  # the icon on the number's capitals
@@ -52,10 +54,14 @@ func set_icon(n: String) -> void:
 ## A gain the battery percent is too slow to show (a cleaned wing feeds a 140 kWh battery): the kid sees it now.
 func bump(text: String) -> void:
 	gain.text = text
-	var t := create_tween()
-	t.tween_property(gain, "modulate:a", 1.0, 0.2)
-	t.tween_interval(2.5)
-	t.tween_property(gain, "modulate:a", 0.0, 0.6)
+	gain.visible = true
+	if _bump:
+		_bump.kill()  # its hide at the end would cut this one short
+	_bump = create_tween()
+	_bump.tween_property(gain, "modulate:a", 1.0, 0.2)
+	_bump.tween_interval(2.5)
+	_bump.tween_property(gain, "modulate:a", 0.0, 0.6)
+	_bump.tween_callback(gain.hide)
 
 
 func low() -> bool:
