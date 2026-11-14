@@ -57,9 +57,6 @@ const VOLUMES := {"master": "All sound", "music": "Music", "effects": "Suit and 
 # "" until first asked: user://settings.cfg in the game, "-" (none) in a test or tool run, so a player's saved
 # choices never change what a check measures. A test that checks saving sets its own file first.
 static var file := ""
-# ponytail: event playtests (14 Nov) hand the game from player to player, so every launch starts from the defaults;
-# choices made in play still hold until the game closes. False keeps a device's choices between launches.
-const FRESH_START := true
 
 var game: Node
 var draft := {}  # the fine-tune choices as knob overrides, put on by apply()
@@ -95,8 +92,6 @@ static func _path() -> String:
 		var tool := Engine.get_main_loop().get_script() != null or Array(OS.get_cmdline_user_args()).any(
 			func(a: String) -> bool: return a.begins_with("--forge-job="))
 		file = "-" if tool else "user://settings.cfg"
-		if file != "-" and FRESH_START:
-			DirAccess.remove_absolute(file)
 	return file
 
 
