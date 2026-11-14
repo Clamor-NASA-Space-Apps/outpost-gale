@@ -299,7 +299,7 @@ func _pick() -> Interactable:
 		# a spot on a bigger usable thing (clean a panel row that also tilts) counts `favour_deg` nearer the aim, or
 		# the row's box, round it on every side, would always take the prompt from it
 		var a := (aim.angle_to(to) if to.length() > 0.01 else 0.0) - (stick if it == target else 0.0) - deg_to_rad(float(it.row.get("favour_deg", 0.0)))
-		# two spots on one line from the hero (the suit rack over the bench) part by where the camera looks: up at
+		# two spots on one line from the hero (the suit rack over the bench, an exact tie) part by where the camera looks: up at
 		# the rack picks the rack, down at the bench the bench (a tie went by float noise, 14 Nov)
 		if a < half and (a < best_a - TIE or (a < best_a + TIE and _looked(it) < _looked(best))):
 			best = it
@@ -307,7 +307,7 @@ func _pick() -> Interactable:
 	return best
 
 
-const TIE := 0.01  # rad (about half a degree): spots this near the same aim are told apart by the camera's view
+const TIE := 0.001  # rad (0.06 deg): a real tie (one spot over another), not two spots side by side, goes by the camera's view
 
 
 ## How far `it` lies from where the play camera looks, rad.
