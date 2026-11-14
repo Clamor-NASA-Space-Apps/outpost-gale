@@ -23,6 +23,11 @@
   "stick_deg_per_s": 140,
   "vehicle_distance": 9.0,
   "vehicle_pivot_height": 2.4,
+  "vehicle_pitch_min": -50,
+  "vehicle_pitch_max": 10,
+  "vehicle_keep": 0.4,
+  "vehicle_clear": 0.4,
+  "note_vehicle": "the driving camera (follow_cam.gd, tests/camera_test.gd; 15 Nov playtest: 'I can move the camera under the rover itself'). The pivot, 2.4 m up, is inside the rover's hull (its roof is at 3 m) and the hull is left out of the camera's casts, so whatever shortened the arm pulled the lens into the rover: at the walker's pitch_max, 60, the arm met the ground 1.4 m from the pivot, between the wheels. vehicle_pitch_min and vehicle_pitch_max: degrees the view may look down and up while driving, a chase camera's range: at 10 up the lens is still about 1 m over level ground, 8 m behind, and the horizon sits low in the frame; steeper and the arm is in the ground before it is clear of the rover. vehicle_keep: m the lens stays outside the vehicle's drawn box, more than the body's spring travel (rover.travel) so the swaying hull never reaches the near plane. vehicle_clear: m, the arm's sphere behind a vehicle (camera.clear on foot), so the lens rests that far over the ground it meets. All art direction",
   "rise_rate": 3.0,
   "lead_time": 0.45,
   "lead_rate": 1.2,
@@ -226,7 +231,7 @@
  "rover": {
   "note": "sandbox/rover.gd, art direction (the physical rows are reality.json rover.*). travel: m each wheel's suspension takes up either way before the body tilts; wheel_shade and body_shade: [radius m, strength 0 to 1] of the moving contact shadow under each wheel pair and under the body's two halves (world.touch(), shaded like data/world.json grounding)",
   "autopilot": {
-   "note": "sandbox/rover_pilot.gd, all art direction (handling, no physical claim; top speed, turn rate and brakes stay reality.json rover.*, through rover.gd drive()). cell_m: the planning grid's cell over the patch; clear_m: a cell is closed when anything taller than the rover climbs stands this near its middle (half the rover's 2.3 m width and a half metre); near_cost: how many times dearer the cells next to closed ones are, so the way keeps a turn's room (the rover's corners swing 2.6 m out) wherever there is room; pass_m: a corner of the way counts as passed this near; arrive_m: it stops this near the mark (under the rover's 4.48 m length); reach_m: a mark cleared with the rover this near is the HUD's own reach (ui/game_hud.gd MARK_REACH_M, 4 m from the hero, who sits 1 m ahead of the rover's middle), an arrival and not the kid taking the mark away; steer_deg: the heading error that asks full lock; slow_deg: full throttle below the first error, none (a turn on the spot) from the second; stall_s: this long without getting nearer or turning and it plans again once, then hands the wheel back",
+   "note": "sandbox/rover_pilot.gd, all art direction (handling, no physical claim; top speed, turn rate and brakes stay reality.json rover.*, through rover.gd drive()). cell_m: the planning grid's cell over the patch; clear_m: a cell is closed when anything taller than the rover climbs stands this near its middle (half the rover's 2.3 m width and a half metre); near_cost: how many times dearer the cells next to closed ones are, so the way keeps a turn's room (the rover's corners swing 2.6 m out) wherever there is room; pass_m: a corner of the way counts as passed this near; arrive_m: it stops this near the mark (under the rover's 4.48 m length); reach_m: a mark cleared with the rover this near is the HUD's own reach (ui/game_hud.gd MARK_REACH_M, 4 m from the hero, who sits 1 m ahead of the rover's middle), an arrival and not the kid taking the mark away; steer_deg: the heading error that asks full lock; slow_deg: full throttle below the first error, none (a turn on the spot) from the second; stall_s: this long without getting nearer or turning and it plans again once, then hands the wheel back; back: the share of the throttle it backs out with when the way lies behind (a three-point turn), and creeps straight on with where the body has no room to swing its nose; turn_look_deg: the turns ahead (degrees) at which the hull is tried against what stands round it before the nose swings that way",
    "cell_m": 2.0,
    "clear_m": 1.7,
    "near_cost": 3.0,
@@ -235,7 +240,9 @@
    "reach_m": 6.0,
    "steer_deg": 12,
    "slow_deg": [15, 60],
-   "stall_s": 3.0
+   "stall_s": 3.0,
+   "back": 0.5,
+   "turn_look_deg": [8, 16]
   },
   "travel": 0.3,
   "dust_power": 2,

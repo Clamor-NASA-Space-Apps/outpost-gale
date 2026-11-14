@@ -9,6 +9,12 @@ extends "res://addons/forge/test.gd"
 ## POP is not asked while a pitch key is held: looking up swings the arm down onto the ground, and the lens then
 ## slides in along it as fast as the key turns it (h / sin(pitch): 0.3 m a frame at 20 degrees), which is the
 ## player's own move, in one glide; STEP still holds there.
+## Then the view swept through everything a player can reach, yaw all the way round in steps of 15 degrees at each
+## pitch (Ravindu, 15 Nov: "I can move the camera under the rover itself ... every single object, to pass through and
+## see their internals"): on foot, the hero stood close against each thing of AGAINST, the lens is never inside or
+## behind a solid; boarded, once the camera has settled, the lens is outside the rover's drawn box grown by OUT, ABOVE
+## over the ground under it, and every value of the rig is a real number.
+## `-- foot` or `-- drive` after the command runs only that sweep (`-- foot PIP "a cargo bag"`: only those things).
 
 const REST := 0.15  # m from the lens to every solid once it has settled: tuning.json camera.clear, less a cast's skin
 const POP := 0.2  # m the lens may come in or go out along its arm in a frame: feel_rate's 0.125, and 7 cm of a cut
@@ -26,6 +32,27 @@ const SPOTS := [
 	["by HAB 1's wall and the oxygen maker", "", Vector3(-2.6, 0.0, 4.3), 0.0],
 	["by the lamp post east of HAB 1", "", Vector3(5.0, 0.0, 3.6), 45.0],
 ]
+
+# [name, item, the way the hero stands off its middle (the item's space)]: pressed against what a ray from there meets
+const AGAINST := [
+	["the rover's side", "rover", Vector3(1, 0, 0)],
+	["the rover's back", "rover", Vector3(0, 0, 1)],
+	["the rover's corner", "rover", Vector3(1, 0, -1)],
+	["HAB 1's wall", "hab1", Vector3(1, 0, 0.4)],
+	["HAB 1's tanks", "hab1", Vector3(0, 0, 1)],
+	["the greenhouse's glass", "greenhouse", Vector3(1, 0, 0.3)],
+	["the storm shelter", "shelter", Vector3(-1, 0, 0)],
+	["a solar row", "wing1", Vector3(0, 0, 1)],
+	["the oxygen maker", "oxygen", Vector3(1, 0, 0)],
+	["the battery bank", "battery", Vector3(0, 0, -1)],
+	["PIP", "pip", Vector3(1, 0, 0)],
+	["a cargo bag", "bag1", Vector3(0, 0, 1)],
+	["a lamp post", "lamp1", Vector3(1, 0, 0)],
+	["the rover's charger", "charger", Vector3(1, 0, 0)],
+]
+const OUT := 0.2  # m the lens keeps from the rover's drawn box while it is driven
+const ABOVE := 0.3  # m the lens keeps over the ground then
+const TURN := 15  # degrees between the sweep's poses
 
 var game: Node3D
 var player: Node3D
@@ -51,13 +78,26 @@ func play() -> bool:
 	space = game.world.get_world_3d().direct_space_state
 	ball.shape = SphereShape3D.new()
 	ball.exclude = cam.excluded
+	game.pip.disable_mode = CollisionObject3D.DISABLE_MODE_KEEP_ACTIVE  # stood still, and still a solid to stand against
 	game.pip.process_mode = Node.PROCESS_MODE_DISABLED  # it wanders: a robot driving through the test is not the camera's doing
 	for it: Node in get_nodes_in_group("interactable"):
 		if it.kind == "door" and not it.open:
 			game.interactions.use(it)  # the doorways open, as in play
 	await frames(60)
+	var only := OS.get_cmdline_user_args()
+	if "foot" in only or "drive" in only:
+		if "foot" in only:
+			for a: Array in AGAINST:
+				if only.size() == 1 or a[0] in only:
+					await against(a)
+		if "drive" in only:
+			await boarded()
+		return true
 	for s: Array in SPOTS:
 		await spot(s)
+	for a: Array in AGAINST:
+		await against(a)
+	await boarded()
 	# what the feelers cost a physics tick by the lamp post, to weigh against the frame budget (skills/frame-budget):
 	# printed, not checked
 	if cam.has_method("_feelers"):
@@ -102,6 +142,148 @@ func spot(s: Array) -> void:
 	check(m.thin == 0, "%s: the near plane never reaches a thin thing (%d frames: %s)" % [s[0], m.thin, m.thin_in])
 	check(m.pop <= POP, "%s: the lens never pops along its arm (%.3f m in a frame, at most %.2f; %s)" % [s[0], m.pop, POP, m.pop_at])
 	check(m.step <= STEP, "%s: the lens never jumps (%.3f m in a frame, at most %.2f)" % [s[0], m.step, STEP])
+
+
+## The hero stood close against a thing, the view swept through its whole range: the lens is never inside or behind
+## a solid, never in a thin thing, and the rig stays real numbers.
+func against(a: Array) -> void:
+	var item: Node3D = game.world.items[a[1]]
+	var dir: Vector3 = (item.global_basis * (a[2] as Vector3) * Vector3(1, 0, 1)).normalized()
+	# walked up to it: a body as wide and tall as the hero comes in from 12 m out until it meets the thing
+	var body := CylinderShape3D.new()
+	body.radius = player.breadth / 2.0
+	body.height = player.model.bounds.end.y - player.step
+	var q := PhysicsShapeQueryParameters3D.new()
+	q.shape = body
+	q.collision_mask = cam.PROPS
+	q.exclude = [player.body.get_rid()]
+	var c := item.global_position
+	var up: float = game.world.height_at(c.x, c.z) + player.step + body.height / 2.0
+	var at := Vector3.INF
+	for i in 6:  # past what stands between
+		q.transform = Transform3D(Basis(), Vector3(c.x, up, c.z) + dir * 12.0)
+		q.motion = -dir * 12.0
+		var stop := q.transform.origin + q.motion * space.cast_motion(q)[0]
+		q.transform = Transform3D(Basis(), stop - dir * 0.1)
+		q.motion = Vector3.ZERO
+		var met := space.intersect_shape(q, 8)
+		if met.any(func(h: Dictionary) -> bool: return h.collider == item or item.is_ancestor_of(h.collider)):
+			at = stop + dir * 0.03
+			break
+		if met.is_empty():
+			break
+		q.exclude += met.map(func(h: Dictionary) -> RID: return h.rid)
+	# a thing lower than a step (a bag, PIP) or thinner than the body's skin (a post): where a ray at the shin meets it
+	for h: float in ([0.4, 0.15, 0.9] if at == Vector3.INF else []):
+		var to := Vector3(c.x, game.world.height_at(c.x, c.z) + h, c.z)
+		var skip: Array[RID] = [player.body.get_rid()]
+		for i in 6:
+			var hit := space.intersect_ray(PhysicsRayQueryParameters3D.create(to + dir * 12.0, to, cam.PROPS, skip))
+			if hit.is_empty():
+				break
+			if hit.collider == item or item.is_ancestor_of(hit.collider):
+				at = hit.position + dir * (body.radius + 0.03)
+				break
+			skip.append(hit.rid)
+		if at != Vector3.INF:
+			break
+	if not check(at != Vector3.INF, "%s: something to stand against" % a[0]):
+		return
+	player.place(Vector3(at.x, game.world.height_at(at.x, at.z) + 0.05, at.z), rad_to_deg(atan2(-dir.x, dir.z)))
+	await frames(40)
+	if not check(player.inside().is_empty(), "%s: the hero stands beside it, in nothing (%s)" % [a[0], player.inside()]):
+		return
+	var r := await sweep(func() -> String:
+		if cam.inside():
+			return "in or behind a solid"
+		ball.transform = Transform3D(Basis(), cam.lens.global_position)
+		ball.shape.radius = cam._near_radius() - cam.arm.margin
+		ball.collision_mask = cam.THIN
+		var hit := space.intersect_shape(ball, 1)
+		return "in the thin " + _name(hit[0].collider) if hit and hit[0].collider.name != &"feet" else "", 12, false)
+	var p: Vector3 = player.body.global_position
+	print("  against %-26s hero %.1f, %.1f: %d poses, %d frames wrong (%s)" % [a[0], p.x, p.z, r.poses, r.bad, r.first])
+	check(r.bad == 0, "%s: with the view swept all round, the lens is never inside or behind a solid (%d frames: %s)" % [a[0], r.bad, r.first])
+	check(r.nan == 0, "%s: every value of the rig is a real number (%d frames were not)" % [a[0], r.nan])
+
+
+## Boarded, where the rover is parked and then backed up to HAB 1's wall (a solid a step behind it): through the whole
+## pitch range the driving camera allows and all the way round, the settled lens is outside the rover's drawn box grown
+## by OUT and ABOVE over the ground under it. And with the arm cut to nothing, as the worst obstacle would cut it, the
+## lens is still outside that box on the next frame. A snap (a teleport) cuts its own arm before a frame is drawn.
+func boarded() -> void:
+	var rover: Node3D = game.world.items["rover"]
+	var box := AABB()
+	for mi: MeshInstance3D in rover.find_children("*", "MeshInstance3D", true, false):
+		var b: AABB = rover.global_transform.affine_inverse() * mi.global_transform * mi.get_aabb()
+		box = box.merge(b) if box.has_volume() else b
+	var gap := func() -> float:
+		var l: Vector3 = rover.global_transform.affine_inverse() * cam.lens.global_position
+		return l.distance_to(l.clamp(box.position, box.end))
+	player.enter(rover)
+	for where: String in ["in its bay", "backed up to HAB 1"]:
+		if where != "in its bay":
+			# its back (+Z) half a metre from the west wall, as cine.gd moves it on a trip
+			var away: Vector3 = (game.world.items["hab1"] as Node3D).global_position + Vector3(-2.75 - box.end.z - 0.5, 0.0, 0.0)
+			rover.v = 0.0
+			rover.yaw = PI / 2.0
+			rover._plane = Vector3.INF
+			rover._apply(rover._pose(Vector3(away.x, 0.0, away.z), rover.yaw))
+			await frames(1)
+			cam.snap(rover.yaw)
+			# straight behind it stands HAB 1: the snap itself cuts the arm, before any frame is drawn
+			check(not cam.inside() and gap.call() >= OUT, "boarded %s: snapped behind it, the lens is in no solid at once (dist %.2f)" % [where, cam.dist])
+		await frames(60)
+		var r := await sweep(func() -> String:
+			var lens: Vector3 = cam.lens.global_position
+			var over: float = lens.y - game.world.height_at(lens.x, lens.z)
+			if gap.call() < OUT:
+				return "%.2f m from the rover's box, at %s in its space" % [gap.call(), (rover.global_transform.affine_inverse() * lens).snappedf(0.01)]
+			return "%.2f m over the ground" % over if over < ABOVE else "", 45, true)
+		print("  boarded %s: %d poses, pitch %.0f to %.0f, %d wrong (%s)" % [where, r.poses, r.lo, r.hi, r.bad, r.first])
+		check(r.bad == 0, "boarded %s: settled, the lens is %.1f m outside the rover's box and %.1f m over the ground (%d of %d poses were not: %s)" % [where, OUT, ABOVE, r.bad, r.poses, r.first])
+		check(r.nan == 0, "boarded %s: every value of the rig is a real number (%d frames were not)" % [where, r.nan])
+		var cut := 0
+		for turn in range(0, 360, 45):
+			cam.yaw = rover.yaw + deg_to_rad(turn)
+			await frames(30)
+			cam.dist = 0.0
+			await frames(1)
+			cut += int(gap.call() < OUT)
+		check(cut == 0, "boarded %s: with the arm cut to nothing the lens is still outside the rover's box (%d of 8 headings were not)" % [where, cut])
+	player.exit()
+	await frames(10)
+
+
+## The view through every pose a player can reach: each pitch from the lowest to the highest the camera allows now,
+## and at each the yaw all the way round, `hold` frames a pose. `wrong` says what is wrong with the lens ("" for
+## nothing), asked on every frame, or with `settled` only on a pose's last one.
+func sweep(wrong: Callable, hold: int, settled: bool) -> Dictionary:
+	var r := {"poses": 0, "bad": 0, "first": "", "nan": 0}
+	cam.look(0.0, 1000.0)
+	r.lo = roundf(rad_to_deg(cam.pitch))
+	cam.look(0.0, -1000.0)
+	r.hi = roundf(rad_to_deg(cam.pitch))
+	var yaw0: float = cam.yaw
+	var pitches: Array = range(int(r.lo), int(r.hi), TURN) + [int(r.hi)]
+	for pitch: int in pitches:
+		for turn in range(0, 360, TURN):
+			cam.yaw = yaw0 + deg_to_rad(turn)
+			cam.pitch = deg_to_rad(pitch)
+			r.poses += 1
+			for f in hold:
+				await frames(1)
+				var real: bool = [cam.dist, cam.yaw, cam.pitch, cam.lift, cam.slope, cam.late].all(is_finite) and not is_nan(cam.soft) and not is_nan(cam.tail) \
+					and cam.global_position.is_finite() and cam.lens.global_position.is_finite() and cam.lens.global_basis.is_finite()
+				r.nan += int(not real)
+				if settled and f < hold - 1:
+					continue
+				var what: String = wrong.call() if real else "not a number"
+				if what != "":
+					r.bad += 1
+					if r.first == "":
+						r.first = "%s, yaw %d, pitch %d, dist %.2f" % [what, turn, pitch, cam.dist]
+	return r
 
 
 ## `keys` held for `n` frames, the camera read on each.

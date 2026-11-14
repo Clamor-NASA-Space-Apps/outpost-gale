@@ -6,6 +6,9 @@ extends Node3D
 ## eases out. A wall behind the target lifts the view over it before the target fades.
 ## In a room (the owner's `room`) the lens eases into the hero's own eye, first person, and back out at the door
 ## (Ravindu, 15 Nov: "first person inside the greenhouse, hab and the shelter like we did in older builds").
+## Following a vehicle (`keep`, its drawn box) the pivot is inside its hull and the hull is left out of the casts, so
+## the lens stands no nearer than where the arm's line leaves that box, the pitch has a chase camera's range, and the
+## arm's sphere is wide enough to keep the lens off the ground.
 ## Every distance and time is a row of tuning.json `camera`.
 
 const SOLIDS := 1 | 2 | 16 | 64  # CONTRACTS.md: ground, statics, vehicles, carriables; thin (4) only where the lens stands
@@ -47,6 +50,8 @@ var tail := INF  # m the arm's own line is free of the thin things the lens woul
 var late := 0.0  # m of the arm's sphere the near plane does not need: a cut is eased over that last bit
 var _reach := SphereShape3D.new()  # all the feelers can touch, asked once before they are cast
 var show_body := false  # a cut is on: another camera films the body, so it is drawn even in first person
+var keep := AABB()  # a vehicle's drawn box in its own space (the owner's), none on foot: the lens stays out of it
+var out := 0.0  # m along the arm where its line leaves that box grown by vehicle_keep: the least the lens stands at
 
 
 func setup(tuning: Dictionary) -> void:
@@ -63,8 +68,9 @@ func setup(tuning: Dictionary) -> void:
 
 ## Follow `node`. `bodies` are left out of every cast (the hero, or the vehicle), `meshes` fade when the lens
 ## comes within the camera's fade range of `drawn`, the body's box in the node's space. `top_speed` (m/s, a
-## vehicle's) brings the lens lower, closer and looking further ahead as the real speed nears it.
-func follow_target(node: Node3D, bodies: Array[RID], meshes: Array[MeshInstance3D], dist_wanted: float, pivot_height: float, drawn := AABB(), top_speed := 0.0) -> void:
+## vehicle's) brings the lens lower, closer and looking further ahead as the real speed nears it. `hull` is a
+## vehicle's drawn box in its space: its bodies are left out of the casts, so the lens is kept out of it by this box.
+func follow_target(node: Node3D, bodies: Array[RID], meshes: Array[MeshInstance3D], dist_wanted: float, pivot_height: float, drawn := AABB(), top_speed := 0.0, hull := AABB()) -> void:
 	for r in excluded:
 		arm.remove_excluded_object(r)
 	excluded = bodies
@@ -76,6 +82,7 @@ func follow_target(node: Node3D, bodies: Array[RID], meshes: Array[MeshInstance3
 	distance = dist_wanted
 	height = pivot_height
 	fast = top_speed
+	keep = hull
 	snap(-node.global_rotation.y)
 
 
@@ -102,6 +109,16 @@ func snap(heading: float) -> void:
 	global_position = target.global_position + Vector3.UP * height
 	dist = _wanted()
 	rotation = Vector3(pitch, yaw, 0)
+	# cut now by what stands behind, not at the first physics step: a frame drawn before it showed the lens where
+	# the arm had not looked yet (inside HAB 1, snapped behind a rover parked against its wall)
+	var q := PhysicsShapeQueryParameters3D.new()
+	q.shape = arm.shape
+	q.collision_mask = arm.collision_mask
+	q.exclude = excluded
+	q.transform = Transform3D(Basis(), global_position)
+	q.motion = global_basis.z * dist
+	out = _leaves(global_basis.z) if keep.has_volume() else 0.0
+	dist = maxf(dist * get_world_3d().direct_space_state.cast_motion(q)[0], out)
 	lens.position = Vector3(0, 0, dist)
 	lens.rotation = Vector3.ZERO
 	if room:
@@ -111,11 +128,21 @@ func snap(heading: float) -> void:
 ## Turn the view by degrees: right and down are positive, as the mouse and the thumb move.
 func look(right_deg: float, down_deg: float) -> void:
 	yaw -= deg_to_rad(right_deg)
-	var lo: float = t.fp_pitch_min if room else t.pitch_min
-	var hi: float = t.fp_pitch_max if room else t.pitch_max
-	pitch = clampf(pitch - deg_to_rad(down_deg), deg_to_rad(lo), deg_to_rad(hi))
+	var r := _pitches()
+	pitch = clampf(pitch - deg_to_rad(down_deg), r.x, r.y)
 	idle = 0.0
 	glanced = 0.0
+
+
+## The lowest and highest pitch a look may reach now, rad: the eye's in a room, a chase camera's behind a vehicle
+## (looking up swings the arm down, and at the walker's 60 degrees it met the ground a metre from the pivot, under
+## the rover's belly: 15 Nov playtest, "I can move the camera under the rover itself"), else the follow camera's.
+func _pitches() -> Vector2:
+	if room:
+		return Vector2(deg_to_rad(t.fp_pitch_min), deg_to_rad(t.fp_pitch_max))
+	if keep.has_volume():
+		return Vector2(deg_to_rad(t.vehicle_pitch_min), deg_to_rad(t.vehicle_pitch_max))
+	return Vector2(deg_to_rad(t.pitch_min), deg_to_rad(t.pitch_max))
 
 
 ## The camera's flat heading: what "forward" means for the move keys.
@@ -132,9 +159,9 @@ func follow(delta: float, travel: Vector3, facing: float, on_floor: bool) -> voi
 		look(stick.x * t.stick_deg_per_s * delta, stick.y * t.stick_deg_per_s * delta)
 	idle += delta
 	first = move_toward(first, 1.0 if room else 0.0, delta / t.fp_ease_s)
-	if not room:
-		# back from the eye's wider pitch range into the follow camera's, eased, never a snap
-		pitch = lerpf(pitch, clampf(pitch, deg_to_rad(t.pitch_min), deg_to_rad(t.pitch_max)), 1.0 - exp(-t.ease_rate * delta))
+	# back from a wider pitch range (the eye's) into the one that holds now, eased, never a snap
+	var reach := _pitches()
+	pitch = lerpf(pitch, clampf(pitch, reach.x, reach.y), 1.0 - exp(-t.ease_rate * delta))
 	var speed := travel.length()
 	# a phone player has no thumb free to look: left alone, the view drifts behind the real travel like a towed
 	# leash, by distance covered, so it never turns while the target stands or pushes into a wall (Nesky #23)
@@ -201,9 +228,10 @@ func follow(delta: float, travel: Vector3, facing: float, on_floor: bool) -> voi
 	var squeeze := clampf(inverse_lerp(wanted, t.lift_full, free), 0.0, 1.0)
 	# looking up, the arm swings down behind the hero and meets the ground, which is no wall: lifting then dragged
 	# the view back to eye level and the night sky could not be watched (Ravindu, 14 Nov). The arm shortens instead
-	if pitch > deg_to_rad(t.pitch_default):
+	# Behind a vehicle the lift stays: its arm cannot shorten into the hull, and its pitch stops short of the sky
+	if pitch > deg_to_rad(t.pitch_default) and not keep.has_volume():
 		squeeze = 0.0
-	lift = lerpf(lift, (deg_to_rad(t.pitch_min) - pitch) * squeeze, 1.0 - exp(-t.ease_rate * delta))
+	lift = lerpf(lift, (reach.x - pitch) * squeeze, 1.0 - exp(-t.ease_rate * delta))
 	# the ground some way ahead pitches the view: up a dune shows the crest, down one the floor (Nesky #26)
 	var fwd: Vector3 = Vector3(-sin(yaw), 0.0, -cos(yaw)) * t.slope_ahead
 	var ray := PhysicsRayQueryParameters3D.create(at + fwd + Vector3.UP * t.slope_ahead, at + fwd + Vector3.DOWN * t.slope_ahead, 1, excluded)
@@ -216,11 +244,35 @@ func follow(delta: float, travel: Vector3, facing: float, on_floor: bool) -> voi
 	lens.shift = t.frame_low * clampf(inverse_lerp(deg_to_rad(t.pitch_min), 0.0, rotation.x), 0.0, 1.0)
 	# kept between the lens and every solid: with only the near plane's own sphere, anything drawn a centimetre proud
 	# of its collider was cut open by the near plane and showed its hollow inside
-	var radius := maxf(_near_radius(), t.clear)
+	var radius := maxf(_near_radius(), t.vehicle_clear if keep.has_volume() else t.clear)
 	late = radius - _near_radius()
 	(arm.shape as SphereShape3D).radius = radius
 	arm.spring_length = wanted
+	out = _leaves(global_basis.z) if keep.has_volume() else 0.0
 	_feelers(global_position, wanted)
+
+
+## How far from the pivot along `dir` (unit) the arm's line leaves the vehicle's box grown by vehicle_keep, 0 when it
+## never enters it (slabs, in the vehicle's space; the distance is still in world metres).
+## ponytail: the lens is only kept past the far side. A pivot above a vehicle's box (none here: the rover's roof is
+## over it) could rest the lens on the near side; keep both sides if such a vehicle comes.
+func _leaves(dir: Vector3) -> float:
+	var box := keep.grow(t.vehicle_keep)
+	var inv := target.global_transform.affine_inverse()
+	var p := inv * global_position
+	var d := inv.basis * dir
+	var enters := -INF
+	var leaves := INF
+	for i in 3:
+		if absf(d[i]) < 1e-6:  # along this slab: in it all the way or never, and nothing to divide by
+			if p[i] < box.position[i] or p[i] > box.end[i]:
+				return 0.0
+			continue
+		var a := (box.position[i] - p[i]) / d[i]
+		var b := (box.end[i] - p[i]) / d[i]
+		enters = maxf(enters, minf(a, b))
+		leaves = minf(leaves, maxf(a, b))
+	return leaves if is_finite(leaves) and leaves > maxf(enters, 0.0) else 0.0
 
 
 ## The share of q.motion the sphere may go, stopped `skin` short of what it meets. A sphere left touching a wall cannot
@@ -406,6 +458,9 @@ class Lens extends Camera3D:
 			rig.hold -= delta
 		else:
 			rig.dist = minf(lerpf(rig.dist, minf(safe, rig.soft), 1.0 - exp(-rig.t.ease_rate * delta)), rig.dist + step)
+		# never in a vehicle's own box, whatever cut the arm: its line leaves the box at `out`, which moves smoothly
+		# with the view, so the lens slides along the box and does not pop
+		rig.dist = maxf(rig.dist, rig.out)
 		position = Vector3(0, 0, rig.dist)  # the arm casts along its +Z, the lens looks back down -Z
 		rotation = Vector3.ZERO
 		if rig.ahead.length() > 0.01:

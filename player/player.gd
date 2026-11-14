@@ -610,7 +610,12 @@ func enter(v: Node3D) -> void:
 	for c: Node in [v] + v.find_children("*", "CollisionObject3D", true, false):
 		if c is CollisionObject3D:
 			rids.append((c as CollisionObject3D).get_rid())
-	cam.follow_target(v, rids, [], tuning.camera.vehicle_distance, tuning.camera.vehicle_pivot_height, AABB(), float(v.top) if "top" in v else 0.0)  # a vehicle's top speed, m/s: the speed framing
+	# the vehicle's drawn box in its own space: its bodies are left out of the camera's casts, so this keeps the lens out
+	var hull := AABB()
+	for mi: MeshInstance3D in v.find_children("*", "MeshInstance3D", true, false):
+		var b: AABB = v.global_transform.affine_inverse() * mi.global_transform * mi.get_aabb()
+		hull = hull.merge(b) if hull.has_volume() else b
+	cam.follow_target(v, rids, [], tuning.camera.vehicle_distance, tuning.camera.vehicle_pivot_height, AABB(), float(v.top) if "top" in v else 0.0, hull)  # a vehicle's top speed, m/s: the speed framing
 
 
 func exit() -> void:
