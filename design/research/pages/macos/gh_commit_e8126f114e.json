@@ -1,0 +1,101 @@
+{
+  "sha": "e8126f114e2c6d5fdee1db61b8e04fcccd987b64",
+  "node_id": "C_kwDOAO6SJdoAKGU4MTI2ZjExNGUyYzZkNWZkZWUxZGI2MWI4ZTA0ZmNjY2Q5ODdiNjQ",
+  "commit": {
+    "author": {
+      "name": "Pāvels Nadtočajevs",
+      "email": "7645683+bruvzg@users.noreply.github.com",
+      "date": "2025-06-09T07:29:30Z"
+    },
+    "committer": {
+      "name": "Pāvels Nadtočajevs",
+      "email": "7645683+bruvzg@users.noreply.github.com",
+      "date": "2025-06-09T07:29:30Z"
+    },
+    "message": "[macOS] Switch Angle to Metal backend.",
+    "tree": {
+      "sha": "9a743a539de7ed485333d9e2f01cafd57f8a9f33",
+      "url": "https://api.github.com/repos/godotengine/godot/git/trees/9a743a539de7ed485333d9e2f01cafd57f8a9f33"
+    },
+    "url": "https://api.github.com/repos/godotengine/godot/git/commits/e8126f114e2c6d5fdee1db61b8e04fcccd987b64",
+    "comment_count": 0,
+    "verification": {
+      "verified": true,
+      "reason": "valid",
+      "signature": "-----BEGIN PGP SIGNATURE-----\n\niHUEABYKAB0WIQSifk+rvhYhKKk/ayiEEyECGO810gUCaEaNWwAKCRCEEyECGO81\n0rIFAQCs9Ci0+YwdMhJHpGM94zsasf2WxBjrUNM1l8EJ6GzSWgEAyiMJUB3qto+M\n6Rl9DwAGhtrBbnEI/XxqH52teHJzvg8=\n=t28h\n-----END PGP SIGNATURE-----",
+      "payload": "tree 9a743a539de7ed485333d9e2f01cafd57f8a9f33\nparent 9e0219429742e8bf1d7ad3f171c7d2bdcb9adcd4\nauthor Pāvels Nadtočajevs <7645683+bruvzg@users.noreply.github.com> 1749454170 +0300\ncommitter Pāvels Nadtočajevs <7645683+bruvzg@users.noreply.github.com> 1749454170 +0300\n\n[macOS] Switch Angle to Metal backend.\n",
+      "verified_at": "2025-06-09T07:30:47Z"
+    }
+  },
+  "url": "https://api.github.com/repos/godotengine/godot/commits/e8126f114e2c6d5fdee1db61b8e04fcccd987b64",
+  "html_url": "https://github.com/godotengine/godot/commit/e8126f114e2c6d5fdee1db61b8e04fcccd987b64",
+  "comments_url": "https://api.github.com/repos/godotengine/godot/commits/e8126f114e2c6d5fdee1db61b8e04fcccd987b64/comments",
+  "author": {
+    "login": "bruvzg",
+    "id": 7645683,
+    "node_id": "MDQ6VXNlcjc2NDU2ODM=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/7645683?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/bruvzg",
+    "html_url": "https://github.com/bruvzg",
+    "followers_url": "https://api.github.com/users/bruvzg/followers",
+    "following_url": "https://api.github.com/users/bruvzg/following{/other_user}",
+    "gists_url": "https://api.github.com/users/bruvzg/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/bruvzg/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/bruvzg/subscriptions",
+    "organizations_url": "https://api.github.com/users/bruvzg/orgs",
+    "repos_url": "https://api.github.com/users/bruvzg/repos",
+    "events_url": "https://api.github.com/users/bruvzg/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/bruvzg/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "committer": {
+    "login": "bruvzg",
+    "id": 7645683,
+    "node_id": "MDQ6VXNlcjc2NDU2ODM=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/7645683?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/bruvzg",
+    "html_url": "https://github.com/bruvzg",
+    "followers_url": "https://api.github.com/users/bruvzg/followers",
+    "following_url": "https://api.github.com/users/bruvzg/following{/other_user}",
+    "gists_url": "https://api.github.com/users/bruvzg/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/bruvzg/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/bruvzg/subscriptions",
+    "organizations_url": "https://api.github.com/users/bruvzg/orgs",
+    "repos_url": "https://api.github.com/users/bruvzg/repos",
+    "events_url": "https://api.github.com/users/bruvzg/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/bruvzg/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "parents": [
+    {
+      "sha": "9e0219429742e8bf1d7ad3f171c7d2bdcb9adcd4",
+      "url": "https://api.github.com/repos/godotengine/godot/commits/9e0219429742e8bf1d7ad3f171c7d2bdcb9adcd4",
+      "html_url": "https://github.com/godotengine/godot/commit/9e0219429742e8bf1d7ad3f171c7d2bdcb9adcd4"
+    }
+  ],
+  "stats": {
+    "total": 2,
+    "additions": 1,
+    "deletions": 1
+  },
+  "files": [
+    {
+      "sha": "8579cd0e58cd381cf712e83fb23ef5f29e4c9304",
+      "filename": "platform/macos/gl_manager_macos_angle.mm",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1,
+      "changes": 2,
+      "blob_url": "https://github.com/godotengine/godot/blob/e8126f114e2c6d5fdee1db61b8e04fcccd987b64/platform%2Fmacos%2Fgl_manager_macos_angle.mm",
+      "raw_url": "https://github.com/godotengine/godot/raw/e8126f114e2c6d5fdee1db61b8e04fcccd987b64/platform%2Fmacos%2Fgl_manager_macos_angle.mm",
+      "contents_url": "https://api.github.com/repos/godotengine/godot/contents/platform%2Fmacos%2Fgl_manager_macos_angle.mm?ref=e8126f114e2c6d5fdee1db61b8e04fcccd987b64",
+      "patch": "@@ -48,7 +48,7 @@\n Vector<EGLAttrib> GLManagerANGLE_MacOS::_get_platform_display_attributes() const {\n \tVector<EGLAttrib> ret;\n \tret.push_back(EGL_PLATFORM_ANGLE_TYPE_ANGLE);\n-\tret.push_back(EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE);\n+\tret.push_back(EGL_PLATFORM_ANGLE_TYPE_METAL_ANGLE);\n \tret.push_back(EGL_NONE);\n \n \treturn ret;"
+    }
+  ]
+}

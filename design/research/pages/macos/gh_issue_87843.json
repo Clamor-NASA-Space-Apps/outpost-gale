@@ -1,0 +1,125 @@
+{
+  "url": "https://api.github.com/repos/godotengine/godot/issues/87843",
+  "repository_url": "https://api.github.com/repos/godotengine/godot",
+  "labels_url": "https://api.github.com/repos/godotengine/godot/issues/87843/labels{/name}",
+  "comments_url": "https://api.github.com/repos/godotengine/godot/issues/87843/comments",
+  "events_url": "https://api.github.com/repos/godotengine/godot/issues/87843/events",
+  "html_url": "https://github.com/godotengine/godot/issues/87843",
+  "id": 2113680140,
+  "node_id": "I_kwDOAO6SJc59_DMM",
+  "number": 87843,
+  "title": "Excessive loading times using GPUParticles2D in projects exported for HTML5",
+  "user": {
+    "login": "derdobs",
+    "id": 1636534,
+    "node_id": "MDQ6VXNlcjE2MzY1MzQ=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1636534?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/derdobs",
+    "html_url": "https://github.com/derdobs",
+    "followers_url": "https://api.github.com/users/derdobs/followers",
+    "following_url": "https://api.github.com/users/derdobs/following{/other_user}",
+    "gists_url": "https://api.github.com/users/derdobs/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/derdobs/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/derdobs/subscriptions",
+    "organizations_url": "https://api.github.com/users/derdobs/orgs",
+    "repos_url": "https://api.github.com/users/derdobs/repos",
+    "events_url": "https://api.github.com/users/derdobs/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/derdobs/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 279097455,
+      "node_id": "MDU6TGFiZWwyNzkwOTc0NTU=",
+      "url": "https://api.github.com/repos/godotengine/godot/labels/platform:web",
+      "name": "platform:web",
+      "color": "e4e4e4",
+      "default": false,
+      "description": "",
+      "archived_at": null,
+      "archived_by": null
+    },
+    {
+      "id": 279098111,
+      "node_id": "MDU6TGFiZWwyNzkwOTgxMTE=",
+      "url": "https://api.github.com/repos/godotengine/godot/labels/topic:rendering",
+      "name": "topic:rendering",
+      "color": "ffee88",
+      "default": false,
+      "description": "",
+      "archived_at": null,
+      "archived_by": null
+    },
+    {
+      "id": 3240950060,
+      "node_id": "MDU6TGFiZWwzMjQwOTUwMDYw",
+      "url": "https://api.github.com/repos/godotengine/godot/labels/performance",
+      "name": "performance",
+      "color": "447777",
+      "default": false,
+      "description": "",
+      "archived_at": null,
+      "archived_by": null
+    },
+    {
+      "id": 4442850752,
+      "node_id": "LA_kwDOAO6SJc8AAAABCNCFwA",
+      "url": "https://api.github.com/repos/godotengine/godot/labels/topic:particles",
+      "name": "topic:particles",
+      "color": "ffee88",
+      "default": false,
+      "description": "",
+      "archived_at": null,
+      "archived_by": null
+    }
+  ],
+  "state": "open",
+  "locked": false,
+  "assignees": [
+
+  ],
+  "milestone": null,
+  "comments": 4,
+  "created_at": "2024-02-01T23:02:18Z",
+  "updated_at": "2026-11-06T05:52:28Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [
+
+  ],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Tested versions\n\nReproducable in 4.2.1 stable and forward (not tested in older versions)\r\n\n\n### System information\n\nWindows 11\n\n### Issue description\n\n\r\nUsing GPUParticles2D in projects exported for the web/HTML5 incur excessive loading times. A single (default) GPUParticles2D system with a gradienttexture2D needs around 2 seconds to load. \r\n\r\nThe behaviour was the same accross two computers (Gaming PC and Laptop), Browsers (Firefox, Chrome) and regardless of the \"export with debug\" box ticked when exporting the project.\r\n\r\nIn a more complex project with multiple GPUParticles2D nodes with textures, this delay makes GPUParticle2D systems virtually unusable. CPUParticle2D systems did not incur any noticeable loading delays.\n\n### Steps to reproduce\n\nMinimal Setup:\r\nEmpty 2D Scene with a single GPUParticles2D emitter which renders a GradientTexture2D.\r\nExport the project for the Web and run the result.\n\n### Minimal reproduction project (MRP)\n\n[particle-test.zip](https://github.com/godotengine/godot/files/14131985/particle-test.zip)\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/godotengine/godot/issues/87843/reactions",
+    "total_count": 5,
+    "+1": 5,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/godotengine/godot/issues/87843/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

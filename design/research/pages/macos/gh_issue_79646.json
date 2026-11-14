@@ -1,0 +1,136 @@
+{
+  "url": "https://api.github.com/repos/godotengine/godot/issues/79646",
+  "repository_url": "https://api.github.com/repos/godotengine/godot",
+  "labels_url": "https://api.github.com/repos/godotengine/godot/issues/79646/labels{/name}",
+  "comments_url": "https://api.github.com/repos/godotengine/godot/issues/79646/comments",
+  "events_url": "https://api.github.com/repos/godotengine/godot/issues/79646/events",
+  "html_url": "https://github.com/godotengine/godot/issues/79646",
+  "id": 1811047089,
+  "node_id": "I_kwDOAO6SJc5r8mKx",
+  "number": 79646,
+  "title": "Compatibility renderer: V-Sync sets framerate at double the refresh rate",
+  "user": {
+    "login": "acadiansith",
+    "id": 10876009,
+    "node_id": "MDQ6VXNlcjEwODc2MDA5",
+    "avatar_url": "https://avatars.githubusercontent.com/u/10876009?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/acadiansith",
+    "html_url": "https://github.com/acadiansith",
+    "followers_url": "https://api.github.com/users/acadiansith/followers",
+    "following_url": "https://api.github.com/users/acadiansith/following{/other_user}",
+    "gists_url": "https://api.github.com/users/acadiansith/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/acadiansith/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/acadiansith/subscriptions",
+    "organizations_url": "https://api.github.com/users/acadiansith/orgs",
+    "repos_url": "https://api.github.com/users/acadiansith/repos",
+    "events_url": "https://api.github.com/users/acadiansith/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/acadiansith/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 73330064,
+      "node_id": "MDU6TGFiZWw3MzMzMDA2NA==",
+      "url": "https://api.github.com/repos/godotengine/godot/labels/bug",
+      "name": "bug",
+      "color": "ff6055",
+      "default": true,
+      "description": "",
+      "archived_at": null,
+      "archived_by": null
+    },
+    {
+      "id": 279097780,
+      "node_id": "MDU6TGFiZWwyNzkwOTc3ODA=",
+      "url": "https://api.github.com/repos/godotengine/godot/labels/platform:macos",
+      "name": "platform:macos",
+      "color": "e4e4e4",
+      "default": false,
+      "description": "",
+      "archived_at": null,
+      "archived_by": null
+    },
+    {
+      "id": 279098111,
+      "node_id": "MDU6TGFiZWwyNzkwOTgxMTE=",
+      "url": "https://api.github.com/repos/godotengine/godot/labels/topic:rendering",
+      "name": "topic:rendering",
+      "color": "ffee88",
+      "default": false,
+      "description": "",
+      "archived_at": null,
+      "archived_by": null
+    },
+    {
+      "id": 279098255,
+      "node_id": "MDU6TGFiZWwyNzkwOTgyNTU=",
+      "url": "https://api.github.com/repos/godotengine/godot/labels/topic:platforms",
+      "name": "topic:platforms",
+      "color": "ffee88",
+      "default": false,
+      "description": "",
+      "archived_at": null,
+      "archived_by": null
+    },
+    {
+      "id": 279128044,
+      "node_id": "MDU6TGFiZWwyNzkxMjgwNDQ=",
+      "url": "https://api.github.com/repos/godotengine/godot/labels/confirmed",
+      "name": "confirmed",
+      "color": "aaddaa",
+      "default": false,
+      "description": "",
+      "archived_at": null,
+      "archived_by": null
+    }
+  ],
+  "state": "open",
+  "locked": false,
+  "assignees": [
+
+  ],
+  "milestone": null,
+  "comments": 6,
+  "created_at": "2023-07-19T03:02:07Z",
+  "updated_at": "2026-03-21T05:16:45Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [
+
+  ],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Godot version\n\nv4.1.1.stable.official [bd6af8e0e]\n\n### System information\n\nGodot v4.1.1.stable - macOS 13.4.1 - OpenGL (Compatibility) - Apple M1 - Apple M1 (8 Threads)\n\n### Issue description\n\nWhen launching a scene with the Compatibility renderer with V-Sync enabled, the framerate is double the refresh rate. In my case, my display (2020 MacBook Air) has a 60Hz refresh rate, but the framerate is locked at 120 FPS with V-Sync. With both Forward+ and Mobile Vulkan renderers, the framerate is correctly set at 60 FPS.\r\n\r\nPrevious issues #64475 and #56355 have been posted about this occurring for the Vulkan renderer on macOS prior to 13, but were closed since the issue was resolved with the macOS 13 update. However, this issue is occurring now on macOS 13 for the OpenGL Compatibility renderer.\n\n### Steps to reproduce\n\n1. Create a new project with the Comatibility renderer.\r\n2. Create a new Node2D or Node3D scene.\r\n3. Run the scene with V-Sync enabled (default).\n\n### Minimal reproduction project\n\nI display the FPS by adding a Label to the Node2D or Node3D with the following script:\r\n\r\n```GDScript\r\nextends Label\r\n\r\nfunc _process(delta):\r\n\ttext = \"%s: %d\" % [get_parent().name, Engine.get_frames_per_second()]\r\n```",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/godotengine/godot/issues/79646/reactions",
+    "total_count": 0,
+    "+1": 0,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/godotengine/godot/issues/79646/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}

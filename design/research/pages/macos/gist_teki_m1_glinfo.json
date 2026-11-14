@@ -1,0 +1,88 @@
+{
+  "url": "https://api.github.com/gists/f7930067af35d5890294a1663ba82dc8",
+  "forks_url": "https://api.github.com/gists/f7930067af35d5890294a1663ba82dc8/forks",
+  "commits_url": "https://api.github.com/gists/f7930067af35d5890294a1663ba82dc8/commits",
+  "id": "f7930067af35d5890294a1663ba82dc8",
+  "node_id": "MDQ6R2lzdGY3OTMwMDY3YWYzNWQ1ODkwMjk0YTE2NjNiYTgyZGM4",
+  "git_pull_url": "https://gist.github.com/f7930067af35d5890294a1663ba82dc8.git",
+  "git_push_url": "https://gist.github.com/f7930067af35d5890294a1663ba82dc8.git",
+  "html_url": "https://gist.github.com/teki/f7930067af35d5890294a1663ba82dc8",
+  "files": {
+    "apple-m1-opengl.txt": {
+      "filename": "apple-m1-opengl.txt",
+      "type": "text/plain",
+      "language": "Text",
+      "raw_url": "https://gist.githubusercontent.com/teki/f7930067af35d5890294a1663ba82dc8/raw/901414949023487e430d8e76f78f93bd8cb88062/apple-m1-opengl.txt",
+      "size": 4029,
+      "truncated": false,
+      "content": "\nRenderer: Apple M1\nVendor: Apple\nVersion: 4.1 Metal - 71.0.7\nDevice: Macmini9,1\nShading language version: 4.10\n\n\nMax texture size: 16384 x 16384\nMax vertex texture image units: 16\nMax texture image units: 16\nMax geometry texture units: 16\nMax anisotropic filtering value: 16\nMax viewport size: 16384 x 16384\nMax Clip Distances: 8\nMax samples: 4\n\n\nExtensions: 133\n\n\nGL_ARB_half_float_pixel\nGL_APPLE_texture_range\nGL_APPLE_vertex_point_size\nGL_EXT_framebuffer_multisample_blit_scaled\nGL_EXT_packed_depth_stencil\nGL_EXT_texture_lod_bias\nGL_EXT_provoking_vertex\nGL_ARB_color_buffer_float\nGL_ARB_texture_compression_rgtc\nGL_ARB_draw_instanced\nGL_EXT_draw_buffers2\nGL_EXT_texture_shared_exponent\nGL_IBM_rasterpos_clip\nGL_ARB_draw_elements_base_vertex\nGL_ARB_window_pos\nGL_NV_depth_clamp\nGL_ARB_texture_float\nGL_ARB_point_parameters\nGL_ARB_texture_compression\nGL_EXT_transform_feedback\nGL_ARB_depth_buffer_float\nGL_EXT_bindable_uniform\nGL_EXT_timer_query\nGL_ARB_vertex_buffer_object\nGL_EXT_packed_float\nGL_ARB_pixel_buffer_object\nGL_NV_texture_barrier\nGL_APPLE_aux_depth_stencil\nGL_ARB_fragment_program_shadow\nGL_ARB_shading_language_100\nGL_EXT_blend_func_separate\nGL_ARB_texture_env_crossbar\nGL_EXT_stencil_wrap\nGL_ARB_transpose_matrix\nGL_APPLE_vertex_array_object\nGL_EXT_texture_compression_dxt1\nGL_EXT_texture_compression_s3tc\nGL_APPLE_packed_pixels\nGL_ARB_vertex_program\nGL_EXT_texture_sRGB\nGL_ARB_texture_rectangle\nGL_ARB_depth_clamp\nGL_ARB_framebuffer_sRGB\nGL_ARB_texture_env_add\nGL_ARB_texture_rg\nGL_ATI_texture_float\nGL_EXT_texture_sRGB_decode\nGL_ARB_half_float_vertex\nGL_SGIS_texture_edge_clamp\nGL_ARB_texture_cube_map\nGL_EXT_shadow_funcs\nGL_SGIS_texture_lod\nGL_EXT_texture_filter_anisotropic\nGL_APPLE_ycbcr_422\nGL_EXT_multi_draw_arrays\nGL_EXT_texture_rectangle\nGL_APPLE_transform_hint\nGL_ARB_shadow\nGL_ARB_vertex_array_bgra\nGL_ARB_shader_texture_lod\nGL_SGIS_generate_mipmap\nGL_EXT_blend_minmax\nGL_ARB_shadow_ambient\nGL_ARB_point_sprite\nGL_ARB_depth_texture\nGL_APPLE_row_bytes\nGL_EXT_vertex_array_bgra\nGL_ARB_occlusion_query\nGL_ARB_fragment_shader\nGL_ARB_draw_buffers\nGL_ARB_texture_border_clamp\nGL_EXT_clip_volume_hint\nGL_APPLE_fence\nGL_ARB_vertex_shader\nGL_ARB_texture_mirrored_repeat\nGL_EXT_fog_coord\nGL_ARB_fragment_program\nGL_EXT_framebuffer_blit\nGL_EXT_framebuffer_sRGB\nGL_ARB_imaging\nGL_ATI_separate_stencil\nGL_ARB_texture_env_combine\nGL_EXT_abgr\nGL_EXT_bgra\nGL_ARB_texture_non_power_of_two\nGL_ARB_sync\nGL_EXT_separate_specular_color\nGL_EXT_framebuffer_object\nGL_EXT_texture_integer\nGL_NV_conditional_render\nGL_EXT_blend_color\nGL_EXT_gpu_program_parameters\nGL_EXT_texture_mirror_clamp\nGL_NV_texgen_reflection\nGL_APPLE_vertex_program_evaluators\nGL_APPLE_float_pixels\nGL_NV_light_max_exponent\nGL_EXT_blend_subtract\nGL_EXT_gpu_shader4\nGL_APPLE_element_array\nGL_EXT_secondary_color\nGL_APPLE_specular_vector\nGL_ATI_texture_mirror_once\nGL_ARB_provoking_vertex\nGL_NV_blend_square\nGL_EXT_draw_range_elements\nGL_EXT_texture_env_add\nGL_APPLE_vertex_array_range\nGL_ARB_vertex_blend\nGL_ATI_texture_compression_3dc\nGL_APPLE_pixel_buffer\nGL_ARB_multisample\nGL_ARB_shader_objects\nGL_EXT_geometry_shader4\nGL_EXT_debug_marker\nGL_ARB_texture_env_dot3\nGL_APPLE_rgb_422\nGL_EXT_rescale_normal\nGL_EXT_blend_equation_separate\nGL_EXT_debug_label\nGL_ATI_texture_env_combine3\nGL_APPLE_flush_buffer_range\nGL_ARB_instanced_arrays\nGL_APPLE_client_storage\nGL_EXT_framebuffer_multisample\nGL_NV_fog_distance\nGL_EXT_stencil_two_side\nGL_ARB_framebuffer_object\nGL_EXT_depth_bounds_test\nGL_ARB_multitexture\nGL_EXT_texture_array\nGL_ARB_seamless_cube_map\nGL_APPLE_flush_render\n\nCore features\n\n\nv3.0 (100 % - 23/23)\nv3.1 (100 % - 7/7)\nv3.2 (100 % - 10/10)\nv3.3 (100 % - 10/10)\nv4.0 (100 % - 14/14)\nv4.1 (100 % - 7/7)\nv4.2 (0 % - 0/13)\nv4.3 (0 % - 0/20)\nv4.4 (0 % - 0/10)\nv4.5 (0 % - 0/11)\nv4.6 (0 % - 0/11)\nvARB 2015 (0 % - 0/12)\n\nOpenGL driver version check (Current: 4.1 Metal - 71.0.7, Latest known: ):\nLatest version of display drivers found\nAccording the database, you are running the latest display drivers for your video card.\n\nExtension verification:",
+      "encoding": "utf-8"
+    }
+  },
+  "public": true,
+  "created_at": "2021-01-11T08:17:21Z",
+  "updated_at": "2021-01-11T08:17:22Z",
+  "description": "",
+  "comments": 0,
+  "user": null,
+  "comments_enabled": true,
+  "comments_url": "https://api.github.com/gists/f7930067af35d5890294a1663ba82dc8/comments",
+  "owner": {
+    "login": "teki",
+    "id": 5516,
+    "node_id": "MDQ6VXNlcjU1MTY=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/5516?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/teki",
+    "html_url": "https://github.com/teki",
+    "followers_url": "https://api.github.com/users/teki/followers",
+    "following_url": "https://api.github.com/users/teki/following{/other_user}",
+    "gists_url": "https://api.github.com/users/teki/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/teki/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/teki/subscriptions",
+    "organizations_url": "https://api.github.com/users/teki/orgs",
+    "repos_url": "https://api.github.com/users/teki/repos",
+    "events_url": "https://api.github.com/users/teki/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/teki/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "forks": [
+
+  ],
+  "history": [
+    {
+      "user": {
+        "login": "teki",
+        "id": 5516,
+        "node_id": "MDQ6VXNlcjU1MTY=",
+        "avatar_url": "https://avatars.githubusercontent.com/u/5516?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/teki",
+        "html_url": "https://github.com/teki",
+        "followers_url": "https://api.github.com/users/teki/followers",
+        "following_url": "https://api.github.com/users/teki/following{/other_user}",
+        "gists_url": "https://api.github.com/users/teki/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/teki/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/teki/subscriptions",
+        "organizations_url": "https://api.github.com/users/teki/orgs",
+        "repos_url": "https://api.github.com/users/teki/repos",
+        "events_url": "https://api.github.com/users/teki/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/teki/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "version": "9e80c1ca0d727d5465268197f170b87e8eadff6f",
+      "committed_at": "2021-01-11T08:17:21Z",
+      "change_status": {
+        "total": 176,
+        "additions": 176,
+        "deletions": 0
+      },
+      "url": "https://api.github.com/gists/f7930067af35d5890294a1663ba82dc8/9e80c1ca0d727d5465268197f170b87e8eadff6f"
+    }
+  ],
+  "truncated": false
+}

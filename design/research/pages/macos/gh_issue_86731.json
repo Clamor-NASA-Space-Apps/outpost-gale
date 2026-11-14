@@ -1,0 +1,114 @@
+{
+  "url": "https://api.github.com/repos/godotengine/godot/issues/86731",
+  "repository_url": "https://api.github.com/repos/godotengine/godot",
+  "labels_url": "https://api.github.com/repos/godotengine/godot/issues/86731/labels{/name}",
+  "comments_url": "https://api.github.com/repos/godotengine/godot/issues/86731/comments",
+  "events_url": "https://api.github.com/repos/godotengine/godot/issues/86731/events",
+  "html_url": "https://github.com/godotengine/godot/issues/86731",
+  "id": 2063103396,
+  "node_id": "I_kwDOAO6SJc56-HWk",
+  "number": 86731,
+  "title": "shader compilation very slow in Compatibility renderer",
+  "user": {
+    "login": "djrain",
+    "id": 33777501,
+    "node_id": "MDQ6VXNlcjMzNzc3NTAx",
+    "avatar_url": "https://avatars.githubusercontent.com/u/33777501?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/djrain",
+    "html_url": "https://github.com/djrain",
+    "followers_url": "https://api.github.com/users/djrain/followers",
+    "following_url": "https://api.github.com/users/djrain/following{/other_user}",
+    "gists_url": "https://api.github.com/users/djrain/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/djrain/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/djrain/subscriptions",
+    "organizations_url": "https://api.github.com/users/djrain/orgs",
+    "repos_url": "https://api.github.com/users/djrain/repos",
+    "events_url": "https://api.github.com/users/djrain/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/djrain/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "labels": [
+    {
+      "id": 73330064,
+      "node_id": "MDU6TGFiZWw3MzMzMDA2NA==",
+      "url": "https://api.github.com/repos/godotengine/godot/labels/bug",
+      "name": "bug",
+      "color": "ff6055",
+      "default": true,
+      "description": "",
+      "archived_at": null,
+      "archived_by": null
+    },
+    {
+      "id": 279098111,
+      "node_id": "MDU6TGFiZWwyNzkwOTgxMTE=",
+      "url": "https://api.github.com/repos/godotengine/godot/labels/topic:rendering",
+      "name": "topic:rendering",
+      "color": "ffee88",
+      "default": false,
+      "description": "",
+      "archived_at": null,
+      "archived_by": null
+    },
+    {
+      "id": 3240950060,
+      "node_id": "MDU6TGFiZWwzMjQwOTUwMDYw",
+      "url": "https://api.github.com/repos/godotengine/godot/labels/performance",
+      "name": "performance",
+      "color": "447777",
+      "default": false,
+      "description": "",
+      "archived_at": null,
+      "archived_by": null
+    }
+  ],
+  "state": "open",
+  "locked": false,
+  "assignees": [
+
+  ],
+  "milestone": null,
+  "comments": 14,
+  "created_at": "2024-01-03T00:32:10Z",
+  "updated_at": "2026-11-06T05:51:14Z",
+  "closed_at": null,
+  "assignee": null,
+  "author_association": "NONE",
+  "issue_field_values": [
+
+  ],
+  "type": null,
+  "active_lock_reason": null,
+  "sub_issues_summary": {
+    "total": 0,
+    "completed": 0,
+    "percent_completed": 0
+  },
+  "issue_dependencies_summary": {
+    "blocked_by": 0,
+    "total_blocked_by": 0,
+    "blocking": 0,
+    "total_blocking": 0
+  },
+  "body": "### Tested versions\r\n\r\n- Reproducible in: 4.2.1 stable\r\n- NOT reproducible in 3.5.2 stable\r\n\r\n### System information\r\n\r\nmacOS Ventura, Android 13 - compatibility\r\n\r\n### Issue description\r\n\r\nShowing/loading CanvasItem shaders for the first time is much slower when using Compatibility renderer compared to Forward+ or Mobile. It occurs on macOS (2020 Mac Mini M1) and Android (Google Pixel 4 XL), but not on my iPhone 14 Pro Max (compatibility actually seems to be faster there). Unable to test Windows.\r\n\r\n\r\nHere it is on mobile mode on Mac, a short stutter\r\n\r\nhttps://github.com/godotengine/godot/assets/33777501/e2f09a1e-58a6-497a-b4ce-455d0a856278\r\n\r\n\r\nand compatibility, much longer stutter\r\n\r\nhttps://github.com/godotengine/godot/assets/33777501/bec8d6ba-69fa-4755-8f85-cea6f71c3f7c\r\n\r\n\r\n### Steps to reproduce\r\n\r\nRun MRP on Mac or Android. After 1 second, the shaders will load and display\r\n\r\n### Minimal reproduction project (MRP)\r\n\r\n[ShaderCompilationIssue.zip](https://github.com/godotengine/godot/files/13814880/ShaderCompilationIssue.zip)\r\n",
+  "closed_by": null,
+  "reactions": {
+    "url": "https://api.github.com/repos/godotengine/godot/issues/86731/reactions",
+    "total_count": 3,
+    "+1": 3,
+    "-1": 0,
+    "laugh": 0,
+    "hooray": 0,
+    "confused": 0,
+    "heart": 0,
+    "rocket": 0,
+    "eyes": 0
+  },
+  "timeline_url": "https://api.github.com/repos/godotengine/godot/issues/86731/timeline",
+  "performed_via_github_app": null,
+  "state_reason": null,
+  "pinned_comment": null
+}
