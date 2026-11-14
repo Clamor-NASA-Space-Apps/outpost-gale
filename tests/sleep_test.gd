@@ -68,6 +68,27 @@ func play() -> bool:
 	check(st.player.room == "hab1", "the berth's stand point is inside HAB 1 (%s)" % st.player.room)
 	check(String(st.interaction.prompt).ends_with("Sleep"), "at the berth the prompt says Sleep (%s)" % st.interaction.prompt)
 
+	# a sol's tasks first (14 Nov playtest: the bed skipped whole sols): at the start of Sol 2 the bed says why not and
+	# opens nothing; once only the rest is left, it opens
+	var beats: Node = game.beats
+	var said: Array[String] = []
+	beats.line.connect(func(id: String, _o: Dictionary) -> void: said.append(id))
+	beats.start_sol(2)
+	await frames(2)
+	game.interactions.interact()
+	await frames(2)
+	check(not cine.picker.visible and not cine.busy(), "the bed opens no picker before the sol's tasks are done")
+	check(said.has(beats.NOT_YET) and beats.beat.get("id", "") == "wake", "PIP says why, and the day stays on its step (%s)" % [said])
+	beats._start(beats.beats.find_custom(func(b: Dictionary) -> bool: return b.id == "day_done"))
+	await frames(2)
+	game.interactions.interact()
+	await frames(2)
+	check(cine.picker.visible, "the bed opens once only the rest is left")
+	beats.skip()  # the rest of this test is the time-lapse alone
+	cine.picker._cancel()  # "Not now"
+	player.place(stand.origin, -rad_to_deg(atan2(-face.x, -face.z)))  # Sol 2's wake moved nothing, but PIP may block
+	await frames(10)
+
 	# E: the picker opens and the clock waits
 	game.interactions.interact()
 	await frames(2)

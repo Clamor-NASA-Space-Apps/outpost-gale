@@ -77,11 +77,16 @@ func state() -> Dictionary:
 
 
 ## A bed spot (data/world.json `uses`, kind `bed`, no clip: it reports at once) used: the picker, with the clock held
-## while it is open.
+## while it is open; before the sol's tasks are done, PIP says why not (beats.may_sleep()).
 func _used(what: String, _pos: Vector3) -> void:
-	if what == "bed" and not busy():
-		_take_clock()
-		picker.open()
+	if what != "bed" or busy():
+		return
+	var beats: Node = game.get("beats")
+	if beats and not beats.may_sleep():  # the sol's tasks first: a bed used early skipped whole sols (14 Nov playtest)
+		beats.refuse_sleep()
+		return
+	_take_clock()
+	picker.open()
 
 
 ## The sleep time-lapse: a night to the fixed wake hour, or a nap of `nap_h`. Lights out, a drone shot of the base

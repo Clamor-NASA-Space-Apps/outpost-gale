@@ -1,5 +1,5 @@
 {
-  "_note": "Sols past the first (design/story.md section 4, Chapter 1), in data/beats.json's beat schema (its _note). A key per sol: beats.start_sol(sol) plays it when the kid wakes on that sol (after cine's night sleep, the rules' sim.sol). Feel first, then PIP names it (a fact waits for its dismiss); pleas when ignored. Each sol ends with free play: everything allowed, PIP let go (pip.release), the Today list says sleep and points at HAB 1, until the next night's sleep (event slept). Every number PIP says has a factcheck row, named per beat in `fact_rows`. Spots: [27.95, 9.5] is wing1's clean_panel stand, [28.5, 7] open ground south of it, short of the wing rows; [-11, 0.5] just inside the greenhouse's door. pip.place: put PIP at a spot before its order (unseen, the night has passed: a sol may end with PIP far from the base). Sol 2's dust comes from the rules: data/sim.json schedule fires dust_gust at Sol 2, 03:00, overnight. Sol 4: `do: mail` sends the visor mail (beats.send_mail, the HUD's send_mail), and the reply comes back as mail_arrived (the HUD's mail cue); `wait.ever` counts an event that came before its beat, since the valve may take longer than the 22 minute round trip. Sol 5: to_shelter ends 0.6 m from the shelter's middle, where the whole body is inside its room (player.room). Sol 5: the rules' schedule starts the ARCHIVED X12 flare at 07:00 (data/sim.json), the wiring tells the beats event:<id>, and being in the storm shelter's room sets the rules' sheltered knob (half the dose). Sol 6: the quiet sols 6 to 8 are slept through at once (`do: skip:3`, beats.skip_sols: the rules' skip_sols, then the HUD's ledger card); its close comes back as ledger_closed, and the day goes on as Sol 9. The skip lands on Sol 9's morning, so key 6 goes on with Sol 9 'First field trip': plan on the map, board the rover, `do: trip:<landmark>` (beats.trip, cine.trip_to, answered with arrived:<landmark>) to the Mont Mercou site, a sample, and the trip home Sol 10: the quiet sols 10 and 11 are slept through (`skip:2`, the rules' storm starts in Sol 11's night, data/sim.json schedule) and the look jumps to the storm under the ledger card (`clock:storm`); key 10 goes on as Sol 12 'The sky turns orange': out to PIP, a dark sky felt first, then named, the storm power choice (beats.json offers sol12_power), the reactor. Sol 13: a dusty suit brushed off in HAB 1 (use brush), then the stormy sols 13 to 16 skipped (`skip:4`), and key 13 goes on as Sol 17: the first salad from the greenhouse (use harvest). The 2018 storm's sky clears with a 43 sol e-fold (row 182), so the storm look and the rules' dim sun stay on past Sol 17: no 'clear sky' line Sol 18: the stormy sols 18 and 19 skipped (`skip:2`), and key 18 goes on as Sol 20 'The long drive' to Curiosity's sol 5070 spot (site_curiosity, 14.3 km, outside the walk-home ring): look, never touch, the trip home (the overnight in the rover and Sol 22's low battery are not played). Sol 21: the calm sols 21 to 25 skipped (`skip:5`), Sol 26: the sample case lifted and carried to the rocket (item mav) and set down, sols 26 to 30 skipped, and on Sol 31 `do: liftoff` (beats.liftoff, cine.launch, answered with launched); PIP's last lines are the result. A skip later in a sequence waits on the `event` ledger_closed, not `ever`: `ever` counts the wake's own ledger",
+  "_note": "Sols past the first (design/story.md section 4, Chapter 1), in data/beats.json's beat schema (its _note). A key per sol: beats.start_sol(sol) plays it when the kid wakes on that sol (after cine's night sleep, the rules' sim.sol). Feel first, then PIP names it (a fact waits for its dismiss); pleas when ignored. Each sol's work ends with day_done: PIP leads to HAB 1's airlock and the Today list keeps only the rest (beats.REST), and the bed opens only then (beats.may_sleep; not on Sol 5, where PIP stays in the shelter). Then free play: everything allowed, PIP let go (pip.release), the Today list says sleep and points at HAB 1, until the next night's sleep (event slept). Every number PIP says has a factcheck row, named per beat in `fact_rows`. Spots: [27.95, 9.5] is wing1's clean_panel stand, [28.5, 7] open ground south of it, short of the wing rows; [-11, 0.5] just inside the greenhouse's door. pip.place: put PIP at a spot before its order (unseen, the night has passed: a sol may end with PIP far from the base). Sol 2's dust comes from the rules: data/sim.json schedule fires dust_gust at Sol 2, 03:00, overnight. Sol 4: `do: mail` sends the visor mail (beats.send_mail, the HUD's send_mail), and the reply comes back as mail_arrived (the HUD's mail cue); `wait.ever` counts an event that came before its beat, since the valve may take longer than the 22 minute round trip. Sol 5: to_shelter ends 0.6 m from the shelter's middle, where the whole body is inside its room (player.room). Sol 5: the rules' schedule starts the ARCHIVED X12 flare at 07:00 (data/sim.json), the wiring tells the beats event:<id>, and being in the storm shelter's room sets the rules' sheltered knob (half the dose). Sol 6: the quiet sols 6 to 8 are slept through at once (`do: skip:3`, beats.skip_sols: the rules' skip_sols, then the HUD's ledger card); its close comes back as ledger_closed, and the day goes on as Sol 9. The skip lands on Sol 9's morning, so key 6 goes on with Sol 9 'First field trip': plan on the map, board the rover, `do: trip:<landmark>` (beats.trip, cine.trip_to, answered with arrived:<landmark>) to the Mont Mercou site, a sample, and the trip home Sol 10: the quiet sols 10 and 11 are slept through (`skip:2`, the rules' storm starts in Sol 11's night, data/sim.json schedule) and the look jumps to the storm under the ledger card (`clock:storm`); key 10 goes on as Sol 12 'The sky turns orange': out to PIP, a dark sky felt first, then named, the storm power choice (beats.json offers sol12_power), the reactor. Sol 13: a dusty suit brushed off in HAB 1 (use brush), then the stormy sols 13 to 16 skipped (`skip:4`), and key 13 goes on as Sol 17: the first salad from the greenhouse (use harvest). The 2018 storm's sky clears with a 43 sol e-fold (row 182), so the storm look and the rules' dim sun stay on past Sol 17: no 'clear sky' line Sol 18: the stormy sols 18 and 19 skipped (`skip:2`), and key 18 goes on as Sol 20 'The long drive' to Curiosity's sol 5070 spot (site_curiosity, 14.3 km, outside the walk-home ring): look, never touch, the trip home (the overnight in the rover and Sol 22's low battery are not played). Sol 21: the calm sols 21 to 25 skipped (`skip:5`), Sol 26: the sample case lifted and carried to the rocket (item mav) and set down, sols 26 to 30 skipped, and on Sol 31 `do: liftoff` (beats.liftoff, cine.launch, answered with launched); PIP's last lines are the result. A skip later in a sequence waits on the `event` ledger_closed, not `ever`: `ever` counts the wake's own ledger",
   "2": [
     {
       "id": "wake",
@@ -128,6 +128,22 @@
         210
       ],
       "objective": null
+    },
+    {
+      "id": "day_done",
+      "allow": [],
+      "task": "task.sleep",
+      "objective": "hab1",
+      "pip": {
+        "follow_me": "airlock"
+      },
+      "line": "sleep.day_done",
+      "wait": {
+        "place": {
+          "at": "airlock",
+          "r": 4.0
+        }
+      }
     },
     {
       "id": "sleep_hint",
@@ -261,6 +277,22 @@
       ]
     },
     {
+      "id": "day_done",
+      "allow": [],
+      "task": "task.sleep",
+      "objective": "hab1",
+      "pip": {
+        "follow_me": "airlock"
+      },
+      "line": "sleep.day_done",
+      "wait": {
+        "place": {
+          "at": "airlock",
+          "r": 4.0
+        }
+      }
+    },
+    {
       "id": "sleep_hint",
       "task": "task.sleep",
       "objective": "hab1",
@@ -346,6 +378,22 @@
       "id": "reply_home",
       "line": "sol4.reply_home",
       "fact": true
+    },
+    {
+      "id": "day_done",
+      "allow": [],
+      "task": "task.sleep",
+      "objective": "hab1",
+      "pip": {
+        "follow_me": "airlock"
+      },
+      "line": "sleep.day_done",
+      "wait": {
+        "place": {
+          "at": "airlock",
+          "r": 4.0
+        }
+      }
     },
     {
       "id": "sleep_hint",
@@ -597,6 +645,22 @@
       }
     },
     {
+      "id": "day_done",
+      "allow": [],
+      "task": "task.sleep",
+      "objective": "hab1",
+      "pip": {
+        "follow_me": "airlock"
+      },
+      "line": "sleep.day_done",
+      "wait": {
+        "place": {
+          "at": "airlock",
+          "r": 4.0
+        }
+      }
+    },
+    {
       "id": "sleep_hint",
       "task": "task.sleep",
       "objective": "hab1",
@@ -703,6 +767,22 @@
       "fact_rows": [
         40
       ]
+    },
+    {
+      "id": "day_done",
+      "allow": [],
+      "task": "task.sleep",
+      "objective": "hab1",
+      "pip": {
+        "follow_me": "airlock"
+      },
+      "line": "sleep.day_done",
+      "wait": {
+        "place": {
+          "at": "airlock",
+          "r": 4.0
+        }
+      }
     },
     {
       "id": "sleep_hint",
@@ -844,6 +924,22 @@
       "fact_rows": [
         121
       ]
+    },
+    {
+      "id": "day_done",
+      "allow": [],
+      "task": "task.sleep",
+      "objective": "hab1",
+      "pip": {
+        "follow_me": "airlock"
+      },
+      "line": "sleep.day_done",
+      "wait": {
+        "place": {
+          "at": "airlock",
+          "r": 4.0
+        }
+      }
     },
     {
       "id": "sleep_hint",
@@ -1021,6 +1117,22 @@
       "wait": {
         "ever": "arrived:rover",
         "max_s": 40
+      }
+    },
+    {
+      "id": "day_done",
+      "allow": [],
+      "task": "task.sleep",
+      "objective": "hab1",
+      "pip": {
+        "follow_me": "airlock"
+      },
+      "line": "sleep.day_done",
+      "wait": {
+        "place": {
+          "at": "airlock",
+          "r": 4.0
+        }
       }
     },
     {

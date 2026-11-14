@@ -22,6 +22,8 @@ signal choice_offered(id: String)
 signal finished(sequence: String)
 
 const Ghost := preload("res://cine/beats_ghost.gd")
+const REST := "task.sleep"  # a sol's last task: once it is the task now, the day's work is done and the bed is open
+const NOT_YET := "sleep.not_yet"
 
 var world: Node3D
 var player: Node3D
@@ -126,8 +128,11 @@ func _wants() -> Array:
 	return out
 
 
-## Today's list for the HUD: every task of the sequence in order, done, now or next.
+## Today's list for the HUD: every task of the sequence in order, done, now or next. Once the rest is the task, the
+## day's list is over and only the rest is left (the HUD sees the rows go and plays the list out).
 func tasks() -> Array:
+	if _task == REST:
+		return [{"label_id": REST, "state": "now"}]
 	var out: Array = []
 	var state := "done"  # before the task now; all of them once the sequence is over
 	for b: Dictionary in beats:
@@ -139,6 +144,17 @@ func tasks() -> Array:
 		if state == "now":
 			state = "next"
 	return out
+
+
+## The bed is for after the sol's work (14 Nov playtest: a kid slept through Sol 1 and skipped sols): open once only
+## the rest is left, or when no sequence plays (after the last sol, or the tutorial skipped from Settings).
+func may_sleep() -> bool:
+	return sequence.is_empty() or _task == REST
+
+
+## The bed used too early: PIP says why, then this step's own line comes back.
+func refuse_sleep() -> void:
+	_say(NOT_YET, true)
 
 
 ## The interactions' `used` signal: a bag picked up is a lift, anything else a use.

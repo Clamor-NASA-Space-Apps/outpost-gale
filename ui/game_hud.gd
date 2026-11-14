@@ -23,6 +23,9 @@ const DOSE_FULL_MSV := 1000.0
 const GAIN_STEP := 1.05  # solar power rising 5% between two states shows as a "+kW" beside the power meter
 const GAIN_MIN_KW := 0.1  # and by this much: at dawn a tiny solar number climbs fast in percent
 const TOAST_S := 6.0
+const TASKS_HOLD_S := 1.2  # a finished day's list stays up, every box ticked, before it leaves (art direction)
+const TASKS_LEAVE_S := 0.45  # its slide and fade out
+const TASKS_SLIDE := 24.0  # px it slides left as it goes
 const ALERT_GAP_S := 6.0  # the alert and danger cues repeat no more often than this
 const PLACES := preload("res://ui/components/full_map.gd").PLACES
 # What the "where this comes from" card says beside each number, with its factcheck row
@@ -48,6 +51,7 @@ var meters := {}  # power, life, health
 var clock: Control  # the status card: sol, time, suit air
 var status: Control
 var tasks: Control
+var _tasks_out: Tween  # the finished list leaving, then the next one coming in
 var compass: Control
 var minimap: Control
 var waypoint: Control
@@ -368,9 +372,49 @@ func set_tasks(list: Array) -> void:
 		_cue("objective_new")
 	if now.keys().any(func(id: String) -> bool: return now[id] == "done" and _task_states.get(id, "") != "done"):
 		_cue("task_tick")
+	var rows: Array = list.map(func(t: Dictionary) -> Array: return [line(t.label_id), t.state])
+	# a finished list (every box ticked, or its rows gone because the day's work is over) leaves with a slide and a
+	# fade, ticked to the end, and the next list comes in after it (14 Nov playtest: the done list just stayed up)
+	var ended: bool = tasks.visible and not tasks.tasks.is_empty() and (_task_states.keys().any(
+		func(id: String) -> bool: return not now.has(id)) or list.all(func(t: Dictionary) -> bool: return t.state == "done"))
+	var was: Dictionary = _task_states
 	_task_states = now
-	tasks.set_tasks(list.map(func(t: Dictionary) -> Array: return [line(t.label_id), t.state]))
-	tasks.visible = not list.is_empty()
+	if _tasks_out:
+		_tasks_out.kill()
+		_settle_tasks()
+	if not ended:
+		tasks.set_tasks(rows)
+		tasks.visible = not list.is_empty()
+		return
+	var labels := {}
+	for id: String in was:
+		labels[line(id)] = now.get(id, "done")
+	if was.keys().any(func(id: String) -> bool: return was[id] != "done" and not now.has(id)):
+		_cue("task_tick")  # the last task left the list done: it ticks like any other
+	tasks.set_tasks(tasks.tasks.map(func(r: Array) -> Array: return [r[0], labels.get(r[0], "done")]))
+	var next := rows.filter(func(r: Array) -> bool: return r[1] != "done")
+	_tasks_out = create_tween()
+	_tasks_out.tween_interval(TASKS_HOLD_S)
+	_tasks_out.tween_method(_slide_tasks.bind(tasks.position.x), 0.0, 1.0, TASKS_LEAVE_S).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
+	_tasks_out.tween_callback(func() -> void:
+		_settle_tasks()
+		tasks.visible = not next.is_empty()
+		if tasks.visible:
+			tasks.set_tasks(next)
+			tasks.modulate.a = 0.0)
+	_tasks_out.tween_property(tasks, "modulate:a", 1.0, 0.25)
+
+
+## The Today card `k` of the way out (0 in place, 1 gone) from its laid-out x. Set every frame, so the box that lays
+## it out cannot pull it back mid-slide.
+func _slide_tasks(k: float, x0: float) -> void:
+	tasks.position.x = x0 - TASKS_SLIDE * k
+	tasks.modulate.a = 1.0 - k
+
+
+func _settle_tasks() -> void:
+	tasks.modulate.a = 1.0
+	(tasks.get_parent() as Container).queue_sort()  # its column puts it back where it belongs
 
 
 ## The use prompt at the bottom right ("Open the greenhouse"); "" hides it.

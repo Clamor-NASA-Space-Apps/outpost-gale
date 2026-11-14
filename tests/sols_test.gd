@@ -5,7 +5,7 @@ extends "res://addons/forge/test.gd"
 ## data/lines.json, the brush raises the power coming in, PIP never gives up, and free play allows everything.
 
 const BUDGET := {"wake": 30, "power_low": 2, "to_wings": 90, "see_dust": 2, "brush": 30, "jumped": 2, "weak_sun": 2,
-	"opportunity": 2, "see_reactor": 10, "reactor": 2, "nasa_chose": 2, "sleep_hint": 2, "free": 3,
+	"opportunity": 2, "see_reactor": 10, "reactor": 2, "nasa_chose": 2, "sleep_hint": 2, "free": 3, "day_done": 120,
 	"to_greenhouse": 90, "go_in": 40, "robots_planted": 2, "lettuce_days": 2, "plant": 30, "microgreens": 2,
 	"radish": 2, "vitamins": 2, "sent": 2, "light_time": 2, "valve": 60, "fixed": 2, "reply": 40, "reply_home": 2,
 	"dustier": 2, "s9_plan": 2, "s9_far": 2, "s9_board": 60, "s9_drive": 40, "s9_outcrop": 2, "s9_sample": 120,
@@ -26,6 +26,7 @@ var moving := false
 var used_at := -1
 var lines: Array[String] = []
 var targets: Array[String] = []
+var crumbs: Array[Vector3] = []  # PIP's tracks for _crumbs()
 
 
 func _init() -> void:
@@ -399,6 +400,7 @@ func _wake(seq: String) -> void:
 	await frames(30)
 	lines.clear()
 	check(beats.start_sol(int(seq.trim_prefix("sol"))), "data/sols.json has %s" % seq)
+	check(not beats.may_sleep(), "%s: no sleep at the start of the day (14 Nov playtest: sleep skipped sols)" % seq)
 	check(_flat(pip.global_position, Vector3.ZERO) < 8.0, "%s: PIP starts the day at the base (was %.0f m out)" % [seq, far])
 
 
@@ -406,6 +408,16 @@ func _wake(seq: String) -> void:
 func _sleep(seq: String) -> void:
 	var finished := [false]
 	beats.finished.connect(func(s: String) -> void: finished[0] = finished[0] or s == seq, CONNECT_ONE_SHOT)
+	check(beats.may_sleep(), "%s: the bed opens once the work is done" % seq)
+	if beats.beat.get("id", "") == "day_done":  # PIP leads to HAB 1 (not on Sol 5: it stays in the shelter)
+		check(beats.tasks().size() == 1 and lines[-1] == "sleep.day_done", "%s: only the rest is left, and PIP says so" % seq)
+		player.exit()  # home from a trip: out of the rover first (E), as a kid does
+		await frames(2)
+		if beats.beat.get("id", "") == "day_done":  # already by the airlock, it has ended
+			crumbs = [player.body.global_position, pip.global_position]
+			await _beat("day_done", _crumbs)
+			_stop()
+		check(beats.done.has("day_done"), "%s: the walk to HAB 1 ended" % seq)
 	await _beat("sleep_hint", _dismiss)
 	check(targets[-1] == "hab1", "%s ends pointing at HAB 1 to sleep (%s)" % [seq, targets[-1]])
 	await frames(5)
@@ -507,6 +519,20 @@ func _out() -> void:
 
 func _dismiss() -> void:
 	beats.notify("dismissed")  # the HUD's Enter or tap
+
+
+## After PIP along its own tracks, as a kid behind it does (heading straight at PIP from its far side stood in its way
+## out of the greenhouse, and PIP waited for good), stopping 2 m short of it.
+func _crumbs() -> void:
+	if pip.global_position.distance_to(crumbs[-1]) > 0.5:
+		crumbs.append(pip.global_position)
+	var b: Vector3 = player.body.global_position
+	while crumbs.size() > 1 and _flat(crumbs[0], b) < 0.8:
+		crumbs.pop_front()
+	if _flat(pip.global_position, b) < 2.0:
+		_stop()
+	else:
+		_steer(crumbs[0])
 
 
 ## After PIP like a kid: toward it, stopping `near` short.

@@ -15,6 +15,10 @@ const Delay := preload("res://ui/radio_delay.gd")
 const Fake := preload("res://ui/fake_state.gd")
 
 
+func _init() -> void:
+	watchdog = 60.0  # the Today list's leave and the power gain's fade wait about 9 s of game time
+
+
 func play() -> bool:
 	# a phone-shaped window (2400 x 1080 is 1600 x 720 on the canvas), so the phone layout is drawn unshrunk
 	await shape(SHAPES[1])
@@ -234,6 +238,30 @@ func _hud_parts(h: Control, cues: Array[String]) -> void:
 	check(h.tasks.is_visible_in_tree(), "Today shows as soon as a task is set")
 	h.set_tasks([{"label_id": "morning_check", "state": "done"}, {"label_id": "brush_dust", "state": "now"}])
 	check(h.snapshot().tasks.size() == 2 and h.snapshot().tasks[0][1] == "done", "Today lists the tasks: %s" % [h.snapshot().tasks])
+	# the day's work done (the beats keep only the rest): the list stays up ticked, slides and fades out, then the rest
+	# comes in alone; a list all done leaves for good (14 Nov playtest: the done list just stayed up)
+	var x0: float = h.tasks.position.x
+	h.set_tasks([{"label_id": "task.sleep", "state": "now"}])
+	check(h.snapshot().tasks.size() == 2 and h.snapshot().tasks.all(func(r: Array) -> bool: return r[1] == "done"),
+		"the finished list stays up, every box ticked: %s" % [h.snapshot().tasks])
+	await create_timer(h.TASKS_HOLD_S + h.TASKS_LEAVE_S * 0.6).timeout
+	check(h.tasks.modulate.a < 0.9 and h.tasks.position.x < x0 - 1.0, "then it slides out and fades (alpha %.2f, x %.0f from %.0f)" % [h.tasks.modulate.a, h.tasks.position.x, x0])
+	await create_timer(h.TASKS_LEAVE_S + 0.5).timeout
+	await process_frame
+	check(h.snapshot().tasks == [[h.line("task.sleep"), "now"]] and h.tasks.modulate.a > 0.99 and is_equal_approx(h.tasks.position.x, x0),
+		"and only the rest comes back, in place (%s, x %.0f)" % [h.snapshot().tasks, h.tasks.position.x])
+	h.set_tasks([{"label_id": "task.sleep", "state": "done"}])
+	await create_timer(h.TASKS_HOLD_S + h.TASKS_LEAVE_S + 0.3).timeout
+	check(not h.tasks.visible, "a list all done leaves for good")
+	# a brushed wing's "+kW" fades beside the power number and gives the bar its width back (14 Nov playtest: "the power
+	# bar is getting shorter and shorter")
+	var power: Control = h.meters.power
+	var bar_w: float = power.bar.size.x
+	power.bump("+0.4 kW")
+	await create_timer(3.6).timeout
+	await process_frame
+	await process_frame
+	check(is_equal_approx(power.bar.size.x, bar_w), "the power bar is as long after a gain shows as before (%.0f, was %.0f)" % [power.bar.size.x, bar_w])
 	h.show_prompt("Open the greenhouse")
 	check(h.snapshot().prompt == "Open the greenhouse", "the use prompt shows")
 	h.show_prompt("")
@@ -270,7 +298,8 @@ func _hud_parts(h: Control, cues: Array[String]) -> void:
 	h.show_ledger({"sols": 1})
 	h.close_card()
 	h.bubble.hide()
-	var want_cues := ["objective_new", "objective_new", "task_tick", "map_open", "map_close", "objective_new", "objective_done", "pip_open", "choice_open", "choice_made", "ledger_open"]
+	# the second tick: the rest itself ticked done (the day's list leaving ticks inside the first one's 0.15 s window)
+	var want_cues := ["objective_new", "objective_new", "task_tick", "task_tick", "map_open", "map_close", "objective_new", "objective_done", "pip_open", "choice_open", "choice_made", "ledger_open"]
 	check(cues == want_cues, "each HUD event plays its cue once:\n  got  %s\n  want %s" % [cues, want_cues])
 	var audio: Script = load("res://audio/audio.gd")
 	for n: String in want_cues + ["mail", "alert", "danger", "tick", "select"]:

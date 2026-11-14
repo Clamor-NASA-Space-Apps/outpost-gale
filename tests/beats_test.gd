@@ -13,7 +13,8 @@ extends "res://addons/forge/test.gd"
 const BUDGET := {"wake": 4, "hatch": 3, "walk_out": 20, "turn_out": 15, "outside": 4, "pip_hello": 14, "walk_to_me": 20,
 	"side_steps": 60, "back_step": 4, "look_shot": 4, "look_mouse": 6, "try_jump": 4, "jump_fact": 6, "hurry": 10,
 	"lift": 40, "lift_fact": 2, "set_down": 10, "map": 2, "map_close": 2, "follow_solar": 120, "sun_fact": 2, "o2_visit": 120,
-	"o2_fact": 2, "garden_visit": 180, "lamps_fact": 2, "choice": 2}
+	"o2_fact": 2, "garden_visit": 180, "lamps_fact": 2, "choice": 2,
+	"day_done": 120, "sleep_hint": 2, "free": 3}
 
 var game: Node3D
 var world: Node3D
@@ -55,6 +56,7 @@ func play() -> bool:
 	beats.finished.connect(func(s: String) -> void: finished.append(s))
 	game.hud.map_toggled.connect(func(open: bool) -> void: beats.notify("map_open" if open else "map_closed"))
 	beats.start_opening()
+	check(not beats.may_sleep(), "no sleep while Sol 1's tasks are left")
 	var clock: Node = game.clock
 	var wake_h: float = float(Array(beats.data.opening[0].do).filter(func(c: String) -> bool: return c.begins_with("clock:"))[0].get_slice(":", 1))
 	var cine: Node = game.cine
@@ -295,9 +297,27 @@ func play() -> bool:
 	check(offered == ["sol1_power"], "the power choice comes last, after both visits (%s)" % [offered])
 	# the sandbox's own handler of a click on the card runs clean (a string `_note` among the offers broke it: a script
 	# error, and the opening never got past the choice)
+	check(not beats.may_sleep(), "no sleep while the choice waits")
 	game.hud.chosen.emit(game.offers.sol1_power.title, 0)
 	beats.notify("chose:sol1_power")  # the rules' answer (lane S)
 	await _beat("choice")
+
+	# the day's work done: the Today list keeps only the rest, PIP says so at once and leads to HAB 1, and the bed opens
+	# (14 Nov playtest: "I was just sitting there. PIP was silent")
+	check(beats.beat.get("id", "") == "day_done" and lines[-1] == "sleep.day_done", "PIP says the work is done at once (%s)" % lines[-1])
+	check(beats.tasks() == [{"label_id": "task.sleep", "state": "now"}] and targets[-1] == "hab1", "only the rest is left, HAB 1 the objective (%s, %s)" % [beats.tasks(), targets[-1]])
+	check(beats.may_sleep(), "the bed opens once the work is done")
+	await frames(30)
+	check(pip.leading, "PIP leads the way to HAB 1")
+	crumbs = [player.body.global_position, pip.global_position]
+	await _beat("day_done", _follow_crumbs)
+	_stop()
+	await _beat("sleep_hint", func() -> void: beats.notify("dismissed"))
+	await frames(5)
+	check(not pip.led, "PIP is let go to potter about in free play")
+	check(player.allowed.is_empty(), "every action works in free play")
+	beats.notify("slept")  # cine.slept, a night
+	await _beat("free")
 
 	var ids: Array[String] = []
 	var own: Array[String] = []
@@ -312,9 +332,8 @@ func play() -> bool:
 		if firsts.is_empty() or firsts[-1] != id:
 			firsts.append(id)
 	check(firsts == own, "every beat's line went to the HUD, in order (%s)" % [firsts])
-	check(finished == ["opening"], "the opening finished")
+	check(finished == ["opening"], "the opening finished on the sleep")
 	check(pip.gave_up == 0, "PIP never gave up on an order (%d)" % pip.gave_up)
-	check(not pip.led, "PIP is let go to potter about again")
 	check(player.allowed.is_empty(), "every action works again after the opening")
 	check(beats.tasks().all(func(t: Dictionary) -> bool: return t.state == "done") and tasks[-1] == "" and targets[-1] == "",
 		"the task list is all done and the objective cleared (%s)" % [beats.tasks()])

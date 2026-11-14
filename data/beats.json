@@ -415,6 +415,38 @@
       "line": "sol1.every_choice",
       "wait": {
         "action": "chose:sol1_power"
+      }
+    },
+    {
+      "id": "day_done",
+      "allow": [],
+      "task": "task.sleep",
+      "objective": "hab1",
+      "pip": {
+        "follow_me": "airlock"
+      },
+      "line": "sleep.day_done",
+      "wait": {
+        "place": {
+          "at": "airlock",
+          "r": 4.0
+        }
+      }
+    },
+    {
+      "id": "sleep_hint",
+      "objective": "hab1",
+      "line": "sleep.when_ready",
+      "fact": true
+    },
+    {
+      "id": "free",
+      "allow": [],
+      "pip": {
+        "release": true
+      },
+      "wait": {
+        "event": "slept"
       },
       "then": "end"
     }
