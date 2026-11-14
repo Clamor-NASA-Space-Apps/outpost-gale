@@ -48,7 +48,7 @@ var yaw := 0.0
 var target := Vector3.ZERO
 var gaze := Vector3.ZERO  # what the head looks at when nothing nearer is worth it
 var led := false  # the beats lead it: no wandering and no visits, it holds still between their orders
-var leading := false  # a "follow me" order (lead_m): waits past x m, goes on within y, full speed within z
+var leading := false  # a "follow me" order (lead_m): waits for a hero x m behind (_lag), goes on within y, full speed within z
 var lead_m := Vector3.ZERO
 var gave_up := 0  # orders it could not get through to and tried again (checks: never)
 var _order := {}  # the order it is driving: {at: Vector3, face: Vector3 (INF for the hero), wave: bool}
@@ -78,6 +78,7 @@ var _feel := 0.0  # seconds to the next feeler pass
 var _best := INF  # closest it came to the target since `_since`
 var _since := 0.0
 var _patience := 0.0  # seconds of driving round the hero after a wait ran out
+var _tail := false  # leading, the hero walks ahead in its way with no room to pass: behind them at their pace (_round)
 var _still := 0.0  # seconds the hero has stood still
 var _greet_cool := 0.0
 var _hello_cool := 0.0
@@ -192,10 +193,12 @@ func _physics_process(delta: float) -> void:
 	if state not in ["drive", "flee"]:
 		_wedge = 0.0  # a wedge is a second of driving that gets nowhere, not a parked wait
 	# held by the beats, a hero walking into it: out of the way, sooner the faster the hero closes in (a lead driving
-	# away already is)
+	# away already is). A lead never yields on the move, nor to a kid ahead of it: for one hurrying up beside it, it
+	# stopped, stepped aside and was left behind for good (14 Nov playtest, "pip should not let us pass it")
 	var closing: float = player.last_vel.dot(Vector3(-to_hero.x, 0.0, -to_hero.y).normalized())
 	if led and walking and state not in ["flee", "back"] and closing > float(p.still_speed) \
-			and to_hero.length() < back_m + closing * back_lead and not (state == "drive" and v > 0.3 and _ahead(-to_hero) > 0.5):
+			and to_hero.length() < back_m + closing * back_lead and not (state == "drive" and v > 0.3 and (leading or _ahead(-to_hero) > 0.5)) \
+			and not (leading and _lag() < 0.0):
 		_held = state if state in ["look", "greet"] else "greet"
 		state = "back"
 		_back_t = 0.0
@@ -220,7 +223,7 @@ func _physics_process(delta: float) -> void:
 		"behind":
 			_brake(delta)
 			_face(hero, delta)
-			if to_hero.length() < lead_m.y:
+			if _lag() < lead_m.y:  # back with it, or gone ahead by another way
 				state = "drive"
 				_since = 0.0
 		"back":
@@ -460,15 +463,17 @@ func _drive(delta: float, to_hero: Vector2) -> void:
 		return
 	var pace := top
 	if leading and state == "drive" and stop == "order":
-		if to_hero.length() > lead_m.x:
+		# how far the hero is behind it on the way, never the plain distance: by that a kid who walked on ahead was
+		# "far", so PIP slowed, stopped and waited behind them for good (14 Nov playtest)
+		var lag := _lag()
+		if lag > lead_m.x:
 			state = "behind"  # stop and look back; a beep the first time in a while
 			if _hello_cool <= 0.0:
 				_hello()
 			return
-		# the hero's pace: full speed while the hero is close behind, slowing as the gap grows, then a stop to look
-		# back at lead_m.x (a floor, or it crept on forever just short of it and counted as stuck)
-		# a hurrying hero: PIP hurries too, a little faster than the hero's hurry, so the lead holds (sprint, art direction)
-		pace = _top() * clampf((lead_m.x - to_hero.length()) / (lead_m.x - lead_m.z), 0.3, 1.0)
+		# the hero's pace: full speed while the hero is close behind (or ahead), slowing as they fall back, then a stop
+		# to look back at lead_m.x (a floor, or it crept on forever just short of it and counted as stuck)
+		pace = _top() * clampf((lead_m.x - lag) / (lead_m.x - lead_m.z), 0.3, 1.0)
 	_patience -= delta
 	# held by the beats it never stops for the hero: it steers round a hero standing in the way and backs off from one
 	# walking into it (a wait there kept a kid at its side and PIP in place for good, 13 Nov)
@@ -493,11 +498,11 @@ func _drive(delta: float, to_hero: Vector2) -> void:
 	_feel -= delta
 	if _feel <= 0.0:
 		_feel = float(p.feel_s)
-		_steer = _feelers(atan2(-to.x, -to.y))
+		_steer = _feelers(_round(to, to_hero))
 	var err := wrapf(_steer - yaw, -PI, PI)
 	var new_yaw := yaw + clampf(err, -turn * delta, turn * delta)
 	# slower in a turn, and slowing to a stop at the target
-	var want := pace * clampf(cos(err) * 1.5 - 0.5, 0.0, 1.0)
+	var want := (minf(pace, player.moved) if _tail else pace) * clampf(cos(err) * 1.5 - 0.5, 0.0, 1.0)
 	want = minf(want, sqrt(2.0 * accel * maxf(left - float(p.arrive_m) * 0.5, 0.0)))
 	v = move_toward(v, want, accel * delta)
 	_move(new_yaw, v * delta)
@@ -510,6 +515,27 @@ func _drive(delta: float, to_hero: Vector2) -> void:
 	_wedge += delta
 	if _wedge > float(p.wedge_s):
 		_unwedge()
+
+
+## The heading it wants: at its next point, or, leading with the hero ahead in its way, at a point back_m to one side
+## of them and as far on: its own side if the ground is free to there and from there on to its next point, else the
+## other. It passes with room. With no room on either side (the kid and the rover, 14 Nov: it squeezed in, wedged,
+## backed out and went all the way round the rover) it keeps behind a walking kid at their pace (_tail) until a
+## side opens.
+func _round(to: Vector2, to_hero: Vector2) -> float:
+	_tail = false
+	var dir := to.normalized()
+	var off := to_hero.dot(dir.orthogonal())  # the hero's distance to one side of its line
+	if leading and to_hero.dot(dir) > 0.0 and to_hero.length() < lead_m.x and absf(off) < back_m:
+		var own := -signf(off + 1e-3)
+		# the other side only from well behind them: beside them already, the way there is through them
+		for side: float in ([own, -own] if to_hero.dot(dir) > back_m else [own]):
+			var by := to_hero + (dir + dir.orthogonal() * side) * back_m
+			var at := _ground([global_position.x + by.x, global_position.z + by.y])
+			if _clear(global_position, at, MOVERS) and _clear(at, global_position + Vector3(to.x, 0.0, to.y), MOVERS):
+				return atan2(-by.x, -by.y)
+		_tail = player.moved > float(p.still_speed)  # one standing in the way is steered round by the feelers
+	return atan2(-to.x, -to.y)
 
 
 ## Wedged or stalled: back out the way it came (reverse_m along the trail, or straight back with no trail), then
@@ -830,9 +856,27 @@ func _back(delta: float, to_hero: Vector2) -> void:
 	_move(yaw + clampf(err, -turn * delta, turn * delta), sgn * v * delta)
 
 
-## Its top speed now: leading a hurrying hero it hurries too, a little faster than the hero (sprint, art direction)
+## Its top speed now. Leading, it hurries, a little faster than the hero's hurry (sprint, art direction), while the
+## hero hurries and while the hero is ahead of it or within back_m behind: the lead holds, and a kid who got past is
+## passed again
 func _top() -> float:
-	return maxf(top, player.hurry * sprint) if leading and player.moved > player.walk * 1.1 else top
+	return maxf(top, player.hurry * sprint) if leading and (player.moved > player.walk * 1.1 or _lag() < back_m) else top
+
+
+## How far the hero is behind PIP on the way, in metres: the gap between them, or, where PIP is making for its goal,
+## how much farther from the goal the hero is, if that is less: about zero for a kid level with it, below zero for
+## one ahead. On a leg round something (more than 60 degrees off the goal) only the gap counts: there a kid right
+## behind it can be the nearer of the two, and it drove on and left them (sols_test, the way back from the reactor).
+func _lag() -> float:
+	var flat := Vector3(1.0, 0.0, 1.0)
+	var hero := _hero() * flat
+	var at := global_position * flat
+	var goal := target * flat
+	var aim: Vector3 = (_path[0] if _path.size() else target) * flat
+	var gap := hero.distance_to(at)
+	if at.direction_to(aim).dot(at.direction_to(goal)) < 0.5:
+		return gap
+	return minf(gap, hero.distance_to(goal) - at.distance_to(goal))
 
 
 ## How much a flat direction points along its heading (1 ahead, -1 behind).

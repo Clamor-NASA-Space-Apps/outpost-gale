@@ -1,7 +1,8 @@
 extends "res://addons/forge/test.gd"
 ## The handbook (ui/handbook.gd, data/handbook.json): the data file is sound, and the screen does what
-## design/plans/mission-1-contracts.md says: unlock, "???" for a page not found, open on a page, the Learned stamp,
-## the decision log, finger-sized buttons, close.
+## design/plans/mission-1-contracts.md says: unlock, open on a page, the Learned stamp, the decision log,
+## finger-sized buttons, close. It shows only what is found: no row for a page not unlocked, a locked category for
+## a tab with no page yet, and no count of how many pages there are.
 ##   godot --headless --path . --fixed-fps 60 -s tests/handbook_test.gd
 
 # the only ids a beat may name (the contracts)
@@ -36,6 +37,22 @@ func play() -> bool:
 	root.add_child(book)
 	await frames(2)
 	check(not book.visible, "hidden until opened")
+
+	# the first look, nothing learned yet: the Mission log with a friendly line, every other category locked
+	book.open()
+	await frames(2)
+	check(book.state().tab == "log" and book.state().page == "", "with nothing found it opens on the Mission log: %s" % book.state())
+	check("PIP will fill this as you learn." in _words(book), "and says PIP will fill it")
+	for tab: String in IDS:
+		check(_locked(book, tab), "the %s tab is a locked category: a lock sign, not to be focused or pressed" % tab)
+		(book._tab_buttons[tab] as Button).pressed.emit()
+		check(book.state().tab == "log", "a locked category does not open")
+	check(not _locked(book, "log"), "the Mission log is never locked")
+	check(book._rows.is_empty(), "no rows at all before anything is found")
+	check(book.unlock("dust") and not _locked(book, "mars") and _locked(book, "base"), "a tab unlocks the moment its first page does")
+	book.close()
+	book._unlocked.clear()  # as new again for what follows
+
 	check(book.unlock("air_tanks") == true, "a new page unlocks")
 	check(book.unlock("air_tanks") == false, "the same page does not unlock twice")
 	check(book.unread() == 1, "one page not read yet")
@@ -51,9 +68,9 @@ func play() -> bool:
 	check(book.unread() == 0, "an opened page is read")
 	check("Air in tanks" in _words(book) and data.pages[7].lines[0] in _words(book), "the page's title and lines are on screen")
 	check((book._rows["air_tanks"] as Button).button_pressed, "the open page is marked in the list")
-	var locked: Button = book._rows["air_maker"]
-	check(locked.text == "???" and locked.disabled, "a page not found reads ??? and cannot be opened")
-	check("The air maker" not in _words(book), "a page not found keeps its title to itself")
+	check(book._rows.keys() == ["air_tanks"] and book._list.get_child_count() == 1, "a page not found has no row and leaves no gap: %s" % [book._rows.keys()])
+	check("The air maker" not in _words(book) and "???" not in _words(book), "nothing hints at a page not found")
+	check(not _locked(book, "base") and _locked(book, "mars") and _locked(book, "explorers"), "only the tab with a found page is open")
 
 	check("Learned" not in _words(book), "no stamp before the check is passed")
 	book.learned(["air_tanks"])
@@ -70,11 +87,13 @@ func play() -> bool:
 	await frames(2)
 	check(book.state().tab == "log", "the log tab opens")
 	check("Run the air maker" in _words(book) and "Power for one today" in _words(book), "a decision shows in the log")
-	check("2 of 23" in _words(book) and "1 of 23" in _words(book), "the log counts pages found and learned")
+	check(_after(book, "Pages found") == "2" and _after(book, "Pages learned") == "1", "the log counts pages found and learned: %s" % [_words(book)])
 
-	for tab: String in ["log", "mars", "base", "explorers"]:
+	for tab: String in ["log", "mars", "base"]:  # explorers is still locked
 		(book._tab_buttons[tab] as Button).pressed.emit()
 		await frames(2)
+		check(book.state().tab == tab, "the %s tab opens" % tab)
+		check(not _words(book).any(func(w: String) -> bool: return "of 23" in w), "%s tab: nothing drawn says how many pages there are" % tab)
 		for b: Button in book.find_children("*", "Button", true, false):
 			if b.is_visible_in_tree():
 				check(b.size.y >= TARGET, "%s tab: button '%s' is %d px tall, under %d" % [tab, b.text, b.size.y, TARGET])
@@ -146,6 +165,18 @@ func play() -> bool:
 			check(book._text_scroll.get_global_rect().size.x >= 300, "%s: the words get %d px of width" % [what, book._text_scroll.get_global_rect().size.x])
 			check(book._back.get_global_rect().end.x <= screen.x - EDGE and book._scroll.get_global_rect().position.x >= EDGE, "%s: nothing to press in the back swipe's edge" % what)
 	return true
+
+
+## A locked category: its lock sign shows, and it takes no press and no focus.
+func _locked(book: Control, tab: String) -> bool:
+	var b: Button = book._tab_buttons[tab]
+	return (book._locks[tab] as Control).visible and b.disabled and b.focus_mode == Control.FOCUS_NONE
+
+
+## The label drawn right after the label `what` (a count under its name).
+func _after(book: Control, what: String) -> String:
+	var words := _words(book)
+	return words[words.find(what) + 1] if what in words else ""
 
 
 func _press(action: StringName) -> void:

@@ -9,7 +9,7 @@ const SOLID := 2 | 4 | 8 | 16 | 64  # statics, thin, hero, vehicles, carriables 
 
 
 func _init() -> void:
-	watchdog = 480.0
+	watchdog = 600.0
 
 
 func play() -> bool:
@@ -101,6 +101,7 @@ func play() -> bool:
 	check(pip._near, "its head is on the hero")
 	await _lead(world, player, pip)
 	await _sprint(world, player, pip)
+	await _tours(world, player, pip)
 	await _cluster(world, player, pip)
 	await _wedged(world, player, pip)
 	await _bags(world, player, pip, false)
@@ -140,6 +141,80 @@ func _sprint(world: Node3D, player: Node3D, pip: Node3D) -> void:
 	print("  sprint: closest %.2f m, PIP top %.2f m/s (hero hurry %.2f)" % [gap, top, player.hurry])
 	check(top > player.hurry, "leading a sprinting kid, PIP goes faster than the hero's hurry (%.2f m/s)" % top)
 	pip.release()
+
+
+## The solar tour as the opening starts it (follow_solar): PIP at its airlock stop looking at the hero, the goal 17 m
+## off past the rover and the battery row. 14 Nov playtest: the kid walked on ahead and PIP stood still behind them
+## for good, waiting by plain distance ("pip should not let us pass it ... he must pass us and take the lead").
+func _tours(world: Node3D, player: Node3D, pip: Node3D) -> void:
+	var gave: int = pip.gave_up
+	# behind it, walking straight at the goal: never ahead of PIP
+	var t: Dictionary = await _tour(world, player, pip, Vector2(4.2, -1.6), false, true)
+	check(t.arrived and t.ahead_s == 0.0, "a kid walking behind a leading PIP never gets ahead of it (%.1f s ahead)" % t.ahead_s)
+	# ahead of it from the start, walking on: PIP comes after, passes and leads again
+	t = await _tour(world, player, pip, Vector2(4.2, -7.0), false, true)
+	print("  walked ahead: PIP moving after %.1f s, in the lead after %.1f s, closest %.2f m" % [t.moving_s, t.lead_s, t.gap])
+	check(t.moving_s < 2.0, "the kid walked on ahead: PIP is moving within 2 s (%.1f s)" % t.moving_s)
+	check(t.waited.is_empty(), "it never waits or backs off while the kid is nearer the goal (%s)" % [t.waited])
+	check(t.arrived and t.lead_s < 15.0, "it passes the kid and leads again (%.1f s)" % t.lead_s)
+	check(t.gap > 0.8, "round them, not through them (closest %.2f m)" % t.gap)
+	# level with it, hurrying to the goal: PIP hurries too and comes to the goal right after
+	t = await _tour(world, player, pip, Vector2(2.6, -4.2), true, true)
+	print("  hurried ahead: PIP moving after %.1f s, at the goal %.1f s after the kid, closest %.2f m" % [t.moving_s, t.after_s, t.gap])
+	check(t.moving_s < 2.0, "the kid hurried off ahead: PIP is moving within 2 s (%.1f s)" % t.moving_s)
+	check(t.waited.is_empty(), "it never waits or backs off while the kid is nearer the goal (%s)" % [t.waited])
+	check(t.arrived and t.after_s < 5.0, "it is at the goal a few seconds after the kid (%.1f s)" % t.after_s)
+	# far behind, standing: PIP waits (the old rule)
+	t = await _tour(world, player, pip, Vector2(4.2, -1.6), false, false)
+	var back: float = Vector2(pip.global_position.x - player.body.global_position.x, pip.global_position.z - player.body.global_position.z).length()
+	check(not t.arrived and pip.state == "behind" and back < 6.0, "a kid who stays behind is waited for (%s, %.1f m on)" % [pip.state, back])
+	check(t.hits == 0 and pip.gave_up == gave, "no overlap and no order given up on the tours (%d frames, %d)" % [t.hits, pip.gave_up - gave])
+	pip.release()
+
+
+## One tour: the hero from `from` (x, z), walking or hurrying straight at the goal with real input and stopping 3 m
+## short of it (`go` false: standing still, for 12 s). What happened, for the checks.
+func _tour(world: Node3D, player: Node3D, pip: Node3D, from: Vector2, hurry: bool, go: bool) -> Dictionary:
+	var b: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/beats.json")).pip
+	var goal := Vector2(-0.166, -20.223)
+	pip.release()
+	await frames(2)
+	pip._place(Vector3(4.667, world.height_at(4.667, -3.777), -3.777), pip.yaw)
+	player.place(Vector3(from.x, world.height_at(from.x, from.y) + 0.05, from.y), 171.0)
+	pip.point_at(player.body.global_position + Vector3.UP * 1.6)  # as the beats before leave it
+	await frames(180)
+	var out := {"arrived": false, "ahead_s": 0.0, "moving_s": INF, "lead_s": INF, "after_s": INF, "gap": INF, "waited": {}, "hits": 0}
+	pip.arrived.connect(func() -> void: out.arrived = true, CONNECT_ONE_SHOT)
+	pip.order(Vector3(goal.x, 0.0, goal.y), Vector3.INF, false, Vector3(b.lead_wait_m, b.lead_resume_m, b.lead_near_m))
+	var there := INF  # s when the hero stopped short of the goal
+	for i in 60 * (40 if go else 12):
+		await frames(1)
+		var h := Vector2(player.body.global_position.x, player.body.global_position.z)
+		var q := Vector2(pip.global_position.x, pip.global_position.z)
+		var s := i / 60.0
+		var walk := go and h.distance_to(goal) > 3.0
+		player.cam.yaw = atan2(h.x - goal.x, h.y - goal.y)
+		action(&"move_forward", walk)
+		action(&"hurry", walk and hurry)
+		there = minf(there, INF if walk or not go else s)
+		out.hits += 1 if _overlaps(pip) else 0
+		out.gap = minf(out.gap, h.distance_to(q))
+		if pip.v > 0.3:
+			out.moving_s = minf(out.moving_s, s)
+		if out.arrived:
+			out.after_s = maxf(s - there, 0.0)
+			break
+		if h.distance_to(goal) < q.distance_to(goal):
+			out.ahead_s += 1.0 / 60.0
+			if pip.state != "drive":
+				out.waited[pip.state] = true
+		elif out.ahead_s > 0.0:
+			out.lead_s = minf(out.lead_s, s)
+	action(&"move_forward", false)
+	action(&"hurry", false)
+	if out.arrived:
+		out.lead_s = minf(out.lead_s, 40.0)
+	return out
 
 
 ## Inside the cargo bag cluster by HAB 1 (14 Nov playtest: PIP wedged among the bags for good, "doesn't follow me"):
