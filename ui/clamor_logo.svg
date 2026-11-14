@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="212 214 600 600" width="600" height="600">
+  <!-- Team Clamor's mark for a black background (ui/start.gd): the team's logo with its white backdrop dropped
+       and the dark brackets of the C turned white; the red blade is as the team drew it. -->
+  <defs>
+    <linearGradient id="redLight" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#8a1426"/>
+      <stop offset="1" stop-color="#c0243a"/>
+    </linearGradient>
+    <linearGradient id="redDark" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7a111f"/>
+      <stop offset="1" stop-color="#4a0610"/>
+    </linearGradient>
+  </defs>
+  <path fill="#ffffff" d="M315 597 L315 420 Q315 291 445 291 L680 291 L583 368 L450 368 Q398 368 398 420 L398 525 Z"/>
+  <path fill="#ffffff" d="M727 318 L727 375 L558 523 Z"/>
+  <path fill="#ffffff" d="M410 703 L463 650 Q470 660 500 660 L620 660 Q655 658 654 625 L654 598 L740 682 Q735 700 700 725 Q680 740 650 740 L480 740 Q440 740 410 703 Z"/>
+  <path fill="url(#redLight)" d="M771 236 L252 671 L330 655 Z"/>
+  <path fill="url(#redDark)" d="M771 236 L330 655 L304 793 Z"/>
+</svg>

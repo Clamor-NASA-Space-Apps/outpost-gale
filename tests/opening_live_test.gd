@@ -14,6 +14,15 @@ func _init() -> void:
 
 func play() -> bool:
 	change_scene_to_file("res://ui/boot.tscn")
+	# past the team's logo and the start screen (ui/start.gd) as a kid gets past them: any key, then Enter on Start
+	while current_scene == null or current_scene.get("start") == null or not current_scene.start.is_inside_tree():
+		await process_frame
+	_key(KEY_SPACE, true)
+	_key(KEY_SPACE, false)
+	while current_scene.start.splash:
+		await process_frame
+	_key(KEY_ENTER, true)
+	_key(KEY_ENTER, false)
 	while current_scene == null or current_scene.get("beats") == null:
 		await process_frame
 	var game: Node = current_scene
