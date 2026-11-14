@@ -27,20 +27,14 @@ func play() -> bool:
 		return int(h.stage) >= world.EAT_STAGE and absf(p.y - it.middle().y) < 0.3 and Vector2(p.x - it.middle().x, p.z - it.middle().z).length() <= 1.3).size()
 	check(ready > 0, "the tray starts with heads to eat (%d)" % ready)
 	var eaten := 0
-	var held := false
 	var head: Node3D = it.props["head"]
 	while it.can_use(game.player.body) and eaten < 10:
 		var before := _stages(world, id)
 		box.use(it)
-		for f in 60 * 15:
-			await frames(1)
-			held = held or head.visible
-			if box.playing == null and f > 30:
-				break
+		await frames(2)
 		check(_stages(world, id) < before, "a harvest takes a head off the tray (stages %d, then %d)" % [before, _stages(world, id)])
 		eaten += 1
-	check(held, "the cut head shows in the glove")
-	check(not head.visible, "and is gone after the clip")
+	check(not head.visible, "no head is left floating where the glove was (no clip)")
 	check(eaten == ready, "the tray gave %d heads, it had %d" % [eaten, ready])
 	check(not it.can_use(game.player.body), "an empty tray refuses the next harvest")
 	world.regrow(int(game.sim.sim.sol) + 40, 33.0)

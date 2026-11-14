@@ -255,7 +255,7 @@ func play() -> bool:
 	# PIP asks for the bag back on the ground: one E once the pick-up has finished
 	var put := [false]
 	await _beat("set_down", func() -> void:
-		if not put[0] and game.interactions._seq <= 0.0:
+		if not put[0]:
 			put[0] = true
 			action(&"interact", true)
 			action(&"interact", false))

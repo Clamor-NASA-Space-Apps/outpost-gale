@@ -3,7 +3,7 @@ extends "res://addons/forge/test.gd"
 ## Every clip in data/clips.json is on the hero. Each use clip (one with `planted` boots) is drawn at 12 phases on
 ## the shipped model, skinned on the CPU: no vertex under the floor, no glove inside the helmet or the chest unit,
 ## the planted boots still, the lean under the sheet's hero.lean.max, a kneel's knee on the floor and the working
-## glove where clips.json says. Then perform() and sit() through the real player on a flat floor.
+## glove where clips.json says. Then sit() through the real player on a flat floor.
 
 const MODEL := "res://models/character_suited.glb"
 const PHASES := 12
@@ -237,7 +237,7 @@ func poses() -> void:
 			check(knee - floor_y < 0.03, "%s: the knee is %.3f m over the floor at the work time" % [c, knee - floor_y])
 
 
-## The player's methods on a flat floor: perform() glides, turns, plays and hands back; sit() goes down and up.
+## The player's seat on a flat floor: sit() goes down and up (the use clips themselves are gone, 14 Nov).
 func player_methods() -> void:
 	var world := Node3D.new()
 	root.add_child(world)
@@ -257,48 +257,12 @@ func player_methods() -> void:
 	player.place(Vector3.ZERO, 0.0)
 	await frames(30)
 	var model: Node3D = player.model
-	var start: Vector3 = player.body.global_position
-	# a spot 2 m ahead and to the right, facing +X: the glide stops at 0.5 m, the turn reaches the spot's heading
-	var stand := Transform3D(Basis(Vector3.UP, -PI / 2.0), start + Vector3(1.2, 0, -1.6))
-	var length: float = player.perform(&"consume", stand)
-	check(is_equal_approx(length, float(clips.consume.length)), "perform returns the clip's length (%.2f, %.2f)" % [length, clips.consume.length])
-	var work := ceili(length * clips.consume.work_at * Engine.physics_ticks_per_second)
-	await frames(work)
-	await process_frame
-	check(model.state == &"consume", "perform plays the clip (%s)" % model.state)
-	check(player.cam.show_body and player.cam.fade == 1.0, "the body is drawn while the clip plays")
-	var skeleton: Skeleton3D = model.skeleton
-	var hand: Vector3 = skeleton.global_transform * skeleton.get_bone_global_pose(skeleton.find_bone("hand_r")).origin
-	var want: Vector3 = model.global_transform * model.point(&"consume", "hand")
-	check(hand.distance_to(want) < 0.08, "the glove is where model.point() says at the work time (%.3f m off)" % hand.distance_to(want))
-	await frames(ceili(length * Engine.physics_ticks_per_second) - work + 30)
-	await process_frame
-	var moved: float = ((player.body.global_position - start) * Vector3(1, 0, 1)).length()
-	check(absf(moved - 0.5) < 0.03, "the glide stops at 0.5 m (%.3f)" % moved)
-	check(absf(wrapf(player.yaw - (-PI / 2.0), -PI, PI)) < 0.02, "the hero turns to the spot's heading (%.2f rad)" % player.yaw)
-	check(model.state == &"idle" and player.cut.is_empty() and not player.cam.show_body, "after the clip the hero stands in idle (%s)" % model.state)
-	# a move key ends a clip at once
-	player.perform(&"radio", Transform3D(Basis(), player.body.global_position))
-	await frames(10)
-	var left: float = player.cut.left
-	check(player.perform(&"radio", Transform3D(Basis(), player.body.global_position)) == 0.0 and player.cut.left == left,
-		"the playing clip asked for again is refused, and its cut runs on (%s)" % [player.cut])
-	action(&"move_forward", true)
-	await frames(10)
-	action(&"move_forward", false)
-	check(player.cut.is_empty() and model.state != &"radio", "a move key ends the clip (%s)" % model.state)
-	await frames(60)
 	# sit and stand: down onto a seat behind, idle there, up again on a move key, where it sat
 	var at: Vector3 = player.body.global_position
 	player.sit(true)
 	await frames(ceili(float(clips.sit_down.length) * Engine.physics_ticks_per_second) + 20)
 	await process_frame
 	check(player.seated and model.state == &"sit_idle", "sit(true) ends in sit_idle (%s)" % model.state)
-	check(player.perform(&"consume", Transform3D(Basis(), at)) == 0.0 and player.cut.is_empty(), "no use clip from a seat: perform returns 0 and starts no cut")
-	player.act()
-	await frames(2)
-	await process_frame
-	check(player.seated and model.state == &"sit_idle", "a reach from a seat leaves the hero sitting (%s)" % model.state)
 	action(&"move_forward", true)
 	await frames(5)
 	action(&"move_forward", false)

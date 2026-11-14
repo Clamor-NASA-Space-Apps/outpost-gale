@@ -67,23 +67,13 @@ func one(it: Node3D, heard: Array) -> void:
 	var rest := {}
 	for p: String in it.props:
 		rest[p] = [(it.props[p] as Node3D).transform, (it.props[p] as Node3D).visible]
-	var dish: Node3D = it.props.get("dish")
 	box.interact()
 	await frames(2)
 	if row.has("seat"):
 		check(player.seated, "%s: the hero sits" % name)
 	else:
-		check(player.cut.get("clip") == StringName(row.clip), "%s: E plays %s (cut %s)" % [name, row.clip, player.cut])
-	check(heard.is_empty(), "%s: no action before the clip has run (%s)" % [name, heard])
-	if dish:
-		await frames(220)  # 0.2 of the 1.6 s clip, then 3 s to Earth, held there `hold_s`
-		check(absf(dish.rotation.x - box._earth_x()) < 0.03, "%s: the dish points at Earth's elevation (%.2f, want %.2f)" % [name, dish.rotation.x, box._earth_x()])
-	for i in 900:
-		if box.playing == null:
-			break
-		await frames(1)
-	await frames(60 + 200 * int(dish != null))  # turned parts ease back (the dish over its back_s)
-	check(heard == [row.kind], "%s: used names the action once, at the end (%s)" % [name, heard])
+		check(player.cut.is_empty(), "%s: E plays no clip (cut %s)" % [name, player.cut])
+	check(heard == [row.kind], "%s: used names the action once, at once (%s)" % [name, heard])
 	for p: String in it.props:
 		var n: Node3D = it.props[p]
 		var spec: Dictionary = row.props[p]

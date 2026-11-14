@@ -1,10 +1,6 @@
 extends Node3D
 ## Close views of the rooms' fit-out (lane I, 13 Nov), around the real sandbox (capture-view --scene):
 ##   node ../../tools/capture-view.mjs . captures/i --scene res://tests/i_views.tscn --views wc_in,wc_floor,galley,veggie,cab --scale 0.5
-## board=open or board=shut: once the game is up, the hero boards the rover through its hatch (interactions.gd), and
-## the clock stops with the hatch wide open (the hand on it) or swinging shut behind the hero aboard; with
-## --advance 6000 the shots come after that:
-##   ... --views hatch,hatch_near -- board=open
 ## lights=new previews the proposed room lighting (not the game's look until Ravindu approves it): the ceiling
 ## panels glow warm white instead of the status-light cyan, and the rooms' flat fill (their probe's ambient) drops,
 ## so light comes from the panels. Views are [item, from, at] in the item's own space; any other name goes to the
@@ -45,16 +41,12 @@ const LIGHT_GAIN := 1.6  # its energy, so the floor under it keeps today's brigh
 var game: Node3D
 var cam := Camera3D.new()
 var lights := "now"
-var board := ""
-var _boarding := false
 
 
 func _ready() -> void:
 	for a in OS.get_cmdline_user_args():
 		if a.begins_with("lights="):
 			lights = a.trim_prefix("lights=")
-		if a.begins_with("board="):
-			board = a.trim_prefix("board=")
 	game = load("res://sandbox/sandbox.tscn").instantiate()
 	add_child(game)
 	Forge.register(self)
@@ -144,19 +136,3 @@ func _process(_delta: float) -> void:
 				l.omni_attenuation = FALLOFF
 				l.set_meta("energy", float(l.get_meta("energy", l.light_energy)) * LIGHT_GAIN)  # what the lamp pool fades to
 				l.light_energy *= LIGHT_GAIN
-
-
-func _physics_process(_delta: float) -> void:
-	if board == "" or Engine.time_scale < 1.0 or game.busy():
-		return
-	var box: Node3D = game.interactions
-	var rover: Node3D = game.world.items["rover"]
-	if not _boarding:
-		_boarding = true
-		game.place(rover.exit_point() * Vector3(1, 0, 1), 0.0)  # place() puts it on the ground
-		box.use(box.by_thing[rover])
-		return
-	var leaf: Node3D = box._rover_hatch.thing
-	var open := absf(leaf.rotation.y - box._rover_hatch.shut.basis.get_euler().y)
-	if (board == "open" and open > deg_to_rad(90.0)) or (board == "shut" and game.player.vehicle and box._fade.modulate.a < 0.05 and open > 0.5):
-		Engine.time_scale = 0.001  # held here for the shots (at 0 the rover's springs divide by a zero step and its wheels vanish)

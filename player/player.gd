@@ -76,8 +76,7 @@ var bound := Rect2()
 ## [x, z, r]} or {rect: [x0, z0, x1, z1]}, ...]}}, each area in its node's space (data/world.json `rooms`).
 var rooms := {}
 var room := ""  # the one the body is in, "" outside
-## A use clip playing (perform), else empty: {left: s to its end, t: s since it began, move: the glide (m, world),
-## yaw0, yaw1: the turn, firm: no move key ends it}. Input moves nothing while it plays.
+## Standing up from a seat (sit_to_stand), else empty: {left: s to its end}. Input moves nothing while it plays.
 var cut := {}
 var seated := false  # on a seat (sit): input moves nothing; a move key stands the hero up
 ## The tutorial's lock (allow()): only these may act; empty, everything may.
@@ -322,10 +321,9 @@ func _walk(delta: float) -> void:
 	if not allowed.is_empty():
 		stick.x *= float(may(&"move_left") if stick.x < 0.0 else may(&"move_right"))
 		stick.y *= float(may(&"move_forward") if stick.y < 0.0 else may(&"move_back"))
-	var glide := Vector3.ZERO
 	var busy := seated or not cut.is_empty()
 	if busy:
-		glide = _busy(stick, delta)
+		_busy(stick, delta)
 		stick = Vector2.ZERO
 	var want := cam.ground_basis() * Vector3(stick.x, 0.0, stick.y)
 	var top := (hurry if Input.is_action_pressed(&"hurry") and may(&"hurry") else walk) * stick.length()
@@ -340,7 +338,6 @@ func _walk(delta: float) -> void:
 	body.rotation.y = yaw
 	body.velocity.x = -sin(yaw) * speed
 	body.velocity.z = -cos(yaw) * speed
-	body.velocity += glide
 	if bound.has_area():
 		var p := body.global_position
 		body.velocity.x = _held(body.velocity.x, p.x - bound.position.x, bound.end.x - p.x)
@@ -383,7 +380,6 @@ func _walk(delta: float) -> void:
 	for c in body.get_children():
 		if c.is_in_group("carriable"):
 			carried = c
-	# a use clip plays in place: the glide under it is not a walk (the model would end the clip on it)
 	var steps := model.update(0.0 if busy else flat, idle_below, on_floor, carried != null, delta)
 	if carried:
 		_carry()
@@ -567,32 +563,6 @@ func place(pos: Vector3, yaw_deg: float) -> void:
 	life.snap(pos + Vector3(-sin(yaw), 0.0, -cos(yaw)) * tuning.life.look_far + Vector3.UP * model.bounds.end.y * 0.9)
 
 
-## The hero reaches for something it uses (CONTRACTS.md): the interactions call this when a use happens.
-func act() -> void:
-	if not seated:  # a reach would replace the sit while `seated` stays true
-		model.act()
-
-
-## Plays a use clip (data/clips.json) once and returns its length in seconds; the hero then stands in idle. The
-## body slides at most tuning.json perform.glide_max toward `stand` (global; its origin on the floor, the hero facing
-## its -Z) and turns to it over perform.glide_s while the clip starts in place. A move key ends it early. While it plays the body is drawn
-## even with the play lens close (follow_cam.show_body), for the cut that films it.
-func perform(clip: StringName, stand: Transform3D) -> float:
-	if vehicle or not model.clips.has(clip):
-		push_error("perform: no clip %s, or driving" % clip)
-		return 0.0
-	if seated or not model.act(clip):  # refused: no cut, or the hero would stand idle with the keys locked
-		return 0.0
-	var move := stand.origin - body.global_position
-	move.y = 0.0
-	var front := -stand.basis.z
-	var length: float = model.clips[clip].length
-	cut = {"clip": clip, "left": length, "t": 0.0, "move": move.limit_length(tuning.perform.glide_max), "yaw0": yaw, "yaw1": atan2(-front.x, -front.z), "firm": false}
-	speed = 0.0
-	cam.show_body = true
-	return length
-
-
 ## On a seat behind the hero (true: sit_down, then sit_idle; the hips go to model.point(&"sit_idle", "seat_hip")),
 ## or back up (false: sit_to_stand, which no key cuts short). A move key while seated stands the hero up.
 func sit(on: bool) -> void:
@@ -602,30 +572,18 @@ func sit(on: bool) -> void:
 	speed = 0.0
 	model.seat(on)
 	cam.show_body = true
-	cut = {} if on else {"left": float(model.clips.sit_to_stand.length), "t": float(tuning.perform.glide_s), "move": Vector3.ZERO, "yaw0": yaw, "yaw1": yaw, "firm": true}
+	cut = {} if on else {"left": float(model.clips.sit_to_stand.length)}
 
 
-## While a use clip plays or the hero sits: the glide's velocity this frame, and the turn; a move key ends a cut
-## or stands the hero up.
-func _busy(stick: Vector2, delta: float) -> Vector3:
+## Seated, a move key stands the hero up; standing up, the clip runs out.
+func _busy(stick: Vector2, delta: float) -> void:
 	if seated:
 		if stick != Vector2.ZERO:
 			sit(false)
-		return Vector3.ZERO
-	if stick != Vector2.ZERO and not cut.firm:
-		_end_cut()
-		return Vector3.ZERO
-	var t0: float = cut.t
-	cut.t += delta
+		return
 	cut.left -= delta
-	var s: float = tuning.perform.glide_s
-	var a := smoothstep(0.0, 1.0, minf(t0 / s, 1.0))
-	var b := smoothstep(0.0, 1.0, minf(cut.t / s, 1.0))
-	yaw = lerp_angle(cut.yaw0, cut.yaw1, b)
-	var glide: Vector3 = cut.move * (b - a) / delta
 	if cut.left <= 0.0:
 		_end_cut()
-	return glide
 
 
 func _end_cut() -> void:
@@ -649,6 +607,7 @@ func enter(v: Node3D) -> void:
 		if c is CollisionObject3D:
 			rids.append((c as CollisionObject3D).get_rid())
 	cam.follow_target(v, rids, [], tuning.camera.vehicle_distance, tuning.camera.vehicle_pivot_height, AABB(), float(v.top) if "top" in v else 0.0)  # a vehicle's top speed, m/s: the speed framing
+	model.visible = false  # aboard at once, out of sight in the cab (no boarding clip)
 
 
 func exit() -> void:
@@ -661,6 +620,7 @@ func exit() -> void:
 
 func _leave() -> void:
 	vehicle = null
+	model.visible = true
 	model.sit(false)
 	body.collision_layer = HERO_LAYER
 	body.collision_mask = MASK

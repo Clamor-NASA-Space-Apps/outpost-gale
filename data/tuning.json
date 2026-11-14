@@ -1,10 +1,5 @@
 {
  "note": "Feel numbers that are not physical (physical ones live in reality.json). Camera rows sized against hero.height 1.89 m.",
- "perform": {
-  "note": "player.perform(): glide_max: m the body slides at most to a use spot's stand point; glide_s: s the slide and the turn take, while the clip starts in place (design/plans/next-lanes.md, Lane A)",
-  "glide_max": 0.5,
-  "glide_s": 0.3
- },
  "camera": {
   "distance": 4.2,
   "distance_up": 3.2,

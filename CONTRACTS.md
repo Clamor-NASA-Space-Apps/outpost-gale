@@ -46,7 +46,9 @@ The composition root is `sandbox/sandbox.gd`. It calls only these:
   positive; input.y throttle, forward positive), `seat() -> Transform3D` (global), `exit_point() -> Vector3` (global),
   `speed() -> float`. The sandbox root calls `player.exit()` on `interact` while driving.
 - `player.restyle(design)`: the sandbox calls it with `world.restyle()` on a sky or quality switch.
-- `player.act()`: the hero reaches (the interact clip); the interactions call it from `use()`, only when something is used.
+- Every use happens at once, with no clip (14 Nov): a door swings (unless the hero stands in its swing: then it stays
+  as it is), a bag is in the hands (`player.carried`, held by `player.gd _carry()`) and is set down in front on free
+  floor, the hero is in the rover (hidden) or out beside its hatch. Only a seat plays clips (sit down, stand up).
 - `player.attention`: a `Node3D` or null, the thing the helmet turns toward; the interactions set it to their target.
 - The player reads `breath_phase` (0 to 1) from any sibling that has it (the audio node), so the chest rises on the
   breath you hear.
@@ -219,15 +221,13 @@ cover lifts (`audio.lift()`, a 1 s fade).
   `machines.aim(sun)` turns the trackers to the clock's sun (zero lies them flat).
 
 ## Actions, sounds and the charger (13 Nov 2026, night)
-- `player.perform(clip: StringName, stand: Transform3D) -> float`: glide at most `tuning.perform` to `stand` (global, floor
-  origin, facing its -Z), play a use clip from `data/clips.json`, return its length (0 for an unknown clip or while
-  driving). A move key ends it; jump is blocked. `player.sit(on)`, `player.seated`, `player.cut` (empty when idle).
-  `follow_cam.show_body` holds the body drawn, however close the play lens, during either. `player.model.point(clip, "hand" |
-  "seat_hip" | "wheel") -> Vector3` in the hero's own space, to place a stand point from a spot.
+- `player.sit(on)`, `player.seated`, `player.cut` (standing up: `{left}`, else empty). `follow_cam.show_body` holds
+  the body drawn while seated. `player.model.point(clip, "hand" | "seat_hip" | "wheel") -> Vector3` in the hero's own
+  space, to place a stand point from a spot.
 - Use spots (`data/world.json` `uses`: item id -> rows `{kind, prompt, box: [x0,y0,z0,x1,y1,z1], stand: [x, z, yaw_deg],
   clip, sound}` in the item's own space): one Interactable of kind `spot` per row, its `thing` an empty node at the
-  item's origin, its `shape` the box, `row` the row, `stand()` the global stand point. E calls
-  `player.perform(clip, stand())` and emits `used(sound)`. `player.cut.clip` names the playing clip.
+  item's origin, its `shape` the box, `row` the row, `stand()` the global stand point. E plays the sound, sets each
+  step's end state (a `keep` prop keeps it, others go back) and emits `used(kind)` at once; `clip` is no longer played.
 - `audio.used(name, pos)` plays the `SOUNDS` table's files for `name` (`audio.gd`); an unknown name or a missing file
   is an error. `audio.music(name, force := false)` (`force` fades the playing cue and skips the gap), `stop_music()`,
   `bed(name)` (`eva`, `habitat`: phrases with long rests), `duck(on)` (world sound down `audio.duck_db`, music not),

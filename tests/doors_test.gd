@@ -38,8 +38,8 @@ func play() -> bool:
 	world = game.get_node("World")
 	player = game.get_node("Player")
 	box = game.get_node("Interactions")
-	# the hand reaches the handle (box.GRIP of the reach clip), then the door swings
-	wait = int(60 * (0.2 + float(game.tuning.interact.move_s) + box.GRIP * float(player.model.clips.interact.length)))
+	# E swings the door at once (no reach clip)
+	wait = int(60 * (0.2 + float(game.tuning.interact.move_s)))
 	for id: String in ENTERABLE:
 		var door := _door(id)
 		if door:
@@ -323,16 +323,13 @@ func no_push(door: Node3D, item: Node3D) -> void:
 				if not await _stand(door, at, 0.0):
 					continue  # where the open door or the frame is
 				tried[1] += 1
-				var was: float = door.thing.rotation.y
+				var passing: bool = not box._clear(door, false)
 				await _use_still(door, label + " close", bad)
-				if absf(door.thing.rotation.y - door.shut.basis.get_euler().y) > 0.01:
-					held += 1  # held at the hero: it finishes once the hero steps away
-					await _stand(door, _spot(f, w, -side, 2.0, 0.0), 0.0)  # through to the side it never swings into
-					await frames(wait)
-					check(absf(door.thing.rotation.y - door.shut.basis.get_euler().y) < 0.01, "%s: a door held at the hero shuts once it steps away (at %.0f deg, was %.0f)" % [label, rad_to_deg(door.thing.rotation.y), rad_to_deg(was)])
+				held += int(passing)
+				check(absf(door.thing.rotation.y - door.shut.basis.get_euler().y) < 0.01, "%s: it shuts all the way, through the hero's place if it must (at %.0f deg)" % [label, rad_to_deg(door.thing.rotation.y)])
 	_shut(door)
 	check(tried[0] >= 8 and tried[1] >= 8, "%s: the hero stands at %d spots to open it and %d in its swing to close it" % [id, tried[0], tried[1]])
-	check(held > 0, "%s: some spots are in the swing, where the closing door stops at the hero (%d)" % [id, held])
+	check(held > 0, "%s: some spots are in the swing, where the closing leaf passes the hero, never held half shut (%d)" % [id, held])
 	check(bad.is_empty(), "%s: no door push moves the hero over %.2f m or leaves it in a collider %s" % [id, PUSH, bad])
 
 

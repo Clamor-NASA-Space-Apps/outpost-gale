@@ -37,18 +37,14 @@ func play() -> bool:
 	await frames(3)
 	check(box.target == door, "the door is the target in front of it (got %s)" % [box.target])
 	var shut: float = door.thing.rotation.y
+	var p0: Vector3 = player.body.global_position
 	game.interactions.interact()
-	await frames(20)
-	check(player.cut.get("clip") == &"interact" and is_equal_approx(door.thing.rotation.y, shut), "E: the hand goes to the handle first (cut %s)" % [player.cut])
-	await frames(70)
-	# from here (1.1 m into its swing) the hero steps back what a reach allows (tuning perform.glide_max), so the
-	# door may stop at the hero, never push it, and finish once the hero walks on
-	check(absf(door.thing.rotation.y - shut) > deg_to_rad(45) and player.state().player.inside.is_empty(), "then the door swings open (%.0f deg), never into the hero" % rad_to_deg(door.thing.rotation.y - shut))
-	action(&"move_back")
-	await frames(40)
-	action(&"move_back", false)
-	await frames(40)
-	check(absf(door.thing.rotation.y - shut) > deg_to_rad(95), "and opens all the way once the hero steps back (%.0f deg)" % rad_to_deg(door.thing.rotation.y - shut))
+	await frames(2)
+	check(player.cut.is_empty() and absf(door.thing.rotation.y - shut) > 0.0, "E: the door starts to swing at once, no reach clip (cut %s)" % [player.cut])
+	await frames(60)
+	# from 1 m off its face the hero is out of its swing (the swing never starts where the leaf would meet the hero)
+	check(absf(door.thing.rotation.y - shut) > deg_to_rad(95) and player.state().player.inside.is_empty(), "and opens all the way (%.0f deg), never into the hero" % rad_to_deg(door.thing.rotation.y - shut))
+	check(player.body.global_position.distance_to(p0) < 0.05, "the hero stays where it stood")
 
 	var panel := face("panel")
 	await frames(3)
@@ -65,59 +61,36 @@ func play() -> bool:
 	check(box.target != null and box.target.kind == bag.kind, "a bag is the target beside them (got %s)" % [box.target])
 	box.interact()
 	await frames(2)
-	check(player.cut.get("clip") == box.PICK, "E kneels to the bag (cut %s)" % [player.cut])
-	check(box.carried != null and box.carried.is_in_group("carriable"), "a bag is carried")
+	check(player.cut.is_empty() and box.carried != null and box.carried.is_in_group("carriable"), "E: a bag is in the hands at once, no kneel")
 	check(game.render_game_to_text().carry != "", "state says what is carried")
 	var b: Node3D = box.carried
-	var jump := await _until_free(b)
-	check(b.get_parent() == player.body, "after the clip it rides on the chest")
+	check(b.get_parent() == player.body, "it rides with the hero")
+	check(_clear_of_body(b), "held out in front, the bag is not inside the body")
 	box.interact()
 	await frames(2)
-	check(player.cut.get("clip") == box.PICK and box.busy(), "E kneels to put it down")
-	jump = maxf(jump, await _until_free(b))
-	check(box.carried == null, "the bag is put down")
+	check(box.carried == null and player.cut.is_empty(), "E: it is put down at once")
 	check(absf(b.global_position.y - game.world.height_at(b.global_position.x, b.global_position.z)) < 0.05, "the bag rests on the ground")
-	check(jump < 0.12, "picked up and put down, the bag never jumps (%.3f m in a frame)" % jump)
+	await set_down_beside()
 
 	await hatch()
 	var rover := face("rover")
 	await frames(3)
 	check(box.target == rover, "the rover is the target at its hatch (got %s)" % [box.target])
 	var start: Vector3 = rover.thing.global_position
-	var leaf: Node3D = box._rover_hatch.thing
-	var shut_y: float = box._rover_hatch.shut.basis.get_euler().y
-	var swung := [0.0]  # the widest the hatch stood open
-	var watch := func() -> void: swung[0] = maxf(swung[0], absf(leaf.rotation.y - shut_y))
-	process_frame.connect(watch)
 	box.interact()
 	await frames(2)
-	check(player.vehicle == null and player.cut.get("clip") == &"interact", "E: a hand on the hatch first, not aboard at once")
-	await _until_free(rover.thing)
-	check(player.vehicle == rover.thing and box._fade.modulate.a == 0.0, "then through it in a fade: the hero is in the rover")
-	check(swung[0] > deg_to_rad(60.0), "the hatch swung open before the hero went through (%.0f deg)" % rad_to_deg(swung[0]))
-	await frames(60)
-	check(absf(leaf.rotation.y - shut_y) < 0.01, "and shut behind the hero")
+	check(player.vehicle == rover.thing and not player.model.visible, "E: the hero is in the rover at once, out of sight in the cab")
 	action(&"move_forward")
 	await frames(240)
 	action(&"move_forward", false)
 	await frames(60)
 	var moved: float = (rover.thing.global_position - start).length()
 	check(moved > 1.0, "the rover drives (moved %.2f m)" % moved)
-	swung[0] = 0.0
 	box.interact()
 	await frames(2)
-	check(player.vehicle == rover.thing and box._swinging.has(box._rover_hatch), "getting out opens the hatch first")
-	for i in 60:
-		if box._fade.modulate.a > 0.0:
-			break
-		await frames(1)
-	check(player.vehicle == rover.thing and box._fade.modulate.a > 0.0, "then fades through it")
-	await _until_free(rover.thing)
-	check(player.vehicle == null and box._fade.modulate.a == 0.0, "the hero gets out")
-	check(swung[0] > deg_to_rad(60.0), "through the open hatch (%.0f deg)" % rad_to_deg(swung[0]))
-	await frames(60)
-	process_frame.disconnect(watch)
-	check(absf(leaf.rotation.y - shut_y) < 0.01, "which shuts again behind the hero")
+	check(player.vehicle == null and player.model.visible, "E: the hero gets out at once")
+	await frames(30)
+	check(player.state().player.inside.is_empty(), "on free ground, in no solid")
 	var out: Vector3 = player.body.global_position
 	check(out.distance_to(rover.thing.exit_point()) < 1.0, "the hero is at the rover's hatch")
 	await frames(3)
@@ -234,22 +207,12 @@ func galley() -> void:
 	box.used.connect(hear)
 	box.interact()
 	await frames(2)
-	check(player.cut.get("clip") == &"consume", "E plays the consume clip (cut %s)" % [player.cut])
-	check(not spot.can_use(player.body), "mid-drink the spot is not offered again")
+	box.used.disconnect(hear)
+	# at once (14 Nov: no use clips): the action is named for the rules on the press, and the hero is free again
+	check(player.cut.is_empty() and heard.has("drink"), "E: the drink is had at once, no clip (%s)" % [heard])
 	var extra: Array = game.render_game_to_text().keys().filter(func(k: String) -> bool: return not k in keys)
 	check(extra.is_empty(), "no new state keys (%s)" % [extra])
-	await frames(20)
-	var pouch: Node3D = spot.props.pouch
-	check(pouch.visible, "the pouch shows under the nozzle")
-	action(&"move_forward")
-	await frames(3)
-	action(&"move_forward", false)
-	await frames(2)
-	box.used.disconnect(hear)
-	check(player.cut.is_empty(), "a move key ends the drink")
-	# cut short, the drink was not had: no action for the rules, and the pouch goes back (tests/uses_test.gd plays it out)
-	check(heard.is_empty(), "a drink cut short names no action (%s)" % [heard])
-	check(not pouch.visible and box.playing == null, "and its pouch is put away")
+	check(not (spot.props.pouch as Node3D).visible, "its pouch stays put away")
 
 
 ## Drives the rover straight across `at` (x, z) from 8 m before it (room to reach top speed) to `beyond` + 4 m past
@@ -416,15 +379,49 @@ func over_rock(r: Node3D, tall: float, lane: float) -> Dictionary:
 	return out
 
 
-## Waits while a pick-up, put-down or hatch trip runs (at most 10 s); the most `n` moved in one frame.
-func _until_free(n: Node3D) -> float:
-	var jump := 0.0
-	var last := n.global_position
-	for i in 600:
-		await frames(1)
-		jump = maxf(jump, n.global_position.distance_to(last))
-		last = n.global_position
-		if not box.busy():
-			break
-	await frames(2)
-	return jump
+## The carried bag's box against the drawn body (the idle pose's box, a little in, as hands and arms reach round it).
+func _clear_of_body(b: Node3D) -> bool:
+	var player: Node3D = game.player
+	var cs: CollisionShape3D = b.find_children("*", "CollisionShape3D", true, false)[0]
+	var bag: AABB = player.body.global_transform.affine_inverse() * cs.global_transform * cs.shape.get_debug_mesh().get_aabb()
+	var torso: AABB = player.model.bounds.grow(-0.08)  # the torso and pack, not the arms held out
+	return not bag.intersects(torso)
+
+
+## 14 Nov playtest: a bag set down where another bag lay sank into it. Standing with another bag where E would put
+## it, from four sides: it is set down beside it, never in it (or kept in the hands where there is no room).
+func set_down_beside() -> void:
+	var bags: Array = game.get_tree().get_nodes_in_group("interactable").filter(func(it: Node3D) -> bool: return it.kind == "bag")
+	var player: Node3D = game.player
+	var mine: Node3D = bags[0]
+	var under: Node3D = bags[1]
+	for k in 4:
+		var face := Vector3.FORWARD.rotated(Vector3.UP, TAU * k / 4.0)
+		var at: Vector3 = mine.middle() - face * 1.2
+		game.place(Vector3(at.x, game.world.height_at(at.x, at.z) + 0.02, at.z), rad_to_deg(atan2(face.x, -face.z)))
+		await frames(40)
+		box.target = mine
+		box.interact()
+		await frames(2)
+		if not check(box.carried == mine.thing, "side %d: picked up" % k):
+			continue
+		var spot: Vector3 = under.middle() + face * (float(game.tuning.interact.carry_ahead) + 0.4)
+		game.place(Vector3(spot.x, game.world.height_at(spot.x, spot.z) + 0.02, spot.z) - face * 2.0 * (float(game.tuning.interact.carry_ahead) + 0.4), rad_to_deg(atan2(face.x, -face.z)))
+		await frames(40)
+		box.interact()
+		await frames(2)
+		var cs: CollisionShape3D = mine.thing.find_children("*", "CollisionShape3D", true, false)[0]
+		var q := PhysicsShapeQueryParameters3D.new()
+		q.shape = cs.shape
+		q.transform = cs.global_transform
+		q.collision_mask = box.CARRIABLES
+		q.exclude = [(mine.thing as CollisionObject3D).get_rid()]
+		var deepest := 0.0
+		var pairs := game.get_world_3d().direct_space_state.collide_shape(q, 32)
+		for i in range(0, pairs.size(), 2):
+			deepest = maxf(deepest, pairs[i].distance_to(pairs[i + 1]))
+		check(box.carried != null or deepest < 0.01, "side %d: set down by another bag, it is inside none (in by %.3f m)" % [k, deepest])
+		if box.carried:
+			box.carried.reparent(game.world)  # no room here: back on its own spot for the next side
+			(box.carried as CollisionObject3D).collision_layer = box.CARRIABLES
+			box.carried = null
