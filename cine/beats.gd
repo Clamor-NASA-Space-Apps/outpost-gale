@@ -52,6 +52,7 @@ var _nag := 0  # the plea level now: 0 calm, 1 to 3
 var _next_nag := 0
 var _nag_t := 0.0  # s the kid has been ignoring this step
 var _best := INF  # the nearest the hero came to this beat's place
+var _pip_there := false  # PIP reached this beat's order
 var _call_t := 0.0  # s since PIP last called "this way"
 var _back := INF  # s until the beat's own line comes back after a plea or a call
 var _walk_to := Vector3.INF  # walk:<spot>: where the hero walks on its own, INF when it does not
@@ -109,6 +110,8 @@ func start(name: String) -> void:
 func notify(action: String, _info := {}) -> void:
 	if not sequence.is_empty():
 		_ever[action] = true
+	if action == "pip_arrived":
+		_pip_there = true
 	var want := _wants()
 	if beat.is_empty() or action not in want:
 		return
@@ -185,6 +188,11 @@ func _physics_process(delta: float) -> void:
 		if d < _best - 1.0:  # the kid is on the way: no plea, and calm again
 			_best = d
 			_calm()
+		# a kid who followed PIP all the way and stands beside it has arrived, from whichever side: outside the place's
+		# circle the step never ended, and PIP only pleaded "Over here!" at a kid already there
+		if beat.get("pip", {}).has("follow_me") and _pip_there:
+			var p: Vector3 = pip.global_position
+			_met = _met or Vector2(b.x - p.x, b.z - p.z).length() < float(data.pip.lead_wait_m)
 	if w.has("ever"):
 		var names: Array = w.ever if w.ever is Array else [w.ever]
 		_met = _met or names.all(func(a: String) -> bool: return _ever.has(a))
@@ -267,6 +275,7 @@ func _start(i: int) -> void:
 	_got = {}
 	_held = {}
 	_best = INF
+	_pip_there = false
 	_call_t = 0.0
 	_back = INF
 	_calm()
