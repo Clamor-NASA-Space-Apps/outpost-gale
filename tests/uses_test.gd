@@ -47,6 +47,32 @@ func play() -> bool:
 				if spec.get("clean", false) and not spec.get("hidden", false) and not spec.get("hand", false):
 					outdoors.append("%s %s" % [id, name])
 	check(outdoors.is_empty(), "no always-shown outdoor prop is a swept surface (%s)" % [outdoors])
+	# every step that waits for a use has a waypoint to the thing: PIP said "press E" for things a building away, with
+	# no way to know where (15 Nov playtest)
+	var kinds := {}
+	for id: String in game.world.data.uses:
+		if id != "_note":
+			for row: Dictionary in game.world.data.uses[id]:
+				kinds[row.kind] = true
+	var seqs: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/sols.json"))
+	seqs["1"] = JSON.parse_string(FileAccess.get_file_as_string("res://data/beats.json")).opening
+	var lost: Array[String] = []
+	for key: String in seqs:
+		if not key.is_valid_int():
+			continue
+		for b: Dictionary in seqs[key]:
+			var w: Variant = b.get("wait", {}).get("action", [])
+			for a: String in (w if w is Array else [w]):
+				# the one step with none sends the kid to the handbook, which says where (Sol 4's valve, keys Tab)
+				if a.begins_with("use:") and (a == "use:rover" or kinds.has(a.trim_prefix("use:"))) \
+						and b.get("objective") == null and not "Tab" in b.get("keys", []):
+					lost.append("sol %s %s" % [key, b.id])
+	check(lost.is_empty(), "every step that waits for a use has a waypoint to it (%s)" % [lost])
+	game.beats.objective.emit("use:radio")
+	var mark: Node3D = game.hud.objective_node
+	check(mark != null and mark.row.kind == "radio", "a step that asks for the radio puts its waypoint on a radio")
+	game.interactions.used.emit("radio", Vector3.ZERO)
+	check(game.hud.objective == "", "and the waypoint goes once the radio is used (%s)" % game.hud.objective)
 	await wiper(spots.filter(func(it: Node) -> bool: return it.row.has("wiper")), heard)
 	var extra: Array = game.render_game_to_text().keys().filter(func(k: String) -> bool: return not k in keys)
 	check(extra.is_empty(), "no new state keys (%s)" % [extra])

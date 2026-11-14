@@ -180,11 +180,11 @@ wall, and drive home. The map lesson happens here.
 
 | PIP says (once) | Page | Lines on the page | Picture |
 |---|---|---|---|
-| "See the ring? We can walk back from inside it." | The rover | Apollo crews stayed within about 9.7 km: the distance they could walk back (rows 266 to 268). Mont Mercou is 8.8 km away | `jsc2008e138993` |
+| "8.8 km: if the rover breaks, we walk." | The rover | Apollo crews stayed within about 9.7 km: the distance they could walk back (rows 266 to 268). Mont Mercou is 8.8 km away | `jsc2008e138993` |
 | "Long ago, this was a lake." | Gale's ancient lake | Billions of years ago Gale held a lake with what life needs. Nobody has found life here | to pick |
 | "An old friend lives in this crater." | Curiosity | NASA's rover has worked at Gale since 2012 (row 228) | to pick |
 
-**Check:** Why is Mont Mercou a safe trip? We could walk back from it ✔ · The rover is fast · It is downhill
+**Check:** Why is Mont Mercou a safe trip? We could walk home if the rover broke ✔ · The rover is fast · It is downhill
 
 ### Sol 10: "The sky goes dark". What do we do when the sun is gone?
 **Story.** The finale (Ravindu, 14 Nov). You wake to a dust storm: the sky is dark and the solar wings make almost

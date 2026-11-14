@@ -660,10 +660,25 @@ func _wire() -> void:
 			# "the game itself cannot identify where the rover is"). Boarded at its rear hatch, so the waypoint stands
 			# on the hatch, not on its middle, where it led a kid to the nose and no prompt
 			hud.set_objective_node(interactions.by_thing.get(world.items[t], world.items[t]), "", t)
+		elif t.begins_with("use:"):
+			# the thing a step asks the kid to use, wherever the kid is: the nearest spot of that kind that can be used
+			# now, named by its own prompt. PIP said "press E" for things a building away (15 Nov playtest: "pressing E
+			# outside does nothing", the radio to ask Earth a question)
+			var best: Node3D = null
+			for it: Node3D in interactions.by_thing.values():
+				if it.kind == "spot" and it.row.kind == t.trim_prefix("use:") and it.can_use(player.body) \
+						and (best == null or it.global_position.distance_to(player.body.global_position) < best.global_position.distance_to(player.body.global_position)):
+					best = it
+			if best:
+				hud.set_objective_node(best, String(best.row.get("prompt", t)), t)
 		elif t == "pip" or world.data.landmarks.has(t):
 			hud.set_objective(t)
 		elif world.items.has(t):
 			hud.set_objective_node(world.items[t], "", t))
+	# used: its waypoint has done its work
+	interactions.used.connect(func(what: String, _pos: Vector3) -> void:
+		if hud.objective == "use:" + what:
+			hud.clear_objective())
 	hud.dismissed.connect(func(_id: String) -> void: beats.notify("dismissed"))
 	hud.map_toggled.connect(func(open: bool) -> void: beats.notify("map_open" if open else "map_closed"))
 	beats.shot.connect(cine.shot)

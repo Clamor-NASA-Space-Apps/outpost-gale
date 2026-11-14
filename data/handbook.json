@@ -106,7 +106,7 @@
 			"source": "NASA ICES 2013 and NASA Orion, factcheck rows 35, 87 and 90",
 			"photo": "", "credit": ""},
 		{"id": "rover", "tab": "base", "title": "The rover", "icon": "next",
-			"lines": ["Apollo crews stayed within about 9.7 km of their lander.", "That was how far they could walk back.", "Mont Mercou is 8.8 km away."],
+			"lines": ["Apollo crews stayed within about 9.7 km of their lander.", "That was how far they could walk back if the rover broke.", "Mont Mercou is 8.8 km away."],
 			"kid": "Never drive farther than you can walk home.",
 			"source": "NASA SP-350 and our map maths, factcheck rows 232 and 266",
 			"photo": "res://ui/handbook/photos/7035876.jpg", "credit": "NASA",

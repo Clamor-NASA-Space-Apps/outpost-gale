@@ -67,6 +67,7 @@
     },
     {
       "id": "brush",
+      "objective": "use:clean_panel",
       "line": "sol2.brush",
       "keys": [
         "E"
@@ -233,6 +234,7 @@
     },
     {
       "id": "plant",
+      "objective": "use:plant",
       "task": "task.s3_plant",
       "line": "sol3.plant",
       "keys": [
@@ -319,6 +321,7 @@
   "4": [
     {
       "id": "wake",
+      "objective": "use:radio",
       "allow": [],
       "do": [
         "clock:run"
@@ -959,7 +962,7 @@
       "keys": [
         "E"
       ],
-      "objective": "hab1",
+      "objective": "use:brush",
       "wait": {
         "action": "use:brush"
       }
@@ -1024,6 +1027,7 @@
     },
     {
       "id": "s17_pick",
+      "objective": "use:harvest",
       "line": "sol17.pick",
       "keys": [
         "E"
@@ -1214,7 +1218,7 @@
       "keys": [
         "E"
       ],
-      "objective": "site_curiosity_rover",
+      "objective": "rover",
       "wait": {
         "action": "use:rover"
       }

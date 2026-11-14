@@ -13,6 +13,7 @@ extends Node3D
 const Rover := preload("res://sandbox/rover.gd")
 const CARRIABLES := 64
 const WALLS := 2  # what hides a thing from the hands (CONTRACTS.md collision layers: statics)
+const SPOT_MIN := 0.5  # m: the least a use spot's target measures on a side (art direction)
 const PRESS := 0.35  # share of the reach clip (clips.json interact) when the glove is on a wiper's button
 const STEP_S := 0.25  # s the hero takes to the button's stand, as a step up to it (art direction)
 const POINTED := 2 | 4 | 16 | 64  # what the view's centre can rest on: statics, thin statics, vehicles, carriables
@@ -184,6 +185,11 @@ func setup(w: Node3D, p: Node3D, t: Dictionary, sheet: Dictionary) -> void:
 			else:
 				var b: Array = row.box
 				it.shape = AABB(Vector3(b[0], b[1], b[2]), Vector3(b[3] - b[0], b[4] - b[1], b[5] - b[2]))
+				# never smaller than SPOT_MIN on a side, about its own middle: a seed tray or a button a few centimetres
+				# across had to be faced or looked at exactly, and the prompt never came (15 Nov playtest: the pebble, the
+				# brush, "pressing E does nothing")
+				var short := (Vector3.ONE * SPOT_MIN - it.shape.size).max(Vector3.ZERO) / 2.0
+				it.shape = AABB(it.shape.position - short, it.shape.size + short * 2.0)
 			it.global_position = it.middle()
 			if row.has("wiper"):
 				_wiper_add(it, item)

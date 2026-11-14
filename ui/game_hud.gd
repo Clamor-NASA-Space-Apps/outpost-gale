@@ -405,7 +405,7 @@ func set_objective_node(node: Node3D, label_id := "", id := "") -> void:
 		_cue("objective_new")
 	objective = id
 	objective_node = node
-	waypoint.point_node(node, line(label_id) if label_id else ("PIP" if node == pip else PLACES.get(id, id.capitalize())))
+	waypoint.point_node(node, _words(label_id) if label_id else ("PIP" if node == pip else PLACES.get(id, id.capitalize())))
 
 
 ## Where the objective is now (world x, z), or null.

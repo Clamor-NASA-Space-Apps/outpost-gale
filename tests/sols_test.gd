@@ -179,7 +179,7 @@ func play() -> bool:
 	await _beat("sent")
 	check(game.hud.mail.visible, "the visor mail shows the question on its way")
 	await _beat("light_time")
-	check(targets[-1] == "", "the alarm shows no waypoint: the handbook says where the valve is (%s)" % targets[-1])
+	check(game.hud.objective == "", "the alarm shows no waypoint: the handbook says where the valve is (%s)" % game.hud.objective)
 	used_at = -1
 	await _beat("valve", func() -> void:
 		var b: Vector3 = player.body.global_position
