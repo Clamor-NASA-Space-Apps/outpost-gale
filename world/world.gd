@@ -317,6 +317,12 @@ func mark(pos: Vector3, yaw_deg: float, kind: String, width := 0.3, strength := 
 	terrain.mark(pos, yaw_deg, kind, width, strength)
 
 
+## A wheel's rut, pressed along the wheel's own way from its last print (`from`) to where it is now (`to`), a print
+## every `every` metres; returns where the last print lies, for the next call (terrain.gd rut()).
+func rut(from: Vector3, to: Vector3, every: float, width: float, strength: float) -> Vector3:
+	return terrain.rut(from, to, every, width, strength)
+
+
 ## Dust thrown by a boot or a wheel at contact: `vel` the foot's (or wheel rim's) world velocity, `strength`
 ## 0 to 1, `kind` "foot" or "wheel" (world/dust.gd).
 func puff(pos: Vector3, vel: Vector3, strength: float, kind := "foot") -> void:

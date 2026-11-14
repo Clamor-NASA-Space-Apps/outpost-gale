@@ -19,9 +19,13 @@
   "wake_hold_s": 2.0
  },
  "trip": {
-  "_note": "The rover drives away from a camera left where it stood (cam: m behind, m to its right, m over the ground) for drive_s (from a standstill at the sheet's 1 m/s2 to its 2.8 m/s, about 10 m: small in the frame), the screen goes black, the title holds title_s, then the rover stands at the landmark. title_id: the card's text id; trip_to()'s args fill {sol} and {km} once the story writes them",
+  "_note": "The rover drives away from a camera left where it stood (cam: m behind, m to its right, m over the ground, seen along the way it drives off; cine.gd _stand() tries other spots when that one is in a wall or has no sight of the rover) for drive_s (from a standstill at the sheet's 1 m/s2 to its 2.8 m/s, about 10 m: small in the frame, run_m), the screen goes black, the title holds title_s, then the rover stands at the landmark. title_id: the card's text id; trip_to()'s args fill {sol} and {km} once the story writes them",
   "cam": [6.0, 3.0, 1.8],
   "drive_s": 5.0,
+  "run_m": 10.0,
+  "turn_s": 7.0,
+  "turn_deg": 30,
+  "_note_turn": "the drive-off is the autopilot's (sandbox/rover_pilot.gd film()): toward the edge of the ground on the side the destination lies, round whatever stands in the way. Where the rover must come round first (parked nose on to a wall, the way home behind it: a three-point turn at the sheet's 20 deg/s), drive_s starts once its nose is within turn_deg of its way, at most turn_s later; a rover that faces its way starts at once, as before. Art direction",
   "title_s": 2.5,
   "title_id": "cine_trip_title"
  },

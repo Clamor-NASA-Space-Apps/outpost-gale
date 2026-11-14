@@ -3,6 +3,7 @@ extends RefCounted
 ## rover cannot drive through and then holds the same stick the kid does (player.gd _drive() asks steer() for the
 ## input each physics frame), so the speed, turning, braking, dust and sound are the rover's own (rover.gd drive()).
 ## A move key, a cleared mark, getting out or a cinematic takes the wheel back at once.
+## A rover trip's drive-off is its own entry (film(), release()): cine.gd holds that wheel, and no key or mark does.
 ## PIP's route graph (pip.gd _route) is a dozen hand-placed points checked with PIP's own 0.5 m hull, so it cannot
 ## serve a body 2.3 m wide: the way is planned on a grid over the patch from the same collision layers instead.
 
@@ -36,6 +37,10 @@ var _best := INF  # nearest it came to the point since it last got anywhere
 var _yaw := 0.0  # and its heading then
 var _since := 0.0
 var _tries := 0
+var off := PI  # rad: how far the nose is off the point it steers for (cine.gd films the drive-off once it has come round)
+var _backing := false  # backing off a wall to make room to turn
+var _shot := false  # a cinematic drives (film()): no key, mark or word until release()
+var _hull: CollisionShape3D  # the rover's
 var _stop_m := 0.0  # how near the last point it stops
 var _near := false  # the rover is within the HUD's reach of the mark
 var _done := false  # arrived: braking to a stand before it hands back
@@ -51,6 +56,8 @@ func _init(w: Node3D, tuning: Dictionary) -> void:
 
 ## The map's mark was set (x, z) or cleared (null). The root passes null when nobody is aboard.
 func go(at: Variant) -> void:
+	if _shot:
+		return
 	_want = at
 	if at == null and driving():
 		# the HUD clears a mark the hero reaches (game_hud.gd MARK_REACH_M), a little before the rover stands: that
@@ -65,18 +72,47 @@ func driving() -> bool:
 	return on and Engine.get_physics_frames() - _frame <= 1
 
 
+## A cinematic's own drive (cine.gd trip_to): the rover sets off toward `at` now, round everything, until release().
+## No key takes this wheel, no mark changes it and nothing is said. False when there is no way at all.
+func film(rover: Node3D, at: Vector2) -> bool:
+	_shot = true
+	_want = null
+	_goal = at
+	_tries = 0
+	off = PI
+	on = _plan(rover)
+	return on
+
+
+func release() -> void:
+	_shot = false
+	on = false
+	_want = null
+
+
+## The point `m` metres along the way from `from` (the way's end when it is shorter).
+func ahead(from: Vector2, m: float) -> Vector2:
+	for i in range(_i, path.size()):
+		var d := from.distance_to(path[i])
+		if d >= m:
+			return from.move_toward(path[i], m)
+		m -= d
+		from = path[i]
+	return from
+
+
 ## The stick for this frame: the kid's `keys` (x steers right, y is throttle), or its own while it drives.
 func steer(rover: Node3D, keys: Vector2, delta: float) -> Vector2:
 	var frame := Engine.get_physics_frames()
-	if frame - _frame > 1 or (busy.is_valid() and busy.call()):
+	if not _shot and (frame - _frame > 1 or (busy.is_valid() and busy.call())):
 		on = false  # nobody drove last frame (the kid got out and in again), or a cinematic has the rover
 		_want = null
 	_frame = frame
 	if _want != null and not hold:
 		_start(rover)
 	if not on:
-		return keys
-	if keys != Vector2.ZERO:
+		return Vector2.ZERO if _shot else keys
+	if keys != Vector2.ZERO and not _shot:
 		_stop("off")
 		return keys
 	var pos := Vector2(rover.global_position.x, rover.global_position.z)
@@ -104,12 +140,40 @@ func steer(rover: Node3D, keys: Vector2, delta: float) -> Vector2:
 				_stop("stuck")
 			return Vector2.ZERO
 	var err := angle_difference(rover.yaw, atan2(-to.x, -to.y))  # the rover's nose is its -z
+	off = err
 	var slow: Array = t.slow_deg
+	# the nose swings only where the body has room to: nose on to a wall, a turn on the spot put its corners into
+	# the wall (rover.gd drive() turns without asking)
+	var room := absf(err) < deg_to_rad(slow[0]) or _turns(rover, signf(err))
+	var x := clampf(-err / deg_to_rad(float(t.steer_deg)), -1.0, 1.0) if room else 0.0
+	if rover.v < -0.05:
+		x = -x  # backing turns the other way, as a car does (rover.gd drive())
 	var throttle := 1.0 - clampf(inverse_lerp(slow[0], slow[1], rad_to_deg(absf(err))), 0.0, 1.0)
-	if last:
+	if room:
+		_backing = false
+	elif rover.blocked != "" and rover.v >= 0.0:
+		_backing = true  # no room to turn and none ahead (nose on to a wall): back off until there is
+	if absf(err) > PI / 2.0 or _backing:
+		throttle = -float(t.back)  # the way lies behind: back out in an arc and come round, a three-point turn
+	elif not room:
+		throttle = float(t.back)  # straight on until there is room to turn
+	elif last:
 		# what its brakes can take off before the stop, never under a crawl
 		throttle = minf(throttle, maxf(sqrt(2.0 * rover.brake * maxf(d - _stop_m, 0.0)) / rover.top, 0.2))
-	return Vector2(clampf(-err / deg_to_rad(float(t.steer_deg)), -1.0, 1.0), throttle)
+	return Vector2(x, throttle)
+
+
+## The body can swing its nose toward `side` (1: yaw grows) from where it stands: turned a little that way, its hull
+## meets nothing taller than it climbs (the same things the grid closes).
+func _turns(rover: Node3D, side: float) -> bool:
+	_q.shape = _hull.shape
+	_q.collision_mask = STILL | MOVERS
+	for deg: float in t.turn_look_deg:
+		var b := Basis(Vector3.UP, side * deg_to_rad(deg)) * rover.global_basis
+		_q.transform = Transform3D(b, rover.global_position + Vector3.UP * float(rover.climb)) * _hull.transform
+		if not world.get_world_3d().direct_space_state.intersect_shape(_q, 1).is_empty():
+			return false
+	return true
 
 
 func _start(rover: Node3D) -> void:
@@ -129,7 +193,8 @@ func _start(rover: Node3D) -> void:
 
 func _stop(why: String) -> void:
 	on = false
-	note.emit(NOTES[why][0], NOTES[why][1])
+	if not _shot:
+		note.emit(NOTES[why][0], NOTES[why][1])
 
 
 ## The way from the rover to `_goal`, or to the nearest spot it can reach: a grid over the area the rover is in
@@ -142,6 +207,7 @@ func _plan(rover: Node3D) -> bool:
 	var climb := float(rover.climb)
 	var rect: Rect2 = world.bound(float(world.data.bound.reach) + cell, rover.global_position)
 	_q.exclude = [rover.get_rid()]
+	_hull = rover.find_children("*", "CollisionShape3D", false, false)[0]
 	_column.radius = float(t.clear_m)
 	_column.height = TALL
 	if not _grids.has(rect):
@@ -188,6 +254,7 @@ func _plan(rover: Node3D) -> bool:
 		_stop_m = float(t.arrive_m)
 	_i = 0
 	_done = false
+	_backing = false
 	_best = INF
 	_since = 0.0
 	return true

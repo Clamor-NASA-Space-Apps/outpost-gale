@@ -7,7 +7,7 @@ const SITE := "lander"
 
 
 func _init() -> void:
-	watchdog = 240.0
+	watchdog = 420.0
 
 
 func until(cine: Node, s: float) -> bool:
@@ -128,8 +128,162 @@ func play() -> bool:
 	cine.shot("nothing")
 	await frames(3)
 	check(done == ["nothing"] and not cine.busy(), "an unknown shot starts nothing and still reports done (%s)" % [done])
+	await drive_offs(game, cine)
 	game.queue_free()
 	return true
+
+
+## A trip's drive-off is driven, not a held throttle (sandbox/rover_pilot.gd film()): parked nose on to HAB 1, to a
+## solar row or to PIP, the rover is seen to pull out and drive away the way the trip lies, touching nothing; the same
+## on the way home from the site, where it arrives facing the outcrop. Nothing steers once the trip is over.
+func drive_offs(game: Node3D, cine: Node) -> void:
+	var world: Node3D = game.world
+	var player: Node3D = game.player
+	var rover: Node3D = world.items.rover
+	var pip: Node3D = game.pip
+	player.enter(rover)
+	await frames(3)
+	var bearing := float(world.data.sites.mercou.bearing)
+
+	# nose on to HAB 1: up to its wall on the throttle, as a kid parks it
+	var hab: Vector3 = world.items.hab1.global_position
+	var parked := false
+	for deg: float in [300.0, 240.0, 120.0, 60.0, 0.0, 180.0]:
+		var dir := Vector3(sin(deg_to_rad(deg)), 0.0, -cos(deg_to_rad(deg)))
+		_put(rover, hab + dir * 14.0, -dir)
+		await frames(2)
+		if not _touching(rover, 1.0).is_empty():
+			continue
+		parked = await _nose_on(rover) and _ahead(rover).begins_with("hab1")
+		if parked:
+			break
+	if check(parked, "the rover is parked nose on to HAB 1's wall ('%s' ahead)" % _ahead(rover)):
+		var run: Dictionary = await _trip(game, cine, "site_mercou_rover", hab)
+		_judge(run, "from HAB 1's wall")
+		check(absf(angle_difference(deg_to_rad(bearing), run.goal)) < deg_to_rad(30), "its way out lies toward the site (bearing %.0f of %.0f)" % [rad_to_deg(run.goal), bearing])
+
+		# home from the site, where the trip set it down facing the outcrop
+		var outcrop: Vector3 = world.items.mercou.global_position
+		var home: Vector3 = world.landmark("rover").pos - rover.global_position
+		var facing: Vector3 = -rover.global_basis.z
+		check(facing.dot(outcrop - rover.global_position) > 0.0 and facing.dot(home) < 0.0, "at the site the rover faces the outcrop, its back to the way home")
+		run = await _trip(game, cine, "rover", outcrop)
+		_judge(run, "home from Mont Mercou")
+		var off: float = rad_to_deg(absf(angle_difference(atan2(home.x, -home.z), run.heading)))
+		check(off < 30.0, "it heads the way home lies as the picture fades (%.0f deg off)" % off)
+
+	# nose on to a solar row
+	var wing: Vector3 = world.items.wing1.global_position
+	_put(rover, wing + Vector3(9.0, 0.0, 4.0), Vector3(-1.0, 0.0, 0.0))
+	await frames(2)
+	# its panels turn with the sun, so a ray from the nose may pass under them: stopped as by a wall, at the row
+	if check(await _nose_on(rover) and absf(rover.global_position.x - wing.x) < 6.0, "the rover is parked nose on to a solar row (%.1f m from its middle)" % absf(rover.global_position.x - wing.x)):
+		_judge(await _trip(game, cine, "site_mercou_rover", wing), "from a solar row")
+
+	# PIP standing right ahead
+	_put(rover, Vector3(45.0, 0.0, -45.0), Vector3(-1.0, 0.0, 0.0))
+	if pip:
+		pip.process_mode = Node.PROCESS_MODE_DISABLED  # it holds still, as when it waits for the hero
+		var at: Vector3 = rover.global_position + Vector3(-3.4, 0.0, 0.0)
+		pip.global_position = Vector3(at.x, world.height_at(at.x, at.z), at.z)
+		await frames(2)
+		_judge(await _trip(game, cine, "site_mercou_rover", pip.global_position), "from behind PIP")
+		pip.process_mode = Node.PROCESS_MODE_INHERIT
+
+
+func _put(rover: Node3D, at: Vector3, facing: Vector3) -> void:
+	rover.yaw = atan2(-facing.x, -facing.z)
+	rover.v = 0.0
+	rover._apply(rover._pose(Vector3(at.x, 0.0, at.z), rover.yaw))
+
+
+## Forward on the throttle until something stops the rover: true when it stands against a wall.
+func _nose_on(rover: Node3D) -> bool:
+	var by := ""
+	action(&"move_forward")
+	for i in 900:
+		await physics_frame
+		by = rover.blocked
+		if by != "" and absf(rover.v) < 0.01:
+			break
+	action(&"move_forward", false)
+	await frames(30)
+	return by == "wall"
+
+
+## What stands right before the rover's nose (its path under the world), "" when nothing within 2 m.
+func _ahead(rover: Node3D) -> String:
+	var from: Vector3 = rover.global_position + Vector3.UP * 1.2
+	var q := PhysicsRayQueryParameters3D.create(from, from - rover.global_basis.z * 4.3, 2 | 4 | 16 | 64)
+	q.exclude = [rover.get_rid()]
+	var hit := rover.get_world_3d().direct_space_state.intersect_ray(q)
+	return str(rover.get_parent().get_path_to(hit.collider)) if not hit.is_empty() else ""
+
+
+## The solids the rover's hull is in (buildings, rows, posts, PIP, bags; not what its wheels climb), the hull shrunk
+## to `k` of its size so that standing against a wall is not being in it.
+func _touching(rover: Node3D, k := 0.97) -> Array:
+	var hull: CollisionShape3D = rover.find_children("*", "CollisionShape3D", false, false)[0]
+	var q := PhysicsShapeQueryParameters3D.new()
+	q.shape = hull.shape
+	q.transform = hull.global_transform.scaled_local(Vector3.ONE * k)
+	q.collision_mask = 2 | 4 | 16 | 64
+	q.exclude = [rover.get_rid()]
+	var out: Array = []
+	for h: Dictionary in rover.get_world_3d().direct_space_state.intersect_shape(q):
+		if not (h.collider as CollisionObject3D).collision_layer & 256:
+			out.append(str(rover.get_parent().get_path_to(h.collider)))
+	return out
+
+
+## One trip from where the rover stands, watched every physics frame of its drive-off: what it touched, how long
+## anything held it up, how far it got in the first three seconds and by the fade, from `thing` too.
+func _trip(game: Node3D, cine: Node, landmark: String, thing: Vector3) -> Dictionary:
+	var rover: Node3D = game.world.items.rover
+	var pilot: RefCounted = game.player.pilot
+	var from: Vector3 = rover.global_position
+	var out := {"touched": {}, "held": 0.0, "early": 0.0, "moved": 0.0, "away": 0.0, "heading": 0.0, "goal": 0.0, "s": 0.0, "ended": false, "keys": [], "idle": false, "at": 0.0}
+	var held := 0
+	var far0 := Vector2(thing.x - from.x, thing.z - from.z).length()
+	cine.trip_to(landmark, {"sol": 9, "km": 8.8})
+	if not pilot.path.is_empty():
+		var end: Vector2 = pilot.path[-1] - Vector2(from.x, from.z)
+		out.goal = atan2(end.x, -end.y)
+	for i in 60 * 40:
+		await physics_frame
+		if not cine.busy():
+			out.ended = true
+			break
+		if cine.beat != "trip_drive":
+			continue
+		out.s += 1.0 / 60.0
+		var p: Vector3 = rover.global_position
+		for n: String in _touching(rover):
+			out.touched[n] = true
+		held = held + 1 if rover.blocked != "" else 0
+		out.held = maxf(out.held, held / 60.0)
+		out.moved = Vector2(p.x - from.x, p.z - from.z).length()
+		if out.s <= 3.0:
+			out.early = out.moved
+		out.away = Vector2(thing.x - p.x, thing.z - p.z).length() - far0
+		var nose: Vector3 = -rover.global_basis.z
+		out.heading = atan2(nose.x, -nose.z)
+	await frames(30)
+	out.touched = out.touched.keys()
+	out.keys = [&"move_forward", &"move_back", &"move_left", &"move_right"].filter(func(a: StringName) -> bool: return Input.is_action_pressed(a))
+	out.idle = not pilot.on and not pilot.driving() and absf(rover.v) < 0.05
+	var l: Vector3 = game.world.landmark(landmark).pos
+	out.at = Vector2(rover.global_position.x - l.x, rover.global_position.z - l.z).length()
+	return out
+
+
+func _judge(run: Dictionary, what: String) -> void:
+	check(run.early > 0.5, "%s: the rover moves in the shot's first seconds (%.1f m in 3 s)" % [what, run.early])
+	check(run.moved > 6.0 and run.away > 3.0, "%s: it drives off, away from what it stood at (%.1f m, %.1f m further from it, in %.1f s)" % [what, run.moved, run.away, run.s])
+	check(run.touched.is_empty(), "%s: touching nothing (%s)" % [what, run.touched])
+	check(run.held < 1.0, "%s: never held up (%.2f s)" % [what, run.held])
+	check(run.ended and run.at < 0.1, "%s: the trip ends at its landmark (%.2f m off)" % [what, run.at])
+	check(run.keys.is_empty() and run.idle, "%s: nothing steers after it (keys %s, idle %s)" % [what, run.keys, run.idle])
 
 
 ## One shot from the settled play camera: it ends, says so once, never puts the camera in or through a solid or

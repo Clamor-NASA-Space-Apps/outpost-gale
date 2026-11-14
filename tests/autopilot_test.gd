@@ -131,8 +131,29 @@ func play() -> bool:
 	check(rover.global_position.distance_to(left) < 0.01, "an empty rover never drives")
 	await _board()
 	await frames(120)
-	check(player.vehicle == rover and not pilot.driving() and rover.global_position.distance_to(left) < 0.01, "back aboard: it waits for a new mark (aboard %s, moved %.2f m)" % [player.vehicle == rover, rover.global_position.distance_to(left)])
+	# the rover keeps the speed it was left with (rover.gd), so it may roll out its last centimetres
+	check(player.vehicle == rover and not pilot.driving() and absf(rover.v) < 0.01 and rover.global_position.distance_to(left) < 0.5, "back aboard: it waits for a new mark (aboard %s, moved %.2f m)" % [player.vehicle == rover, rover.global_position.distance_to(left)])
 	check(cfg.arrive_m < 4.48, "it stops within a rover length (tuning arrive_m)")
+
+	# a cinematic's own drive (cine.gd trip_to calls film()): no key and no mark takes that wheel, nothing is said,
+	# and release() ends it
+	var notes: Array = []
+	pilot.note.connect(func(title: String, _text: String) -> void: notes.append(title))
+	game.cine.beat = "trip_drive"
+	check(pilot.film(rover, _xz(reactor)), "a cinematic's drive finds its way")
+	action(&"move_right")
+	hud.set_mark(_xz(park))
+	await frames(240)
+	check(pilot.driving() and rover.global_position.distance_to(left) > 1.0, "it drives through a held key and a new mark (%.1f m)" % rover.global_position.distance_to(left))
+	check(pilot.path[-1].distance_to(_xz(reactor)) < 1.0, "on the way the cinematic gave it")
+	action(&"move_right", false)
+	pilot.release()
+	game.cine.beat = ""
+	await frames(240)
+	left = rover.global_position
+	await frames(60)
+	check(not pilot.driving() and not pilot.on and rover.global_position.distance_to(left) < 0.01, "released: nothing steers, the rover stands")
+	check(notes.is_empty(), "and it said nothing (%s)" % [notes])
 	return true
 
 

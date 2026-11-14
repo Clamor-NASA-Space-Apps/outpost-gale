@@ -9,6 +9,7 @@ const CHUNK := 100  # cells per side of one patch mesh: 200 m pieces, four in al
 # quality `trail` pixels wide (2048 is 64 m).
 const TRAIL_MPX := 0.03125
 const TILE := 64  # pixels: a print uploads the tiles it touched, never the whole map
+const RUT_JUMP := 1.0  # m: a wheel this far from its last print was put down here, not rolled (a tick's roll is 5 cm)
 const MOVERS := 12  # contact discs for things that move (terrain.gdshader `movers`)
 const SEAM := 0.1  # m the backdrop stays under the patch's edge where they meet (_seat()), so the edge always hides it
 
@@ -509,6 +510,35 @@ func mark(pos: Vector3, yaw_deg: float, kind: String, width := 0.3, strength := 
 				trail.set_pixel(tx, ty, Color(maxf(trail.get_pixel(tx, ty).r, depth), 0, 0))
 				_tiles[Vector2i(tx / TILE, ty / TILE)] = true
 	trail_dirty = true
+
+
+## A wheel's rut from `from`, where its last print lies, to `to`, where the wheel is now: a wheel print every
+## `every` metres along the wheel's own way, turned along that way, so a wheel swinging sideways in a turn leaves an
+## arc and never bars across it. None where the dust is pressed right across the print already: the wheel behind
+## rolls in the rut of the one ahead (a print costs about 500 map pixels). Asked at the middle alone, a wheel running
+## half beside another's rut pressed a print now and then, ticks along the rut; asked for the same depth, a rover
+## speeding up pressed every other one a shade deeper. Returns where the last print lies, to pass in next time.
+## A wheel put down somewhere else (a trip, the safety net) starts anew there, with nothing pressed in between.
+func rut(from: Vector3, to: Vector3, every: float, width: float, strength: float) -> Vector3:
+	var way := Vector3(to.x - from.x, 0.0, to.z - from.z)
+	if way.length() > RUT_JUMP:
+		return to
+	var yaw := rad_to_deg(atan2(way.x, -way.z))
+	var step := way.normalized() * every
+	var edge := Vector3(-step.z, 0.0, step.x).normalized() * (width / 2.0 - 2.0 * TRAIL_MPX)
+	for i in int(way.length() / every):
+		from += step
+		if minf(pressed(from), minf(pressed(from + edge), pressed(from - edge))) < strength * 0.5:
+			mark(from, yaw, "wheel", width, strength)
+	return from
+
+
+## How deep the dust is pressed at `pos`, 0 to 1 (0 outside the map's square).
+func pressed(pos: Vector3) -> float:
+	var g := Vector2i(roundi(pos.x / TRAIL_MPX), roundi(pos.z / TRAIL_MPX))
+	if not Rect2i(trail_win, Vector2i(trail_px, trail_px)).has_point(g):
+		return 0.0
+	return trail.get_pixel(posmod(g.x, trail_px), posmod(g.y, trail_px)).r
 
 
 func _process(_delta: float) -> void:

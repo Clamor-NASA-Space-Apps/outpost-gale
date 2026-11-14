@@ -218,16 +218,29 @@ func trip_to(landmark: String, args := {}) -> void:
 		player.enter(rover)
 	var c: Dictionary = cfg.trip
 	_begin("trip_drive")
-	var from: Vector3 = rover.global_transform * Vector3(c.cam[1], 0.0, c.cam[0])
-	from.y = world.height_at(from.x, from.z) + float(c.cam[2])
+	# the hero drives off the way the trip lies, round whatever stands there (sandbox/rover_pilot.gd film()): the
+	# real rover on its real stick. A held throttle drove it straight ahead, into the wall or the outcrop it was
+	# parked facing, and it stood there pushing while the picture faded (15 Nov playtest)
+	var pilot: RefCounted = player.pilot
+	var at := Vector2(rover.global_position.x, rover.global_position.z)
+	pilot.film(rover, _way_out(rover, landmark))
+	var along: Vector2 = pilot.ahead(at, float(c.run_m)) - at
+	var ahead := Vector3(along.x, 0.0, along.y).normalized() if along.length() > 1.0 else -rover.global_basis.z
+	var from := _stand(rover, ahead)
 	var watch := func(_k: float) -> void: cam.look_at_from_position(from, rover.global_position + Vector3.UP)
 	watch.call(0.0)
 	cam.make_current()
-	Input.action_press(&"move_forward")  # the hero drives off: the real throttle, the real rover
+	# where the rover must come round first (a wall ahead, the way home behind it), the drive-off's seconds start
+	# once its nose is on its way, turn_s later at most: it is seen to drive away, not to back and turn into black
+	var turning := 0.0
+	while pilot.on and turning < float(c.turn_s) and absf(pilot.off) > deg_to_rad(float(c.turn_deg)):
+		await get_tree().process_frame
+		turning += get_process_delta_time()
+		watch.call(0.0)
 	await _run(float(c.drive_s), watch)
 	_fade(1.0, float(cfg.fade_out_s))
 	await _run(float(cfg.fade_out_s), watch)
-	Input.action_release(&"move_forward")
+	pilot.release()
 	beat = "trip_title"
 	_title.text = _words(c.title_id).format(args)
 	_title.show()
@@ -244,6 +257,50 @@ func trip_to(landmark: String, args := {}) -> void:
 	await _fade(0.0, float(cfg.fade_in_s))
 	_end()
 	arrived.emit(landmark)
+
+
+## Where a trip to `landmark` drives off to: the edge of the ground the rover stands on (the base's patch, or a
+## site's), the way the landmark lies in the world. That is the way the compass and the waypoint show: a site stands
+## where data/world.json `sites` puts its patch, which is not always on its real `bearing` (Curiosity's lies west).
+## Where that edge is nearer than three runs, the first other way with room.
+func _way_out(rover: Node3D, landmark: String) -> Vector2:
+	var at := Vector2(rover.global_position.x, rover.global_position.z)
+	var to: Vector3 = world.landmark(landmark).pos
+	var r: Rect2 = world.bound(float(world.data.bound.reach), rover.global_position)
+	var out := at
+	for turn: float in [0.0, 90.0, -90.0, 180.0]:
+		var d := (Vector2(to.x, to.z) - at).normalized().rotated(deg_to_rad(turn))
+		var k := INF  # how far along d the bound's edge is
+		for i in 2:
+			if d[i] != 0.0:
+				k = minf(k, ((r.end[i] if d[i] > 0.0 else r.position[i]) - at[i]) / d[i])
+		out = at + d * maxf(k, 0.0)
+		if out.distance_to(at) >= 3.0 * float(cfg.trip.run_m):
+			break
+	return out
+
+
+## Where the trip's camera stands: behind the rover and to its right as seen along `ahead`, the way it drives off
+## (cfg.trip.cam), so it drives away through the frame. The way off can lie behind the rover, where a wall may be:
+## the first spot in the open with the rover in sight, the other side next, then beside it, then nearer.
+func _stand(rover: Node3D, ahead: Vector3) -> Vector3:
+	var c: Array = cfg.trip.cam
+	var right := ahead.cross(Vector3.UP)
+	var space := world.get_world_3d().direct_space_state
+	var ball := PhysicsShapeQueryParameters3D.new()
+	var sphere := SphereShape3D.new()
+	sphere.radius = 0.5
+	ball.shape = sphere
+	var eye := Vector3.ZERO
+	for k: Vector2 in [Vector2(1, 1), Vector2(1, -1), Vector2(0, 1.5), Vector2(0, -1.5), Vector2(0.5, 0.5), Vector2(0.5, -0.5)]:
+		eye = rover.global_position - ahead * float(c[0]) * k.x + right * float(c[1]) * k.y
+		eye.y = world.height_at(eye.x, eye.z) + float(c[2])
+		ball.transform = Transform3D(Basis(), eye)
+		var sight := PhysicsRayQueryParameters3D.create(eye, rover.global_position + Vector3.UP * 1.5)
+		sight.exclude = [rover.get_rid()]
+		if space.intersect_shape(ball, 1).is_empty() and space.intersect_ray(sight).is_empty():
+			break
+	return eye
 
 
 ## The hero boards the ascent rocket (item `mav`; a stand-in on the lander's landmark when there is none), liftoff from

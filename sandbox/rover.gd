@@ -31,7 +31,7 @@ var track_every: float  # metres between wheel prints
 var shade: Dictionary  # tuning.rover: contact shadow discs, dust and track depth by speed
 var v := 0.0
 var yaw := 0.0
-var travelled := 0.0
+var ruts := PackedVector3Array()  # where each wheel's last print lies, in hubs' order (terrain.gd rut())
 var wheels: Array[Node3D] = []
 var hubs: Array[Vector3] = []  # each wheel's hub at rest, in the body's space
 var rest_at: Array[Vector3] = []  # each wheel node's rest position in its parent
@@ -105,6 +105,8 @@ func setup(w: Node3D, sheet: Dictionary, tuning: Dictionary) -> void:
 			c.reparent(_sprung)
 	var p := _pose(global_position, yaw)
 	_apply(p)
+	for h in hubs:
+		ruts.append(global_transform * Vector3(h.x, 0.0, h.z))
 	set_physics_process(true)
 	set_process(true)  # the script comes after the body's _ready (interactions.gd), so neither starts on its own
 	for mi: MeshInstance3D in find_children("*", "MeshInstance3D", true, false):
@@ -166,7 +168,7 @@ func drive(input: Vector2, _hurry: bool, delta: float) -> void:
 	var moved := Vector2(global_position.x - before.x, global_position.z - before.z).length() * signf(v)
 	for wh in wheels:
 		wh.rotate_object_local(Vector3.RIGHT, -moved / radius)
-	_ground_fx(moved)
+	_ground_fx()
 
 
 ## What stops a move of `step` (world): "rock" (a wheel would meet a rock over the climb height, or the belly one),
@@ -257,7 +259,7 @@ func _apply(p: Dictionary) -> void:
 
 
 ## Prints, dust and the contact shadow where the wheels meet the ground.
-func _ground_fx(moved: float) -> void:
+func _ground_fx() -> void:
 	var discs := PackedVector4Array()
 	var wr: float = shade.wheel_shade[0]
 	for wh in wheels:
@@ -267,18 +269,19 @@ func _ground_fx(moved: float) -> void:
 		var c := global_transform * Vector3(0.0, 0.0, z)
 		discs.append(Vector4(c.x, c.z, shade.body_shade[0], shade.body_shade[1]))
 	world.touch(self, discs)
-	travelled += absf(moved)
 	var back := global_basis.z * signf(v)  # the way the tread leaves the ground: backward as it rolls forward
 	for side: float in [-TRACK, TRACK]:
 		# the trailing pair on each side throws the dust, from behind its contact patch
 		var p := global_transform * Vector3(side, 0.0, AXLE * signf(v) + 0.5 * signf(v))
 		p.y = world.height_at(p.x, p.z)
 		world.stream("rover%d" % int(side), p, back * absf(v), pow(absf(v) / top, shade.dust_power))
-	if travelled >= track_every:
-		travelled = 0.0
-		for side: float in [-TRACK, TRACK]:
-			var p := global_transform * Vector3(side, 0.0, AXLE)
-			world.mark(p, -rad_to_deg(yaw), "wheel", 0.3, lerpf(shade.track_depth[0], shade.track_depth[1], absf(v) / top))
+	# every wheel presses its own rut along its own way. Prints were laid under the rear pair only, one for every
+	# track_every the body's middle went and turned the way the body faced: in a slow turn the rear wheels swing
+	# sideways faster than the middle moves, so their prints lay apart and across the wheels' way, a row of dashes
+	# (15 Nov playtest), and the front and middle wheels' wider arcs were never pressed at all
+	var depth := lerpf(shade.track_depth[0], shade.track_depth[1], absf(v) / top)
+	for i in hubs.size():
+		ruts[i] = world.rut(ruts[i], global_transform * Vector3(hubs[i].x, 0.0, hubs[i].z), track_every, 0.3, depth)
 
 
 ## The lights by the sky clock's sun (the base lamps' switch angles, with their gap so they do not flicker at the
