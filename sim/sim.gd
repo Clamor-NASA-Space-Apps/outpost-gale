@@ -6,6 +6,10 @@ extends RefCounted
 
 const DATA := "res://data/sim.json"
 const METERS := ["o2_kg", "water_kg", "food_kg"]
+# What changes as the game runs, the plain values: a checkpoint keeps these, the tables below them and the dice
+# (save(), load()). The power figures too: they are the last tick's, not this hour's.
+const SAVED := ["sol", "hour", "o2_kg", "water_kg", "food_kg", "battery_kwh", "power_in_kw", "solar_in_kw", "power_out_kw",
+	"dose_msv", "suit_air_min", "outside", "panel_dust", "tau", "crop_age_days", "woke_sol", "energy_in_kwh", "energy_out_kwh"]
 
 var d: Dictionary
 var sol := 1
@@ -71,6 +75,31 @@ func state() -> Dictionary:
 		"battery_pct": 100.0 * battery_kwh / n("power", "battery_kwh"), "power_in_kw": power_in_kw, "solar_in_kw": solar_in_kw,
 		"power_out_kw": power_out_kw, "dose_msv": dose_msv, "suit_air_min": suit_air_min, "panel_dust": panel_dust,
 		"tau": tau, "events": ev, "failing": failing()}
+
+
+## The rules as they stand, for a checkpoint: a copy, in the engine's own types. sandbox/save.gd keeps it as bytes,
+## not as JSON numbers: Godot reads a JSON number back a hair off (122.46804875000163 came back ...164), and the
+## rules would drift from the saved ones.
+func save() -> Dictionary:
+	var out := {"make": make, "knobs": knobs, "active": active, "causes": causes, "cause": _cause, "fired": _fired,
+		"rng": _rng.state}
+	for k: String in SAVED:
+		out[k] = get(k)
+	return out.duplicate(true)
+
+
+## A checkpoint back in: these rules then tick on exactly as the saved ones would have (tests/sim_test.gd).
+func load(s: Dictionary) -> void:
+	s = s.duplicate(true)
+	for k: String in SAVED:
+		set(k, s[k])
+	make = s.make
+	knobs.merge(s.knobs, true)  # a knob the data file gained since keeps its starting value
+	active.assign(s.active)
+	causes.assign(s.causes)
+	_cause = s.cause
+	_fired = s.fired
+	_rng.state = s.rng
 
 
 ## Meters at zero. Winning and losing are the story's flow; this only says what ran out.

@@ -15,6 +15,7 @@ const Beats := preload("res://cine/beats.gd")
 const Cine := preload("res://cine/cine.gd")
 const GameHud := preload("res://ui/game_hud.tscn")
 const Hud := preload("res://ui/hud.gd")
+const Save := preload("res://sandbox/save.gd")
 # sky states: DESIGN.md and its DESIGN.<state>.md siblings, as token files; the sky clock blends them by the sun
 const SKIES := ["design", "design.sunset", "design.night", "design.storm"]
 const SKY_PHASES := ["noon", "dusk", "night", "storm"]  # where _sky(i) puts the clock: each key at its own look
@@ -70,6 +71,7 @@ var film := false  # P, or Settings, Demo: no HUD, no touch controls, no frame-r
 var beacon: MeshInstance3D  # the kid's map mark in the world: a pillar of the DESIGN.md `light` role, seen from afar
 var deadline := {}  # data/sols.json `deadline`: PIP's warnings while a sol's tasks run late
 var warned := {}  # "<woke sol>:<line id>" -> true: each warning once a day
+var resume := {}  # Continue: the checkpoint to start from (sandbox/save.gd), set by ui/boot.gd before this enters the tree
 
 
 func _ready() -> void:
@@ -398,6 +400,33 @@ func start_opening() -> void:
 	beats.start_opening()
 
 
+## The morning's checkpoint (sandbox/save.gd), written as a night's sleep starts sol `sol`'s beats: the rules, the
+## handbook and the few flags here that last across days. Taken before that sol's first beat runs, so Continue starts
+## the beat on the same numbers (Sol 6's first beat sleeps three quiet sols on). Never after the mission is lost: the
+## last good morning stays, to try again from.
+func checkpoint(sol: int) -> void:
+	if not lost:
+		Save.write({"version": Save.VERSION, "sol": sol, "sim": sim.save(), "handbook": hud.handbook.save(),
+			"warned": warned, "lamp_hinted": lamp_hinted, "trip_km": trip_km, "storm": clock.storm_on})
+
+
+## Continue (ui/start.gd): the checkpoint's morning in place of the opening. The flags, the hero where the opening
+## wakes it (in HAB 1, so the rules' first word finds nobody out in a storm), the rules, the sky at the rules' hour
+## with its storm, the handbook, then that sol's beats. The world is a fresh morning's.
+func _resume() -> void:
+	warned = resume.get("warned", {})
+	lamp_hinted = resume.get("lamp_hinted", false)
+	trip_km = resume.get("trip_km", trip_km)
+	beats._do("hero:airlock")
+	sim.load(resume.sim)
+	clock.storm_on = resume.get("storm", false)
+	clock.storm = 1.0 if clock.storm_on else 0.0
+	clock.set_hour(clock.hours - clock.hour() + sim.sim.local_hour())
+	clock.refresh()
+	hud.load_handbook(resume.handbook)
+	beats.start_sol(int(resume.sol))
+
+
 ## The warm-up's camera: inside the base's reflection probe, looking at HAB 1, so HAB 1's and the greenhouse's room
 ## probes are in view and get drawn (the base turned to face the sunrise, 14 Nov: looking north missed them).
 func _probe_view() -> Transform3D:
@@ -590,6 +619,7 @@ func _wire() -> void:
 			return
 		if sim.sim.sol < next:
 			sim.skip_sols(next - sim.sim.sol)  # the rules catch up, so the HUD's sol is the story's
+		checkpoint(next)
 		beats.start_sol(next))
 	cine.arrived.connect(func(l: String) -> void:
 		player.bound = world.bound(0.0, player.body.global_position)
@@ -635,6 +665,8 @@ func _wire() -> void:
 	hud.ledger_closed.connect(func() -> void: beats.notify("ledger_closed"))
 	# the opening plays when a person starts the game (through ui/boot.tscn), never in a test script (no current
 	# scene) or a tool run (--forge-job)
-	if get_tree().current_scene != null and not Array(OS.get_cmdline_user_args()).any(
+	if not resume.is_empty():
+		_resume.call_deferred()  # Continue: the checkpoint's morning in the opening's place, at the same moment
+	elif get_tree().current_scene != null and not Array(OS.get_cmdline_user_args()).any(
 			func(a: String) -> bool: return a.begins_with("--forge-job=")):
 		start_opening.call_deferred()

@@ -30,6 +30,16 @@ func state() -> Dictionary:
 	return sim.state()
 
 
+func save() -> Dictionary:
+	return sim.save()
+
+
+## A checkpoint's rules back in, and the HUD told at once.
+func load(s: Dictionary) -> void:
+	sim.load(s)
+	changed.emit(sim.state())
+
+
 func apply(choice_id: String) -> Dictionary:
 	return _told(sim.apply(choice_id))
 

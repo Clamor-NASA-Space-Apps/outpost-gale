@@ -2,6 +2,10 @@ extends "res://addons/forge/test.gd"
 ## The way into the game, as a person meets it (ui/boot.tscn, the main scene): the team's logo, then the start
 ## screen (ui/start.gd) with the hero and PIP alive on it as a loop of video over a still (no 3D of its own), then the
 ## sandbox once it is loaded and Start was pressed, with nothing of the start screen left beside it. Real keys throughout.
+## With a morning saved (sandbox/save.gd) the menu leads with "Continue: Sol N", in focus; without one, or with a file
+## of another version, it is the three rows it always was. tests/save_test.gd continues a game through it.
+
+const Save := preload("res://sandbox/save.gd")
 
 
 func _init() -> void:
@@ -32,6 +36,38 @@ func play() -> bool:
 		await process_frame
 	await frames(5)
 	check(_theirs(null).is_empty(), "loaded, the start screen still has no camera, light, sky or viewport (%s)" % [_theirs(null)])
+
+	# a morning saved: Continue leads the menu, names its sol and has the focus. The test's own file, never a player's
+	Save.file = "user://save_test.json"
+	Save.write({"version": Save.VERSION, "sol": 13, "sim": {}, "handbook": {}})
+	boot = await _boot()
+	start = boot.start
+	_key(KEY_ENTER)
+	while start.splash:
+		await process_frame
+	var saved: Array[Button] = start.rows
+	check(saved.map(func(b: Button) -> String: return b.text) == ["Continue: Sol 13", "Start mission", "Credits", "Exit"], "with a checkpoint: Continue: Sol 13, Start mission, Credits, Exit")
+	check(root.gui_get_focus_owner() == saved[0], "Continue is in focus first")
+	for b in saved:
+		check(b.size.y >= TARGET and root.get_visible_rect().encloses(b.get_global_rect()) and b.get_global_rect().position.x >= EDGE, "'%s' is a touch target on the screen (%s)" % [b.text, b.get_global_rect()])
+	_key(KEY_DOWN)
+	_key(KEY_DOWN)
+	_key(KEY_ENTER)
+	_key(KEY_ESCAPE)
+	check(not start.credits.visible and root.gui_get_focus_owner() == saved[2], "the credits close back on Credits, now the third row")
+	# which game each row asks for; boot is not told, so none loads here
+	for c: Dictionary in start.started.get_connections():
+		start.started.disconnect(c.callable)
+	saved[0].pressed.emit()
+	check(start.resume == start.checkpoint and int(start.resume.sol) == 13 and saved[0].text == "Loading...", "Continue asks for the checkpoint's morning")
+	saved[1].pressed.emit()
+	check(start.resume.is_empty() and saved[1].text == "Loading...", "Start mission asks for Sol 1, whatever is saved")
+	# a checkpoint this build cannot use is none: the menu is as it always was
+	Save.write({"version": Save.VERSION + 1, "sol": 13, "sim": {}, "handbook": {}})
+	boot = await _boot()
+	check(boot.start.rows.size() == 3 and boot.start.rows[0].text == "Start mission" and boot.start.checkpoint.is_empty(), "a checkpoint of another version: no Continue row")
+	DirAccess.remove_absolute(Save.file)
+	Save.file = "-"
 
 	# again from the top, in a hurry: a key skips the logo, and that key starts nothing
 	boot = await _boot()

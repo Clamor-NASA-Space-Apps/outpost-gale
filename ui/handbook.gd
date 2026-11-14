@@ -133,6 +133,19 @@ func unread() -> int:
 	return _unlocked.filter(func(id: String) -> bool: return id not in _seen).size()
 
 
+## What a checkpoint keeps (sandbox/save.gd): the pages found, opened and learned, and the decisions made.
+func save() -> Dictionary:
+	return {"unlocked": _unlocked, "seen": _seen, "learned": _learned, "decisions": _decisions}.duplicate(true)
+
+
+## A checkpoint's handbook back in. A page the data file no longer holds is left out.
+func load(d: Dictionary) -> void:
+	for k: String in ["unlocked", "seen", "learned"]:
+		(get("_" + k) as Array).assign(d.get(k, []).filter(func(id: Variant) -> bool: return pages.has(id)))
+	_decisions = d.get("decisions", []).duplicate(true)
+	_refresh()
+
+
 func state() -> Dictionary:
 	return {"open": visible, "tab": _tab, "page": _page, "unlocked": _unlocked.duplicate(),
 		"learned": _learned.duplicate(), "total": order.size()}

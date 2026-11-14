@@ -72,6 +72,7 @@ func _process(_delta: float) -> void:
 		# the sandbox's _ready builds the world from what is now in memory, under its own cover with the same picture
 		var t := Time.get_ticks_msec()
 		var game: Node = (_done[SCENE] as PackedScene).instantiate()
+		game.set("resume", start.resume)  # Continue's checkpoint, or nothing: Sol 1's opening (sandbox.gd _wire())
 		# the frame the sandbox comes in draws no 3D: its build and its first 3D frame (the sky, the probe, the post
 		# passes compiling) were one 16 s block on the web, and a browser offers to kill a page that stops that long
 		var vp := get_viewport()  # held here: boot is freed before the frame is drawn

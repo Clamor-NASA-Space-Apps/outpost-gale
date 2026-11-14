@@ -713,6 +713,12 @@ func log_decision(title: String, choice: String) -> void:
 	handbook.log_decision(title, choice)
 
 
+## A checkpoint's handbook back in (sandbox.gd, Continue), with the "!" on the book button for a page not read yet.
+func load_handbook(d: Dictionary) -> void:
+	handbook.load(d)
+	book_mark.visible = handbook.unread() > 0
+
+
 ## The sleep ledger: the sim's skip_sols() result.
 func show_ledger(d: Dictionary) -> void:
 	var c: Control = load("res://ui/components/ledger_card.tscn").instantiate()

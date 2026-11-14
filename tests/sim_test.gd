@@ -34,6 +34,7 @@ func play() -> bool:
 	_causes()
 	_uses()
 	_awake()
+	_save()
 	await _node()
 	return true
 
@@ -248,6 +249,48 @@ func _awake() -> void:
 	var full := Sim.new()
 	full.skip_sols(40)
 	check(full.failing().is_empty(), "the base's supplies last to the end of Sol %d (%s)" % [last, full.failing()])
+
+
+## A checkpoint (sandbox/save.gd keeps the rules as bytes): rules saved and loaded into fresh ones read the same and
+## tick on exactly as the saved ones do: the choices' knobs, the running events, the cause log and the dice.
+func _save() -> void:
+	var data := base.duplicate(true)
+	data.events.dust_storm.chance_per_sol = 0.3  # the dice start storms often: their state must come back too
+	var a := Sim.new(data)
+	a.apply("greenhouse_on")
+	a.apply("heater_low")
+	a.eva(true)
+	a.step(30.0)
+	a.use("clean_panel")
+	a.skip_sols(5)  # past Sol 2's gust and Sol 5's flare (the schedule)
+	a.use("sleep_night")
+	a.run(3.3)
+	check(not a.active.is_empty() and a.causes.size() > 5, "the saved rules have events running (%d) and a log (%d)" % [a.active.size(), a.causes.size()])
+	var bytes := Marshalls.variant_to_base64(a.save())
+	var b := Sim.new(data)
+	b.load(Marshalls.base64_to_variant(bytes))
+	check(b.state() == a.state() and b.top_causes(9) == a.top_causes(9), "loaded rules read as the saved ones: %s, %s" % [b.state(), a.state()])
+	check(Marshalls.variant_to_base64(b.save()) == bytes, "and save to the same bytes")
+	var logged := a.causes.size()
+	for s: Sim in [a, b]:
+		s.eva(false)
+		s.apply("moxie_on")
+		s.run(9.0)
+		s.use("sleep_night")
+		s.start("flare_x12")
+		s.skip_sols(8)
+		s.use("harvest")
+		s.step(0.1)
+	check(a.causes.size() > logged + 3, "the dice went on starting storms after the save (%d more log lines)" % (a.causes.size() - logged))
+	check(b.state() == a.state(), "ticked the same way, both read the same: %s, %s" % [b.state(), a.state()])
+	check(b.top_causes(9) == a.top_causes(9) and b.causes == a.causes, "and blame the same causes")
+	check(Marshalls.variant_to_base64(b.save()) == Marshalls.variant_to_base64(a.save()), "to the last bit")
+	# the saved copy is its own: the rules running on do not change it
+	var kept := a.save()
+	var was := Marshalls.variant_to_base64(kept)
+	a.apply("recycler_off")
+	a.step(5.0)
+	check(Marshalls.variant_to_base64(kept) == was, "a save is a copy: the rules running on leave it alone")
 
 
 func _node() -> void:

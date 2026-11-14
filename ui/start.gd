@@ -6,10 +6,12 @@ extends Control
 ## short loop of video over it (ui/start_loop.ogv): both drawn once from the game's own models (tools/start_loop.gd),
 ## so the start screen itself draws no 3D.
 
-## The kid pressed "Start mission". Boot puts the sandbox in once everything is loaded.
+## The kid pressed "Start mission" or "Continue" (`resume` says which). Boot puts the sandbox in once everything is
+## loaded.
 signal started
 
 const Hud := preload("res://ui/hud.gd")
+const Save := preload("res://sandbox/save.gd")
 # 96 px tall: a 48 dp target on a phone held sideways (addons/forge/test.gd TARGET)
 const ROW := Vector2(380, 96)
 # Android's back swipe starts 60 px in from a side (addons/forge/test.gd EDGE): the menu stays clear of it
@@ -28,7 +30,9 @@ var shine := ShaderMaterial.new()
 var loop := "res://ui/start_loop.ogv"
 var video: VideoStreamPlayer  # the hero and PIP alive, over the still; null on a phone or with no file to play
 var menu: VBoxContainer
-var rows: Array[Button] = []  # Start mission, Credits, Exit
+var rows: Array[Button] = []  # Start mission, Credits, Exit; with a checkpoint, Continue first
+var checkpoint := {}  # the last morning saved (sandbox/save.gd); empty when there is none to use
+var resume := {}  # the checkpoint again once Continue was pressed: boot hands it to the sandbox
 var credits: PanelContainer
 var back: Button
 var bar := ColorRect.new()
@@ -169,8 +173,11 @@ func _menu() -> void:
 	var gap := Control.new()
 	gap.custom_minimum_size.y = 18
 	menu.add_child(gap)
-	rows = [_row("Start mission", _start), _row("Credits", _show_credits.bind(true)), _row("Exit", get_tree().quit)]
+	rows = [_row("Start mission", _start.bind({})), _row("Credits", _show_credits.bind(true)), _row("Exit", get_tree().quit)]
 	rows[2].visible = not OS.has_feature("web")  # a page has nothing to exit to
+	checkpoint = Save.read()
+	if not checkpoint.is_empty():
+		rows.push_front(_row("Continue: Sol %d" % checkpoint.sol, _start.bind(checkpoint)))
 	for b in rows:
 		menu.add_child(b)
 	menu.set_anchors_and_offsets_preset(PRESET_BOTTOM_LEFT)
@@ -199,11 +206,15 @@ func _credits() -> void:
 func _show_credits(on: bool) -> void:
 	credits.visible = on
 	menu.visible = not on  # hidden rows take no focus, so the keys stay on Back
-	(back if on else rows[1]).grab_focus()
+	(back if on else rows[-2]).grab_focus()  # Credits
 
 
-func _start() -> void:
-	rows[0].text = "Loading..."  # read only while boot still loads: the sandbox comes in by itself after
+## From Sol 1 (`saved` empty) or from the checkpoint. The checkpoint itself stays until the next morning's.
+func _start(saved: Dictionary) -> void:
+	resume = saved
+	# on the row pressed (Continue is the first row when there is one); read only while boot still loads: the sandbox
+	# comes in by itself after
+	rows[0 if saved == checkpoint else 1].text = "Loading..."
 	started.emit()
 
 
