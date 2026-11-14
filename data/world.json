@@ -34,6 +34,7 @@
   "relay_antenna": "res://models/prop_relay_antenna.glb"
  },
  "standin": {
+  "solar_wing": [40.6, 2.0, 3.0],
   "habitat": [
    5.0,
    3.5,
@@ -333,7 +334,7 @@
  "sink": {
   "_note": "how far each prefab sits in the dust: a reality.json row id per prefab, else default (skills/shadows-and-grounding, Sink). support: metres above an item's lowest drawn point that still count as resting on the ground (feet, skids, bevelled bottom edges). level: prefabs crews build level (floors, foundations, tracking mounts); everything else tilts to the ground under it, as a lander's legs or a bag do. Vehicles only touch: their drivers set them on their wheels, sunk by their own row here (rover). Rocks: reality.json rock.embed",
   "support": 0.05,
-  "level": ["habitat", "greenhouse", "storm_shelter", "build_pad", "dish", "telltale"],
+  "level": ["habitat", "greenhouse", "storm_shelter", "build_pad", "dish", "telltale", "solar_wing"],
   "default": "ground.sink.soft",
   "lander": "ground.sink.foot",
   "mav": "ground.sink.foot",
@@ -341,7 +342,7 @@
  },
  "graded": {
   "_note": "prefabs whose footprint (standin size) is graded level before the ground is built (world/terrain.gd _grade()), as crews prepare a site before they lay a slab on it: NASA's ASPECT project 'will develop tools and methods to clear, level, and compact the lunar surface' (https://www.nasa.gov/?p=96252, design/research/pages/pad-grading/). Without it a 0.15 m pad on a slope was buried at its uphill side and the ground came up through it; the greenhouse's and the shelter's floors showed the ground through them the same way (13 Nov playtest), and HAB 1's doorway (14 Nov: deck 2 mm over the ground). A standin spans the model's whole footprint about its origin where it matters (the greenhouse's vestibule reaches 4.71 m out; HAB 1's porch, 4.23 m, lies within 3 cm of level as it is), and neighbours' grades stay apart on the 2 m grid: a later one overwrites an earlier one where they meet (world_test checks every graded footprint is level, 14 Nov)",
-  "prefabs": ["build_pad", "greenhouse", "storm_shelter", "habitat"]
+  "prefabs": ["build_pad", "greenhouse", "storm_shelter", "habitat", "solar_wing"]
  },
  "shadow_min": 0.6,
  "_swept_range_m": "metres from the camera to a ground cell's centre (the patch centre for the base) beyond which its swept surfaces (floors, HAB 1's fit-out: DESIGN.md weathering.clean) are not drawn: seen only through doorways, they cost a draw call each from anywhere (world.gd _merge). Art direction",
