@@ -107,10 +107,9 @@ func play() -> bool:
 	cine.stand_for_dawn()
 	# the opening's pre-dawn wake (data/beats.json), as the beats leave it: pinned
 	var clock: Node = game.clock
-	var wake: String = Array(JSON.parse_string(FileAccess.get_file_as_string("res://data/beats.json")).opening[0].do).filter(
-		func(c: String) -> bool: return c.begins_with("clock:"))[0]
+	# the shot machinery from the hour Sol 1 starts at (cine.dawn_hour()), pinned as a beat would pin it
 	clock.pinned = true
-	clock.set_hour(clock.hours - clock.hour() + float(wake.get_slice(":", 1)))
+	clock.set_hour(clock.hours - clock.hour() + cine.dawn_hour())
 	clock.refresh()
 	await shoot(game, cine, "dawn_reveal", 1.0)  # the play camera's own distance: a turn, not a pull-out
 	check(clock.pinned and not clock.driven, "the clock is given back pinned, as the beats left it")

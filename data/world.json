@@ -123,7 +123,7 @@
     0,
     0
    ],
-   "yaw": 180
+   "yaw": 81
   },
   {
    "id": "oxygen",
@@ -146,11 +146,8 @@
   {
    "id": "greenhouse",
    "prefab": "greenhouse",
-   "pos": [
-    -11,
-    -2
-   ],
-   "yaw": 180
+   "pos": [-13.5, -2],
+   "yaw": 81
   },
   {
    "id": "shelter",
@@ -235,10 +232,11 @@
   },
   {
    "id": "lamp1",
+   "_note": "the yard light by HAB 1's door: north of the door's path since HAB 1 faces the sunrise (14 Nov), its cable from the port that came round to HAB 1's north side",
    "prefab": "lamp",
    "pos": [
     5.5,
-    2.6
+    -3.0
    ],
    "yaw": 0
   },
@@ -317,8 +315,8 @@
    0
   ],
   "airlock": [
-   0,
-   4.5,
+   4.4,
+   -0.7,
    0
   ],
   "solar": [
@@ -327,8 +325,8 @@
    135
   ],
   "greenhouse": [
-   -11,
-   5.2,
+   -8.0,
+   -2.9,
    0
   ],
   "rover": [
@@ -373,12 +371,12 @@
    [[41.42, 8.58], [48.08, 8.58]],
    [[48.92, 8.58], [55.58, 8.58]],
    [[56.42, 8.58], [63.08, 8.58]],
-   [[14, 2.87], [13.6, 3.3], [12.5, 2.6], [6, 1.0], [3.2, -0.12], [2.7, -0.12]],
-   [[-2.64, 0], [-3.2, -0.6], [-4.6, -3.4], [-8.7, -5.4], [-9.15, -5.2]],
+   [[14, 2.87], [13.3, 3.3], [12.8, 1.2], [12.0, -2.4], [7.5, -2.2], [3.5, -2.2], [2.0, -2.35], [0.9, -2.9], [-0.32, -3.0], [-0.3, -2.69]],
+   [[0.41, 2.61], [0.2, 3.6], [-3.5, 3.95], [-6.0, 4.0], [-10.0, 3.0], [-17.9, 2.6], [-18.0, -3.0], [-16.95, -3.33]],
    [[15.1, 1.13], [15.1, 0.4], [15.1, -11.5], [8.0, -15.6], [6.8, -16]],
    [[14, 1.13], [14, 0.5], [13.6, -4.8], [8.6, -5.6], [8.04, -5.91]],
    [[15.1, 2.87], [15.1, 7.6], [13.5, 8.2], [12.9, 8.2]],
-   [[2.7, 0.12], [3.4, 0.3], [4.9, 2.5], [5.54, 2.69]]
+   [[-0.54, -2.65], [-0.6, -3.3], [0.9, -3.4], [2.1, -2.8], [2.9, -2.85], [3.4, -5.3], [4.9, -3.1], [5.54, -2.91]]
   ],
   "ends": [
    ["battery3:port_n", "reactor"],
@@ -388,12 +386,12 @@
    ["wing3:port_e", "wing4:port_w"],
    ["wing4:port_e", "wing5:port_w"],
    ["wing5:port_e", "wing6:port_w"],
-   ["battery:port_s", "hab1:port_e2"],
+   ["battery:port_s", "hab1:port_e1"],
    ["hab1:port_w", "greenhouse"],
    ["battery2:port_n", "dish"],
    ["battery:port_n", "lamp2"],
    ["battery2:port_s", "charger"],
-   ["hab1:port_e1", "lamp1"]
+   ["hab1:port_e2", "lamp1"]
   ]
  },
  "charger": {
@@ -471,16 +469,15 @@
   "beacon"
  ],
  "paths": {
-  "_note": "walkways kept clear of rocks: polylines of [x, z], width in metres. From the airlock yard: south, to the rover's hatch, to the power yard, to the greenhouse door, past the storm shelter's door to build pad 1; the dish path north; the rover's track from its bay to the lander, 191 m north-west (design/research/layout.md)",
+  "_note": "walkways kept clear of rocks: polylines of [x, z], width in metres. HAB 1's and the greenhouse's doors face the sunrise (east, 14 Nov): the last two lines are their walkways, out of HAB 1 to the power yard and from the greenhouse door to HAB 1. The others: from the yard to the rover's hatch, the dish path north, past the storm shelter's door to build pad 1, and the rover's track from its bay to the lander, 191 m north-west (design/research/layout.md)",
   "width": 2.5,
   "lines": [
-   [[0, 3], [0, 14]],
    [[2, 5], [9, 4.6]],
-   [[3, -0.5], [12.5, -0.5]],
    [[2, -3], [6, -14]],
-   [[-1, 5], [-11, 4.2]],
    [[-1.5, 5.5], [-6, 8], [-12, 9]],
-   [[10, 11], [10, 15], [-22, 15], [-127, -125]]
+   [[10, 11], [10, 15], [-22, 15], [-127, -125]],
+   [[2.2, -0.3], [11.0, -1.7]],
+   [[-9.1, -2.7], [-3.6, -1.8]]
   ]
  },
  "scatter": {
@@ -584,9 +581,9 @@
  "pip": {
   "_note": "PIP's wandering (sandbox/pip.gd): ambient life, no game state. Speed, acceleration and turn: reality.json pip.*. Everything here is art direction. stops: where it parks [x, z] and what it looks at [x, z, height above the ground], weight how often it picks one; via: open ground it may drive through, so the route graph (every straight, clear line between stops and via points, `clearance` m clear either side) gets round the buildings ([-10.5, 7.0], between the greenhouse door and the storm shelter's west side: once the shelter grew, a PIP nudged against its corner found no short line home and went round by the lander, 14 Nov sols_test); via_m: how near a via point counts as passed;  (the lander is a long trip), divided by near_m plus the distance so near stops come up more; never one of the last two. notice_m: the hero this close gets a look, a beep and two flashes (flash_hz under the 3 a second limit), at most every hello_cool_s. A hero standing still (below still_speed m/s for still_s) within greet_m gets a visit: PIP parks greet_stand_m away, looks up with its head tilted, wiggles, for greet_s, then not again for greet_cool_s. yield_m, yield_deg: a hero this close inside this cone ahead stops it for wait_s, then it drives round for patience_s. feeler_m: how far ahead it checks, every feel_s; stuck_s without getting 0.3 m closer and it backs out and plans again (an order: again and again; wandering, the second time it goes elsewhere); wedge_s neither moving nor turning (boxed in between bags) and it backs out reverse_m along its trail (a point every trail_m) before planning again. Bags and the rover are planned round, the hero is left to the feelers. door_clear_m round every door and rooms (prefabs, grown by room_margin) it never drives into. flee_m: a moving rover this close sends it aside. Head: yaw and pitch limits, turn rate, tilt; blinks every blink_s, double_blink share; status bar glows at glow_hz. track_every, track_width: m between wheel prints (a print is 0.24 m long, world/terrain.gd, so under that they join into a band) and their width (the wheel is 8 cm wide, forge/vehicle_pip.py); track_depth: the prints' depth and darkness (terrain.mark strength; the rover's are tuning.json rover.track_depth, 0.5 at a crawl to 1 at speed, the hero's boots 1). Art direction from the physics: sinkage grows with the pressure under the wheel (Bekker), and a small robot's light load on narrow wheels barely marks the dust where a crewed rover's 0.99 m wheels leave a rut (Curiosity's 0.5 m wheels sank under 1 cm on Gale's plains, reality.json ground.sink.soft), so a faint scuff: a fifth of the rover's crawl; shade: contact shadow radius and strength",
   "stops": [
-   {"id": "airlock", "at": [3.0, 5.2], "look": [0.0, 2.6, 1.2]},
+   {"id": "airlock", "at": [6.0, 1.4], "look": [2.2, -0.3, 1.2]},
    {"id": "solar", "at": [20.0, 3.0], "look": [26.0, 8.5, 1.2]},
-   {"id": "greenhouse", "at": [-7.5, -6.5], "look": [-11.0, -2.0, 1.5]},
+   {"id": "greenhouse", "at": [-7.0, -5.0], "look": [-9.1, -2.7, 1.5]},
    {"id": "dish", "at": [5.0, -12.6], "look": [6.0, -16.0, 2.5]},
    {"id": "rover", "at": [6.6, 4.6], "look": [10.0, 4.8, 1.2]},
    {"id": "bags", "at": [1.4, 6.0], "look": [3.3, 7.4, 0.2]},

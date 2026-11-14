@@ -545,7 +545,7 @@ func sun_clear(h: float, eye: Vector3) -> float:
 ## Where the opening leaves the hero for dawn_reveal (data/beats.json face_dawn): east of HAB 1's door, facing the
 ## sunrise; for tests and captures.
 func stand_for_dawn() -> void:
-	var at := Vector3(3.5, 0.0, 5.5)
+	var at: Vector3 = world.items.hab1.to_global(Vector3(0.0, 0.0, -9.5))  # out of HAB 1's door (it faces the sunrise), the play camera behind clear of the vestibule
 	player.place(Vector3(at.x, world.height_at(at.x, at.z) + 0.1, at.z), -rad_to_deg(_yaw_of(HouseStyle.sun_at(clock._C, clock.hour()))))
 	player.cam.snap(player.yaw)
 

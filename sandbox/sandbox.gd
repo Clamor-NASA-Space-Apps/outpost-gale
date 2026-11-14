@@ -24,9 +24,9 @@ const VIEWS := {
 	"overview": [Vector3(0, 150, 110), Vector3(0, 0, -35)],  # the whole outpost from high up: lander to reactor
 	"horizon": [Vector3(-14, 1.7, -14), Vector3(30, 3, 22)],
 	"west": [Vector3(14, 1.7, 2), Vector3(-60, 4, -6)],  # toward the setting sun, past the base (the dusk's blue glow)
-	"airlock": [Vector3(-2.5, 1.7, 7.5), Vector3(0, 1.2, 2.5)],
+	"airlock": [Vector3(7.8, 1.7, 1.3), Vector3(2.5, 1.2, -0.4)],  # HAB 1's door faces the sunrise (east), 14 Nov
 	"rover": [Vector3(16, 3.0, 16), Vector3(10, 1.2, 8)],
-	"greenhouse": [Vector3(-6, 5.5, 9), Vector3(-11, 0.4, 0)],
+	"greenhouse": [Vector3(-3.4, 5.5, -8.7), Vector3(-11.5, 0.4, -2.3)],
 	"hab_in": [Vector3(0.3, 2.0, 1.4), Vector3(0.6, 1.1, -2.0)],  # inside HAB 1: the life-support wall and bunks
 	"hab_desk": [Vector3(0.9, 2.0, -0.6), Vector3(-2.0, 1.0, 0.9)],  # inside HAB 1: galley, Veggie, desk and map
 }

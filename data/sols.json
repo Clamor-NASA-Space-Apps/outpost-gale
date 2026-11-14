@@ -194,19 +194,13 @@
     {
       "id": "to_greenhouse",
       "pip": {
-        "follow_me": [
-          -11.0,
-          6.5
-        ]
+        "follow_me": [-7.0, -5.0]
       },
       "line": "sol3.follow",
       "objective": "pip",
       "wait": {
         "place": {
-          "at": [
-            -11.0,
-            5.2
-          ],
+          "at": [-8.0, -2.9],
           "r": 3.0
         }
       }
@@ -214,20 +208,13 @@
     {
       "id": "go_in",
       "pip": {
-        "point_at": [
-          -11.0,
-          -2.0,
-          1.2
-        ]
+        "point_at": [-13.5, -2.0, 1.2]
       },
       "line": "sol3.go_in",
       "objective": null,
       "wait": {
         "place": {
-          "at": [
-            -11.0,
-            0.5
-          ],
+          "at": [-11.03, -2.39],
           "r": 1.5
         }
       }
@@ -871,19 +858,13 @@
       "allow": [],
       "task": "task.s17_harvest",
       "pip": {
-        "follow_me": [
-          -11.0,
-          6.5
-        ]
+        "follow_me": [-7.0, -5.0]
       },
       "line": "sol17.ripe",
       "objective": "pip",
       "wait": {
         "place": {
-          "at": [
-            -11.0,
-            5.2
-          ],
+          "at": [-8.0, -2.9],
           "r": 3.0
         }
       }
@@ -891,20 +872,13 @@
     {
       "id": "s17_go_in",
       "pip": {
-        "point_at": [
-          -11.0,
-          -2.0,
-          1.2
-        ]
+        "point_at": [-13.5, -2.0, 1.2]
       },
       "line": "sol3.go_in",
       "objective": null,
       "wait": {
         "place": {
-          "at": [
-            -11.0,
-            0.5
-          ],
+          "at": [-11.03, -2.39],
           "r": 1.5
         }
       }

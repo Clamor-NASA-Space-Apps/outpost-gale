@@ -10,8 +10,8 @@ extends "res://addons/forge/test.gd"
 ## at the hero's pace without being caught, and is let go at the end.
 
 # s each beat may take here: its own wait plus the walking
-const BUDGET := {"wake": 4, "hatch": 3, "walk_out": 20, "turn_out": 15, "outside": 4, "pip_hello": 14, "walk_to_me": 20,
-	"side_steps": 60, "back_step": 4, "look_shot": 4, "look_mouse": 6, "try_jump": 4, "jump_fact": 6, "hurry": 10,
+const BUDGET := {"wake": 40, "outside": 4, "pip_hello": 6, "walk_to_me": 20,
+	"side_steps": 60, "back_step": 4, "look_mouse": 6, "try_jump": 4, "jump_fact": 6, "hurry": 10,
 	"lift": 40, "lift_fact": 2, "set_down": 10, "map": 2, "map_mark": 10, "map_close": 2, "follow_solar": 120, "sun_fact": 2, "o2_visit": 120,
 	"o2_fact": 2, "garden_visit": 180, "lamps_fact": 2, "choice": 2,
 	"day_done": 120, "sleep_hint": 2, "free": 3}
@@ -61,109 +61,66 @@ func play() -> bool:
 			beats.notify("waypoint_set")
 			if id != "":
 				beats.notify("waypoint_set:" + id))
+	# Sol 1 as the sandbox starts it: shortly before sunrise, the clock running (sandbox.gd start_opening)
+	var clock: Node = game.clock
+	var cine: Node = game.cine
+	clock.set_hour(clock.hours - clock.hour() + cine.dawn_hour())
+	clock.refresh()
+	game._sync_rules()
 	beats.start_opening()
 	check(not beats.may_sleep(), "no sleep while Sol 1's tasks are left")
-	var clock: Node = game.clock
-	var wake_h: float = float(Array(beats.data.opening[0].do).filter(func(c: String) -> bool: return c.begins_with("clock:"))[0].get_slice(":", 1))
-	var cine: Node = game.cine
-	var rim_eye := func() -> Vector3: return player.body.global_position + Vector3.UP * 1.9  # near the shot's eye
-	check(clock.pinned and absf(clock.hour() - wake_h) < 0.01, "the opening pins the look at its pre-dawn hour (%.2f h)" % clock.hour())
-	check(cine.sun_clear(clock.hour(), rim_eye.call()) < -2.0, "it wakes before the sunrise: the sun %.1f deg under the rim" % cine.sun_clear(clock.hour(), rim_eye.call()))
-	check(clock.report().sun_el > -12.0, "and not in the night: blue twilight (sun %.1f deg)" % clock.report().sun_el)
+	var eye: Vector3 = cine._at(cine.cfg.opening.eye)
+	var h0: float = clock.hour()
+	check(not clock.pinned and not clock.driven, "the opening holds no hour: the clock runs from the first frame")
+	check(cine.sun_clear(h0, eye) < 0.0, "it wakes before the sunrise: the sun %.1f deg under the rim" % cine.sun_clear(h0, eye))
+	check(clock.report().sun_el > -12.0, "and not in the night: twilight (sun %.1f deg)" % clock.report().sun_el)
+	check(absf(game.sim.sim.local_hour() - h0) < 0.02, "the HUD's hour is the sky's (%.2f, %.2f)" % [game.sim.sim.local_hour(), h0])
 	var inside := await _until(func() -> bool: return player.room == "hab1", 1.0)
 	check(inside, "the hero starts inside HAB 1 (%s)" % player.room)
 	var hatch_it: Node = null
 	for part: Node3D in world.items.hab1.get_meta("parts"):
 		if part.name == &"door":
 			hatch_it = game.interactions.by_thing.get(part)
-	check(hatch_it != null and not hatch_it.open, "HAB 1 has a shut outer hatch")
-	# the real step_out shot, asked for the moment the hatch beat ends
-	beats.shot.connect(func(n: String) -> void:
-		if n == "step_out":
-			cine.shot(n))
-	cine.shot_done.connect(func(n: String) -> void: beats.notify("shot_done:" + n))
-	# row 2: the first playable frame faces the way out, the hatch in the frame
+	# row 2: the first playable frame faces the way out, the hatch in the frame, and the hatch faces the sunrise
 	var wake_lens: Camera3D = player.cam.lens
 	var wake_hatch: Vector3 = world.items.hab1.to_global(Vector3(0.0, 1.0, -2.2))
 	var half := deg_to_rad(wake_lens.fov) / 2.0 * 1.7  # the frame's half-width at 16:9
 	var off := (-wake_lens.global_basis.z).angle_to(wake_hatch - wake_lens.global_position)
 	check(off < half, "the hero wakes facing HAB 1's hatch: it is %.0f deg off the view's centre" % rad_to_deg(off))
-	# a kid who turns round first (rows 1, 8): look input turns the view 180 deg, and the walk out still gets out
+	var sun: Vector3 = load("res://addons/forge/house_style.gd").sun_at(clock._C, h0 + 0.7)
+	var door: Vector3 = -world.items.hab1.global_basis.z
+	var to_sun := rad_to_deg(Vector2(door.x, door.z).angle_to(Vector2(sun.x, sun.z)))
+	check(absf(to_sun) < 5.0, "HAB 1's hatch faces the sunrise (%.1f deg off its bearing)" % to_sun)
+	await frames(2)
+	check(hatch_it != null and hatch_it.open, "the hatch stands open from the start")
+	# a kid who turns round first (rows 1, 8): look input turns the view 180 deg, then the kid walks out with move and
+	# look alone; nothing walks them
 	var turned := [0.0, player.cam.yaw]
-	await _beat("wake", func() -> void:
+	var at: Vector3 = player.body.global_position
+	await _until(func() -> bool: return turned[0] >= PI, 4.0, func() -> void:
 		turned[0] += absf(wrapf(player.cam.yaw - turned[1], -PI, PI))
 		turned[1] = player.cam.yaw
-		action(&"look_left", turned[0] < PI))
+		action(&"look_left", true))
 	action(&"look_left", false)
 	check(turned[0] >= PI * 0.95, "look input turned the view round in the wake (%.0f deg)" % rad_to_deg(turned[0]))
-	await _beat("hatch")
-	check(hatch_it != null and hatch_it.open, "the hatch opens on the dawn")
-
-	# animation #1: the real step_out shot follows the hero out of the hatch and lands on the play camera
-	# the walk out is the hero's own: the kid's keys do nothing, the controller walks at walk speed
-	var at: Vector3 = player.body.global_position
-	var top := [0.0]
-	var tried := [0]
-	var space := world.get_world_3d().direct_space_state
-	var ball := PhysicsShapeQueryParameters3D.new()
-	ball.shape = SphereShape3D.new()
-	ball.shape.radius = 0.15
-	ball.exclude = [player.body.get_rid()]
-	var cam_log := {"last": Vector3.INF, "bad": "", "jump": 0.0, "frames": 0, "end": Transform3D(), "looked": 0}
-	var film := func() -> void:
-		top[0] = maxf(top[0], player.moved)
-		var c3: Camera3D = root.get_camera_3d()
-		if c3 != cine.cam:
-			return
-		var p: Vector3 = c3.global_position
-		cam_log.frames += 1
-		cam_log.end = c3.global_transform
-		ball.transform = Transform3D(Basis(), p)
-		if cam_log.bad == "" and not space.intersect_shape(ball, 1).is_empty():
-			cam_log.bad = "inside a solid at %s" % p
-		# the kid's own look input moves the play camera the shot lands on: that is theirs, not a jump
-		cam_log.looked = 0 if Input.is_action_pressed(&"look_left") or Input.is_action_pressed(&"look_right") else cam_log.looked + 1
-		if cam_log.last != Vector3.INF and cam_log.looked > 30:
-			cam_log.jump = maxf(cam_log.jump, p.distance_to(cam_log.last))
-			var ray := PhysicsRayQueryParameters3D.create(cam_log.last, p)
-			ray.exclude = ball.exclude
-			if cam_log.bad == "" and p.distance_to(cam_log.last) > 0.001 and not space.intersect_ray(ray).is_empty():
-				cam_log.bad = "through a solid from %s to %s" % [cam_log.last, p]
-		cam_log.last = p
-	await _beat("walk_out", func() -> void:
-		film.call()
-		tried[0] += 1
-		if tried[0] == 30:
-			action(&"move_back", true)  # a kid pulling back: the walk goes on
-		elif tried[0] == 60:
-			action(&"move_back", false))
-	check(player.body.global_position.distance_to(at) > 5.0, "the hero walked out on its own (%.1f m)" % player.body.global_position.distance_to(at))
-	check(root.get_camera_3d() == cine.cam, "the step_out shot films the walk")
-	await _beat("turn_out", film)
-	check(root.get_camera_3d() == player.cam.lens, "the play camera has the view after the shot")
-	check(cam_log.bad == "", "the shot's camera never enters or crosses a solid: %s" % cam_log.bad)
-	check(cam_log.jump < 0.25, "and never jumps between frames (%.2f m at most in a frame)" % cam_log.jump)
-	await frames(1)
-	var lens: Camera3D = player.cam.lens
-	check(lens.global_position.distance_to(cam_log.end.origin) < 0.1, "it hands over at the play camera's own pose (%.2f m off)" % lens.global_position.distance_to(cam_log.end.origin))
-	# the end frame: the hatch on the left, the rover ahead on the right, PIP in view
-	var right := lens.global_basis.x
-	var hatch_at: Vector3 = world.items.hab1.to_global(Vector3(0.0, 1.0, -2.2))
-	check((hatch_at - lens.global_position).dot(right) < 0.0, "HAB 1's hatch is on the left of the end frame")
-	check((world.items.rover.global_position - lens.global_position).dot(right) > 0.0 and lens.is_position_in_frustum(world.items.rover.global_position), "the rover is ahead on the right")
-	check(top[0] > player.walk * 0.8 and top[0] < player.walk * 1.15, "at walk speed (%.2f of %.2f m/s)" % [top[0], player.walk])
-	check(not player.touch.stick.visible, "the touch stick stays hidden: the kid is not steering")
-	check(player.allowed == ["look"], "after the walk only looking is the kid's, as before it (%s)" % [player.allowed])
-	check(player.room == "", "the hero is outside (%s)" % player.room)
+	await frames(60)
+	check(player.body.global_position.distance_to(at) < 0.05 and beats.beat.get("id", "") == "wake", "nothing walks the hero: the wake waits for the kid")
+	out_leg = 0
+	await _beat("wake", _walk_out_by_look)
+	_stop()
+	action(&"look_left", false)
+	action(&"look_right", false)
+	var past: float = (player.body.global_position - wake_hatch).dot(door)
+	check(player.room == "" and past > 0.5, "the kid walked out with move and look alone (room '%s', %.1f m past the hatch)" % [player.room, past])
+	check(clock.hour() > h0, "the clock ran meanwhile (%.3f to %.3f)" % [h0, clock.hour()])
 	await _beat("outside")
 	await frames(30)
 	check(not hatch_it.open, "the hatch shut behind the hero")
-	check(clock.pinned, "the look holds until the lessons let it run")
-	check(lens.is_position_in_frustum(pip.global_position + Vector3.UP * 0.3), "PIP is in view, ahead of the hero (at %.1f, %.1f)" % [pip.global_position.x, pip.global_position.z])
 	var lessons: Array = beats.data.opening.map(func(b: Dictionary) -> String: return b.id)
-	check(lessons.slice(0, 6) == ["wake", "hatch", "walk_out", "turn_out", "outside", "pip_hello"], "control returns with PIP's hello (%s)" % [lessons.slice(0, 6)])
+	check(lessons.slice(0, 4) == ["wake", "outside", "pip_hello", "walk_to_me"], "no scripted walk or shot in the opening (%s)" % [lessons.slice(0, 4)])
+	check(not shots.has("step_out") and not shots.has("look_around"), "no camera shot in Sol 1's opening (%s)" % [shots])
 	await _beat("pip_hello")
-	check(pip.reached[-1] == "order", "PIP rolled up to its spot before the hello")
+	check(pip.reached.size() > 0 and pip.reached[-1] == "order", "PIP waits at its spot by the door for the hello")
 	check(targets.has("pip") and tasks.has("task.meet_pip"), "PIP is the objective and meeting it the task (%s, %s)" % [targets, tasks])
 	await _beat("walk_to_me", func() -> void: _steer(pip.global_position, 2.0))
 	_stop()
@@ -194,9 +151,6 @@ func play() -> bool:
 	action(&"move_back", false)
 	await frames(30)
 
-	# row 3: the 360 is asked for only with the hero outdoors
-	check(shots.has("look_around") and beats.outdoors(), "the look-around starts with the hero outdoors (room '%s')" % player.room)
-	await _beat("look_shot", _answer.bind("look_around"))
 	await _beat("look_mouse", func() -> void: player.cam.look(6.0, 0.0))
 
 	# the hop and its Earth ghost
@@ -367,29 +321,6 @@ func play() -> bool:
 	await frames(120)
 	check(pip.state != "behind" and not pip.leading, "and it no longer waits for the hero (%s)" % pip.state)
 
-	# row 3: held indoors, the outdoor beat does not start; PIP leads the way out, and a kid using only move and
-	# look walks out after it; the 360 starts only then, outdoors, and plays for real
-	var asked := []
-	beats.shot.connect(func(n: String) -> void:
-		if n == "look_around":
-			asked.append(beats.outdoors())
-			cine.shot(n))
-	var hab: Node3D = world.items.hab1
-	player.place(hab.to_global(Vector3(0.6, 0.3, 0.8)), -rad_to_deg(hab.global_rotation.y))  # deep in, facing the back
-	player.cam.snap(player.yaw)
-	await frames(30)
-	check(player.room == "hab1", "the hero is back inside HAB 1 (%s)" % player.room)
-	beats.sequence = "opening"
-	beats.beats = beats.data.opening
-	beats._start(beats.beats.find_custom(func(b: Dictionary) -> bool: return b.id == "look_shot"))
-	await frames(60)
-	check(asked.is_empty() and not cine.busy(), "indoors the outdoor beat waits: no 360 in the room")
-	check(pip.led and pip.leading, "PIP leads the way out instead")
-	var out_ok := await _until(func() -> bool: return not asked.is_empty(), 90.0, _walk_out_by_look)
-	_stop()
-	check(out_ok and asked == [true], "the hero walked out with move and look alone, and the 360 started outdoors (%s)" % [asked])
-	var played := await _until(func() -> bool: return cine.beat == "look_around", 2.0)
-	check(played and player.room == "", "the 360 plays, out in the open")
 	return true
 
 
