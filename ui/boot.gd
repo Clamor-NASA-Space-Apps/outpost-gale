@@ -13,6 +13,10 @@ const KINDS := ["glb", "png", "jpg", "webp", "exr"]
 
 var start := Start.new()
 var _go := false  # the kid pressed Start: the sandbox comes in when the loading is done
+var _last := Time.get_ticks_msec()  # the frame before this one, for the --verbose frame log
+var _second := Time.get_ticks_msec()
+var _frames := 0
+var _worst := 0
 var _paths: Array[String] = []
 var _done := {}  # path -> the loaded resource, held so the cache keeps it until the sandbox has used it
 
@@ -42,11 +46,26 @@ func _ready() -> void:
 # ponytail: one load at a time on the main thread, within a slice of each frame. Worker-thread loading
 # (load_threaded_request) hung the exported build in a later main-thread load (13 Nov, 4.7.2), so no threads.
 func _process(_delta: float) -> void:
-	# a short slice while the logo's light sweeps: 50 ms of loading in every frame would leave it under 20 frames a second
-	var until := Time.get_ticks_msec() + (8 if start.splash else 50)
+	# a short slice while the logo's light sweeps and while the kid is on the menu: 50 ms of loading in every frame
+	# left it under 20 frames a second, and the rows answered late (14 Nov playtest: "it took some time for us to
+	# change them"). The long slice only once Start is pressed and there is nothing left to answer
+	var until := Time.get_ticks_msec() + (50 if _go else 8)
 	while _done.size() < _paths.size() and Time.get_ticks_msec() < until:
 		var p: String = _paths[_done.size()]
+		var t0 := Time.get_ticks_msec()
 		_done[p] = load(p)  # held, so the cache keeps it until the sandbox has used it; a failure logs itself
+		if Time.get_ticks_msec() - t0 > 30:
+			print_verbose("boot: %s took %d ms to load" % [p, Time.get_ticks_msec() - t0])  # one load no slice can cut
+	# with --verbose: how the screens ran while the base loaded (frames in each second, and the longest one)
+	var now := Time.get_ticks_msec()
+	_worst = maxi(_worst, now - _last)
+	_last = now
+	_frames += 1
+	if now - _second >= 1000:
+		print_verbose("boot: %d frames in the last second, the longest %d ms, %d of %d loaded" % [_frames, _worst, _done.size(), _paths.size()])
+		_second = now
+		_frames = 0
+		_worst = 0
 	start.progress(float(_done.size()) / _paths.size())
 	if _go and _done.size() == _paths.size():
 		set_process(false)
