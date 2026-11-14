@@ -373,7 +373,8 @@ func _wind(h: float, el: float, now: bool) -> void:
 	var hours_on: Array = _cfg.devil_hours
 	var devil: bool = _world.weather.get("devil", false) and h >= float(hours_on[0]) and h < float(hours_on[1])
 	if _world.dust.devil.emitting != devil or now:
-		_world.dust.switch(_world.dust.devil, devil, now)  # spins up in play, whole at once behind a cover
+		for d: GPUParticles3D in _world.dust.devils:  # all of them: copies left to the weather alone emitted at
+			_world.dust.switch(d, devil, now)  # the origin, inside HAB 1, before 11:00 (14 Nov playtest)
 	# the trackers turn to the real sun, and lie flat once it is down or the row says stow (a storm)
 	_world.machines.aim(Vector3.ZERO if el <= 0.0 or _world.weather.get("stow", false) else sun)
 

@@ -141,6 +141,9 @@ func build(world: Node3D) -> void:
 			d.name = "Devil%d" % i
 			add_child(d)
 		d.scale = Vector3.ONE * float(world.data.devil.devils[i][2])
+		var o: Array = world.data.devil.devils[i]
+		var c: Array = world.data.scatter.centre
+		d.position = Vector3(float(c[0]) + cos(float(o[1])) * float(o[0]), 0.0, float(c[1]) + sin(float(o[1])) * float(o[0]))
 		devils.append(d)
 
 
@@ -363,7 +366,7 @@ func _process(delta: float) -> void:
 		front.global_position = at + Vector3(0, 3.0, 0)
 	if streaks.emitting:
 		streaks.amount_ratio = _streak_share * _share * (0.25 + 0.75 * _world.gust())
-	if devil.emitting:
+	if devils.any(func(e: GPUParticles3D) -> bool: return e.emitting):  # each stays on its far circle, never the origin
 		var d: Dictionary = _world.data.devil
 		var c: Array = _world.data.scatter.centre
 		_devil_angle += float(d.speed) / float(d.radius) * delta
