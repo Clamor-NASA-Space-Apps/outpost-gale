@@ -22,6 +22,7 @@ var distance := 0.0  # the wanted distance at the default pitch
 var height := 0.0  # pivot above the target's floor
 var yaw := 0.0  # radians, as rotation.y: 0 puts the lens south of the target looking north
 var pitch := 0.0  # radians, negative looks down
+var may_capture := func() -> bool: return true  # the owner's answer: false while a menu or an overlay is up, so a click never hides the cursor
 var lift := 0.0  # extra pitch over a wall behind the target
 var dist := 0.0  # where the lens is now
 var hold := 0.0
@@ -371,7 +372,7 @@ func on_screen(feet: Vector3, tall: float) -> float:
 ## scroll is a stream of wheel "presses", so the cursor vanished while the player only scrolled (13 Nov playtest).
 func _unhandled_input(e: InputEvent) -> void:
 	# the browser allows a capture only from inside an input event; a touch's made-up click never captures
-	if e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_LEFT and e.device != InputEvent.DEVICE_ID_EMULATION:
+	if e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_LEFT and e.device != InputEvent.DEVICE_ID_EMULATION and may_capture.call():
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	elif e is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		look(e.screen_relative.x * t.mouse_deg_per_px, e.screen_relative.y * t.mouse_deg_per_px)

@@ -166,6 +166,10 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	# time waits while the player cannot act: the look clock and the rules alike
 	clock.paused = settings.is_open() or cover.visible or hud.is_open() or hud.map_open()
+	# a menu or an overlay is up: the cursor shows and a click cannot capture it; play takes it back (14 Nov playtest:
+	# the cursor hidden over Settings and the map)
+	if overlay() and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	clock.paused = clock.paused or sim.sim.awake_left() <= 0.0  # up all night: the sky waits at dawn with the rules
 	sim.paused = clock.paused or cine.busy() or beats.holds_clock or lost  # the opening holds the sky at dawn: the HUD hour waits with it
 	hud.visible = not settings.is_open()
@@ -450,6 +454,7 @@ func _wire() -> void:
 	interactions.prompt_label.visible = false
 	hud.bind(sim)
 	hud.bind_view(player.cam.lens, player.body)
+	player.cam.may_capture = func() -> bool: return not overlay()
 	if pip:
 		hud.bind_speaker(pip, player.cam.lens)
 	hud.cue.connect(audio.ui)
