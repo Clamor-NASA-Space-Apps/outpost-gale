@@ -929,6 +929,14 @@ static func warm(root: Node, design: Dictionary, at: Transform3D, extra: Array =
 	stage.global_transform = at
 	stage.add_child(cam)
 	cam.make_current()
+	# the scene's own meshes stay out of sight while the copies compile a batch a frame: in view (and in the sun's
+	# shadow and a probe's six faces) on the first frame, every variant compiled at once, 31 s in one frame on the
+	# web, and the browser offered to kill the page. Lights, probes and the sky stay, so the copies get their variants
+	var hidden: Array[GeometryInstance3D] = []
+	for g: GeometryInstance3D in root.find_children("*", "GeometryInstance3D", true, false):
+		if g.visible:
+			g.visible = false
+			hidden.append(g)
 	var box := BoxMesh.new()
 	box.size = Vector3.ONE * 0.05
 	var lamp := make_lamp(design)
@@ -974,19 +982,20 @@ static func warm(root: Node, design: Dictionary, at: Transform3D, extra: Array =
 					k += 1
 		for e in emitters:
 			var c := e.duplicate() as GPUParticles3D
-			c.visible = true
 			c.local_coords = false
 			c.preprocess = 0.0
 			c.one_shot = false
 			c.amount_ratio = 1.0
 			c.position = spot
+			c.visible = false  # in a batch like the copies: all on the first frame was most of a 19 s web frame
 			stage.add_child(c)
 			c.emitting = true
 			c.restart()
+			parts.append(c)
 	var tree := root.get_tree()
 	var probes := root.find_children("*", "ReflectionProbe", true, false).size()
 	# progress in frames, the compiles weighed as one frame each (probe frames are cheap, compiles are not)
-	var batch := maxi(1, ceili(parts.size() / float(WARM_STEPS)))
+	var batch := mini(maxi(1, ceili(parts.size() / float(WARM_STEPS))), WARM_BATCH)
 	var steps := float(ceili(parts.size() / float(batch)) * WARM_STEPS + frames + PROBE_FRAMES * probes)
 	var done := [0]  # an array, so the frame hook below counts into the same one
 	var tell := func(n: int) -> void:
@@ -1000,6 +1009,9 @@ static func warm(root: Node, design: Dictionary, at: Transform3D, extra: Array =
 		if not is_instance_valid(stage):
 			return  # the scene went away while it warmed
 		tell.call(WARM_STEPS)
+	for g in hidden:
+		if is_instance_valid(g):
+			g.visible = true
 	for i in frames:
 		await tree.process_frame
 		tell.call(1)
@@ -1018,6 +1030,11 @@ static func warm(root: Node, design: Dictionary, at: Transform3D, extra: Array =
 ## cost more: 10 adds about half a second on a 20 fps phone, and a fixed batch of 8 (33 frames for 264 copies) made a
 ## software-GL web load far longer (ready at 285 s against 95 s, on a busy laptop).
 const WARM_STEPS := 10
+
+## The most copies shown in one frame. A web compile is a third of a second or more and blocks the page: 31 copies
+## made an 11 s frame, and a browser offers to kill a page that stops answering (14 Nov). With the scene hidden
+## while they compile, the extra frames cost next to nothing.
+const WARM_BATCH := 6
 
 ## Frames an UPDATE_ONCE probe takes once a camera sees it: one to be queued by the cull, one for its six faces, then
 ## one per roughness mip, at most 8 (renderer_scene_cull.cpp render_probes(), gles3 light_storage.cpp, 4.7.2), plus one.
