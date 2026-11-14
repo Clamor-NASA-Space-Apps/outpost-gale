@@ -1,4 +1,4 @@
-# Every push builds the web, Linux and Windows versions.
+# Every push builds the web, Linux, Windows and macOS versions.
 # Web: https://clamor-nasa-space-apps.github.io/<folder>/ (main is "sandbox", other branches use their name, "/" becomes "-").
 # Desktop: the rolling release "build-<folder>" on this repo (release files do not count against the 500 MB artifact quota).
 # Pull requests only build, so a broken export shows before the merge.
@@ -21,12 +21,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Godot 4.7.2 and the three export templates (cached)
+      - name: Godot 4.7.2 and the four export templates (cached)
         id: godot
         uses: actions/cache@v4
         with:
           path: ~/godot
-          key: godot-4.7.2-stable
+          key: godot-4.7.2-stable-macos
       - if: steps.godot.outputs.cache-hit != 'true'
         run: |
           mkdir -p ~/godot/templates && cd ~/godot
@@ -34,7 +34,7 @@ jobs:
           curl -sSLo e.zip $base/Godot_v4.7.2-stable_linux.x86_64.zip && unzip -q e.zip && mv Godot_v4.7.2-stable_linux.x86_64 godot && rm e.zip
           # the full template set is 1.3 GB; the cache keeps only what our presets use
           curl -sSLo t.tpz $base/Godot_v4.7.2-stable_export_templates.tpz
-          unzip -qj t.tpz templates/version.txt templates/web_nothreads_release.zip templates/linux_release.x86_64 templates/windows_release_x86_64.exe -d templates && rm t.tpz
+          unzip -qj t.tpz templates/version.txt templates/web_nothreads_release.zip templates/linux_release.x86_64 templates/windows_release_x86_64.exe templates/macos.zip -d templates && rm t.tpz
       - run: |
           mkdir -p ~/.local/share/godot/export_templates
           ln -s ~/godot/templates ~/.local/share/godot/export_templates/4.7.2.stable
@@ -58,12 +58,14 @@ jobs:
 
       - name: Export
         run: |
-          mkdir -p build/web build/linux build/windows
+          mkdir -p build/web build/linux build/windows build/macos
           godot --headless --path . --export-release Web build/web/index.html
           godot --headless --path . --export-release Linux build/linux/outpost-gale.x86_64
           godot --headless --path . --export-release Windows build/windows/OutpostGale.exe
+          # a universal .app in a zip, signed ad hoc (no Apple account): unsigned, Apple silicon refuses to start it
+          godot --headless --path . --export-release macOS build/macos/OutpostGale-macos.zip
           ls -la build/*
-          test -s build/web/index.pck && test -s build/linux/outpost-gale.x86_64 && test -s build/windows/OutpostGale.exe
+          test -s build/web/index.pck && test -s build/linux/outpost-gale.x86_64 && test -s build/windows/OutpostGale.exe && test -s build/macos/OutpostGale-macos.zip
           # GitHub refuses a file over 100 MB in git, and Pages is a git push
           find build/web -size +95M | grep . && { echo "a web file is over 95 MB"; exit 1; } || true
 
@@ -81,11 +83,12 @@ jobs:
           (cd windows && zip -q9 ../OutpostGale-windows-x64.zip OutpostGale.exe)
           tar -C linux -czf outpost-gale-linux-x86_64.tar.gz outpost-gale.x86_64
           (cd web && zip -qr9 ../outpost-gale-web.zip .)
+          mv macos/OutpostGale-macos.zip .
           gh release delete "build-$DIR" --cleanup-tag -y || true
           gh release create "build-$DIR" --prerelease --target "$GITHUB_SHA" \
             --title "$GITHUB_REF_NAME, ${GITHUB_SHA::7}" \
-            --notes "Built from $GITHUB_SHA. Play in the browser: https://clamor-nasa-space-apps.github.io/$DIR/" \
-            OutpostGale-windows-x64.zip outpost-gale-linux-x86_64.tar.gz outpost-gale-web.zip
+            --notes "Built from $GITHUB_SHA. Play in the browser: https://clamor-nasa-space-apps.github.io/$DIR/. macOS: unzip, then right-click OutpostGale.app and Open (it is signed ad hoc, not notarised), or run xattr -cr OutpostGale.app once." \
+            OutpostGale-windows-x64.zip outpost-gale-linux-x86_64.tar.gz outpost-gale-web.zip OutpostGale-macos.zip
 
       # The Pages repo holds generated files only: each deploy is one fresh commit (force-pushed), so
       # 100 MB builds never pile up in its history. The lease makes two branches deploying at once retry.
