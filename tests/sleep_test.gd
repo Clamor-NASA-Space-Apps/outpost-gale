@@ -3,8 +3,11 @@ extends "res://addons/forge/test.gd"
 ## The bed spot opens the picker and the clock waits; Night drives only the look clock to the fixed 06:30 wake with the
 ## drone shot, PIP frozen, the shadows reaching further and the probes held; then the hero wakes on the bench in HAB 1,
 ## the clock given back. A nap from a pinned 13:00 ends 20 minutes on and stays pinned. Nothing counts (hard rule 1).
+## The lapse itself (15 Nov): the sun moves on every frame with no step much larger than the rest, and the night ends
+## with the sun in the drone's frame, over the skyline it sees, wherever the base is turned; the drone is in no solid.
 
 const Cine := preload("res://cine/cine.gd")
+const HouseStyle := preload("res://addons/forge/house_style.gd")
 
 var game: Node3D
 var cine: Node
@@ -113,7 +116,41 @@ func play() -> bool:
 	check(clock.driven, "the cine drives the look clock")
 	check(sun.directional_shadow_max_distance >= 60.0, "the shadows reach the drone shot (%.0f m)" % sun.directional_shadow_max_distance)
 	check(root.get_camera_3d() == cine.cam, "the drone camera is the one in use")
-	check(await within(cine.slept, 15.0, 2), "the lapse ends within its 9 s cap")
+	# the end of the night as the drone sees it, read as `slept` fires (the wake moves the camera a moment later)
+	var end := {}  # filled in place: a lambda holds its own copy of a local, but the same dictionary
+	cine.slept.connect(func(_k: StringName, _h: float) -> void:
+		var cam: Camera3D = cine.cam
+		var to_sun: Vector3 = HouseStyle.sun_at(clock._C, clock.hour())
+		var at := cam.global_position + to_sun * 1000.0
+		var ray := PhysicsRayQueryParameters3D.create(cam.global_position, cam.global_position + to_sun * 300.0)
+		end.merge({"behind": cam.is_position_behind(at), "at": cam.unproject_position(at) / root.get_visible_rect().size,
+			"clear": cine.sun_clear(clock.hour(), cam.global_position),
+			"hidden": not game.world.get_world_3d().direct_space_state.intersect_ray(ray).is_empty(),
+			"hab": cam.unproject_position(hab.global_position) / root.get_visible_rect().size}), CONNECT_ONE_SHOT)
+	# the lapse frame by frame, as the clock handed the sun to the sky: the frames on which it saw the hour move
+	var steps: Array[float] = []
+	var was_sun: Vector3 = clock.sun
+	var was_h: float = clock._seen
+	var looks: int = clock.looks
+	for i in 900:
+		if got.size() > 0:
+			break
+		await process_frame
+		if clock._seen != was_h:
+			steps.append(rad_to_deg(was_sun.angle_to(clock.sun)) if clock.sun != was_sun else 0.0)
+		was_sun = clock.sun
+		was_h = clock._seen
+	check(got.size() > 0, "the lapse ends within its 9 s cap")
+	var by_size := steps.duplicate()
+	by_size.sort()
+	if check(steps.size() > 200, "the lapse ran the clock on %d frames" % steps.size()):
+		check(by_size[0] > 0.0, "the sun moved on every frame of the lapse (it stood still on %d of %d)" % [steps.count(0.0), steps.size()])
+		check(by_size[-1] < by_size[by_size.size() / 2] * 2.0, "no frame moves the sun more than twice the median (%.3f, median %.3f deg)" % [by_size[-1], by_size[by_size.size() / 2]])
+		check(clock.looks - looks > steps.size() * 0.8, "the sky's colour follows on most frames, not at look_hz (%d looks in %d frames)" % [clock.looks - looks, steps.size()])
+	if check(not end.is_empty(), "the night's end was seen"):
+		check(not end.behind and Rect2(0.05, 0.05, 0.9, 0.9).has_point(end.at), "the night ends with the sun in the drone's frame (at %.2f, %.2f of it)" % [end.at.x, end.at.y])
+		check(end.clear > 0.5 and not end.hidden, "over the skyline the drone sees, behind nothing (%.1f deg over it)" % end.clear)
+		check(Rect2(0.0, 0.0, 1.0, 1.0).has_point(end.hab), "with HAB 1 in the frame (at %.2f, %.2f)" % [end.hab.x, end.hab.y])
 	check(absf(clock.hour() - 6.5) < 0.05, "a night ends at the fixed 06:30 wake (%.2f)" % clock.hour())
 	check(got.size() > 0 and got[0][0] == &"night" and absf(got[0][1] - (30.5 - h0)) < 0.01, "slept(night, hours to 06:30) fires (%s from %.2f)" % [got, h0])
 	check(not clock.driven and not clock.pinned, "the clock is given back as it was: running, not pinned")
@@ -131,6 +168,19 @@ func play() -> bool:
 	check(not player.seated and player.process_mode != Node.PROCESS_MODE_DISABLED, "the hero stands and moves again")
 	check(audio._dawn, "the next door opened plays the dawn cue")
 	check(audio.cue != "sleep", "the sleep cue stopped on the cut")
+	# the drone's whole path is in the open: no solid at the camera, and well over the ground
+	var ball := PhysicsShapeQueryParameters3D.new()
+	ball.shape = SphereShape3D.new()
+	ball.shape.radius = 0.5
+	var in_solid := 0
+	var lowest := INF
+	for i in 21:
+		cine.drone(i / 20.0)
+		var eye: Vector3 = cine.cam.global_position
+		ball.transform = Transform3D(Basis(), eye)
+		in_solid += int(not game.world.get_world_3d().direct_space_state.intersect_shape(ball, 1).is_empty())
+		lowest = minf(lowest, eye.y - game.world.height_at(eye.x, eye.z))
+	check(in_solid == 0 and lowest > 3.0, "the drone is in no solid on its way (%d of 21 points), %.1f m over the ground at its lowest" % [in_solid, lowest])
 
 	# a nap from a pinned 13:00: 20 minutes on, and it stays pinned there
 	clock.pinned = true

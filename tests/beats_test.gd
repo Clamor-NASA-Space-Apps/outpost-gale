@@ -95,6 +95,18 @@ func play() -> bool:
 	check(absf(to_sun) < 5.0, "HAB 1's hatch faces the sunrise (%.1f deg off its bearing)" % to_sun)
 	await frames(2)
 	check(hatch_it != null and hatch_it.open, "the hatch stands open from the start")
+	# PIP waits where the sun comes up (15 Nov: at its airlock stop it stood in the left of the frame, and a kid
+	# looking at it missed the sunrise). The spot is world numbers (data/beats.json wake): they go stale if the base
+	# turns again, and these fail until they are derived again from the hatch and the sun's bearing at this hour
+	var dawn: Vector3 = load("res://addons/forge/house_style.gd").sun_at(clock._C, h0)
+	var hatch_at: Vector3 = world.items.hab1.to_global(Vector3(cine.cfg.sleep.hatch[0], 0.0, cine.cfg.sleep.hatch[1]))
+	var first: Dictionary = beats.data.opening[0].pip
+	var out := Vector2(first.go_to[0] - hatch_at.x, first.go_to[1] - hatch_at.z)
+	var stale := rad_to_deg(out.angle_to(Vector2(dawn.x, dawn.z)))
+	check(absf(stale) < 3.0 and out.length() > 7.0 and out.length() < 9.0,
+		"PIP's first spot is on the line from the hatch to the sunrise, 7 to 9 m out (%.1f deg off it, %.1f m)" % [stale, out.length()])
+	check(first.place == first.go_to and _flat(pip.global_position, Vector3(first.go_to[0], 0.0, first.go_to[1])) < 0.6,
+		"and PIP stands there from the first frame (%.1f m off)" % _flat(pip.global_position, Vector3(first.go_to[0], 0.0, first.go_to[1])))
 	# a kid who turns round first (rows 1, 8): look input turns the view 180 deg, then the kid walks out with move and
 	# look alone; nothing walks them
 	var turned := [0.0, player.cam.yaw]
@@ -115,6 +127,21 @@ func play() -> bool:
 	var past: float = (player.body.global_position - wake_hatch).dot(door)
 	check(player.room == "" and past > 0.5, "the kid walked out with move and look alone (room '%s', %.1f m past the hatch)" % [player.room, past])
 	check(clock.hour() > h0, "the clock ran meanwhile (%.3f to %.3f)" % [h0, clock.hour()])
+	# out of the hatch and looking straight ahead: PIP in the middle of the frame, on the sun's bearing
+	player.cam.snap(atan2(-door.x, -door.z))
+	await frames(3)
+	var now_sun: Vector3 = load("res://addons/forge/house_style.gd").sun_at(clock._C, clock.hour())
+	var to_pip := Vector2(pip.global_position.x - hatch_at.x, pip.global_position.z - hatch_at.z)
+	var off_sun := rad_to_deg(to_pip.angle_to(Vector2(now_sun.x, now_sun.z)))
+	check(absf(off_sun) < 10.0, "from the hatch PIP stands on the sun's bearing (%.1f deg off it)" % off_sun)
+	var pip_at: Vector3 = pip.global_position + Vector3.UP * 0.4
+	var in_frame: Vector2 = wake_lens.unproject_position(pip_at) / root.get_visible_rect().size
+	check(not wake_lens.is_position_behind(pip_at) and in_frame.x > 1.0 / 3.0 and in_frame.x < 2.0 / 3.0 and in_frame.y > 0.0 and in_frame.y < 1.0,
+		"the kid steps out facing PIP in the middle third of the frame (at %.2f, %.2f of it)" % [in_frame.x, in_frame.y])
+	var sees := PhysicsRayQueryParameters3D.create(wake_lens.global_position, pip_at)
+	sees.exclude = [player.body.get_rid()]
+	var hit: Dictionary = world.get_world_3d().direct_space_state.intersect_ray(sees)
+	check(hit.is_empty() or hit.collider == pip or pip.is_ancestor_of(hit.collider), "with nothing between the lens and PIP (%s)" % [hit.get("collider")])
 	await _beat("outside")
 	await frames(30)
 	check(not hatch_it.open, "the hatch shut behind the hero")

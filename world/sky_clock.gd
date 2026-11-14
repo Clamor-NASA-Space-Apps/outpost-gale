@@ -5,7 +5,8 @@ extends Node
 ## the stars, Phobos and Deimos turn with the same clock; dust settles in a storm and stays.
 ## It drives the look only: nothing here counts sols, and nothing a player can win or lose reads it (hard rule 1 until
 ## 14 Nov). The rules take it over with `driven` and set_hour() (CONTRACTS.md, The sky clock).
-## Knobs: data/tuning.json `sky`. Cost: the light moves in short bursts and the probes redraw in steps, never per frame.
+## Knobs: data/tuning.json `sky`. Cost: the look is taken `look_hz` times a second and the probes redraw in steps, never
+## per frame; only a time-lapse (LAPSE_H_S) takes the look every frame.
 
 ## The design that now leads the blend changed (sandbox SKIES names: "design", "design.sunset", "design.night",
 ## "design.storm"). The sandbox passes it to the audio; the rules may listen on 14 Nov.
@@ -14,6 +15,10 @@ signal phase_changed(state: String)
 const HouseStyle := preload("res://addons/forge/house_style.gd")
 const KEYS := ["design", "design.sunset", "design.night", "design.storm"]
 const PHASES := ["dawn", "noon", "dusk", "night", "storm"]
+## Local hours a real second from which the hour is a time-lapse (the sleep, a debug skip: 1 to 2.4; the clock's own
+## night runs at about 0.05): the whole look is then taken every frame. At `look_hz` the sky's colour and its sun went
+## 1.7 deg a step through a night's sleep, a slideshow (15 Nov playtest); the probes keep their own rate
+const LAPSE_H_S := 0.25
 
 var hours := 0.0  # local solar hours since midnight of the first sol; hour() is this within the sol
 var driven := false  # the rules own the hour (set_hour() every frame); the clock stops advancing it
@@ -49,6 +54,7 @@ var _phase := 0
 var _skip_to := -1.0
 var _skip_rate := 0.0
 var _since_look := 0.0
+var _seen := 0.0  # the hour at the last frame: what it moved by since, whoever moved it
 var _v: Dictionary  # the look of the last update, without the light
 var _light_to: Dictionary  # where the true sun would put the light now: {dir, color, energy}
 var _light_from: Dictionary  # a burst's two ends, with `shadowed` (HouseStyle._shadowed(), solved once a burst)
@@ -186,7 +192,6 @@ func report() -> Dictionary:
 
 func _process(delta: float) -> void:
 	var t0 := Time.get_ticks_usec()
-	var was := hours
 	if _skip_to >= 0.0:
 		hours = minf(hours + _skip_rate * delta, _skip_to)
 		if hours >= _skip_to:
@@ -197,16 +202,19 @@ func _process(delta: float) -> void:
 		# the planet's own seconds since the night design's hour: stars, Phobos and Deimos keep pace with the sun
 		_stars.t = (hours - float(_C.hour)) * float(_cfg.sol_s) / 24.0
 	_since_look += delta
-	var dh := hours - was
-	if _since_look >= 1.0 / float(_cfg.look_hz) or dh > 0.05:
+	# since the last frame, not since this one began: a cine's lapse sets the hour (set_hour()) before this runs, and
+	# measured from here a driven clock never moved, so the sleep's sun stood still between looks
+	var dh := hours - _seen
+	_seen = hours
+	if _since_look >= 1.0 / float(_cfg.look_hz) or absf(dh) > LAPSE_H_S * delta:
 		_update_look(false)
 		_since_look = 0.0
 	elif dh != 0.0:
 		# the disc keeps pace with the light and the stars every frame (a global: the cubemap is left alone); at
 		# look_hz alone it stepped like a slideshow in a fast-forward (Ravindu, 14 Nov)
-		var s := HouseStyle.sun_at(_C, hour())
-		RenderingServer.global_shader_parameter_set(&"forge_sky_sun_dir", s)
-		RenderingServer.global_shader_parameter_set(&"forge_sky_twilight_dir", Vector3(s.x, 0.0, s.z).normalized())
+		sun = HouseStyle.sun_at(_C, hour())
+		RenderingServer.global_shader_parameter_set(&"forge_sky_sun_dir", sun)
+		RenderingServer.global_shader_parameter_set(&"forge_sky_twilight_dir", Vector3(sun.x, 0.0, sun.z).normalized())
 	if float(_cfg.sun_step_deg) <= 0.0:
 		if hours != _lit_at:  # a still clock leaves the light, and the sky's reflections, alone
 			_lit_at = hours

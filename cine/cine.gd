@@ -170,7 +170,16 @@ func sleep(kind: StringName) -> void:
 ## The drone shot at `k` (0 its start, 1 its end), on the cine camera: the captures pose it the same way.
 func drone(k: float) -> void:
 	var d: Dictionary = cfg.sleep.drone
-	cam.look_at_from_position(_ground(d.from).lerp(_ground(d.to), k), _ground(d.at).lerp(_ground(d.at_to), k))
+	cam.look_at_from_position(_dawn(d.from).lerp(_dawn(d.to), k), _dawn(d.at).lerp(_dawn(d.at_to), k))
+
+
+## A drone point [m right, m over the ground there, m back] about HAB 1, in a frame turned to where the sun stands at
+## the wake hour (-Z toward it), so the lapse ends on the sunrise wherever the base is turned: as world metres the
+## points turned with the base (tools/rotate_base.py) and the shot ended looking north, the sun out of frame (15 Nov).
+func _dawn(p: Array) -> Vector3:
+	var to_sun := Basis(Vector3.UP, _yaw_of(HouseStyle.sun_at(clock._C, float(cfg.sleep.wake_h))))
+	var at: Vector3 = world.items.hab1.global_position + to_sun * Vector3(p[0], 0.0, p[2])
+	return Vector3(at.x, world.height_at(at.x, at.z) + float(p[1]), at.z)
 
 
 ## The hero on the donning bench, sitting down: the hips onto the seat, facing into the room.

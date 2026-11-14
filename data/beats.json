@@ -36,7 +36,7 @@
   "opening": [
     {
       "id": "wake",
-      "_note": "Sol 1 starts here, with no script (Ravindu, 14 Nov: 'ditch both hard coded animations ... user goes outside, and enjoy the sunrise'): the hero wakes in HAB 1's airlock facing the open hatch, which faces the sunrise (data/world.json hab1 yaw), with move and look free from the first frame. The clock runs from the first frame too; the root starts it so the sun's first sliver clears the rim about 45 s after the cover lifts (data/cine.json opening). The beat ends once the kid is out",
+      "_note": "Sol 1 starts here, with no script (Ravindu, 14 Nov: 'ditch both hard coded animations ... user goes outside, and enjoy the sunrise'): the hero wakes in HAB 1's airlock facing the open hatch, which faces the sunrise (data/world.json hab1 yaw), with move and look free from the first frame. The clock runs from the first frame too; the root starts it so the sun's first sliver clears the rim about 45 s after the cover lifts (data/cine.json opening). The beat ends once the kid is out. PIP waits at [10.048, -1.503] from the first frame (pip.place, then go_to): 8 m out from HAB 1's hatch (its inner face, HAB 1's own [0, -2.16], here [2.133, -0.338]) along the sun's bearing at the opening's hour (81.6 deg at 05:25, cine.dawn_hour(); the door faces 81), so a kid looking straight out of the hatch has PIP in the middle of the frame with the dawn behind it, not off to the left at the airlock stop (15 Nov). World numbers: if the base turns again they go stale, and tests/beats_test.gd fails until they are derived again",
       "do": [
         "hero:airlock",
         "ghost:off",
@@ -47,7 +47,8 @@
       "line": "sol1.walk_out",
       "keys": ["W"],
       "pip": {
-        "go_to": "airlock",
+        "place": [10.048, -1.503],
+        "go_to": [10.048, -1.503],
         "point_at": "airlock"
       },
       "wait": {

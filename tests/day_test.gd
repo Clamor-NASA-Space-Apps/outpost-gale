@@ -5,6 +5,8 @@ extends "res://addons/forge/test.gd"
 ## every frame with no jump (and not at all while the clock stands), the probes redraw in steps, and
 ## the probes redraw in steps (never every frame), the night sky turns with the clock, a storm's dust stays after it
 ## and a wiped row of panels sheds its own, the clock waits while a menu is open, and the clock's own work per frame is small.
+## In a time-lapse (the sleep's set_hour() every frame, the debug skip) the sun, the light and the sky's colour move on
+## every frame with no step much larger than the rest, the probes still in steps; after it the look is back at look_hz.
 
 const HouseStyle := preload("res://addons/forge/house_style.gd")
 
@@ -286,14 +288,57 @@ func play() -> bool:
 		await process_frame
 	check(clock.hours > h1, "and runs again once it closes")
 
-	# 7. the debug key: a short time-lapse to each next phase, then a storm, then dawn with the storm's dust left on
+	# 7. a time-lapse driven as the sleep drives it (cine.gd: set_hour() before the clock's own frame), through an
+	# afternoon, where the light is the sun: the 15 Nov playtest saw the sun "like a slide show", because a driven
+	# clock never saw its hour move and took the sky's sun only at look_hz
+	clock.jump("noon")
+	clock.driven = true
+	var lapse_from: float = clock.hours
+	var lapse_looks: int = clock.looks
+	var lapse_redraws: int = clock.probe_redraws
+	var sun_steps: Array[float] = []
+	var light_steps: Array[float] = []
+	var sun_was: Vector3 = clock.sun
+	was_dir = sun_light.basis.z
+	for i in 241:  # 4 s at the night lapse's 1.1 h a second
+		await process_frame
+		if i > 0:  # what the clock made of the hour set a frame ago
+			sun_steps.append(rad_to_deg(sun_was.angle_to(clock.sun)) if clock.sun != sun_was else 0.0)
+			light_steps.append(rad_to_deg(was_dir.angle_to(sun_light.basis.z)) if sun_light.basis.z != was_dir else 0.0)
+		sun_was = clock.sun
+		was_dir = sun_light.basis.z
+		clock.set_hour(lapse_from + (i + 1) * 1.1 / 60.0)
+	sun_steps.sort()
+	light_steps.sort()
+	check(sun_steps[0] > 0.0 and light_steps[0] > 0.0, "in a lapse the sky's sun and the light move on every frame (smallest steps %.3f, %.3f deg)" % [sun_steps[0], light_steps[0]])
+	check(sun_steps[-1] < sun_steps[120] * 2.0 and light_steps[-1] < light_steps[120] * 2.0,
+		"and no frame steps more than twice the median (sun %.3f of %.3f deg, light %.3f of %.3f)" % [sun_steps[-1], sun_steps[120], light_steps[-1], light_steps[120]])
+	check(clock.looks - lapse_looks >= 239, "the sky's colour is taken on every frame of a lapse (%d looks in 240 frames)" % (clock.looks - lapse_looks))
+	check(clock.probe_redraws - lapse_redraws <= 4, "the probes keep their own rate in a lapse (%d redraws in 240 frames)" % (clock.probe_redraws - lapse_redraws))
+	clock.driven = false
+	await process_frame
+	lapse_looks = clock.looks
+	for i in 120:
+		await process_frame
+	check(clock.looks - lapse_looks <= 2 * int(cfg.look_hz) + 2, "after it the look is back at look_hz (%d looks in 2 s)" % (clock.looks - lapse_looks))
+
+	# 8. the debug key: a short time-lapse to each next phase, then a storm, then dawn with the storm's dust left on
 	clock.coat = base_coat
 	clock.jump("noon")
 	var wait := roundi(float(cfg.skip_s) * 60.0) + 20
 	for want: String in ["dusk", "night", "storm", "dawn"]:
 		game._unhandled_input(_key(&"debug_sky"))
+		sun_steps.clear()
 		for i in wait:
+			sun_was = clock.sun
+			var seen: float = clock._seen
 			await process_frame
+			if clock._seen != seen:  # the frames on which the clock saw its hour move
+				sun_steps.append(rad_to_deg(sun_was.angle_to(clock.sun)) if clock.sun != sun_was else 0.0)
+		sun_steps.sort()
+		check(sun_steps.size() > 100 and sun_steps[0] > 0.0 and sun_steps[-1] < sun_steps[sun_steps.size() / 2] * 2.0,
+			"the skip to %s moved the sun on every frame, evenly (%d frames, %.3f to %.3f deg, median %.3f)" % [want, sun_steps.size(),
+			sun_steps[0] if sun_steps.size() else 0.0, sun_steps[-1] if sun_steps.size() else 0.0, sun_steps[sun_steps.size() / 2] if sun_steps.size() else 0.0])
 		check(off_phase.call(want) < 0.15, "the sky key time-lapsed to %s (%.2f h, off by %.2f)" % [want, clock.hour(), off_phase.call(want)])
 		if want == "storm":
 			check(clock.storm > 0.99 and clock.coat > base_coat + 0.2, "a storm at noon, its dust settled through the skip (%.3f)" % clock.coat)
