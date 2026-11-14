@@ -47,8 +47,12 @@ for s in (-1, 1):
     bar(f"pillar_b{s}", (x, 1.965, 2.065), (x, 2.215, 1.56), 0.045, TRIM)
     bar(f"sill{s}", (x, 0.45, 1.64), (x, 2.215, 1.56), 0.04, TRIM)
     bar(f"pillar_c{s}", (x, 0.45, 1.64), (x, 0.45, 2.80), 0.045, TRIM)
-    label(f"name{s}", "ROVER 1", 0.36, (s * 1.158, -0.55, 2.0), (math.pi / 2, 0, s * math.pi / 2), TRIM)
-    label(f"team{s}", "CLAMOR", 0.14, (s * 1.158, -0.55, 2.36), (math.pi / 2, 0, s * math.pi / 2), TRIM)  # the operator, as crews mark a vehicle
+    # one block centred in the free flat panel: window pillar to rear corner (y -1.75..0.405), locker top to roof
+    # edge (z 1.87..2.75). Line 1 is the flag (data/world.json `flags`, 0.41 m wide, a quad the game adds) then
+    # CLAMOR on one middle line, line 2 is ROVER 1; both lines are 1.31 m wide, so they share a centre line.
+    # The small offsets centre the ink: Blender centres the type box, which sits 2 cm off the letters
+    label(f"name{s}", "ROVER 1", 0.36, (s * 1.158, -0.6725 + s * 0.022, 2.148), (math.pi / 2, 0, s * math.pi / 2), TRIM)
+    label(f"team{s}", "CLAMOR", 0.197, (s * 1.158, -0.6725 + s * 0.2533, 2.473), (math.pi / 2, 0, s * math.pi / 2), TRIM)  # the operator, as crews mark a vehicle
     # side detail: a dark lower belt, an equipment locker with its handle, a hazard step plate
     bevel(box(f"belt{s}", (0.03, 3.5, 0.16), (s * 1.152, 0.0, 1.2), TRIM), width=0.01, segments=1)
     bevel(box(f"locker{s}", (0.06, 0.9, 0.5), (s * 1.17, -1.05, 1.62), BODY), width=0.03, segments=1)

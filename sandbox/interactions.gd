@@ -1,6 +1,6 @@
 extends Node3D
 ## The sandbox's physical interactions (BRIEF.md 7b): open the airlock door, pick up and put down a cargo bag, get in
-## the rover, draw the toilet's curtain, brush a row of solar panels. Each does one physical thing and changes no game state (hard rule 1).
+## the rover, draw the toilet's curtain, run a solar row's wiper. Each does one physical thing and changes no game state (hard rule 1).
 ## Every usable thing is an Interactable node in group `interactable` (CONTRACTS.md). The target is measured to the
 ## thing's shape, from either side, not to one spot beside it (skills/character-body, Using things): a door that
 ## offered E at one point outside could not be closed from inside (13 Nov playtest).
@@ -8,14 +8,13 @@ extends Node3D
 ## implementation", as Half-Life 2's doors open with no hand on them): a door swings, a bag is in the hands, the hero
 ## is in the rover. Use spots (data/world.json `uses`) set their props' end state and emit `used(action_id)` at once:
 ## the rules hook (sim.use, 14 Nov). Only a seat still plays its clips (sit down, stand up), for the story's rests,
-## and a `sweep` row its job in fast forward (a wing's panels brushed end to end, Ravindu, 14 Nov: _sweep_start()).
+## and a `wiper` row its button press: the row's wiper then clears its dust by itself (Ravindu, 15 Nov: _wiper_press()).
 
 const Rover := preload("res://sandbox/rover.gd")
 const CARRIABLES := 64
 const WALLS := 2  # what hides a thing from the hands (CONTRACTS.md collision layers: statics)
-const FAST := 3.0  # a sweep's clip plays this many times its speed, as a fast forward does (art direction)
-const LIMIT := 1.6  # a sweep ends after this many times its own length, whatever held it up: never a trap
-const TURN := 4.0  # 1/s: how fast the view comes round behind the hero at a sweep's row (art direction)
+const PRESS := 0.35  # share of the reach clip (clips.json interact) when the glove is on a wiper's button
+const STEP_S := 0.25  # s the hero takes to the button's stand, as a step up to it (art direction)
 
 ## A thing used: its sound name ("door_open", "door_close", "grab", "rover", "rover_exit", "set_down") the
 ## moment it happens; for a use spot, the row's `kind` (the action id: drink, eat, sample...).
@@ -48,7 +47,7 @@ class Interactable extends Node3D:
 			var needs: String = row.get("needs", "")
 			return not box.player.seated and box.player.cut.is_empty() and (needs == "" or (props[needs] as Node3D).visible) \
 				and (not row.get("pick", false) or box.world.can_pick(get_parent().name, middle())) \
-				and (not row.has("sweep") or box.dusty(self))  # a tray with a head to eat, a row with dust to brush
+				and (not row.has("wiper") or box.dusty(self))  # a tray with a head to eat, a row with dust to wipe
 		return not (kind == "bag" and box.carried != null)
 
 	func use(_hero: Node3D) -> void:
@@ -116,8 +115,7 @@ var hold: float  # m, the hands' height over the feet (reality.json hero.reach.w
 var by_thing := {}  # thing -> its Interactable, to name what a ray hit
 var design: Dictionary  # the sandbox's look: role materials for the props made here
 var _swinging := {}  # door Interactable -> {goal: rad, wait: bool, moved: bool}: doors on their way
-var _sweep := {}  # the row being brushed: {it, t, real (s, menus included), from, far, near, face (toward the row), held (the lock before it), puff, left (share of the brushing to do)}
-var _glove: BoneAttachment3D  # the hero's hand, where a sweep's `hand` props ride
+var _wipers := {}  # a wiper row's Interactable -> {bar, panel, y, ends: [x, x] in the panel's space, at: the end it is parked at (0, 1), t: s since E (negative: parked), hero: [from, yaw] | null while it steps up}
 
 
 func setup(w: Node3D, p: Node3D, t: Dictionary, sheet: Dictionary) -> void:
@@ -184,8 +182,8 @@ func setup(w: Node3D, p: Node3D, t: Dictionary, sheet: Dictionary) -> void:
 				var b: Array = row.box
 				it.shape = AABB(Vector3(b[0], b[1], b[2]), Vector3(b[3] - b[0], b[4] - b[1], b[5] - b[2]))
 			it.global_position = it.middle()
-			if row.has("sweep"):  # a 40 m row is used from its end, not its middle (the helmet's look, a guide's aim)
-				it.global_position = item.global_transform * Vector3(row.sweep[0], hold, row.sweep[2])
+			if row.has("wiper"):
+				_wiper_add(it, item)
 	# a still prop is drawn with its ground cell (world.gd join()): a flag and a case cost no draw call of their own
 	var meshes: Array = []
 	for prop: Node3D in still:
@@ -257,18 +255,17 @@ func _item_of(n: Node) -> Node3D:
 func _physics_process(delta: float) -> void:
 	for it: Interactable in _swinging.keys():
 		_door_step(it, delta)
-	if not _sweep.is_empty():
-		_sweep_step(delta)
+	for it: Interactable in _wipers:
+		_wiper_step(it, delta)
 	var text := ""
-	target = null if player.vehicle or carried or not _sweep.is_empty() else _pick()
+	target = null if player.vehicle or carried else _pick()
 	if player.vehicle:
 		text = "Get out"
 	elif carried:
 		text = "Put down bag"
 	elif target:
 		text = target.prompt()
-		# a swung door's middle, for the helmet's look; of a long row, the part beside the hero
-		target.global_position = target.nearest(player.body.global_position + Vector3.UP * hold) if target.row.has("sweep") else target.middle()
+		target.global_position = target.middle()  # a swung door's middle, for the helmet's look
 	player.attention = target  # the helmet turns toward what can be used
 	if not player.may(&"interact"):
 		text = ""  # a tutorial step that blocks E shows no "E Sit" or "E Close door" that would do nothing
@@ -340,8 +337,6 @@ func _owner(n: Node) -> Interactable:
 
 ## The interact action: out of the rover, put down what is carried, or use the target. Each at once.
 func interact() -> void:
-	if not _sweep.is_empty():
-		return  # the hero is busy with a row
 	if player.vehicle:
 		var rover: Node3D = player.vehicle
 		player.exit()  # beside its hatch, on the ground (rover.gd exit_point())
@@ -356,8 +351,8 @@ func use(it: Interactable) -> void:
 	var s: float = tuning.interact.move_s
 	match it.kind:
 		"spot":
-			if it.row.has("sweep"):
-				_sweep_start(it)
+			if it.row.has("wiper"):
+				_wiper_press(it)
 			else:
 				_play(it)
 			return
@@ -534,105 +529,64 @@ func _play(it: Interactable) -> void:
 	used.emit(row.kind, it.middle())
 
 
-## A sweep row (data/world.json uses `sweep`: a wing's panels brushed), the same every time and in fast forward: the
-## hero goes to the row's far end, then comes back along it facing the row, the row's clip looping with its `hand`
-## props in the glove, the row's dust thinning as the brush goes (world/sky_clock.gd brush()). The line is on the side
-## the panels lean to (the trackers turn them east in the morning, west after noon): from their high side the brush
-## would be at their backs, and the kid would watch a row's underside come clean (14 Nov pictures). Game time runs
-## fast meanwhile, for the sky and the rules alike (the clock's rush; tuning.json interact.clean_*), so the job costs
-## what that time costs. The kid's input is held. The hero is set along the line, never walked: a post or a panel
-## in the way cannot stop it, and the job ends on the clock (LIMIT), the hero at the near end and `used` told once.
-func _sweep_start(it: Interactable) -> void:
-	var s: Array = it.row.sweep
-	var xf := it.thing.global_transform
-	var z := float(s[2])
-	var panel := it.get_parent().find_child("panel_*", true, false) as Node3D
-	var lean: float = xf.basis.z.dot(panel.global_basis.y) if panel else 0.0  # its face is its +Y
-	if absf(lean) > 0.05:
-		z = absf(z) * signf(lean)
-	var ends: Array[Vector3] = [xf * Vector3(s[0], 0.0, z), xf * Vector3(s[1], 0.0, z)]
-	var from: Vector3 = player.body.global_position
-	if from.distance_to(ends[0]) > from.distance_to(ends[1]):
-		ends.reverse()
-	_sweep = {"it": it, "t": 0.0, "real": 0.0, "from": from, "far": ends[1], "near": ends[0],
-		"face": xf.basis * Vector3(0.0, 0.0, -z) * Vector3(1, 0, 1), "held": player.allowed.duplicate(), "puff": 0.0, "left": 1.0}
-	player.allow(["none"])
+## A row's wiper (data/world.json uses `wiper`: bar [m along the row, m high], role): a slim bar across the row's
+## panel, parked at the end its button is at. It is no part of the item (as the props are not): it is set on the
+## panel every step, so it rides the panel as the tracker turns it.
+func _wiper_add(it: Interactable, item: Node3D) -> void:
+	var panel := item.find_child("panel_*", true, false) as Node3D
+	var box: AABB = (panel as MeshInstance3D).get_aabb() if panel is MeshInstance3D else _drawn(panel)
+	var w: Dictionary = it.row.wiper
+	var bar := _mesh({"box": [w.bar[0], w.bar[1], box.size.z], "role": w.role}, true, false)  # no dust coat: it must read on a dusty row
+	bar.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF  # a hand's width: its shadow is a few pixels
+	add_child(bar)
+	_wipers[it] = {"bar": bar, "panel": panel, "y": box.end.y + float(w.bar[1]) / 2.0,
+		"ends": [box.position.x + float(w.bar[0]), box.end.x - float(w.bar[0])], "at": 0, "t": -1.0, "hero": null}
+
+
+## E at a wiper's button: the hero steps to the spot's stand and presses it (the reach clip), and may walk off. The
+## wiper then runs by itself (_wiper_step()).
+func _wiper_press(it: Interactable) -> void:
+	var w: Dictionary = _wipers[it]
+	w.t = 0.0
+	w.hero = [player.body.global_position, player.yaw]
 	player.speed = 0.0
-	if _glove == null:
-		_glove = BoneAttachment3D.new()
-		_glove.bone_name = player.model.clips[it.row.clip].get("hand_bone", "hand_r")
-		player.model.skeleton.add_child(_glove)
-	for name: String in it.props:
-		if it.row.props[name].get("hand", false):
-			var p: Node3D = it.props[name]
-			if p.get_parent() != _glove:
-				p.reparent(_glove, false)
-				p.transform = p.get_meta("local")
-			p.visible = true
-	if it.row.has("sound"):
-		world.sound.emit(it.row.sound, from)
-	if _clock():
-		_clock().rush = float(tuning.interact.clean_min) / 60.0 / float(tuning.interact.clean_s)
+	player.model.act(StringName(it.row.clip))
 
 
-func _sweep_step(delta: float) -> void:
-	var c := _sweep
-	var k: Dictionary = tuning.interact
-	var clock := _clock()
-	c.real += delta
-	if not (clock and clock.paused):
-		c.t += delta  # a menu holds the clock, and the job with it
-	var u: float = c.t / float(k.clean_s)
-	if u >= 1.0 or c.real >= float(k.clean_s) * LIMIT:
-		_sweep_end()
-		return
-	var run: float = k.clean_run
-	var at: Vector3 = (c.from as Vector3).lerp(c.far, smoothstep(0.0, 1.0, u / run)) if u < run else (c.far as Vector3).lerp(c.near, (u - run) / (1.0 - run))
-	_sweep_put(at, (c.far - c.from) * Vector3(1, 0, 1) if u < run else c.face)
-	player.cam.yaw = lerp_angle(player.cam.yaw, atan2(-c.face.x, -c.face.z), 1.0 - exp(-TURN * delta))  # the row in view
-	var model: Node3D = player.model
-	var clip := StringName(c.it.row.clip)
-	if model.act(clip):
-		model.timer = float(model.clips[clip].length) / FAST
-	if model.phase == "act":
-		model.tree.advance(delta * (FAST - 1.0))
-	if u >= run:
-		if clock:  # the row's dust thins as the brush goes: each step keeps the share of it still to brush
-			var left: float = (1.0 - u) / (1.0 - run)
-			clock.brush(c.it.middle(), left / c.left)
-			c.left = left
-		c.puff -= delta
-		if c.puff <= 0.0:
-			c.puff = float(k.clean_every)
-			world.puff(_glove.global_position, Vector3.UP * 0.4, 1.0)
+## A wiper each step: on its panel, and, once its button is pressed, across the row in tuning.json interact.wiper_s
+## to park at the other end, the dust gone behind it as it passes (world/sky_clock.gd wipe()). At the end it tells
+## `used` once: the rules lift that row's dust then.
+func _wiper_step(it: Interactable, delta: float) -> void:
+	var w: Dictionary = _wipers[it]
+	var k := 0.0
+	if w.t >= 0.0:
+		w.t += delta
+		if w.hero:  # up to the button, facing it
+			var u: float = minf(w.t / STEP_S, 1.0)
+			var st := it.stand()
+			var at: Vector3 = (w.hero[0] as Vector3).lerp(st.origin, u)
+			player.body.global_position = Vector3(at.x, lerpf(w.hero[0].y, world.height_at(st.origin.x, st.origin.z), u), at.z)
+			player.yaw = lerp_angle(w.hero[1], atan2(st.basis.z.x, st.basis.z.z), u)
+			if u >= 1.0:
+				w.hero = null
+		var press: float = PRESS * float(player.model.clips[it.row.clip].length)
+		k = clampf((w.t - press) / float(tuning.interact.wiper_s), 0.0, 1.0)
+		if k > 0.0 and w.t - delta <= press and it.row.has("sound"):
+			world.sound.emit(it.row.sound, it.middle())
+	var x: float = lerpf(w.ends[w.at], w.ends[1 - w.at], k)
+	(w.bar as Node3D).global_transform = (w.panel as Node3D).global_transform * Transform3D(Basis.IDENTITY, Vector3(x, w.y, 0.0))
+	if k > 0.0 and _clock():
+		_clock().wipe(it.middle(), x, signf(w.ends[1 - w.at] - w.ends[w.at]))
+	if k >= 1.0:
+		w.at = 1 - w.at
+		w.t = -1.0
+		used.emit(it.row.kind, it.middle())
 
 
-## The hero on the ground at `at`, facing along `to`.
-func _sweep_put(at: Vector3, to: Vector3) -> void:
-	player.body.global_position = Vector3(at.x, world.height_at(at.x, at.z) + 0.01, at.z)
-	if to.length() > 0.01:
-		player.yaw = atan2(-to.x, -to.z)
-
-
-func _sweep_end() -> void:
-	var c := _sweep
-	var it: Interactable = c.it
-	_sweep = {}
-	_sweep_put(c.near, c.face)
-	for name: String in it.props:
-		if it.row.props[name].get("hand", false):
-			(it.props[name] as Node3D).visible = false
-	player.model.timer = 0.0  # the clip ends with the job
-	if player.allowed == ["none"]:
-		player.allow(c.held)  # unless a beat set its own lock meanwhile
-	if _clock():
-		_clock().rush = 0.0
-	used.emit(it.row.kind, it.middle())
-
-
-## Whether a sweep row has dust left to brush: the look's own count per row (world/sky_clock.gd). No clock: always.
+## Whether a wiper row has dust to clear and its wiper is parked: the look's own count per row (world/sky_clock.gd).
+## No clock: always.
 func dusty(it: Interactable) -> bool:
-	return _clock() == null or _clock().dusty(it.middle())
+	return _wipers[it].t < 0.0 and (_clock() == null or _clock().dusty(it.middle()))
 
 
 func _clock() -> Node:
@@ -695,8 +649,7 @@ func _earth_x() -> float:
 ## A spot's prop from its row spec, in the item's space: `part` (a node of the item, or of the prop `in`), `model`
 ## (a GLB path, `scale`, or the scale of `like`'s plant: a slot's lettuce), or `meshes` (built-in shapes in roles:
 ## {box: size | cyl: [r, h] | torus: [inner, outer] | line: [from, to], r, at, rot, role}). `at` [x, y, z], `rot`
-## degrees, `ground` sets it on the terrain (`at`'s y over it), `hidden` until a step shows it, `hand` rides in the glove
-## during a sweep and is unseen otherwise, `solid` gives
+## degrees, `ground` sets it on the terrain (`at`'s y over it), `hidden` until a step shows it, `solid` gives
 ## it a box to walk into, `layer` its
 ## render layers (2: the ground's family, a pebble).
 func _prop(item: Node3D, spec: Dictionary, made: Dictionary, still := false) -> Node3D:
@@ -724,7 +677,6 @@ func _prop(item: Node3D, spec: Dictionary, made: Dictionary, still := false) -> 
 	var a: Array = spec.get("at", [0, 0, 0])
 	var local := Transform3D(Basis.from_euler(Vector3(spec.rot[0], spec.rot[1], spec.rot[2]) * PI / 180.0, EULER_ORDER_YXZ) if spec.has("rot") else Basis.IDENTITY, Vector3(a[0], a[1], a[2]))
 	add_child(n)
-	n.set_meta("local", local)  # a `hand` prop's place in the glove (_sweep_start())
 	n.global_transform = item.global_transform * local
 	n.scale = Vector3.ONE * k
 	if spec.get("ground", false):
@@ -753,7 +705,7 @@ func _prop(item: Node3D, spec: Dictionary, made: Dictionary, still := false) -> 
 		col.position = d.get_center()
 		body.add_child(col)
 		n.add_child(body)
-	n.visible = not spec.get("hidden", false) and not spec.get("hand", false)  # a `hand` prop shows only in the glove, during a sweep
+	n.visible = not spec.get("hidden", false) and not spec.get("hand", false)  # a thing that was held in the glove while a clip played: no clip, never seen
 	return n
 
 

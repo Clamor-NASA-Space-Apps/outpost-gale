@@ -4,7 +4,7 @@ extends "res://addons/forge/test.gd"
 ## and nothing darker than the night key, lamps switch once each way at dusk and dawn, the light turns with the sun
 ## every frame with no jump (and not at all while the clock stands), the probes redraw in steps, and
 ## the probes redraw in steps (never every frame), the night sky turns with the clock, a storm's dust stays after it
-## and a brushed row of panels sheds its own, the clock waits while a menu is open, and the clock's own work per frame is small.
+## and a wiped row of panels sheds its own, the clock waits while a menu is open, and the clock's own work per frame is small.
 
 const HouseStyle := preload("res://addons/forge/house_style.gd")
 
@@ -245,7 +245,7 @@ func play() -> bool:
 	var share := func(q: Dictionary) -> float: return q.shown
 	check(share.call(p) > 0.9 and share.call(other) > 0.9, "every panel dusty after the storm (%.2f)" % share.call(p))
 	clock.used("clean_panel", (p.node as Node3D).global_position)
-	check(share.call(p) < 0.01, "a brushed row shed its dust (%.3f)" % share.call(p))
+	check(share.call(p) < 0.01, "a wiped row shed its dust (%.3f)" % share.call(p))
 	check(other.row != p.row and share.call(other) > 0.9, "another row kept its own (%.2f)" % share.call(other))
 	var c0: float = clock.coat
 	for i in 241:
@@ -266,7 +266,7 @@ func play() -> bool:
 	var tp: Dictionary = clock._panels[1]
 	check(tp.shown > 0.8, "a panel dusty in the storm (%.2f)" % tp.shown)
 	clock.used("clean_panel", (tp.node as Node3D).global_position)
-	check(tp.shown < 0.02, "brushed clean in the storm (%.3f)" % tp.shown)
+	check(tp.shown < 0.02, "wiped clean in the storm (%.3f)" % tp.shown)
 	for i in 30:
 		at(clock.hours + 0.002)
 	var back: float = tp.shown

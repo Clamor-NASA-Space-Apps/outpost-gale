@@ -247,29 +247,39 @@ func play() -> bool:
 	var site: Vector3 = world.landmark("site_mercou_rover").pos
 	check(_flat(player.body.global_position, site) < 30.0, "the trip ends at the Mont Mercou site (%.0f m off)" % _flat(player.body.global_position, site))
 	await _beat("s9_lake")
+	check(targets[-1] == "mercou", "a waypoint leads to the pebbles ('%s')" % targets[-1])
 	used_at = -1
 	var cleared := [false]
-	var pebble := [Vector3.INF]
+	# the sample as a kid takes it, move keys and E only: out of the rover, round it, to the waypoint (a pebble's flag
+	# stands on it), then E once the hero stands there and the prompt offers the sample. The bot used to look the
+	# pebble up and call its use, and passed while a kid standing at the flag was offered nothing (15 Nov playtest)
 	await _beat("s9_sample", func() -> void:
 		if player.vehicle:
-			game.interactions.interact()  # out of the rover (E)
+			_press(&"interact")
 			return
-		# the nearest pebble still on the ground (a spot sits at its item's origin; its pebble is where the kid kneels)
-		var best: Vector3 = pebble[0]  # one pebble, kept: switching to a nearer one mid-clip pressed a move key and cut it
-		for it: Node in ([] if best != Vector3.INF else game.interactions.by_thing.values()):
-			if it.kind == "spot" and it.row.kind == "sample" and (it.props[it.row.on] as Node3D).visible:
-				var at: Vector3 = (it.props[it.row.on] as Node3D).global_position
-				if best == Vector3.INF or _flat(at, player.body.global_position) < _flat(best, player.body.global_position):
-					best = at
 		var past: Vector3 = site + Vector3(5.0, 0.0, 3.0)  # round the parked rover first, as a kid walks round it
 		cleared[0] = cleared[0] or _flat(player.body.global_position, past) < 0.8
 		if not cleared[0]:
 			_steer(past, 0.5)
-		elif best != Vector3.INF:
-			pebble[0] = best
-			_use_near("sample", best))
+			return
+		_steer(world.landmark(targets[-1]).pos, 0.4)
+		if not moving and game.interactions.prompt_label.text.contains("Take a sample"):
+			_press(&"interact"))
 	await _beat("s9_curiosity")
-	await _beat("s9_home", _board)
+	# home the same way: round the rover to its back door (it is boarded there), then E at the prompt
+	var back := [0]
+	await _beat("s9_home", func() -> void:
+		if player.vehicle:
+			return
+		if game.interactions.prompt_label.text.contains("Drive rover"):
+			_stop()
+			_press(&"interact")
+			return
+		var rover: Node3D = world.items.rover
+		var path: Array[Vector3] = [rover.global_position + rover.global_basis.x * 3.0, rover.exit_point(), rover.global_position]
+		if back[0] < 2 and _flat(player.body.global_position, path[back[0]]) < 0.6:
+			back[0] += 1
+		_steer(path[back[0]], 0.3))
 	await _beat("s9_return")
 	check(_flat(player.body.global_position, world.landmark("rover").pos) < 30.0, "and the trip home ends at the base")
 	await _beat("check", _answer)
@@ -544,21 +554,6 @@ func _until(ok: Callable, seconds: float, each := Callable()) -> bool:
 			each.call()
 		await frames(1)
 	return ok.call()
-
-
-## To `at`, then the use spot of `kind` whose pebble (row `on`) lies there.
-func _use_near(kind: String, at: Vector3) -> void:
-	if _flat(at, player.body.global_position) > 1.2:
-		_steer(at, 0.9)
-		return
-	_stop()
-	if used_at >= 0 and Engine.get_physics_frames() - used_at < 60 * 8:
-		return
-	for it: Node in game.interactions.by_thing.values():
-		if it.kind == "spot" and it.row.kind == kind and _flat((it.props[it.row.on] as Node3D).global_position, at) < 0.1:
-			used_at = Engine.get_physics_frames()
-			game.interactions.use(it)
-			return
 
 
 ## A key tapped once a beat (the map), as the kid does.

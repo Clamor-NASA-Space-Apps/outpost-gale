@@ -34,10 +34,29 @@ func play() -> bool:
 	await frames(int(60 * float(game.tuning.lamps.fade_s)) + 5)
 	check(is_equal_approx(player.lamps.spot.light_energy, float(game.tuning.lamps.energy)), "and fade up to full")
 
+	# lit, on foot: a cone of light in the air and a burning face on each lamp, for a handful of small draws
+	var l: Node3D = player.lamps
+	var glimmer := float(game.tuning.lamps.bulb_glow) * float(game.tuning.sky.light_floor)
+	for i in 2:
+		check(l.beams[i].is_visible_in_tree() and l.halos[i].is_visible_in_tree(), "lit, lamp %d has its beam and its halo" % i)
+		var bulb: StandardMaterial3D = l.faces[i].material_override
+		check(l.faces[i].is_visible_in_tree() and bulb.emission_energy_multiplier > glimmer * 100.0,
+			"and a burning face (emission %.2f, unlit %.4f)" % [bulb.emission_energy_multiplier, glimmer])
+		var air: ShaderMaterial = l.beams[i].material_override
+		check(air.shader.code.contains("unshaded, blend_add") and float(air.get_shader_parameter("strength")) > 0.0,
+			"the beam is unshaded and added to the picture, never lit (strength %.2f)" % float(air.get_shader_parameter("strength")))
+		var drop: float = absf(l.beams[i].global_basis.y.y) * float(game.tuning.lamps.beam_m)
+		var up: float = l.faces[i].global_position.y - player.body.global_position.y
+		check(drop < up, "and its middle ends above the ground the hero stands on (%.2f m down from %.2f m)" % [drop, up])
+	var drawn: int = l.find_children("*", "MeshInstance3D", true, false).size()
+	check(drawn == 6, "the lamps are 6 small meshes, 4 of them the light in the air (%d)" % drawn)
+
 	await press()
 	check(not player.lamps_on and not player.lamps.auto, "the key turns them off by hand")
 	await frames(60)
 	check(not player.lamps_on, "a hand toggle holds at night")
+	check(not l.beams.any(func(b: Node3D) -> bool: return b.visible) and not l.halos.any(func(b: Node3D) -> bool: return b.visible), "off, no beam and no halo is drawn")
+	check(is_equal_approx((l.faces[0].material_override as StandardMaterial3D).emission_energy_multiplier, glimmer), "and the faces are down to the glimmer")
 	await sky("noon")
 	check(not player.lamps_on and player.lamps.auto, "dawn hands them back to auto")
 	await press()

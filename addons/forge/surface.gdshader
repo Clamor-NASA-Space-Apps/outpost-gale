@@ -18,7 +18,9 @@ shader_type spatial;
 //             own space with LOCAL, so it stays put on a part that turns. COAT_NOISE breaks it into patches,
 //             COAT_GRAIN adds the coat's own photo. KEEP: an official model's own textures under the coat.
 //             COAT_EACH scales it per copy in a MultiMesh by its custom data's red (0 clean, 1 the whole coat; a
-//             mesh drawn on its own reads 0): one draw for a row of panels that each hold their own dust.
+//             mesh drawn on its own reads 0): one draw for a row of panels that each hold their own dust. Its
+//             blue set to 1 or -1, a wiper is going that way along the copy's x and stands at its green (m): the
+//             coat is left only ahead of it.
 // VARIANT
 #ifdef SEE
 // no depth write: a blended pane that wrote depth hid any blended surface drawn after it behind it (its own far
@@ -46,6 +48,7 @@ uniform float coat_noise = 1.5;  // metres per patch
 #endif
 #ifdef COAT_EACH
 varying float coat_each;
+varying float coat_past;  // m past the wiper, the way it goes: linear in x, so exact between vertices
 #endif
 #ifdef COAT_GRAIN
 uniform sampler2D coat_texture : source_color, repeat_enable, filter_linear_mipmap_anisotropic;
@@ -114,6 +117,7 @@ void vertex() {
 #endif
 #ifdef COAT_EACH
 	coat_each = INSTANCE_CUSTOM.r;
+	coat_past = INSTANCE_CUSTOM.b == 0.0 ? 1.0 : (VERTEX.x - INSTANCE_CUSTOM.g) * INSTANCE_CUSTOM.b;
 #endif
 }
 
@@ -181,7 +185,7 @@ void fragment() {
 	thick += coat_crevice * coat_amount * max(face, 0.0) * clamp(1.0 - dot(shade, vec3(0.333)), 0.0, 1.0);
 #endif
 #ifdef COAT_EACH
-	thick *= coat_each;
+	thick *= coat_each * smoothstep(0.0, 0.25, coat_past);
 #endif
 	cov = clamp(thick, 0.0, 1.0);
 	vec3 coat = coat_color;

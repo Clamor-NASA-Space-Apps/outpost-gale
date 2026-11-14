@@ -46,7 +46,7 @@ func play() -> bool:
 	check(absf(door.thing.rotation.y - shut) > deg_to_rad(95) and player.state().player.inside.is_empty(), "and opens all the way (%.0f deg), never into the hero" % rad_to_deg(door.thing.rotation.y - shut))
 	check(player.body.global_position.distance_to(p0) < 0.05, "the hero stays where it stood")
 
-	# a solar panel is not tilted by hand: its row is brushed clean, all of it at once (uses_test's sweep)
+	# a solar panel is not tilted by hand: its row has a wiper, run from a button (uses_test's wiper)
 	check(not game.get_tree().get_nodes_in_group("interactable").any(func(it: Node) -> bool: return it.kind == "panel"), "no panel is usable by itself")
 
 	await steady()
@@ -74,7 +74,15 @@ func play() -> bool:
 	var start: Vector3 = rover.thing.global_position
 	box.interact()
 	await frames(2)
-	check(player.vehicle == rover.thing and not player.model.visible, "E: the hero is in the rover at once, out of sight in the cab")
+	check(player.vehicle == rover.thing, "E: the hero is in the rover at once")
+	check(seen() and solid(), "aboard, every mesh of the hero is drawn, solid (shown %.2f)" % player.shown)
+	var seat: Vector3 = rover.thing.seat().origin
+	var sk: Skeleton3D = player.model.skeleton
+	var head: Vector3 = sk.global_transform * sk.get_bone_global_pose(sk.find_bone(&"Head")).origin
+	var hips: Vector3 = player.body.global_transform * player.model.hip_sit
+	check(hips.distance_to(seat) < 0.05 and head.y > seat.y + 0.3 and head.y < game.world.drawn(rover.thing).end.y
+			and Vector2(head.x - seat.x, head.z - seat.z).length() < 0.4,
+			"it sits in the cab: hips on the driver's seat, helmet over them and under the roof (hips %.2f m off, head %s, seat %s)" % [hips.distance_to(seat), head, seat])
 	action(&"move_forward")
 	await frames(240)
 	action(&"move_forward", false)
@@ -83,7 +91,7 @@ func play() -> bool:
 	check(moved > 1.0, "the rover drives (moved %.2f m)" % moved)
 	box.interact()
 	await frames(2)
-	check(player.vehicle == null and player.model.visible, "E: the hero gets out at once")
+	check(player.vehicle == null and seen() and solid(), "E: the hero gets out at once, drawn as before")
 	await frames(30)
 	check(player.state().player.inside.is_empty(), "on free ground, in no solid")
 	var out: Vector3 = player.body.global_position
@@ -137,6 +145,19 @@ func play() -> bool:
 	check(crossed == 2 or lines.is_empty(), "two cables crossed at a walk and at speed (%d had a clear lane)" % crossed)
 	await lights(r)
 	return true
+
+
+## Every mesh of the hero is drawn. Hidden in the cab (14 Nov), its helmet lamps hung in the windscreen alone.
+func seen() -> bool:
+	return game.player.meshes.all(func(m: MeshInstance3D) -> bool: return m.is_visible_in_tree())
+
+
+## None of it is faded: every material on the solid shader, the fade at 1.
+func solid() -> bool:
+	var player: Node3D = game.player
+	return player.shown == 1.0 and player.meshes.all(func(m: MeshInstance3D) -> bool:
+		return range(m.mesh.get_surface_count()).all(func(i: int) -> bool:
+			return (m.get_surface_override_material(i) as ShaderMaterial).shader == player.HeroShader))
 
 
 ## The rover's lights: dark by day with the crew aboard, at night only with the crew aboard, fading in and out over

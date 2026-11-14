@@ -681,7 +681,7 @@
       "keys": [
         "E"
       ],
-      "objective": null,
+      "objective": "mercou",
       "wait": {
         "action": "use:sample"
       }

@@ -1,6 +1,6 @@
 extends "res://addons/forge/test.gd"
 ## Every use spot (data/world.json `uses`) is picked from where its hero stands, plays its clip, names its action
-## once the clip has run, and puts every prop back; a wing's row is brushed whole in fast forward (sweep()):
+## once the clip has run, and puts every prop back; a wing's row is cleared by its wiper at a button's press (wiper()):
 ## godot --headless --path . --fixed-fps 60 -s tests/uses_test.gd
 
 var game: Node3D
@@ -30,11 +30,11 @@ func play() -> bool:
 	box.used.connect(func(what: String, _pos: Vector3) -> void: heard.append(what))
 	var keys: Array = game.render_game_to_text().keys()
 	for it: Node3D in spots:
-		if it.row.kind == "bed" or it.row.has("sweep"):
-			continue  # the sleep picker's spot: tests/sleep_test.gd; a wing's row: sweep() below
+		if it.row.kind == "bed" or it.row.has("wiper"):
+			continue  # the sleep picker's spot: tests/sleep_test.gd; a wing's row: wiper() below
 		heard.clear()
 		await one(it, heard)
-	await sweep(spots.filter(func(it: Node) -> bool: return it.row.has("sweep")), heard)
+	await wiper(spots.filter(func(it: Node) -> bool: return it.row.has("wiper")), heard)
 	var extra: Array = game.render_game_to_text().keys().filter(func(k: String) -> bool: return not k in keys)
 	check(extra.is_empty(), "no new state keys (%s)" % [extra])
 	return true
@@ -72,10 +72,8 @@ func one(it: Node3D, heard: Array) -> void:
 		rest[p] = [(it.props[p] as Node3D).transform, (it.props[p] as Node3D).visible]
 	box.interact()
 	await frames(2)
-	if row.has("seat"):
-		check(player.seated, "%s: the hero sits" % name)
-	else:
-		check(player.cut.is_empty(), "%s: E plays no clip (cut %s)" % [name, player.cut])
+	# no spot seats the hero: the Sit spots left a kid walking seated in the air (15 Nov); only cine sits the hero
+	check(player.cut.is_empty() and not player.seated, "%s: E plays no clip and seats no one (cut %s)" % [name, player.cut])
 	check(heard == [row.kind], "%s: used names the action once, at once (%s)" % [name, heard])
 	for p: String in it.props:
 		var n: Node3D = it.props[p]
@@ -89,85 +87,77 @@ func one(it: Node3D, heard: Array) -> void:
 	for p: String in it.props:
 		if row.props[p].get("keep", false) and p != row.get("needs", ""):
 			check((it.props[p] as Node3D).visible, "%s: %s stays (%s)" % [name, p, row.props[p]])
-	if player.seated:
-		action(&"move_forward")
-		await frames(3)
-		action(&"move_forward", false)
-		await frames(120)
-		check(not player.seated, "%s: a move key stands the hero up" % name)
 
 
-## A wing's row (Ravindu, 14 Nov): E brushes the whole row by itself in fast forward and never tilts a panel. One
-## press, `clean_panel` once, the data's game minutes on the rules' own clock, control back in seconds, that row
-## clean on screen and the next still dusty, and no second clean of a clean row.
-func sweep(rows: Array, heard: Array) -> void:
+## A wing's row (Ravindu, 15 Nov): each has a wiper bar parked at its control post. E at the post's button steps the
+## hero to the spot's stand for the press, the bar crosses the row and parks at the other end, `clean_panel` is told
+## once when it gets there, that row is clean on screen and the next still dusty. No tilt, no camera change, no jump
+## of the clock, no second run on a clean row; the next run sends the bar back.
+func wiper(rows: Array, heard: Array) -> void:
 	var player: Node3D = game.player
 	var clock: Node = game.clock
 	var sim: Object = game.sim.sim
-	var k: Dictionary = game.tuning.interact
-	if not check(rows.size() == 6, "six wing rows to brush (%d)" % rows.size()):
+	if not check(rows.size() == 6 and box._wipers.size() == 6, "six wing rows, each with a wiper (%d rows, %d wipers)" % [rows.size(), box._wipers.size()]):
 		return
+	for row: Node3D in rows:
+		var bar: Node3D = box._wipers[row].bar
+		var on: Vector3 = (box._wipers[row].panel as Node3D).to_local(bar.global_position)
+		check(bar.is_inside_tree() and bar.visible and absf(on.x - float(box._wipers[row].ends[0])) < 0.01 and row.props.has("post"),
+			"%s: a bar parked at the post's end of its panel, and a post (%s on the panel)" % [row.get_parent().name, on])
 	var it: Node3D = rows[0]
 	var other: Node3D = rows[1]
-	var s: Array = it.row.sweep
+	var w: Dictionary = box._wipers[it]
 	var shown := func(row: Node3D) -> Array: return clock._panels.filter(func(p: Dictionary) -> bool: return p.row == row.get_parent()).map(func(p: Dictionary) -> float: return p.shown)
-	check(not it.can_use(player.body), "a row with no dust offers no clean")
+	var st: Transform3D = it.stand()
+	var front: Vector3 = -st.basis.z
+	var off: Vector3 = st.origin - front * 0.6 + st.basis.x * 0.3  # walked up to the post, not onto the stand
+	player.place(Vector3(off.x, game.world.height_at(off.x, off.z) + 0.05, off.z), rad_to_deg(atan2(front.x, -front.z)))
+	await frames(30)
+	check(not it.can_use(player.body) and box.target != it, "a row with no dust offers no wiper")
 	sim.panel_dust = 0.33  # the morning after the night gust (sim.json dust_gust)
+	box.target = null
 	await frames(15)
 	check((shown.call(it) as Array).min() > 0.9 and clock.dusty(it.middle()), "the rules' dust shows on the row (%s)" % [(shown.call(it) as Array).min()])
-	# offered from anywhere along the row: its end, its middle, and its back
-	for at: Array in [[s[0], s[2]], [0.0, s[2]], [8.0, -float(s[2])]]:
-		var p: Vector3 = it.thing.global_transform * Vector3(at[0], 0.0, at[1])
-		var to: Vector3 = it.thing.global_transform * Vector3(at[0], 0.0, 0.0) - p
-		player.place(Vector3(p.x, game.world.height_at(p.x, p.z) + 0.05, p.z), rad_to_deg(atan2(to.x, -to.z)))
-		await frames(30)
-		box.target = null
-		await frames(5)
-		check(box.target == it and box.prompt_label.text.ends_with("Clean panels"), "the row offers its clean from %s ('%s')" % [at, box.prompt_label.text])
-	var start: Vector3 = player.body.global_position
+	check(box.target == it and box.prompt_label.text.ends_with("Run the wiper"), "the post offers the wiper ('%s')" % box.prompt_label.text)
 	var tilts: Array = game.world.machines.panels.map(func(p: Dictionary) -> float: return (p.node as Node3D).rotation.x)
-	var before: Dictionary = sim.state()
-	var t0: Array = [sim.now(), clock.hours]
-	clock.pinned = false  # the job runs the clock
+	var cam: Camera3D = root.get_camera_3d()
+	var t0: float = sim.now()
 	heard.clear()
 	box.interact()
+	await frames(30)
+	var at: Vector3 = player.body.global_position
+	check(Vector2(at.x - st.origin.x, at.z - st.origin.z).length() < 0.05 and (-player.body.global_basis.z).dot(front) > 0.99 and player.model.phase == "act",
+		"E: the hero stands at the spot's stand, facing the post, in the press (%.2f m off, %s)" % [Vector2(at.x - st.origin.x, at.z - st.origin.z).length(), player.model.phase])
+	check(heard.is_empty() and player.allowed.is_empty() and not it.can_use(player.body), "nothing is told yet, no input is held, and a running wiper takes no second press (%s)" % [heard])
+	var n := 30
+	while heard.is_empty() and n < 300:
+		await frames(1)
+		n += 1
+		if n == 120:  # part way: the bar between the ends, the dust gone only behind it
+			var x: float = (w.panel as Node3D).to_local((w.bar as Node3D).global_position).x
+			var p: Dictionary = clock._panels.filter(func(q: Dictionary) -> bool: return q.row == it.get_parent())[0]
+			check(x > float(w.ends[0]) + 2.0 and x < float(w.ends[1]) - 2.0 and absf(p.wipe.x - x) < 0.5 and p.wipe.y == 1.0 and p.shown > 0.9,
+				"part way the bar is %.1f m along and the row's coat ends at it (wipe %s)" % [x, p.wipe])
+	check(heard == ["clean_panel"] and n <= 250, "the bar is across and `clean_panel` told once, after %.1f s (%s)" % [n / 60.0, heard])
 	await frames(10)
+	var end: Vector3 = (w.panel as Node3D).to_local((w.bar as Node3D).global_position)
+	check(absf(end.x - float(w.ends[1])) < 0.01 and w.at == 1, "the bar is parked at the far end (%.2f of %.2f)" % [end.x, w.ends[1]])
 	var turned := 0.0
 	for i in tilts.size():
 		turned = maxf(turned, absf((game.world.machines.panels[i].node as Node3D).rotation.x - tilts[i]))
-	check(turned < deg_to_rad(0.5), "E tilts no panel (%.2f deg)" % rad_to_deg(turned))
-	check(heard.is_empty() and player.allowed == ["none"] and box.target == null, "the job is under way and the kid's input is held (%s, %s)" % [heard, player.allowed])
-	var n := 10
-	var part := -1.0
-	while heard.is_empty() and n < 480:
-		await frames(1)
-		n += 1
-		if n == 200:  # in the brushing: the brush in the glove, the row's coat part gone
-			part = (shown.call(it) as Array).max()
-			check((it.props.brush as Node3D).visible and player.model.phase == "act", "the brush is in the glove and the clip plays (%s)" % player.model.phase)
-	check(part > 0.1 and part < 0.9, "the row's dust thins as the brush goes (%.2f of the coat part way)" % part)
-	await frames(2)
-	check(heard == ["clean_panel"], "one E brushes the row and names the action once (%s)" % [heard])
-	check(n <= float(k.clean_s) * 60.0 + 20.0 and player.allowed.is_empty(), "control is back after %.1f s (%s)" % [n / 60.0, player.allowed])
-	var end: Vector3 = player.body.global_position
-	var at_end: Vector3 = it.thing.global_transform.affine_inverse() * end  # the end nearer the back's x = 8, on either side
-	check(absf(at_end.x - float(s[1])) < 0.5 and absf(absf(at_end.z) - absf(float(s[2]))) < 0.5 and player.state().player.inside.is_empty() and not (it.props.brush as Node3D).visible,
-		"the hero is back at the row's near end, in no wall, the brush put away (%s in the row's space, from %s)" % [at_end, start])
-	var face: Vector3 = (it.get_parent().find_child("panel_*", true, false) as Node3D).global_basis.y
-	var lean: float = it.thing.global_basis.z.dot(face)
-	check(absf(lean) < 0.05 or signf(lean) == signf(at_end.z), "on the side the panels lean to, where their faces show (lean %.2f, hero z %.2f)" % [lean, at_end.z])
-	var after: Dictionary = sim.state()
-	var sol_h: float = sim.n("clock", "sol_h")
-	var took: Array = [(sim.now() - t0[0]) * 24.0 / sol_h * 60.0, (clock.hours - t0[1]) * 60.0]
-	check(absf(took[0] - float(k.clean_min)) < 1.5 and absf(took[1] - float(k.clean_min)) < 1.5, "the row took %s game minutes on the rules' clock and the sky's (%.1f, %.1f)" % [k.clean_min, took[0], took[1]])
-	check(after.water_kg < before.water_kg and after.o2_kg <= before.o2_kg and after.food_kg < before.food_kg, "that time cost its supplies (water %.2f to %.2f kg)" % [before.water_kg, after.water_kg])
-	check(absf(after.panel_dust - 0.33 * (1.0 - float(sim.d.uses.clean_panel.clean))) < 0.002, "the rules' dust fell by a sixth (%.4f)" % after.panel_dust)
-	await frames(10)
-	check((shown.call(it) as Array).max() < 0.01 and not clock.dusty(it.middle()), "the brushed row is clean on screen (%s)" % [(shown.call(it) as Array).max()])
+	check(turned < deg_to_rad(0.5), "no panel was tilted (%.2f deg)" % rad_to_deg(turned))
+	check(root.get_camera_3d() == cam and player.body.global_position.distance_to(at) < 0.05, "the camera is the same one and the hero stayed at the post")
+	check((sim.now() - t0) * 60.0 < 10.0, "the game clock did not jump (%.1f game minutes in %.1f s)" % [(sim.now() - t0) * 60.0, n / 60.0])
+	check(absf(sim.panel_dust - 0.33 * (1.0 - float(sim.d.uses.clean_panel.clean))) < 0.002, "the rules' dust fell by a sixth (%.4f)" % sim.panel_dust)
+	check((shown.call(it) as Array).max() < 0.01 and not clock.dusty(it.middle()), "the wiped row is clean on screen (%s)" % [(shown.call(it) as Array).max()])
 	check((shown.call(other) as Array).min() > 0.9 and clock.dusty(other.middle()), "the next row is still dusty (%s)" % [(shown.call(other) as Array).min()])
 	heard.clear()
-	check(not it.can_use(player.body) and box.target != it, "a clean row offers no second clean (target %s)" % [box.target])
+	check(not it.can_use(player.body) and box.target != it, "a clean row offers no second run (target %s)" % [box.target])
 	box.interact()
 	await frames(30)
-	check(heard.is_empty(), "and E there does nothing (%s)" % [heard])
-	clock.pinned = true
+	check(heard.is_empty() and w.t < 0.0, "and E there does nothing (%s)" % [heard])
+	sim.panel_dust += 0.2  # dust again: the next run sends the bar back
+	await frames(15)
+	box.use(it)
+	await frames(260)
+	check(heard == ["clean_panel"] and w.at == 0, "dusty again, the next press sends the bar back to the post (%s, at %d)" % [heard, w.at])

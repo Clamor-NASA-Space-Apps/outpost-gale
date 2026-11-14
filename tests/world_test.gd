@@ -146,6 +146,7 @@ func play() -> bool:
 
 	_rocks_clear(world)
 	_cables_clear(world)
+	_flags(world)
 	await _charge_lead(world)
 	await _contact(world)
 
@@ -160,6 +161,38 @@ func play() -> bool:
 	await _probe(game, world)
 	OS.remove_logger(errors)
 	return true
+
+
+## The team's flag (data/world.json `flags`): each row is one sprite on the part that moves, showing the flag file
+## whole in its own 1:2 proportions, lit, facing out, the right way up and unmirrored, casting no shadow.
+func _flags(world: Node3D) -> void:
+	var f: Dictionary = world.data.flags
+	var moving := RegEx.create_from_string(world.data.moving)
+	for row: Dictionary in f.at:
+		var what := "flag on %s's %s" % [row.item, row.part]
+		var item: Node3D = world.items[row.item]
+		var part := item.find_child(row.part, true, false) as Node3D
+		var out := Vector3(row.out[0], row.out[1], row.out[2]).normalized()
+		var at := Vector3(row.pos[0], row.pos[1], row.pos[2]) + out * float(f.off)
+		var found := part.find_children("flag*", "Sprite3D", false, false).filter(func(s: Sprite3D) -> bool: return s.position.distance_to(at) < 0.001)
+		if not check(found.size() == 1, "%s: one sprite %.0f mm off the hull at %s (found %d)" % [what, float(f.off) * 1000.0, at, found.size()]):
+			continue
+		var flag: Sprite3D = found[0]
+		check(item is CollisionObject3D or moving.search(part.name) != null, "%s: it rides a body or a part that moves" % what)
+		var sprung := item.find_child("sprung", true, false)  # rover.gd: the cab on its springs
+		check(sprung == null or sprung.is_ancestor_of(flag), "%s: it leans with the cab, not with the wheels" % what)
+		var mat := flag.material_override as StandardMaterial3D
+		check(flag.texture.resource_path == f.texture and mat != null and mat.albedo_texture == flag.texture,
+			"%s: its picture is %s (%s)" % [what, f.texture, flag.texture.resource_path])
+		check(mat != null and mat.shading_mode != BaseMaterial3D.SHADING_MODE_UNSHADED and not mat.emission_enabled
+			and mat.transparency == BaseMaterial3D.TRANSPARENCY_DISABLED and mat.cull_mode == BaseMaterial3D.CULL_BACK,
+			"%s: lit like the hull, solid, seen from outside only" % what)
+		var size := flag.get_aabb().size
+		check(absf(size.x - float(row.width)) < 0.001 and absf(size.y - float(row.width) / 2.0) < 0.001 and flag.scale.is_equal_approx(Vector3.ONE),
+			"%s: %.2f m wide and half as tall, the flag's 1:2 (%.3f x %.3f)" % [what, float(row.width), size.x, size.y])
+		check(flag.cast_shadow == GeometryInstance3D.SHADOW_CASTING_SETTING_OFF, "%s: it casts no shadow" % what)
+		check(flag.basis.z.dot(out) > 0.999 and flag.basis.y.dot(Vector3.UP) > 0.999 and flag.basis.determinant() > 0.0 and not flag.flip_h and not flag.flip_v,
+			"%s: it faces out, the right way up, not mirrored (z %s, y %s)" % [what, flag.basis.z, flag.basis.y])
 
 
 ## A sky switch redraws the base's reflection probe behind the cover, from inside its box, for every step it takes:

@@ -94,6 +94,7 @@ func build(design: Dictionary) -> void:
 			bags.append_array(n.find_children("merged", "MeshInstance3D", true, false))
 	_instance(bags + _static_parts, self)
 	_lay_cables(design)
+	_flags()
 	rocks = Rocks.new()
 	rocks.name = "Rocks"
 	add_child(rocks)
@@ -1094,6 +1095,34 @@ func _charge_step(delta: float) -> void:
 ## Whether the rover is plugged in at its charging post (tests).
 func charging() -> bool:
 	return not _charge.is_empty() and _charge.on == true
+
+
+## The team's flag on the hulls (data/world.json `flags`): one flat quad per row, a child of the part that moves, so
+## it leans with the rover's cab and lifts off with the rocket. A Sprite3D, the engine's own textured quad, and not
+## a MeshInstance3D: the restyle gives every mesh a DESIGN.md role, and the flag keeps its own colours.
+func _flags() -> void:
+	var f: Dictionary = data.get("flags", {})
+	if f.is_empty():
+		return
+	var tex: Texture2D = load(f.texture)
+	var mat := StandardMaterial3D.new()  # opaque, lit like the hull, seen from outside only; the warm-up finds an override
+	mat.albedo_texture = tex
+	for row: Dictionary in f.at:
+		var item: Node3D = items.get(row.item)
+		var part := item.find_child(row.part, true, false) as Node3D if item else null
+		if part == null:
+			push_error("flags: no part %s on %s" % [row.part, row.item])
+			continue
+		var out := Vector3(row.out[0], row.out[1], row.out[2]).normalized()
+		var flag := Sprite3D.new()
+		flag.name = "flag"
+		flag.texture = tex
+		flag.pixel_size = float(row.width) / tex.get_width()
+		flag.material_override = mat
+		flag.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF  # a sheet 5 mm off the hull shades nothing
+		# a sprite faces its +Z, the picture's left on its -X: turned to `out` it reads the same from either side
+		flag.transform = Transform3D(Basis.looking_at(-out), Vector3(row.pos[0], row.pos[1], row.pos[2]) + out * float(f.off))
+		part.add_child(flag, true)  # a readable name: flag, flag2
 
 
 ## Lettuce in the greenhouse's grow-bed slots (data/world.json `plants`), sized so a full head is the sheet's

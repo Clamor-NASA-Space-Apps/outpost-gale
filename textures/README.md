@@ -13,3 +13,4 @@ CC0 photo sets, resized for the web build (2K for the ground, 1K for the rest). 
 | metal_* | ambientCG `Metal011` |
 | trim_* | ambientCG `Rubber004` |
 | suit_* | ambientCG `Fabric061` |
+| flag_sri_lanka.svg | The flag of Sri Lanka from Wikimedia Commons, public domain, as downloaded (the team's flag on the rover and the rocket, data/world.json `flags`; ASSETS.md) |
