@@ -120,7 +120,7 @@ func use(action_id: String) -> Dictionary:
 		food_kg += n("crop", "harvest_food_kg")
 	if u.has("to_hour"):
 		var h := fposmod(n("clock", u.to_hour) - hour, n("clock", "sol_h"))
-		var slept := step(h if h > 1e-6 else n("clock", "sol_h"))
+		var slept := step(minf(h if h > 1e-6 else n("clock", "sol_h"), end_left()))
 		woke_sol = sol
 		return slept
 	if u.has("advance_h"):
@@ -138,7 +138,7 @@ func eva(on: bool) -> void:
 
 ## Sleep through `count` sols; the ledger says what the base used meanwhile (the sleep card).
 func skip_sols(count: int) -> Dictionary:
-	var ledger := step(count * n("clock", "sol_h"))
+	var ledger := step(minf(count * n("clock", "sol_h"), end_left()))
 	ledger["sols"] = count
 	woke_sol = sol
 	return ledger
@@ -148,7 +148,13 @@ func skip_sols(count: int) -> Dictionary:
 ## starts a sol, so a sol's beats can never be slept past (14 Nov playtest: sleep skipped sols).
 func awake_left() -> float:
 	var wake := woke_sol * n("clock", "sol_h") + n("clock", "wake_hour") - n("clock", "wait_before_wake_h")
-	return maxf(wake - now(), 0.0)
+	return minf(maxf(wake - now(), 0.0), end_left())
+
+
+## Hours to the end of the story's last sol (the launch home): no sleep, skip or wait runs the rules past it, so the
+## sol counter never passes the mission (14 Nov playtest: "Sol 39" of 30).
+func end_left() -> float:
+	return maxf(n("clock", "last_sol") * n("clock", "sol_h") - n("clock", "wait_before_wake_h") - now(), 0.0)
 
 
 ## Real time passing while the kid is awake: step(), but it waits before the next sol's wake (awake_left()).

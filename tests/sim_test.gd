@@ -227,6 +227,18 @@ func _awake() -> void:
 	s.skip_sols(3)
 	s.run(40.0)
 	check(s.sol == 6 and s.hour < wake, "after a skip the wait is the morning after the skip (sol %d)" % s.sol)
+	# the story ends with the launch on its last sol: no skip, sleep or wait runs the sol counter past it (14 Nov
+	# playtest: "Sol 39" of 30)
+	var last: int = int(base.clock.last_sol.value)
+	s.skip_sols(60)
+	for i in 5:
+		s.use("sleep_night")
+		s.run(40.0)
+	check(s.sol == last, "the sol counter stops on the launch sol %d (%d)" % [last, s.sol])
+	# and the supplies last that whole stay when no choice spends them (the old 30 sols' worth ran out on launch morning)
+	var full := Sim.new()
+	full.skip_sols(40)
+	check(full.failing().is_empty(), "the base's supplies last to the end of Sol %d (%s)" % [last, full.failing()])
 
 
 func _node() -> void:
