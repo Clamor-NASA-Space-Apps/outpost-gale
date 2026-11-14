@@ -29,4 +29,14 @@ func play() -> bool:
 	for k: String in state:
 		check(k in ALLOWED, "render_game_to_text() has an unknown key '%s' (add it to ALLOWED)" % k)
 	check(world.items.size() == world.data.items.size(), "every world.json item is placed")
+	# the waypoint to the rover follows the rover, not its parking spot (15 Nov playtest: "Rover 2 m" over bare ground)
+	var rover: Node3D = world.items.rover
+	rover.global_position += Vector3(30.0, 0.0, 12.0)
+	await frames(2)
+	game.beats.objective.emit("rover")
+	await frames(2)
+	var o: Vector2 = game.hud._objective_xz()
+	var r := Vector2(rover.global_position.x, rover.global_position.z)
+	check(o.distance_to(r) < 6.0, "the rover's waypoint is at the rover, %.1f m from it" % o.distance_to(r))
+	game.beats.objective.emit("")
 	return true

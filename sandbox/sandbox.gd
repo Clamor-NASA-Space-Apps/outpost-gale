@@ -651,13 +651,16 @@ func _wire() -> void:
 	beats.objective.connect(func(t: String) -> void:
 		if t == "":
 			hud.clear_objective()
+		elif t == "rover" and world.items.has(t):
+			# the rover itself, wherever it stands now, before the landmark of the same name (its parking spot): a kid who
+			# had driven it somewhere was sent to the empty parking place, "Rover 2 m" over bare ground (15 Nov playtest:
+			# "the game itself cannot identify where the rover is"). Boarded at its rear hatch, so the waypoint stands
+			# on the hatch, not on its middle, where it led a kid to the nose and no prompt
+			hud.set_objective_node(interactions.by_thing.get(world.items[t], world.items[t]), "", t)
 		elif t == "pip" or world.data.landmarks.has(t):
 			hud.set_objective(t)
 		elif world.items.has(t):
-			# the rover is boarded at its rear hatch: the waypoint stands on the hatch, not on the rover's middle, where it
-			# led a kid to the nose and no prompt
-			var at: Node3D = interactions.by_thing.get(world.items[t], world.items[t]) if t == "rover" else world.items[t]
-			hud.set_objective_node(at, "", t))
+			hud.set_objective_node(world.items[t], "", t))
 	hud.dismissed.connect(func(_id: String) -> void: beats.notify("dismissed"))
 	hud.map_toggled.connect(func(open: bool) -> void: beats.notify("map_open" if open else "map_closed"))
 	beats.shot.connect(cine.shot)
