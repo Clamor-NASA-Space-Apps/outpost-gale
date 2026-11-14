@@ -167,7 +167,9 @@ cover lifts (`audio.lift()`, a 1 s fade).
   `follow_cam.room` (the room the body is in, else the one whose door is nearest) and `follow_cam.want_in` (1 in it,
   from 0 at `camera.in_approach` m from its door) are set by the player; `follow_cam.indoor` eases toward it and
   blends the room profile in: `camera.in_distance`, `in_shoulder`, `in_pivot_height`, `in_pitch_min/max`, the
-  feelers (`in_feelers`, `in_feel_s`), no wall lift, no glance. The lens is kept in the plan shrunk by the arm's
+  no wall lift, no glance. Indoors and out the arm and its feelers cast a sphere of `camera.clear` (the lens stands
+  that far from every solid), and the feelers (`camera.feelers`, `feel_slack`, `feel_rate`) slide the lens in before
+  the arm's own cut; outdoors thin things block only over the last `camera.thin_tail` m before the lens (`tests/camera_test.gd`). The lens is kept in the plan shrunk by the arm's
   sphere, blended in by the arm root's depth past the plan's edge, on top of the sphere cast. In the profile the arm
   also collides with the thin layer (4), and its length is capped at the plan's depth from its middle. Concave
   colliders collide from both sides (`world.gd _layer()`), so a one-sided glass shell stops a cast from inside.

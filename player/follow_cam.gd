@@ -1,14 +1,16 @@
 extends Node3D
 ## A third-person follow camera (skills/third-person-camera). This node is the pivot: it stores yaw, pitch and
-## distance and rebuilds the shot from them every frame. Its SpringArm3D casts a sphere the size of the near
-## plane against what the target collides with (thin things left out), and the Lens beside the arm cuts in at
-## once, holds, then eases out. A wall behind the target lifts the view over it before the target fades.
+## distance and rebuilds the shot from them every frame. Its SpringArm3D casts a sphere of `clear` m (well over the
+## near plane's half-diagonal) against what the target collides with, feelers either side of it slide the Lens in
+## before the arm is blocked, and the Lens beside the arm cuts in at once only for what they missed, holds, then
+## eases out. A wall behind the target lifts the view over it before the target fades.
 ## In and near a room (the owner's `room` and `want_in`) the shot eases into the room's profile: a shorter arm off
 ## the shoulder, a narrower pitch, feelers that pull in before a wall, and the lens kept inside the room's plan.
 ## Every distance and time is a row of tuning.json `camera`.
 
-const SOLIDS := 1 | 2 | 16 | 64  # CONTRACTS.md: ground, statics, vehicles, carriables; thin (4) never moves the lens
+const SOLIDS := 1 | 2 | 16 | 64  # CONTRACTS.md: ground, statics, vehicles, carriables; thin (4) only where the lens stands
 const THIN := 4
+const PROPS := 2 | 16 | 64 | THIN  # what the feelers look for: all but the ground, which has no edge to turn into
 
 var t: Dictionary
 var arm: SpringArm3D
@@ -40,7 +42,10 @@ var room := {}  # the room the target is in or nearest the door of ({node, areas
 var want_in := 0.0  # 0 to 1, the owner's: how far into the room's profile the shot should be (1 in a room)
 var indoor := 0.0  # where the shot is, eased toward want_in over in_ease_s: never a step at the doorway
 var shoulder := 0.0  # m the arm's root sits right of the pivot now (in_shoulder in a room), cut in by a wall
-var soft := INF  # m the feelers allow the arm (Lyra's predictive avoidance), INF outside
+var soft := INF  # m the feelers allow the arm (Lyra's predictive avoidance), INF with nothing near
+var tail := INF  # m the arm's own line is free of the thin things the lens would stand in: a cut, as for a solid
+var late := 0.0  # m of the arm's sphere the near plane does not need: a cut is eased over that last bit
+var _reach := SphereShape3D.new()  # all the feelers can touch, asked once before they are cast
 var show_body := false  # a cut is on (player.perform): another camera films the body, so it is drawn even with the lens close
 
 
@@ -90,6 +95,7 @@ func snap(heading: float) -> void:
 	indoor = want_in  # a teleport into a room is already in its profile
 	shoulder = 0.0
 	soft = INF
+	tail = INF
 	pitch = clampf(pitch, deg_to_rad(_pitch_lo()), deg_to_rad(_pitch_hi()))
 	floor_y = target.global_position.y
 	global_position = target.global_position + Vector3.UP * _height()
@@ -166,20 +172,27 @@ func follow(delta: float, travel: Vector3, facing: float, on_floor: bool) -> voi
 	# chase cams sit lower and closer as speed builds); the field of view stays fixed (rule 14)
 	rush = lerpf(rush, clampf(speed / fast, 0.0, 1.0) if fast > 0.0 else 0.0, 1.0 - exp(-t.lead_rate * delta))
 	var y := lerpf(global_position.y, floor_y + _height() * lerpf(1.0, t.rush_height, rush), 1.0 - exp(-t.rise_rate * delta))
-	global_position = Vector3(want.x + off.x, y, want.z + off.z)
+	# the pivot trails the hero on its spring, and trailed into a wall or a prop the hero had just left: the arm's
+	# sphere, starting inside it, came back with no length and the lens jumped into the helmet. The sphere goes from
+	# the hero's own axis, which its collider keeps clear, and the pivot stops where the sphere does
+	var space := get_world_3d().direct_space_state
+	var q := PhysicsShapeQueryParameters3D.new()
+	q.shape = arm.shape
+	q.collision_mask = arm.collision_mask
+	q.exclude = excluded
+	q.transform = Transform3D(Basis(), Vector3(at.x, y, at.z))
+	q.motion = Vector3(want.x + off.x - at.x, 0.0, want.z + off.z - at.z)
+	global_position = q.transform.origin + q.motion * _short(q)
 	# once the travel is steady the lens looks a little ahead along it; the lead builds and goes slowly, so a
 	# start or a stop shows only the spring
 	ahead = ahead.lerp(travel * lerpf(t.lead_time, t.rush_lead, rush), 1.0 - exp(-t.lead_rate * delta))
 	var wanted := _wanted()
 	# lift over a wall behind the target: measured at the player's own pitch, so the lift cannot feed itself
 	var back := Basis.from_euler(Vector3(pitch, yaw, 0)).z * wanted
-	var q := PhysicsShapeQueryParameters3D.new()
-	q.shape = arm.shape
 	q.transform = Transform3D(Basis(), global_position)
 	q.motion = back
 	q.collision_mask = SOLIDS
-	q.exclude = excluded
-	var free: float = get_world_3d().direct_space_state.cast_motion(q)[0] * wanted
+	var free: float = space.cast_motion(q)[0] * wanted
 	var squeeze := clampf(inverse_lerp(wanted, t.lift_full, free), 0.0, 1.0)
 	# looking up, the arm swings down behind the hero and meets the ground, which is no wall: lifting then dragged
 	# the view back to eye level and the night sky could not be watched (Ravindu, 14 Nov). The arm shortens instead
@@ -190,22 +203,29 @@ func follow(delta: float, travel: Vector3, facing: float, on_floor: bool) -> voi
 	# the ground some way ahead pitches the view: up a dune shows the crest, down one the floor (Nesky #26)
 	var fwd: Vector3 = Vector3(-sin(yaw), 0.0, -cos(yaw)) * t.slope_ahead
 	var ray := PhysicsRayQueryParameters3D.create(at + fwd + Vector3.UP * t.slope_ahead, at + fwd + Vector3.DOWN * t.slope_ahead, 1, excluded)
-	var hit := get_world_3d().direct_space_state.intersect_ray(ray)
+	var hit := space.intersect_ray(ray)
 	var rise: float = atan2(hit.position.y - floor_y, t.slope_ahead) * t.slope_share if hit else 0.0
 	slope = lerpf(slope, clampf(rise, -deg_to_rad(t.slope_max_deg), deg_to_rad(t.slope_max_deg)), 1.0 - exp(-t.rise_rate * delta))
 	rotation = Vector3(pitch + lift + slope, yaw, 0)
 	# the hero on the lower third looking level, centred looking straight down (Kaufmann): the lens shifts the
 	# picture, it does not turn, so verticals stay upright
 	lens.shift = t.frame_low * clampf(inverse_lerp(deg_to_rad(t.pitch_min), 0.0, rotation.x), 0.0, 1.0)
-	var radius := _near_radius()
+	# kept between the lens and every solid: with only the near plane's own sphere, anything drawn a centimetre proud
+	# of its collider was cut open by the near plane and showed its hollow inside
+	var radius := maxf(_near_radius(), t.clear)
+	late = radius - _near_radius()
 	(arm.shape as SphereShape3D).radius = radius
 	q.shape = arm.shape
-	# off the shoulder: the arm's root moves right of the pivot, cut in at once by a wall at that side
+	# off the shoulder: the arm's root moves right of the pivot, cut in at once by a wall at that side (`skin` short
+	# of it), and eased on to in_shoulder_clear from it: in a doorway the root then stays near the middle, where the
+	# feelers have room either side (hard by the frame they brought the lens in, and the hero faded on every walk
+	# through a door). Eased, because a door frame comes into the side cast all at once
 	var right := global_basis.x
 	q.transform = Transform3D(Basis(), global_position)
-	q.motion = right * t.in_shoulder * s
-	var side: float = get_world_3d().direct_space_state.cast_motion(q)[0] * t.in_shoulder * s if s > 0.0 else 0.0
-	shoulder = minf(side, lerpf(shoulder, side, 1.0 - exp(-t.ease_rate * delta)))
+	q.motion = right * (t.in_shoulder * s + t.in_shoulder_clear)
+	var gap: float = space.cast_motion(q)[0] * q.motion.length() if s > 0.0 else 0.0
+	var side := clampf(gap - t.in_shoulder_clear, 0.0, t.in_shoulder * s)
+	shoulder = minf(clampf(gap - t.skin, 0.0, t.in_shoulder * s), lerpf(shoulder, side, 1.0 - exp(-(t.in_shoulder_rate if side < shoulder else t.ease_rate) * delta)))
 	arm.position = Vector3(shoulder, 0.0, 0.0)
 	var root := global_position + right * shoulder
 	var length := wanted
@@ -219,25 +239,93 @@ func follow(delta: float, travel: Vector3, facing: float, on_floor: bool) -> voi
 	# outdoors thin things are posts, and pulling in for them shoves the lens into the hero (rule 4); in a room they
 	# are fittings as wide as a wall (the toilet curtain), and the lens went through them: there they block
 	arm.collision_mask = SOLIDS | THIN if s > 0.0 else SOLIDS
-	soft = _feelers(root, length, s) if s > 0.0 else INF
+	_feelers(root, length, s > 0.0)
 
 
-## Lyra's predictive avoidance (design/research/interior-camera.md): spheres cast a little either side of the arm
-## find a wall before it blocks, and the lens moves in toward what they allow over in_feel_s instead of popping
-## when the arm itself is hit. A feeler further round counts less (its weight). Only in a room's profile.
-func _feelers(root: Vector3, length: float, s: float) -> float:
+## The share of q.motion the sphere may go, stopped `skin` short of what it meets. A sphere left touching a wall cannot
+## move toward it at all: with the pivot or the arm's root in contact, a turn of a few degrees took the arm from its
+## full length to nothing, and the lens jumped into the helmet.
+func _short(q: PhysicsShapeQueryParameters3D) -> float:
+	var f: float = get_world_3d().direct_space_state.cast_motion(q)[0]
+	return f if f >= 1.0 else maxf(f - t.skin / maxf(q.motion.length(), 0.001), 0.0)
+
+
+## Predictive avoidance (Lyra's feelers, design/research/interior-camera.md) as a cone: a sphere cast at each angle of
+## `feelers` either side of the arm (and of `feel_pitch` above and below it), and a hit there allows the arm that
+## hit's length plus feel_slack m for every degree the feeler inside it is off the arm. What the feelers allow then
+## never changes faster than feel_slack against the view's turn, so turning toward a wall, a door frame or a prop
+## slides the lens in ahead of the arm's own cut: no pop (14 Nov playtest: "whenever the camera hits an object behind
+## it, the camera glitches").
+## Thin things (layer 3: posts, but also machines narrower than the hero) count only over the last thin_tail m before
+## where the lens would stand, on the arm's own line too (`tail`): the lens stops before one it would stand in, where
+## it used to pass through and show its hollow inside. Nearer the hero they are passed and draw in front of it:
+## pulling in for a post shoves the lens into the hero's back (rule 4). In a room's profile they block everywhere, as
+## they do the arm.
+## The ground is left to the arm: it has no edge the view could turn into. With nothing else in reach, nothing is cast.
+func _feelers(root: Vector3, length: float, in_room: bool) -> void:
+	soft = INF
+	tail = INF
 	var space := get_world_3d().direct_space_state
 	var q := PhysicsShapeQueryParameters3D.new()
-	q.shape = arm.shape
-	q.transform = Transform3D(Basis(), root)
-	q.collision_mask = SOLIDS
 	q.exclude = excluded
-	var most := length
-	for f: Array in t.in_feelers:  # [yaw degrees, weight]
-		q.motion = global_basis.rotated(Vector3.UP, deg_to_rad(f[0])).z * length
-		var hit: float = space.cast_motion(q)[0]
-		most = minf(most, length * (hit + (1.0 - hit) * (1.0 - float(f[1]) * s)))
-	return most
+	q.transform = Transform3D(Basis(), root)
+	_reach.radius = length + (arm.shape as SphereShape3D).radius
+	q.shape = _reach
+	q.collision_mask = PROPS
+	if space.intersect_shape(q, 1).is_empty():
+		return
+	var thin := false
+	if not in_room:
+		q.collision_mask = THIN
+		thin = not space.intersect_shape(q, 1).is_empty()
+	q.shape = arm.shape
+	# where the lens would stand: the arm's length, or less where a solid stopped it last tick
+	var reach := minf(length, arm.get_hit_length())
+	if thin:  # the arm's own line
+		tail = _thin(space, q, root, global_basis.z, reach)
+	var solids := PROPS if in_room else PROPS & ~THIN
+	# what a feeler meets is still somewhere between it and the feeler inside it, so it allows that inner feeler's
+	# slack: the lens is then in before the arm gets there, not one feeler late
+	var slack := 0.0
+	for deg: float in t.feelers:
+		for side: float in [1.0, -1.0]:
+			var dir := global_basis.rotated(Vector3.UP, deg_to_rad(deg * side)).z
+			soft = minf(soft, length * _cast(space, q, root, dir * length, solids) + slack)
+			if thin and deg <= float(t.feel_thin):
+				soft = minf(soft, _thin(space, q, root, dir, reach) + slack)
+		slack = deg * t.feel_slack
+	# up and down too: without them a look up threaded the arm under the rover, and a look down over a wall's top
+	slack = 0.0
+	for deg: float in t.feel_pitch:
+		for side: float in [1.0, -1.0]:
+			var dir := Basis.from_euler(Vector3(rotation.x + deg_to_rad(deg * side), rotation.y, 0.0)).z
+			soft = minf(soft, length * _cast(space, q, root, dir * length, solids) + slack)
+		slack = deg * t.feel_slack
+
+
+## How far the arm's sphere may go from `root` along `dir` before a thin thing the lens would stand in: one met in
+## the last thin_tail m of `reach`, or one that reaches across the start of that stretch (the lens then stops before
+## it: a cast that starts inside a thing comes back with nonsense, and the lens sat in a lamp's mast). One wholly
+## nearer the hero is passed. INF for none.
+func _thin(space: PhysicsDirectSpaceState3D, q: PhysicsShapeQueryParameters3D, root: Vector3, dir: Vector3, reach: float) -> float:
+	var from := maxf(reach - float(t.thin_tail), 0.0)
+	var first := reach * _cast(space, q, root, dir * reach, THIN)
+	if first >= from:
+		return first
+	q.transform = Transform3D(Basis(), root + dir * from)
+	q.motion = Vector3.ZERO
+	if not space.intersect_shape(q, 1).is_empty():
+		return first
+	return from + (reach - from) * _cast(space, q, root + dir * from, dir * (reach - from), THIN)
+
+
+## The share of `motion` the arm's sphere may go from `at`, INF when it meets nothing (so it limits nothing).
+func _cast(space: PhysicsDirectSpaceState3D, q: PhysicsShapeQueryParameters3D, at: Vector3, motion: Vector3, mask: int) -> float:
+	q.transform = Transform3D(Basis(), at)
+	q.motion = motion
+	q.collision_mask = mask
+	var hit: float = space.cast_motion(q)[0]
+	return hit if hit < 1.0 else INF
 
 
 ## The room profile's arm: in_distance, or less in a room too small for it, so that from the room's middle the lens
@@ -390,18 +478,19 @@ class Lens extends Camera3D:
 
 	func _physics_process(delta: float) -> void:
 		var rig: Node3D = get_parent()
-		var safe: float = rig.arm.get_hit_length()
-		if safe < rig.dist:
-			rig.dist = safe  # blocked: cut in at once
-			rig.hold = rig.t.hold_time
-		elif rig.soft < rig.dist:
-			# a feeler sees a wall coming: in toward it smoothly (Lyra's PenetrationBlendInTime), then hold
-			rig.dist = maxf(rig.soft, rig.dist - delta / rig.t.in_feel_s * (rig.dist - rig.soft))
+		var safe: float = minf(rig.arm.get_hit_length(), rig.tail)
+		var step: float = rig.t.feel_rate * delta
+		var want := minf(safe, rig.soft)
+		if want < rig.dist:
+			# a feeler sees a wall coming, or the arm is blocked: in at a held speed, never a jump, but at once to
+			# where the near plane is clear of what blocks (the arm's sphere is `late` wider than the near plane
+			# needs, so only that last bit of a cut is eased); then hold
+			rig.dist = minf(maxf(want, rig.dist - step), safe + rig.late)
 			rig.hold = rig.t.hold_time
 		elif rig.hold > 0.0:
 			rig.hold -= delta
 		else:
-			rig.dist = lerpf(rig.dist, minf(safe, rig.soft), 1.0 - exp(-rig.t.ease_rate * delta))
+			rig.dist = minf(lerpf(rig.dist, minf(safe, rig.soft), 1.0 - exp(-rig.t.ease_rate * delta)), rig.dist + step)
 		position = rig.arm.position + Vector3(0, 0, rig.dist)  # the arm casts along its +Z, the lens looks back down -Z
 		rotation = Vector3.ZERO
 		if rig.ahead.length() > 0.01:
