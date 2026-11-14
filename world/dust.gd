@@ -6,7 +6,7 @@ extends Node3D
 ##   quads at ankle height that spread, slow, drift downwind and fade in 2 to 3 s. The print is terrain.mark().
 ## - streaks: faint lines low over the ground around the camera, at the wind's speed, more of them in a gust
 ##   (world.gust(): "dust blowing across the ground appears as pale horizontal streak", NASA, Gale sol 1597).
-## - a dust devil wandering far off (seen crossing the crater floor on summer afternoons), day only.
+## - a few dust devils wandering far off round the crater (seen crossing its floor on summer afternoons), day only.
 ## - the storm front: big slow clouds close around the camera, the storm state only.
 ## What shows in which sky is data/world.json `weather`; the wind's direction is `wind`.
 
@@ -18,14 +18,15 @@ var wind := Vector3.ZERO
 var grit: Array[GPUParticles3D] = []
 var haze: Array[GPUParticles3D] = []
 var streaks: GPUParticles3D
-var devil: GPUParticles3D
+var devil: GPUParticles3D  # the first of `devils`, the one the audio's motif and the tests watch
+var devils: Array[GPUParticles3D] = []
 var front: GPUParticles3D
 var _world: Node3D
 var _soft: StandardMaterial3D  # one billboard material for every cloud, so one restyle reaches them all
 var _column: StandardMaterial3D  # the dust devil's: ground-coloured, so it shows against the pale sky
 var _line: StandardMaterial3D
 var _dir: Vector3  # where the wind blows to, flat
-var _devil_angle := 0.0
+var _devil_angle := 0.0  # each devil's own angle is this times its direction plus its start (data devil.devils)
 var _haze_mat: ShaderMaterial
 var _wheel_haze_mat: ShaderMaterial  # a rover's trail: paler than a boot's puff, or it vanished against the ground
 var _grit_mat: ShaderMaterial
@@ -133,6 +134,14 @@ func build(world: Node3D) -> void:
 	dp.initial_velocity_max = 6.0
 	dp.radial_velocity_min = 0.3  # the column widens as it climbs
 	dp.radial_velocity_max = 0.9
+	# the others: copies sharing its material and motion, each its own draw call, scaled by its size
+	for i in world.data.devil.devils.size():
+		var d: GPUParticles3D = devil if i == 0 else devil.duplicate()
+		if i > 0:
+			d.name = "Devil%d" % i
+			add_child(d)
+		d.scale = Vector3.ONE * float(world.data.devil.devils[i][2])
+		devils.append(d)
 
 
 ## Colours from the design's `dust` role (the sky's light does the rest: the clouds are lit), and the weather row.
@@ -168,7 +177,8 @@ func restyle(design: Dictionary, weather: Dictionary, instant := true) -> void:
 	_streak_share = float(weather.streaks)
 	streaks.amount_ratio = _streak_share * _share
 	streaks.emitting = _streak_share > 0.0
-	switch(devil, bool(weather.devil), instant)
+	for d: GPUParticles3D in devils:
+		switch(d, bool(weather.devil), instant)
 	switch(front, bool(weather.front), instant)
 
 
@@ -357,12 +367,16 @@ func _process(delta: float) -> void:
 		var d: Dictionary = _world.data.devil
 		var c: Array = _world.data.scatter.centre
 		_devil_angle += float(d.speed) / float(d.radius) * delta
-		# it wanders in and out a little as it goes round, never inside `radius` less its wander
-		var r := float(d.radius) * (1.0 + float(d.wander) * sin(_devil_angle * 3.0))
-		var x := float(c[0]) + cos(_devil_angle) * r
-		var z := float(c[1]) + sin(_devil_angle) * r
-		devil.position = Vector3(x, _world.height_at(x, z), z)
-		devil.rotate_y(2.5 * delta)
+		for i in devils.size():
+			# each goes round on its own circle, every other one the other way, at the same ground speed; it
+			# wanders in and out a little as it goes, never inside its radius less its wander
+			var o: Array = d.devils[i]
+			var a: float = float(o[1]) + _devil_angle * float(d.radius) / float(o[0]) * (1.0 if i % 2 == 0 else -1.0)
+			var r := float(o[0]) * (1.0 + float(d.wander) * sin(a * 3.0))
+			var x := float(c[0]) + cos(a) * r
+			var z := float(c[1]) + sin(a) * r
+			devils[i].position = Vector3(x, _world.height_at(x, z), z)
+			devils[i].rotate_y(2.5 * delta)
 
 
 func _material(tex: Texture2D, billboard: BaseMaterial3D.BillboardMode) -> StandardMaterial3D:
