@@ -10,7 +10,7 @@ func _init() -> void:
 
 
 ## Stands the hero a metre off the first interactable of `kind`, facing the nearest point of its shape, and returns
-## it: off a door's or a panel row's face (its thinnest level side), at the rover's hatch, beside a bag.
+## it: off a door's face (its thinnest level side), at the rover's hatch, beside a bag.
 func face(kind: String) -> Node3D:
 	for it: Node3D in game.get_tree().get_nodes_in_group("interactable"):
 		if it.kind == kind:
@@ -46,13 +46,8 @@ func play() -> bool:
 	check(absf(door.thing.rotation.y - shut) > deg_to_rad(95) and player.state().player.inside.is_empty(), "and opens all the way (%.0f deg), never into the hero" % rad_to_deg(door.thing.rotation.y - shut))
 	check(player.body.global_position.distance_to(p0) < 0.05, "the hero stays where it stood")
 
-	var panel := face("panel")
-	await frames(3)
-	check(box.target == panel, "a panel row is the target beside it (got %s)" % [box.target])
-	var flat: float = panel.thing.rotation.x
-	box.interact()
-	await frames(60)
-	check(absf(panel.thing.rotation.x - flat) > deg_to_rad(5), "the panel tilts")
+	# a solar panel is not tilted by hand: its row is brushed clean, all of it at once (uses_test's sweep)
+	check(not game.get_tree().get_nodes_in_group("interactable").any(func(it: Node) -> bool: return it.kind == "panel"), "no panel is usable by itself")
 
 	await steady()
 	var bag := face("bag")

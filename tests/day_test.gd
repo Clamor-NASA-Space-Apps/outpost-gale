@@ -4,7 +4,7 @@ extends "res://addons/forge/test.gd"
 ## and nothing darker than the night key, lamps switch once each way at dusk and dawn, the light turns with the sun
 ## every frame with no jump (and not at all while the clock stands), the probes redraw in steps, and
 ## the probes redraw in steps (never every frame), the night sky turns with the clock, a storm's dust stays after it
-## and a tilted panel sheds its own, the clock waits while a menu is open, and the clock's own work per frame is small.
+## and a brushed row of panels sheds its own, the clock waits while a menu is open, and the clock's own work per frame is small.
 
 const HouseStyle := preload("res://addons/forge/house_style.gd")
 
@@ -225,7 +225,7 @@ func play() -> bool:
 		at(24.0 + 24.0 * i / 480.0)
 	check(clock.probe_redraws - pr >= 4 and clock.probe_redraws - pr <= 16, "%d probe redraws in a sol (4 to 16)" % (clock.probe_redraws - pr))
 
-	# 5. a storm's dust stays after it, a tilt sheds one panel's, the wind takes the rest slowly
+	# 5. a storm's dust stays after it, a clean sheds one row's, the wind takes the rest slowly
 	var body: ShaderMaterial = HouseStyle.role(game.design, "body", true)
 	var base_coat: float = clock._base_coat
 	check(clock._panels.size() > 0, "the trackers' panels wear their own coat (%d)" % clock._panels.size())
@@ -244,11 +244,9 @@ func play() -> bool:
 	# what went to the MultiMesh (headless, the dummy renderer keeps no instance data to read back)
 	var share := func(q: Dictionary) -> float: return q.shown
 	check(share.call(p) > 0.9 and share.call(other) > 0.9, "every panel dusty after the storm (%.2f)" % share.call(p))
-	clock.used("panel", (p.node as Node3D).global_position)
-	for i in roundi(float(cfg.shed_s) * 60.0) + 10:
-		await process_frame
-	check(share.call(p) < 0.01, "a tilted panel shed its dust (%.3f)" % share.call(p))
-	check(share.call(other) > 0.9, "the panel next to it kept its own (%.2f)" % share.call(other))
+	clock.used("clean_panel", (p.node as Node3D).global_position)
+	check(share.call(p) < 0.01, "a brushed row shed its dust (%.3f)" % share.call(p))
+	check(other.row != p.row and share.call(other) > 0.9, "another row kept its own (%.2f)" % share.call(other))
 	var c0: float = clock.coat
 	for i in 241:
 		at(clock.hours + 0.1)
@@ -260,26 +258,15 @@ func play() -> bool:
 		meshes = meshes.filter(func(m: MeshInstance3D) -> bool: return m.mesh != null)
 		bare += meshes.size() - (q.copies as Array).size()
 	check(bare == 0, "every part of every panel is drawn coated (%d parts left bare)" % bare)
-	# a tilt in a storm: the shed goes one way while the panel turns, and the dust comes back only at the storm's rate
+	# a clean in a storm: the dust comes back only at the storm's rate
 	game._sky(3)
 	await settle()
 	for i in 200:
 		at(clock.hours + 0.01)
 	var tp: Dictionary = clock._panels[1]
 	check(tp.shown > 0.8, "a panel dusty in the storm (%.2f)" % tp.shown)
-	var node: Node3D = tp.node
-	clock.used("panel", node.global_position)
-	var tilt := create_tween()
-	tilt.tween_property(node, "rotation:x", node.rotation.x - deg_to_rad(30.0), float(game.tuning.interact.move_s))
-	var rose := 0.0
-	var last_share: float = tp.shown
-	for i in roundi(float(cfg.shed_s) * 60.0) + 2:
-		at(clock.hours + 0.002)  # the storm blows on through it
-		await process_frame
-		rose = maxf(rose, float(tp.shown) - last_share)
-		last_share = tp.shown
-	check(rose < 0.01, "while it tilts and sheds its dust never comes back (largest rise %.3f)" % rose)
-	check(tp.shown < 0.02, "shed by the end of shed_s (%.3f)" % tp.shown)
+	clock.used("clean_panel", (tp.node as Node3D).global_position)
+	check(tp.shown < 0.02, "brushed clean in the storm (%.3f)" % tp.shown)
 	for i in 30:
 		at(clock.hours + 0.002)
 	var back: float = tp.shown

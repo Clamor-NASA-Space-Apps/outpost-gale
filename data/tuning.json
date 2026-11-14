@@ -74,12 +74,11 @@
   "carry_ahead": 0.45,
   "track_every": 0.12,
   "door_open_deg": 100,
-  "panel_tilts": [
-   -30,
-   -45,
-   -60,
-   -15
-  ],
+  "clean_s": 5.0,
+  "clean_min": 30,
+  "clean_run": 0.2,
+  "clean_every": 0.25,
+  "note_clean": "a row of solar panels brushed end to end by the hero alone, in fast forward (a use row's `sweep`, data/world.json uses): clean_s real seconds a row, the first clean_run share of them the run to the row's far end, the rest the brushing back; clean_min game minutes pass meanwhile at the rules' own rates (the sky clock's rush); clean_every: seconds between the brush's puffs of dust. All art direction (no source): a 40 m row by hand is slow work, and six rows cost three hours of the sol",
   "move_s": 0.6,
   "curtain_gather": 0.22,
   "note_curtain": "curtain_gather: an open curtain's width as a share of its closed width, gathered at its jamb (HAB 1's toilet). Art direction",
@@ -307,10 +306,10 @@
   "_debug": "skip_s: real seconds of time-lapse the debug sky key takes to the next phase (dawn, noon, dusk, night, then a storm at noon); storm_build_h: game hours a storm takes to blow in or clear on the key (a real global storm builds over days and its haze e-folds in 43 sols, Guzewich 2019: too slow to see in a sandbox). Art direction",
   "skip_s": 2.5,
   "storm_build_h": 0.15,
-  "_dust": "dust that settles and stays (design/research/day-cycle.md rows 22 to 27): the weathering coat climbs from DESIGN.md's amount to DESIGN.storm.md's over coat_rise_h game hours of storm and stays after it, clearing back with an e-fold of coat_clear_sols sols (panels on Mars lose about 0.2% a sol to dust and get it back only in rare wind cleaning events, Lorenz 2021; art direction, so a session sees it go); every panel takes the storm's coat and a tilt by hand sheds it over shed_s (crew-base studies shed panel dust by tilting, NTRS 20170000235: our game action, not presented as the NASA plan). Wind: night_wind times the night row's speed after dark (Gale's downslope winds peak at night, about 21 m/s against 14 by day: Martinez 2017, Ullan 2017); the far whirlwind only between devil_hours (Gale's vortices peak 11:00 to 13:00 LTST, about one a sol, Newman 2019; it shows into the early afternoon)",
+  "_dust": "dust that settles and stays (design/research/day-cycle.md rows 22 to 27): the weathering coat climbs from DESIGN.md's amount to DESIGN.storm.md's over coat_rise_h game hours of storm and stays after it, clearing back with an e-fold of coat_clear_sols sols (panels on Mars lose about 0.2% a sol to dust and get it back only in rare wind cleaning events, Lorenz 2021; art direction, so a session sees it go); every panel takes the storm's coat, and wears the rules' dust (sim.json panel_dust: the night gust, 0.2% a sol) as the whole coat once it reaches panel_full (the gust's 0.33, so the morning after shows it plainly; art direction); a clean sheds a row's (sandbox/interactions.gd: a brush by hand is our game action, not presented as the NASA plan). Wind: night_wind times the night row's speed after dark (Gale's downslope winds peak at night, about 21 m/s against 14 by day: Martinez 2017, Ullan 2017); the far whirlwind only between devil_hours (Gale's vortices peak 11:00 to 13:00 LTST, about one a sol, Newman 2019; it shows into the early afternoon)",
   "coat_rise_h": 1.0,
   "coat_clear_sols": 10,
-  "shed_s": 1.0,
+  "panel_full": 0.33,
   "night_wind": 1.5,
   "devil_hours": [11, 14]
  }

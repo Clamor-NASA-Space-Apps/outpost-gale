@@ -60,7 +60,11 @@ var _burst_sun := Vector3.ZERO
 var _probe_w: Array[float] = []
 var _lamps: Dictionary = {}  # OmniLight3D -> {on, level, full, at (its own switch offset, degrees)}
 var _glow := {"on": false, "level": -1.0}  # the work lights' glowing faces (the `light` role), on the lamps' schedule
-var _panels: Array[Dictionary] = []  # {node, copies: [[MultiMeshInstance3D, index]], keep (0 shed .. 1), shown}
+var _panels: Array[Dictionary] = []  # {node, row (its item), copies: [[MultiMeshInstance3D, index]], keep (the storm's coat, 0 brushed off .. 1), dust (the rules' dust on it), shown}
+var _dust_seen := 0.0  # the rules' panel_dust at the last look: what it rose by since then settled on every row
+## Local hours a real second while a job runs in fast forward (a row of panels brushed, sandbox/interactions.gd),
+## else 0: the clock's own pace. The rules step at pace() too, so their time is the same time.
+var rush := 0.0
 var _coat_shown := -1.0
 var _base_coat: float
 var _storm_coat: float
@@ -226,6 +230,8 @@ func _process(delta: float) -> void:
 ## Local hours a real second the clock runs at now (or at hour `h`): the day's pace, the night night_speed times
 ## faster. The rules step at the same pace (sim/sim_node.gd), so the HUD's hour is the sky's.
 func pace(h := NAN) -> float:
+	if rush > 0.0 and is_nan(h):
+		return rush
 	return _rate * _speed(_elevation(sun if is_nan(h) else HouseStyle.sun_at(_C, h)))
 
 
@@ -380,43 +386,74 @@ func _wind(h: float, el: float, now: bool) -> void:
 
 
 ## Dust settles on everything while a storm blows and stays after it; the wind takes it back only slowly (an e-fold of
-## `coat_clear_sols`). Panels hold their own share: a storm coats them all, a tilt sheds one (NASA crew-base studies
-## shed panel dust by tilting, NTRS 20170000235).
+## `coat_clear_sols`). Panels hold their own share: a storm coats them all, a brush cleans a row (brush()).
 func _settle(dh: float) -> void:
 	if storm > 0.5:
 		coat = move_toward(coat, _storm_coat, (_storm_coat - _base_coat) / float(_cfg.coat_rise_h) * dh)
-		# each panel gathers it again at the same rate, a shed one too: setting them all to 1 here undid a tilt's shed
-		# within a tenth of a second, and a panel tilted in a storm flickered dusty and bare (13 Nov playtest)
+		# each panel gathers it again at the same rate, a brushed one too: setting them all to 1 here undid a clean
+		# within a tenth of a second, and a panel cleaned in a storm flickered dusty and bare (13 Nov playtest)
 		for p in _panels:
 			p.keep = move_toward(p.keep, 1.0, dh / float(_cfg.coat_rise_h))
 	else:
 		coat = _base_coat + (coat - _base_coat) * exp(-dh / (24.0 * float(_cfg.coat_clear_sols)))
 
 
+## The coat on screen. A panel wears the larger of the storm's coat it kept and the rules' dust (sim.panel_dust, the
+## whole coat at `panel_full`). The rules hold one number for the field, so each panel counts what that number rose
+## by since its row was last brushed: one row clean and five dusty is what the kid sees.
 func _show_coat() -> void:
 	var extra := clampf((coat - _base_coat) / (_storm_coat - _base_coat), 0.0, 1.0)
 	if absf(coat - _coat_shown) >= 0.002:
 		_coat_shown = coat
 		HouseStyle.set_coat(_design, coat, lerpf(_base_side, _storm_side, extra))
+	var rules: Node = _game.get("sim")
+	var now: float = rules.sim.panel_dust if rules else 0.0
+	var rose := maxf(now - _dust_seen, 0.0)
+	_dust_seen = now
 	for p in _panels:
-		var share: float = p.keep * extra
+		p.dust = minf(p.dust + rose, 1.0)
+		var share: float = maxf(p.keep * extra, minf(p.dust / float(_cfg.panel_full), 1.0))
 		if absf(share - p.shown) >= 0.005:
 			p.shown = share
 			for c: Array in p.copies:
 				(c[0] as MultiMeshInstance3D).multimesh.set_instance_custom_data(c[1], Color(share, 0, 0, 0))
 
 
-## A tilt by hand (sandbox/interactions.gd "panel") sheds that panel's dust over `shed_s`.
+## A row of panels brushed to its end (sandbox/interactions.gd): it is clean, however the job went.
 func used(what: String, pos: Vector3) -> void:
-	if not (what == "panel" or what == "clean_panel") or _panels.is_empty():  # tilted or brushed, the dust comes off
-		return
-	var near: Dictionary = _panels[0]
+	if what == "clean_panel":
+		brush(pos)
+
+
+## The brush at work on the row of panels at `pos` (its middle): the row keeps `left` of its dust (a wing is one long panel, so
+## its coat thins as the job goes; none is left at its end).
+func brush(pos: Vector3, left := 0.0) -> void:
+	var row := _row(pos)
 	for p in _panels:
-		if (p.node as Node3D).global_position.distance_to(pos) < (near.node as Node3D).global_position.distance_to(pos):
+		if p.row == row:
+			p.keep *= left
+			p.dust *= left
+	_show_coat()
+
+
+## Whether the row of panels at `pos` wears dust a kid can see: a clean row offers no clean.
+func dusty(pos: Vector3) -> bool:
+	var row := _row(pos)
+	return _panels.any(func(p: Dictionary) -> bool: return p.row == row and p.shown >= 0.05)  # under 5% of the coat nothing shows
+
+
+## The item whose panel is nearest `pos`, null with no panels.
+func _row(pos: Vector3) -> Node:
+	var near := {}
+	for p in _panels:
+		if near.is_empty() or _flat(p, pos) < _flat(near, pos):
 			near = p
-	create_tween().tween_method(func(k: float) -> void:
-		near.keep = k
-		_show_coat(), near.keep, 0.0, float(_cfg.shed_s))
+	return near.get("row")
+
+
+func _flat(p: Dictionary, pos: Vector3) -> float:
+	var at: Vector3 = (p.node as Node3D).global_position
+	return Vector2(at.x - pos.x, at.z - pos.z).length()
 
 
 ## Every solar panel the trackers turn, with its drawn copies in the world's MultiMeshes, whose material takes the
@@ -431,7 +468,10 @@ func _find_panels() -> void:
 			if c.size():
 				copies.append(c)
 		if copies.size():
-			_panels.append({"node": node, "copies": copies, "keep": 0.0, "shown": -1.0})
+			var row: Node = node
+			while row.get_parent() != _world:
+				row = row.get_parent()
+			_panels.append({"node": node, "row": row, "copies": copies, "keep": 0.0, "dust": 0.0, "shown": -1.0})
 	_coat_panels()
 
 
