@@ -573,7 +573,14 @@
    {"kind": "refill_air", "prompt": "Fill suit air", "box": [1.0, 1.4, -2.09, 1.41, 1.9, -1.77], "stand": [0.817, -1.307, -32], "clip": "interact", "sound": "suit_air", "props": {"hose": {"hidden": true, "clean": true, "meshes": [{"line": [[1.103, 1.722, -1.954], [0.95, 1.62, -1.52]], "r": 0.014, "role": "trim"}]}, "lamp": {"at": [1.2, 1.852, -1.927], "rot": [0, 58, 0], "hidden": true, "clean": true, "meshes": [{"box": [0.006, 0.04, 0.08], "role": "light"}]}}, "steps": [[0.15, "appear", "hose", 0.2], [0.35, "glow", "lamp", true]]},
    {"kind": "radio", "prompt": "Call base", "box": [1.16, 1.14, -1.66, 2.16, 1.88, -0.58], "stand": [1.083, -0.731, -56], "clip": "radio", "sound": "call", "props": {"screen_l": {"at": [1.885, 1.742, -0.994], "rot": [0, 34, 0], "hidden": true, "clean": true, "meshes": [{"box": [0.004, 0.22, 0.38], "role": "light"}]}, "screen_r": {"at": [1.628, 1.742, -1.376], "rot": [0, 34, 0], "hidden": true, "clean": true, "meshes": [{"box": [0.004, 0.22, 0.38], "role": "light"}]}}, "steps": [[0.05, "glow", "screen_l", true], [0.15, "glow", "screen_r", true]]},
    {"kind": "suit_check", "prompt": "Suit check", "box": [-1.73, 1.8, -2.02, -1.09, 2.35, -1.46], "stand": [-0.954, -1.178, 39], "clip": "suit_check", "sound": "suit_check"},
-   {"kind": "brush", "prompt": "Brush off dust", "box": [-0.97, 1.29, -2.19, -0.82, 1.45, -2.03], "stand": [-0.605, -1.426, 23], "clip": "brush", "sound": "brush", "props": {"brush": {"hand": true, "hidden": true, "at": [0, 0.08, 0], "meshes": [{"cyl": [0.013, 0.3], "at": [0, 0.05, 0], "role": "trim"}, {"box": [0.05, 0.07, 0.1], "at": [0, 0.23, 0.02], "role": "trim"}]}}, "steps": [[0.05, "appear", "brush", 0.2], [0.35, "puff", "brush"], [0.6, "puff", "brush"]]},
+   {"kind": "brush", "prompt": "Brush off dust", "box": [
+    -1.35,
+    0.9,
+    -2.3,
+    -0.45,
+    1.85,
+    -1.6
+   ], "stand": [-0.605, -1.426, 23], "clip": "brush", "sound": "brush", "props": {"brush": {"hand": true, "hidden": true, "at": [0, 0.08, 0], "meshes": [{"cyl": [0.013, 0.3], "at": [0, 0.05, 0], "role": "trim"}, {"box": [0.05, 0.07, 0.1], "at": [0, 0.23, 0.02], "role": "trim"}]}}, "steps": [[0.05, "appear", "brush", 0.2], [0.35, "puff", "brush"], [0.6, "puff", "brush"]]},
    {"kind": "bed", "prompt": "Sleep", "box": [-1.66, 0.9, 0.42, -0.71, 1.45, 1.43], "stand": [-0.63, 0.49, 128], "clip": "", "sound": "curtain", "_why": "the lower berth (unit(berths, 218, 2.0) in forge/hab_interior.py): the air over its mattress, 1.25 to 1.75 m out along 218 degrees; E opens the sleep picker (cine/cine.gd)"}
   ],
   "shelter": [

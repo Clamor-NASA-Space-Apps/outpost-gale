@@ -197,7 +197,7 @@
   "check.sol10.c": "Night came early",
   "task.s13_dust": "Brush the dust off your suit",
   "sol13.morning": "Morning! Meet me outside. Mind the dust!",
-  "sol13.brush": "Dust all over you! Brush it off inside.",
+  "sol13.brush": "Dusty suit! Use the *brush* by the hatch.",
   "sol13.toxic": "Mars dust is likely toxic to breathe.",
   "sol13.why": "So we brush it off before coming in.",
   "task.s13_skip": "Skip the stormy sols",
