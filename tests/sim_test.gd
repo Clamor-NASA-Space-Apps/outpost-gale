@@ -49,13 +49,20 @@ func _rates() -> void:
 	near(-r.food_kg, 2 * p.food_kg.value * days, 1e-6, "food over a sol, 2 x 2.39 kg/d (row 112)")
 	near(r.dose_msv, p.dose_msv.value * days, 1e-6, "dose over a sol, 0.67 mSv/d (row 32)")
 	check(s.sol == 2 and is_equal_approx(s.hour, base.clock.start_hour.value), "a sol of 24 h 39 min brings the same hour back")
-	# the oxygen maker: 5.4 kg/d for 3.573 kW, 1.125 kg of water per kg (rows 74, 75, 106)
+	# the oxygen maker keeps the tanks full and no more: with full tanks it splits only the water for what the crew
+	# breathed, 1.125 kg a kg (row 106), and draws its standby plus that share of the rest (row 74); oxygen never climbs
+	# past full (14 Nov playtest: 115 kg of oxygen, the water gone)
 	var m := quiet()
 	m.apply("o2_maker_on")
+	var full: float = m.o2_kg
 	r = m.step(SOL)
-	near(r.o2_kg, (5.4 - 2 * 0.84) * days, 1e-6, "oxygen maker's net O2 over a sol")
-	near(-r.water_kg, (2 * 3.217 + 5.4 * 1.125) * days, 1e-6, "oxygen maker's water over a sol")
-	near(m.power_out_kw - quiet().power_out_kw, 3.573, 0.05, "oxygen maker draws 3.573 kW")
+	near(m.o2_kg, full, 1e-6, "with the maker on the tanks stay full")
+	near(-r.water_kg, (2 * 3.217 + 2 * 0.84 * 1.125) * days, 1e-6, "the maker's water over a sol: what the crew breathed")
+	near(float(m._power().o2_maker), 0.382 + (3.573 - 0.382) * 2 * 0.84 / 5.4, 1e-3, "and its draw for that rate")
+	m.o2_kg = full - 3.0  # tanks low: the maker runs at its full 5.4 kg a day until they are full again (row 75)
+	r = m.step(1.0)
+	near(r.o2_kg, (5.4 - 2 * 0.84) / 24.0, 1e-6, "with room in the tanks it makes 5.4 kg a day")
+	near(float(m._power().o2_maker), 3.573, 1e-6, "drawing 3.573 kW")
 	# water recycling returns 98% of what the crew used (rows 26, 127)
 	var w := quiet()
 	w.apply("recycler_on")
@@ -166,7 +173,7 @@ func _ledger() -> void:
 func _causes() -> void:
 	var s := quiet()
 	s.apply("moxie_on")  # 0.3 kW
-	s.apply("o2_maker_on")  # 3.6 kW and 6 kg of water a day
+	s.apply("o2_maker_on")  # with full tanks, about 1.4 kW and the water for what the crew breathes
 	s.apply("heater_low")  # saves power: never a cause
 	s.apply("greenhouse_on")  # 5.67 kW
 	s.start("flare_x12")
@@ -174,7 +181,7 @@ func _causes() -> void:
 	var top := s.top_causes(3)
 	var ids := top.map(func(e: Dictionary) -> String: return e.id)
 	check(top.size() == 3, "three causes")
-	check(ids[0] == "greenhouse_on" and ids[1] == "o2_maker_on", "the hungriest choices lead: %s" % [ids])
+	check(ids[0] == "greenhouse_on" and "o2_maker_on" in ids, "the hungriest choices lead: %s" % [ids])
 	check(not ("heater_low" in ids) and not ("moxie_on" in ids), "a saving and a small cost stay out: %s" % [ids])
 	check(top[0].harm >= top[1].harm and top[1].harm >= top[2].harm, "ranked by harm")
 	check(top[0].effect.energy_kwh < 0.0, "each cause carries its effect")

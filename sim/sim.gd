@@ -23,6 +23,7 @@ var outside := false
 var panel_dust := 0.0
 var tau := 1.0
 var crop_age_days := 0.0
+var make := {}  # water-splitting device -> its share of full rate (tanks full: it only tops them up, never past)
 var woke_sol := 1  # the sol of the last wake: the rules run on to the next sol's wake at most, and wait there for a sleep
 var knobs := {}
 var active: Array[Dictionary] = []  # running events: the template plus t0 (absolute hours) and log index
@@ -245,7 +246,9 @@ func _power() -> Dictionary:
 	var loads := {"hab": n("power", "hab_kw"), "heater": heater_kw()}
 	for dev: String in d.devices:
 		if knobs.get(dev, false):
-			loads[dev] = float(d.devices[dev].kw)
+			var spec: Dictionary = d.devices[dev]
+			var idle: float = float(spec.get("standby_kw", spec.kw))
+			loads[dev] = idle + (float(spec.kw) - idle) * float(make.get(dev, 1.0))
 	power_out_kw = 0.0
 	for k: String in loads:
 		power_out_kw += loads[k]
@@ -257,6 +260,7 @@ func _power() -> Dictionary:
 func _tick(dt: float) -> void:
 	var day := dt / 24.0
 	var crew := n("crew")
+	_throttle(day, crew)
 	var loads := _power()
 	# the battery takes the difference; when it runs dry, every load gets the share of power there is
 	var cap := n("power", "battery_kwh")
@@ -276,9 +280,9 @@ func _tick(dt: float) -> void:
 		if not d.devices.has(dev):
 			continue
 		var spec: Dictionary = d.devices[dev]
-		var fx := {"energy_kwh": -float(spec.kw) * served * dt}
+		var fx := {"energy_kwh": -float(loads[dev]) * served * dt}
 		if spec.has("o2_kg_day"):
-			var made: float = float(spec.o2_kg_day) * served * day
+			var made: float = float(spec.o2_kg_day) * float(make.get(dev, 1.0)) * served * day
 			fx["o2_kg"] = made
 			fx["water_kg"] = -made * float(spec.water_per_o2)
 		if spec.has("recover"):
@@ -286,6 +290,7 @@ func _tick(dt: float) -> void:
 		o2_kg += fx.get("o2_kg", 0.0)
 		water_kg += fx.get("water_kg", 0.0)
 		_charge(_cause.get(dev, -1), fx)
+	o2_kg = minf(o2_kg, n("start", "o2_kg"))  # the tanks are full: what the plants and MOXIE add past that is cabin air
 	# a heat choice costs only what it adds over the starting set point (or saves under it)
 	var base_heat := n("power", "heater_ua_kw_per_k") * maxf(n("knobs", "heater_c") - outside_c(), 0.0)
 	_charge(_cause.get("heater_c", -1), {"energy_kwh": -(loads.heater - base_heat) * served * dt})
@@ -306,6 +311,22 @@ func _tick(dt: float) -> void:
 		suit_air_min = maxf(suit_air_min - dt * 60.0, 0.0)
 	for m: String in METERS:
 		set(m, maxf(get(m), 0.0))
+
+
+## How hard each water-splitting oxygen maker runs this tick: only enough to keep the oxygen tanks full (they landed
+## full, start.o2_kg) against what the crew breathes and the water-free makers add. A real maker is set to the crew's
+## need (the ISS one runs 2.3 to 9.2 kg a day, row 75); at full rate for 2 crew it split water into oxygen with nowhere
+## to go (14 Nov playtest: 115 kg of oxygen, the water gone).
+func _throttle(day: float, crew: float) -> void:
+	var room := n("start", "o2_kg") - o2_kg + n("per_person_day", "o2_kg") * crew * day
+	for dev: String in d.devices:
+		var spec: Dictionary = d.devices[dev]
+		if knobs.get(dev, false) and float(spec.get("water_per_o2", 0.0)) <= 0.0:
+			room -= float(spec.get("o2_kg_day", 0.0)) * day
+	for dev: String in d.devices:
+		var spec: Dictionary = d.devices[dev]
+		if float(spec.get("water_per_o2", 0.0)) > 0.0:
+			make[dev] = clampf(room / (float(spec.o2_kg_day) * day), 0.0, 1.0) if knobs.get(dev, false) else 0.0
 
 
 ## Starts scheduled events that are due, ends finished ones, and sets the sky's opacity.

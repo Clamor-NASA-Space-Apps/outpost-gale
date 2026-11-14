@@ -20,7 +20,7 @@
   "dose_msv": {"value": 0.67, "factcheck": "row 32 (Curiosity RAD at Gale, 2012 to 2013)"}
  },
  "start": {
-  "o2_kg": {"value": 54, "factcheck": "row 163's rate, our maths for 2 crew to the end of Sol 31, the launch (0.84 x 2 x 31.85 Earth days); 30 sols' worth ran out on the morning of the launch", "placeholder": true},
+  "o2_kg": {"value": 54, "factcheck": "row 163's rate, our maths for 2 crew to the end of Sol 31, the launch (0.84 x 2 x 31.85 Earth days); 30 sols' worth ran out on the morning of the launch. The tanks land full with it (row 132: tanked high-pressure gas; one ISS oxygen tank holds about 94.3 kg, row 159), so it is also the most they hold: an oxygen maker only tops them up", "placeholder": true},
   "water_kg": {"value": 205, "factcheck": "row 163's rate, our maths for 2 crew to the end of Sol 31 (3.217 x 2 x 31.85 Earth days)", "placeholder": true},
   "food_kg": {"value": 153, "factcheck": "row 112, our maths to the end of Sol 31 (2.39 x 2 x 31.85 Earth days)", "placeholder": true},
   "battery_pct": {"value": 100, "factcheck": "story", "placeholder": true},
@@ -45,7 +45,7 @@
   "low_hour": {"value": 5.5, "unit": "local h", "factcheck": "row 11 (coldest before dawn; the hour is our pick)"}
  },
  "devices": {
-  "o2_maker": {"kw": 3.573, "o2_kg_day": 5.4, "water_per_o2": 1.125, "factcheck": "rows 74, 75 (ISS oxygen maker), 106 (water per kg O2, warning: inferred)"},
+  "o2_maker": {"kw": 3.573, "standby_kw": 0.382, "o2_kg_day": 5.4, "water_per_o2": 1.125, "factcheck": "row 74 (ISS oxygen maker: 3,573 W making O2, 382 W standby; the draw in between scales with its rate, our assumption for electrolysis), row 75 (5.4 kg O2 a day at full rate, the most it makes here; it runs only to keep the tanks full, sim._throttle), row 106 (1.125 kg water per kg O2: the chemistry, 36 g of water to 32 g of O2)"},
   "moxie": {"kw": 0.3, "o2_kg_day": 0.24, "water_per_o2": 0, "factcheck": "row 57 (300 W, up to 10 g O2 an hour, run all day here)"},
   "greenhouse": {"kw": 5.67, "o2_kg_day": 0.021, "water_per_o2": 0, "factcheck": "rows 66, 67 (1.35 m2 salad per person at 2.1 kW/m2 of lamps, warning: pre-LED), 64 (lettuce 7.78 g O2/m2 a day)"},
   "recycler": {"kw": 0.767, "recover": 0.98, "factcheck": "row 128 (water 343 W + urine 424 W processing, warning: pre-flight), rows 26, 127 (98% recovered)"}
