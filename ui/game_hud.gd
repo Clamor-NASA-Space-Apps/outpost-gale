@@ -14,6 +14,7 @@ signal cue(name: String)  # a HUD sound: audio.ui(name)
 signal map_toggled(open: bool)
 signal marked(at: Variant, id: String)  # the kid's own map mark set (world x, z; a place id or "") or cleared (null)
 signal dismissed(line_id: String)  # a fact line (say(id, {fact = true})) closed by Enter or a tap
+signal checked(id: String)  # a check answered right (design/plans/mission-1-contracts.md)
 
 const Hud := preload("res://ui/hud.gd")
 const Delay := preload("res://ui/radio_delay.gd")
@@ -746,3 +747,21 @@ func snapshot() -> Dictionary:
 		"mail": {"sent": mail.sent_label.text, "reply": mail.reply_label.text, "minutes": snappedf(mail.minutes, 0.1)} if mail.visible else {},
 		"card": String(card.name) if card else "",
 	}
+
+
+# Stand-ins for lane U (design/plans/mission-1-contracts.md): the names the root wires, so every lane's check runs
+# before the real ones land.
+func unlock_page(_id: String) -> void:
+	pass
+
+
+func offer_check(check: Dictionary) -> void:
+	checked.emit.call_deferred(check.id)
+
+
+func open_handbook(_page := "") -> void:
+	pass
+
+
+func log_decision(_title: String, _choice: String) -> void:
+	pass
