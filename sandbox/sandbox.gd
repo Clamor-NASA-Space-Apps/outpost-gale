@@ -14,6 +14,7 @@ const SimNode := preload("res://sim/sim_node.gd")
 const Beats := preload("res://cine/beats.gd")
 const Cine := preload("res://cine/cine.gd")
 const GameHud := preload("res://ui/game_hud.tscn")
+const Hud := preload("res://ui/hud.gd")
 # sky states: DESIGN.md and its DESIGN.<state>.md siblings, as token files; the sky clock blends them by the sun
 const SKIES := ["design", "design.sunset", "design.night", "design.storm"]
 const SKY_PHASES := ["noon", "dusk", "night", "storm"]  # where _sky(i) puts the clock: each key at its own look
@@ -64,6 +65,7 @@ var cine: Cine  # cine/cine.gd: sleep, rover trips, the launch
 var trip_km := 8.8  # the last rover trip's distance, for its title card and the drive home
 var lamp_hinted := false  # PIP explains the helmet lights once, the first time they come on by themselves
 var offers := {}  # data/beats.json `offers`: what each choice card holds and which rules it sets
+var lost := false  # a meter ran out: the mission-lost card is up and the rules stop
 
 
 func _ready() -> void:
@@ -163,7 +165,7 @@ func _process(_delta: float) -> void:
 	# time waits while the player cannot act: the look clock and the rules alike
 	clock.paused = settings.is_open() or cover.visible or hud.is_open() or hud.map_open()
 	clock.paused = clock.paused or sim.sim.awake_left() <= 0.0  # up all night: the sky waits at dawn with the rules
-	sim.paused = clock.paused or cine.busy() or beats.holds_clock  # the opening holds the sky at dawn: the HUD hour waits with it
+	sim.paused = clock.paused or cine.busy() or beats.holds_clock or lost  # the opening holds the sky at dawn: the HUD hour waits with it
 	hud.visible = not settings.is_open()
 	hud.show_prompt(interactions.prompt_label.text.trim_prefix("[E]  "))  # empty when nothing is in reach; the HUD draws its own E key
 	if not cine.busy():
@@ -270,6 +272,18 @@ func set_graphics(level: String, over: Dictionary, restyle := true, warm := true
 		_restyle()
 	if warm:
 		_warm()
+
+
+## A meter at 0 is the end, PG (design/story.md section 3): Mission Control calls the crew home and the card shows the
+## three choices that cost most (sim.top_causes), or what ran out when no choice did. Never a silent 0% (14 Nov
+## playtest: Sol 39 with life support at 0% and nothing happening).
+func _lose(failing: Array) -> void:
+	lost = true
+	beats.skip()
+	var causes: Array = sim.sim.top_causes(3)
+	if causes.is_empty():
+		causes = failing.map(func(k: String) -> String: return "%s ran out" % Hud.KEYS.get(k, ["", k])[1])
+	hud.show_causes(causes)
 
 
 ## Every shader the scene can show compiles now, behind the cover, not on its first sight in play (the web build keeps
@@ -483,7 +497,10 @@ func _wire() -> void:
 			beats.notify("mail_arrived"))
 	sim.changed.connect(func(st: Dictionary) -> void:
 		for e: Dictionary in st.events:
-			beats.notify("event:" + String(e.id)))
+			beats.notify("event:" + String(e.id))
+		if not st.failing.is_empty() and not lost:
+			_lose(st.failing))
+	hud.retry.connect(func() -> void: get_tree().reload_current_scene())  # "try again from the start" (typical-day.md)
 	player.lamps_changed.connect(func(on: bool, auto: bool) -> void:
 		if on and auto and not lamp_hinted:
 			lamp_hinted = true

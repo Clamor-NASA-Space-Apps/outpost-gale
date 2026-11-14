@@ -172,5 +172,13 @@ func play() -> bool:
 		await process_frame
 	# Sol 10's wake sleeps through 10 and 11 itself (skip:2): it starts on Sol 10 and lands on 12
 	check(beats.sequence == "sol10" and at_start[0] == 12, "after the key 6 day the next is Sol 10 (%s, sol %d at its start, %d now)" % [beats.sequence, at_start[0], sim.sol])
+	# a meter at 0 leads somewhere, PG: the mission-lost card with what led there, the day's beats stop, the rules wait
+	# (14 Nov playtest: life support at 0% and nothing happened)
+	check(not game.lost, "no mission lost while the meters hold")
+	sim.water_kg = 0.0
+	game.sim.use("drink")  # any change: the node tells the HUD and the root
+	await frames(2)
+	check(game.lost and game.hud.card != null and game.hud.card.has_signal("retry"), "water at 0 puts the mission-lost card up")
+	check(beats.sequence == "" and game.sim.paused, "the beats stop and the rules wait")
 	game.queue_free()
 	return true
