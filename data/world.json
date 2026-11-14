@@ -572,13 +572,13 @@
   "devils": [[135, 0.0, 1.0], [105, 1.7, 0.8], [160, 3.3, 1.2], [118, 4.7, 0.9]]
  },
  "probe": {
-  "_note": "one reflection probe over the base: centre [x, z], size [x, y, z]. The sandbox redraws every probe from this centre looking north after a sky switch (HouseStyle.warm()), and a probe is drawn only once a camera sees it: the centre sits 10 m south of HAB 1 so the room probes are in view. rooms: an item's own probe, centre `at` and `size` in its space (HAB 1: the room between the deck at 0.40 m and the ceiling at 2.72 m; the greenhouse: the dome, `interior` false so its glass shows the sky). light: the room's own light (world.gd restyle(), DESIGN.md lighting.room), at `at` in the item's space with its `range` in m and `color` a DESIGN.md colour name (default lighting.room.color), `share` of lighting.room.intensity (default 1; the grow light at full strength turned the greenhouse floor magenta by day): HAB 1's at the ceiling's middle, the greenhouse's the grow light at the rack tops in the `grow` magenta. The storm shelter: the room between its floor at 0.06 m and its ceiling at 2.5 m, the light under its ceiling panel. It stands west of this centre, out of the warm-up camera's view, so its probe is drawn the first time the play camera sees it",
+  "_note": "one reflection probe over the base: centre [x, z], size [x, y, z]. The sandbox redraws every probe from this centre looking north after a sky switch (HouseStyle.warm()), and a probe is drawn only once a camera sees it: the centre sits 10 m south of HAB 1 so the room probes are in view. rooms: an item's own probe, centre `at` and `size` in its space (HAB 1: the room between the deck at 0.40 m and the ceiling at 2.72 m; the greenhouse: the dome, `interior` false so its glass shows the sky). light: the room's own light (world.gd restyle(), DESIGN.md lighting.room), at `at` in the item's space with its `range` in m and `color` a DESIGN.md colour name (default lighting.room.color), `share` of lighting.room.intensity (default 1; the grow light at full strength turned the greenhouse floor magenta by day): HAB 1's and the shelter's in the middle of the room, between floor and ceiling (14 Nov playtest: hung 10 to 17 cm under the ceiling, it lit a hot spot round the panels and left the walls and floor dim at night), the greenhouse's the grow light at the rack tops in the `grow` magenta. The storm shelter: the room between its floor at 0.06 m and its ceiling at 2.5 m. It stands west of this centre, out of the warm-up camera's view, so its probe is drawn the first time the play camera sees it",
   "pos": [4, 10],
   "size": [80, 30, 80],
   "rooms": {
-   "hab1": {"at": [0, 1.56, 0], "size": [4.8, 2.36, 4.8], "light": {"at": [0, 2.55, 0], "range": 4.0}},
+   "hab1": {"at": [0, 1.56, 0], "size": [4.8, 2.36, 4.8], "light": {"at": [0, 1.65, 0], "range": 4.0}},
    "greenhouse": {"at": [0, 2.0, 0], "size": [6.8, 3.8, 6.8], "interior": false, "light": {"at": [0, 2.1, 0], "range": 3.5, "color": "growlight", "share": 0.6}},
-   "shelter": {"at": [0, 1.28, 0], "size": [4.0, 2.44, 3.5], "light": {"at": [0, 2.4, 0], "range": 4.5}}
+   "shelter": {"at": [0, 1.28, 0], "size": [4.0, 2.44, 3.5], "light": {"at": [0, 1.35, 0], "range": 4.5}}
   }
  },
  "pip": {

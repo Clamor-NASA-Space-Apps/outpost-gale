@@ -31,6 +31,9 @@ const VIEWS := {
 	"gh_rack": ["greenhouse", Vector3(0.1, 1.75, 0.6), Vector3(1.25, 1.0, -0.2)],
 	"gh_rack_top": ["greenhouse", Vector3(0.4, 2.3, 0.2), Vector3(1.25, 1.55, -0.2)],
 	"hab_hatch": ["hab1", Vector3(0.3, 1.8, 0.0), Vector3(-0.9, 1.3, -2.1)],
+	# the signs (neon proposal, 14 Nov): the shelter's over its door, a battery bank's front
+	"sh_sign_out": ["shelter", Vector3(0.6, 2.3, -5.0), Vector3(0, 2.6, -2.2)],
+	"sign_power": ["battery", Vector3(0.3, 1.5, -2.4), Vector3(-0.15, 0.9, 0)],
 }
 ## The proposal's numbers: the lighting.room colour as an LED panel, and the share of the rooms' ambient kept
 const LAMP := "#f4efe6"

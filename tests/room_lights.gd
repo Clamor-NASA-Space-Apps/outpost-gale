@@ -1,9 +1,9 @@
 extends "res://addons/forge/test.gd"
-## Every room is lit by its own light, at noon and at night, on every quality preset (14 Nov playtest: HAB 1 at
-## night had glowing ceiling panels and no light). Pictures, so under xvfb, not headless:
+## Every room is lit by its own light, at noon, at night and in the storm, on every quality preset (14 Nov playtest:
+## HAB 1 at night had glowing ceiling panels and no light):
 ##   godot --headless --path . --fixed-fps 60 -s tests/room_lights.gd          (every preset and sky: the lights' state)
 ##   xvfb-run -a godot --display-driver x11 --path . --fixed-fps 60 -s tests/room_lights.gd -- pixels   (the laptop
-##   preset at noon and night, and the floor's pixels too: software GL draws a few frames a second)
+##   preset in each sky, and the floor's pixels too: software GL draws a few frames a second)
 ## For each room: its RoomLight is visible, at its full energy, on the rooms' layer only, and (pixels) the floor in the
 ## play view is brighter with it than with it masked off for a frame.
 
@@ -21,7 +21,7 @@ func play() -> bool:
 	root.add_child(game)
 	await _settle(game)
 	var pixels := "pixels" in OS.get_cmdline_user_args()
-	for sky: int in [0, 2]:  # noon and night (sandbox SKIES)
+	for sky: int in [0, 2, 3]:  # noon, night and the storm (sandbox SKIES)
 		for level: String in (["laptop"] if pixels else game.design.quality.keys()):
 			print("  %s, %s" % [game.SKIES[sky], level])
 			game.set_graphics(level, {}, true, false)  # no warm-up: a compile in a test only costs time
@@ -43,6 +43,21 @@ func play() -> bool:
 				var dark := await _floor(game)
 				l.light_cull_mask = ROOMS
 				check(lit - dark > LIFT, "%s: the floor is lit by the room light (%.3f with it, %.3f without)" % [what, lit, dark])
+	# a night's sleep dims HAB 1's light for the time-lapse (cine.gd _room_light): it is back once the hero is up
+	print("  after a night's sleep")
+	game.set_view("hab_room")
+	await frames(10)
+	game.cine.sleep(&"night")
+	await frames(5)
+	for i in 60 * 120:
+		if game.cine.beat == "":
+			break
+		await frames(1)
+	check(game.cine.beat == "", "the sleep ended (beat '%s')" % game.cine.beat)
+	await frames(45)
+	var hab: OmniLight3D = game.world.items["hab1"].get_node("RoomLight")
+	check(hab.visible and hab.light_energy > 0.0 and is_equal_approx(float(hab.get_meta("energy")), float(hab.get_meta("full", hab.get_meta("energy")))),
+		"after a sleep HAB 1's light is back at full (energy %.2f, meta %.2f of %.2f)" % [hab.light_energy, float(hab.get_meta("energy")), float(hab.get_meta("full", -1.0))])
 	return true
 
 
