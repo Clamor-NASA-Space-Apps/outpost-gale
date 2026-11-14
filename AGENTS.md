@@ -60,6 +60,10 @@ Its own repo. Commits signed off (`git commit -s`), prefixed by area, ending wit
   physics and render all under 2 ms on them: outside the game (the window or the desktop), so rerun before chasing them.
 - Hero recipe: small separate pieces (a patch, lettering) joined into the suit before `ARMATURE_AUTO` made the heat
   solve fail (2,889 unweighted vertices, a crumpled sleeve in play): join them after skin() and make them rigid.
+- Hero recipe: the suit is one hull. From the waist to the neck the pack's sides are the suit's back (no wall between
+  them), and the visor's chin rim rests on suit vertices. Cutting the pack free (`split_edges`) opened a hole the sky
+  showed through whenever the look layer turned the chest; pin the seam's vertices to the hard part's bone and let the
+  cloth beside it stretch. Films must cull back faces (hero_films.py does), or a hole shows the suit's inside and hides.
 - `feel-probe --film` draws every row of the run under xvfb, and the sandbox timed out at 300 s: film one row with
   `--only <id> --film <id>`, and check pass/fail headless without `--film`.
 - A script set on an item after it entered the tree (interactions.gd puts rover.gd on the rover's body) never gets

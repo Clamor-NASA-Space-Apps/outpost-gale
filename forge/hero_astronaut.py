@@ -286,13 +286,24 @@ def skin(o, arm):
     for p in me.polygons:
         for i in p.vertices:
             vrole.setdefault(i, set()).add(roles[p.material_index])
+    # From the waist to the neck the pack's sides are the suit's back: one hull, no wall between them. So the pack is
+    # never cut free (cut, it opened a hole you could see the sky through at every turn of the chest, 14 Nov). Every
+    # vertex of a pack face follows spine_03 whole, the seam included, and the suit's cloth next to it takes the stretch.
+    bm = bmesh.new()
+    bm.from_mesh(me)
+    pack = {v.index for f in pack_faces(bm) for v in f.verts}
+    bm.free()
+    # the visor's chin rim rests on suit vertices below the helmet: left to the neck, they stayed behind when the
+    # helmet looked up and the ground showed under the visor
+    rim = [v.co for v in me.vertices if "visor" in vrole.get(v.index, ())]
     groups = {}
     for v in me.vertices:
         c, r, s = v.co, vrole.get(v.index, set()), "l" if v.co.x > 0 else "r"
-        if "visor" in r or (c.z > HELMET_Z and c.y < PACK_Y and ("body" in r or "metal" in r)):
+        if "visor" in r or (c.z > HELMET_Z and c.y < PACK_Y and ("body" in r or "metal" in r)) \
+                or any((c - p).length < 1e-3 for p in rim):
             bone = "Head"
-        elif r == {"body"} and c.y > 0.1 or in_dcm(c, 0.01):
-            bone = "spine_03"  # the backpack (cut free of the suit in free_pack()) and the chest unit are bolted to the hard upper torso
+        elif v.index in pack or in_dcm(c, 0.01):
+            bone = "spine_03"  # the backpack and the chest unit are bolted to the hard upper torso
         elif abs(c.x) > GLOVE_X - 0.02:
             bone = "hand_" + s
         elif c.z < BOOT_Z:
@@ -315,26 +326,6 @@ def skin(o, arm):
     bpy.ops.object.vertex_group_limit_total(limit=4)
     bpy.ops.object.vertex_group_normalize_all(lock_active=False)
     return len(bare)
-
-
-def free_pack(o, arm):
-    """The weld joined the pack to the suit where they touch, and a vertex on that seam can carry only one set of
-    weights, so the pack's faces next to it bent with the hips. Cut the pack free (after the automatic weights, which
-    fail on a loose piece: see Gotchas) and bolt every pack vertex to spine_03. Returns how many pack vertices
-    sit where the seat or a thigh is (front of y 0.186, within the hips): only the lower box's wrap-round should."""
-    bm = bmesh.new()
-    bm.from_mesh(o.data)
-    pack = pack_faces(bm)
-    bmesh.ops.split_edges(bm, edges=[e for e in bm.edges if len({f in pack for f in e.link_faces}) > 1])
-    bm.verts.index_update()
-    vs = {v for f in pack for v in f.verts}
-    idx = sorted(v.index for v in vs)
-    near = sum(1 for v in vs if v.co.y < 0.186 and v.co.z < 0.95 and abs(v.co.x) < 0.24)
-    bm.to_mesh(o.data)
-    bm.free()
-    rigid(o, arm, {"spine_03": idx})
-    print("HERO pack faces", len(pack), "verts", len(idx), "in front of the pack face", near)
-    return near
 
 
 def build():
@@ -361,7 +352,6 @@ def build():
     suit.name = "astronaut"
     smooth(suit, 40)
     bare = skin(suit, arm)
-    free_pack(suit, arm)
     # the team's patch on the left arm, between the shoulder and the orange band; no insignia (AGENTS.md). Joined after
     # the automatic weights: its small separate pieces made the heat solve fail and crumpled the sleeve
     sh, el = joint("shoulder", "l"), joint("elbow", "l")
@@ -375,6 +365,12 @@ def build():
     rigid(suit, arm, marks)
     bpy.context.view_layer.objects.active = suit
     bpy.ops.object.vertex_group_normalize_all(lock_active=False)
+    # two vertices on one spot with different weights are a seam that opens when a bone turns: there must be none
+    at = {}
+    for v in suit.data.vertices:
+        at.setdefault(tuple(round(x, 4) for x in v.co), set()).add(
+            tuple(sorted((g.group, round(g.weight, 2)) for g in v.groups if g.weight > 0.01)))
+    assert all(len(w) == 1 for w in at.values()), "HERO seam: vertices on one spot with different weights"
     print("HERO tris", sum(len(p.vertices) - 2 for p in suit.data.polygons), "verts", len(suit.data.vertices),
           "unweighted fixed", bare, "bones", len(arm.data.bones))
     return suit, arm, src

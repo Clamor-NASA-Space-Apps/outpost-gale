@@ -28,6 +28,7 @@ sc.render.engine = "BLENDER_WORKBENCH"
 sc.render.resolution_x, sc.render.resolution_y = 300, 420
 sh = sc.display.shading
 sh.light, sh.color_type, sh.show_cavity, sh.show_shadows = "STUDIO", "MATERIAL", True, True
+sh.show_backface_culling = True  # as the game draws it: a hole in the suit shows what is behind, not its inside
 floor_m = bpy.data.materials.new("floor")
 floor_m.diffuse_color = (0.55, 0.38, 0.28, 1)
 mark_m = bpy.data.materials.new("mark")
