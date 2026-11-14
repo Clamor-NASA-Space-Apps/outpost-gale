@@ -168,6 +168,9 @@ func _tours(world: Node3D, player: Node3D, pip: Node3D) -> void:
 	t = await _tour(world, player, pip, Vector2(4.2, -1.6), false, false)
 	var back: float = Vector2(pip.global_position.x - player.body.global_position.x, pip.global_position.z - player.body.global_position.z).length()
 	check(not t.arrived and pip.state == "behind" and back < 6.0, "a kid who stays behind is waited for (%s, %.1f m on)" % [pip.state, back])
+	# out of its reach and nearer the goal, standing (a short cut): PIP comes, it does not wait behind them
+	t = await _tour(world, player, pip, Vector2(1.0, -12.0), false, false)
+	check(t.waited.is_empty() and t.lead_s < 12.0, "a kid who went ahead by another way is not waited for from behind: PIP passes and leads (%s, in the lead after %.1f s)" % [t.waited, t.lead_s])
 	check(t.hits == 0 and pip.gave_up == gave, "no overlap and no order given up on the tours (%d frames, %d)" % [t.hits, pip.gave_up - gave])
 	pip.release()
 
@@ -187,7 +190,7 @@ func _tour(world: Node3D, player: Node3D, pip: Node3D, from: Vector2, hurry: boo
 	pip.arrived.connect(func() -> void: out.arrived = true, CONNECT_ONE_SHOT)
 	pip.order(Vector3(goal.x, 0.0, goal.y), Vector3.INF, false, Vector3(b.lead_wait_m, b.lead_resume_m, b.lead_near_m))
 	var there := INF  # s when the hero stopped short of the goal
-	for i in 60 * (40 if go else 12):
+	for i in 60 * (40 if go else 20):
 		await frames(1)
 		var h := Vector2(player.body.global_position.x, player.body.global_position.z)
 		var q := Vector2(pip.global_position.x, pip.global_position.z)

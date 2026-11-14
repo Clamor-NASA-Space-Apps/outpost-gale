@@ -537,6 +537,10 @@ func _wire() -> void:
 	beats.setup(world, player, interactions, clock)
 	interactions.used.connect(beats.used)
 	beats.line.connect(hud.say)
+	# free time: PIP's "sleep when you're ready" does not hang over the bed's own prompt (14 Nov playtest)
+	beats.beat_done.connect(func(id: String) -> void:
+		if id == "sleep_hint":
+			hud.clear_line())
 	beats.finished.connect(func(_s: String) -> void: hud.clear_line())  # PIP's last "This way!" stayed up for good
 	offers = JSON.parse_string(FileAccess.get_file_as_string("res://data/beats.json")).get("offers", {})
 	offers.erase("_note")  # a string: the chosen handler below called .get() on it and a click on a choice did nothing

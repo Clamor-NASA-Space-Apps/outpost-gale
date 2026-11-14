@@ -14,7 +14,7 @@ const BUDGET := {"wake": 40, "outside": 4, "pip_hello": 6, "walk_to_me": 20,
 	"side_steps": 10, "back_step": 4, "look_mouse": 6, "try_jump": 4, "jump_fact": 6,
 	"follow_solar": 120, "sun_fact": 6, "o2_visit": 120, "tanks_fact": 6, "maker_fact": 6,
 	"garden_visit": 180, "garden_fact": 6, "air_check": 2, "choice": 2,
-	"day_done": 120, "sleep_hint": 2, "free": 3}
+	"day_done": 120, "sleep_hint": 6, "free": 3}
 # the handbook pages Sol 1 unlocks, in the order the kid meets them (design/plans/mission-1-contracts.md)
 const PAGES: Array[String] = ["thin_air", "pip", "light_on_mars", "weak_sun", "solar_wings", "air_tanks", "air_maker", "garden", "cold_nights"]
 const TASKS: Array[String] = ["task.step_outside", "task.learn_moves", "task.tour_base", "task.choose_power", "task.sleep"]
@@ -288,7 +288,7 @@ func play() -> bool:
 		return text == "" or text.split(" ", false).size() > 8 or text.count("*") not in [0, 2, 4])
 	check(long.is_empty(), "every line of Sol 1 is 8 words at most, two highlights at most (%s)" % [long])
 	var stops: Array = beats.data.opening.filter(func(b: Dictionary) -> bool: return b.get("fact", false)).map(func(b: Dictionary) -> String: return b.id)
-	check(stops == ["sleep_hint"], "no teaching line stops the game (%s)" % [stops])
+	check(stops.is_empty(), "no line stops the game, the sleep hint included (%s)" % [stops])
 	await frames(120)
 	check(pip.state != "behind" and not pip.leading, "and it no longer waits for the hero (%s)" % pip.state)
 

@@ -865,8 +865,9 @@ func _top() -> float:
 
 ## How far the hero is behind PIP on the way, in metres: the gap between them, or, where PIP is making for its goal,
 ## how much farther from the goal the hero is, if that is less: about zero for a kid level with it, below zero for
-## one ahead. On a leg round something (more than 60 degrees off the goal) only the gap counts: there a kid right
-## behind it can be the nearer of the two, and it drove on and left them (sols_test, the way back from the reactor).
+## one ahead. On a leg round something (more than 60 degrees off the goal) only the gap counts for a kid within its
+## reach: there a kid right behind it can be the nearer of the two, and it drove on and left them (sols_test, the way
+## back from the reactor).
 func _lag() -> float:
 	var flat := Vector3(1.0, 0.0, 1.0)
 	var hero := _hero() * flat
@@ -874,9 +875,15 @@ func _lag() -> float:
 	var goal := target * flat
 	var aim: Vector3 = (_path[0] if _path.size() else target) * flat
 	var gap := hero.distance_to(at)
+	var nearer := hero.distance_to(goal) - at.distance_to(goal)
+	# out of its reach and nearer the goal: the kid went on by another way (a short cut its own way round something
+	# does not take), so they are ahead whichever way it points. On a leg round the rover it waited 7 m back for a kid
+	# already standing at the air maker (14 Nov playtest, "he's still waiting")
+	if gap > lead_m.x and nearer < 0.0:
+		return nearer
 	if at.direction_to(aim).dot(at.direction_to(goal)) < 0.5:
 		return gap
-	return minf(gap, hero.distance_to(goal) - at.distance_to(goal))
+	return minf(gap, nearer)
 
 
 ## How much a flat direction points along its heading (1 ahead, -1 behind).
