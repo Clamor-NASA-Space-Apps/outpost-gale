@@ -130,6 +130,9 @@ func set_view(v: String) -> void:
 					game.interactions.use(it)
 			player.cam.lens.make_current()
 			_hold = 1.5
+		"top":  # the base straight down from 90 m, north up: a fixed frame, for pictures before and after a layout change
+			cine.cam.look_at_from_position(Vector3(0.0, 90.0, 0.0), Vector3(0.0, 0.0, 0.0), Vector3.FORWARD)
+			cine.cam.make_current()
 		"hatch":  # out of HAB 1's open hatch at eye height, straight along the door's way (the sunrise, since 14 Nov)
 			for it: Node in get_tree().get_nodes_in_group("interactable"):
 				if it.kind == "door" and hab.is_ancestor_of(it) and not it.open:
