@@ -660,14 +660,15 @@ func _answer(i: int) -> void:
 		checked.emit(c.id)
 		return
 	say("check.wrong")
+	card.mark(i)  # a cross stays on the answer tried
 	if not card.book_button:
 		return
 	for b: Button in card.buttons:
 		b.disabled = true  # no second answer while PIP's line is read
-	var k := card
+	var k := card.get_instance_id()  # not the card: freed before the timer, it comes back null, as "no card" does
 	get_tree().create_timer(WRONG_S).timeout.connect(func() -> void:
-		if card == k:  # still this check
-			for b: Button in k.buttons:
+		if card and card.get_instance_id() == k:  # still this check
+			for b: Button in card.buttons:
 				b.disabled = false
 			open_handbook(c.pages[0]))
 
@@ -745,6 +746,8 @@ func show_causes(list: Array) -> void:
 
 ## Every number on screen and where it comes from.
 func show_sources() -> void:
+	if side_card:
+		return  # a question waits for its answer: this card would take its place and the day would never go on
 	var s := state
 	var rows: Array = [
 		["battery", "Battery %d%%" % meters.power.value, SOURCES.battery_pct, ""],
@@ -767,6 +770,9 @@ func show_sources() -> void:
 
 
 func close_card() -> void:
+	if side_card:
+		for p: Control in _under():
+			p.modulate.a = 1.0
 	if card:
 		card.name = &"Closed"  # freed at the frame's end: the next card in the same parent keeps its own name (snapshot)
 		card.queue_free()
@@ -814,11 +820,17 @@ func _open(c: Control, full := false, side := false) -> void:
 	_focus_card()
 
 
+## The HUD parts a side card can lie on.
+func _under() -> Array:
+	return [status, tasks, toast, note, minimap, gear_slot.get_parent(), mail, prompt, compass]
+
+
 ## Keys and a gamepad work on the open card at once.
 func _focus_card() -> void:
 	var b: Array = card.find_children("*", "Button", true, false) if card else []
 	if b:
-		(b[0] as Button).grab_focus.call_deferred()
+		# held but not drawn until a key moves it: a lit first row read as the answer already picked
+		(b[0] as Button).grab_focus.call_deferred(true)
 
 
 ## A choice stands in a side third, mid height, on the side away from PIP's bubble; if the bubble still reaches it
@@ -860,6 +872,10 @@ func _process(delta: float) -> void:
 	waypoint.below = objective_node != null and objective_node == pip and bubble.visible and not bubble.docked
 	if card and side_card:
 		_place_side()
+		# what the card stands on goes while it is up: through its glass the minimap's words ran across the question
+		var r := card.get_global_rect()
+		for p: Control in _under():
+			p.modulate.a = 0.0 if p.get_global_rect().intersects(r) else 1.0
 	_follow_view()
 	if toast.visible:
 		_toast_left -= delta

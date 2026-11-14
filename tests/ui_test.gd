@@ -152,6 +152,9 @@ func _mission() -> void:
 	sorted.sort()
 	check(h.snapshot().card == "EventCard" and h.modal.visible and not h.handbook.visible and shown == want and sorted == [0, 1, 2],
 		"the handbook closed, the check card shows its three options in the card's order: %s %s" % [shown, h.card.order])
+	await _glass(h, "the check card")
+	h.source_button.pressed.emit()
+	check(h.snapshot().check == "t1" and h.snapshot().card == "EventCard", "the '?' leaves a question in place: %s" % h.snapshot().card)
 	h.card.book.pressed.emit()
 	await frames(2)
 	check(h.handbook.visible and not h.modal.visible, "the card's Handbook button opens the handbook over it")
@@ -159,6 +162,8 @@ func _mission() -> void:
 	await frames(2)
 	h.card.buttons[h.card.order.find(0)].pressed.emit()  # wrong
 	check(h.snapshot().subtitle == h.line("check.wrong") and done.is_empty() and h.is_open(), "a wrong answer: PIP says '%s', nothing is emitted" % h.snapshot().subtitle)
+	var crossed: Array = h.card.buttons.filter(func(k: Button) -> bool: return k.has_node("Row/Mark"))
+	check(crossed == [h.card.buttons[h.card.order.find(0)]], "the answer tried carries a cross, a sign and not a colour")
 	await create_timer(h.WRONG_S + 0.2).timeout
 	check(h.handbook.visible and h.snapshot().handbook.page == "air_tanks", "then the page opens again: %s" % [h.snapshot().handbook])
 	h.handbook.close()
@@ -169,6 +174,7 @@ func _mission() -> void:
 	var learned: Array = h.snapshot().handbook.learned
 	check(done == ["t1"] and not h.is_open() and h.snapshot().check == "" and "air_tanks" in learned and "garden" in learned,
 		"the right answer emits checked once, stamps its pages and closes: %s %s" % [done, learned])
+	check(h._under().all(func(p: Control) -> bool: return p.modulate.a == 1.0), "the HUD under the card is back when it closes")
 	# a decision: what each option gains and loses, with its sign, and a way to the handbook
 	h.offer_choice("choice_power_morning", [{"text": "follow_me", "gain": "spare air", "lose": "the lettuce waits a day"},
 		{"text": "Rest", "gain": "*more* power", "lose": "less air", "costs": {"battery_pct": -20}}], ["garden"])
@@ -177,6 +183,7 @@ func _mission() -> void:
 	check("+ spare air" in rows and "- the lettuce waits a day" in rows and "+ more power" in rows and "-20 %" in rows, "a decision shows each gain and loss with its sign: %s" % [rows])
 	check(h.card.buttons.all(func(k: Button) -> bool: return k.size.y >= Hud.BUTTON_H and k.get_global_rect().encloses((k.get_child(0) as Control).get_global_rect())),
 		"each option holds its rows and stays a touch target")
+	await _glass(h, "the decision card")
 	h.card.book.pressed.emit()
 	await frames(2)
 	check(h.handbook.visible and h.snapshot().handbook.page == "garden" and h.is_open(), "its Handbook button opens the page: %s" % [h.snapshot().handbook])
@@ -606,6 +613,32 @@ func _drag_events(from: Vector2, to: Vector2) -> Array[InputEvent]:
 	up.button_index = MOUSE_BUTTON_LEFT
 	up.position = k * to
 	return [down, move, up]
+
+
+## A side card wears the play HUD's glass: the status card's panel, see-through rows (never the menu's slab on a
+## slab), words with the dark edge, a row in focus marked by a bar as well as a tint, rows a finger can hit on a
+## phone, and nothing of the HUD showing through it.
+func _glass(h: Control, what: String) -> void:
+	await process_frame
+	await process_frame
+	var c: Control = h.card
+	check(c.theme_type_variation == &"HudPanel" and c.get_theme_stylebox("panel") == h.status.get_theme_stylebox("panel") and not h.scrim.visible,
+		"%s is on the play HUD's glass panel, with no scrim (%s)" % [what, c.theme_type_variation])
+	var menu := Hud.color("hud-glass-menu").a
+	var through := 1.0 - _fill_of(c.get_theme_stylebox("panel")).a
+	for b: Button in c.buttons + [c.book]:
+		var rest := b.get_theme_stylebox("normal") as StyleBoxFlat
+		var lit := b.get_theme_stylebox("focus") as StyleBoxFlat
+		check(through * (1.0 - rest.bg_color.a) > 1.0 - menu, "%s: a row lets more of the game through than menu glass (%.2f)" % [what, through * (1.0 - rest.bg_color.a)])
+		check(lit.border_width_left >= 4 and lit.border_width_left > rest.border_width_left and lit.bg_color != rest.bg_color,
+			"%s: the row in focus has a bar at its left edge as well as a tint" % what)
+		check(b.size.y * Hud.PHONE_SCALE >= TARGET, "%s: a row is %.0f scene px tall on a phone, a finger needs %.0f" % [what, b.size.y * Hud.PHONE_SCALE, TARGET])
+	for l: Label in c.find_children("*", "Label", true, false):
+		check(l.has_node("Edge") or String(l.theme_type_variation).begins_with("OnFill"), "%s: '%s' has the dark edge" % [what, l.text])
+	var r := c.get_global_rect()
+	check(h._under().all(func(p: Control) -> bool: return p.modulate.a == (0.0 if p.get_global_rect().intersects(r) else 1.0)),
+		"%s: no HUD part shows through it" % what)
+	check(get_root().get_visible_rect().encloses(r), "%s %s is on screen" % [what, r])
 
 
 ## Each card at the width of a 360 dp phone: it asks for no more, and nothing in it spills past its edge.
