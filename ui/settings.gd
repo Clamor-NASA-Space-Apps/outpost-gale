@@ -488,7 +488,10 @@ func _demo() -> Control:
 	var jobs := [
 		["Skip the tutorial", func() -> void: game.beats.skip()],
 		["Sunrise opening", dawn],
-		["Look around", func() -> void: game.cine.shot("look_around")],
+		["Look around", func() -> void:
+			if game.player.room != "":
+				game.cine.stand_for_dawn()  # the 360 plays only outdoors (cine.json `outdoors`): out by the hatch first
+			game.cine.shot("look_around")],
 		["Meet PIP", func() -> void: game.cine.shot("focus_pip")],
 		["Sleep a night", func() -> void: game.cine.sleep(&"night")],
 		["Rover trip", func() -> void:
