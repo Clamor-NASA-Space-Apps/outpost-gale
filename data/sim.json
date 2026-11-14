@@ -69,7 +69,7 @@
  },
  "harm_scale": {
   "_note": "how top_causes() weighs meters against each other: a cause's share of the starting stock (o2, water, food, the battery). dose_msv 10 has no source, a game weight (placeholder)",
-  "o2_kg": 52, "water_kg": 198, "food_kg": 147, "energy_kwh": 140, "dose_msv": 10
+  "o2_kg": 54, "water_kg": 205, "food_kg": 153, "energy_kwh": 140, "dose_msv": 10
  },
  "choices": {
   "o2_maker_on": {"label": "Run the oxygen maker", "set": {"o2_maker": true}},
