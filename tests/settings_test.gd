@@ -95,12 +95,16 @@ func play() -> bool:
 	for r: String in s.rows:  # every option of the old Advanced rows is a segment
 		check(s.rows[r].size() == Settings.ADVANCED[r].size() and s.rows[r].all(func(b: Button) -> bool: return b.is_visible_in_tree()), "%s shows every option" % r)
 	var tab_has := [s.cards.values()[0], s.sliders.music, null, s.fps_buttons[0]]
+	var sizes: Array[Vector2] = []
 	for i: int in s.tabs.size():
 		s.tabs[i].pressed.emit()
 		await frames(2)
+		sizes.append(s.panel.size)
 		check(s.page == i and s.tabs[i].button_pressed and s.pages.filter(func(p: Control) -> bool: return p.visible).size() == 1, "tab %s opens its page alone" % s.tabs[i].text)
 		if tab_has[i]:
 			check(on_screen(tab_has[i]), "tab %s holds its options" % s.tabs[i].text)
+	check(sizes.all(func(v: Vector2) -> bool: return v.is_equal_approx(sizes[0])), "every tab keeps one window size (%s)" % [sizes])
+	check(s.exit_button != null and s.exit_button.is_visible_in_tree() == (s.page == 3), "a native build has Exit on the Screen tab")
 	check(s.pages[2].find_children("*", "Label", true, false).any(func(l: Label) -> bool: return l.text == "E"), "Controls lists the keys (E for Use)")
 	for k: String in ["master", "music", "effects", "interface"]:
 		check(s.sliders.has(k), "a slider for %s" % k)

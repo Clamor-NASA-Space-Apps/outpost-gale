@@ -81,6 +81,8 @@ var panel: PanelContainer
 var close_button: Button  # the Esc chip
 var fps_buttons: Array[Button] = []  # On, Off
 var full_buttons: Array[Button] = []  # On, Off; empty where a page cannot go full screen (iPhone Safari)
+var exit_button: Button  # Settings > Screen: closes the game; none on the web
+var _tallest := 0.0  # px: the tallest page at the panel's width (_measure), the height every tab takes
 var saved_tag: Control
 var scroll := ScrollContainer.new()
 var body: Control  # the tab column and the page beside it
@@ -212,7 +214,22 @@ func open() -> void:
 	gear.visible = false  # the Esc chip closes it; the gear sat under the panel's corner on a phone
 	draft = game.overrides.duplicate()
 	_refresh()
-	_fit.call_deferred()  # the page's size settles on the next frame
+	_measure.call_deferred()  # the pages' sizes settle on the next frame
+
+
+## Every page laid out once at the panel's real width, unseen, so each tab takes the tallest page's height: a hidden
+## page's flows still hold the line breaks of their last width.
+func _measure() -> void:
+	panel.modulate.a = 0.0
+	for p: Control in pages:
+		p.visible = true
+	await get_tree().process_frame
+	_tallest = 0.0
+	for p: Control in pages:
+		_tallest = maxf(_tallest, p.size.y)
+	_refresh()  # back to the open page alone
+	_fit()
+	panel.modulate.a = 1.0
 
 
 ## The Esc chip, the Esc key or the gear: what still waits is applied, nothing chosen is lost.
@@ -441,8 +458,19 @@ func _screen() -> Control:
 			if on != _full():
 				full_screen())
 		c.add_child(_line("Full screen", _group(full_buttons)))
+	if not OS.has_feature("web"):  # a page cannot close its own tab, and the web build has no title to go back to
+		exit_button = _button("Exit", quit, &"ChoiceButton")
+		exit_button.icon = load("res://ui/icons/close.svg")
+		c.add_child(_line("Leave the game", _group([exit_button])))
 	c.add_child(_demo())  # a fifth tab made the panel taller than a sideways phone
 	return c
+
+
+## Exit: what waits is applied and saved, then the game closes (native builds only).
+func quit() -> void:
+	close()
+	save()
+	get_tree().quit()
 
 
 ## For showing the game: skip the tutorial, play any cinematic, start any played sol (Ravindu, 14 Nov). Each closes
@@ -730,8 +758,13 @@ func _fit() -> void:
 		t.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER if wide else HORIZONTAL_ALIGNMENT_LEFT
 	_sizes()
 	# as tall as the open page needs, up to the screen; past that the page scrolls
+	# one size for every tab, the biggest page's (14 Nov playtest: the Screen tab made the window grow)
 	scroll.custom_minimum_size.y = 0.0
-	var need: float = pages[page].get_combined_minimum_size().y
+	var wide := 0.0
+	for p: Control in pages:
+		wide = maxf(wide, p.get_combined_minimum_size().x)
+	var need := maxf(pages[page].get_combined_minimum_size().y, _tallest)
+	(scroll.get_child(0) as Control).custom_minimum_size.x = wide
 	scroll.custom_minimum_size.y = need
 	var over := panel.get_combined_minimum_size().y - room.y
 	if over > 0.0:
