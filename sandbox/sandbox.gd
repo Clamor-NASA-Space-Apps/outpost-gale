@@ -183,7 +183,9 @@ func _process(_delta: float) -> void:
 	sim.paused = clock.paused or lost  # one time: the rules run exactly when the sky does, at its pace (sim.pace)
 	hud.visible = not settings.is_open()
 	(fps_label.get_parent() as CanvasLayer).visible = not film  # the HUD, PIP's words and the frame-rate line
-	hud.show_prompt(interactions.prompt_label.text.trim_prefix("[E]  "))  # empty when nothing is in reach; the HUD draws its own E key
+	# empty when nothing is in reach (the HUD draws its own E key), and through a cinematic: the bed's "Sleep" stood
+	# over the night's time-lapse (15 Nov playtest)
+	hud.show_prompt("" if cine.busy() else interactions.prompt_label.text.trim_prefix("[E]  "))
 	if not cine.busy():
 		world.room_shadow(player.room != "")  # indoors the sun's shadow reaches the room only (world.gd)
 	var h := clock.hour()

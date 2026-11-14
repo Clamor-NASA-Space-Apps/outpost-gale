@@ -157,8 +157,8 @@ func sleep(kind: StringName) -> void:
 	show_card.emit({"kind": kind, "hours": span})
 	await _fade(0.0, float(cfg.fade_in_s))
 	await _wait(float(c.wake_hold_s))
-	player.sit(false)
-	await _wait(float(player.model.clips.sit_to_stand.length))
+	# the hero wakes on its feet and walks out through the hatch as on any morning: the sit and the stand-up were
+	# "useless and glitchy" (15 Nov playtest)
 	var to: Vector3 = hab.to_global(Vector3(c.hatch[0], 0.0, c.hatch[1])) - player.body.global_position
 	player.place(player.body.global_position, -rad_to_deg(atan2(-to.x, -to.z)))
 	player.cam.pitch = 0.0
@@ -182,7 +182,7 @@ func _dawn(p: Array) -> Vector3:
 	return Vector3(at.x, world.height_at(at.x, at.z) + float(p[1]), at.z)
 
 
-## The hero on the donning bench, sitting down: the hips onto the seat, facing into the room.
+## The hero by the donning bench for the night, standing (no sitting down: 15 Nov playtest), facing into the room.
 func _seat() -> void:
 	var b: Array = cfg.sleep.bench
 	var hab: Node3D = world.items.hab1
@@ -193,7 +193,6 @@ func _seat() -> void:
 	var feet := seat - Basis(Vector3.UP, r) * Vector3(hip.x, 0.0, hip.z)
 	feet.y = hab.to_global(Vector3(0.0, float(cfg.sleep.deck_y), 0.0)).y
 	player.place(feet, -rad_to_deg(r))
-	player.sit(true)
 
 
 ## HAB 1's own light at share `k`: the lamp pool fades it there (half a second), else it is set at once.
