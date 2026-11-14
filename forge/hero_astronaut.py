@@ -51,6 +51,22 @@ def in_dcm(c, pad=0.0):
     return abs(c.x) < 0.115 + pad and 1.215 - pad < c.z < 1.53 + pad and c.y < -0.15 + pad
 
 
+def in_pack(c, n):
+    """A face of the backpack, by its centre and normal: anything behind PACK_Y, and below that the pack's lower box
+    (down to z 0.68, its face toward the body at y 0.19 and its sides wrapping forward round the hips to y 0.115).
+    The seat right above the thighs reaches y 0.18 too, but it faces back (+y), so it stays on the legs. Measured off
+    the mesh; the lower box was skinned to the hips and thighs and bent like rubber at every step (14 Nov playtest).
+    Its face toward the body runs up to z 1.13 at the sides."""
+    return c.y > PACK_Y or (0.66 < c.z < 1.15 and c.y > 0.1 and (c.y > 0.186 or n.y < -0.3))
+
+
+def pack_faces(bm):
+    """The pack's faces: in_pack(), plus any face whose corners are all on those (the lower box's ledges face up)."""
+    pack = {f for f in bm.faces if in_pack(f.calc_center_median(), f.normal)}
+    vs = {v for f in pack for v in f.verts}
+    return pack | {f for f in bm.faces if all(v in vs for v in f.verts)}
+
+
 def joint(name, side):
     x, y, z = J[name]
     return Vector((-x if side == "r" else x, y, z))
@@ -120,6 +136,7 @@ def paint(o, roles):
     for m in roles:
         o.data.materials.append(m)
     isl = islands(bm)
+    pack = pack_faces(bm)
     for f in bm.faces:
         c = f.calc_center_median()
         if f.material_index == 1:
@@ -130,7 +147,7 @@ def paint(o, roles):
             r = trim if f.normal.y < -0.9 else body  # the chest control unit: a hard box, its face dark
         elif abs(c.x) > GLOVE_X or c.z < 0.03:
             r = trim  # gloves and boot soles
-        elif (c.z > HELMET_Z and c.y < PACK_Y) or (c.y > PACK_Y and c.z > 0.85):
+        elif (c.z > HELMET_Z and c.y < PACK_Y) or f in pack:
             r = body  # hard shells: helmet and backpack
         else:
             r = suit
@@ -145,7 +162,10 @@ def band(suit, name, c, axis, width, m, pad=0.007, n=24):
     u = axis.cross(Vector((0, 0, 1)) if abs(axis.z) < 0.9 else Vector((1, 0, 0))).normalized()
     v = axis.cross(u)
     c = Vector(c)
-    pts = [p.co - c for p in suit.data.vertices if abs((p.co - c).dot(axis)) < 0.03 and (p.co - c).length < 0.25]
+    # only this side's limb: the other thigh is closer than 0.25 m, and its vertices gave the band a flap that
+    # reached across to the other leg and hung there as a block at every step (14 Nov playtest)
+    pts = [p.co - c for p in suit.data.vertices if abs((p.co - c).dot(axis)) < 0.03 and (p.co - c).length < 0.25
+           and (p.co.x > 0) == (c.x > 0)]
     mid = sum(((p - axis * p.dot(axis)) for p in pts), Vector()) / len(pts)
     c, pts = c + mid, [p - mid for p in pts]
     rad = []
@@ -271,8 +291,8 @@ def skin(o, arm):
         c, r, s = v.co, vrole.get(v.index, set()), "l" if v.co.x > 0 else "r"
         if "visor" in r or (c.z > HELMET_Z and c.y < PACK_Y and ("body" in r or "metal" in r)):
             bone = "Head"
-        elif ("body" in r and c.y > PACK_Y) or in_dcm(c, 0.01):
-            bone = "spine_03"  # the backpack and the chest unit are bolted to the hard upper torso
+        elif r == {"body"} and c.y > 0.1 or in_dcm(c, 0.01):
+            bone = "spine_03"  # the backpack (cut free of the suit in free_pack()) and the chest unit are bolted to the hard upper torso
         elif abs(c.x) > GLOVE_X - 0.02:
             bone = "hand_" + s
         elif c.z < BOOT_Z:
@@ -295,6 +315,26 @@ def skin(o, arm):
     bpy.ops.object.vertex_group_limit_total(limit=4)
     bpy.ops.object.vertex_group_normalize_all(lock_active=False)
     return len(bare)
+
+
+def free_pack(o, arm):
+    """The weld joined the pack to the suit where they touch, and a vertex on that seam can carry only one set of
+    weights, so the pack's faces next to it bent with the hips. Cut the pack free (after the automatic weights, which
+    fail on a loose piece: see Gotchas) and bolt every pack vertex to spine_03. Returns how many pack vertices
+    sit where the seat or a thigh is (front of y 0.186, within the hips): only the lower box's wrap-round should."""
+    bm = bmesh.new()
+    bm.from_mesh(o.data)
+    pack = pack_faces(bm)
+    bmesh.ops.split_edges(bm, edges=[e for e in bm.edges if len({f in pack for f in e.link_faces}) > 1])
+    bm.verts.index_update()
+    vs = {v for f in pack for v in f.verts}
+    idx = sorted(v.index for v in vs)
+    near = sum(1 for v in vs if v.co.y < 0.186 and v.co.z < 0.95 and abs(v.co.x) < 0.24)
+    bm.to_mesh(o.data)
+    bm.free()
+    rigid(o, arm, {"spine_03": idx})
+    print("HERO pack faces", len(pack), "verts", len(idx), "in front of the pack face", near)
+    return near
 
 
 def build():
@@ -321,6 +361,7 @@ def build():
     suit.name = "astronaut"
     smooth(suit, 40)
     bare = skin(suit, arm)
+    free_pack(suit, arm)
     # the team's patch on the left arm, between the shoulder and the orange band; no insignia (AGENTS.md). Joined after
     # the automatic weights: its small separate pieces made the heat solve fail and crumpled the sleeve
     sh, el = joint("shoulder", "l"), joint("elbow", "l")

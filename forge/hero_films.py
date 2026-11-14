@@ -1,6 +1,7 @@
 # Films of the hero's clips: 8 frames per clip in one strip, camera at the side looking a little down, the hero carried forward at the clip's ground speed over a floor ruled every 0.25 m, so a planted
 # boot stays on one mark and a sliding one does not; under it the same frames from the front three-quarter, where an
-# arm through the helmet or the chest unit shows. The hop strip flies the body on a Mars-gravity arc.
+# arm through the helmet or the chest unit shows, and from the back three-quarter, low, where a pack that bends with
+# the hips shows. The hop strip flies the body on a Mars-gravity arc.
 #   blender -b --python-exit-code 1 -P forge/hero_films.py -- models/character_suited.glb data/clips.json <out dir> [clip,clip]
 import json
 import os
@@ -52,10 +53,10 @@ def play(name, t):
     sc.frame_set(int(t * 30), subframe=(t * 30) % 1)
 
 
-def shot(path, y, z=0.0, front=False):
+def shot(path, y, z=0.0, view=0):
     root.location = (0, y, z)
-    if front:  # the model faces -Y: from its front right, at chest height
-        cam.location = (2.6, y - 2.6, 1.5)
+    if view:  # the model faces -Y: 1 from its front right at chest height, 2 from its back left at hip height
+        cam.location = (2.6, y - 2.6, 1.5) if view == 1 else (-2.6, y + 2.6, 0.7)
         cam.rotation_euler = (Vector((0, y, 1.0)) - cam.location).to_track_quat("-Z", "Y").to_euler()
     else:
         cam.location = (4.0, y, 1.6)  # tipped 10 degrees down so the floor rules show
@@ -65,20 +66,21 @@ def shot(path, y, z=0.0, front=False):
 
 
 def strip(name, frames):
-    """frames: [(clip, t, y, z)] -> one PNG: the side view in a row of len(frames) panels, the front view under it."""
+    """frames: [(clip, t, y, z)] -> one PNG: the side view in a row of len(frames) panels, the front and back views under it."""
     paths = []
-    for front in (False, True):
+    for view in range(3):
         for k, (clip, t, y, z) in enumerate(frames):
             play(clip, t)
-            p = os.path.join(out, f"_{name}_{int(front)}_{k}.png")
-            shot(p, y, z, front)
+            p = os.path.join(out, f"_{name}_{view}_{k}.png")
+            shot(p, y, z, view)
             paths.append(p)
     dst = os.path.join(out, f"{name}.png")
     inputs = sum((["-i", p] for p in paths), [])
     n = len(frames)
     side = "".join(f"[{i}:v]" for i in range(n))
     fr = "".join(f"[{i}:v]" for i in range(n, 2 * n))
-    graph = f"{side}hstack=inputs={n}[a];{fr}hstack=inputs={n}[b];[a][b]vstack"
+    bk = "".join(f"[{i}:v]" for i in range(2 * n, 3 * n))
+    graph = f"{side}hstack=inputs={n}[a];{fr}hstack=inputs={n}[b];{bk}hstack=inputs={n}[c];[a][b][c]vstack=inputs=3"
     subprocess.run(["ffmpeg", "-loglevel", "error", "-y", *inputs, "-filter_complex", graph, dst], check=True)
     for p in paths:
         os.remove(p)
