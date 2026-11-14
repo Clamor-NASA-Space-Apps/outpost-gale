@@ -31,6 +31,7 @@ var _holding := false
 var _was_driven := false
 var _frozen := {}  # node -> its process_mode before a shot froze it
 var _rim_bins: Array = []  # _rim(): the crater rim's vertices by bearing
+var _body_yaw := 0.0  # the hero's facing, eased, while a shot plays (the 'body' ref)
 var _sun_yaw := 0.0  # rotation.y facing the sun, set when a shot starts (the 'sun' ref)
 
 
@@ -331,7 +332,8 @@ func launch() -> void:
 ## (and PIP, unless the shot films it rolling up), the look clock held. Refused (busy(), or no such shot):
 ## shot_done still fires, a frame later, so a caller waiting on it never hangs. `args` is not read yet.
 func shot(name: String, _args := {}) -> void:
-	if busy() or not cfg.shots.has(name):
+	# an outdoor shot never plays indoors (skills/guided-tutorial rows 3, 4): the beats lead the hero out first
+	if busy() or not cfg.shots.has(name) or (cfg.shots[name].get("outdoors", false) and player.room != ""):
 		push_warning("cine: no shot '%s' now" % name)
 		shot_done.emit.call_deferred(name)
 		return
@@ -374,10 +376,20 @@ func shot(name: String, _args := {}) -> void:
 	_sun_yaw = _yaw_of(HouseStyle.sun_at(clock._C, h0))  # the bearing barely moves over a sunrise: 'sun' keys
 	var up := sunrise_hour(float(rise.get("peek_deg", 0.0))) if not rise.is_empty() else 0.0
 	var lapse := not rise.is_empty() and h0 < up - 0.01
+	_body_yaw = player.yaw
 	var step := func(k: float) -> void:
+		# the 'body' frame turns with the hero smoothed: a quick pivot swung the spot behind into a wall (14 Nov)
+		_body_yaw = lerp_angle(_body_yaw, player.yaw, 1.0 - exp(-float(c.get("body_rate", 4.0)) * get_process_delta_time()))
 		var poses := [home]
 		for key: Dictionary in c.keys:
 			poses.append(home if key.get("hold", false) else _key(key))  # every frame: PIP may be moving
+		if c.get("to_play", false) and k < 1.0:
+			# unseen while this camera films: the play camera eases round behind the hero for the hand-over, wherever
+			# the kid had turned it (turned back at a wall, its arm cut in and the landing jumped, 14 Nov)
+			var fc: Node3D = player.cam
+			# behind the hero, then round to the landing bearing for the last glide (the end frame's own heading)
+			var want: float = player.yaw if not c.has("land_bearing") or k * total < ts[-2] else -deg_to_rad(float(c.land_bearing))
+			fc.yaw = lerp_angle(fc.yaw, want, 1.0 - exp(-float(c.get("behind_rate", 3.0)) * get_process_delta_time()))
 		poses.append(_lens() if c.get("to_play", false) else home)
 		var lin := k * total
 		var j := 0
@@ -553,7 +565,7 @@ func _at(r: Array) -> Vector3:
 		"hero":  # the hero's feet, turned the way the play camera faces (-Z ahead, +Z back toward the lens)
 			return player.body.global_position + Basis(Vector3.UP, player.cam.yaw) * o
 		"body":  # the hero's feet, turned the way the hero faces (-Z ahead, +Z behind)
-			return player.body.global_position + Basis(Vector3.UP, player.yaw) * o
+			return player.body.global_position + Basis(Vector3.UP, _body_yaw) * o
 		"sun":  # the hero's feet, turned to the rising sun's bearing (-Z toward the sun)
 			return player.body.global_position + Basis(Vector3.UP, _sun_yaw) * o
 		"ground":

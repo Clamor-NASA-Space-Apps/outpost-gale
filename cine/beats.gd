@@ -58,6 +58,7 @@ var _call_t := 0.0  # s since PIP last called "this way"
 var _back := INF  # s until the beat's own line comes back after a plea or a call
 var _walk_to := Vector3.INF  # walk:<spot>: where the hero walks on its own, INF when it does not
 var _walk_allowed: Array = []  # the kid's allowed actions, given back when the walk ends
+var _leading_out := false  # an outdoor beat waits while PIP leads the hero out (outdoors())
 
 const WATCHED: Array[String] = ["move_forward", "move_back", "move_left", "move_right", "hurry"]
 const STICK: Array[StringName] = [&"move_right", &"move_left", &"move_back", &"move_forward"]
@@ -182,6 +183,18 @@ func aside(id: String) -> void:
 	_say(id, true)
 
 
+## Out of every room and clear of every door by data outdoors.clear_m: where an outdoor beat or shot may run.
+func outdoors() -> bool:
+	if player.room != "":
+		return false
+	var b: Vector3 = player.body.global_position
+	for it: Node in get_tree().get_nodes_in_group("interactable"):
+		var at: Vector3 = (it as Node3D).global_position
+		if it.get("kind") == "door" and Vector2(b.x - at.x, b.z - at.z).length() < float(data.outdoors.clear_m):
+			return false
+	return true
+
+
 ## The interactions' `used` signal: a bag picked up is a lift, anything else a use.
 func used(what: String, _pos: Vector3) -> void:
 	notify("lift" if what == "grab" else "use:" + what)
@@ -193,6 +206,12 @@ func _physics_process(delta: float) -> void:
 	if beat.is_empty():
 		return
 	_t += delta
+	if _leading_out:
+		if outdoors():
+			_leading_out = false
+			_t = 0.0
+			_enter()
+		return
 	_auto_walk()
 	_inputs(delta)
 	_plead(delta)
@@ -290,6 +309,7 @@ func _say(id: String, aside := false) -> void:
 func _start(i: int) -> void:
 	_index = i
 	beat = beats[i]
+	_leading_out = false
 	_t = 0.0
 	_met = false
 	_turned = 0.0
@@ -301,6 +321,21 @@ func _start(i: int) -> void:
 	_call_t = 0.0
 	_back = INF
 	_calm()
+	# a beat that needs the hero outdoors (an outdoor shot) never runs indoors: PIP leads the way out first, and the
+	# beat starts once the hero is out (skills/guided-tutorial row 3)
+	if beat.get("outdoors", false) and not outdoors():
+		_leading_out = true
+		player.allow(["move", "look"])
+		if world.items.has(player.room):
+			_do("open:" + player.room)  # the way out stands open
+		_order({"follow_me": data.outdoors.spot})
+		_say(data.pip.call_line, true)
+		return
+	_enter()
+
+
+## The beat's own start: its allowed actions, commands, PIP's order, task, objective and line.
+func _enter() -> void:
 	if beat.has("allow"):
 		player.allow(beat.allow)
 	for c: String in beat.get("do", []):
@@ -421,12 +456,14 @@ func _do(command: String) -> void:
 			_walk_to = _spot(Array(arg.split_floats(",")) if "," in arg else arg)
 			_walk_allowed = player.allowed
 			# the controller reads the move keys through player.may(); set straight, not by allow(), so the touch
-			# stick and the key caps stay hidden: the kid's own input stays blocked to the eye and in effect
-			player.allowed = ["move"]
+			# stick and the key caps stay hidden. Looking stays the kid's (skills/guided-tutorial row 1): the
+			# steering follows the view each tick
+			player.allowed = ["move", "look"]
 		"hero":
 			var s: Dictionary = data.starts[arg]
 			var item: Node3D = world.items[s.item]
 			player.place(item.to_global(Vector3(s.at[0], s.at[1], s.at[2])), -rad_to_deg(item.global_rotation.y) + float(s.yaw))
+			player.cam.snap(player.yaw)  # the view, and the helmet with it, faces the way the hero does: the way out
 		"ghost":
 			ghost.on = arg == "on"
 			ghost.visible = ghost.visible and ghost.on
