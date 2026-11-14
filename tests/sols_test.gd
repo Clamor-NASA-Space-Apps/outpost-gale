@@ -27,6 +27,7 @@ var used_at := -1
 var lines: Array[String] = []
 var targets: Array[String] = []
 var crumbs: Array[Vector3] = []  # PIP's tracks for _crumbs()
+var _held := [Vector3.INF, 0, 0, Vector3.ZERO]  # _crumbs(): where the hero last got somewhere, when, a sidestep's end, its target
 
 
 func _init() -> void:
@@ -533,8 +534,21 @@ func _crumbs() -> void:
 		crumbs.pop_front()
 	if _flat(pip.global_position, b) < 2.0:
 		_stop()
-	else:
-		_steer(crumbs[0])
+		return
+	# a second without getting anywhere (a lamp post on the straight line to PIP's tracks): a kid steps round it
+	var f := Engine.get_physics_frames()
+	if f < int(_held[2]):
+		_steer(_held[3])
+		return
+	if _flat(b, _held[0]) > 0.2:
+		_held[0] = b
+		_held[1] = f
+	elif f - int(_held[1]) > 60:
+		var way: Vector3 = crumbs[0] - b
+		_held[3] = b + Vector3(-way.z, 0.0, way.x).normalized() * 1.2
+		_held[2] = f + 60
+		_held[1] = f
+	_steer(crumbs[0])
 
 
 ## After PIP like a kid: toward it, stopping `near` short.
