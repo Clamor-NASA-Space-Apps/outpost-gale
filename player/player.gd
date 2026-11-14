@@ -607,7 +607,6 @@ func enter(v: Node3D) -> void:
 		if c is CollisionObject3D:
 			rids.append((c as CollisionObject3D).get_rid())
 	cam.follow_target(v, rids, [], tuning.camera.vehicle_distance, tuning.camera.vehicle_pivot_height, AABB(), float(v.top) if "top" in v else 0.0)  # a vehicle's top speed, m/s: the speed framing
-	model.visible = false  # aboard at once, out of sight in the cab (no boarding clip)
 
 
 func exit() -> void:
@@ -620,7 +619,6 @@ func exit() -> void:
 
 func _leave() -> void:
 	vehicle = null
-	model.visible = true
 	model.sit(false)
 	body.collision_layer = HERO_LAYER
 	body.collision_mask = MASK

@@ -504,7 +504,7 @@ func drive() -> void:
 	await frames(10)
 	action(&"move_forward", false)
 	var s: Dictionary = player.state()
-	check(s.vehicle.driving and not player.model.visible, "driving, the hero is aboard and out of sight in the cab (no boarding clip)")
+	check(s.vehicle.driving and player.meshes.all(func(m: MeshInstance3D) -> bool: return m.is_visible_in_tree()), "driving, the hero is aboard and drawn on the seat")
 	var hips: Vector3 = player.body.global_transform * player.model.hip_sit
 	check(hips.distance_to(v.seat().origin) < 0.01, "the drawn hips sit on the seat (%.3f m off)" % hips.distance_to(v.seat().origin))
 	check(v.last.y > 0.5, "the forward key reaches drive() as input.y")
