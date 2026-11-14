@@ -280,15 +280,19 @@ func _warm() -> void:
 		_rewarm = true  # a second switch while the first warms: once more when it ends
 		return
 	_warming = true
+	# the hero's two shaders: the fade, and the solid one, which no mesh wears while the hero is hidden (the opening
+	# starts in HAB 1 with the lens close: its first sight at the hatch was a 0.5 s compile in play, 14 Nov)
 	var fade := ShaderMaterial.new()
 	fade.shader = player.fading
+	var solid := ShaderMaterial.new()
+	solid.shader = player.HeroShader
 	var at := Transform3D(Basis(), world.get_node("Probe").global_position)
 	world.dust.warm(at * Vector3(0, 0, -8))
 	cover.progress(0.0)
-	await Forge.HouseStyle.warm(self, design, at, [fade], 3, cover.progress)
+	await Forge.HouseStyle.warm(self, design, at, [fade, solid], 3, cover.progress)
 	while _rewarm:
 		_rewarm = false
-		await Forge.HouseStyle.warm(self, design, at, [fade], 3, cover.progress)
+		await Forge.HouseStyle.warm(self, design, at, [fade, solid], 3, cover.progress)
 	_warming = false
 	var t := create_tween()
 	t.tween_property(cover, "color:a", 0.0, 0.25)
