@@ -17,7 +17,7 @@ const EDGE_SLIDE := 1.5  # m/s off a rim the body only rests on: a slip, quicker
 # The model and its clips (names, loops, foot contacts). Another hero swaps these and nothing else.
 const MODEL := "res://models/character_suited.glb"
 const CLIPS := "res://data/clips.json"
-const EYE_ROLE := "visor"  # the surface the head lamps aim from (suit_lamps.gd)
+const EYE_ROLE := "visor"  # the surface the eye sits behind in first person, and the head lamps aim from
 
 ## A foot pressed onto the ground: each plant of a walk or run, and both feet on landing. `pos` is under the
 ## foot at the floor, `yaw_deg` the heading (CONTRACTS.md), `foot` is "foot_l" or "foot_r".
@@ -85,7 +85,7 @@ var glancing := false  # the camera faces the hero: the helmet looks at the lens
 ## Where the body may walk (x, z), set by the composition root; no area: anywhere. Near its edge the outward speed is
 ## held to what the hero's braking still stops in, so the hero slows and stops on the line, with no wall's jolt.
 var bound := Rect2()
-## The rooms whose plan the camera keeps to (follow_cam.gd), set by the composition root: {id: {node: Node3D, areas: [{circle:
+## The rooms that put the view in first person, set by the composition root: {id: {node: Node3D, areas: [{circle:
 ## [x, z, r]} or {rect: [x0, z0, x1, z1]}, ...]}}, each area in its node's space (data/world.json `rooms`).
 var rooms := {}
 var room := ""  # the one the body is in, "" outside
@@ -161,6 +161,7 @@ func _ready() -> void:
 	cam.name = "Camera"
 	add_child(cam)
 	cam.setup(tuning.camera)
+	cam.eye = Vector3(0.0, model.eye.y, model.eye.z)  # centred; the forward part turns with the view, not the body
 	cam.follow_target(body, [body.get_rid()], meshes, tuning.camera.distance, tuning.camera.pivot_height, model.bounds)
 	lamps = SuitLamps.new()
 	lamps.setup(self, model.skeleton, model.eye, design)
@@ -320,7 +321,8 @@ func _live(delta: float, accel: Vector3) -> void:
 	# camera parked at the side does not switch every frame)
 	var view := -cam.lens.global_basis.z
 	var ahead := Vector2(view.x, view.z).normalized().dot(Vector2(-sin(yaw), -cos(yaw)))
-	glancing = ahead < cos(PI * 0.45) if not glancing else ahead < cos(PI * 0.35)
+	# never from its own eye: the lens is in the helmet then, and a glance at it sent the lamps' beam anywhere
+	glancing = cam.first < 1.0 and (ahead < cos(PI * 0.45) if not glancing else ahead < cos(PI * 0.35))
 	var head := body.global_position + Vector3.UP * model.bounds.end.y * 0.9
 	var look: Vector3 = cam.lens.global_position if glancing else head + view * tuning.life.look_far
 	if is_instance_valid(attention) and attention.is_inside_tree():
@@ -393,6 +395,7 @@ func _walk(delta: float) -> void:
 	var y := body.global_position.y
 	drawn_y = clampf(move_toward(drawn_y, y, step / tuning.hero.step_catch_s * delta), y - step, y + step) if on_floor and was_on_floor else y
 	model.position.y = drawn_y - y
+	cam.eye.y = model.eye.y + model.position.y  # the eye rides the drawn body over a sill, as Source smooths the view
 
 	var real := body.get_real_velocity()
 	var flat := Vector2(real.x, real.z).length()
@@ -415,10 +418,8 @@ func _walk(delta: float) -> void:
 
 ## Which room the body is in, with a doorway band as wide as the body: in once the whole body is past the door (the
 ## plan shrunk by its radius), out once it is wholly outside (grown by it), so rocking in the hatch never flips the
-## rules, the sound or the lights. ponytail: the plan is flat, a body on a roof would count as inside; add a height
-## when one can get there.
-## The camera gets the room the body is in, else the one whose door is nearest, and how far into its profile to be:
-## 1 in the room, easing from 0 at camera.in_approach m from the door, so the arm is short before the door frame.
+## view, the rules, the sound or the lights. ponytail: the plan is flat, a body on a roof would count as inside; add
+## a height when one can get there.
 func _room() -> void:
 	var r := breadth / 2.0
 	var p := body.global_position
@@ -428,27 +429,7 @@ func _room() -> void:
 		for id: String in rooms:
 			if FollowCam.depth_in(rooms[id], p) > r:
 				room = id
-	var near := room
-	var gap := 0.0
-	if room == "":
-		gap = INF
-		for id: String in rooms:
-			# in the doorway band the door is behind the body already: still at it, or the profile would dip there
-			var d := 0.0 if FollowCam.depth_in(rooms[id], p) > -r else Vector2(p.x, p.z).distance_to(_door(rooms[id]))
-			if d < gap:
-				gap = d
-				near = id
-	cam.room = rooms.get(near, {})
-	cam.want_in = 1.0 - smoothstep(0.0, tuning.camera.in_approach, gap)
-
-
-## A room's door (x, z): where its plan meets the item's front axis, -Z (a model's door is on its front, CONTRACTS.md).
-func _door(spec: Dictionary) -> Vector2:
-	var deepest := 0.0
-	for a: Dictionary in spec.areas:
-		deepest = maxf(deepest, a.circle[2] - a.circle[1] if a.has("circle") else -float(a.rect[1]))
-	var at := (spec.node as Node3D).to_global(Vector3(0.0, 0.0, -deepest))
-	return Vector2(at.x, at.z)
+	cam.room = room != ""
 
 
 ## A speed along one axis held to what the brakes stop in the room left: `back` metres behind, `ahead` in front,
@@ -621,8 +602,7 @@ func enter(v: Node3D) -> void:
 	seated = false
 	vehicle = v
 	room = ""
-	cam.room = {}
-	cam.want_in = 0.0
+	cam.room = false
 	model.sit(true)
 	body.collision_layer = 0
 	body.collision_mask = 0
@@ -670,7 +650,7 @@ func state() -> Dictionary:
 	return {
 		"player": {"pos": feet, "speed": moved, "onFloor": on_floor, "gait": gait, "inside": [] if vehicle else inside(), "room": room,
 			"lamps": {"on": lamps.on, "auto": lamps.auto}},
-		"cam": {"inside": cam.inside(), "dist": cam.dist, "indoor": cam.indoor},
+		"cam": {"inside": cam.inside(), "dist": cam.dist, "first": cam.first},
 		"heroScreen": 0.0 if vehicle else cam.on_screen(feet, model.bounds.end.y),
 		"interaction": {"target": "", "prompt": ""},
 		"carry": "",

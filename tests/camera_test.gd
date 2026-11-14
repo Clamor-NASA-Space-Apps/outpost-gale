@@ -63,7 +63,7 @@ func play() -> bool:
 	if cam.has_method("_feelers"):
 		var t0 := Time.get_ticks_usec()
 		for i in 200:
-			cam._feelers(player.body.global_position + Vector3.UP * 1.55, 4.2, false)
+			cam._feelers(player.body.global_position + Vector3.UP * 1.55, 4.2)
 		print("  the feelers take %.0f us a tick outdoors" % ((Time.get_ticks_usec() - t0) / 200.0))
 	return true
 

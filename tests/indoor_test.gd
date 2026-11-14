@@ -1,18 +1,18 @@
 extends "res://addons/forge/test.gd"
-## Third person inside the rooms (skills/third-person-camera, Rooms; design/research/interior-camera.md):
+## First person inside the rooms (player/follow_cam.gd; back on 15 Nov 2026):
 ## godot --headless --path . --fixed-fps 60 -s tests/indoor_test.gd
-## For HAB 1, the greenhouse and the storm shelter, with real input: walking in through the door and back out, and in
-## at an angle, no frame puts the lens in a solid, the lens never jumps more than MAX_STEP in a frame, the drawn feet
-## never pop on the threshold and the walk never drops into the fall clip; the room's profile is reached inside and
-## left outside; a slow walk back and forth across the doorway never flips the room. Standing anywhere a body's width
-## in from the plan's edge, at every heading and at the profile's lowest, level and highest pitch, the lens stays in
-## the room's plan and in no solid.
+## For HAB 1, the greenhouse and the storm shelter, with real input: walking in through the door the view goes into
+## the hero's eye within the ease time and no part of the hero is drawn; a look input turns the view there; walking
+## out brings the follow camera back, the hero fading in, never popping. In and out, and in at an angle, no frame puts
+## the lens in a solid, the lens never jumps (an eased step at most), the drawn feet never pop on the threshold and
+## the walk never drops into the fall clip; a slow walk back and forth across the doorway never flips the room. Placed
+## anywhere in a room, at every heading, looking level and as far down and up as the eye goes, the view is first
+## person from the first frame, the lens in the room's plan and in no solid, the hero not drawn.
 
 const ROOMS := ["hab1", "greenhouse", "shelter"]
 const START := 7.0  # m in front of the building's centre, along its front (as tests/doors_test.gd)
 const SLOW := 0.35  # stick share for the doorway rocking: a careful shuffle
-const MAX_STEP := 0.15  # m the lens may move in one frame at 60 fps: the feelers' 0.1 s ease-in starts at a sixth of
-# the gap (Lyra's PenetrationBlendInTime), about 0.15 m for the shelter's 0.9 m pull; a cut is the whole gap at once
+const EYE_STEP := 0.1  # m the lens may move in one frame at the eye: a hurry (0.04 m) and a sill caught up (0.03 m)
 const GRID := 0.7  # m between standing spots in the sweep
 
 var game: Node3D
@@ -20,11 +20,15 @@ var player: Node3D
 var world: Node3D
 var cuts := 0  # frames the hero was drawn with the lens inside its box's near sphere
 var step_max := 0.0  # the largest one-frame move of the lens
+var eye_max := 0.0  # the same while the view stayed in the eye
 var strays := 0  # frames the lens was in a solid
 var feet_max := 0.0  # the largest one-frame rise or fall of a drawn foot
 var falls := 0  # frames the model played its fall while walking on the ground
+var jump := 0.0  # the largest one-frame rise of the hero's fade
 var note := ""  # where the first stray frame or the largest lens move happened
 var last_lens := Vector3.INF
+var last_first := 0.0
+var last_shown := 1.0
 var last_feet: Array[Vector3] = []
 
 
@@ -36,6 +40,8 @@ func play() -> bool:
 	game = load("res://sandbox/sandbox.tscn").instantiate()
 	root.add_child(game)
 	await frames(3)
+	while game.busy():  # the warm-up draws the hero's parts one by one behind the cover
+		await frames(1)
 	world = game.get_node("World")
 	player = game.get_node("Player")
 	var box: Node = game.get_node("Interactions")
@@ -120,15 +126,19 @@ func room(id: String) -> void:
 	var item: Node3D = world.items[id]
 	var front := -item.global_basis.z.normalized()
 	var c := item.global_position
-	var out := maxf(START, door_depth(id) + float(game.tuning.camera.in_approach) + 0.5)  # past the profile's reach
-	var start := c + front * out
+	var cam: Node3D = player.cam
+	var lens: Camera3D = cam.lens
+	var start := c + front * START
 	player.place(Vector3(start.x, world.height_at(start.x, start.z) + 0.05, start.z), rad_to_deg(atan2(-front.x, front.z)))
 	await frames(40)  # settled onto the ground: a placed body drops its last few centimetres
-	check(player.room == "" and player.cam.indoor == 0.0, "%s: outside starts in the outdoor profile" % id)
+	check(player.room == "" and cam.first == 0.0, "%s: outside starts in the follow camera" % id)
+	check(drawn() and player.shown == 1.0 and game.render_game_to_text().heroScreen > 0.1, "%s: outside the view is third person, the hero drawn solid in the frame (fade %.2f, %.2f of the frame)" % [id, player.shown, game.render_game_to_text().heroScreen])
 	cuts = 0
 
-	# walk in along the door's axis: the room is entered once, the profile reached, nothing jumps
-	var spec: Dictionary = player.rooms[id]
+	# walk in along the door's axis: the room is entered once, the eye reached within the ease time, nothing jumps
+	var ease: float = game.tuning.camera.fp_ease_s
+	var entered := -1
+	var reached := -1
 	var flips := 0
 	var was := ""
 	reset()
@@ -138,17 +148,41 @@ func room(id: String) -> void:
 		if player.room != was:
 			flips += 1
 			was = player.room
+			if was == id and entered < 0:
+				entered = i
+		if entered >= 0 and reached < 0 and cam.first >= 1.0:
+			reached = i
 		var p: Vector3 = player.body.global_position
-		if Vector2(p.x - c.x, p.z - c.z).length() < 0.6:
+		if Vector2(p.x - c.x, p.z - c.z).length() < 0.6 and reached >= 0:
 			break
 	action(&"move_forward", false)
 	await frames(30)
 	check(flips == 1, "%s: walking in enters the room once (%d changes)" % [id, flips])
-	check(player.cam.indoor == 1.0, "%s: inside, the room's profile is reached (%.2f)" % [id, player.cam.indoor])
+	check(reached >= 0 and (reached - entered) / 60.0 <= ease + 1.0 / 60.0,
+		"%s: in first person %.2f s after the door (ease %.2f s)" % [id, (reached - entered) / 60.0, ease])
+	check(cam.first == 1.0 and lens.global_position.distance_to(eye()) < 0.01, "%s: inside, the lens is in the hero's eye (first %.2f, %.3f m off)" % [id, cam.first, lens.global_position.distance_to(eye())])
+	check(not drawn() and game.render_game_to_text().heroScreen == 0.0, "%s: the hero is not drawn in first person (fade %.2f)" % [id, player.shown])
 	verdict(id, "walking in")
 
+	# a look input turns the view, as far as the eye's range goes, and never rolls it
+	var yaw0 := lens.global_rotation.y
+	action(&"look_right", true)
+	await frames(20)
+	action(&"look_right", false)
+	var turned := absf(wrapf(lens.global_rotation.y - yaw0, -PI, PI))
+	check(turned > deg_to_rad(20.0), "%s: a look input turns the view in the room (%.0f deg in 20 frames)" % [id, rad_to_deg(turned)])
+	action(&"look_down", true)
+	await frames(60)
+	action(&"look_down", false)
+	check(absf(lens.global_rotation.x - deg_to_rad(float(game.tuning.camera.fp_pitch_min))) < 0.01, "%s: and down to the eye's lowest pitch (%.0f deg)" % [id, rad_to_deg(lens.global_rotation.x)])
+	check(not drawn(), "%s: the hero is not drawn looking down" % id)
+	check(absf(lens.global_basis.x.y) < 0.001, "%s: the view never rolls" % id)
+	cam.yaw = yaw0
+	cam.pitch = 0.0
+	await frames(3)
+
 	# rock across the doorway, slowly: from inside out onto the threshold and back, then from outside in and back,
-	# each time staying within the band; the room never changes
+	# each time staying within the band; the room, and the view with it, never changes
 	var door := c + front * door_depth(id)
 	for side: String in ["inside", "outside"]:
 		if side == "outside":
@@ -166,21 +200,21 @@ func room(id: String) -> void:
 				if player.room != at:
 					changes += 1
 					at = player.room
-		check(changes == 0, "%s: rocking in the doorway from %s (%.2f to %.2f m from the door) flips the room %d times" % [id, side, span.x, span.y, changes])
+		check(changes == 0, "%s: rocking in the doorway from %s (%.2f to %.2f m from the door) flips the view %d times" % [id, side, span.x, span.y, changes])
 
-	# walk out: the outdoor profile comes back, the hero solid
+	# walk out: the follow camera comes back and the hero fades in, never popping
 	await walk_to(c - front * 0.3, 8.0)
 	reset()
-	await walk_to(c + front * out, 12.0)
-	for i in int(60 * float(game.tuning.camera.in_ease_s)) + 5:
+	await walk_to(c + front * START, 12.0)
+	for i in int(60 * (ease + float(game.tuning.camera.fp_reveal_s))) + 5:
 		await tick()
-	check(player.room == "" and player.cam.indoor == 0.0, "%s: walking out returns the outdoor profile (%.2f)" % [id, player.cam.indoor])
-	check(drawn() and player.shown == 1.0, "%s: the hero is drawn solid outside (fade %.2f)" % [id, player.shown])
+	check(player.room == "" and cam.first == 0.0, "%s: walking out returns the follow camera (first %.2f)" % [id, cam.first])
+	check(drawn() and player.shown == 1.0, "%s: the hero is drawn solid again outside (fade %.2f)" % [id, player.shown])
+	check(jump <= 0.25, "%s: the hero fades in, it does not pop (largest step %.2f in a frame)" % [id, jump])
 	verdict(id, "walking out")
 
 	# in at an angle: from 4 m out, 35 degrees off the door's axis, to the door and on to the middle, the view left
-	# where the walk puts it. The feelers pull the lens in before the door frame does
-	# (half a metre out of the door it turns in, and the view, still slanted, follows it through)
+	# where the walk puts it
 	var off := front.rotated(Vector3.UP, deg_to_rad(35.0)) * 4.0
 	var from := door + off
 	player.place(Vector3(from.x, world.height_at(from.x, from.z) + 0.05, from.z), rad_to_deg(atan2(-off.x, off.z)))
@@ -188,73 +222,99 @@ func room(id: String) -> void:
 	reset()
 	await walk_to(door + front * 0.6, 8.0)
 	await walk_to(c - front * 0.3, 8.0)
-	check(player.room == id, "%s: the slanted walk ends inside (%s)" % [id, player.room])
+	check(player.room == id and cam.first == 1.0, "%s: the slanted walk ends inside, in first person (%s, first %.2f)" % [id, player.room, cam.first])
 	verdict(id, "walking in at 35 degrees")
 	check(cuts == 0, "%s: the hero was drawn with the lens close enough to cut it on %d frames" % [id, cuts])
 
-	await sweep(id, spec)
+	await sweep(id, player.rooms[id])
+
+
+## Where first person looks from: the visor's middle over the hero, ahead along the view.
+func eye() -> Vector3:
+	var cam: Node3D = player.cam
+	return player.body.global_position + Vector3.UP * cam.eye.y + Basis(Vector3.UP, cam.yaw) * Vector3(0.0, 0.0, cam.eye.z)
 
 
 func reset() -> void:
 	step_max = 0.0
+	eye_max = 0.0
 	strays = 0
 	note = ""
 	feet_max = 0.0
 	falls = 0
+	jump = 0.0
+	last_shown = player.shown
 	last_lens = Vector3.INF
 	last_feet.clear()
 
 
 func verdict(id: String, walk: String) -> void:
 	check(strays == 0, "%s, %s: the lens was in a solid on %d frames (%s)" % [id, walk, strays, note])
-	check(step_max <= MAX_STEP, "%s, %s: the lens never jumps (largest move %.3f m in a frame, at most %.2f; %s)" % [id, walk, step_max, MAX_STEP, note])
+	# the ease between the follow lens and the eye is a smoothstep: its steepest frame is 1.5 / (fp_ease_s * 60) of
+	# the way, here over the play distance and a metre for the walk and the eye's height. A cut is the whole way at once
+	var t: Dictionary = game.tuning.camera
+	var most: float = 1.5 / (float(t.fp_ease_s) * 60.0) * (float(t.distance) + 1.0)
+	check(step_max <= most, "%s, %s: the view is eased, the lens never jumps (largest move %.3f m in a frame, at most %.2f; %s)" % [id, walk, step_max, most, note])
+	check(eye_max <= EYE_STEP, "%s, %s: in the eye the lens moves with the hero (largest move %.3f m in a frame, at most %.2f)" % [id, walk, eye_max, EYE_STEP])
 	var hero: Dictionary = game.tuning.hero
-	var most: float = player.step / float(hero.step_catch_s) / 60.0 + 0.03  # a step caught up, plus the stride's own lift
-	check(feet_max <= most, "%s, %s: the drawn feet never pop (largest move %.3f m in a frame, at most %.3f)" % [id, walk, feet_max, most])
+	var pop: float = player.step / float(hero.step_catch_s) / 60.0 + 0.03  # a step caught up, plus the stride's own lift
+	check(feet_max <= pop, "%s, %s: the drawn feet never pop (largest move %.3f m in a frame, at most %.3f)" % [id, walk, feet_max, pop])
 	check(falls == 0, "%s, %s: the walk never drops into the fall clip on the ground (%d frames)" % [id, walk, falls])
 
 
-## Standing a body's width or more in from the plan's edge, at every heading and at the profile's lowest, level and
-## highest pitch: the lens stays in the plan and in no solid. Spots where the body would be in a solid are skipped.
+## Placed anywhere in the room (the body wholly in the plan), at every heading: on the very next frame drawn the view
+## is in the eye, level, along the heading, and the hero is not drawn; then looking as far down and up as the eye goes
+## the lens stays in the plan and in no solid. Spots where the body would be in a solid are skipped.
 func sweep(id: String, spec: Dictionary) -> void:
 	var item: Node3D = world.items[id]
 	var t: Dictionary = game.tuning.camera
-	var keep: float = t.in_keep
+	var cam: Node3D = player.cam
 	var spots := 0
 	var outside := 0
 	var solid := 0
+	var seen := 0
+	var late := 0
 	var first := ""  # the first pose that failed, to find it again
 	for gx in range(-6, 7):
 		for gz in range(-8, 7):
 			var at := item.to_global(Vector3(gx * GRID, 0.0, gz * GRID))
-			if player.cam.depth_in(spec, at) < keep:
+			if cam.depth_in(spec, at) < player.breadth / 2.0 + 0.05:
 				continue
 			var over := item.to_global(Vector3(gx * GRID, 1.9, gz * GRID))  # under every room's ceiling
 			var hit := root.world_3d.direct_space_state.intersect_ray(PhysicsRayQueryParameters3D.create(over, over + Vector3.DOWN * 4.0, 1 | 2, [player.body.get_rid()]))
 			if hit.is_empty() or item.to_local(hit.position).y > 0.6:
 				continue  # no floor, or the top of a rack
 			for yaw in range(0, 360, 45):
-				for pitch: float in [t.in_pitch_min, t.pitch_default, t.in_pitch_max]:
-					player.place(hit.position + Vector3.UP * 0.05, yaw)
-					player.cam.pitch = deg_to_rad(pitch)
+				player.place(hit.position + Vector3.UP * 0.05, yaw)
+				# before any physics step: what the next drawn frame shows (a wake, Continue)
+				var fwd: Vector3 = -cam.lens.global_basis.z
+				if cam.first < 1.0 or cam.lens.global_position.distance_to(eye()) > 0.01 or absf(fwd.y) > 0.001 or fwd.dot(-player.body.global_basis.z) < 0.999:
+					late += 1
+				for pitch: float in [0.0, t.fp_pitch_min, t.fp_pitch_max]:
+					cam.pitch = deg_to_rad(pitch)
 					await frames(3)
 					if not player.inside().is_empty() or player.room != id:
 						break  # a spot in the fit-out
 					spots += 1
-					for f in 12:
+					for f in 4:
 						await frames(1)
 						var bad := ""
-						if player.cam.depth_in(spec, player.cam.lens.global_position) <= 0.0:
+						if cam.depth_in(spec, cam.lens.global_position) <= 0.0:
 							outside += 1
 							bad = "out of the plan"
 						if player.state().cam.inside:
 							solid += 1
 							bad = "in " + blocker()
+						if drawn() or cam.first < 1.0:
+							seen += 1
+							bad = "the hero drawn"
 						if bad != "" and first == "":
 							first = "%s at %s yaw %d pitch %d, frame %d" % [bad, item.to_local(hit.position), yaw, pitch, f]
 	check(spots > 0, "%s: the sweep stood somewhere (%d spot-poses)" % [id, spots])
-	check(outside == 0, "%s: standing in the room, the lens left the plan on %d frames of %d (first: %s)" % [id, outside, spots * 12, first])
-	check(solid == 0, "%s: standing in the room, the lens was in a solid on %d frames of %d (first: %s)" % [id, solid, spots * 12, first])
+	check(late == 0, "%s: placed in the room, the view is in the eye, level, along the heading before the next frame (%d placings were not)" % [id, late])
+	check(seen == 0, "%s: standing in the room, the hero was drawn or the view left the eye on %d frames of %d (first: %s)" % [id, seen, spots * 4, first])
+	check(outside == 0, "%s: standing in the room, the lens left the plan on %d frames of %d (first: %s)" % [id, outside, spots * 4, first])
+	check(solid == 0, "%s: standing in the room, the lens was in a solid on %d frames of %d (first: %s)" % [id, solid, spots * 4, first])
 
 
 ## What the lens is in, as follow_cam.inside() finds it: the solid between the pivot and the lens, else the one the
@@ -284,11 +344,16 @@ func tick() -> void:
 	var box: AABB = player.model.bounds
 	if drawn() and p.distance_to(p.clamp(box.position, box.end)) <= cam._near_radius():
 		cuts += 1
+	if last_lens != Vector3.INF and cam.first == 1.0 and last_first == 1.0:
+		eye_max = maxf(eye_max, lens.distance_to(last_lens))
 	if last_lens != Vector3.INF and lens.distance_to(last_lens) > step_max:
 		step_max = lens.distance_to(last_lens)
 		if strays == 0:
-			note = "move %.3f at hero %s, dist %.2f, soft %.2f, indoor %.2f" % [step_max, player.body.global_position, cam.dist, cam.soft, cam.indoor]
+			note = "move %.3f at hero %s, dist %.2f, soft %.2f, first %.2f" % [step_max, player.body.global_position, cam.dist, cam.soft, cam.first]
 	last_lens = lens
+	last_first = cam.first
+	jump = maxf(jump, player.shown - last_shown)
+	last_shown = player.shown
 	if player.state().cam.inside:
 		if strays == 0:
 			note = "in %s at hero %s" % [blocker(), player.body.global_position]

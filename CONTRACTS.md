@@ -68,12 +68,12 @@ The composition root is `sandbox/sandbox.gd`. It calls only these:
 
 ## Test hooks
 `Forge.register(sandbox)`. `render_game_to_text()` returns:
-`player.{pos, speed, onFloor, gait, inside, room}`, `cam.{inside, dist, indoor}`, `heroScreen` (0 when the hero is hidden), `interaction.{target, prompt}`,
+`player.{pos, speed, onFloor, gait, inside, room}`, `cam.{inside, dist, first}`, `heroScreen` (0 when the hero is hidden), `interaction.{target, prompt}`,
 `vehicle.{driving, speed}`, `carry`, `sky.{state, phase, hour, sun_el, sun_az, keys, light_el, lamps_on, coat, bursts,
 probe_redraws}` (The sky clock, below), `quality`, `fps`.
 `set_view(name)`: `default` (the play camera), `base`, `hero`, `horizon`, `west`, `storm`, `airlock`, `rover`, `greenhouse`,
 `hab_in` (inside HAB 1: the life-support wall and bunks), `hab_desk` (inside HAB 1: galley, Veggie, desk and map),
-`hab_room`, `greenhouse_room`, `shelter_room` (the play camera in the room's profile, the hero placed in from the door looking in).
+`hab_room`, `greenhouse_room`, `shelter_room` (the play camera in first person, the hero placed in from the door looking in).
 `place(pos, yaw_deg)`: the hero, through `player.place()`.
 
 ## Prefabs (`data/world.json` `prefabs`: id -> model file; a missing file loads a labelled stand-in box)
@@ -158,23 +158,23 @@ cover lifts (`audio.lift()`, a 1 s fade).
   holds the ground, the rocks and every dust emitter, also those made in play (`dust.layers`): the probe draws them
   and does not shade them (`reflection_mask` 1), so dust is lit as the ground it rose from.
 
-## Rooms and the interior camera (12 Nov, third person only since 14 Nov 2026)
+## Rooms and the interior camera (12 Nov; first person indoors again since 15 Nov 2026)
 - `data/world.json` `rooms`: per item id, its floor plan in its own space (`{circle: [x, z, r]}`, `{rect: [x0, z0, x1,
   z1]}`). The root hands them to `player.rooms` (`{id: {node, areas}}`). `player.room` is the room the body is in: in
   once the whole body is past the plan's edge, out once it is wholly outside (the hero's radius either way), so a
-  doorway never flips it (`tests/indoor_test.gd`). A room's door is where its plan meets the item's front axis (-Z).
-- The camera stays third person everywhere (skills/third-person-camera, Rooms; design/research/interior-camera.md).
-  `follow_cam.room` (the room the body is in, else the one whose door is nearest) and `follow_cam.want_in` (1 in it,
-  from 0 at `camera.in_approach` m from its door) are set by the player; `follow_cam.indoor` eases toward it and
-  blends the room profile in: `camera.in_distance`, `in_shoulder`, `in_pivot_height`, `in_pitch_min/max`, the
-  no wall lift, no glance. Indoors and out the arm and its feelers cast a sphere of `camera.clear` (the lens stands
-  that far from every solid), and the feelers (`camera.feelers`, `feel_slack`, `feel_rate`) slide the lens in before
-  the arm's own cut; outdoors thin things block only over the last `camera.thin_tail` m before the lens (`tests/camera_test.gd`). The lens is kept in the plan shrunk by the arm's
-  sphere, blended in by the arm root's depth past the plan's edge, on top of the sphere cast. In the profile the arm
-  also collides with the thin layer (4), and its length is capped at the plan's depth from its middle. Concave
-  colliders collide from both sides (`world.gd _layer()`), so a one-sided glass shell stops a cast from inside.
-- The hero fades only by the lens's gap to its drawn box (`camera.fade_near`, `fade_far`), as outdoors.
-
+  doorway never flips it (`tests/indoor_test.gd`).
+- In a room the view is first person (Ravindu, 15 Nov 2026; third person indoors was tried on 14 Nov). The player sets
+  `follow_cam.room` (bool); `follow_cam.first` eases 0 to 1 over `camera.fp_ease_s` and the lens goes from the follow
+  position into `follow_cam.eye` (the visor's middle, riding the drawn body over a sill), level after a teleport,
+  pitch within `camera.fp_pitch_min/max`. Every turn there is the player's: no recentre, no glance. The hero is not
+  drawn from its own eye and fades back in over `camera.fp_reveal_s` outside; `follow_cam.show_body` draws it for a
+  cut another camera films. E picks what the view's centre rests on, else the nearest thing to it inside
+  `interact.aim_deg` (`sandbox/interactions.gd _pick()`).
+- Outdoors the arm and its feelers cast a sphere of `camera.clear` (the lens stands that far from every solid), and
+  the feelers (`camera.feelers`, `feel_slack`, `feel_rate`) slide the lens in before the arm's own cut; thin things
+  block only over the last `camera.thin_tail` m before the lens (`tests/camera_test.gd`). Concave colliders collide
+  from both sides (`world.gd _layer()`), so a one-sided glass shell stops a cast from inside.
+- Outdoors the hero fades only by the lens's gap to its drawn box (`camera.fade_near`, `fade_far`).
 ## Room light and the toilet curtain (13 Nov 2026)
 - Each room in `data/world.json` `probe.rooms.<id>` has its own reflection probe (`interior` false for a glass dome)
   and an optional `light` (`at`, `range`, `share`, `color`: a DESIGN.md colour name, else `lighting.room`'s). It is an

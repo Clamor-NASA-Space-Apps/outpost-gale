@@ -12,7 +12,7 @@ var tree: AnimationTree
 var playback: AnimationNodeStateMachinePlayback
 var skeleton: Skeleton3D
 var bounds: AABB  # the drawn body in the idle pose, in this node's space (feet at y = 0, centred on the axis)
-var eye: Vector3  # the middle of the visor in the idle pose, in this node's space: where the head lamps aim from
+var eye: Vector3  # the middle of the visor in the idle pose, in this node's space: where first person looks from, and the head lamps aim from
 var clip_speed := {}  # gait clip -> the ground speed its stride was made for, m/s, measured from the feet
 var touchdown := {}  # gait clip -> [left, right] phase (0..1) where each boot lands, from clips.json
 var foot_bones: Array[int] = []

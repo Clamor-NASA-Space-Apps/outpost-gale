@@ -31,8 +31,8 @@ const VIEWS := {
 	"hab_in": [Vector3(1.336, 2, -0.515), Vector3(-2.069, 1.1, -0.28)],  # inside HAB 1: the life-support wall and bunks
 	"hab_desk": [Vector3(-0.733, 2, -0.795), Vector3(1.202, 1, 1.835)],  # inside HAB 1: galley, Veggie, desk and map
 }
-# The play camera inside a room (its third-person profile): [item, where the hero stands in its space, yaw from the
-# item's front, pitch deg]. Each stands well in from the door looking in (a model's door is on its front, -Z).
+# The play camera inside a room, first person: [item, where the hero stands in its space, yaw from the item's front,
+# pitch deg]. Each stands well in from the door looking in (a model's door is on its front, -Z).
 const ROOM_VIEWS := {
 	"hab_room": ["hab1", Vector3(0.0, 0.3, -0.3), 180.0, -12.0],
 	"greenhouse_room": ["greenhouse", Vector3(0.0, 0.22, -0.8), 180.0, -12.0],
