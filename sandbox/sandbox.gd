@@ -637,6 +637,7 @@ func _wire() -> void:
 		checkpoint(next)
 		beats.start_sol(next))
 	cine.arrived.connect(func(l: String) -> void:
+		hud.set_mark(null)  # the kid's pin was for the place left behind: at the other end of a trip it pointed nowhere
 		player.bound = world.bound(0.0, player.body.global_position)
 		beats.notify("arrived:" + l))
 	beats.trip.connect(func(l: String) -> void:

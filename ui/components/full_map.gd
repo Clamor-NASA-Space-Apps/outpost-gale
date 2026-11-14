@@ -193,7 +193,9 @@ func tap(at: Vector2) -> void:
 		var p: Array = best[0]
 		mark = _place_at(p[0])
 		mark_id = p[0]
-		marked.emit(mark, mark_id, p[1])
+		# a site's label on the map carries its distance from the base ("Mont Mercou  8.8 km"); the HUD's tag writes
+		# the distance itself, and showed both (15 Nov playtest: "Mont Mercou 8.8 km 6.5 km")
+		marked.emit(mark, mark_id, String(world.sites[p[0]].label).get_slice(",", 0) if world.sites.has(p[0]) else p[1])
 	else:
 		mark = to_world(at)
 		mark_id = ""
