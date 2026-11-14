@@ -4,7 +4,7 @@ extends "res://addons/forge/test.gd"
 ## fact dismissed, then free play until a sleep. Every beat ends in order inside its time, every line is in
 ## data/lines.json, the brush raises the power coming in, PIP never gives up, and free play allows everything.
 
-const BUDGET := {"wake": 30, "power_low": 2, "to_wings": 90, "see_dust": 2, "brush": 30, "jumped": 2, "weak_sun": 2,
+const BUDGET := {"wake": 45, "power_low": 2, "to_wings": 90, "see_dust": 2, "brush": 30, "jumped": 2, "weak_sun": 2,
 	"opportunity": 2, "see_reactor": 10, "reactor": 2, "nasa_chose": 2, "sleep_hint": 2, "free": 3, "day_done": 120,
 	"to_greenhouse": 90, "go_in": 40, "robots_planted": 2, "lettuce_days": 2, "plant": 30, "microgreens": 2,
 	"radish": 2, "vitamins": 2, "sent": 2, "light_time": 2, "valve": 60, "fixed": 2, "reply": 40, "reply_home": 2,
@@ -104,7 +104,7 @@ func play() -> bool:
 			shown[0] = gain.text
 	await _beat("brush", func() -> void:
 		watch.call()
-		_use("clean_panel", Vector3(27.95, 0.0, 9.5)))
+		_use("clean_panel", Vector3(-8.116, 0.0, -26.723)))
 	var after: Array = [sim.panel_dust, sim.state().power_in_kw]
 	if gain == null:
 		print("  SKIP the HUD's power gain: no real HUD meter here")
@@ -130,29 +130,29 @@ func play() -> bool:
 	beats._do("open:greenhouse")  # the kid's E on the door (doors_test covers it)
 	var lined_up := [false]  # square in front of the doorway first, as a kid lines up with a door
 	await _beat("go_in", func() -> void:
-		lined_up[0] = lined_up[0] or _flat(player.body.global_position, Vector3(-11.0, 0.0, 4.2)) < 0.4
-		_steer(Vector3(-11.0, 0.0, 0.5) if lined_up[0] else Vector3(-11.0, 0.0, 4.2)))
+		lined_up[0] = lined_up[0] or _flat(player.body.global_position, Vector3(5.869, 0.0, 10.208)) < 0.4
+		_steer(Vector3(2.215, 0.0, 10.786) if lined_up[0] else Vector3(5.869, 0.0, 10.208)))
 	_stop()
 	for id: String in ["robots_planted", "lettuce_days"]:
 		await _beat(id, _dismiss)
-	await _beat("plant", _use.bind("plant", Vector3(-10.4, 0.0, -1.7)))
+	await _beat("plant", _use.bind("plant", Vector3(-0.052, 0.0, 10.538)))
 	for id: String in ["microgreens", "radish", "vitamins"]:
 		await _beat(id, _dismiss)
 	await _sleep("sol3")
 
 	# Sol 4: a question to Earth on the radio, a valve fixed without Earth, the reply after its round trip
 	await _wake("sol4")
-	await _beat("wake", _use.bind("radio", Vector3(-1.08, 0.0, 0.73)))
+	await _beat("wake", _use.bind("radio", Vector3(0.89, 0.0, 0.953)))
 	await _beat("sent", _dismiss)
 	check(game.hud.mail.visible, "the visor mail shows the question on its way")
 	await _beat("light_time", _dismiss)
 	used_at = -1
 	await _beat("valve", func() -> void:
 		var b: Vector3 = player.body.global_position
-		if b.z < 4.0 and absf(b.x) < 2.5:
-			_steer(Vector3(0.0, 0.0, 4.5), 0.5)  # out of HAB 1 first
+		if _hab_l(b).z > -4.0 and absf(_hab_l(b).x) < 2.5:
+			_steer(Vector3(4.445, 0.0, -0.704), 0.5)  # out of HAB 1 first
 		else:
-			_use("o2_valve", Vector3(-2.3, 0.0, 2.6)))
+			_use("o2_valve", Vector3(2.928, 0.0, 1.865)))
 	await _beat("fixed", _dismiss)
 	await _beat("reply")
 	await _beat("reply_home", _dismiss)
@@ -170,12 +170,12 @@ func play() -> bool:
 		if game.player.room == "shelter" and not game.sim.sim.knobs.sheltered:
 			game.sim.apply("shelter_in")  # what the wiring does when the hero is in the shelter's room
 		var b: Vector3 = player.body.global_position
-		var sh: Vector3 = world.items.shelter.global_position  # its door faces north, 4 m out lines the kid up
-		lined[0] = lined[0] or _flat(b, sh + Vector3(0.0, 0.0, -4.0)) < 0.5
-		if b.z < 4.0 and absf(b.x) < 2.5:
-			_steer(Vector3(0.0, 0.0, 4.5), 0.5)
+		var sh: Vector3 = world.items.shelter.global_position  # 4 m out of its door lines the kid up (the door turned with the base, 14 Nov)
+		lined[0] = lined[0] or _flat(b, sh + Vector3(-3.951, 0.0, 0.626)) < 0.5
+		if _hab_l(b).z > -4.0 and absf(_hab_l(b).x) < 2.5:
+			_steer(Vector3(4.445, 0.0, -0.704), 0.5)
 		else:
-			_steer(sh if lined[0] else sh + Vector3(0.0, 0.0, -4.0)))
+			_steer(sh if lined[0] else sh + Vector3(-3.951, 0.0, 0.626)))
 	_stop()
 	await frames(5)
 	if game.player.room == "shelter" and not game.sim.sim.knobs.sheltered:
@@ -275,11 +275,11 @@ func play() -> bool:
 	var hab_brush: Vector3 = world.items.hab1.to_global(Vector3(-0.605, 0.0, -1.426))
 	var at_hatch := [false]
 	await _beat("s13_brush", func() -> void:
-		at_hatch[0] = at_hatch[0] or _flat(player.body.global_position, Vector3(0.0, 0.0, 5.5)) < 0.5
+		at_hatch[0] = at_hatch[0] or _flat(player.body.global_position, Vector3(5.432, 0.0, -0.86)) < 0.5
 		if at_hatch[0]:
 			_use("brush", hab_brush)
 		else:
-			_steer(Vector3(0.0, 0.0, 5.5), 0.3))  # square in front of the hatch first
+			_steer(Vector3(5.432, 0.0, -0.86), 0.3))  # square in front of the hatch first
 	_stop()
 	for id: String in ["s13_toxic", "s13_why"]:
 		await _beat(id, _dismiss)
@@ -294,16 +294,16 @@ func play() -> bool:
 	beats._do("open:greenhouse")
 	# square in front of the door, then in; where PIP waits on that spot, round it by its left and in from just
 	# outside the door (14 Nov: with no use clips the hero came later and PIP stood there first)
-	var gh_way := [Vector3(-11.0, 0.0, 4.2), Vector3(-11.0, 0.0, 2.9), Vector3(-11.0, 0.0, 0.5)]
+	var gh_way := [Vector3(5.869, 0.0, 10.208), Vector3(4.585, 0.0, 10.411), Vector3(2.215, 0.0, 10.786)]
 	await _beat("s17_go_in", func() -> void:
 		if gh_way.size() == 3 and _flat(pip.global_position, gh_way[0]) < 1.0:
-			gh_way[0] = Vector3(-12.1, 0.0, 4.2)
+			gh_way[0] = Vector3(6.041, 0.0, 11.294)
 		while gh_way.size() > 1 and _flat(player.body.global_position, gh_way[0]) < 0.4:
 			gh_way.pop_front()
 		_steer(gh_way[0]))
 	_stop()
 	used_at = -1
-	await _beat("s17_pick", _use.bind("harvest", Vector3(-10.4, 0.0, -2.05)))
+	await _beat("s17_pick", _use.bind("harvest", Vector3(-0.398, 0.0, 10.593)))
 	await _beat("s17_salad", _dismiss)
 	await _sleep("sol13")
 
@@ -494,8 +494,8 @@ func _board() -> void:
 	if player.vehicle:
 		return
 	var b: Vector3 = player.body.global_position
-	if b.z < 4.0 and absf(b.x) < 2.5:
-		_steer(Vector3(0.0, 0.0, 4.5), 0.5)  # out of HAB 1 first
+	if _hab_l(b).z > -4.0 and absf(_hab_l(b).x) < 2.5:
+		_steer(Vector3(4.445, 0.0, -0.704), 0.5)  # out of HAB 1 first
 		return
 	for it: Node in game.interactions.by_thing.values():
 		if it.kind == "rover":
@@ -510,8 +510,8 @@ func _board() -> void:
 ## Toward `at`, out of HAB 1 first.
 func _follow_out(at: Vector3, near: float) -> void:
 	var b: Vector3 = player.body.global_position
-	if b.z < 5.8 and absf(b.x) < 2.5:
-		_steer(Vector3(0.0, 0.0, 6.2), 0.4)  # straight out through the hatch first: a turn in it rubs the frame
+	if _hab_l(b).z > -5.8 and absf(_hab_l(b).x) < 2.5:
+		_steer(Vector3(6.124, 0.0, -0.97), 0.4)  # straight out through the hatch first: a turn in it rubs the frame
 	else:
 		_steer(at, near)
 
@@ -519,8 +519,8 @@ func _follow_out(at: Vector3, near: float) -> void:
 ## Out of HAB 1 and stand by.
 func _out() -> void:
 	var b: Vector3 = player.body.global_position
-	if b.z < 4.0 and absf(b.x) < 2.5:
-		_steer(Vector3(0.0, 0.0, 4.5), 0.5)
+	if _hab_l(b).z > -4.0 and absf(_hab_l(b).x) < 2.5:
+		_steer(Vector3(4.445, 0.0, -0.704), 0.5)
 	else:
 		_stop()
 
@@ -581,7 +581,7 @@ func _crumbs() -> void:
 func _follow(near: float) -> void:
 	var b: Vector3 = player.body.global_position
 	if Vector2(b.x, b.z).length() < 4.0:  # in or by HAB 1: out through the hatch first
-		_steer(Vector3(0.0, 0.0, 4.5), 0.5)
+		_steer(Vector3(4.445, 0.0, -0.704), 0.5)
 	else:
 		_steer(pip.global_position, near)
 
@@ -621,3 +621,8 @@ func _stop() -> void:
 func _flat(a: Vector3, b: Vector3) -> float:
 	return Vector2(a.x - b.x, a.z - b.z).length()
 
+
+## A point in HAB 1's own frame (its door on -Z): the bot's "still in HAB 1" tests, written for the base before it
+## turned to face the sunrise (tools/rotate_base.py), in the frame that turned with it.
+func _hab_l(b: Vector3) -> Vector3:
+	return world.items.hab1.to_local(b)

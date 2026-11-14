@@ -86,9 +86,9 @@ func play() -> bool:
 	# the hero stands still nearby: it comes over, looks up, beeps
 	player.place(edge.pos, edge.yaw)
 	await _until(pip, func() -> bool: return pip.state == "look", 30.0)
-	var near: Vector3 = pip.global_position + Vector3(4.0, 0.0, 0.0)
+	var near: Vector3 = pip.global_position + Vector3(-0.626, 0.0, -3.951)
 	if pip._no_go(Vector2(near.x, near.z)):
-		near = pip.global_position - Vector3(4.0, 0.0, 0.0)
+		near = pip.global_position - Vector3(-0.626, 0.0, -3.951)
 	pip._greet_cool = 0.0
 	pip._hello_cool = 0.0
 	sounds.clear()
@@ -114,14 +114,14 @@ func _sprint(world: Node3D, player: Node3D, pip: Node3D) -> void:
 	var b: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/beats.json")).pip
 	pip.release()
 	await frames(2)
-	var from := Vector3(2.0, world.height_at(2.0, 9.5), 9.5)
-	pip.yaw = -PI / 2.0
+	var from := Vector3(9.07, world.height_at(9.07, -3.462), -3.462)
+	pip.yaw = deg_to_rad(9.0)  # facing east before the base turned -99 deg (tools/rotate_base.py)
 	pip._place(from, pip.yaw)
-	player.place(Vector3(-1.5, world.height_at(-1.5, 9.5) + 0.05, 9.5), -90.0)
+	player.place(Vector3(9.618, world.height_at(9.618, -0.005) + 0.05, -0.005), 171.0)
 	await frames(5)
 	var arrived := [false]
 	pip.arrived.connect(func() -> void: arrived[0] = true, CONNECT_ONE_SHOT)
-	pip.order(Vector3(20.0, 0.0, 3.0), Vector3.INF, false, Vector3(b.lead_wait_m, b.lead_resume_m, b.lead_near_m))
+	pip.order(Vector3(-0.166, 0.0, -20.223), Vector3.INF, false, Vector3(b.lead_wait_m, b.lead_resume_m, b.lead_near_m))
 	action(&"move_forward", true)
 	action(&"hurry", true)
 	var gap := INF
@@ -151,10 +151,10 @@ func _cluster(world: Node3D, player: Node3D, pip: Node3D) -> void:
 	var mid := Vector3.ZERO
 	for id: String in ["bag1", "bag2", "bag3"]:
 		mid += (world.items[id] as Node3D).global_position / 3.0
-	var hero := Vector3(-1.5, 0.0, 9.5)
-	player.place(Vector3(hero.x, world.height_at(hero.x, hero.z) + 0.05, hero.z), 90.0)
+	var hero := Vector3(9.618, 0.0, -0.005)
+	player.place(Vector3(hero.x, world.height_at(hero.x, hero.z) + 0.05, hero.z), -9.0)
 	var far := mid + (mid - Vector3(0.0, mid.y, 0.0)).normalized() * 2.5  # beyond the bags, seen from HAB 1
-	for to: Vector3 in [Vector3(2.0, 0.0, 12.0), hero + Vector3(1.2, 0.0, 0.0), far]:
+	for to: Vector3 in [Vector3(11.539, 0.0, -3.853), hero + Vector3(-0.188, 0.0, -1.185), far]:
 		var start := Vector3.INF
 		for r in range(0, 12):  # the free spot nearest the middle of the bags, facing out between them
 			for k in 8:
@@ -187,14 +187,14 @@ func _cluster(world: Node3D, player: Node3D, pip: Node3D) -> void:
 func _wedged(world: Node3D, player: Node3D, pip: Node3D) -> void:
 	pip.release()
 	await frames(2)
-	var at := Vector3(2.0, 0.0, 9.5)  # open ground east of HAB 1 (the lead's start)
+	var at := Vector3(8.0, 0.0, -7.5)  # open, level ground north-east of HAB 1 (since the base turned to the sunrise, 14 Nov: the turned spot sat on a slope PIP could not back up)
 	at.y = world.height_at(at.x, at.z)
-	pip.yaw = PI / 2.0  # facing -X
+	pip.yaw = deg_to_rad(-171.0)  # facing -X before the base turned -99 deg
 	pip._place(at, pip.yaw)
-	player.place(Vector3(-1.5, world.height_at(-1.5, 13.0) + 0.05, 13.0), 0.0)
+	player.place(Vector3(13.075, world.height_at(13.075, -0.552) + 0.05, -0.552), 0.0)
 	var keep := {}
-	var fwd := Vector3(-1.0, 0.0, 0.0)
-	var dirs := {"bag1": fwd, "bag2": Vector3(0.0, 0.0, 1.0), "bag3": Vector3(0.0, 0.0, -1.0)}
+	var fwd := Vector3(0.156, 0.0, 0.988)
+	var dirs := {"bag1": fwd, "bag2": Vector3(0.988, 0.0, -0.156), "bag3": Vector3(-0.988, 0.0, 0.156)}
 	for id: String in dirs:
 		var bag: Node3D = world.items[id]
 		keep[id] = bag.global_transform
@@ -232,8 +232,8 @@ func _wedged(world: Node3D, player: Node3D, pip: Node3D) -> void:
 ## "follow me" for ever).
 func _bags(world: Node3D, player: Node3D, pip: Node3D, dropped: bool) -> void:
 	var b: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/beats.json")).pip
-	var from := Vector3(1.4, world.height_at(1.4, 6.0), 6.0)  # the bags stop, where the Sol 1 lift leaves PIP
-	var to := Vector3(20.0, 0.0, 3.0)  # the solar stop
+	var from := Vector3(5.707, world.height_at(5.707, -2.321), -2.321)  # the bags stop, where the Sol 1 lift leaves PIP
+	var to := Vector3(-0.166, 0.0, -20.223)  # the solar stop
 	if dropped:
 		var bag: Node3D = world.items.bag1
 		var mid := from.lerp(to, 0.3)
@@ -243,7 +243,7 @@ func _bags(world: Node3D, player: Node3D, pip: Node3D, dropped: bool) -> void:
 	await frames(2)
 	pip.yaw = atan2(-(to.x - from.x), -(to.z - from.z))
 	pip._place(from, pip.yaw)
-	player.place(Vector3(-1.0, world.height_at(-1.0, 7.0) + 0.05, 7.0), -90.0)
+	player.place(Vector3(7.07, world.height_at(7.07, -0.107) + 0.05, -0.107), 171.0)
 	await frames(5)
 	var arrived := [false]
 	pip.arrived.connect(func() -> void: arrived[0] = true, CONNECT_ONE_SHOT)
@@ -280,14 +280,14 @@ func _lead(world: Node3D, player: Node3D, pip: Node3D) -> void:
 	pip.back_m = float(b.back_m)
 	pip.back_s = float(b.back_s)
 	pip.back_lead = float(b.back_lead_s)
-	var from := Vector3(2.0, world.height_at(2.0, 9.5), 9.5)  # a via point east of HAB 1, the solar stop 18 m east
-	pip.yaw = -PI / 2.0
+	var from := Vector3(9.07, world.height_at(9.07, -3.462), -3.462)  # a via point beside HAB 1, the solar stop 20 m on (turned with the base, 14 Nov)
+	pip.yaw = deg_to_rad(9.0)  # facing east before the base turned -99 deg (tools/rotate_base.py)
 	pip._place(from, pip.yaw)
-	player.place(Vector3(-1.0, world.height_at(-1.0, 9.5) + 0.05, 9.5), -90.0)
+	player.place(Vector3(9.539, world.height_at(9.539, -0.498) + 0.05, -0.498), 171.0)
 	var arrived := [false]
 	pip.arrived.connect(func() -> void: arrived[0] = true, CONNECT_ONE_SHOT)
 	var gave: int = pip.gave_up
-	pip.order(Vector3(20.0, 0.0, 3.0), Vector3.INF, false, Vector3(b.lead_wait_m, b.lead_resume_m, b.lead_near_m))
+	pip.order(Vector3(-0.166, 0.0, -20.223), Vector3.INF, false, Vector3(b.lead_wait_m, b.lead_resume_m, b.lead_near_m))
 	var gap := INF
 	var hits := 0
 	var speeds: Array[float] = []
