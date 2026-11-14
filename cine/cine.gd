@@ -504,6 +504,27 @@ func sunrise_hour(peek := 0.0) -> float:
 	return (hi + lo) / 2.0
 
 
+## Sol 1's first hour (data/cine.json opening): the kid wakes so that `sliver` of the drawn disc's height clears the
+## crater rim, seen from `eye` (out of HAB 1's door, which faces the sunrise), `lead_s` real seconds after the cover
+## lifts, the clock running at its own pace meanwhile (Ravindu, 14 Nov: 'user goes outside, and enjoy the sunrise').
+func dawn_hour() -> float:
+	var o: Dictionary = cfg.opening
+	var eye := _at(o.eye)
+	var lo := 0.0
+	var hi := 12.0
+	for i in 24:
+		var mid := (lo + hi) / 2.0
+		var r: float = clock.disc_deg(mid)
+		if sun_clear(mid, eye) > -r * (1.0 - 2.0 * float(o.sliver)):
+			hi = mid
+		else:
+			lo = mid
+	var h := hi
+	for i in int(o.lead_s):  # back along the clock's own pace, a second at a time (the night runs faster)
+		h -= float(clock.pace(h))
+	return h
+
+
 ## Degrees the sun's centre stands over the skyline at its own azimuth, seen from `eye`, at local hour `h`: the patch
 ## marched out along that way, then the backdrop's crater rim (models/terrain_backdrop.glb).
 func sun_clear(h: float, eye: Vector3) -> float:

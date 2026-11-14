@@ -378,6 +378,15 @@ func busy() -> bool:
 	return cover.visible
 
 
+## Sol 1 as a person starts it: the hour shortly before sunrise (cine.dawn_hour(), the sky and the rules alike, and
+## running from the first frame), then PIP's beats.
+func start_opening() -> void:
+	clock.set_hour(clock.hours - clock.hour() + cine.dawn_hour())
+	clock.refresh()
+	_sync_rules()
+	beats.start_opening()
+
+
 ## One time for the sky and the HUD: the rules take the look clock's hour of the sol (the rules count Earth hours
 ## through a 24.66 h sol, the look 24 local hours).
 func _sync_rules() -> void:
@@ -597,4 +606,4 @@ func _wire() -> void:
 	# scene) or a tool run (--forge-job)
 	if get_tree().current_scene != null and not Array(OS.get_cmdline_user_args()).any(
 			func(a: String) -> bool: return a.begins_with("--forge-job=")):
-		beats.start_opening.call_deferred()
+		start_opening.call_deferred()
