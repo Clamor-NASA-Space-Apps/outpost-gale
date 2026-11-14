@@ -916,7 +916,8 @@ static func warm(root: Node, design: Dictionary, at: Transform3D, extra: Array =
 		elif g is GPUParticles3D:
 			emitters.append(g)
 	for m: Material in extra:
-		mats[m] = {"layers": {1: true}, "inst": {false: true}, "cast": false}
+		# swapped in on a body that casts and walks in and out of the probes (the hero)
+		mats[m] = {"layers": {1: true, 1 << 19: true}, "inst": {false: true}, "cast": true}
 	var cam := Camera3D.new()
 	var was := root.get_viewport().get_camera_3d()
 	if was:
@@ -931,29 +932,51 @@ static func warm(root: Node, design: Dictionary, at: Transform3D, extra: Array =
 	cam.make_current()
 	# the scene's own meshes stay out of sight while the copies compile a batch a frame: in view (and in the sun's
 	# shadow and a probe's six faces) on the first frame, every variant compiled at once, 31 s in one frame on the
-	# web, and the browser offered to kill the page. Lights, probes and the sky stay, so the copies get their variants
+	# web, and the browser offered to kill the page. The sun, probes and the sky stay, so the copies get their variants.
 	var hidden: Array[GeometryInstance3D] = []
 	for g: GeometryInstance3D in root.find_children("*", "GeometryInstance3D", true, false):
 		if g.visible:
 			g.visible = false
 			hidden.append(g)
+	# The scene's lamps and spots reach no copy: one at the stage (a base lamp's glimmer, the hero's helmet spot) lit
+	# every group, so the unlit and spot-only variants never compiled here and did in play (14 Nov). A cull mask, not
+	# `visible`: the sky clock and the lamp pool show their lamps again every frame
+	var masks_off := {}  # Light3D -> its cull mask
+	for l: Light3D in root.find_children("*", "Light3D", true, false):
+		if not l is DirectionalLight3D:
+			masks_off[l] = l.light_cull_mask
+			l.light_cull_mask = 0
 	var box := BoxMesh.new()
 	box.size = Vector3.ONE * 0.05
-	var lamp := make_lamp(design)
+	var lamp: bool = design.lighting.get("lamp") != null  # make_lamp() makes one
 	var parts: Array[Node3D] = []
-	# with lamps, a second group in a lamp's reach (a lamp in reach is another variant), and one out of it
-	for side: float in ([-3.0, 3.0] if lamp else [0.0]):
-		var spot := Vector3(side, 0.0, -8.0)
-		if lamp and side < 0.0:
-			lamp.omni_range = 1.5  # the variant does not depend on the reach; keep the other group out of it
-			lamp.position = spot + Vector3(0, 0.5, 0)
-			stage.add_child(lamp)
-			# a spot in reach (a helmet or head lamp) is its own light pass, so its variant compiles here too
+	# the lights in reach pick the variant: none, a lamp, a spot (a helmet or head lamp), or both are four variants,
+	# so each gets a group of its own, side by side, every light reaching only its group. With the lamp group under
+	# the spot too, a mesh near a lamp but out of the beam compiled in play (14 Nov: hitches of 0.2 to 0.5 s wherever
+	# the hero's helmet spot reached; design/research/perf-regression-14nov.md)
+	var cones := not root.find_children("*", "SpotLight3D", true, false).is_empty()
+	var groups: Array = [[false, false]]
+	if lamp:
+		groups.append([true, false])
+	if cones:
+		groups.append([false, true])
+		if lamp:
+			groups.append([true, true])
+	for gi in groups.size():
+		var spot := Vector3((gi - (groups.size() - 1) / 2.0) * 3.0, 0.0, -8.0)
+		if groups[gi][0]:
+			var omni := make_lamp(design)
+			omni.remove_from_group(LampPool.GROUP)  # the pool may hide a lamp that is not among the nearest
+			omni.omni_range = 1.5  # the variant does not depend on the reach; keep the other groups out of it
+			omni.position = spot + Vector3(0, 0.5, 0)
+			stage.add_child(omni)
+		if groups[gi][1]:
+			# high enough that the cone takes in the whole 0.7 m grid, narrow
+			# enough that its box stays clear of the next group
 			var cone := SpotLight3D.new()
-			cone.light_color = lamp.light_color
-			cone.spot_range = 1.5
-			cone.spot_angle = 60.0
-			cone.position = lamp.position
+			cone.spot_range = 3.0
+			cone.spot_angle = 30.0
+			cone.position = spot + Vector3(0, 2.0, 0)
 			cone.rotation_degrees.x = -90.0
 			stage.add_child(cone)
 		var k := 0
@@ -967,6 +990,7 @@ static func warm(root: Node, design: Dictionary, at: Transform3D, extra: Array =
 						mm.transform_format = MultiMesh.TRANSFORM_3D
 						mm.mesh = box
 						mm.instance_count = 1
+						mm.set_instance_transform(0, Transform3D())  # a new instance is all zeros, and its group's lights missed it
 						g = MultiMeshInstance3D.new()
 						(g as MultiMeshInstance3D).multimesh = mm
 					else:
@@ -987,6 +1011,7 @@ static func warm(root: Node, design: Dictionary, at: Transform3D, extra: Array =
 			c.one_shot = false
 			c.amount_ratio = 1.0
 			c.position = spot
+			c.visibility_aabb = AABB(Vector3(-0.4, -0.4, -0.4), Vector3(0.8, 0.8, 0.8))  # what pairs it with lights: its group's only
 			c.visible = false  # in a batch like the copies: all on the first frame was most of a 19 s web frame
 			stage.add_child(c)
 			c.emitting = true
@@ -996,7 +1021,7 @@ static func warm(root: Node, design: Dictionary, at: Transform3D, extra: Array =
 	var probes := root.find_children("*", "ReflectionProbe", true, false).size()
 	# progress in frames, the compiles weighed as one frame each (probe frames are cheap, compiles are not)
 	var batch := mini(maxi(1, ceili(parts.size() / float(WARM_STEPS))), WARM_BATCH)
-	var steps := float(ceili(parts.size() / float(batch)) * WARM_STEPS + frames + PROBE_FRAMES * probes)
+	var steps := float(ceili(parts.size() / float(batch)) * WARM_STEPS + 3 + frames + PROBE_FRAMES * probes)
 	var done := [0]  # an array, so the frame hook below counts into the same one
 	var tell := func(n: int) -> void:
 		done[0] += n
@@ -1012,6 +1037,15 @@ static func warm(root: Node, design: Dictionary, at: Transform3D, extra: Array =
 	for g in hidden:
 		if is_instance_valid(g):
 			g.visible = true
+	# the scene's own meshes: a frame with its spots off, one with its lamps off, then as they are. A beam that moves
+	# (the helmet spot) leaves a mesh in the variant without it, and a mesh in two probes (a room's and the base's)
+	# has variants no copy here can get (four of them, 0.5 s in play on 14 Nov)
+	for off: Array in [[SpotLight3D], [OmniLight3D], []]:
+		for l: Light3D in masks_off:
+			if is_instance_valid(l):
+				l.light_cull_mask = 0 if off.any(func(c: Variant) -> bool: return is_instance_of(l, c)) else masks_off[l]
+		await tree.process_frame
+		tell.call(1)
 	for i in frames:
 		await tree.process_frame
 		tell.call(1)
