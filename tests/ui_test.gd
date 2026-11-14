@@ -208,29 +208,30 @@ func _hud_parts(h: Control, cues: Array[String]) -> void:
 	var pip := Node3D.new()
 	for n: Node3D in [cam, body, pip]:
 		root.add_child(n)
-	body.position = Vector3(4, 0, -2.9)  # 12 m east of the greenhouse landmark (its door faces the sunrise, 14 Nov)
-	body.rotation.y = -deg_to_rad(270.0)  # facing west
-	cam.position = Vector3(4, 1.6, -2.9)
+	# the spawn and the greenhouse after the whole base turned -99 deg to face the sunrise (tools/rotate_base.py)
+	body.position = Vector3(8.889, 0, -1.408)  # the spawn
+	body.rotation.y = -deg_to_rad(171.0)  # facing the greenhouse: south
+	cam.position = Vector3(8.889, 1.6, -1.408)
 	cam.rotation.y = body.rotation.y
-	pip.position = Vector3(-5, 0, 4)
+	pip.position = Vector3(4.73, 0, 4.31)
 	h.bind_view(cam, body)
 	h.bind_speaker(pip, cam)
 	cues.clear()
-	h.set_objective("greenhouse")  # (-8, -2.9): 12 m due west
+	h.set_objective("greenhouse")  # (6.856, 10.051): 11.6 m away, a little west of south
 	h.set_objective("greenhouse")
 	await process_frame
 	await process_frame
 	var s: Dictionary = h.snapshot()
-	check(s.heading.begins_with("270°") and s.heading.ends_with("W"), "the compass reads the camera's heading: '%s'" % s.heading)
+	check(s.heading.begins_with("171°") and s.heading.ends_with("S"), "the compass reads the camera's heading: '%s'" % s.heading)
 	check(s.objective.m == 12 and s.objective.label == "Greenhouse" and not s.objective.docked, "the waypoint names the place and its distance on screen: %s" % [s.objective])
-	var want := Hud.bearing(Vector3(-12, 0, 0))
+	var want := Hud.bearing(Vector3(6.856 - 8.889, 0, 10.051 + 1.408))
 	check(absf(float(h.compass.marks.objective) - want) < 0.5, "the compass marks the objective at %.0f, want %.0f" % [h.compass.marks.objective, want])
-	var d: Vector2 = h.minimap.to_disc(Vector2(-8, -2.9), 999.0)
+	var d: Vector2 = h.minimap.to_disc(Vector2(6.856, 10.051), 999.0)
 	check(d.y < 0.0 and absf(d.x) < absf(d.y), "on the minimap the objective ahead is up: %s" % d)
 	check(s.area == "Landing plain", "the area under the minimap: %s" % s.area)
-	body.rotation.y = 0.0
-	cam.rotation.y = 0.0  # now facing north: the greenhouse is to the left, off screen
-	cam.position = Vector3(4, 1.6, -2.9)
+	body.rotation.y = -deg_to_rad(261.0)
+	cam.rotation.y = body.rotation.y  # now facing west: the greenhouse is behind-left, off screen
+	cam.position = Vector3(8.889, 1.6, -1.408)
 	await process_frame
 	await process_frame
 	check(h.snapshot().objective.docked, "off screen the waypoint docks at an edge")
@@ -299,12 +300,12 @@ func _hud_parts(h: Control, cues: Array[String]) -> void:
 	await process_frame
 	await process_frame
 	var m1: int = h.snapshot().objective.m
-	pip.position = Vector3(-3, 0, -20)
+	pip.position = Vector3(-19.29, 0, 6.09)
 	await process_frame
 	await process_frame
 	var m2: int = h.snapshot().objective.m
 	check(h.snapshot().objective.label == "PIP" and m2 > m1 + 10, "the waypoint follows PIP: %d m, then %d m" % [m1, m2])
-	var want_pip := Hud.bearing(Vector3(-3, 0, -20) - body.position)
+	var want_pip := Hud.bearing(Vector3(-19.29, 0, 6.09) - body.position)
 	check(absf(float(h.compass.marks.objective) - want_pip) < 1.0, "the compass mark follows PIP (%.0f, want %.0f)" % [h.compass.marks.objective, want_pip])
 	h.complete_objective()
 	check(h.snapshot().objective.is_empty(), "a done objective clears its waypoint")

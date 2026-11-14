@@ -9,7 +9,7 @@
   "nap_h": 0.3333,
   "lapse_per_h": 0.9,
   "lapse_s": [4.0, 9.0],
-  "drone": {"from": [-24, 14, -20], "to": [-30, 9, 3], "at": [3, 5.5, 4], "at_to": [20, 5, 6]},
+  "drone": {"from": [-15.999, 14, 26.833], "to": [7.656, 9, 29.161], "at": [3.481, 5.5, -3.589], "at_to": [-0.166, 5, -23.223]},
   "shadow_range": 60.0,
   "room_light": 0.15,
   "deck_y": 0.42,
@@ -28,7 +28,7 @@
  "launch": {
   "_note": "The ascent: the hero boards, an outside shot from out_m away on bearing out_bearing (degrees from north, clockwise) at eye height, the engine kicks dust for ignite_s, the rocket climbs at accel m/s2 for climb_s (tracked by the camera), then the window: a camera beside the rocket (window: m out toward the base, m up) looking back at HAB 1 for window_s, turning toward Earth (the night sky's own planet, DESIGN.night.md celestial) over the last part from turn_at. Earth shows only with the sun down, as on the real Mars. Plume: plume_n dust streams plume_r m out from the pad, thrown at plume_v m/s",
   "out_m": 45.0,
-  "out_bearing": 200.0,
+  "out_bearing": 101,
   "look_h": 4.0,
   "ignite_s": 1.5,
   "climb_s": 5.0,

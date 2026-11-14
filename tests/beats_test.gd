@@ -244,7 +244,10 @@ func play() -> bool:
 		ahead[0] = ahead[0] or behind and d > 2.5
 		if behind and ahead[0]:
 			gap[0] = minf(gap[0], d)
-		if d < 2.0:  # a kid following, not one standing on PIP (pip_test walks into it)
+		# a kid following keeps about PIP's own lead distance (beats.json pip lead_near_m), not one standing on PIP
+		# (pip_test walks into it); PIP slows where it steers round the battery bank on the way north (since the base
+		# turned to the sunrise, 14 Nov)
+		if d < float(beats.data.pip.lead_near_m):
 			_stop()
 		else:
 			_steer(pip.global_position))
@@ -255,7 +258,9 @@ func play() -> bool:
 	await _beat("sun_fact", func() -> void: beats.notify("dismissed"))
 	check(not clock.pinned, "the clock runs again: the sun rises and the wings turn")
 	# a visit to each thing the choice is about, then the choice (14 Nov playtest: asked before the kid knew them)
-	crumbs = [player.body.global_position]  # a new lead: the last one's tracks walked the hero straight into PIP
+	# a new lead: the last one's tracks walked the hero straight into PIP; PIP's own spot first, or a hero just past
+	# PIP's resume distance and a PIP waiting for him stand still for good
+	crumbs = [player.body.global_position, pip.global_position]
 	await _beat("o2_visit", _follow_crumbs)
 	_stop()
 	check(offered.is_empty(), "no choice before the oxygen maker and the lamps are shown")

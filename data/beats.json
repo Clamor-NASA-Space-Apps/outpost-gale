@@ -4,7 +4,7 @@
     "look_deg": 120,
     "hold_s": 0.4
   },
-  "outdoors": {"_note": "a beat with outdoors: true (an outdoor shot) starts only with the hero out of every room and clear_m from every door; until then PIP leads the way out to spot [x, z] (skills/guided-tutorial row 3)", "spot": [7.5, -1.2], "clear_m": 3.0},
+  "outdoors": {"_note": "a beat with outdoors: true (an outdoor shot) starts only with the hero out of every room and clear_m from every door; until then PIP leads the way out to spot [x, z] (skills/guided-tutorial row 3)", "spot": [7.51, -3.721], "clear_m": 3.0},
   "pip": {
     "lead_wait_m": 4.0,
     "lead_resume_m": 3.5,
@@ -53,7 +53,7 @@
       },
       "wait": {
         "place": {
-          "at": [4.4, -0.7],
+          "at": [4.445, -0.704],
           "r": 1.5
         }
       }
@@ -294,19 +294,13 @@
       "id": "o2_visit",
       "task": "task.meet_o2",
       "pip": {
-        "follow_me": [
-          -3.8,
-          3.6
-        ]
+        "follow_me": [4.15, 3.19]
       },
       "line": "sol1.follow_o2",
       "objective": "pip",
       "wait": {
         "place": {
-          "at": [
-            -3.8,
-            3.6
-          ],
+          "at": [4.15, 3.19],
           "r": 3.5
         }
       }
@@ -324,13 +318,13 @@
       "id": "garden_visit",
       "task": "task.follow_garden",
       "pip": {
-        "follow_me": [-7.0, -5.0]
+        "follow_me": [8.141, 9.848]
       },
       "line": "sol1.follow_me",
       "objective": "pip",
       "wait": {
         "place": {
-          "at": [-8.0, -2.9],
+          "at": [6.857, 10.051],
           "r": 4.0
         }
       }

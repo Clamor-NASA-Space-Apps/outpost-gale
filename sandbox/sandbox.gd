@@ -20,15 +20,15 @@ const SKIES := ["design", "design.sunset", "design.night", "design.storm"]
 const SKY_PHASES := ["noon", "dusk", "night", "storm"]  # where _sky(i) puts the clock: each key at its own look
 const VIEWS := {
 	# [from, at] in metres from the patch centre; heights are added from the ground
-	"base": [Vector3(-26, 16, 24), Vector3(4, 0, -2)],
-	"overview": [Vector3(0, 150, 110), Vector3(0, 0, -35)],  # the whole outpost from high up: lander to reactor
-	"horizon": [Vector3(-14, 1.7, -14), Vector3(30, 3, 22)],
-	"west": [Vector3(14, 1.7, 2), Vector3(-60, 4, -6)],  # toward the setting sun, past the base (the dusk's blue glow)
-	"airlock": [Vector3(7.8, 1.7, 1.3), Vector3(2.5, 1.2, -0.4)],  # HAB 1's door faces the sunrise (east), 14 Nov
-	"rover": [Vector3(16, 3.0, 16), Vector3(10, 1.2, 8)],
-	"greenhouse": [Vector3(-3.4, 5.5, -8.7), Vector3(-11.5, 0.4, -2.3)],
-	"hab_in": [Vector3(0.3, 2.0, 1.4), Vector3(0.6, 1.1, -2.0)],  # inside HAB 1: the life-support wall and bunks
-	"hab_desk": [Vector3(0.9, 2.0, -0.6), Vector3(-2.0, 1.0, 0.9)],  # inside HAB 1: galley, Veggie, desk and map
+	"base": [Vector3(27.772, 16, 21.925), Vector3(-2.601, 0, -3.638)],
+	"overview": [Vector3(108.646, 150, -17.208), Vector3(-34.569, 0, 5.475)],  # the whole outpost from high up: lander to reactor
+	"horizon": [Vector3(-11.638, 1.7, 16.018), Vector3(-10.166, 3, -39.223)],
+	"west": [Vector3(-0.215, 1.7, -14.141), Vector3(3.46, 4, 60.2)],  # past the base (turned with it, 14 Nov: no longer toward the setting sun)
+	"airlock": [Vector3(7.799, 1.7, 1.296), Vector3(2.469, 1.2, -0.391)],
+	"rover": [Vector3(13.3, 3, -18.306), Vector3(6.337, 1.2, -11.128)],
+	"greenhouse": [Vector3(9.828, 5.5, 4.518), Vector3(1.721, 0.4, 10.865)],
+	"hab_in": [Vector3(1.336, 2, -0.515), Vector3(-2.069, 1.1, -0.28)],  # inside HAB 1: the life-support wall and bunks
+	"hab_desk": [Vector3(-0.733, 2, -0.795), Vector3(1.202, 1, 1.835)],  # inside HAB 1: galley, Veggie, desk and map
 }
 # The play camera inside a room (its third-person profile): [item, where the hero stands in its space, yaw from the
 # item's front, pitch deg]. Each stands well in from the door looking in (a model's door is on its front, -Z).
@@ -343,7 +343,7 @@ func _warm() -> void:
 	fade.shader = player.fading
 	var solid := ShaderMaterial.new()
 	solid.shader = player.HeroShader
-	var at := Transform3D(Basis(), world.get_node("Probe").global_position)
+	var at := _probe_view()
 	world.dust.warm(at * Vector3(0, 0, -8))
 	cover.progress(0.0)
 	await Forge.HouseStyle.warm(self, design, at, [fade, solid], 3, cover.progress)
@@ -385,6 +385,14 @@ func start_opening() -> void:
 	clock.refresh()
 	_sync_rules()
 	beats.start_opening()
+
+
+## The warm-up's camera: inside the base's reflection probe, looking at HAB 1, so HAB 1's and the greenhouse's room
+## probes are in view and get drawn (the base turned to face the sunrise, 14 Nov: looking north missed them).
+func _probe_view() -> Transform3D:
+	var p: Vector3 = world.get_node("Probe").global_position
+	var hab: Vector3 = world.items.hab1.global_position
+	return Transform3D(Basis.looking_at(Vector3(hab.x - p.x, 0.0, hab.z - p.z)), p)
 
 
 ## One time for the sky and the HUD: the rules take the look clock's hour of the sol (the rules count Earth hours

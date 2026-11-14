@@ -144,7 +144,7 @@ func sleep(kind: StringName) -> void:
 	_seat()
 	var sitting := get_tree().create_timer(float(player.model.clips.sit_down.length) + 0.2)
 	# under the black, from inside the outdoor probe: the sky changed by hours, and a stale reflection would pop
-	await HouseStyle._redraw_probes(game, Transform3D(Basis(), world.get_node("Probe").global_position))
+	await HouseStyle._redraw_probes(game, game._probe_view())
 	if sitting.time_left > 0.0:
 		await sitting.timeout
 	beat = "wake"

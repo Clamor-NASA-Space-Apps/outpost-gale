@@ -37,19 +37,13 @@
       "id": "to_wings",
       "task": "task.s2_clean",
       "pip": {
-        "follow_me": [
-          28.5,
-          7.0
-        ]
+        "follow_me": [-8.666, -24.223]
       },
       "line": "sol2.follow_wings",
       "objective": "pip",
       "wait": {
         "place": {
-          "at": [
-            28.5,
-            7.0
-          ],
+          "at": [-8.666, -24.223],
           "r": 4.0
         }
       }
@@ -57,11 +51,7 @@
     {
       "id": "see_dust",
       "pip": {
-        "point_at": [
-          27.95,
-          11.0,
-          1.3
-        ]
+        "point_at": [-8.116, -28.223, 1.3]
       },
       "line": "sol2.see_dust",
       "fact": true,
@@ -194,13 +184,13 @@
     {
       "id": "to_greenhouse",
       "pip": {
-        "follow_me": [-7.0, -5.0]
+        "follow_me": [8.141, 9.848]
       },
       "line": "sol3.follow",
       "objective": "pip",
       "wait": {
         "place": {
-          "at": [-8.0, -2.9],
+          "at": [6.857, 10.051],
           "r": 3.0
         }
       }
@@ -208,13 +198,13 @@
     {
       "id": "go_in",
       "pip": {
-        "point_at": [-13.5, -2.0, 1.2]
+        "point_at": [-0.255, 11.177, 1.2]
       },
       "line": "sol3.go_in",
       "objective": null,
       "wait": {
         "place": {
-          "at": [-11.03, -2.39],
+          "at": [2.215, 10.786],
           "r": 1.5
         }
       }
@@ -428,10 +418,7 @@
       "id": "alert",
       "task": "task.s5_shelter",
       "pip": {
-        "follow_me": [
-          -6.5,
-          7.0
-        ]
+        "follow_me": [7.931, 5.325]
       },
       "line": "sol5.storm",
       "objective": "shelter",
@@ -858,13 +845,13 @@
       "allow": [],
       "task": "task.s17_harvest",
       "pip": {
-        "follow_me": [-7.0, -5.0]
+        "follow_me": [8.141, 9.848]
       },
       "line": "sol17.ripe",
       "objective": "pip",
       "wait": {
         "place": {
-          "at": [-8.0, -2.9],
+          "at": [6.857, 10.051],
           "r": 3.0
         }
       }
@@ -872,13 +859,13 @@
     {
       "id": "s17_go_in",
       "pip": {
-        "point_at": [-13.5, -2.0, 1.2]
+        "point_at": [-0.255, 11.177, 1.2]
       },
       "line": "sol3.go_in",
       "objective": null,
       "wait": {
         "place": {
-          "at": [-11.03, -2.39],
+          "at": [2.215, 10.786],
           "r": 1.5
         }
       }

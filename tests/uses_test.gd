@@ -51,6 +51,7 @@ func one(it: Node3D, heard: Array) -> void:
 	at.y = (hit.position.y if hit else game.world.height_at(at.x, at.z)) + 0.05
 	var to: Vector3 = it.middle() - at
 	player.place(at, rad_to_deg(atan2(to.x, -to.z)))
+	player.cam.snap(player.yaw)  # walked up to it: the view behind the hero, not the last check's leftover yaw
 	await frames(40)
 	if player.body.global_position.distance_to(at) > 3.0:
 		# the sandbox's safety net (sandbox.gd, world.bound()) keeps the hero on the base's patch for now
