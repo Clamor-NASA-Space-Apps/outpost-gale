@@ -75,6 +75,11 @@ Its own repo. Commits signed off (`git commit -s`), prefixed by area, ending wit
 - The look runs on `world/sky_clock.gd`: the hour moves in tests, so a test that needs a sky jumps the clock
   (`game._sky(i)`, `clock.jump()`) and pins it if it must hold; tool runs pin it themselves. A jump re-aims the
   trackers, and their servo sounds keep the audio busy for a second: wait before testing a quiet moment (life_test).
+- A body positioned after `add_child` stays in the physics space where it entered, the origin, until the first
+  physics step, and the real boot starts the opening in the frame the world is built: the rover's body, inside HAB 1
+  at the origin, shoved the hero 1.1 m off the airlock spot and the walk out met the wall beside the hatch (14 Nov,
+  three fixes missed it). Position before `add_child` (world.gd `_item`), and test a start through `ui/boot.tscn`
+  (tests/opening_live_test.gd): `instantiate()` plus `frames(3)` hides the first tick.
 - `xvfb-run godot ...` by hand on this Wayland desktop still opens on the real screen (Godot prefers Wayland):
   pass `--display-driver x11`, as tools/godot.mjs does. Under xvfb the sandbox draws a few frames a second
   (software GL), so tests/draw_calls.gd takes about 15 min for a full breakdown; `deep=none` gives the totals only.

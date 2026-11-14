@@ -3,6 +3,29 @@
 A handoff for the agent that finds and fixes this. Written by the coordinating session after three failed fixes.
 Read this file, then `AGENTS.md` (this repo), `../../AGENTS.md` (the factory) and `../../skills/guided-tutorial/SKILL.md`.
 
+## 0. Resolved (14 Nov, evening)
+
+**Cause.** `world.gd` `_item()` added each mover (the rover, PIP, the bags, the samples) to the tree and positioned
+it after. A body moved after it is in the physics space stays where it entered, the world origin, until the first
+physics step. HAB 1 stands on the origin. The real boot (`ui/boot.gd`) adds the sandbox inside a `_process`, and the
+deferred `start_opening` runs at the end of that same frame, so `hero:airlock` put the hero inside HAB 1 before any
+physics step. On the first tick he overlapped the rover's stale body and was pushed from (0, 0.35) to (1.14, 0.38).
+From there the straight walk to (0, 6.5) runs through the wall beside the hatch: he turns to it (the window) and
+pushes into it for good. Every test starts the opening three frames after the build, and the repro script started it
+from `_initialize`, where a physics tick comes first, so none of them saw the first tick.
+
+**Not the cause.** The warm-up's camera, the room profile, the hatch's collision and the kid's keys: a physical key
+held through the walk does not move it off its line (`Input.action_release` in `_auto_walk` clears a held key's state
+each tick; six input scenarios through the real boot end on the same spot outdoors).
+
+**Fix.** `_item()` positions the item before `add_child`. The coordinator's cover change stays (the beats wait
+behind the cover, walk_out has no `max_s`); `outside` allows `["look"]` again, as beats_test expects, because the
+hero is always out when it starts now.
+
+**Test.** `tests/opening_live_test.gd` boots through `ui/boot.tscn`, headless or on xvfb. At the first playable frame:
+the beat is still `wake`, the hero is on the airlock spot facing the hatch; then, with a real W key held, he is
+outdoors when `outside` starts, and walks on the kid's key at `walk_to_me`.
+
 ## 1. TL;DR
 
 When a person starts the game, the Sol 1 opening is supposed to walk the hero out of HAB 1 through its hatch. In the

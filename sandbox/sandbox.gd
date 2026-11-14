@@ -166,6 +166,9 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	# time waits while the player cannot act: the look clock and the rules alike
 	clock.paused = settings.is_open() or cover.visible or hud.is_open() or hud.map_open()
+	# the beats wait behind the loading cover: the opening's walk-out ran out of time under it and the next beat shut
+	# the hatch on the hero (14 Nov playtest)
+	beats.process_mode = Node.PROCESS_MODE_DISABLED if cover.visible else Node.PROCESS_MODE_INHERIT
 	# a menu or an overlay is up: the cursor shows and a click cannot capture it; play takes it back (14 Nov playtest:
 	# the cursor hidden over Settings and the map)
 	if overlay() and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:

@@ -533,9 +533,13 @@ func _item(it: Dictionary, design: Dictionary) -> Node3D:
 		body.add_child(model)
 		root = body
 	root.name = it.id
-	add_child(root)
+	# placed before it enters the tree: a mover moved after it is in the physics space stays where it entered, the
+	# origin, until the first physics step. HAB 1 stands on the origin, so the rover's body was inside it for the
+	# opening's first tick and shoved the hero 1.1 m off the airlock spot, to where the walk out meets the wall
+	# beside the hatch (14 Nov playtest: the hero trapped in HAB 1)
 	root.position = Vector3(it.pos[0], 0, it.pos[1])
 	root.rotation.y = -deg_to_rad(float(it.get("yaw", 0)))
+	add_child(root)
 	var parts := _parts(model)
 	var moving: Array = []
 	for p: Node3D in parts:
