@@ -442,7 +442,7 @@
       "task": "task.s5_shelter",
       "pip": {
         "follow_me": [
-          -6.0,
+          -6.5,
           7.0
         ]
       },
@@ -457,10 +457,7 @@
       "line": "sol5.no_run",
       "wait": {
         "place": {
-          "at": [
-            -6.0,
-            10.0
-          ],
+          "at": "shelter",
           "r": 0.6
         }
       }

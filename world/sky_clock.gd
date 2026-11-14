@@ -517,11 +517,13 @@ func _lamp_targets(el: float, now: bool) -> void:
 
 
 ## The `light` role's glow at the work lights' level, down to a glimmer (`light_floor`) by day. One material for every
-## such face: the still items are merged into cells, so a face cannot be told by its item.
+## such face: the still items are merged into cells, so a face cannot be told by its item. A room's lights and
+## screens wear the swept copy (DESIGN.md weathering.clean: `interior`) and stay lit: indoors no sun replaces them
+## (14 Nov playtest: the shelter's ceiling light was dark at noon).
 func _glow_faces() -> void:
 	var k := maxf(float(_glow.level), float(_cfg.light_floor))
 	for m: Material in _design.get("_roles", {}).values():
-		if m.resource_name != "light":
+		if m.resource_name != "light" or m.get_meta("clean", false):
 			continue
 		if m is StandardMaterial3D:
 			var std := m as StandardMaterial3D

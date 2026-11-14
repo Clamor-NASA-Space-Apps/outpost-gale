@@ -83,3 +83,6 @@ Its own repo. Commits signed off (`git commit -s`), prefixed by area, ending wit
 - `xvfb-run godot ...` by hand on this Wayland desktop still opens on the real screen (Godot prefers Wayland):
   pass `--display-driver x11`, as tools/godot.mjs does. Under xvfb the sandbox draws a few frames a second
   (software GL), so tests/draw_calls.gd takes about 15 min for a full breakdown; `deep=none` gives the totals only.
+- Graded footprints (world.json `graded`) are laid on the 2 m terrain grid in item order, so a later one overwrites
+  an earlier one's edge where their reach overlaps: the bigger storm shelter's west wall stood on build pad 1's slope
+  and the ground came up through its floor (14 Nov). Move or resize an item, then run world_test (level footprint).

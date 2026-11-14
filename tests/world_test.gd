@@ -67,12 +67,18 @@ func play() -> bool:
 		# a vehicle sits on its wheels only by its own sink row, set by its driver (sandbox/rover.gd)
 		var want: float = 0.0 if kind == "vehicle" and not sink.has(it.prefab) else world.sheet_values[sink.get(it.prefab, sink.default)]
 		var top := -INF  # the highest foot over the ground under it, each dropped onto the underside's plane
+		var low := INF
 		for p in pts:
 			var h := (p - n.global_position).dot(up) - base
 			if h < float(sink.support):
 				var u := p - up * h
 				top = maxf(top, u.y - world.height_at(u.x, u.z))
+				low = minf(low, u.y - world.height_at(u.x, u.z))
 		check(absf(top + want) < 0.02, "%s floats or sinks: its highest foot is %.3f m off the ground under it, not %.3f" % [it.id, top, -want])
+		# a slab laid level needs level ground under all of it: a neighbour graded later can take back an edge of its
+		# footprint (build pad 1's took the storm shelter's west wall, and the ground came up through its floor, 14 Nov)
+		if it.prefab in world.data.graded.prefabs:
+			check(top - low < 0.03, "%s: the ground under its footprint is not level (%.3f m between its feet)" % [it.id, top - low])
 
 	# the base works on its own (world/machines.gd): panels turn, the dish nods, the telltale leans, lights flash
 	# no faster than WCAG 2.3.1 allows, and every wind listener reads one gust between 0 and 1

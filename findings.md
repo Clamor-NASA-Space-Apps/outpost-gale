@@ -4,3 +4,4 @@
 - 14 Nov review: PIP's blocked turn tries the opposite turn, then the next frame steers back: a sway near a corner until the stuck re-plan (pip.gd _move).
 - 14 Nov review (not a bug): "cornered PIP keeps ramming": _move sets v = 0 on a blocked step, so _back_stuck does build.
 - 14 Nov review: a door pressed then walked away from still opens after the reach delay: kept on purpose (E then W at once must open it; cancelling broke audio_test's walk-in).
+- HouseStyle.warm() (factory addon) hides every GeometryInstance3D and sets visible = true on all of them at the end: anything its owner hid meanwhile comes back (spent dust puffs drew for good, 14 Nov; world/dust.gd now re-hides its pool each frame). Fix in the factory: restore only what is still as warm() left it, or hide by another channel. Lane I, 14 Nov.

@@ -169,11 +169,12 @@ func play() -> bool:
 		if game.player.room == "shelter" and not game.sim.sim.knobs.sheltered:
 			game.sim.apply("shelter_in")  # what the wiring does when the hero is in the shelter's room
 		var b: Vector3 = player.body.global_position
-		lined[0] = lined[0] or _flat(b, Vector3(-6.0, 0.0, 6.5)) < 0.5
+		var sh: Vector3 = world.items.shelter.global_position  # its door faces north, 4 m out lines the kid up
+		lined[0] = lined[0] or _flat(b, sh + Vector3(0.0, 0.0, -4.0)) < 0.5
 		if b.z < 4.0 and absf(b.x) < 2.5:
 			_steer(Vector3(0.0, 0.0, 4.5), 0.5)
 		else:
-			_steer(Vector3(-6.0, 0.0, 10.0) if lined[0] else Vector3(-6.0, 0.0, 6.5)))
+			_steer(sh if lined[0] else sh + Vector3(0.0, 0.0, -4.0)))
 	_stop()
 	await frames(5)
 	if game.player.room == "shelter" and not game.sim.sim.knobs.sheltered:

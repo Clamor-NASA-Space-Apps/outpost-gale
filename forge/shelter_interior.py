@@ -1,9 +1,10 @@
-# The storm shelter fitted out for its crew of 2 (13 Nov playtest: "just some textures", no room inside). A kid who
-# walks in sees, in this order: two stacked bunks against the back wall (where the crew lie out a storm, up to 24 h:
-# NASA Orion, design/research/pages/shelter/nasa-orion-shelter.html), water and food on a rack at their foot
-# (the walls are those bags too: Orion builds its shelter from "stowage bags ... food and water"), on the left wall
-# a comms screen with signal bars and a radiation sign over a glowing meter (a prop: no numbers), a light in the
-# ceiling, and the aluminium frame posts the bag walls hang on (RadWorks' group shelter: "a frame of aluminum ...
+# The storm shelter fitted out for its crew of 2 (13 Nov playtest: "just some textures", no room inside; 14 Nov: "too
+# little room", now 4.0 x 3.5 m). A kid who walks in sees: two stacked bunks against the back wall on the left (where
+# the crew lie out a storm, up to 24 h: NASA Orion, design/research/pages/shelter/nasa-orion-shelter.html), the
+# water and food on a long rack down the right wall, labelled (the walls are those bags too: Orion builds its
+# shelter from "stowage bags ... food and water"), on the left wall a comms screen with signal bars and a radiation
+# sign over a glowing meter (a prop: no numbers), two lights in the ceiling, and the aluminium frame posts the bag
+# walls hang on (RadWorks' group shelter: "a frame of aluminum ...
 # an attachment structure for large panels of CTBs", NTRS 20170002287). Water bags are Contingency Water Containers
 # as in HAB 1 (forge/hab_interior.py).
 #
@@ -40,8 +41,7 @@ def _trefoil(name, y, z, r, x, role):
 
 
 def fit_out(IX, IY, F, C):
-    """Returns (parts for interior-col, light parts that stay out of it)."""
-    loose = []
+    """The room's parts, its lights and screens among them (all join interior-col: kept swept, glowing by day)."""
     z0 = F + 0.002  # 2 mm off the deck
     wx, wy = IX / 2 - 0.005, IY / 2 - 0.005  # 5 mm in from the bags' inside faces
 
@@ -51,16 +51,16 @@ def fit_out(IX, IY, F, C):
     cx, cy = (x0 + x1) / 2, y0 + D / 2
     _b("bunk_base", (L - 0.04, D - 0.02, 0.32), (cx, cy, z0 + 0.16), "panel", 0.01)  # closed: stowage
     _b("bunk_plate", (L - 0.04, D - 0.02, 0.03), (cx, cy, z0 + 1.32), "panel", 0.006)
-    _b("bunk_end", (0.03, D - 0.02, 1.78), (x1 - 0.015, cy, z0 + 0.89), "panel", 0.006)  # the foot, beside the rack
-    # 0.88 m from the lower mattress to the plate: an adult sits up in bed (HAB 1's berths, forge/hab_interior.py)
+    _b("bunk_end", (0.03, D - 0.02, 1.78), (x1 - 0.015, cy, z0 + 0.89), "panel", 0.006)  # the foot
+    # 0.88 m from the lower mattress to the plate: an adult sits up in bed (HAB 1's berths, forge/hab_interior.py).
+    # No pillow: a white pillow read as one more cargo bag off the walls (14 Nov playtest); the sleeping bag's hood,
+    # turned back at the head, says bed in the bedding blue
     for k, top in enumerate((0.32, 1.335)):
         z = z0 + top
-        # a dark mattress, so the white pillow and the blue sleeping bag show on it (HAB 1's berths)
         _b(f"mattress{k}", (L - 0.1, D - 0.08, 0.1), (cx - 0.01, cy, z + 0.047), "trim", 0.035, 2)
-        _b(f"sleeping_bag{k}", (L - 0.56, D - 0.16, 0.07), (cx + 0.2, cy, z + 0.115), "bedding", 0.03)
-        fold = _b(f"bag_fold{k}", (0.22, D - 0.16, 0.03), (x0 + 0.62, cy, z + 0.16), "bedding", 0.012)  # the top turned back
-        fold.rotation_euler.y = math.radians(12)
-        _b(f"pillow{k}", (0.34, D - 0.28, 0.09), (x0 + 0.27, cy, z + 0.13), "suit", 0.04, 2)
+        _b(f"sleeping_bag{k}", (L - 0.3, D - 0.16, 0.07), (cx + 0.08, cy, z + 0.115), "bedding", 0.03)
+        hood = _b(f"bag_hood{k}", (0.3, D - 0.2, 0.1), (x0 + 0.27, cy, z + 0.14), "bedding", 0.04, 2)
+        hood.rotation_euler.y = math.radians(-14)  # propped up at the head like a pillow
     for s, x in ((0, x0 + 0.03), (1, x1 - 0.06)):  # front posts of the frame
         _bar(f"bunk_post{s}", (x, y0 + D + 0.005, z0), (x, y0 + D + 0.005, z0 + 1.8), 0.02, "metal")
     _bar("bunk_rail", (x0 + 0.03, y0 + D + 0.005, z0 + 1.6), (x1 - 0.5, y0 + D + 0.005, z0 + 1.6), 0.015, "metal")
@@ -70,48 +70,52 @@ def fit_out(IX, IY, F, C):
     for i in range(3):
         _bar(f"ladder_rung{i}", (lx - 0.16, y0 + D + 0.03, z0 + 0.42 + i * 0.3), (lx + 0.16, y0 + D + 0.03, z0 + 0.42 + i * 0.3), 0.012, "metal")
 
-    # water and food on a rack at the bunks' foot, in reach from both
-    rx0, ry1 = x1 + 0.03, y0 + 0.5
-    rcx, rcy, rw, rd = (rx0 + wx) / 2, (y0 + ry1) / 2, wx - rx0, ry1 - y0
+    # the supplies down the right wall, from the back corner: water bags on the two low shelves, food above, each
+    # shelf's contents named on a yellow tag at its front edge (a kid asked what the white "pillows" were)
+    rd, rl = 0.52, 2.2
+    rx, ry0 = wx - rd / 2, y0
+    ry1 = ry0 + rl
     for sx in (-1, 1):
-        for sy in (-1, 1):
-            _bar(f"rack_post{sx}{sy}", (rcx + sx * (rw / 2 - 0.02), rcy + sy * (rd / 2 - 0.02), z0), (rcx + sx * (rw / 2 - 0.02), rcy + sy * (rd / 2 - 0.02), z0 + 1.62), 0.015, "metal")
-    shelves = (0.06, 0.6, 1.14, 1.6)
+        for y in (ry0 + 0.02, ry0 + rl / 2, ry1 - 0.02):
+            _bar(f"rack_post{sx}{y:.2f}", (rx + sx * (rd / 2 - 0.02), y, z0), (rx + sx * (rd / 2 - 0.02), y, z0 + 1.82), 0.015, "metal")
+    shelves = (0.06, 0.52, 0.98, 1.44, 1.8)
     for i, h in enumerate(shelves):
-        _b(f"rack_shelf{i}", (rw, rd, 0.02), (rcx, rcy, z0 + h), "panel", 0.004)
-    for i in (0, 1):  # a full water bag lying on each low shelf, its carry strap round the middle (HAB 1's _cwc, one bevel step)
-        at_ = (rcx, rcy, z0 + shelves[i] + 0.01 + CWC[2] / 2 + 0.003)
-        _b(f"rack_cwc{i}", (CWC[1], CWC[0] - 0.005, CWC[2]), at_, "suit", 0.06)
-        _b(f"rack_strap{i}", (CWC[1] + 0.006, 0.04, CWC[2] - 0.02), at_, "trim")
-    for i, (dx, dz) in enumerate(((-0.1, 0), (0.1, 0), (-0.1, 0.045), (0.1, 0.045))):  # foil food pouches, two stacks
-        _b(f"food{i}", (0.17, 0.3, 0.04), (rcx + dx, rcy, z0 + shelves[2] + 0.033 + dz), "metal", 0.012)
-    for i, word in ((1, "WATER"), (2, "FOOD")):  # dark words on yellow tags, as the radiation sign: glowing, they faded by day
-        _b(f"rack_sign{i}", (0.3, 0.012, 0.07), (rcx, ry1 + 0.008, z0 + shelves[i] - 0.05), "hazard", 0.003)
-        U.append(flat_label(f"rack_word{i}", word, 0.045, (rcx, ry1 + 0.0155, z0 + shelves[i] - 0.05), "trim", 0, 0, 0))
+        _b(f"rack_shelf{i}", (rd, rl, 0.02), (rx, (ry0 + ry1) / 2, z0 + h), "panel", 0.004)
+    for i in (0, 1):  # four full water bags on each low shelf, a carry strap round each (HAB 1's _cwc)
+        for j in range(4):
+            at_ = (rx, ry0 + 0.3 + j * 0.53, z0 + shelves[i] + 0.01 + CWC[2] / 2 + 0.003)
+            _b(f"rack_cwc{i}{j}", (CWC[0] - 0.04, CWC[1], CWC[2]), at_, "suit", 0.06)
+            _b(f"rack_strap{i}{j}", (CWC[0] - 0.034, 0.04, CWC[2] - 0.02), at_, "trim")
+    for i in (2, 3):  # foil food pouches in stacks of three
+        for j in range(5):
+            for k in range(3):
+                _b(f"food{i}{j}{k}", (0.3, 0.17, 0.04), (rx, ry0 + 0.25 + j * 0.42, z0 + shelves[i] + 0.033 + k * 0.045), "metal")
+    for i, word in ((1, "WATER"), (3, "FOOD")):  # dark words on yellow tags: glowing, they faded by day
+        tag_y = (ry0 + ry1) / 2
+        _b(f"rack_sign{i}", (0.012, 0.36, 0.08), (rx - rd / 2 - 0.008, tag_y, z0 + shelves[i] - 0.05), "hazard", 0.003)
+        U.append(flat_label(f"rack_word{i}", word, 0.055, (rx - rd / 2 - 0.0155, tag_y, z0 + shelves[i] - 0.05), "trim", 0, 90, 0))
 
-    # the left wall: comms screen and signal bars, the radiation sign over its meter
-    wl = -wx
-    _b("comms", (0.05, 0.76, 0.46), (wl + 0.025, 0.55, z0 + 1.5), "trim", 0.01)
-    _b("comms_screen", (0.008, 0.5, 0.32), (wl + 0.056, 0.47, z0 + 1.5), "glass")
+    # the left wall, in front of the bunks: comms screen and signal bars, the radiation sign over its meter
+    wl, cy_ = -wx, 0.75
+    _b("comms", (0.05, 0.76, 0.46), (wl + 0.025, cy_, z0 + 1.5), "trim", 0.01)
+    _b("comms_screen", (0.008, 0.5, 0.32), (wl + 0.056, cy_ - 0.08, z0 + 1.5), "glass")
     for i, h in enumerate((0.06, 0.1, 0.14)):  # signal bars: the link home is up
-        loose.append(box(f"comms_bar{i}", (0.008, 0.035, h), (wl + 0.056, 0.79 + i * 0.05, z0 + 1.36 + h / 2), mat("light")))
-    # one word over the sign: the bars and the screen say comms without one (the building's triangle budget). Dark on
-    # the sign's yellow: in glowing cyan on a dark tag it read at night and vanished by day (13 Nov captures)
-    _b("rad_tag", (0.012, 0.42, 0.1), (wl + 0.006, -0.12, z0 + 1.83), "hazard", 0.003)
-    U.append(flat_label("rad_word", "RADIATION", 0.05, (wl + 0.0135, -0.12, z0 + 1.83), "trim", 0, -90, 0))  # readable from +x, the room
-    _b("rad_plate", (0.012, 0.3, 0.3), (wl + 0.006, -0.12, z0 + 1.58), "hazard", 0.004)
-    U.append(_trefoil("rad_sign", -0.12, z0 + 1.58, 0.022, wl + 0.014, "trim"))
-    _b("rad_meter", (0.03, 0.3, 0.12), (wl + 0.015, -0.12, z0 + 1.33), "trim", 0.006)
+        U.append(box(f"comms_bar{i}", (0.008, 0.035, h), (wl + 0.056, cy_ + 0.24 + i * 0.05, z0 + 1.36 + h / 2), mat("light")))
+    ry = -0.2
+    _b("rad_tag", (0.012, 0.42, 0.1), (wl + 0.006, ry, z0 + 1.83), "hazard", 0.003)
+    U.append(flat_label("rad_word", "RADIATION", 0.05, (wl + 0.0135, ry, z0 + 1.83), "trim", 0, -90, 0))  # readable from +x
+    _b("rad_plate", (0.012, 0.3, 0.3), (wl + 0.006, ry, z0 + 1.58), "hazard", 0.004)
+    U.append(_trefoil("rad_sign", ry, z0 + 1.58, 0.022, wl + 0.014, "trim"))
+    _b("rad_meter", (0.03, 0.3, 0.12), (wl + 0.015, ry, z0 + 1.33), "trim", 0.006)
     for i in range(5):  # a meter that reads low: three segments lit, two dark
-        seg = box(f"rad_seg{i}", (0.006, 0.04, 0.07), (wl + 0.031, -0.23 + i * 0.055, z0 + 1.33), mat("light" if i < 3 else "trim"))
-        (loose if i < 3 else U).append(seg)
+        U.append(box(f"rad_seg{i}", (0.006, 0.04, 0.07), (wl + 0.031, ry - 0.11 + i * 0.055, z0 + 1.33), mat("light" if i < 3 else "trim")))
 
-    # the sign over the bunks, the ceiling light, the frame's front posts
-    _b("shelter_sign", (1.3, 0.012, 0.17), (cx, y0 + 0.006, z0 + 2.17), "trim", 0.004)
-    loose.append(flat_label("shelter_word", "STORM SHELTER", 0.1, (cx, y0 + 0.0135, z0 + 2.17), "light", 0, 0, 0))
-    _b("light_housing", (0.9, 0.26, 0.03), (0, 0.1, C - 0.012), "trim")  # its top 3 mm into the roof deck
-    loose.append(box("ceiling_light", (0.84, 0.2, 0.012), (0, 0.1, C - 0.031), mat("light")))
+    # the sign on the back wall, the ceiling lights, the frame's front posts
+    _b("shelter_sign", (1.3, 0.012, 0.17), (0, y0 + 0.006, z0 + 2.17), "trim", 0.004)
+    U.append(flat_label("shelter_word", "STORM SHELTER", 0.1, (0, y0 + 0.0135, z0 + 2.17), "light", 0, 0, 0))
     for s in (-1, 1):
+        _b(f"light_housing{s}", (0.9, 0.26, 0.03), (s * 0.95, 0.1, C - 0.012), "trim")  # its top 3 mm into the roof deck
+        U.append(box(f"ceiling_light{s}", (0.84, 0.2, 0.012), (s * 0.95, 0.1, C - 0.031), mat("light")))
         _b(f"frame_post{s}", (0.05, 0.05, C - F + 0.03), (s * (wx - 0.025), wy - 0.025, (F - 0.02 + C + 0.01) / 2), "metal")  # ends in the deck and the roof
     # the ceiling: one white face 5 mm under the deck, so the room light reaches it (the deck is outside's layer)
     me = bpy.data.meshes.new("ceiling")
@@ -120,19 +124,22 @@ def fit_out(IX, IY, F, C):
     bpy.context.scene.collection.objects.link(o)
     o.data.materials.append(mat("panel"))
     U.append(o)
-    return U, loose
+    return U
 
 
 def floor(IX, IY, F, front, door_w):
-    """The deck: 60 cm plates in the `deck` role, top at F, out through the doorway (`door_w` wide) to `front`, with
-    dark joint strips 3 mm proud (never flush)."""
+    """The deck: 60 cm plates in the `deck` role, top at F, with dark joint strips 3 mm proud (never flush), and a
+    metal sill across the doorway (`door_w` wide) out to `front`, 3 mm over the deck: the deck plates ran on through
+    the frame into the sun and read as a stray slab (14 Nov playtest)."""
     wx, wy = IX / 2 - 0.003, IY / 2 - 0.003
-    d = box("floor", (2 * wx, front + wy, F), (0, (front - wy) / 2, F / 2), mat("deck"))
-    for s in (-1, 1):  # the doorway strip only past the room
-        cut(d, box("floor_cut", (wx, 1.0, 1.0), (s * (door_w / 2 + wx / 2 + 0.003), IY / 2 + 0.5, F / 2)))
-    U.append(d)
-    for k, g in enumerate((-0.9, -0.3, 0.3, 0.9)):
-        U.append(box(f"joint_x{k}", (0.008, 2 * wy, 0.008), (g, 0, F - 0.001), mat("trim")))
-    for k, g in enumerate((-0.65, -0.05, 0.55)):
-        U.append(box(f"joint_y{k}", (2 * wx, 0.008, 0.008), (0, g, F - 0.001), mat("trim")))
-    return d
+    U.append(box("floor", (2 * wx, 2 * wy, F), (0, 0, F / 2), mat("deck")))
+    for k in range(-3, 4):
+        if abs(k * 0.6) < wx - 0.1:
+            U.append(box(f"joint_x{k}", (0.008, 2 * wy, 0.008), (k * 0.6, 0, F - 0.001), mat("trim")))
+    for k in range(-3, 3):
+        g = k * 0.6 + 0.3
+        if abs(g) < wy - 0.1:
+            U.append(box(f"joint_y{k}", (2 * wx, 0.008, 0.008), (0, g, F - 0.001), mat("trim")))
+    # from 2 cm into the room, so its edge never lies on the deck's end face, to the frame's front; 3 mm narrower each
+    # side than the opening
+    U.append(box("sill", (door_w - 0.006, front - wy + 0.02, F + 0.003), (0, (front + wy - 0.02) / 2, (F + 0.003) / 2), mat("metal")))

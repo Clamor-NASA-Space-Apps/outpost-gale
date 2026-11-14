@@ -57,12 +57,12 @@
   "greenhouse": [
    7.0,
    3.5,
-   7.0
+   9.5
   ],
   "storm_shelter": [
-   3.5,
-   2.8,
-   3.4
+   4.94,
+   2.9,
+   4.44
   ],
   "dish": [
    3.0,
@@ -156,8 +156,8 @@
    "id": "shelter",
    "prefab": "storm_shelter",
    "pos": [
-    -6,
-    10
+    -6.5,
+    10.5
    ],
    "yaw": 0
   },
@@ -174,8 +174,8 @@
    "id": "pad1",
    "prefab": "build_pad",
    "pos": [
-    -15,
-    9
+    -16,
+    10.5
    ],
    "yaw": 0
   },
@@ -426,7 +426,7 @@
   "rover": "ground.sink.soft"
  },
  "graded": {
-  "_note": "prefabs whose footprint (standin size) is graded level before the ground is built (world/terrain.gd _grade()), as crews prepare a site before they lay a slab on it: NASA's ASPECT project 'will develop tools and methods to clear, level, and compact the lunar surface' (https://www.nasa.gov/?p=96252, design/research/pages/pad-grading/). Without it a 0.15 m pad on a slope was buried at its uphill side and the ground came up through it; the greenhouse's and the shelter's floors showed the ground through them the same way (13 Nov playtest), and HAB 1's doorway (14 Nov: deck 2 mm over the ground)",
+  "_note": "prefabs whose footprint (standin size) is graded level before the ground is built (world/terrain.gd _grade()), as crews prepare a site before they lay a slab on it: NASA's ASPECT project 'will develop tools and methods to clear, level, and compact the lunar surface' (https://www.nasa.gov/?p=96252, design/research/pages/pad-grading/). Without it a 0.15 m pad on a slope was buried at its uphill side and the ground came up through it; the greenhouse's and the shelter's floors showed the ground through them the same way (13 Nov playtest), and HAB 1's doorway (14 Nov: deck 2 mm over the ground). A standin spans the model's whole footprint about its origin where it matters (the greenhouse's vestibule reaches 4.71 m out; HAB 1's porch, 4.23 m, lies within 3 cm of level as it is), and neighbours' grades stay apart on the 2 m grid: a later one overwrites an earlier one where they meet (world_test checks every graded footprint is level, 14 Nov)",
   "prefabs": ["build_pad", "greenhouse", "storm_shelter", "habitat"]
  },
  "shadow_min": 0.6,
@@ -576,7 +576,7 @@
   "rooms": {
    "hab1": {"at": [0, 1.56, 0], "size": [4.8, 2.36, 4.8], "light": {"at": [0, 2.55, 0], "range": 4.0}},
    "greenhouse": {"at": [0, 2.0, 0], "size": [6.8, 3.8, 6.8], "interior": false, "light": {"at": [0, 2.1, 0], "range": 3.5, "color": "growlight", "share": 0.6}},
-   "shelter": {"at": [0, 1.28, 0], "size": [2.6, 2.44, 2.5], "light": {"at": [0, 2.4, 0], "range": 3.5}}
+   "shelter": {"at": [0, 1.28, 0], "size": [4.0, 2.44, 3.5], "light": {"at": [0, 2.4, 0], "range": 4.5}}
   }
  },
  "pip": {
@@ -590,7 +590,7 @@
    {"id": "bags", "at": [1.4, 6.0], "look": [3.3, 7.4, 0.2]},
    {"id": "lander", "at": [-125.0, -123.0], "look": [-135.0, -135.0, 4.0], "weight": 0.15}
   ],
-  "via": [[6.0, 6.0], [8.0, 0.5], [5.0, -7.0], [0.0, -6.0], [-5.0, -3.0], [14.0, -1.0], [-10.0, -12.5], [-4.0, -10.0], [10.0, 12.5], [-22.0, 15.0], [-57.0, -32.0], [-92.0, -78.0], [2.0, 9.5], [-3.8, 3.6], [-6.0, 13.5]],
+  "via": [[6.0, 6.0], [8.0, 0.5], [5.0, -7.0], [0.0, -6.0], [-5.0, -3.0], [14.0, -1.0], [-10.0, -12.5], [-4.0, -10.0], [10.0, 12.5], [-22.0, 15.0], [-57.0, -32.0], [-92.0, -78.0], [2.0, 9.5], [-3.8, 3.6], [-6.0, 14.3]],
   "seed": 13,
   "notice_m": 3.0, "hello_cool_s": 12,
   "greet_m": 8.0, "greet_stand_m": 1.6, "still_speed": 0.15, "still_s": 4.0, "greet_s": 6.0, "greet_cool_s": 40,
@@ -615,10 +615,10 @@
   "hab_eye_wc": ["hab1", [0.4, 2.0, 0.1], [-2.0, 1.1, -0.1]],
   "gh_eye_a": ["greenhouse", [0, 1.8, -3.6], [0, 1.2, 3.0]],
   "gh_eye_b": ["greenhouse", [0, 1.8, 2.4], [0, 1.2, -3.0]],
-  "sh_eye_in": ["shelter", [0, 1.66, -0.9], [-0.3, 1.0, 1.25]],
-  "sh_eye_left": ["shelter", [0.6, 1.66, -0.3], [-1.3, 1.45, -0.2]],
-  "sh_eye_rack": ["shelter", [0.75, 1.66, -0.75], [1.0, 0.9, 1.0]],
-  "sh_eye_door": ["shelter", [-0.2, 1.66, 0.4], [0, 1.3, -1.24]],
+  "sh_eye_in": ["shelter", [0, 1.66, -1.4], [-0.3, 1.0, 1.75]],
+  "sh_eye_left": ["shelter", [0.8, 1.66, -0.2], [-2.0, 1.45, -0.4]],
+  "sh_eye_rack": ["shelter", [-0.5, 1.66, -0.9], [2.0, 0.9, 0.6]],
+  "sh_eye_door": ["shelter", [-0.2, 1.66, 0.9], [0, 1.3, -1.75]],
   "_w": "lane W's capture views of its items (13 Nov): each from in front of the item; sky_earth from the yard north of HAB 1 up into the west-south-west evening sky, where Earth and Venus stand after sunset (capture it at an evening hour, sky_earth@19.6)",
   "mav_eye": ["mav", [6, 2.5, -24], [0, 5, 0]],
   "trash_eye": ["trash", [2, 2.2, -8], [-2, 1.2, 3]],
@@ -631,10 +631,10 @@
   "site_curiosity_wide": ["curiosity", [8, 5, -30], [0, 1, 6]]
  },
  "rooms": {
-  "_note": "the buildings with an inside (player.gd _room: the rules, the sound, the lights; follow_cam.gd keeps the third-person lens in the plan, skills/third-person-camera Rooms): each item id's floor plan in its own space, circles [x, z, r] and rects [x0, z0, x1, z1], measured from the models (12 Nov). hab1: building_habitat.glb floor x and z +-2.40, the door's inner face at z -2.16. greenhouse: building_greenhouse.glb floor +-3.28 (the dome), and the vestibule x +-1.0 from the door's inner face at z -4.46 to the dome. shelter (13 Nov): building_storm_shelter.glb, the bags' inside faces at x +-1.3, the back at z 1.25, the door frame's inner face at z -1.24. The doorway band is the hero's own radius either side of these lines",
+  "_note": "the buildings with an inside (player.gd _room: the rules, the sound, the lights; follow_cam.gd keeps the third-person lens in the plan, skills/third-person-camera Rooms): each item id's floor plan in its own space, circles [x, z, r] and rects [x0, z0, x1, z1], measured from the models (12 Nov). hab1: building_habitat.glb floor x and z +-2.40, the door's inner face at z -2.16. greenhouse: building_greenhouse.glb floor +-3.28 (the dome), and the vestibule x +-1.0 from the door's inner face at z -4.46 to the dome. shelter (13 Nov): building_storm_shelter.glb, the bags' inside faces at x +-2.0, the back at z 1.75, the door frame's inner face at z -1.75 (14 Nov, 4.0 x 3.5 m: it was 2.6 x 2.5). The doorway band is the hero's own radius either side of these lines",
   "hab1": [{"circle": [0, 0, 2.4]}],
   "greenhouse": [{"circle": [0, 0, 3.28]}, {"rect": [-1.0, -4.46, 1.0, -2.2]}],
-  "shelter": [{"rect": [-1.3, -1.24, 1.3, 1.25]}]
+  "shelter": [{"rect": [-2.0, -1.75, 2.0, 1.75]}]
  },
  "plants": {
   "_note": "lettuce in the greenhouse grow-bed slots (slot_N nodes of its model), one growth stage per slot; stage 4 is a harvest-size head (reality.json lettuce.width). A number is red romaine 'Outredgeous' (Veggie VEG-01), \"green_N\" stage N of a green lettuce ('Waldmann's Green', VEG-03): the lower tier at hand height (slots 1-4, 9-12) is green, like the leaf the harvest spots pick. A prefab id instead of a stage goes in at its own size: HAB 1's Veggie unit on the galley counter",
@@ -654,9 +654,9 @@
    {"kind": "bed", "prompt": "Sleep", "box": [-1.66, 0.9, 0.42, -0.71, 1.45, 1.43], "stand": [-0.63, 0.49, 128], "clip": "", "sound": "curtain", "_why": "the lower berth (unit(berths, 218, 2.0) in forge/hab_interior.py): the air over its mattress, 1.25 to 1.75 m out along 218 degrees; E opens the sleep picker (cine/cine.gd)"}
   ],
   "shelter": [
-   {"kind": "sit", "prompt": "Sit", "box": [-1.29, 0.49, 0.45, 0.7, 0.8, 1.2], "seat": [-0.3, 0.62], "face": 0, "clip": "sit_down", "sound": "kneel"},
-   {"kind": "radio", "prompt": "Call base", "box": [-1.23, 1.33, -0.93, -1.1, 1.79, -0.17], "stand": [-0.62, -0.47, 90], "clip": "radio", "sound": "call", "props": {"screen": {"at": [-1.231, 1.562, -0.47], "hidden": true, "clean": true, "meshes": [{"box": [0.004, 0.3, 0.48], "role": "light"}]}}, "steps": [[0.05, "glow", "screen", true]]},
-   {"kind": "sample", "prompt": "Take a sample", "on": "pebble", "needs": "pebble", "clip": "kneel_pick", "sound": "sample", "props": {"pebble": {"model": "res://models/rock_small_b.glb", "scale": 0.18, "at": [-3.0, 0, 0.5], "ground": true, "keep": true, "layer": 2}, "flag": {"ground": true, "at": [-2.82, 0, 0.6], "meshes": [{"cyl": [0.003, 0.6], "at": [0, 0.3, 0], "role": "metal"}, {"box": [0.002, 0.08, 0.11], "at": [0, 0.55, 0.057], "role": "hazard"}]}, "case": {"model": "res://models/prop_sample_case.glb", "solid": true, "at": [-2.55, 0, 0.95], "ground": true}, "lid": {"in": "case", "part": "lid"}, "tube": {"hidden": true, "meshes": [{"cyl": [0.025, 0.12], "role": "glass"}, {"cyl": [0.028, 0.025], "at": [0, 0.07, 0], "role": "metal"}], "at": [-2.55, 0.15, 0.95], "ground": true}, "tongs": {"hand": true, "hidden": true, "at": [0, 0.06, 0], "meshes": [{"box": [0.007, 0.26, 0.007], "at": [-0.008, 0.12, 0], "rot": [0, 0, 2], "role": "metal"}, {"box": [0.007, 0.26, 0.007], "at": [0.008, 0.12, 0], "rot": [0, 0, -2], "role": "metal"}, {"box": [0.024, 0.04, 0.012], "at": [0, 0.0, 0], "role": "trim"}]}}, "steps": [[0.04, "appear", "tongs", 0.2], [0.3, "take", "pebble", 0.6, "tongs"], [0.5, "turn", "lid", "x", 100, 0.4], [0.52, "appear", "tube", 0.15], [0.54, "take", "tube", 0.4, "hand"], [0.66, "take", "pebble", 0.3, "tube"], [0.76, "take", "tube", 0.45, "case"], [0.9, "turn", "lid", "x", 0, 0.3], [0.9, "glow", "pebble", false]]}
+   {"kind": "sit", "prompt": "Sit", "box": [-1.99, 0.49, 0.95, 0.0, 0.8, 1.7], "seat": [-1.0, 1.12], "face": 0, "clip": "sit_down", "sound": "kneel"},
+   {"kind": "radio", "prompt": "Call base", "box": [-1.93, 1.33, -1.13, -1.8, 1.79, -0.37], "stand": [-1.32, -0.67, 90], "clip": "radio", "sound": "call", "props": {"screen": {"at": [-1.931, 1.562, -0.67], "hidden": true, "clean": true, "meshes": [{"box": [0.004, 0.3, 0.48], "role": "light"}]}}, "steps": [[0.05, "glow", "screen", true]]},
+   {"kind": "sample", "prompt": "Take a sample", "on": "pebble", "needs": "pebble", "clip": "kneel_pick", "sound": "sample", "props": {"pebble": {"model": "res://models/rock_small_b.glb", "scale": 0.18, "at": [-3.7, 0, 0.5], "ground": true, "keep": true, "layer": 2}, "flag": {"ground": true, "at": [-3.52, 0, 0.6], "meshes": [{"cyl": [0.003, 0.6], "at": [0, 0.3, 0], "role": "metal"}, {"box": [0.002, 0.08, 0.11], "at": [0, 0.55, 0.057], "role": "hazard"}]}, "case": {"model": "res://models/prop_sample_case.glb", "solid": true, "at": [-3.25, 0, 0.95], "ground": true}, "lid": {"in": "case", "part": "lid"}, "tube": {"hidden": true, "meshes": [{"cyl": [0.025, 0.12], "role": "glass"}, {"cyl": [0.028, 0.025], "at": [0, 0.07, 0], "role": "metal"}], "at": [-3.25, 0.15, 0.95], "ground": true}, "tongs": {"hand": true, "hidden": true, "at": [0, 0.06, 0], "meshes": [{"box": [0.007, 0.26, 0.007], "at": [-0.008, 0.12, 0], "rot": [0, 0, 2], "role": "metal"}, {"box": [0.007, 0.26, 0.007], "at": [0.008, 0.12, 0], "rot": [0, 0, -2], "role": "metal"}, {"box": [0.024, 0.04, 0.012], "at": [0, 0.0, 0], "role": "trim"}]}}, "steps": [[0.04, "appear", "tongs", 0.2], [0.3, "take", "pebble", 0.6, "tongs"], [0.5, "turn", "lid", "x", 100, 0.4], [0.52, "appear", "tube", 0.15], [0.54, "take", "tube", 0.4, "hand"], [0.66, "take", "pebble", 0.3, "tube"], [0.76, "take", "tube", 0.45, "case"], [0.9, "turn", "lid", "x", 0, 0.3], [0.9, "glow", "pebble", false]]}
   ],
   "greenhouse": [
    {"kind": "harvest", "prompt": "Pick lettuce", "box": [-1.4, 1.05, -0.1, -1.1, 1.2, 0.2], "face": 90, "clip": "harvest", "sound": "harvest", "props": {"leaf": {"at": [-1.25, 1.14, 0.05], "rot": [20, 0, 0], "hidden": true, "meshes": [{"box": [0.09, 0.004, 0.13], "role": "plant"}]}}, "steps": [[0.3, "appear", "leaf", 0.1], [0.34, "take", "leaf", 0.4, "hand"]]},

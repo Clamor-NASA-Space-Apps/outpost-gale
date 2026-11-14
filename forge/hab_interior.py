@@ -3,7 +3,7 @@
 # wedge sections (NTRS 20110013501): every unit stands against the curved wall, and the middle stays open (hero.width
 # is 0.95 m).
 #   351 galley with the Veggie unit under a window (0)   34 desk with the Gale map   58 air valves   90 hatch
-#   113 a suit brush by the hatch   129 the donning corner (bench, hooks, helmet shelf, boot mat)   162 toilet cubicle
+#   113 the brush-off spot by the hatch (no fitting)   129 the donning corner (bench, hooks, helmet shelf, boot mat)   162 toilet cubicle
 #   218 two sleep stations, stacked   253 window   277, 304 life-support racks (air, water)   328 window
 # Angles checked so no two units' boxes meet (their front corners converge on the round wall), open floor 2.46 m across.
 # Sleep stations after the ISS crew quarters (NTRS 20100017014: "~2.1 m3", "white interior acoustic blankets", a
@@ -154,7 +154,7 @@ def _slot(name, at_, ang):
 def fit_out(F, RI, CEIL):
     """F floor top, RI the wall's inner radius, CEIL the flat ceiling. Returns (interior parts, loose parts, slots)."""
     z0 = F + 0.002  # 2 mm off the deck: a face on the deck's face flickers (tools/coplanar-check.mjs)
-    loose = []      # light and visor parts: no coat, so they stay out of interior-col
+    loose = []      # light and visor parts and the curtain: the recipe joins all but the moving curtain into interior-col
     slots = []
 
     def unit(build, ang, w):
@@ -377,10 +377,8 @@ def fit_out(F, RI, CEIL):
     U[-1].location = at(1.45, 116, z0 + 0.006)  # inside the hatch, on the way to the bench
     U[-1].rotation_euler.z = math.radians(116)
 
-    def brush():  # for the suits before they come in (the dust is "likely toxic"), on the wall by the hatch
-        _bar("brush_handle", (-0.05, 0, z0 + 1.0), (-0.05, 0, z0 + 1.55), 0.015, "trim")
-        _b("brush_head", (0.06, 0.08, 0.12), (-0.05, 0, z0 + 0.95), "trim", 0.01)
-    unit(brush, 113, 0.1)
+    # no brush on the wall by the hatch: a 55 cm handle on its own read as "a lone dark pole sitting there for nothing"
+    # (14 Nov playtest). The "Brush off dust" spot there (world.json uses) hands the hero a brush for its clip
 
     # ceiling lights: four panels in dark housings, the housing tops 5 mm into the roof
     for i, a in enumerate((0, 90, 180, 270)):

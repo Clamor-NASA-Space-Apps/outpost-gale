@@ -19,6 +19,18 @@ const VIEWS := {
 	"hatch": ["rover", Vector3(1.9, 2.5, 5.6), Vector3(0.0, 1.5, 1.8)],  # the rear hatch, from behind and to the side
 	"hatch_near": ["rover", Vector3(-1.1, 2.1, 3.6), Vector3(0.2, 1.7, 1.8)],
 	"cab": ["rover", Vector3(0.45, 2.3, -0.35), Vector3(-0.5, 1.85, -1.4)],  # from the passenger's seat, at the yoke
+	# the storm shelter (14 Nov playtest): outside, the doorway's floor, a back corner, the ceiling light, the sign
+	"sh_out": ["shelter", Vector3(4.5, 2.4, -6.5), Vector3(0, 1.1, 0)],
+	"sh_corner_out": ["shelter", Vector3(-4.5, 1.8, 5.0), Vector3(0, 1.0, 0)],
+	"sh_door_floor": ["shelter", Vector3(0.3, 1.6, 0.2), Vector3(0, 0.0, -2.5)],
+	"sh_corner_in": ["shelter", Vector3(0.0, 1.5, -0.5), Vector3(-2.0, 1.6, 2.0)],
+	"sh_lamp": ["shelter", Vector3(0.6, 1.2, -0.6), Vector3(0, 2.5, 0.2)],
+	"sh_sign": ["shelter", Vector3(-0.5, 1.6, -0.2), Vector3(-0.7, 2.2, 2.0)],
+	"sh_wide": ["shelter", Vector3(0.2, 2.2, -1.5), Vector3(0, 0.6, 1.5)],
+	# the greenhouse racks' lettuce (14 Nov: heads past their trays), from the aisle, and HAB 1's hatch wall
+	"gh_rack": ["greenhouse", Vector3(0.1, 1.75, 0.6), Vector3(1.25, 1.0, -0.2)],
+	"gh_rack_top": ["greenhouse", Vector3(0.4, 2.3, 0.2), Vector3(1.25, 1.55, -0.2)],
+	"hab_hatch": ["hab1", Vector3(0.3, 1.8, 0.0), Vector3(-0.9, 1.3, -2.1)],
 }
 ## The proposal's numbers: the lighting.room colour as an LED panel, and the share of the rooms' ambient kept
 const LAMP := "#f4efe6"

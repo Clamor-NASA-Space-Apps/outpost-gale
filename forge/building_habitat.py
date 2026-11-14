@@ -108,8 +108,10 @@ for name, y in (("port_e1", 0.12), ("port_e2", -0.12)):
     port(name, (-(R + 0.2), y), (-(R + 0.11), y, 0.5), r=0.03)
 
 # the fit-out for a crew of 2 (forge/hab_interior.py), clear of the hatch and its door's swing (65 to 115 degrees)
-U, _, slots = fit_out(SILL, R - WALL, TOP)
-U += frames
+U, loose, slots = fit_out(SILL, R - WALL, TOP)
+# its lamps, screens and signs join the swept fit-out, so the sky clock leaves their glow on by day (sky_clock.gd
+# _glow_faces); in detail-col they dimmed with the floodlights. The toilet's curtain moves, so it stays its own node
+U += frames + [o for o in loose if not moves(o)]
 liner(SILL, R - WALL, TOP, WINDOWS, WZ, WR, HW, SILL + HH + 0.1)  # the collar's top
 deck(SILL, R - WALL, box("deck_hatch", (HW + 0.36, CD + 0.006, 1.0), (0, R - 0.07, SILL)))  # 3 mm short of the collar
 if os.environ.get("FORGE_TRIS"):

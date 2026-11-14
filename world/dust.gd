@@ -329,6 +329,11 @@ func _process(delta: float) -> void:
 		if _live[e].age >= _live[e].life:
 			e.visible = false
 			_live.erase(e)
+	# HouseStyle.warm() hides the scene while it compiles and shows all of it again after: a puff spent meanwhile came
+	# back and drew for good (world_test, 14 Nov). The pool says what shows
+	for e: GPUParticles3D in grit + haze:
+		if e.visible and not _live.has(e):
+			e.visible = false
 	for st: Dictionary in _streams.values():
 		var h: GPUParticles3D = st.haze
 		if h.emitting and Engine.get_physics_frames() - int(st.frame) > 1:
