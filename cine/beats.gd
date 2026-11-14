@@ -33,6 +33,7 @@ var holds_clock := false  # a clock:<hour> holds the sky (the opening): the rule
 var pip: Node3D  # sandbox/pip.gd
 var data: Dictionary
 var _sols := {}  # data/sols.json, read on the first start_sol()
+var sol_key := 1  # the data/sols.json key played last (1: the opening); next_sol() follows it
 var ghost: Ghost
 var sequence := ""
 var beats: Array = []
@@ -81,19 +82,35 @@ func setup(w: Node3D, hero: Node3D, uses: Node3D, sky: Node) -> void:
 
 
 func start_opening() -> void:
+	sol_key = 1
 	start("opening")
 
 
 ## A played sol past the first (data/sols.json): the composition root calls it once the kid has woken from a night
 ## on `sol`. False when that sol has no beats.
 func start_sol(sol: int) -> bool:
-	if _sols.is_empty():
-		_sols = JSON.parse_string(FileAccess.get_file_as_string("res://data/sols.json"))
+	_load_sols()
 	if not _sols.has(str(sol)):
 		return false
+	sol_key = sol
 	data["sol%d" % sol] = _sols[str(sol)]
 	start("sol%d" % sol)
 	return true
+
+
+## The sol whose beats come after the ones played last (data/sols.json keys), -1 after the last.
+func next_sol() -> int:
+	_load_sols()
+	var next := -1
+	for k: String in _sols:
+		if k.is_valid_int() and int(k) > sol_key and (next < 0 or int(k) < next):
+			next = int(k)
+	return next
+
+
+func _load_sols() -> void:
+	if _sols.is_empty():
+		_sols = JSON.parse_string(FileAccess.get_file_as_string("res://data/sols.json"))
 
 
 func start(name: String) -> void:

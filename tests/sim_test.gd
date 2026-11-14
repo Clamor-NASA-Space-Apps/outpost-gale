@@ -33,6 +33,7 @@ func play() -> bool:
 	_ledger()
 	_causes()
 	_uses()
+	_awake()
 	await _node()
 	return true
 
@@ -206,6 +207,26 @@ func _uses() -> void:
 	s.o2_kg = 0.01
 	s.step(1.0)
 	check("o2_kg" in s.failing(), "failing() lists an empty meter")
+
+
+## Up all night: the rules run on only to just short of the next sol's 06:30 wake and wait there, a nap cannot pass it,
+## and the night's sleep then lands on that next sol, not the one after (14 Nov playtest: sleep skipped sols).
+func _awake() -> void:
+	var s := quiet()
+	var wake: float = base.clock.wake_hour.value
+	var wait: float = base.clock.wait_before_wake_h.value
+	s.run(40.0)
+	check(s.sol == 2 and near(s.hour, wake - wait, 1e-6, "awake through the night, the rules wait before the 06:30 wake"), "and on the next sol (%d)" % s.sol)
+	s.run(5.0)
+	s.use("nap")
+	check(s.sol == 2 and s.hour < wake, "nor do more hours or a nap pass the wake (%.3f)" % s.hour)
+	s.use("sleep_night")
+	check(s.sol == 2 and near(s.hour, wake, 1e-6, "the sleep wakes at 06:30"), "on the next sol, none skipped (%d)" % s.sol)
+	s.run(10.0)
+	check(s.sol == 2 and s.hour > wake + 9.0, "a new day runs on as usual")
+	s.skip_sols(3)
+	s.run(40.0)
+	check(s.sol == 6 and s.hour < wake, "after a skip the wait is the morning after the skip (sol %d)" % s.sol)
 
 
 func _node() -> void:

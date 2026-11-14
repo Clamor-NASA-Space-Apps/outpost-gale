@@ -143,5 +143,34 @@ func play() -> bool:
 		await process_frame
 	await idle(1.0)
 	check(clock.pinned and not clock.driven and absf(clock.hour() - 13.333) < 0.02, "the pinned clock stays on its pin after the nap (%.3f)" % clock.hour())
+
+	# up all night past the next 06:30, then to bed: the next sol with beats still plays and none is skipped. Before,
+	# the rules ran on into the next morning and the sleep jumped over a whole sol's tasks
+	var sim: Object = game.sim.sim
+	while sim.sol < 3:
+		game.sim.use("sleep_night")
+	beats.start_sol(3)
+	beats._start(beats.beats.find_custom(func(b: Dictionary) -> bool: return b.id == "day_done"))
+	game.sim.sim.run(40.0)  # real time through the night and past the wake
+	check(sim.sol == 4 and sim.hour < 6.5, "awake all night, the rules wait before Sol 4's wake (sol %d, %.2f h)" % [sim.sol, sim.hour])
+	await frames(2)
+	check(clock.paused, "and the sky waits with them")
+	cine.slept.emit(&"night", 8.0)  # the night's sleep, as cine's time-lapse ends it
+	for i in 30:
+		await process_frame
+	check(beats.sequence == "sol4" and sim.sol == 4, "the sleep starts Sol 4, not Sol 5 (%s, sol %d)" % [beats.sequence, sim.sol])
+	# a sol with no beats is never landed on: Sol 6's beats run through 9, so the next night is Sol 10's
+	while sim.sol < 6:
+		game.sim.use("sleep_night")
+	beats.start_sol(6)  # its wake sleeps through Sols 6 to 8 (skip:3), and its day is Sol 9
+	var at_start := [-1]
+	beats.task.connect(func(_id: String) -> void:
+		if at_start[0] < 0 and beats.sequence == "sol10":
+			at_start[0] = sim.sol, CONNECT_DEFERRED)
+	cine.slept.emit(&"night", 8.0)
+	for i in 30:
+		await process_frame
+	# Sol 10's wake sleeps through 10 and 11 itself (skip:2): it starts on Sol 10 and lands on 12
+	check(beats.sequence == "sol10" and at_start[0] == 12, "after the key 6 day the next is Sol 10 (%s, sol %d at its start, %d now)" % [beats.sequence, at_start[0], sim.sol])
 	game.queue_free()
 	return true

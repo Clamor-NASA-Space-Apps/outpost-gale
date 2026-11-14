@@ -162,6 +162,7 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	# time waits while the player cannot act: the look clock and the rules alike
 	clock.paused = settings.is_open() or cover.visible or hud.is_open() or hud.map_open()
+	clock.paused = clock.paused or sim.sim.awake_left() <= 0.0  # up all night: the sky waits at dawn with the rules
 	sim.paused = clock.paused or cine.busy() or beats.holds_clock  # the opening holds the sky at dawn: the HUD hour waits with it
 	hud.visible = not settings.is_open()
 	hud.show_prompt(interactions.prompt_label.text.trim_prefix("[E]  "))  # empty when nothing is in reach; the HUD draws its own E key
@@ -436,7 +437,8 @@ func _wire() -> void:
 	cine.slept.connect(func(kind: StringName, _hours: float) -> void:
 		sim.use("sleep_night" if kind == &"night" else "nap"))
 	# a night's sleep ends the sol's beats and starts the next sol's (data/sols.json), once the lapse is over and the
-	# rules have counted the new sol (the connection above runs first)
+	# rules have counted the new sol (the connection above runs first). The next is the key after the one just played,
+	# never the rules' sol alone: a sol with no beats (7, 8) slept into must not jump over the story's next day
 	cine.slept.connect(func(kind: StringName, _h: float) -> void:
 		if kind != &"night":
 			return
@@ -445,7 +447,12 @@ func _wire() -> void:
 		beats.notify("slept")
 		await get_tree().physics_frame
 		await get_tree().physics_frame
-		beats.start_sol(sim.sim.sol))
+		var next := beats.next_sol()
+		if next < 0:
+			return
+		if sim.sim.sol < next:
+			sim.skip_sols(next - sim.sim.sol)  # the rules catch up, so the HUD's sol is the story's
+		beats.start_sol(next))
 	cine.arrived.connect(func(l: String) -> void:
 		player.bound = world.bound(0.0, player.body.global_position)
 		beats.notify("arrived:" + l))

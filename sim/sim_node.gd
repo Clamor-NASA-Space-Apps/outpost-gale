@@ -14,7 +14,7 @@ var _since := 0.0
 func _process(delta: float) -> void:
 	if paused:
 		return
-	sim.step(delta * sim.n("clock", "sol_h") / sim.n("clock", "real_s_per_sol"))
+	sim.run(delta * sim.n("clock", "sol_h") / sim.n("clock", "real_s_per_sol"))
 	_since += delta
 	if _since >= 1.0 / sim.n("clock", "emit_hz"):
 		_since = 0.0

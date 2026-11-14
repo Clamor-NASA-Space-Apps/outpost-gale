@@ -8,6 +8,7 @@
   "nap_h": {"value": 0.3333, "unit": "h", "factcheck": "rows 194, 195 (naps of 10 to 40 min; design/typical-day.md 'Nap 20 min')"},
   "step_h": {"value": 0.25, "unit": "h", "factcheck": "solver step, not a fact: the sun's curve is sampled this often"},
   "real_s_per_sol": {"value": 1200, "unit": "s", "factcheck": "game pace: the look clock's day_minutes 20 (data/tuning.json sky)", "placeholder": true},
+  "wait_before_wake_h": {"value": 0.05, "unit": "h", "factcheck": "game rule, not a fact: awake past the night, the rules wait 3 minutes short of the next sol's 06:30 wake until the kid sleeps (sim.awake_left), so a sleep always lands on the next sol"},
   "emit_hz": {"value": 4, "unit": "1/s", "factcheck": "how often sim_node tells the HUD, not a fact"}
  },
  "crew": {"value": 2, "factcheck": "rows 150, 163 (two crew on the surface for 30 sols)"},

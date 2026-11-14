@@ -23,6 +23,7 @@ var outside := false
 var panel_dust := 0.0
 var tau := 1.0
 var crop_age_days := 0.0
+var woke_sol := 1  # the sol of the last wake: the rules run on to the next sol's wake at most, and wait there for a sleep
 var knobs := {}
 var active: Array[Dictionary] = []  # running events: the template plus t0 (absolute hours) and log index
 var causes: Array[Dictionary] = []  # the cause log: {sol, hour, id, kind, label, effect: {meter: delta}}
@@ -119,9 +120,11 @@ func use(action_id: String) -> Dictionary:
 		food_kg += n("crop", "harvest_food_kg")
 	if u.has("to_hour"):
 		var h := fposmod(n("clock", u.to_hour) - hour, n("clock", "sol_h"))
-		return step(h if h > 1e-6 else n("clock", "sol_h"))
+		var slept := step(h if h > 1e-6 else n("clock", "sol_h"))
+		woke_sol = sol
+		return slept
 	if u.has("advance_h"):
-		return step(n("clock", u.advance_h))
+		return step(minf(n("clock", u.advance_h), awake_left()))  # a nap never runs into the next sol's morning
 	_power()
 	return _diff(before, state())
 
@@ -137,7 +140,20 @@ func eva(on: bool) -> void:
 func skip_sols(count: int) -> Dictionary:
 	var ledger := step(count * n("clock", "sol_h"))
 	ledger["sols"] = count
+	woke_sol = sol
 	return ledger
+
+
+## Hours the rules may still run before a night's sleep: up to just short of the next sol's wake. Staying up never
+## starts a sol, so a sol's beats can never be slept past (14 Nov playtest: sleep skipped sols).
+func awake_left() -> float:
+	var wake := woke_sol * n("clock", "sol_h") + n("clock", "wake_hour") - n("clock", "wait_before_wake_h")
+	return maxf(wake - now(), 0.0)
+
+
+## Real time passing while the kid is awake: step(), but it waits before the next sol's wake (awake_left()).
+func run(hours: float) -> Dictionary:
+	return step(minf(hours, awake_left()))
 
 
 ## Advance the rules by `hours` of game time. Returns what changed: each meter's delta, and the energy made and used.
