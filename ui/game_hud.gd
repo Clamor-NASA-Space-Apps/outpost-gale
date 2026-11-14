@@ -64,6 +64,7 @@ var marker: Control  # the kid's own map mark: a light ring, apart from PIP's am
 var mark = null  # its world x, z, or null
 var mark_id := ""  # the place it names, "" for open ground
 const MARK_REACH_M := 4.0  # within this the mark is reached and clears itself
+const SAME_PLACE_M := 20.0  # a mark this near the objective is the same place: one tag, not two (a place's middle and its landmark differ by metres)
 var prompt: Control
 var full_map: Control  # open while the full map shows, else null
 var camera: Camera3D
@@ -896,6 +897,10 @@ func _follow_view() -> void:
 	if mark != null and Vector2(at.x, at.z).distance_to(mark) < MARK_REACH_M:
 		_cue("objective_done")
 		set_mark(null)  # reached
+	# the kid's mark on the very place PIP's objective points at would say it twice ("Reactor 75 m" over "Reactor
+	# 75 m", 15 Nov playtest, the pin dropped on the reactor for the autopilot): the objective's tag speaks for both
+	if mark != null:
+		marker.visible = obj == null or (mark as Vector2).distance_to(obj) > SAME_PLACE_M
 	compass.heading = heading
 	compass.marks = {"objective": Hud.bearing(Vector3(obj.x - at.x, 0, obj.y - at.z)) if obj != null else null,
 		"pip": Hud.bearing(Vector3(p.x - at.x, 0, p.y - at.z)) if p != null else null,

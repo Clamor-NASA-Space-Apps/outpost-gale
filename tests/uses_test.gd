@@ -34,6 +34,19 @@ func play() -> bool:
 			continue  # the sleep picker's spot: tests/sleep_test.gd; a wing's row: wiper() below
 		heard.clear()
 		await one(it, heard)
+	# a prop that stands outdoors is never a swept (`clean`) surface: those are drawn with the rooms' fit-out, which
+	# is hidden from afar (world.json swept_range_m), and the wipers' consoles came and went with the camera's place
+	# (15 Nov playtest: "the wiper push button randomly vanishes")
+	var outdoors: Array[String] = []
+	for id: String in game.world.data.uses:
+		if id == "_note" or game.world.data.rooms.has(id):
+			continue
+		for row: Dictionary in game.world.data.uses[id]:
+			for name: String in row.get("props", {}):
+				var spec: Dictionary = row.props[name]
+				if spec.get("clean", false) and not spec.get("hidden", false) and not spec.get("hand", false):
+					outdoors.append("%s %s" % [id, name])
+	check(outdoors.is_empty(), "no always-shown outdoor prop is a swept surface (%s)" % [outdoors])
 	await wiper(spots.filter(func(it: Node) -> bool: return it.row.has("wiper")), heard)
 	var extra: Array = game.render_game_to_text().keys().filter(func(k: String) -> bool: return not k in keys)
 	check(extra.is_empty(), "no new state keys (%s)" % [extra])

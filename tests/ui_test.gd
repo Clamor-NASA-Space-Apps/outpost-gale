@@ -343,6 +343,17 @@ func _hud_parts(h: Control, cues: Array[String]) -> void:
 	var d: Vector2 = h.minimap.to_disc(Vector2(6.856, 10.051), 999.0)
 	check(d.y < 0.0 and absf(d.x) < absf(d.y), "on the minimap the objective ahead is up: %s" % d)
 	check(s.area == "Landing plain", "the area under the minimap: %s" % s.area)
+	# the kid's own mark dropped on the objective's place shows one tag, not two; elsewhere it shows its own
+	h.set_mark(Vector2(6.856, 10.051), "greenhouse", "Greenhouse")
+	await process_frame
+	await process_frame
+	check(h.waypoint.visible and not h.marker.visible, "a mark on the objective's own place adds no second tag")
+	h.set_mark(Vector2(60.0, 40.0), "", "Marker")
+	await process_frame
+	await process_frame
+	check(h.marker.visible, "a mark somewhere else shows its own tag")
+	h.set_mark(null)
+	await process_frame
 	body.rotation.y = -deg_to_rad(261.0)
 	cam.rotation.y = body.rotation.y  # now facing west: the greenhouse is behind-left, off screen
 	cam.position = Vector3(8.889, 1.6, -1.408)
