@@ -22,6 +22,14 @@ func knob(k: String) -> Dictionary:
 	return HouseStyle.knobs(game.design)[k]
 
 
+## What sets how sharp and how big the 2D is drawn: the canvas transform, the window's stretch, 2D anti-aliasing, the
+## HUD's and this screen's own scale.
+func _ui_shape() -> Array:
+	var v := game.get_viewport()
+	return [v.get_final_transform(), v.size, root.content_scale_factor, root.content_scale_size, v.msaa_2d, v.use_hdr_2d,
+		v.snap_2d_transforms_to_pixel, game.hud.scale, s.root.scale]
+
+
 func settle() -> void:
 	for i in 600:
 		if not game.busy():
@@ -112,11 +120,14 @@ func play() -> bool:
 	s.open()
 	await frames(2)
 
-	# every preset names one choice in every row, so no row reads "Custom" before the player touches it
+	# every preset names one choice in every row, so no row reads "Custom" before the player touches it; and a preset
+	# touches the 3D picture only: the HUD and this screen keep their size and sharpness (14 Nov playtest, 94.png)
+	var ui := _ui_shape()
 	for id: String in game.design.quality:
 		s.cards[id].pressed.emit()
 		await settle()
 		check(game.quality == id and game.overrides.is_empty(), "the %s card puts its preset on" % id)
+		check(_ui_shape() == ui, "%s leaves the 2D as it was (%s, was %s)" % [id, _ui_shape(), ui])
 		for r: String in s.rows:
 			check(s.current(r) >= 0, "%s: the %s row names a choice" % [id, r])
 	check(Settings.saved().level == game.quality, "a card is saved")
