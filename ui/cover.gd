@@ -1,8 +1,7 @@
 extends ColorRect
 ## The cover over the screen while shaders compile (sandbox._warm(), HouseStyle.warm()): a line and a bar driven by
-## the warm-up's real progress, over the splash picture on the first load. The boot splash (native) and the web
-## shell's loading screen (web/shell.html) show the same picture in the same place, so from the click to play the
-## player sees one screen whose bar changes words. Without a warm-up it is a plain fade (the safety net's _flash()).
+## the warm-up's real progress, over the start screen's dark stage (ui/start_bg.jpg, dimmed) on the first load, so
+## from Start to play the player stays in one place. Without a warm-up it is a plain fade (the safety net's _flash()).
 
 const Hud := preload("res://ui/hud.gd")
 
@@ -16,11 +15,13 @@ func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_STOP  # a click while it is up is not a click on the world
 	theme = Hud.THEME
-	# the boot splash, drawn the way the engine draws it (stretch mode Keep: whole, centred), until the first warm-up
-	picture.texture = load(ProjectSettings.get_setting("application/boot_splash/image"))
+	# the picture the start screen stood on, filling the screen as it does there, until the first warm-up. Dimmed
+	# (part seen over the cover's own dark colour): the bar and its words are what to read now
+	picture.texture = load("res://ui/start_bg.jpg")
+	picture.self_modulate.a = 0.4
 	picture.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	picture.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(picture)
 	# low and centred, where the web shell draws its own bar

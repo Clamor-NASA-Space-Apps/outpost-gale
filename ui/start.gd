@@ -1,13 +1,15 @@
 extends Control
 ## The first two screens, up while ui/boot.gd loads the game underneath: the team's mark on black with one sweep of
 ## light across it (about 3 s; any key, click or tap skips it), then the start screen: the hero and PIP under one
-## light (ui/start_bg.jpg, a still drawn once by this engine from the game's own models, so the first frame stays
-## cheap on the web) and a short menu at the bottom left. Keys, a pad, a mouse or a finger all work it.
+## light and a short menu at the bottom left. Keys, a pad, a mouse or a finger all work it.
+## The hero and PIP are a still at first (ui/start_bg.jpg, so the first frame is cheap on the web), and the same
+## scene alive (ui/start_stage.gd) once the game's models are in memory.
 
 ## The kid pressed "Start mission". Boot puts the sandbox in once everything is loaded.
 signal started
 
 const Hud := preload("res://ui/hud.gd")
+const Stage := preload("res://ui/start_stage.gd")
 # 96 px tall: a 48 dp target on a phone held sideways (addons/forge/test.gd TARGET)
 const ROW := Vector2(380, 96)
 # Android's back swipe starts 60 px in from a side (addons/forge/test.gd EDGE): the menu stays clear of it
@@ -23,12 +25,15 @@ void fragment() {
 
 var splash: ColorRect  # null once the menu has the screen
 var shine := ShaderMaterial.new()
+var stage: SubViewport  # the live scene, null until everything is loaded
+var live := TextureRect.new()  # its picture, over the still
 var menu: VBoxContainer
 var rows: Array[Button] = []  # Start mission, Credits, Exit
 var credits: PanelContainer
 var back: Button
 var bar := ColorRect.new()
 var _tween: Tween
+var _asked := false  # Start was pressed
 
 
 func _ready() -> void:
@@ -41,6 +46,13 @@ func _ready() -> void:
 	picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	picture.mouse_filter = MOUSE_FILTER_IGNORE
 	add_child(picture)
+	# the live scene's picture lies on the still the same way, unseen until it is drawn
+	live.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
+	live.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	live.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	live.mouse_filter = MOUSE_FILTER_IGNORE
+	live.modulate.a = 0.0
+	add_child(live)
 	_menu()
 	_credits()
 	# loading, as a thin line along the bottom edge
@@ -57,17 +69,27 @@ func _ready() -> void:
 		RenderingServer.frame_post_draw.connect(func() -> void: JavaScriptBridge.eval("window.shellDone && shellDone()", true), CONNECT_ONE_SHOT)
 
 
-## Loading's share done, 0 to 1 (ui/boot.gd).
+## Loading's share done, 0 to 1 (ui/boot.gd), every frame.
 func progress(k: float) -> void:
 	bar.anchor_right = k
 	bar.visible = k < 1.0
+	# all in memory and the logo gone: the hero and PIP come alive. Not for a kid already on the way in: the stage
+	# would be built and freed in one frame
+	if k >= 1.0 and splash == null and stage == null and not _asked:
+		stage = Stage.new()
+		add_child(stage)
+		live.texture = stage.get_texture()
+		# its first frames compile its shaders and settle the hero on the ground: shown after them, faded in
+		var t := create_tween()
+		t.tween_interval(0.3)
+		t.tween_property(live, "modulate:a", 1.0, 0.6)
 
 
 func _splash() -> void:
 	splash = ColorRect.new()
-	# pure black, the one colour not from the theme: the team asked for its mark on black, and it is the team's
-	# card, not a part of the game's look
-	splash.color = Color.BLACK
+	# black, the one colour not from the theme: the team asked for its mark on black, and it is the team's card,
+	# not a part of the game's look. Read from where the engine's own splash takes it, so the two cannot differ
+	splash.color = ProjectSettings.get_setting("application/boot_splash/bg_color")
 	splash.set_anchors_and_offsets_preset(PRESET_FULL_RECT)  # it stops the mouse: no click reaches the menu under it
 	add_child(splash)
 	var mark := Control.new()
@@ -95,8 +117,9 @@ func _splash() -> void:
 	team.position = Vector2(-300, 96)
 	team.size = Vector2(600, 56)
 	mark.add_child(team)
+	# no fade in: the engine's boot splash and the web page's loading screen show this same frame (ui/boot_splash.png)
 	_tween = create_tween()
-	_tween.tween_property(mark, "modulate:a", 1.0, 0.4).from(0.0)
+	_tween.tween_interval(0.4)
 	_tween.tween_method(func(v: float) -> void: shine.set_shader_parameter("at", v), -0.2, 1.2, 1.3)
 	_tween.tween_interval(0.7)
 	_tween.tween_property(splash, "modulate:a", 0.0, 0.5)
@@ -172,6 +195,7 @@ func _show_credits(on: bool) -> void:
 
 func _start() -> void:
 	rows[0].text = "Loading..."  # read only while boot still loads: the sandbox comes in by itself after
+	_asked = true
 	started.emit()
 
 

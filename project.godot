@@ -5,8 +5,8 @@ config_version=5
 config/name="junior-astronaut-mission-trainer"
 run/main_scene="res://ui/boot.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
-boot_splash/bg_color=Color(0.0862745, 0.0588235, 0.0470588, 1)
-boot_splash/image="res://ui/splash.png"
+boot_splash/bg_color=Color(0, 0, 0, 1)
+boot_splash/image="res://ui/boot_splash.png"
 
 [autoload]
 

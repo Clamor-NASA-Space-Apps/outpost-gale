@@ -7,10 +7,12 @@
 		<!--
 		Outpost Gale's loading screen, the export preset's html/custom_html_shell. Built on Godot 4.7.2's own shell
 		(godot.html in web_nothreads_release.zip): its engine start code is kept as it was. What changed: the splash
-		picture fills the screen the way the engine draws it, a bar with plain words counts the download, and the
-		screen stays up until the game's own cover is drawn (ui/cover.gd calls shellDone()), so the player never
-		sees a black canvas between them. Offline first: no file comes from another host; the font is inline.
-		Colours are DESIGN.md tokens copied here (tests/ui_test.gd fails when they drift). Font: Lexend (OFL,
+		picture (the team's mark on black, ui/boot_splash.png) fills the screen the way the engine draws it, a bar
+		with plain words counts the download, and the screen stays up until the game's own splash, the same
+		picture, is drawn (ui/start.gd calls shellDone()), so the player never sees a jump between them.
+		Offline first: no file comes from another host; the font is inline.
+		Colours are DESIGN.md tokens copied here (tests/ui_test.gd fails when they drift), but for the black behind
+		the mark: the team's card is black, as in ui/start.gd. Font: Lexend (OFL,
 		ui/fonts/Lexend-OFL.txt), weight 500 only, ASCII plus the ellipsis, made with
 		  python3 -m fontTools.varLib.instancer ui/fonts/Lexend-latin-wght.woff2 wght=500 -o lex.woff2
 		  python3 -m fontTools.subset lex.woff2 --unicodes="U+0020-007E,U+2026" --flavor=woff2 --output-file=sub.woff2
@@ -37,7 +39,7 @@ html, body, #canvas {
 
 body {
 	color: var(--on-surface);
-	background-color: var(--surface);
+	background-color: black;
 	overflow: hidden;
 	touch-action: none;
 	font-family: 'Lexend', system-ui, sans-serif;
@@ -55,7 +57,7 @@ body {
 #status {
 	position: absolute;
 	inset: 0;
-	background-color: var(--surface);
+	background-color: black;
 	z-index: 1;
 }
 
@@ -68,7 +70,7 @@ body {
 	object-fit: contain;
 }
 
-/* low and centred, where ui/cover.gd draws its bar; one size for a phone and a laptop */
+/* low and centred, under the mark; one size for a phone and a laptop */
 #status-box {
 	position: absolute;
 	left: 50%;
@@ -149,7 +151,7 @@ body {
 		</noscript>
 
 		<div id="status">
-			<img id="status-splash" src="$GODOT_SPLASH" alt="Outpost Gale">
+			<img id="status-splash" src="$GODOT_SPLASH" alt="Team Clamor">
 			<div id="status-box">
 				<div id="status-line" aria-live="polite">Downloading the base...</div>
 				<div id="status-bar" role="progressbar" aria-label="Loading" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="status-fill"></div></div>
@@ -179,7 +181,7 @@ const engine = new Engine(GODOT_CONFIG);
 		statusBar.setAttribute('aria-valuenow', String(Math.round(fraction * 100)));
 	}
 
-	// ui/cover.gd calls this on the first frame it is drawn: the game's own cover takes over from here
+	// ui/start.gd calls this on the first frame it is drawn: the game's own splash takes over from here
 	window.shellDone = function () {
 		statusOverlay.remove();
 	};
@@ -258,7 +260,7 @@ const engine = new Engine(GODOT_CONFIG);
 				}
 			},
 		}).then(() => {
-			// downloaded and started; the screen stays until the game's cover is drawn (shellDone)
+			// downloaded and started; the screen stays until the game's splash is drawn (shellDone)
 			statusLine.textContent = 'Getting ready...';
 			setBar(1);
 			statusBar.classList.add('busy');

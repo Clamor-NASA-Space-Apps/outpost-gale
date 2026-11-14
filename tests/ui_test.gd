@@ -709,8 +709,9 @@ func _loading_tokens() -> void:
 	check(found.size() >= 4, "web/shell.html declares its colour tokens")
 	for m: RegExMatch in found:
 		check(colors.get(m.get_string(1), "") == m.get_string(2), "web/shell.html --%s is %s, design.json says %s" % [m.get_string(1), m.get_string(2), colors.get(m.get_string(1), "nothing")])
+	# the boot splash is the team's mark on black (ui/boot_splash.png, ui/start.gd), not a part of the game's look
 	var bg: Color = ProjectSettings.get_setting("application/boot_splash/bg_color")
-	check(bg.to_html(false) == Hud.color("surface").to_html(false), "the boot splash colour %s is not the surface token" % bg.to_html(false))
+	check(bg == Color.BLACK, "the boot splash colour %s is not black, as its picture is" % bg.to_html(false))
 
 
 var aligned := 0
