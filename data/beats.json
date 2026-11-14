@@ -278,7 +278,7 @@
     },
     {
       "id": "map",
-      "task": "task.follow_solar",
+      "task": "task.mark_solar",
       "line": "sol1.map_open",
       "keys": [
         "M"
@@ -297,6 +297,17 @@
       }
     },
     {
+      "id": "map_mark",
+      "_note": "Far Cry style (Ravindu, 14 Nov): a tap on the Solar farm's label marks it (ui/components/full_map.gd); the HUD's marked event reaches here as waypoint_set:<place id>",
+      "line": "sol1.map_mark",
+      "keys": [
+        "Mouse"
+      ],
+      "wait": {
+        "event": "waypoint_set:solar"
+      }
+    },
+    {
       "id": "map_close",
       "line": "sol1.map_close",
       "keys": [
@@ -311,9 +322,10 @@
       "pip": {
         "follow_me": "solar"
       },
-      "line": "sol1.follow_solar",
+      "task": "task.walk_marker",
+      "line": "sol1.to_marker",
       "allow": [],
-      "objective": "pip",
+      "objective": null,
       "wait": {
         "place": {
           "at": "solar",

@@ -12,7 +12,7 @@ extends "res://addons/forge/test.gd"
 # s each beat may take here: its own wait plus the walking
 const BUDGET := {"wake": 4, "hatch": 3, "walk_out": 20, "turn_out": 15, "outside": 4, "pip_hello": 14, "walk_to_me": 20,
 	"side_steps": 60, "back_step": 4, "look_shot": 4, "look_mouse": 6, "try_jump": 4, "jump_fact": 6, "hurry": 10,
-	"lift": 40, "lift_fact": 2, "set_down": 10, "map": 2, "map_close": 2, "follow_solar": 120, "sun_fact": 2, "o2_visit": 120,
+	"lift": 40, "lift_fact": 2, "set_down": 10, "map": 2, "map_mark": 10, "map_close": 2, "follow_solar": 120, "sun_fact": 2, "o2_visit": 120,
 	"o2_fact": 2, "garden_visit": 180, "lamps_fact": 2, "choice": 2,
 	"day_done": 120, "sleep_hint": 2, "free": 3}
 
@@ -56,6 +56,11 @@ func play() -> bool:
 	beats.choice_offered.connect(func(id: String) -> void: offered.append(id))
 	beats.finished.connect(func(s: String) -> void: finished.append(s))
 	game.hud.map_toggled.connect(func(open: bool) -> void: beats.notify("map_open" if open else "map_closed"))
+	game.hud.marked.connect(func(at: Variant, id: String) -> void:  # as sandbox.gd wires the map's mark
+		if at != null:
+			beats.notify("waypoint_set")
+			if id != "":
+				beats.notify("waypoint_set:" + id))
 	beats.start_opening()
 	check(not beats.may_sleep(), "no sleep while Sol 1's tasks are left")
 	var clock: Node = game.clock
@@ -258,10 +263,20 @@ func play() -> bool:
 	await _beat("map", func() -> void:
 		action(&"map", true)
 		action(&"map", false))
+	# Far Cry style: a click on the Solar farm's label marks it, through the same input a finger or a mouse gives
+	var clicked := [false]
+	await _beat("map_mark", func() -> void:
+		var label = game.hud.full_map.screen_of("solar") if game.hud.full_map else null
+		if label != null and not clicked[0]:
+			clicked[0] = true
+			click(label))
+	check(game.hud.mark != null and game.hud.mark_id == "solar", "the click marked the Solar farm (%s)" % game.hud.mark_id)
+	check(game.beacon.visible, "its beacon stands in the world")
 	await _beat("map_close", func() -> void:
 		action(&"map", true)
 		action(&"map", false))
 	check(not game.hud.map_open(), "the map closed again")
+	check(game.hud.snapshot().mark.compass.ends_with(" m"), "the compass shows the mark's distance (%s)" % game.hud.snapshot().mark)
 	check(offered.is_empty(), "no choice before PIP has shown the power")
 
 	# after PIP to the solar farm: it leads at the hero's pace and the hero never catches it
