@@ -23,7 +23,7 @@ const PICTURE_M := 400.0  # the base picture's width (tools/bake_minimap.gd)
 const GALE_PX_PER_KM := 0.8 * 1024.0 / 154.0
 const SUMMIT_PX := Vector2(535, 495)
 const BASE_FROM_SUMMIT_KM := Vector2(-24.17, -28.99)  # x east, y south on the picture
-const ZOOM_MAX := 4.0  # px a metre, closest in: a habitat about 40 px across
+const ZOOM_MAX := 8.0  # px a metre, closest in: a habitat about 80 px across
 const ZOOM_STEP := 1.25  # one wheel notch
 const PICK_PX := 24.0  # a tap this near a label or the mark takes it (a fingertip)
 const DRAG_PX := 8.0  # a press that moves further is a drag, not a tap
@@ -48,7 +48,7 @@ var me_button := Button.new()
 var view := Control.new()
 var card: PanelContainer
 var center := Vector2.ZERO  # world metres at the view's middle
-var zoom := 2.5  # px a metre
+var zoom := 4.0  # px a metre
 var labels: Array = []  # [id, name, screen rect] drawn this frame, for the tap test
 var _press = null  # where a press began (screen), while it may still be a tap
 var _moved := false
@@ -85,7 +85,7 @@ func _ready() -> void:
 	for kid: Control in [
 		Hud.row([_swatch("mercou"), Hud.label(_site("mercou"), "MenuText")], 8),
 		Hud.row([_swatch("curiosity"), Hud.label(_site("curiosity"), "MenuText")], 8),
-		Hud.row([Hud.tag("TagArchive", "archive", "ARCHIVED", "CapInk", 12), Hud.label("Curiosity's place, 10 Nov 2026", "MenuSmall", true)], 8),
+		Hud.row([Hud.tag("TagArchive", "archive", "ARCHIVED", "CapInk", 12), Hud.label("Curiosity's place, 10 Nov 2026", "MenuSmall")], 8),
 	]:
 		legend.add_child(kid)
 	var body := Hud.col([
@@ -118,7 +118,7 @@ func refresh() -> void:
 ## Back to the hero, close enough to see the base's places.
 func recenter() -> void:
 	center = hero if hero != null else Vector2.ZERO
-	zoom = maxf(zoom, 2.5)  # the habitat about 60 px across: the base's places and their labels apart
+	zoom = maxf(zoom, 4.0)  # the habitat about 40 px across: the base's places and their labels apart
 	refresh()
 
 

@@ -469,7 +469,7 @@ func _far_cry_map(h: Control) -> void:
 	for e: InputEvent in _drag_events(press, press + Vector2(60, 0)):
 		send(e)
 	await process_frame
-	check(fm.center.x < c0.x - 10.0 and fm.mark == null, "a drag pans the map and marks nothing (%.0f to %.0f)" % [c0.x, fm.center.x])
+	check(fm.center.x < c0.x - 5.0 and fm.mark == null, "a drag pans the map and marks nothing (%.0f to %.0f)" % [c0.x, fm.center.x])
 	fm.recenter()
 	await process_frame
 	var at = fm.screen_of("solar")
