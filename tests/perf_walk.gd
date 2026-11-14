@@ -139,6 +139,9 @@ func hold(actions: Array, s: float) -> void:
 	for a: StringName in actions:
 		if InputMap.has_action(a):
 			Input.action_press(a)
+	var p: Node = game.get("player")
+	if p.get("hurrying") != null:
+		p.hurrying = &"hurry" in actions  # a lock (player.gd): action_press() sends no event to turn it on or off
 	await secs(s)
 	for a: StringName in actions:
 		if InputMap.has_action(a):

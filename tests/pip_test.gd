@@ -124,7 +124,7 @@ func _sprint(world: Node3D, player: Node3D, pip: Node3D) -> void:
 	pip.arrived.connect(func() -> void: arrived[0] = true, CONNECT_ONE_SHOT)
 	pip.order(Vector3(-0.166, 0.0, -20.223), Vector3.INF, false, Vector3(b.lead_wait_m, b.lead_resume_m, b.lead_near_m))
 	action(&"move_forward", true)
-	action(&"hurry", true)
+	_hurry(player, true)
 	var gap := INF
 	var top := 0.0
 	for i in 60 * 40:
@@ -137,7 +137,7 @@ func _sprint(world: Node3D, player: Node3D, pip: Node3D) -> void:
 			gap = minf(gap, d.length())
 		top = maxf(top, pip.v)
 	action(&"move_forward", false)
-	action(&"hurry", false)
+	_hurry(player, false)
 	print("  sprint: closest %.2f m, PIP top %.2f m/s (hero hurry %.2f)" % [gap, top, player.hurry])
 	check(top > player.hurry, "leading a sprinting kid, PIP goes faster than the hero's hurry (%.2f m/s)" % top)
 	pip.release()
@@ -175,6 +175,13 @@ func _tours(world: Node3D, player: Node3D, pip: Node3D) -> void:
 	pip.release()
 
 
+## The hurry lock (player.gd `hurrying`) on or off through a real press of the key, as a kid's tap.
+func _hurry(player: Node3D, on: bool) -> void:
+	if player.hurrying != on:
+		action(&"hurry")
+		action(&"hurry", false)
+
+
 ## One tour: the hero from `from` (x, z), walking or hurrying straight at the goal with real input and stopping 3 m
 ## short of it (`go` false: standing still, for 12 s). What happened, for the checks.
 func _tour(world: Node3D, player: Node3D, pip: Node3D, from: Vector2, hurry: bool, go: bool) -> Dictionary:
@@ -198,7 +205,7 @@ func _tour(world: Node3D, player: Node3D, pip: Node3D, from: Vector2, hurry: boo
 		var walk := go and h.distance_to(goal) > 3.0
 		player.cam.yaw = atan2(h.x - goal.x, h.y - goal.y)
 		action(&"move_forward", walk)
-		action(&"hurry", walk and hurry)
+		_hurry(player, walk and hurry)
 		there = minf(there, INF if walk or not go else s)
 		out.hits += 1 if _overlaps(pip) else 0
 		out.gap = minf(out.gap, h.distance_to(q))
@@ -214,7 +221,7 @@ func _tour(world: Node3D, player: Node3D, pip: Node3D, from: Vector2, hurry: boo
 		elif out.ahead_s > 0.0:
 			out.lead_s = minf(out.lead_s, s)
 	action(&"move_forward", false)
-	action(&"hurry", false)
+	_hurry(player, false)
 	if out.arrived:
 		out.lead_s = minf(out.lead_s, 40.0)
 	return out

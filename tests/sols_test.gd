@@ -139,14 +139,14 @@ func play() -> bool:
 		if route.size() == 4:  # at wing 2's brush stand
 			if sim.panel_dust < after[0] - 0.01:
 				route.pop_front()
-				action(&"hurry", true)
+				_hurry(true)
 			else:
 				_use("clean_panel", route[0])
 			return
 		if route.size() > 1 and _flat(player.body.global_position, route[0]) < 0.6:
 			route.pop_front()
 		_steer(route[0], 0.5))
-	action(&"hurry", false)
+	_hurry(false)
 	_stop()
 	check(sim.panel_dust < after[0] - 0.01, "a second wing brushed on the way cleared more dust, and the step waited (%.3f to %.3f)" % [after[0], sim.panel_dust])
 	check(player.vehicle == null and _flat(player.body.global_position, world.landmark("reactor").pos) < 14.5,
@@ -554,6 +554,13 @@ func _until(ok: Callable, seconds: float, each := Callable()) -> bool:
 			each.call()
 		await frames(1)
 	return ok.call()
+
+
+## The hurry lock (player.gd `hurrying`) on or off through a real press of the key, as a kid's tap.
+func _hurry(on: bool) -> void:
+	if player.hurrying != on:
+		action(&"hurry")
+		action(&"hurry", false)
 
 
 ## A key tapped once a beat (the map), as the kid does.

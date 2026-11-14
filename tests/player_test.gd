@@ -28,6 +28,7 @@ func play() -> bool:
 		"project.godot gravity is the sheet's")
 	await no_sinking()
 	await footsteps()
+	await hurry_lock()
 	await life()
 	await look_turns()
 	await carry_hands()
@@ -58,6 +59,53 @@ func box(at: Vector2, size: Vector3) -> StaticBody3D:
 	b.position = Vector3(at.x, world.height_at(at.x, at.y) + size.y / 2.0 - 0.1, at.y)
 	game.add_child(b)
 	return b
+
+
+## The hurry lock (player.gd `hurrying`) on or off through a real press of the key, as a kid's tap.
+func hurry(on: bool) -> void:
+	if player.hurrying != on:
+		action(&"hurry")
+		action(&"hurry", false)
+
+
+## One press locks hurrying and the hero keeps the hurry speed with the key up; a second press walks; standing still
+## lets go; a blocked hurry never locks and a lock lets go once hurry is blocked; place() lets go.
+func hurry_lock() -> void:
+	game.place(Vector3(OPEN.x, 0, OPEN.y + 6.0), 180)
+	await frames(30)
+	action(&"move_forward", true)
+	hurry(true)
+	await frames(120)
+	check(player.hurrying and not Input.is_action_pressed(&"hurry") and player.moved > player.walk * 1.1,
+		"one press locks hurrying: the hero hurries with the key up (%.2f m/s, walk %.2f)" % [player.moved, player.walk])
+	action(&"hurry")
+	action(&"hurry", false)
+	await frames(120)
+	check(not player.hurrying and player.moved < player.walk * 1.05, "a second press walks again (%.2f m/s)" % player.moved)
+	hurry(true)
+	action(&"move_forward", false)
+	await frames(roundi(60.0 * player.tuning.hero.hurry_still_s) + 10)
+	check(not player.hurrying, "standing still lets go of the lock")
+	player.allow(["move"])
+	await frames(2)
+	action(&"hurry")
+	action(&"hurry", false)
+	await frames(2)
+	check(not player.hurrying, "a blocked hurry never locks")
+	player.allow([])
+	await frames(2)
+	action(&"move_forward", true)
+	hurry(true)
+	await frames(10)
+	player.allow(["move"])
+	await frames(2)
+	check(not player.hurrying, "a lock lets go once hurry is blocked")
+	player.allow([])
+	hurry(true)
+	await frames(2)
+	action(&"move_forward", false)
+	game.place(Vector3(OPEN.x, 0, OPEN.y + 6.0), 180)
+	check(not player.hurrying, "place() lets go of the lock")
 
 
 ## Holds `actions` for n frames, checking every frame that the drawn body is in nothing.
@@ -479,9 +527,11 @@ func restyle() -> void:
 
 class Rover extends AnimatableBody3D:
 	var last := Vector2.ZERO
+	var hurried := false
 
-	func drive(input: Vector2, _hurry: bool, _delta: float) -> void:
+	func drive(input: Vector2, hurry: bool, _delta: float) -> void:
 		last = input
+		hurried = hurry
 
 	func seat() -> Transform3D:
 		return global_transform
@@ -499,10 +549,15 @@ func drive() -> void:
 	v.add_to_group("vehicle")
 	game.add_child(v)
 	v.global_position = Vector3(STEPS.x, game.get_node("World").height_at(STEPS.x, STEPS.y + 10), STEPS.y + 10)
+	hurry(true)
 	player.enter(v)
+	check(not player.hurrying, "boarding lets go of the hurry lock")
 	action(&"move_forward", true)
 	await frames(10)
+	hurry(true)
+	await frames(2)
 	action(&"move_forward", false)
+	check(v.hurried, "the rover's drive() gets the hurry lock")
 	var s: Dictionary = player.state()
 	check(s.vehicle.driving and player.meshes.all(func(m: MeshInstance3D) -> bool: return m.is_visible_in_tree()), "driving, the hero is aboard and drawn on the seat")
 	var hips: Vector3 = player.body.global_transform * player.model.hip_sit
@@ -510,6 +565,7 @@ func drive() -> void:
 	check(v.last.y > 0.5, "the forward key reaches drive() as input.y")
 	check(is_equal_approx(player.cam.distance, player.tuning.camera.vehicle_distance), "the camera keeps the vehicle distance")
 	player.exit()
+	check(not player.hurrying, "leaving lets go of the hurry lock")
 	await frames(5)
 	s = player.state()
 	check(not s.vehicle.driving and player.model.state != &"drive_sit", "leaving stands the hero up")
@@ -551,6 +607,15 @@ func touch(view: Rect2) -> void:
 	# each button is a full target and holds its action while the finger stays down
 	for b: Button in t.root.find_children("*", "Button", true, false):
 		check(b.size.x >= TARGET and b.size.y >= TARGET, "%s button is at least %d px" % [b.name, TARGET])
+		if b.name == "hurry":
+			# a lock: a tap turns it on and the button shows it, the next tap turns it off
+			for on: bool in [true, false]:
+				finger(2, b.get_global_rect().get_center(), true)
+				await frames(1)
+				finger(2, b.get_global_rect().get_center(), false)
+				await frames(1)
+				check(player.hurrying == on and b.button_pressed == on, "%s: a tap on Hurry turns the lock %s, and the button shows it" % [view.size, "on" if on else "off"])
+			continue
 		finger(2, b.get_global_rect().get_center(), true)
 		await frames(1)
 		check(Input.is_action_pressed(StringName(b.name)), "%s: a finger on the button holds its action" % view.size)

@@ -97,6 +97,8 @@
  "hero": {
   "note": "gait_hysteresis: Froude the hurry-to-walk change sits below hero.froude.walk_run. The boots' sink is reality.json hero.sink; smooth_deg: at load the hero's normals are averaged across edges flatter than this angle, so the suit's folds shade smooth and the pack's box corners (90 deg) stay sharp; the limbs are about eight-sided, 45 deg a face, which 40 left faceted (the file's normals were split face by face)",
   "gait_hysteresis": 0.05,
+  "hurry_still_s": 0.5,
+  "note_hurry": "hurry_still_s: s with no move input after which the hurry lock (player.gd hurrying: a press locks it, the next press lets go) lets go by itself, so a kid who stops and walks on later is not surprised by a run. Art direction, never shown to players",
   "step_catch_s": 0.12,
   "note_step": "step_catch_s: s the drawn body takes to catch up a whole step (reality.json hero.step) after the body steps up or down at once: it follows at hero.step / step_catch_s m/s and is never more than a step behind. Source's SmoothViewOnStairs does this to the view (150 units/s, an 18-unit step, 18 / 150 = 0.12 s; design/research/pages/camera/source-sdk-2013-smooth-stairs.md); here the whole drawn body, so the feet do not pop up a sill (the greenhouse's 0.18 m threshold rose in one frame)",
   "smooth_deg": 60,

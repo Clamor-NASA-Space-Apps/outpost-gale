@@ -12,6 +12,7 @@ var look: Callable  # (right_deg, down_deg)
 var deg_per_half := 0.0
 var fingers := {}  # finger index -> its last position on the pad
 var target := 0.0
+var hurry_button: Button
 
 
 func setup(tuning: Dictionary, colors: Dictionary, on_look: Callable) -> void:
@@ -60,14 +61,27 @@ func setup(tuning: Dictionary, colors: Dictionary, on_look: Callable) -> void:
 		button.custom_minimum_size = Vector2(target, target)
 		button.focus_mode = Control.FOCUS_NONE  # a focused button would also take Space
 		# action events, not Input.action_press(): that sets the state but skips every _input listener
-		button.button_down.connect(_send.bind(StringName(b[0]), true))
-		button.button_up.connect(_send.bind(StringName(b[0]), false))
+		if b[0] == "hurry":
+			# a lock, not a hold (player.gd `hurrying`): a tap is one press, and the button shows the lock (show_hurry)
+			button.toggle_mode = true
+			button.toggled.connect(func(_on: bool) -> void:
+				_send(&"hurry", true)
+				_send(&"hurry", false))
+			hurry_button = button
+		else:
+			button.button_down.connect(_send.bind(StringName(b[0]), true))
+			button.button_up.connect(_send.bind(StringName(b[0]), false))
 		column.add_child(button)
 	visible = DisplayServer.is_touchscreen_available()
 
 
 func restyle(colors: Dictionary) -> void:
 	root.theme = _theme(colors, target)
+
+
+## The player's hurry lock, on the button: it lets go by itself too, so the button follows the player, not the taps.
+func show_hurry(on: bool) -> void:
+	hurry_button.set_pressed_no_signal(on)
 
 
 func _input(e: InputEvent) -> void:
@@ -108,9 +122,14 @@ func _theme(colors: Dictionary, corner: float) -> Theme:
 		return s
 	th.set_stylebox(&"normal", &"Button", box.call("surface", 0.55, "outline-variant"))
 	th.set_stylebox(&"hover", &"Button", box.call("surface", 0.55, "outline-variant"))
-	th.set_stylebox(&"pressed", &"Button", box.call("accent", 0.8, "accent"))
+	# pressed, and a lock that is on (Hurry): filled, with a thick light rim, so it reads without its colour
+	var on: StyleBoxFlat = box.call("accent", 0.8, "on-surface")
+	on.set_border_width_all(4)
+	th.set_stylebox(&"pressed", &"Button", on)
+	th.set_stylebox(&"hover_pressed", &"Button", on)  # a tap leaves the emulated mouse on the button
 	th.set_color(&"font_color", &"Button", Color.html(colors["on-surface"]))
 	th.set_color(&"font_pressed_color", &"Button", Color.html(colors["on-primary"]))
+	th.set_color(&"font_hover_pressed_color", &"Button", Color.html(colors["on-primary"]))
 	th.set_stylebox(&"normal_joystick", &"VirtualJoystick", box.call("surface", 0.35, "outline-variant"))
 	th.set_stylebox(&"pressed_joystick", &"VirtualJoystick", box.call("surface", 0.5, "accent"))
 	th.set_stylebox(&"normal_tip", &"VirtualJoystick", box.call("on-surface", 0.6, "outline-variant"))

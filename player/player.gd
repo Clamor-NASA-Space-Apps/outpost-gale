@@ -33,7 +33,10 @@ var cam: FollowCam
 var touch: Touch
 var tuning: Dictionary
 var meshes: Array[MeshInstance3D] = []
-var vehicle: Node3D = null
+var vehicle: Node3D = null:
+	set(v):
+		vehicle = v
+		hurrying = false  # boarding or leaving lets go of the hurry lock: a rover set off at a run would surprise
 var design: Dictionary
 var gait := "idle"
 # from the sheet, read once
@@ -56,6 +59,15 @@ var buffer := 0.0
 var launch := -1.0  # seconds of crouch left before take-off, negative when no hop is coming
 var last_pos := Vector3.ZERO
 var moved := 0.0  # horizontal speed from the change of position
+## The hurry lock: a press of `hurry` locks it on, the next off. The walk, the rover and the tutorial read this, never
+## the key. It lets go by itself when the hero stands still (tuning hero.hurry_still_s), when hurry is not allowed, on
+## boarding or leaving a vehicle and on place(). The touch Hurry button wears it.
+var hurrying := false:
+	set(on):
+		hurrying = on
+		if touch:
+			touch.show_hurry(on)
+var still := 0.0  # s with no move input
 var carried: Node3D = null  # a bag the interactions hung on the body; it rides on the chest
 var attention: Node3D = null  # what the helmet turns toward: the interactions set their target here
 var life: HeroLife
@@ -316,6 +328,12 @@ func _live(delta: float, accel: Vector3) -> void:
 	life.update(delta, accel if not vehicle else Vector3.ZERO, carried != null, breath, b.inhale_share, look, pace)
 
 
+func _unhandled_input(e: InputEvent) -> void:
+	if e.is_action_pressed(&"hurry") and may(&"hurry"):
+		hurrying = not hurrying
+		still = 0.0  # a press standing still gives the kid the whole still time to set off
+
+
 func _walk(delta: float) -> void:
 	var stick := Input.get_vector(&"move_left", &"move_right", &"move_forward", &"move_back")
 	if not allowed.is_empty():
@@ -326,7 +344,9 @@ func _walk(delta: float) -> void:
 		_busy(stick, delta)
 		stick = Vector2.ZERO
 	var want := cam.ground_basis() * Vector3(stick.x, 0.0, stick.y)
-	var top := (hurry if Input.is_action_pressed(&"hurry") and may(&"hurry") else walk) * stick.length()
+	still = still + delta if stick == Vector2.ZERO else 0.0
+	hurrying = hurrying and may(&"hurry") and still < tuning.hero.hurry_still_s
+	var top := (hurry if hurrying else walk) * stick.length()
 	if stick != Vector2.ZERO:
 		var diff := wrapf(atan2(-want.x, -want.z) - yaw, -PI, PI)
 		# grip limits a turn at speed (a / v), the legs limit it standing still
@@ -529,7 +549,7 @@ func _gait(v: float) -> String:
 
 func _drive(delta: float) -> void:
 	var input := Vector2(Input.get_axis(&"move_left", &"move_right"), Input.get_axis(&"move_back", &"move_forward"))
-	vehicle.drive(input, Input.is_action_pressed(&"hurry"), delta)
+	vehicle.drive(input, hurrying, delta)
 	var seat: Transform3D = vehicle.seat()
 	# the hero rides along with its drawn hips on the seat, so its position stays true
 	body.global_transform = Transform3D(seat.basis, seat.origin - seat.basis * model.hip_sit)
@@ -549,6 +569,7 @@ func place(pos: Vector3, yaw_deg: float) -> void:
 	body.velocity = Vector3.ZERO
 	on_floor = false  # put down, not snapped: it settles onto whatever is under it
 	speed = 0.0
+	hurrying = false
 	launch = -1.0
 	buffer = 0.0
 	last_pos = pos

@@ -262,7 +262,7 @@ func _watch() -> void:
 func _inputs(delta: float) -> void:
 	var want := _wants()
 	for a in WATCHED:
-		if a in want and Input.is_action_pressed(a) and player.may(a) and (a != "hurry" or player.moved > player.walk * 1.1):
+		if a in want and player.may(a) and (player.hurrying and player.moved > player.walk * 1.1 if a == "hurry" else Input.is_action_pressed(a)):
 			_held[a] = _held.get(a, 0.0) + delta
 			_nag_t = 0.0  # on it: no reminder
 			if _held[a] >= float(data.watch.hold_s):

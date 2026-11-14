@@ -261,10 +261,14 @@ func secs(s: float) -> void:
 
 
 func hold(actions: Array, s: float) -> void:
-	for a: StringName in actions:
+	var keys := actions.filter(func(a: StringName) -> bool: return a != &"hurry")
+	if player.hurrying != (&"hurry" in actions):  # a lock (player.gd): a press turns it on or off
+		action(&"hurry")
+		action(&"hurry", false)
+	for a: StringName in keys:
 		action(a, true)
 	await secs(s)
-	for a: StringName in actions:
+	for a: StringName in keys:
 		action(a, false)
 
 
