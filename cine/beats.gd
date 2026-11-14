@@ -296,6 +296,25 @@ func _stop_walk() -> void:
 	player.allowed = _walk_allowed
 
 
+## Ends the running sequence at once (Settings, Demo: skip the tutorial): the hero is free and the clock runs.
+func skip() -> void:
+	if sequence.is_empty():
+		return
+	_stop_walk()
+	beat = {}
+	holds_clock = false
+	clock.pinned = false
+	ghost.on = false
+	pip.release()
+	player.allow([])
+	_task = ""
+	task.emit("")
+	objective.emit("")
+	var was := sequence
+	sequence = ""
+	finished.emit(was)
+
+
 func _end() -> void:
 	_stop_walk()
 	var id: String = beat.id

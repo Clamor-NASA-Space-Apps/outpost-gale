@@ -436,7 +436,55 @@ func _screen() -> Control:
 			if on != _full():
 				full_screen())
 		c.add_child(_line("Full screen", _group(full_buttons)))
+	c.add_child(_demo())  # a fifth tab made the panel taller than a sideways phone
 	return c
+
+
+## For showing the game: skip the tutorial, play any cinematic, start any played sol (Ravindu, 14 Nov). Each closes
+## the settings first, then runs.
+func _demo() -> Control:
+	var run := func(job: Callable) -> void:
+		close()
+		job.call_deferred()
+	var dawn := func() -> void:
+		game.beats.skip()
+		game.clock.set_hour(game.clock.hours - game.clock.hour() + 5.8)  # before the sun clears the rim
+		game.clock.refresh()
+		game.cine.stand_for_dawn()
+		game.cine.shot("dawn_reveal")
+	var jobs := [
+		["Skip the tutorial", func() -> void: game.beats.skip()],
+		["Sunrise opening", dawn],
+		["Look around", func() -> void: game.cine.shot("look_around")],
+		["Meet PIP", func() -> void: game.cine.shot("focus_pip")],
+		["Sleep a night", func() -> void: game.cine.sleep(&"night")],
+		["Rover trip", func() -> void:
+			game.beats.skip()
+			game.cine.trip_to("site_mercou_rover", {"sol": game.sim.sim.sol, "km": 8.8})],
+		["Launch home", func() -> void:
+			game.beats.skip()
+			game.cine.launch()],
+	]
+	var grid := GridContainer.new()
+	grid.columns = 2
+	grid.add_theme_constant_override("h_separation", 8)
+	grid.add_theme_constant_override("v_separation", 8)
+	for j: Array in jobs:
+		grid.add_child(_button(j[0], run.bind(j[1]), &"ChoiceButton"))
+	var sols := HFlowContainer.new()
+	sols.add_theme_constant_override("h_separation", 6)
+	sols.add_theme_constant_override("v_separation", 6)
+	var keys: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/sols.json"))
+	for k: String in keys:
+		if not k.is_valid_int():
+			continue
+		sols.add_child(_button("Sol " + k, run.bind(func() -> void:
+			game.beats.skip()
+			var n := int(k) - int(game.sim.sim.sol)
+			if n > 0:
+				game.sim.skip_sols(n)
+			game.beats.start_sol(int(k))), &"ChoiceButton"))
+	return Hud.col([Hud.label("Watch", "Cap"), grid, Hud.label("Start a sol", "Cap"), sols], 8)
 
 
 ## A preset as a card: its icon, its name, one line, and a check in the corner when it is in force.
