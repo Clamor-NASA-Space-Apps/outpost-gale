@@ -37,66 +37,25 @@
   "opening": [
     {
       "id": "wake",
+      "_note": "Sol 1 starts here, with no script (Ravindu, 14 Nov: 'ditch both hard coded animations ... user goes outside, and enjoy the sunrise'): the hero wakes in HAB 1's airlock facing the open hatch, which faces the sunrise (data/world.json hab1 yaw), with move and look free from the first frame. The clock runs from the first frame too; the root starts it so the sun's first sliver clears the rim about 45 s after the cover lifts (data/cine.json opening). The beat ends once the kid is out",
       "do": [
-        "clock:5.8",
         "hero:airlock",
-        "ghost:off"
+        "ghost:off",
+        "open:hab1"
       ],
-      "allow": ["look"],
+      "allow": ["move", "look"],
       "task": "task.step_outside",
+      "line": "sol1.walk_out",
+      "keys": ["W"],
       "pip": {
-        "go_to": [
-          -2.5,
-          8.0
-        ],
+        "go_to": "airlock",
         "point_at": "airlock"
       },
       "wait": {
-        "time": 2.5
-      }
-    },
-    {
-      "id": "hatch",
-      "do": [
-        "open:hab1"
-      ],
-      "wait": {
-        "time": 1.5
-      }
-    },
-    {
-      "id": "walk_out",
-      "_note": "animation #1 (Ravindu's video, 14 Nov 09:50): the hero walks out through the hatch on its own while cine's step_out shot follows close behind on the hero's line and ends on the play camera; PIP waits until the hero is out (its way crosses the hatch path)",
-      "do": [
-        "walk:0,6.5",
-        "shot:step_out"
-      ],
-      "wait": {
         "place": {
-          "at": [
-            0.0,
-            6.5
-          ],
-          "r": 0.6
+          "at": "airlock",
+          "r": 1.5
         }
-      }
-    },
-    {
-      "id": "turn_out",
-      "_note": "a few steps north-east, so the play camera behind the hero ends with HAB 1's hatch on the left and the rover and bags ahead on the right (the video's end frame); the beat ends with the shot. PIP sets off now, beside the rover where the end frame sees it",
-      "pip": {
-        "go_to": [
-          7.5,
-          6.0
-        ],
-        "point_at": "hero"
-      },
-      "do": [
-        "walk:2.5,5.5"
-      ],
-      "wait": {
-        "event": "shot_done:step_out",
-        "max_s": 15
       }
     },
     {
@@ -104,7 +63,7 @@
       "do": [
         "close:hab1"
       ],
-      "allow": ["look"],
+      "allow": ["move", "look"],
       "line": "sol1.thin_air",
       "wait": {
         "time": 2.5
@@ -119,8 +78,7 @@
       },
       "line": "sol1.good_morning",
       "wait": {
-        "event": "pip_arrived",
-        "max_s": 12
+        "time": 3.0
       }
     },
     {
@@ -164,19 +122,6 @@
       "allow": ["move", "look"],
       "wait": {
         "action": "move_back"
-      }
-    },
-    {
-      "id": "look_shot",
-      "outdoors": true,
-      "do": [
-        "shot:look_around"
-      ],
-      "allow": ["look"],
-      "line": "sol1.look_around",
-      "wait": {
-        "event": "shot_done:look_around",
-        "max_s": 30
       }
     },
     {
