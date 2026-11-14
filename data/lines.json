@@ -109,6 +109,7 @@
   "cine_launch_window": "Goodbye, Gale crater.",
   "cine_title": "Outpost Gale",
   "hint.suit_lights": "Your helmet lights. Switch them anytime.",
+  "hint.autopilot": "Drop a *pin* on the map. I'll drive!",
   "task.s2_power": "Check the power meter",
   "task.s2_clean": "Run a solar wing's wiper",
   "task.s2_reactor": "Go to the reactor",

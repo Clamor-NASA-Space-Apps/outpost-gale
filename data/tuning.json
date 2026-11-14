@@ -229,6 +229,18 @@
  },
  "rover": {
   "note": "sandbox/rover.gd, art direction (the physical rows are reality.json rover.*). travel: m each wheel's suspension takes up either way before the body tilts; wheel_shade and body_shade: [radius m, strength 0 to 1] of the moving contact shadow under each wheel pair and under the body's two halves (world.touch(), shaded like data/world.json grounding)",
+  "autopilot": {
+   "note": "sandbox/rover_pilot.gd, all art direction (handling, no physical claim; top speed, turn rate and brakes stay reality.json rover.*, through rover.gd drive()). cell_m: the planning grid's cell over the patch; clear_m: a cell is closed when anything taller than the rover climbs stands this near its middle (half the rover's 2.3 m width and a half metre); near_cost: how many times dearer the cells next to closed ones are, so the way keeps a turn's room (the rover's corners swing 2.6 m out) wherever there is room; pass_m: a corner of the way counts as passed this near; arrive_m: it stops this near the mark (under the rover's 4.48 m length); reach_m: a mark cleared with the rover this near is the HUD's own reach (ui/game_hud.gd MARK_REACH_M, 4 m from the hero, who sits 1 m ahead of the rover's middle), an arrival and not the kid taking the mark away; steer_deg: the heading error that asks full lock; slow_deg: full throttle below the first error, none (a turn on the spot) from the second; stall_s: this long without getting nearer or turning and it plans again once, then hands the wheel back",
+   "cell_m": 2.0,
+   "clear_m": 1.7,
+   "near_cost": 3.0,
+   "pass_m": 3.0,
+   "arrive_m": 3.0,
+   "reach_m": 6.0,
+   "steer_deg": 12,
+   "slow_deg": [15, 60],
+   "stall_s": 3.0
+  },
   "travel": 0.3,
   "dust_power": 2,
   "track_depth": [0.5, 1.0],

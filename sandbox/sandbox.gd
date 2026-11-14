@@ -666,6 +666,22 @@ func _wire() -> void:
 			hud.say("hint.suit_lights", {"keys": ["H"]}))
 	beats.skip_sols.connect(func(n: int) -> void: hud.show_ledger(sim.skip_sols(n)))
 	hud.ledger_closed.connect(func() -> void: beats.notify("ledger_closed"))
+	# the rover's autopilot (sandbox/rover_pilot.gd): a mark set aboard is where it drives, a cleared one hands the
+	# wheel back; it says on the HUD when it takes over and when it lets go
+	var auto: RefCounted = preload("res://sandbox/rover_pilot.gd").new(world, tuning.rover.autopilot)
+	player.pilot = auto
+	auto.busy = cine.busy
+	auto.note.connect(func(title: String, text: String) -> void: hud.alert(title, text, "objective_new"))
+	hud.marked.connect(func(at: Variant, _id: String) -> void: auto.go(at if player.vehicle else null))
+	hud.map_toggled.connect(func(open: bool) -> void: auto.hold = open)
+	# PIP teaches it once, the first time the kid sits in the rover with the wheel theirs
+	interactions.used.connect(func(what: String, _pos: Vector3) -> void:
+		if what != "rover" or auto.hinted:
+			return
+		await get_tree().create_timer(1.0, false, true).timeout  # a beat may answer the boarding with a trip (Sol 9)
+		if player.vehicle and not cine.busy() and not auto.hinted:
+			auto.hinted = true
+			hud.say("hint.autopilot", {"keys": ["M"]}))
 	# the opening plays when a person starts the game (through ui/boot.tscn), never in a test script (no current
 	# scene) or a tool run (--forge-job)
 	if not resume.is_empty():

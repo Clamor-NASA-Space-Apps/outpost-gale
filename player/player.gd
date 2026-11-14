@@ -37,6 +37,7 @@ var vehicle: Node3D = null:
 	set(v):
 		vehicle = v
 		hurrying = false  # boarding or leaving lets go of the hurry lock: a rover set off at a run would surprise
+var pilot: RefCounted = null  # sandbox/rover_pilot.gd, set by the root: holds the stick of a boarded rover on its way to the map's mark
 var design: Dictionary
 var gait := "idle"
 # from the sheet, read once
@@ -549,6 +550,8 @@ func _gait(v: float) -> String:
 
 func _drive(delta: float) -> void:
 	var input := Vector2(Input.get_axis(&"move_left", &"move_right"), Input.get_axis(&"move_back", &"move_forward"))
+	if pilot:
+		input = pilot.steer(vehicle, input, delta)  # the autopilot's stick, or the keys back: any move key takes the wheel
 	vehicle.drive(input, hurrying, delta)
 	var seat: Transform3D = vehicle.seat()
 	# the hero rides along with its drawn hips on the seat, so its position stays true
