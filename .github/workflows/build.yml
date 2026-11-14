@@ -87,7 +87,7 @@ jobs:
           gh release delete "build-$DIR" --cleanup-tag -y || true
           gh release create "build-$DIR" --prerelease --target "$GITHUB_SHA" \
             --title "$GITHUB_REF_NAME, ${GITHUB_SHA::7}" \
-            --notes "Built from $GITHUB_SHA. Play in the browser: https://clamor-nasa-space-apps.github.io/$DIR/. macOS: unzip, then right-click OutpostGale.app and Open (it is signed ad hoc, not notarised), or run xattr -cr OutpostGale.app once." \
+            --notes "Built from $GITHUB_SHA. Play in the browser: https://clamor-nasa-space-apps.github.io/$DIR/. macOS: unzip, then run xattr -cr on the .app once in Terminal, or open it, press Done, and allow it in System Settings, Privacy and Security, Open Anyway (it is signed ad hoc, not notarised)." \
             OutpostGale-windows-x64.zip outpost-gale-linux-x86_64.tar.gz outpost-gale-web.zip OutpostGale-macos.zip
 
       # The Pages repo holds generated files only: each deploy is one fresh commit (force-pushed), so

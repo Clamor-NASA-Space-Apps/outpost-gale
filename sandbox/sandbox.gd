@@ -221,10 +221,13 @@ func _unhandled_input(e: InputEvent) -> void:
 		return  # E mid-shot would take the hero out of the rover
 	if e.is_action_pressed("interact"):
 		interactions.interact()  # out of the rover, put down the bag, or use what is in reach
-	elif e.is_action_pressed("debug_sky"):
-		clock.skip()  # a short time-lapse to the next phase: dawn, noon, dusk, night, a storm
 	elif e.is_action_pressed("fullscreen"):
 		settings.full_screen()
+	# the debug keys only in a debug run: G beside WASD steps a playtester up to Max unasked (a Mac at 21 fps, 14 Nov)
+	elif not OS.is_debug_build():
+		return
+	elif e.is_action_pressed("debug_sky"):
+		clock.skip()  # a short time-lapse to the next phase: dawn, noon, dusk, night, a storm
 	elif e.is_action_pressed("debug_quality"):
 		var levels: Array = design.quality.keys()
 		set_graphics(levels[(levels.find(quality) + 1) % levels.size()], {})
