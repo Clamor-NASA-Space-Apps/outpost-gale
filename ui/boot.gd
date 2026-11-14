@@ -1,6 +1,6 @@
 extends Node
-## The main scene: up on the first frame, so the window answers the desktop while the game loads (13 Nov playtest:
-## "not responding" from the double-click to the cover). It draws the splash with a bar, reads every model and
+## The main scene: up on the first frame, so the window (or the browser tab) answers while the game loads (13 Nov
+## playtest: "not responding" from the double-click to the cover; 14 Nov: "Page Unresponsive" in Brave). It draws the splash with a bar, reads every model and
 ## texture in a slice of each frame, then puts the sandbox in. Tests and the tools load sandbox.tscn themselves.
 
 const Cover := preload("res://ui/cover.gd")
@@ -16,12 +16,15 @@ var _done := {}  # path -> the loaded resource, held so the cache keeps it until
 
 func _ready() -> void:
 	var tool := Array(OS.get_cmdline_user_args()).any(func(a: String) -> bool: return a.begins_with("--forge-job="))
-	# the web shell's own screen covers the wait in a browser, and a tool run wants the scene as the tests see it
-	if tool or OS.has_feature("web"):
+	# a tool run wants the scene as the tests see it. A browser loads in slices too: the whole base in one frame
+	# held the page long enough for Brave to offer to kill it (14 Nov, venue playtest); the cover takes over from
+	# the shell's screen on its first drawn frame (cover.gd)
+	if tool:
 		get_tree().change_scene_to_file.call_deferred(SCENE)
 		return
-	# full screen unless this device chose a window last time (ui/settings.gd); a phone app is always full screen
-	if Settings.saved().get("full", true):
+	# full screen unless this device chose a window last time (ui/settings.gd); a phone app is always full screen.
+	# A page may go full screen only inside a press (the shell asks on a phone's first touch)
+	if not OS.has_feature("web") and Settings.saved().get("full", true):
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 	cover.color = ProjectSettings.get_setting("application/boot_splash/bg_color")
 	add_child(cover)
