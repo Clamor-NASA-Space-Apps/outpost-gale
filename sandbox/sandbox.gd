@@ -517,6 +517,8 @@ func _wire() -> void:
 	cine.setup(self)
 	cine.slept.connect(func(kind: StringName, _hours: float) -> void:
 		sim.use("sleep_night" if kind == &"night" else "nap"))
+	cine.slept.connect(func(_kind: StringName, _hours: float) -> void:
+		world.regrow(sim.sim.sol, sim.sim.n("crop", "ready_days")))  # cut lettuce grows back on the rules' sols
 	# a night's sleep ends the sol's beats and starts the next sol's (data/sols.json), once the lapse is over and the
 	# rules have counted the new sol (the connection above runs first). The next is the key after the one just played,
 	# never the rules' sol alone: a sol with no beats (7, 8) slept into must not jump over the story's next day

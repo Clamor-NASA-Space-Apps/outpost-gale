@@ -45,6 +45,8 @@ var _rooms: Array[ReflectionProbe] = []  # one probe per room (data/world.json p
 var _room_lights: Dictionary = {}  # OmniLight3D -> its world.json probe.rooms entry
 const ROOMS := 1 << 3  # render layer 4: indoor swept surfaces, which only the room probes reflect onto
 var _cells: Array[Node3D] = []
+var _lettuce: Dictionary = {}  # item id -> [{node, stage, full, green, cut}]: the heads in its slots (pick(), regrow())
+var _design: Dictionary  # the look in force, for heads that regrow in play
 var _touch: Dictionary = {}  # mover -> PackedVector4Array of its contact discs (touch())
 var _touch_dirty := false
 var _wheel := SphereShape3D.new()
@@ -56,6 +58,7 @@ var _mirrors: Array[Dictionary] = []  # {mmi, srcs, at}: identical moving meshes
 
 
 func build(design: Dictionary) -> void:
+	_design = design
 	data = JSON.parse_string(FileAccess.get_file_as_string("res://data/world.json"))
 	var sheet: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/reality.json"))
 	for r: Dictionary in sheet.rows:
@@ -83,6 +86,8 @@ func build(design: Dictionary) -> void:
 		items[it.id] = _item(it, design)
 	_plant(design, sheet)
 	_merge_cells()
+	for id: String in _lettuce:
+		_merge_lettuce(id)
 	var bags: Array = []
 	for n: Node3D in items.values():
 		if n.is_in_group("carriable"):
@@ -189,6 +194,7 @@ func wind_now() -> float:
 
 ## A sky state or a quality switch: every material, lamp, the probe and the dust follow the design in force.
 func restyle(design: Dictionary) -> void:
+	_design = design
 	terrain.restyle(design)
 	for n: Node3D in items.values():
 		Forge.HouseStyle.apply(n, design, n.get_meta("still"))
@@ -810,7 +816,7 @@ func _still(n: Node3D) -> Array:
 		# a flashing light keeps its own mesh, so its material can change without the rest of the cell; so does a
 		# cable's gland box, which _glands() sets onto the ground after the item rests. A mover's port (the rover's
 		# charge socket, on its body) is not a box on the ground: its body merged, 9 draw calls fewer at the base
-		return mi.mesh != null and mi.skin == null and not _in_part(mi, parts) and not _blink.search(mi.name) and not (_gland(mi) and not n is CollisionObject3D))
+		return mi.mesh != null and mi.skin == null and not _in_part(mi, parts) and not _blink.search(mi.name) and not (_gland(mi) and not n is CollisionObject3D) and not mi.is_in_group(&"lettuce"))
 
 
 ## Every face of `mi` kept swept (DESIGN.md weathering.clean): an indoor or underfoot surface.
@@ -1109,15 +1115,8 @@ func _plant(design: Dictionary, sheet: Dictionary) -> void:
 			# 'Outredgeous', "green_N" stage N of the green variety: the same head with its `romaine` faces in `plant`
 			var green: bool = stages[i] is String and stages[i].begins_with("green_")
 			var prefab: bool = stages[i] is String and not green
-			var plant := _model(stages[i] if prefab else "lettuce_%d" % int(float(str(stages[i]).trim_prefix("green_"))), design)
-			if green:
-				for mi: MeshInstance3D in plant.find_children("*", "MeshInstance3D", true, false):
-					for s in mi.mesh.get_surface_count():
-						var m := mi.get_active_material(s)
-						if m and m.resource_name == "romaine":
-							mi.set_surface_override_material(s, Forge.HouseStyle.role(design, "plant", true, m.get_meta("clean", false)))
-			slots[i].add_child(plant)
 			if prefab:
+				slots[i].add_child(_model(stages[i], design))
 				# styled again from the slot's parent, so a slot in a room kept swept (HAB 1's `interior`) keeps it swept
 				Forge.HouseStyle.apply(slots[i].get_parent(), design, true)
 				continue
@@ -1125,7 +1124,101 @@ func _plant(design: Dictionary, sheet: Dictionary) -> void:
 				# measured in place, so a scale the slot carries from its model counts too
 				var full := drawn(_model_in(slots[i], "lettuce_4", design)).size
 				scale_by = width / maxf(full.x, full.z)
-			plant.scale = Vector3.ONE * scale_by
+			var stage := int(float(str(stages[i]).trim_prefix("green_")))
+			var head := {"slot": slots[i], "stage": stage, "full": stage, "green": green, "cut": -1, "scale": scale_by}
+			_lettuce.get_or_add(id, []).append(head)
+			_head(head, design)
+
+
+## A slot's lettuce at its stage: the model in the slot, its meshes kept out of the ground cells (_merge_lettuce()).
+func _head(head: Dictionary, design: Dictionary) -> void:
+	var plant := _model("lettuce_%d" % int(head.stage), design)
+	if head.green:
+		for mi: MeshInstance3D in plant.find_children("*", "MeshInstance3D", true, false):
+			for s in mi.mesh.get_surface_count():
+				var m := mi.get_active_material(s)
+				if m and m.resource_name == "romaine":
+					mi.set_surface_override_material(s, Forge.HouseStyle.role(design, "plant", true, m.get_meta("clean", false)))
+	for mi: MeshInstance3D in plant.find_children("*", "MeshInstance3D", true, false):
+		mi.add_to_group(&"lettuce")
+	(head.slot as Node3D).add_child(plant)
+	plant.scale = Vector3.ONE * float(head.scale)
+	head.node = plant
+
+
+## An item's heads drawn as one mesh per material (as a ground cell is), merged again when one is picked or grows:
+## a few small meshes, so a pick never re-merges a whole cell. Kept apart from the cells, on the rooms' layer.
+func _merge_lettuce(id: String) -> void:
+	var holder: Node3D = get_node_or_null("lettuce_" + id)
+	if holder == null:
+		holder = Node3D.new()
+		holder.name = "lettuce_" + id
+		add_child(holder)
+		_cells.append(holder)  # restyled with the cells
+	for c: Node in holder.get_children():
+		c.free()
+	var meshes: Array = []
+	for head: Dictionary in _lettuce[id]:
+		meshes.append_array((head.node as Node3D).find_children("*", "MeshInstance3D", true, false))
+	_merge(meshes, holder)
+	for mi: MeshInstance3D in meshes:
+		mi.visible = false
+	for mi: MeshInstance3D in holder.find_children("merged_swept", "MeshInstance3D", false, false):
+		mi.layers = ROOMS
+
+
+## Lettuce a kid can eat at least this grown (prop_lettuce_N stages): a head, not a seedling.
+const EAT_STAGE := 3
+
+
+## The nearest head of `id` grown enough to eat, on the tier at `near` and within `reach` m along the rack, or {}.
+func _eatable(id: String, near: Vector3, reach: float) -> Dictionary:
+	var best := {}
+	var best_d := reach
+	for head: Dictionary in _lettuce.get(id, []):
+		var p: Vector3 = (head.slot as Node3D).global_position
+		var d := Vector2(p.x - near.x, p.z - near.z).length()
+		if int(head.stage) >= EAT_STAGE and absf(p.y - near.y) < 0.3 and d <= best_d:
+			best = head
+			best_d = d
+	return best
+
+
+func can_pick(id: String, near: Vector3, reach := 1.3) -> bool:
+	return not _eatable(id, near, reach).is_empty()
+
+
+## Cuts the nearest head grown enough to eat (cut-and-come-again: a small rosette stays and regrows, regrow()), on
+## sol `sol`. Returns what was cut, {stage, green, scale}, for the hero's hand; {} if the tray has none to eat.
+func pick(id: String, near: Vector3, sol: int, reach := 1.3) -> Dictionary:
+	var head := _eatable(id, near, reach)
+	if head.is_empty():
+		return {}
+	var cut := {"stage": head.stage, "green": head.green, "scale": head.scale}
+	(head.node as Node3D).free()
+	head.stage = 1
+	head.cut = sol
+	_head(head, _design)
+	_merge_lettuce(id)
+	return cut
+
+
+## Every cut head grows back toward the stage it was, a stage a third of `ready_days` (data/sim.json crop: Veggie
+## lettuce is ready in 33 days, factcheck row 29), reckoned from the sol it was cut. Call it on a new sol.
+func regrow(sol: int, ready_days: float) -> void:
+	for id: String in _lettuce:
+		var changed := false
+		for head: Dictionary in _lettuce[id]:
+			if int(head.cut) < 0:
+				continue
+			var stage := mini(1 + int(3.0 * float(sol - int(head.cut)) / ready_days), int(head.full))
+			if stage != int(head.stage):
+				(head.node as Node3D).free()
+				head.stage = stage
+				_head(head, _design)
+				changed = true
+		if changed:
+			_merge_lettuce(id)
 
 
 ## A throwaway copy of a prefab under `parent`, measured and freed by the caller's next line.

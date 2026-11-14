@@ -19,7 +19,7 @@ const HATCH_OPEN_S := 0.45  # s the rover's hatch swings before the fade: most o
 ## A thing used: its sound name ("door_open", "door_close", "panel", "grab", "rover", "set_down") the moment it
 ## happens (a door's when it starts to move, a bag's when the glove takes it or it lands); for a use spot, the row's `kind` (the action id: drink, eat, sample...) once its clip has run to its end.
 signal used(what: String, pos: Vector3)
-const VERBS := ["appear", "take", "turn", "glow", "puff"]  # what a use spot's `steps` may do to its props
+const VERBS := ["appear", "take", "turn", "glow", "puff", "pick"]  # what a use spot's `steps` may do to its props
 
 
 class Interactable extends Node3D:
@@ -47,7 +47,8 @@ class Interactable extends Node3D:
 	func can_use(_hero: Node3D) -> bool:
 		if kind == "spot":  # one use at a time, and never from a seat; a sample taken is gone (row `needs`)
 			var needs: String = row.get("needs", "")
-			return not box.player.seated and box.player.cut.is_empty() and box.playing == null and (needs == "" or (props[needs] as Node3D).visible)
+			return not box.player.seated and box.player.cut.is_empty() and box.playing == null and (needs == "" or (props[needs] as Node3D).visible) \
+				and (not row.get("pick", false) or box.world.can_pick(get_parent().name, middle()))  # a tray with a head to eat
 		return not (kind == "bag" and box.carried != null)
 
 	func use(_hero: Node3D) -> void:
@@ -660,7 +661,8 @@ func _done(it: Interactable) -> void:
 ## One step of a spot's timeline. appear [prop, s]: grows from nothing. take [prop, s, to]: eases to `to` (the
 ## glove, `hand`, or another prop) and rides with it. turn [prop, axis, deg, s]: to `deg` from where it rested about
 ## its own x, y or z (`earth`: the elevation that points at Earth now). glow [prop, on]: shown or hidden (a lit
-## pane). puff [prop]: a puff of dust there.
+## pane). puff [prop]: a puff of dust there. pick [prop]: a lettuce head cut off the tray (row `pick`: none left to
+## eat hides the prompt); its prop is the head shown in the glove.
 func _step(it: Interactable, s: Array) -> void:
 	var p: Node3D = it.props[s[2]]
 	match s[1]:
@@ -685,6 +687,10 @@ func _step(it: Interactable, s: Array) -> void:
 			p.visible = bool(s[3])
 		"puff":
 			world.puff(p.global_position, Vector3.UP * 0.4, 1.0)
+		"pick":  # pick [prop]: the nearest head on the tray is cut (world.pick()); the prop is what the glove holds
+			var sim: Node = get_parent().get("sim") if get_parent() else null
+			if world.pick(it.get_parent().name, it.middle(), int(sim.sim.sol) if sim else 1).is_empty():
+				p.visible = false
 
 
 ## Every prop of a spot back where it rested (turned parts ease back), but a `keep` prop keeps what it became.
