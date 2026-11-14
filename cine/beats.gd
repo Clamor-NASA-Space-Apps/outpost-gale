@@ -174,7 +174,12 @@ func may_sleep() -> bool:
 
 ## The bed used too early: PIP says why, then this step's own line comes back.
 func refuse_sleep() -> void:
-	_say(NOT_YET, true)
+	aside(NOT_YET)
+
+
+## PIP says `id` between the step's own lines (a warning, a reason), and the step's line comes back after.
+func aside(id: String) -> void:
+	_say(id, true)
 
 
 ## The interactions' `used` signal: a bag picked up is a lift, anything else a use.

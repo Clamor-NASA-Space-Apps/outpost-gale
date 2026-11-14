@@ -66,6 +66,8 @@ var trip_km := 8.8  # the last rover trip's distance, for its title card and the
 var lamp_hinted := false  # PIP explains the helmet lights once, the first time they come on by themselves
 var offers := {}  # data/beats.json `offers`: what each choice card holds and which rules it sets
 var lost := false  # a meter ran out: the mission-lost card is up and the rules stop
+var deadline := {}  # data/sols.json `deadline`: PIP's warnings while a sol's tasks run late
+var warned := {}  # "<woke sol>:<line id>" -> true: each warning once a day
 
 
 func _ready() -> void:
@@ -274,6 +276,37 @@ func set_graphics(level: String, over: Dictionary, restyle := true, warm := true
 		_warm()
 
 
+## PIP's warnings while a sol's tasks run late (skills/guided-tutorial row 6): at the deadline's hours of the day the
+## kid woke on, and at the rules' hold before the next wake. A storm outside gets its own two, once a day each: the dark
+## and the panels (rows 16, 183, 210).
+func _warn(st: Dictionary) -> void:
+	var r: Object = sim.sim
+	var day: int = r.woke_sol
+	var hour: float = r.local_hour() + (24.0 if int(st.sol) > day else 0.0)  # past midnight is still the same day
+	var says: Array[String] = []
+	if not beats.sequence.is_empty() and not beats.may_sleep():
+		var due := ""  # only the latest hour passed: a day that starts late does not hear the earlier ones
+		for w: Array in deadline.get("warn", []):
+			if hour >= float(w[0]):
+				due = w[1]
+		if r.awake_left() <= 0.0:
+			due = deadline.get("dawn", "")
+		says.append(due)
+	if float(st.tau) > float(r.n("power", "tau_clear")) * 3.0 and player.room == "" and not player.vehicle:
+		says.append_array(["storm.dark", "storm.panels"])
+	for id: String in says:
+		var key := "%d:%s" % [day, id]
+		if id != "" and not warned.has(key):
+			warned[key] = true
+			beats.aside(id)
+			return  # one at a time: the next comes on the next state
+
+
+## A menu or an overlay is up: the cursor is the player's, and a click does not capture it (follow_cam.may_capture).
+func overlay() -> bool:
+	return settings.is_open() or cover.visible or hud.is_open() or hud.map_open() or cine.picker.visible
+
+
 ## A meter at 0 is the end, PG (design/story.md section 3): Mission Control calls the crew home and the card shows the
 ## three choices that cost most (sim.top_causes), or what ran out when no choice did. Never a silent 0% (14 Nov
 ## playtest: Sol 39 with life support at 0% and nothing happening).
@@ -458,6 +491,8 @@ func _wire() -> void:
 			return
 		while cine.busy():
 			await get_tree().process_frame
+		if sim.sim.hour > sim.sim.n("clock", "wake_hour") + 0.25:
+			hud.alert("We slept in", "To bed late: a full 8.5 hours of sleep.")  # sim.json sleep_h, rows 188, 205
 		beats.notify("slept")
 		await get_tree().physics_frame
 		await get_tree().physics_frame
@@ -499,7 +534,9 @@ func _wire() -> void:
 		for e: Dictionary in st.events:
 			beats.notify("event:" + String(e.id))
 		if not st.failing.is_empty() and not lost:
-			_lose(st.failing))
+			_lose(st.failing)
+		_warn(st))
+	deadline = JSON.parse_string(FileAccess.get_file_as_string("res://data/sols.json")).get("deadline", {})
 	hud.retry.connect(func() -> void: get_tree().reload_current_scene())  # "try again from the start" (typical-day.md)
 	player.lamps_changed.connect(func(on: bool, auto: bool) -> void:
 		if on and auto and not lamp_hinted:

@@ -172,6 +172,31 @@ func play() -> bool:
 		await process_frame
 	# Sol 10's wake sleeps through 10 and 11 itself (skip:2): it starts on Sol 10 and lands on 12
 	check(beats.sequence == "sol10" and at_start[0] == 12, "after the key 6 day the next is Sol 10 (%s, sol %d at its start, %d now)" % [beats.sequence, at_start[0], sim.sol])
+	# the day's tasks run late (skills/guided-tutorial row 6): an idle day hears PIP at each deadline hour, then at the
+	# dawn hold, once each; to bed at dawn, the kid sleeps a full night and wakes late
+	check(not beats.may_sleep(), "Sol 12's tasks are not done")
+	said.clear()
+	for i in 200:
+		sim.run(0.5)
+		game.sim.changed.emit(sim.state())
+		if sim.awake_left() <= 0.0:
+			break
+	game.sim.changed.emit(sim.state())
+	var warns := said.filter(func(id: String) -> bool: return id.begins_with("deadline."))
+	check(warns == ["deadline.sunset", "deadline.night", "deadline.late", "deadline.dawn"], "PIP warns at each hour, then at the hold (%s)" % [warns])
+	# out in the storm: PIP says it is dark and the panels barely work (rows 16, 183, 210)
+	said.clear()
+	var out: Vector3 = Vector3(3.0, game.world.height_at(3.0, 9.0), 9.0)
+	player.place(out, 0.0)
+	await frames(10)
+	for i in 3:
+		game.sim.changed.emit(sim.state())
+	check(sim.tau > 3.0 and said.has("storm.dark") and said.has("storm.panels"), "outside in the storm PIP warns (tau %.1f, %s)" % [sim.tau, said])
+	cine.slept.emit(&"night", 8.0)
+	for i in 30:
+		await process_frame
+	check(sim.hour > float(sim.n("clock", "wake_hour")) + 6.0, "to bed at dawn, up in the afternoon (%.1f h)" % sim.hour)
+
 	# a meter at 0 leads somewhere, PG: the mission-lost card with what led there, the day's beats stop, the rules wait
 	# (14 Nov playtest: life support at 0% and nothing happened)
 	check(not game.lost, "no mission lost while the meters hold")

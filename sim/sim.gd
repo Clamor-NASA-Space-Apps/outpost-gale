@@ -120,8 +120,10 @@ func use(action_id: String) -> Dictionary:
 		crop_age_days = 0.0
 		food_kg += n("crop", "harvest_food_kg")
 	if u.has("to_hour"):
-		var h := fposmod(n("clock", u.to_hour) - hour, n("clock", "sol_h"))
-		var slept := step(minf(h if h > 1e-6 else n("clock", "sol_h"), end_left()))
+		# to the wake hour, but never less than a full night's sleep: to bed late, up late (14 Nov playtest: the
+		# consequence of staying up)
+		var h := maxf(fposmod(n("clock", u.to_hour) - hour, n("clock", "sol_h")), n("clock", "sleep_h"))
+		var slept := step(minf(h, end_left()))
 		woke_sol = sol
 		return slept
 	if u.has("advance_h"):

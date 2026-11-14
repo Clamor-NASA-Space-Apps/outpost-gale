@@ -98,6 +98,9 @@ func sleep(kind: StringName) -> void:
 	_take_clock()
 	var from: float = clock.hours
 	var span: float = float(c.nap_h) if kind == &"nap" else fposmod(float(c.wake_h) - clock.hour(), 24.0)
+	if kind == &"night" and game.get("sim"):  # never less than the rules' full night (sim.json sleep_h, in local hours)
+		var r: Object = game.sim.sim
+		span = maxf(span, r.n("clock", "sleep_h") * 24.0 / r.n("clock", "sol_h"))
 	if span < 0.01:
 		span = 24.0  # already the wake hour: the next one
 	var lapse := clampf(float(c.lapse_per_h) * span, float(c.lapse_s[0]), float(c.lapse_s[1]))

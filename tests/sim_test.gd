@@ -227,10 +227,12 @@ func _awake() -> void:
 	s.run(5.0)
 	s.use("nap")
 	check(s.sol == 2 and s.hour < wake, "nor do more hours or a nap pass the wake (%.3f)" % s.hour)
+	# to bed at dawn: still a full night's sleep (rows 188, 205), so the kid wakes in the afternoon, on that same sol
+	var sleep_h: float = base.clock.sleep_h.value
 	s.use("sleep_night")
-	check(s.sol == 2 and near(s.hour, wake, 1e-6, "the sleep wakes at 06:30"), "on the next sol, none skipped (%d)" % s.sol)
-	s.run(10.0)
-	check(s.sol == 2 and s.hour > wake + 9.0, "a new day runs on as usual")
+	check(s.sol == 2 and near(s.hour, wake - wait + sleep_h, 1e-6, "up all night, the sleep still lasts 8.5 h"), "on the next sol, none skipped (%d)" % s.sol)
+	s.run(5.0)
+	check(s.sol == 2 and s.hour > wake - wait + sleep_h + 4.9, "a new day runs on as usual")
 	s.skip_sols(3)
 	s.run(40.0)
 	check(s.sol == 6 and s.hour < wake, "after a skip the wait is the morning after the skip (sol %d)" % s.sol)

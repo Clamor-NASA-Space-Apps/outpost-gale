@@ -5,6 +5,7 @@
   "start_sol": {"value": 1, "factcheck": "story", "placeholder": true},
   "start_hour": {"value": 6.5, "unit": "h", "factcheck": "row 208 (06:30 wake)", "placeholder": true},
   "wake_hour": {"value": 6.5, "unit": "h", "factcheck": "rows 188, 205, 208 (8.5 h sleep, wake 06:30)"},
+  "sleep_h": {"value": 8.5, "unit": "h", "factcheck": "rows 188, 205 (NASA: at least 8.5 h of sleep a sol), 208 (22:00 to 06:30): a night is never shorter, so a late bedtime wakes late"},
   "nap_h": {"value": 0.3333, "unit": "h", "factcheck": "rows 194, 195 (naps of 10 to 40 min; design/typical-day.md 'Nap 20 min')"},
   "step_h": {"value": 0.25, "unit": "h", "factcheck": "solver step, not a fact: the sun's curve is sampled this often"},
   "real_s_per_sol": {"value": 1200, "unit": "s", "factcheck": "game pace: the look clock's day_minutes 20 (data/tuning.json sky)", "placeholder": true},

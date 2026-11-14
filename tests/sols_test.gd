@@ -80,7 +80,8 @@ func play() -> bool:
 	# Sol 2: the night of Sol 1 slept through (the rules' night gust dusts the wings), out to PIP, to the wings, a brush
 	var sim: Object = game.sim.sim
 	var clean_kw: float = sim.solar_kw(1.0) / (1.0 - sim.panel_dust)  # the field clean, at this hour
-	game.sim.use("sleep_night")  # through the node, as the sandbox's slept wiring does: the HUD hears the new state
+	while game.sim.sim.sol < 2:  # from the 06:30 start a night is 8.5 h (sim.json sleep_h): twice to reach Sol 2
+		game.sim.use("sleep_night")  # through the node, as the sandbox's slept wiring does: the HUD hears the new state
 	check(sim.sol == 2 and sim.panel_dust >= 0.33, "the night gust dusted the wings by Sol 2's morning (sol %d, dust %.3f)" % [sim.sol, sim.panel_dust])
 	await _wake("sol2")
 	await _beat("wake", _follow.bind(2.5))
