@@ -4,6 +4,8 @@ extends "res://addons/forge/test.gd"
 ## later). Runs headless, and on a display the same way (xvfb-run -a ... godot --display-driver x11 ... -s this file).
 ## 14 Nov playtest, twice: the walk-out ran under the loading cover and timed out; then the rover's body, still at the
 ## origin for the first physics tick, shoved the hero off the airlock spot and the walk out met the wall beside the hatch.
+## Since the script went (14 Nov evening): the kid walks out with a real W key, and the sun's first sliver must clear
+## the crater rim, straight out of the hatch, 30 to 60 s after the cover lifts (data/cine.json opening).
 
 
 func _init() -> void:
@@ -29,25 +31,38 @@ func play() -> bool:
 	var hatch: Vector3 = hab.to_global(Vector3(0.0, 0.0, -2.2)) - at
 	var off := absf(wrapf(atan2(-hatch.x, -hatch.z) - player.yaw, -PI, PI))
 	check(off < deg_to_rad(15.0), "facing the hatch (%.0f deg off)" % rad_to_deg(off))
-	# a kid told to step outside holds W, a real key, through the automatic walk
+	check(hab.get_meta("parts").any(func(p: Node3D) -> bool: return p.name == &"door"), "HAB 1 has its hatch")
+	# no script: a kid holds W, a real key, and walks out on their own; the clock runs from this frame
+	var clock: Node = game.clock
+	var cine: Node = game.cine
+	var h0: float = clock.hour()
+	var f0 := Engine.get_physics_frames()
+	check(not clock.pinned and not clock.driven, "the opening holds no hour")
 	_key(KEY_W, true)
 	var out := false
-	for i in 60 * 40:
+	for i in 60 * 30:
 		await physics_frame
-		if beats.beat.get("id", "") == "outside":
-			out = beats.outdoors()
+		if beats.beat.get("id", "") != "wake":
+			out = player.room == ""
 			break
 	_key(KEY_W, false)
-	check(out, "the hero is outdoors when the hatch closes behind him (%s at %s)" % [beats.beat.get("id", ""), player.body.global_position])
-	for i in 60 * 20:
-		if beats.beat.get("id", "") == "walk_to_me":
+	check(out, "the kid walked out of HAB 1 on their own (%s at %s)" % [beats.beat.get("id", ""), player.body.global_position])
+	check(clock.hour() > h0, "the clock runs while the kid walks out (%.4f to %.4f)" % [h0, clock.hour()])
+	# the sunrise, seen from just out of the hatch: the first sliver clears the rim in the planned window
+	var o: Dictionary = cine.cfg.opening
+	var eye: Vector3 = cine._at(o.eye)
+	var rise := -1.0
+	for i in 60 * 90:
+		var r: float = clock.disc_deg(clock.hour())
+		if cine.sun_clear(clock.hour(), eye) > -r * (1.0 - 2.0 * float(o.sliver)):
+			rise = (Engine.get_physics_frames() - f0) / 60.0
 			break
 		await physics_frame
-	at = player.body.global_position
-	_key(KEY_W, true)
-	await frames(90)
-	_key(KEY_W, false)
-	check(player.body.global_position.distance_to(at) > 0.5, "and walks on the kid's own key once PIP asks (%s)" % beats.beat.get("id", ""))
+	check(rise >= 30.0 and rise <= 60.0, "the sun's first sliver clears the rim %.1f s after the cover lifts (wanted 30 to 60)" % rise)
+	var sun: Vector3 = load("res://addons/forge/house_style.gd").sun_at(clock._C, clock.hour())
+	var door: Vector3 = -hab.global_basis.z
+	check(absf(rad_to_deg(Vector2(door.x, door.z).angle_to(Vector2(sun.x, sun.z)))) < 5.0, "and it rises straight out of HAB 1's hatch")
+	check(absf(game.sim.sim.local_hour() - clock.hour()) < 0.05, "the HUD's hour is the sky's (%.2f, %.2f)" % [game.sim.sim.local_hour(), clock.hour()])
 	return true
 
 

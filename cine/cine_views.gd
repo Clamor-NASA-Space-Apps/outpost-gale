@@ -130,6 +130,13 @@ func set_view(v: String) -> void:
 					game.interactions.use(it)
 			player.cam.lens.make_current()
 			_hold = 1.5
+		"hatch":  # out of HAB 1's open hatch at eye height, straight along the door's way (the sunrise, since 14 Nov)
+			for it: Node in get_tree().get_nodes_in_group("interactable"):
+				if it.kind == "door" and hab.is_ancestor_of(it) and not it.open:
+					game.interactions.use(it)
+			cine.cam.look_at_from_position(hab.to_global(Vector3(0.0, 1.65, -1.2)), hab.to_global(Vector3(0.0, 2.6, -60.0)))
+			cine.cam.make_current()
+			_hold = 1.5
 		"trip_drive", "trip_title":
 			if not cine.busy():
 				game.player.enter(game.world.items.rover)
