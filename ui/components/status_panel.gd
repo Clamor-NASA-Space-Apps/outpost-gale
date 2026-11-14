@@ -51,7 +51,7 @@ static func _wide(l: Label, text: String) -> float:
 	return ceilf(l.get_theme_font("font").get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, l.get_theme_font_size("font_size")).x)
 
 
-## hour: the sim's clock (Earth hours through the sol). suit_min below 0 hides the suit air.
+## hour: the Mars clock (24 local hours a sol, the sky's time). suit_min below 0 hides the suit air.
 func show_time(s: int, hour: float, suit_min := -1.0) -> void:
 	sol = s
 	time = "%02d:%02d" % [int(hour) % 24, int(fposmod(hour, 1.0) * 60.0)]

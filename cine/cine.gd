@@ -73,6 +73,12 @@ func busy() -> bool:
 	return picker.visible or beat != ""
 
 
+## True while the cine owns the hour (a sleep's lapse or its picker, a trip, the launch): the look clock and the
+## rules wait for it.
+func holds_time() -> bool:
+	return _holding
+
+
 func state() -> Dictionary:
 	return {"cine": {"shot": beat, "t": snappedf(t, 0.01), "picker": picker.visible}}
 

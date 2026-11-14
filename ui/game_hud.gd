@@ -260,7 +260,8 @@ func show_state(s: Dictionary) -> void:
 	# the suit's air shows while it runs down (outside), and hides once it is topped up again
 	var suit := float(s.get("suit_air_min", -1.0))
 	stock.suit = maxf(stock.get("suit", 0.0), suit)
-	clock.show_time(int(s.sol), float(s.hour), suit if suit < stock.suit else -1.0)
+	# the Mars clock: 24 local hours a sol, the sky's own time (the rules count Earth hours through a 24.66 h sol)
+	clock.show_time(int(s.sol), float(s.hour) * 24.0 / Hud.SOL_H, suit if suit < stock.suit else -1.0)
 	if mail_sol >= 0:
 		var was: float = mail.progress()
 		mail.set_now(float(s.hour) + (int(s.sol) - mail_sol) * Hud.SOL_H)

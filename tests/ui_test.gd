@@ -141,7 +141,8 @@ func _bound() -> void:
 	check(s.meters.power == 82, "power follows battery_pct: %d" % s.meters.power)
 	check(s.meters.life == 50 and s.meters.lifeIcon == "oxygen", "life support is the shortest supply (oxygen at half): %s" % [s.meters])
 	check(s.meters.health == 90, "100 mSv takes crew health to 90, got %d" % s.meters.health)
-	check(s.sol == 13 and s.time == "14:30" and s.suit == "5 h 00 min", "clock and suit air: %s %s '%s'" % [s.sol, s.time, s.suit])
+	# the HUD shows the sky's local time: the rules' 14.5 Earth hours into a 24.66 h sol are 14:06 on a 24 h dial
+	check(s.sol == 13 and s.time == "14:06" and s.suit == "5 h 00 min", "clock and suit air: %s %s '%s'" % [s.sol, s.time, s.suit])
 	check(not "!" in h.meters.power.num.text, "the low mark goes when power recovers")
 	var cues: Array[String] = []
 	h.cue.connect(func(n: String) -> void: cues.append(n))

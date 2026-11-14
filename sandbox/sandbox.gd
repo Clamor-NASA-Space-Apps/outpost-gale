@@ -174,8 +174,9 @@ func _process(_delta: float) -> void:
 	# the cursor hidden over Settings and the map)
 	if overlay() and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	clock.paused = clock.paused or sim.sim.awake_left() <= 0.0  # up all night: the sky waits at dawn with the rules
-	sim.paused = clock.paused or cine.busy() or beats.holds_clock or lost  # the opening holds the sky at dawn: the HUD hour waits with it
+	# up all night: the sky waits at dawn with the rules. A sleep (or its picker), a trip and the launch own the hour
+	clock.paused = clock.paused or sim.sim.awake_left() <= 0.0 or cine.holds_time()
+	sim.paused = clock.paused or lost  # one time: the rules run exactly when the sky does, at its pace (sim.pace)
 	hud.visible = not settings.is_open()
 	hud.show_prompt(interactions.prompt_label.text.trim_prefix("[E]  "))  # empty when nothing is in reach; the HUD draws its own E key
 	if not cine.busy():
@@ -377,6 +378,12 @@ func busy() -> bool:
 	return cover.visible
 
 
+## One time for the sky and the HUD: the rules take the look clock's hour of the sol (the rules count Earth hours
+## through a 24.66 h sol, the look 24 local hours).
+func _sync_rules() -> void:
+	sim.sim.hour = clock.hour() * sim.sim.n("clock", "sol_h") / 24.0
+
+
 func render_game_to_text() -> Dictionary:
 	var s: Dictionary = player.state()
 	s.merge(interactions.state(), true)
@@ -456,6 +463,8 @@ func _wire() -> void:
 	fps_label.offset_right = 460
 	fps_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	interactions.prompt_label.visible = false
+	sim.pace = clock.pace
+	_sync_rules()
 	hud.bind(sim)
 	hud.bind_view(player.cam.lens, player.body)
 	player.cam.may_capture = func() -> bool: return not overlay()
@@ -516,7 +525,11 @@ func _wire() -> void:
 	add_child(cine)
 	cine.setup(self)
 	cine.slept.connect(func(kind: StringName, _hours: float) -> void:
-		sim.use("sleep_night" if kind == &"night" else "nap"))
+		sim.use("sleep_night" if kind == &"night" else "nap")
+		# the rules count the lapse in Earth hours; the HUD takes the sky's minute after it. Never across a midnight
+		# (a field trip's sols), never a tool's pinned hour
+		if not clock.pinned and absf(sim.sim.local_hour() - clock.hour()) < 0.5:
+			_sync_rules())
 	cine.slept.connect(func(_kind: StringName, _hours: float) -> void:
 		world.regrow(sim.sim.sol, sim.sim.n("crop", "ready_days")))  # cut lettuce grows back on the rules' sols
 	# a night's sleep ends the sol's beats and starts the next sol's (data/sols.json), once the lapse is over and the

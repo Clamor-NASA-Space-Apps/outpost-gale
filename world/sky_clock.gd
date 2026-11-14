@@ -191,7 +191,7 @@ func _process(delta: float) -> void:
 		if hours >= _skip_to:
 			_skip_to = -1.0
 	elif not (driven or paused or pinned):
-		hours += _rate * _speed(_elevation(sun)) * delta
+		hours += pace() * delta
 	if _stars:
 		# the planet's own seconds since the night design's hour: stars, Phobos and Deimos keep pace with the sun
 		_stars.t = (hours - float(_C.hour)) * float(_cfg.sol_s) / 24.0
@@ -221,6 +221,17 @@ func _process(delta: float) -> void:
 	_fade_lamps(delta)
 	cost_us = Time.get_ticks_usec() - t0
 	cost_max_us = maxi(cost_max_us, cost_us)
+
+
+## Local hours a real second the clock runs at now (or at hour `h`): the day's pace, the night night_speed times
+## faster. The rules step at the same pace (sim/sim_node.gd), so the HUD's hour is the sky's.
+func pace(h := NAN) -> float:
+	return _rate * _speed(_elevation(sun if is_nan(h) else HouseStyle.sun_at(_C, h)))
+
+
+## The drawn sun's radius in degrees at local hour `h`: the keys' discs blended by the sun's elevation there.
+func disc_deg(h: float) -> float:
+	return rad_to_deg(HouseStyle.blend(_look, _weights(_elevation(HouseStyle.sun_at(_C, h)))).disc)
 
 
 ## Hours of the next time the sol reaches `h`, from now (today if it is still ahead).
