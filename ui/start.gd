@@ -2,14 +2,14 @@ extends Control
 ## The first two screens, up while ui/boot.gd loads the game underneath: the team's mark on black with one sweep of
 ## light across it (about 3 s; any key, click or tap skips it), then the start screen: the hero and PIP under one
 ## light and a short menu at the bottom left. Keys, a pad, a mouse or a finger all work it.
-## The hero and PIP are a still at first (ui/start_bg.jpg, so the first frame is cheap on the web), and the same
-## scene alive (ui/start_stage.gd) once the game's models are in memory.
+## The hero and PIP are a still (ui/start_bg.jpg, so the first frame is cheap on the web) and, on a computer, a
+## short loop of video over it (ui/start_loop.ogv): both drawn once from the game's own models (tools/start_loop.gd),
+## so the start screen itself draws no 3D.
 
 ## The kid pressed "Start mission". Boot puts the sandbox in once everything is loaded.
 signal started
 
 const Hud := preload("res://ui/hud.gd")
-const Stage := preload("res://ui/start_stage.gd")
 # 96 px tall: a 48 dp target on a phone held sideways (addons/forge/test.gd TARGET)
 const ROW := Vector2(380, 96)
 # Android's back swipe starts 60 px in from a side (addons/forge/test.gd EDGE): the menu stays clear of it
@@ -25,15 +25,14 @@ void fragment() {
 
 var splash: ColorRect  # null once the menu has the screen
 var shine := ShaderMaterial.new()
-var stage: SubViewport  # the live scene, null until everything is loaded
-var live := TextureRect.new()  # its picture, over the still
+var loop := "res://ui/start_loop.ogv"
+var video: VideoStreamPlayer  # the hero and PIP alive, over the still; null on a phone or with no file to play
 var menu: VBoxContainer
 var rows: Array[Button] = []  # Start mission, Credits, Exit
 var credits: PanelContainer
 var back: Button
 var bar := ColorRect.new()
 var _tween: Tween
-var _asked := false  # Start was pressed
 
 
 func _ready() -> void:
@@ -46,13 +45,6 @@ func _ready() -> void:
 	picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	picture.mouse_filter = MOUSE_FILTER_IGNORE
 	add_child(picture)
-	# the live scene's picture lies on the still the same way, unseen until it is drawn
-	live.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
-	live.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	live.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	live.mouse_filter = MOUSE_FILTER_IGNORE
-	live.modulate.a = 0.0
-	add_child(live)
 	_menu()
 	_credits()
 	# loading, as a thin line along the bottom edge
@@ -69,20 +61,36 @@ func _ready() -> void:
 		RenderingServer.frame_post_draw.connect(func() -> void: JavaScriptBridge.eval("window.shellDone && shellDone()", true), CONNECT_ONE_SHOT)
 
 
-## Loading's share done, 0 to 1 (ui/boot.gd), every frame.
+## Loading's share done, 0 to 1 (ui/boot.gd).
 func progress(k: float) -> void:
 	bar.anchor_right = k
 	bar.visible = k < 1.0
-	# all in memory and the logo gone: the hero and PIP come alive. Not for a kid already on the way in: the stage
-	# would be built and freed in one frame
-	if k >= 1.0 and splash == null and stage == null and not _asked:
-		stage = Stage.new()
-		add_child(stage)
-		live.texture = stage.get_texture()
-		# its first frames compile its shaders and settle the hero on the ground: shown after them, faded in
-		var t := create_tween()
-		t.tween_interval(0.3)
-		t.tween_property(live, "modulate:a", 1.0, 0.6)
+
+
+## The hero and PIP alive: the loop over the still, filling the screen as the still does (16:9, covering it), faded in
+## once it plays. Not on a phone or a tablet, where the processor alone decodes every frame, and not without the
+## file: the still stays, and nothing else changes.
+func _play() -> void:
+	if DisplayServer.is_touchscreen_available() or OS.has_feature("web_android") or OS.has_feature("web_ios") or not ResourceLoader.exists(loop):
+		return
+	var frame := AspectRatioContainer.new()
+	frame.ratio = 16.0 / 9.0
+	frame.stretch_mode = AspectRatioContainer.STRETCH_COVER
+	frame.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
+	frame.mouse_filter = MOUSE_FILTER_IGNORE
+	frame.modulate.a = 0.0
+	video = VideoStreamPlayer.new()
+	video.stream = load(loop)
+	video.loop = true
+	video.expand = true
+	video.mouse_filter = MOUSE_FILTER_IGNORE
+	frame.add_child(video)
+	add_child(frame)
+	move_child(frame, 1)  # over the still, under the menu
+	video.play()
+	var t := create_tween()
+	t.tween_interval(0.2)  # its first frame is decoded by then
+	t.tween_property(frame, "modulate:a", 1.0, 0.6)
 
 
 func _splash() -> void:
@@ -132,6 +140,7 @@ func _open() -> void:
 	splash.queue_free()
 	splash = null
 	rows[0].grab_focus()
+	_play()
 
 
 func _input(e: InputEvent) -> void:
@@ -195,7 +204,6 @@ func _show_credits(on: bool) -> void:
 
 func _start() -> void:
 	rows[0].text = "Loading..."  # read only while boot still loads: the sandbox comes in by itself after
-	_asked = true
 	started.emit()
 
 

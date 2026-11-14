@@ -77,7 +77,6 @@ func _process(_delta: float) -> void:
 		var vp := get_viewport()  # held here: boot is freed before the frame is drawn
 		vp.disable_3d = true
 		RenderingServer.frame_post_draw.connect(func() -> void: vp.disable_3d = false, CONNECT_ONE_SHOT)
-		start.free()  # now, not with boot at the frame's end: its scene and render target are gone before the world is built
 		get_tree().root.add_child(game)
 		print_verbose("boot: loaded in %d ms, the sandbox's _ready took %d ms" % [t, Time.get_ticks_msec() - t])
 		get_tree().current_scene = game
