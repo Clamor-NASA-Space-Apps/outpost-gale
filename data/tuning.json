@@ -46,11 +46,17 @@
   "rush_height": 0.8,
   "rush_lead": 1.0,
   "note_rush": "a vehicle's speed framing (follow_cam.gd), reached at its top speed and eased by lead_rate: rush_distance and rush_height are shares of the vehicle distance and pivot height (9 m and 2.4 m become 7.2 m and 1.9 m), rush_lead s of velocity the aim looks ahead (lead_time on foot). The field of view never changes (skills/third-person-camera rule 14). Our choice, 13 Nov playtest: \"I felt the rover is slow\"",
-  "fp_ease_s": 0.4,
-  "fp_pitch_min": -70,
-  "fp_pitch_max": 60,
-  "fp_reveal_s": 0.2,
-  "note_fp": "first person inside a room (data/world.json rooms; skills/third-person-camera, Into first person indoors; design/research/pages/camera/first-person.md). fp_ease_s: s the lens takes between the follow position and the eye, each way (the brief asked for 0.3 to 0.5; short, as Meta's comfort guide keeps camera discontinuities and acceleration small); fp_pitch_min and fp_pitch_max: degrees the view may look down and up in first person, wider than the follow camera's so the floor at your feet and the ceiling show (art direction: at -70 the 75 degree lens sees straight down past its lower edge). fp_reveal_s: s the hero takes to fade back in once the lens is clear of its drawn box by the near sphere (follow_cam reveal; Ravindu's call after the 12 Nov 21:12 playtest: about 0.2 s, never a near-plane cut). In first person the hero is not drawn (12 Nov playtest: its shoulders crossed the lens as big pale triangles). The field of view stays the lens's 75 degrees vertical (games usually 75 to 90, de Vries 2007; Minecraft 70): no zoom at the switch. The eye is the visor's middle in the idle pose (player/hero_model.gd eye), no bob, no roll. The doorway band is the hero's own width (reality.json hero.width), no number here",
+  "in_ease_s": 0.5,
+  "in_approach": 3.0,
+  "in_distance": 1.9,
+  "in_shoulder": 0.35,
+  "in_pivot_height": 1.45,
+  "in_pitch_min": -35,
+  "in_pitch_max": 35,
+  "in_keep": 1.0,
+  "in_feel_s": 0.1,
+  "in_feelers": [[16, 0.75], [-16, 0.75], [32, 0.5], [-32, 0.5]],
+  "note_in": "third person inside a room (data/world.json rooms; follow_cam.gd; design/research/interior-camera.md). We found no shipped third-person game that forces first person indoors; engines and guides keep the follow camera and tighten it (a camera volume's profile, 'a more claustrophobic camera mode' for a narrow corridor; a shorter arm and a shoulder offset on one blend value, the UE spring arm guide; 'set a max distance that fit your levels', GameDev Pensieve). Playtest 14 Nov: first person indoors dropped for third person. in_ease_s: s the blend may take from 0 to 1 at most (it follows the hero's distance to the door, so a walk sets the pace; a teleport is capped by this); in_approach: m from the door at which the profile starts to blend in, so the arm is short before it meets the door frame; in_distance: the arm at the default pitch indoors, sized to HAB 1's plan (radius 2.4 m: the lens stays in the room behind a hero at its middle); a room whose plan is shallower takes that depth instead (the storm shelter's 1.25 m half-width, follow_cam.gd _fit()); in_shoulder: m the arm's root sits right of the hero (an over-the-shoulder Socket Offset; the UE spring arm guide shows 0.55 m for a full shoulder view, design/research/pages/camera/ue-springarm-uhiyama.md; 0.35 m here is art direction for a 4.8 m room); in_pivot_height: m over the floor, a little lower than outside so the lens stays under a 2.3 m ceiling at the default pitch; in_pitch_min and in_pitch_max: degrees, narrower than outside so a look down does not press the lens into the ceiling; in_keep: m the arm's root must be past the plan's edge before the plan holds the lens fully (it blends in from the edge), so walking in the lens comes through the door with the hero, about a body's width (reality.json hero.width 0.95) and never so close that the hero fades; in_feel_s and in_feelers: Lyra's penetration avoidance (PenetrationBlendInTime 0.1 s; feelers at 16 degrees with weight 0.75 and 32 with 0.5 either side of the arm, design/research/pages/camera/lyra-penetration-opentournament.md): they pull the lens in smoothly before the arm meets a wall or a door frame. All else art direction",
   "note_frame": "frame_low: share of the frame height the pivot sits below centre when looking level (1/6 is the lower-third line), easing to centred at pitch_min; slope_ahead: m ahead along the view where a ray reads the ground; slope_share: share of that slope the view pitches by; slope_max_deg: the most it pitches. follow_rate and lead_rate also set the lead that cancels the spring's lag in a steady walk (2 v / follow_rate, built at lead_rate)"
  },
  "input": {
@@ -73,8 +79,6 @@
   "move_s": 0.6,
   "curtain_gather": 0.22,
   "note_curtain": "curtain_gather: an open curtain's width as a share of its closed width, gathered at its jamb (HAB 1's toilet). Art direction",
-  "aim_deg": 74,
-  "note_aim": "aim_deg: in first person the target is what the view's centre rests on within reach, else the usable thing whose shape is nearest the view's centre inside a cone this wide (degrees, both sides together). 74 = Source's +use radius search, which keeps an object only when the direction to its nearest point has dot >= 0.8 with the view (2 x acos 0.8; design/research/pages/interaction/source-sdk-2013-baseplayer_shared.cpp FindUseEntity). The nearest one wins, so a wide gate does not blur two things a metre apart",
   "stick_deg": 10,
   "note_reach": "reach: m from the body's axis to the nearest point of the thing's collision box (either side of a door), height counted only past the feet or the head; cone_deg: in third person the thing's shape must lie inside this cone (both sides) round the heading. stick_deg: the current target counts this much nearer the aim, at the cone's edge and against a rival, so the prompt does not flicker (skills/character-body, Using things). All three art direction"
  },
@@ -86,11 +90,15 @@
   "xfade": 0.2,
   "anticipation": 0.12,
   "note": "xfade: s of blend between clips; anticipation: s of crouch before take-off, the last part of hop_start plays in it (all 0.34 s of it would delay every press); xfade_hop: s of blend into and out of the hop clips, short so the arc keeps its timing",
-  "xfade_hop": 0.06
+  "xfade_hop": 0.06,
+  "fall_after": 0.1,
+  "note_fall": "fall_after: s off the floor before the model leaves its walk for the fall clip (hero_model.gd). A one-frame drop over a bevel (HAB 1's hatch sill, 1.5 cm down to the deck) played hop_air and restarted the walk cycle: the legs reset on the threshold (14 Nov playtest). The same 0.1 s as input.coyote, the grace in which the ground still counts for a jump"
  },
  "hero": {
   "note": "gait_hysteresis: Froude the hurry-to-walk change sits below hero.froude.walk_run. The boots' sink is reality.json hero.sink; smooth_deg: at load the hero's normals are averaged across edges flatter than this angle, so the suit's folds shade smooth and the pack's box corners (90 deg) stay sharp; the limbs are about eight-sided, 45 deg a face, which 40 left faceted (the file's normals were split face by face)",
   "gait_hysteresis": 0.05,
+  "step_catch_s": 0.12,
+  "note_step": "step_catch_s: s the drawn body takes to catch up a whole step (reality.json hero.step) after the body steps up or down at once: it follows at hero.step / step_catch_s m/s and is never more than a step behind. Source's SmoothViewOnStairs does this to the view (150 units/s, an 18-unit step, 18 / 150 = 0.12 s; design/research/pages/camera/source-sdk-2013-smooth-stairs.md); here the whole drawn body, so the feet do not pop up a sill (the greenhouse's 0.18 m threshold rose in one frame)",
   "smooth_deg": 60,
   "coat": {
    "legs_top": 0.55,

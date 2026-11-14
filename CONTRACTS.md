@@ -39,8 +39,7 @@ The composition root is `sandbox/sandbox.gd`. It calls only these:
 - The target (`sandbox/interactions.gd _pick()`, skills/character-body "Using things"): in reach when the nearest
   point of the shape is within `interact.reach` of the body's axis (height counted past the feet or head only), from
   either side; an open door or curtain counts at its shut pose too, so it closes from both sides; a wall (layer 2)
-  between the hands and every spot of it hides it. In first person what the view's centre rests on wins, else the
-  shape nearest the view line within `aim_deg`; in third person nearest the heading within `cone_deg`. The current
+  between the hands and every spot of it hides it. Of those, the shape nearest the heading within `cone_deg`. The current
   target is favoured by `stick_deg`. `tests/doors_test.gd` holds the standing grid. The rover's shape is its rear
   hatch (the model's `hatch*` parts), not its hull: it is boarded there only (`tests/interact_test.gd` hatch()).
 - A vehicle is in group `vehicle` with `drive(input: Vector2, hurry: bool, delta: float)` (input.x steer, right
@@ -67,12 +66,12 @@ The composition root is `sandbox/sandbox.gd`. It calls only these:
 
 ## Test hooks
 `Forge.register(sandbox)`. `render_game_to_text()` returns:
-`player.{pos, speed, onFloor, gait, inside, room}`, `cam.{inside, dist, first}`, `heroScreen` (0 in first person), `interaction.{target, prompt}`,
+`player.{pos, speed, onFloor, gait, inside, room}`, `cam.{inside, dist, indoor}`, `heroScreen` (0 when the hero is hidden), `interaction.{target, prompt}`,
 `vehicle.{driving, speed}`, `carry`, `sky.{state, phase, hour, sun_el, sun_az, keys, light_el, lamps_on, coat, bursts,
 probe_redraws}` (The sky clock, below), `quality`, `fps`.
 `set_view(name)`: `default` (the play camera), `base`, `hero`, `horizon`, `west`, `storm`, `airlock`, `rover`, `greenhouse`,
 `hab_in` (inside HAB 1: the life-support wall and bunks), `hab_desk` (inside HAB 1: galley, Veggie, desk and map),
-`hab_fp`, `greenhouse_fp` (the play camera in first person, the hero placed inside the door looking in).
+`hab_room`, `greenhouse_room`, `shelter_room` (the play camera in the room's profile, the hero placed in from the door looking in).
 `place(pos, yaw_deg)`: the hero, through `player.place()`.
 
 ## Prefabs (`data/world.json` `prefabs`: id -> model file; a missing file loads a labelled stand-in box)
@@ -157,19 +156,20 @@ cover lifts (`audio.lift()`, a 1 s fade).
   holds the ground, the rocks and every dust emitter, also those made in play (`dust.layers`): the probe draws them
   and does not shade them (`reflection_mask` 1), so dust is lit as the ground it rose from.
 
-## First person indoors (12 Nov 2026)
+## Rooms and the interior camera (12 Nov, third person only since 14 Nov 2026)
 - `data/world.json` `rooms`: per item id, its floor plan in its own space (`{circle: [x, z, r]}`, `{rect: [x0, z0, x1,
   z1]}`). The root hands them to `player.rooms` (`{id: {node, areas}}`). `player.room` is the room the body is in: in
   once the whole body is past the plan's edge, out once it is wholly outside (the hero's radius either way), so a
-  doorway never flips it (skills/third-person-camera, Into first person indoors; `tests/indoor_test.gd`).
-- `follow_cam.room` (set by the player), `follow_cam.first` 0 to 1 (eased over `tuning.json camera.fp_ease_s`):
-  the lens blends from the follow position into the eye (`hero_model.eye`, the visor's middle). Yaw and pitch are
-  shared by both views; no recentre or glance in first person.
-- The hero is not drawn in first person (the close-lens fade: the lens is inside its drawn box), and comes back only
-  once the lens is clear of that box by the arm's sphere radius, faded in over `camera.fp_reveal_s`
-  (`follow_cam.reveal` caps `fade`). No shadow of the hero indoors: it is hidden, not culled by layer.
-- The interaction target in a room is what the view's centre rests on, else the usable shape nearest the view's
-  centre within reach (`interact.aim_deg`).
+  doorway never flips it (`tests/indoor_test.gd`). A room's door is where its plan meets the item's front axis (-Z).
+- The camera stays third person everywhere (skills/third-person-camera, Rooms; design/research/interior-camera.md).
+  `follow_cam.room` (the room the body is in, else the one whose door is nearest) and `follow_cam.want_in` (1 in it,
+  from 0 at `camera.in_approach` m from its door) are set by the player; `follow_cam.indoor` eases toward it and
+  blends the room profile in: `camera.in_distance`, `in_shoulder`, `in_pivot_height`, `in_pitch_min/max`, the
+  feelers (`in_feelers`, `in_feel_s`), no wall lift, no glance. The lens is kept in the plan shrunk by the arm's
+  sphere, blended in by the arm root's depth past the plan's edge, on top of the sphere cast. In the profile the arm
+  also collides with the thin layer (4), and its length is capped at the plan's depth from its middle. Concave
+  colliders collide from both sides (`world.gd _layer()`), so a one-sided glass shell stops a cast from inside.
+- The hero fades only by the lens's gap to its drawn box (`camera.fade_near`, `fade_far`), as outdoors.
 
 ## Room light and the toilet curtain (13 Nov 2026)
 - Each room in `data/world.json` `probe.rooms.<id>` has its own reflection probe (`interior` false for a glass dome)
@@ -222,7 +222,7 @@ cover lifts (`audio.lift()`, a 1 s fade).
 - `player.perform(clip: StringName, stand: Transform3D) -> float`: glide at most `tuning.perform` to `stand` (global, floor
   origin, facing its -Z), play a use clip from `data/clips.json`, return its length (0 for an unknown clip or while
   driving). A move key ends it; jump is blocked. `player.sit(on)`, `player.seated`, `player.cut` (empty when idle).
-  `follow_cam.show_body` holds the body drawn in first person during either. `player.model.point(clip, "hand" |
+  `follow_cam.show_body` holds the body drawn, however close the play lens, during either. `player.model.point(clip, "hand" |
   "seat_hip" | "wheel") -> Vector3` in the hero's own space, to place a stand point from a spot.
 - Use spots (`data/world.json` `uses`: item id -> rows `{kind, prompt, box: [x0,y0,z0,x1,y1,z1], stand: [x, z, yaw_deg],
   clip, sound}` in the item's own space): one Interactable of kind `spot` per row, its `thing` an empty node at the

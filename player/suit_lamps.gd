@@ -103,6 +103,6 @@ func _process(delta: float) -> void:
 			_glow.emission_energy_multiplier = _full_glow * k
 		else:
 			_glow.set_shader_parameter("emission", _full_glow * k)
-	# the faces go with the body: never at the lens in first person
+	# the faces go with the body: hidden when the lens is close enough to hide it
 	for f in faces:
 		f.visible = _player.shown > 0.5

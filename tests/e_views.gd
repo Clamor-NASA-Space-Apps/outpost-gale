@@ -3,7 +3,7 @@ extends Node3D
 ##   node ../../tools/capture-view.mjs . captures/e --scene res://tests/e_views.tscn --views gh_30,gh_6 -- sky=night
 ## sky=sunset (or night, storm) switches the sky first; a view named "night/gh_6" switches it before that view, so one
 ## run can take every sky (scratchpad runner: one boot instead of one per sky). "day/coat0:gh_5" also sets the glass
-## role's weathering share first (until the next sky switch), to compare the dust film. Any other view name goes to the sandbox (greenhouse_fp, gh_eye_a).
+## role's weathering share first (until the next sky switch), to compare the dust film. Any other view name goes to the sandbox (greenhouse_room, gh_eye_a).
 ##   gh_30 .. gh_2   walking up to the greenhouse's side, eye height, any distance in metres from its centre
 ##   hab_win, hab_win2, hab_win_in   HAB 1's windows from outside, and out through one from inside
 

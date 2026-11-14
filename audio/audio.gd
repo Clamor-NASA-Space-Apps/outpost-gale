@@ -521,8 +521,8 @@ func _inside_now() -> bool:
 	return (_rover != null and player.vehicle == _rover) or _in_room()
 
 
-## In a room (data/world.json `rooms`: HAB 1, the greenhouse): the player's own answer, the one that puts the view in
-## first person, so what you hear and what you see change at the same step.
+## In a room (data/world.json `rooms`: HAB 1, the greenhouse): the player's own answer, the one the rules and the
+## room's camera use, so what you hear and what you see change at the same step.
 func _in_room() -> bool:
 	return player.room != ""
 

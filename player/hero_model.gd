@@ -12,7 +12,7 @@ var tree: AnimationTree
 var playback: AnimationNodeStateMachinePlayback
 var skeleton: Skeleton3D
 var bounds: AABB  # the drawn body in the idle pose, in this node's space (feet at y = 0, centred on the axis)
-var eye: Vector3  # the middle of the visor in the idle pose, in this node's space: where first person looks from
+var eye: Vector3  # the middle of the visor in the idle pose, in this node's space: where the head lamps aim from
 var clip_speed := {}  # gait clip -> the ground speed its stride was made for, m/s, measured from the feet
 var touchdown := {}  # gait clip -> [left, right] phase (0..1) where each boot lands, from clips.json
 var foot_bones: Array[int] = []
@@ -25,6 +25,7 @@ var act_clip := &"interact"  # what the "act" phase plays: the reach, or any use
 var placed: Transform3D  # the model's own space to this node's, feet on y = 0: where clips.json's points land
 var timer := 0.0  # seconds left in a timed phase (landing, interacting)
 var last_phase := -1.0  # where the gait cycle was last frame, 0..1, negative outside a gait
+var off_floor := 0.0  # seconds the body has been off the floor while walking or standing
 var clips: Dictionary
 var feel: Dictionary
 
@@ -103,8 +104,11 @@ func update(speed: float, idle: float, on_floor: bool, carrying: bool, delta: fl
 			if timer <= 0.0 or speed > idle:
 				phase = ""  # walking off cuts the landing or the reach short: an in-place clip would skate
 		"":
-			if not on_floor:
-				phase = "air"  # stepped off something: no anticipation, just the fall
+			# stepped off something: no anticipation, just the fall. Only after fall_after: a one-frame drop over a
+			# sill's bevel played hop_air and restarted the walk, the legs reset in the doorway (tuning.json hop)
+			off_floor = 0.0 if on_floor else off_floor + delta
+			if off_floor > feel.fall_after:
+				phase = "air"
 	var next: StringName
 	match phase:
 		"crouch": next = &"hop_start"
@@ -191,6 +195,7 @@ func sit(on: bool) -> void:
 
 func reset() -> void:
 	phase = ""
+	off_floor = 0.0
 	state = &"idle"
 	last_phase = -1.0
 	playback.start(&"idle")

@@ -17,7 +17,7 @@ const EDGE_SLIDE := 1.5  # m/s off a rim the body only rests on: a slip, quicker
 # The model and its clips (names, loops, foot contacts). Another hero swaps these and nothing else.
 const MODEL := "res://models/character_suited.glb"
 const CLIPS := "res://data/clips.json"
-const EYE_ROLE := "visor"  # the surface the eye sits behind in first person
+const EYE_ROLE := "visor"  # the surface the head lamps aim from (suit_lamps.gd)
 
 ## A foot pressed onto the ground: each plant of a walk or run, and both feet on landing. `pos` is under the
 ## foot at the floor, `yaw_deg` the heading (CONTRACTS.md), `foot` is "foot_l" or "foot_r".
@@ -67,11 +67,12 @@ var last_vel := Vector3.ZERO
 var on_floor := false  # the body's floor contact, or a floor it was snapped down onto this frame
 var fading: Shader  # hero.gdshader built with FADE: blended, swapped in only while the lens is close
 var shown := 1.0  # the fade the materials carry now
+var drawn_y := 0.0  # the drawn body's height: it follows a step at a capped speed (tuning.json hero.step_catch_s)
 var glancing := false  # the camera faces the hero: the helmet looks at the lens, not along its aim
 ## Where the body may walk (x, z), set by the composition root; no area: anywhere. Near its edge the outward speed is
 ## held to what the hero's braking still stops in, so the hero slows and stops on the line, with no wall's jolt.
 var bound := Rect2()
-## The rooms that put the view in first person, set by the composition root: {id: {node: Node3D, areas: [{circle:
+## The rooms whose plan the camera keeps to (follow_cam.gd), set by the composition root: {id: {node: Node3D, areas: [{circle:
 ## [x, z, r]} or {rect: [x0, z0, x1, z1]}, ...]}}, each area in its node's space (data/world.json `rooms`).
 var rooms := {}
 var room := ""  # the one the body is in, "" outside
@@ -148,7 +149,6 @@ func _ready() -> void:
 	cam.name = "Camera"
 	add_child(cam)
 	cam.setup(tuning.camera)
-	cam.eye = Vector3(0.0, model.eye.y, model.eye.z)  # centred; the forward part turns with the view, not the body
 	cam.follow_target(body, [body.get_rid()], meshes, tuning.camera.distance, tuning.camera.pivot_height, model.bounds)
 	lamps = SuitLamps.new()
 	lamps.setup(self, model.skeleton, model.eye, design)
@@ -370,6 +370,11 @@ func _walk(delta: float) -> void:
 	var before := body.global_position
 	body.move_and_slide()
 	on_floor = _settle(before, was_on_floor and not launching and body.velocity.y <= 0.0)
+	# a step up or down moves the body at once; the drawn body follows at a step per step_catch_s and is never
+	# more than a step behind (Source's SmoothViewOnStairs), so the feet do not pop up a sill. In the air: at once
+	var y := body.global_position.y
+	drawn_y = clampf(move_toward(drawn_y, y, step / tuning.hero.step_catch_s * delta), y - step, y + step) if on_floor and was_on_floor else y
+	model.position.y = drawn_y - y
 
 	var real := body.get_real_velocity()
 	var flat := Vector2(real.x, real.z).length()
@@ -393,26 +398,40 @@ func _walk(delta: float) -> void:
 
 ## Which room the body is in, with a doorway band as wide as the body: in once the whole body is past the door (the
 ## plan shrunk by its radius), out once it is wholly outside (grown by it), so rocking in the hatch never flips the
-## view. ponytail: the plan is flat, a body on a roof would count as inside; add a height when one can get there.
+## rules, the sound or the lights. ponytail: the plan is flat, a body on a roof would count as inside; add a height
+## when one can get there.
+## The camera gets the room the body is in, else the one whose door is nearest, and how far into its profile to be:
+## 1 in the room, easing from 0 at camera.in_approach m from the door, so the arm is short before the door frame.
 func _room() -> void:
 	var r := breadth / 2.0
-	if room != "" and not _in(rooms[room], r):
+	var p := body.global_position
+	if room != "" and FollowCam.depth_in(rooms[room], p) <= -r:
 		room = ""
 	if room == "":
 		for id: String in rooms:
-			if _in(rooms[id], -r):
+			if FollowCam.depth_in(rooms[id], p) > r:
 				room = id
-	cam.room = room != ""
+	var near := room
+	var gap := 0.0
+	if room == "":
+		gap = INF
+		for id: String in rooms:
+			# in the doorway band the door is behind the body already: still at it, or the profile would dip there
+			var d := 0.0 if FollowCam.depth_in(rooms[id], p) > -r else Vector2(p.x, p.z).distance_to(_door(rooms[id]))
+			if d < gap:
+				gap = d
+				near = id
+	cam.room = rooms.get(near, {})
+	cam.want_in = 1.0 - smoothstep(0.0, tuning.camera.in_approach, gap)
 
 
-func _in(spec: Dictionary, grow: float) -> bool:
-	var p: Vector3 = (spec.node as Node3D).to_local(body.global_position)
+## A room's door (x, z): where its plan meets the item's front axis, -Z (a model's door is on its front, CONTRACTS.md).
+func _door(spec: Dictionary) -> Vector2:
+	var deepest := 0.0
 	for a: Dictionary in spec.areas:
-		if a.has("circle") and Vector2(p.x - a.circle[0], p.z - a.circle[1]).length() < a.circle[2] + grow:
-			return true
-		if a.has("rect") and Rect2(a.rect[0], a.rect[1], a.rect[2] - a.rect[0], a.rect[3] - a.rect[1]).grow(grow).has_point(Vector2(p.x, p.z)):
-			return true
-	return false
+		deepest = maxf(deepest, a.circle[2] - a.circle[1] if a.has("circle") else -float(a.rect[1]))
+	var at := (spec.node as Node3D).to_global(Vector3(0.0, 0.0, -deepest))
+	return Vector2(at.x, at.z)
 
 
 ## A speed along one axis held to what the brakes stop in the room left: `back` metres behind, `ahead` in front,
@@ -431,7 +450,18 @@ func _held(v: float, back: float, ahead: float) -> float:
 func _settle(before: Vector3, may_drop: bool) -> bool:
 	var at := body.global_position
 	var q := PhysicsRayQueryParameters3D.create(at + Vector3.UP * step, at + Vector3.DOWN * step, MASK & ~4, [body.get_rid()])
-	var hit := body.get_world_3d().direct_space_state.intersect_ray(q)
+	var space := body.get_world_3d().direct_space_state
+	var hit := space.intersect_ray(q)
+	# down off a step's edge the ray meets its bevel, steep: the floor is just past it, down its slope. Found within
+	# a step, the body steps down onto it as a person does (and as an engine's floor snap does within its step
+	# height); taken for a drop, a 1.5 cm sill bevel played the fall clip and reset the legs in HAB 1's hatch
+	if may_drop and hit and hit.position.y <= at.y and hit.normal.angle_to(Vector3.UP) > body.floor_max_angle:
+		var past := Vector3(hit.normal.x, 0.0, hit.normal.z).normalized() * float(design.geometry.bevel) * 2.0
+		q.from += past
+		q.to += past
+		var below := space.intersect_ray(q)
+		if below and below.position.y <= at.y and below.normal.angle_to(Vector3.UP) <= body.floor_max_angle:
+			hit = below
 	# up onto any lip (a bevelled curb edge is steep where the ray meets it), down only onto a walkable slope
 	if hit.is_empty() or hit.position.y <= at.y and hit.normal.angle_to(Vector3.UP) > body.floor_max_angle:
 		return _off_edge()
@@ -507,6 +537,7 @@ func _drive(delta: float) -> void:
 	var seat: Transform3D = vehicle.seat()
 	# the hero rides along with its drawn hips on the seat, so its position stays true
 	body.global_transform = Transform3D(seat.basis, seat.origin - seat.basis * model.hip_sit)
+	model.position.y = 0.0  # no step to catch up on a seat
 	yaw = vehicle.global_rotation.y
 	gait = "idle"
 	model.update(0.0, idle_below, true, false, delta)
@@ -545,7 +576,7 @@ func act() -> void:
 ## Plays a use clip (data/clips.json) once and returns its length in seconds; the hero then stands in idle. The
 ## body slides at most tuning.json perform.glide_max toward `stand` (global; its origin on the floor, the hero facing
 ## its -Z) and turns to it over perform.glide_s while the clip starts in place. A move key ends it early. While it plays the body is drawn
-## even in first person (follow_cam.show_body), for the cut that films it.
+## even with the play lens close (follow_cam.show_body), for the cut that films it.
 func perform(clip: StringName, stand: Transform3D) -> float:
 	if vehicle or not model.clips.has(clip):
 		push_error("perform: no clip %s, or driving" % clip)
@@ -608,7 +639,8 @@ func enter(v: Node3D) -> void:
 	seated = false
 	vehicle = v
 	room = ""
-	cam.room = false
+	cam.room = {}
+	cam.want_in = 0.0
 	model.sit(true)
 	body.collision_layer = 0
 	body.collision_mask = 0
@@ -656,7 +688,7 @@ func state() -> Dictionary:
 	return {
 		"player": {"pos": feet, "speed": moved, "onFloor": on_floor, "gait": gait, "inside": [] if vehicle else inside(), "room": room,
 			"lamps": {"on": lamps.on, "auto": lamps.auto}},
-		"cam": {"inside": cam.inside(), "dist": cam.dist, "first": cam.first},
+		"cam": {"inside": cam.inside(), "dist": cam.dist, "indoor": cam.indoor},
 		"heroScreen": 0.0 if vehicle else cam.on_screen(feet, model.bounds.end.y),
 		"interaction": {"target": "", "prompt": ""},
 		"carry": "",

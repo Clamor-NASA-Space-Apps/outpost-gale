@@ -739,6 +739,10 @@ func _layer(body: CollisionObject3D) -> void:
 		var b := cs.global_transform * cs.shape.get_debug_mesh().get_aabb()
 		box = b if first else box.merge(b)
 		first = false
+		# a one-sided surface (the greenhouse's glass dome) stops casts from inside too: without it the camera's
+		# sphere cast passed out through the dome from the room (indoor_test sweep, 14 Nov)
+		if cs.shape is ConcavePolygonShape3D:
+			(cs.shape as ConcavePolygonShape3D).backface_collision = true
 	var thin := maxf(box.size.x, box.size.z) < hero_width
 	body.collision_layer = THIN if thin else STATICS
 	body.collision_mask = 0

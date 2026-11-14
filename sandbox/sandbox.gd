@@ -29,12 +29,12 @@ const VIEWS := {
 	"hab_in": [Vector3(0.3, 2.0, 1.4), Vector3(0.6, 1.1, -2.0)],  # inside HAB 1: the life-support wall and bunks
 	"hab_desk": [Vector3(0.9, 2.0, -0.6), Vector3(-2.0, 1.0, 0.9)],  # inside HAB 1: galley, Veggie, desk and map
 }
-# The play camera in first person inside a room: [item, where the hero stands in its space, yaw from the item's
-# front, pitch deg]. Both stand inside the door looking in (a model's door is on its front, -Z).
-const FP_VIEWS := {
-	"hab_fp": ["hab1", Vector3(0.0, 0.3, -1.3), 180.0, -12.0],
-	"greenhouse_fp": ["greenhouse", Vector3(0.0, 0.22, -2.0), 180.0, -12.0],
-	"shelter_fp": ["shelter", Vector3(0.0, 0.1, -0.45), 180.0, -12.0],
+# The play camera inside a room (its third-person profile): [item, where the hero stands in its space, yaw from the
+# item's front, pitch deg]. Each stands well in from the door looking in (a model's door is on its front, -Z).
+const ROOM_VIEWS := {
+	"hab_room": ["hab1", Vector3(0.0, 0.3, -0.3), 180.0, -12.0],
+	"greenhouse_room": ["greenhouse", Vector3(0.0, 0.22, -0.8), 180.0, -12.0],
+	"shelter_room": ["shelter", Vector3(0.0, 0.1, 0.3), 180.0, -12.0],
 }
 
 @onready var world: Node3D = $World
@@ -351,8 +351,8 @@ func set_view(v: String) -> void:
 	if v == "settings":
 		settings.open()  # over the play view, for a picture of it
 		return
-	if FP_VIEWS.has(v):
-		var f: Array = FP_VIEWS[v]
+	if ROOM_VIEWS.has(v):
+		var f: Array = ROOM_VIEWS[v]
 		var item: Node3D = world.items[f[0]]
 		$ViewCam.current = false
 		player.place(item.to_global(f[1]), -rad_to_deg(item.global_rotation.y) + float(f[2]))

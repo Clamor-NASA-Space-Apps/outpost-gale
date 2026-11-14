@@ -10,7 +10,6 @@ extends Node3D
 const Rover := preload("res://sandbox/rover.gd")
 const CARRIABLES := 64
 const WALLS := 2  # what hides a thing from the hands (CONTRACTS.md collision layers: statics)
-const POINTED := 2 | 4 | 16 | 64  # what the view's centre can rest on: statics, thin statics, vehicles, carriables
 # Art direction for the hands (second playtest, 13 Nov: doors, the rover and bags moved with no hands on them):
 const GRIP := 0.35  # share of the reach clip (clips.json interact, which names no work_at) when the glove is on the handle
 const PICK := &"kneel_pick"  # down to a bag on the ground and up again: its glove is at 0.44 m at work_at
@@ -299,18 +298,15 @@ func _physics_process(delta: float) -> void:
 
 
 ## What E would use (skills/character-body, Using things). In reach: from the body's axis to the nearest point of the
-## thing's box, from either side, with no wall between it and the hands. Of those, in first person what the view's
-## centre rests on, else the one nearest the aim inside the aim cone; in third person the aim is the body's heading
-## and the cone `cone_deg`. The current target is favoured by `stick_deg`, so two things in reach do not flicker.
+## thing's box, from either side, with no wall between it and the hands. Of those, the one nearest the body's heading
+## inside the cone `cone_deg`. The current target is favoured by `stick_deg`, so two things in reach do not flicker.
 func _pick() -> Interactable:
 	var hero: Node3D = player.body
 	var feet := hero.global_position
 	var hands := feet + Vector3.UP * hold
 	var head: float = player.model.bounds.end.y
-	var first: bool = player.room != ""
-	var lens: Camera3D = player.cam.lens
-	var from := lens.global_position if first else hands
-	var aim := -lens.global_basis.z if first else (-hero.global_basis.z * Vector3(1, 0, 1)).normalized()
+	var from := hands
+	var aim := (-hero.global_basis.z * Vector3(1, 0, 1)).normalized()
 	var reach: float = tuning.interact.reach
 	var space := hero.get_world_3d().direct_space_state
 	var near: Array[Interactable] = []
@@ -320,21 +316,14 @@ func _pick() -> Interactable:
 		var up := maxf(maxf(feet.y - q.y, q.y - feet.y - head), 0.0)
 		if Vector2(Vector2(q.x - feet.x, q.z - feet.z).length(), up).length() < reach and it.can_use(hero) and _seen(space, hands, it):
 			near.append(it)
-	if first:
-		var ray := PhysicsRayQueryParameters3D.create(from, from + aim * (from.distance_to(hands) + reach), POINTED, [hero.get_rid()])
-		var hit := space.intersect_ray(ray)
-		var pointed: Interactable = _owner(hit.collider) if hit else null
-		if pointed in near:
-			return pointed
-	var half := deg_to_rad(tuning.interact.aim_deg if first else tuning.interact.cone_deg) / 2.0
+	var half := deg_to_rad(tuning.interact.cone_deg) / 2.0
 	var stick := deg_to_rad(tuning.interact.stick_deg)
 	var best: Interactable = null
 	var best_a := INF
 	for it: Interactable in near:
 		# the box's point nearest the aim line (near enough: nearest to the aim at the box's distance)
 		var to := it.nearest(from + aim * from.distance_to(it.nearest(from))) - from
-		if not first:
-			to.y = 0.0
+		to.y = 0.0
 		# a spot on a bigger usable thing (clean a panel row that also tilts) counts `favour_deg` nearer the aim, or
 		# the row's box, round it on every side, would always take the prompt from it
 		var a := (aim.angle_to(to) if to.length() > 0.01 else 0.0) - (stick if it == target else 0.0) - deg_to_rad(float(it.row.get("favour_deg", 0.0)))

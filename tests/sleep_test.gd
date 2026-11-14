@@ -105,7 +105,7 @@ func play() -> bool:
 	st = game.render_game_to_text()
 	check(clock.probe_redraws - redraws <= 2, "the probes redraw at most twice for the whole night (%d)" % (clock.probe_redraws - redraws))
 	check(st.player.room == "hab1", "the hero wakes in HAB 1 (%s)" % st.player.room)
-	check(st.cam.first > 0.99, "the wake hands over to first person (%.2f)" % st.cam.first)
+	check(st.cam.indoor > 0.99 and not st.cam.inside, "the wake hands over to the room's third-person view, the lens in no solid (%.2f)" % st.cam.indoor)
 	check(root.get_camera_3d() == player.cam.lens, "the play camera is back")
 	check(not player.seated and player.process_mode != Node.PROCESS_MODE_DISABLED, "the hero stands and moves again")
 	check(audio._dawn, "the next door opened plays the dawn cue")

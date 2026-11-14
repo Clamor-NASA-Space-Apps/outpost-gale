@@ -3,13 +3,12 @@ extends "res://addons/forge/test.gd"
 ## godot --headless --path . --fixed-fps 60 -s tests/doors_test.gd
 ## Doors are opened through the interactions, as a player opens them. The walk is real input: forward from
 ## 7 m in front of the door until the hero is inside on the floor, then back toward the camera until it is out.
-## Into a room that turns the view first person (world.json rooms) the stick is aimed through the view at the centre,
-## then at the start, as a player steers: the view never turns by itself in there, so a held forward key would keep
-## whatever heading the door frame knocked it to.
+## Into a room (world.json rooms) the stick is aimed through the view at the centre, then at the start, as a player
+## steers: a held forward key would keep whatever heading the door frame knocked it to.
 ## First, using them (skills/character-body, Using things): a grid of standing spots on both sides of each door and of
 ## HAB 1's toilet curtain, at several headings, each within reach and facing it gets its prompt, shut and open;
 ## out of reach, facing away or behind a wall gets none; a door opens and closes from either side in any order;
-## in first person inside HAB 1 the view, not the body, picks the door.
+## inside HAB 1, in the room's third-person profile, the body's heading picks the door as it does outside.
 ## Then, never pushed (13 Nov playtest: HAB 1's hatch swung into the hero at the Sol 1 start and trapped it in the
 ## frame): the hero stands at points across each doorway and swing path, on both sides, and at the Sol 1 start; each
 ## door opened and closed there moves the hero no more than PUSH and never leaves it in a collider, a door held at
@@ -53,7 +52,7 @@ func play() -> bool:
 			await approach(door)
 	await start_spot()
 	await set_door()
-	await first_person()
+	await inside_hab()
 	for id: String in ENTERABLE:
 		var item: Node3D = world.items[id]
 		for it: Node in item.find_children("*", "", true, false):
@@ -244,25 +243,23 @@ func curtain() -> void:
 	check(box.target != it, "and gets no prompt through the wall (got %s)" % [box.target.name if box.target else "nothing"])
 
 
-## Inside HAB 1 the body faces away from the door and the view looks at it: first person picks by the view.
-func first_person() -> void:
+## Inside HAB 1, facing the door with the view turned away from it: the room's third-person profile is on, and the
+## heading, not the view, picks the door (the view no longer chooses since first person indoors was dropped, 14 Nov).
+func inside_hab() -> void:
 	var door := _door("hab1")
 	var f := _frame(door)
 	var hab: Node3D = world.items["hab1"]
 	var inner := 1 if (f * Vector3(0, 0, 1)).distance_to(hab.global_position) < (f * Vector3(0, 0, -1)).distance_to(hab.global_position) else -1
 	var at := _spot(f, 1.0, inner, 1.0, 0.0)
-	await _stand(door, at, 180.0)
+	await _stand(door, at, 0.0)
+	player.cam.yaw += PI / 2.0  # the view a quarter turn off: it must not matter
 	await frames(30)
-	var lens: Camera3D = player.cam.lens
-	var to: Vector3 = door.middle() - lens.global_position
-	player.cam.yaw = atan2(-to.x, -to.z)
-	player.cam.pitch = atan2(to.y, Vector2(to.x, to.z).length())
-	await frames(5)
-	check(player.room == "hab1" and player.cam.first > 0.9, "inside HAB 1 the view is first person (room %s, first %.2f)" % [player.room, player.cam.first])
-	check(box.target == door, "the view on the door, the body turned away: the door is offered (got %s)" % [box.target.name if box.target else "nothing"])
+	check(player.room == "hab1" and player.cam.indoor > 0.9, "inside HAB 1 the view is in the room's profile (room %s, indoor %.2f)" % [player.room, player.cam.indoor])
+	check(not player.state().cam.inside, "and the lens is in no solid")
+	check(box.target == door, "the body facing the door, the view turned away: the door is offered (got %s)" % [box.target.name if box.target else "nothing"])
 	box.interact()
 	await frames(wait)
-	check(door.open, "E opens it from the view")
+	check(door.open, "E opens it")
 	box.interact()
 	await frames(wait)
 	check(not door.open, "and closes it")

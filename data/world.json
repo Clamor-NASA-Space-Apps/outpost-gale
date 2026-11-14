@@ -631,7 +631,7 @@
   "site_curiosity_wide": ["curiosity", [8, 5, -30], [0, 1, 6]]
  },
  "rooms": {
-  "_note": "the buildings whose inside puts the view in first person (player.gd _room, skills/third-person-camera Into first person indoors): each item id's floor plan in its own space, circles [x, z, r] and rects [x0, z0, x1, z1], measured from the models (12 Nov). hab1: building_habitat.glb floor x and z +-2.40, the door's inner face at z -2.16. greenhouse: building_greenhouse.glb floor +-3.28 (the dome), and the vestibule x +-1.0 from the door's inner face at z -4.46 to the dome. shelter (13 Nov): building_storm_shelter.glb, the bags' inside faces at x +-1.3, the back at z 1.25, the door frame's inner face at z -1.24. The doorway band is the hero's own radius either side of these lines",
+  "_note": "the buildings with an inside (player.gd _room: the rules, the sound, the lights; follow_cam.gd keeps the third-person lens in the plan, skills/third-person-camera Rooms): each item id's floor plan in its own space, circles [x, z, r] and rects [x0, z0, x1, z1], measured from the models (12 Nov). hab1: building_habitat.glb floor x and z +-2.40, the door's inner face at z -2.16. greenhouse: building_greenhouse.glb floor +-3.28 (the dome), and the vestibule x +-1.0 from the door's inner face at z -4.46 to the dome. shelter (13 Nov): building_storm_shelter.glb, the bags' inside faces at x +-1.3, the back at z 1.25, the door frame's inner face at z -1.24. The doorway band is the hero's own radius either side of these lines",
   "hab1": [{"circle": [0, 0, 2.4]}],
   "greenhouse": [{"circle": [0, 0, 3.28]}, {"rect": [-1.0, -4.46, 1.0, -2.2]}],
   "shelter": [{"rect": [-1.3, -1.24, 1.3, 1.25]}]
