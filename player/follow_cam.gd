@@ -245,6 +245,11 @@ func _short(q: PhysicsShapeQueryParameters3D) -> float:
 func _feelers(root: Vector3, length: float) -> void:
 	soft = INF
 	tail = INF
+	# an arm of no length has nothing to feel with, and 0 times a cast's INF is not a number: in the eye at HAB 1's
+	# hatch (a thin thing in reach) `tail` and then the lens's place went NaN, and the view was sky from nowhere
+	# (15 Nov playtest: "where am I even on right now? sky?")
+	if length <= 0.001:
+		return
 	var space := get_world_3d().direct_space_state
 	var q := PhysicsShapeQueryParameters3D.new()
 	q.exclude = excluded
@@ -286,6 +291,8 @@ func _feelers(root: Vector3, length: float) -> void:
 ## it: a cast that starts inside a thing comes back with nonsense, and the lens sat in a lamp's mast). One wholly
 ## nearer the hero is passed. INF for none.
 func _thin(space: PhysicsDirectSpaceState3D, q: PhysicsShapeQueryParameters3D, root: Vector3, dir: Vector3, reach: float) -> float:
+	if reach <= 0.001:
+		return INF  # the arm is cut to nothing already: no stretch left to stop in (and 0 times INF is not a number)
 	var from := maxf(reach - float(t.thin_tail), 0.0)
 	var first := reach * _cast(space, q, root, dir * reach, THIN)
 	if first >= from:

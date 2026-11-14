@@ -40,6 +40,9 @@ func play() -> bool:
 	await frames(90)
 	var said: String = hud.snapshot().subtitle
 	check(pilot.hinted and said == hud.line("hint.autopilot") and hud.snapshot().bubble.keys == 1, "PIP teaches the pin, with the M key (said '%s')" % said)
+	# the hint goes by itself: it stayed up for good, even out of the rover (15 Nov playtest)
+	await frames(int(game.HINT_S * 60.0) + 30)
+	check(hud.bubble.line_id != "hint.autopilot" or not hud.bubble.visible, "and the hint is gone a few seconds later (%s)" % hud.snapshot().subtitle)
 	check(said.split(" ").size() <= 8, "in at most 8 words")
 	check(not pilot.driving() and absf(rover.v) < 0.01, "the old mark, set on foot, starts nothing aboard")
 

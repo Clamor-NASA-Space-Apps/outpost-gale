@@ -40,6 +40,14 @@ func play() -> bool:
 	var hatch: Vector3 = hab.to_global(Vector3(0.0, 0.0, -2.2)) - at
 	var off := absf(wrapf(atan2(-hatch.x, -hatch.z) - player.yaw, -PI, PI))
 	check(off < deg_to_rad(15.0), "facing the hatch (%.0f deg off)" % rad_to_deg(off))
+	# the view itself, at the real start: a camera that is nowhere drew sky from every side (15 Nov playtest)
+	var lens: Camera3D = root.get_viewport().get_camera_3d()
+	var from: Vector3 = at + Vector3.UP * float(player.cam.eye.y)
+	check(lens.global_position.is_finite() and lens.global_position.distance_to(from) < 0.6, "the view is from the hero's own eye in HAB 1 (lens at %s, eye at %s)" % [lens.global_position, from])
+	var ahead := Vector2(-lens.global_basis.z.x, -lens.global_basis.z.z).normalized().dot(Vector2(hatch.x, hatch.z).normalized())
+	check(ahead > 0.9, "and it looks at the hatch (%.2f)" % ahead)
+	await frames(120)
+	check(lens.global_position.is_finite() and is_finite(float(player.cam.dist)), "and it stays somewhere two seconds on (lens at %s, arm %s)" % [lens.global_position, player.cam.dist])
 	check(hab.get_meta("parts").any(func(p: Node3D) -> bool: return p.name == &"door"), "HAB 1 has its hatch")
 	# no script: a kid holds W, a real key, and walks out on their own; the clock runs from this frame
 	var clock: Node = game.clock

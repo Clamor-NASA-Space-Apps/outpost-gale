@@ -19,6 +19,7 @@ const Save := preload("res://sandbox/save.gd")
 # sky states: DESIGN.md and its DESIGN.<state>.md siblings, as token files; the sky clock blends them by the sun
 const SKIES := ["design", "design.sunset", "design.night", "design.storm"]
 const SKY_PHASES := ["noon", "dusk", "night", "storm"]  # where _sky(i) puts the clock: each key at its own look
+const HINT_S := 6.0  # s a one-off hint of PIP's stays up (the HUD's toast time; art direction)
 const VIEWS := {
 	# [from, at] in metres from the patch centre; heights are added from the ground
 	"base": [Vector3(27.772, 16, 21.925), Vector3(-2.601, 0, -3.638)],
@@ -322,6 +323,20 @@ func _warn(st: Dictionary) -> void:
 			warned[key] = true
 			beats.aside(id)
 			return  # one at a time: the next comes on the next state
+
+
+## A one-off hint from PIP outside the beats (the helmet lights, the autopilot): said, then gone by itself. Left to
+## hud.say() alone it stayed for good, since only the next line clears the bubble and free play has none (15 Nov
+## playtest: the autopilot's line still up after getting out of the rover). The step's own line comes back after it.
+func _hint(id: String, keys: Array) -> void:
+	hud.say(id, {"keys": keys})
+	await get_tree().create_timer(HINT_S, false, true).timeout
+	if hud.bubble.line_id != id:
+		return  # PIP has said something else since
+	if beats.beat.has("line"):
+		hud.say(beats.beat.line, {"keys": beats.beat.get("keys", []), "fact": beats.beat.get("fact", false)})
+	else:
+		hud.clear_line()
 
 
 ## A menu or an overlay is up: the cursor is the player's, and a click does not capture it (follow_cam.may_capture).
@@ -663,7 +678,7 @@ func _wire() -> void:
 	player.lamps_changed.connect(func(on: bool, auto: bool) -> void:
 		if on and auto and not lamp_hinted:
 			lamp_hinted = true
-			hud.say("hint.suit_lights", {"keys": ["H"]}))
+			_hint("hint.suit_lights", ["H"]))
 	beats.skip_sols.connect(func(n: int) -> void: hud.show_ledger(sim.skip_sols(n)))
 	hud.ledger_closed.connect(func() -> void: beats.notify("ledger_closed"))
 	# the rover's autopilot (sandbox/rover_pilot.gd): a mark set aboard is where it drives, a cleared one hands the
@@ -681,7 +696,7 @@ func _wire() -> void:
 		await get_tree().create_timer(1.0, false, true).timeout  # a beat may answer the boarding with a trip (Sol 9)
 		if player.vehicle and not cine.busy() and not auto.hinted:
 			auto.hinted = true
-			hud.say("hint.autopilot", {"keys": ["M"]}))
+			_hint("hint.autopilot", ["M"]))
 	# the opening plays when a person starts the game (through ui/boot.tscn), never in a test script (no current
 	# scene) or a tool run (--forge-job)
 	if not resume.is_empty():
