@@ -38,6 +38,11 @@ static func amount(key: String, v: float) -> String:
 	return plus + num(v) + (" " + k[2] if k[2] else "")
 
 
+## "18 m", or "8.8 km" from a kilometre on: a distance as the waypoints and the compass say it.
+static func distance(m: float) -> String:
+	return "%d m" % roundi(m) if m < 1000.0 else "%s km" % String.num(m / 1000.0, 1)
+
+
 ## One decimal below 100 ("16.7", "2.4"), whole numbers above, and no ".0".
 static func num(v: float) -> String:
 	return String.num(v, 0 if absf(v) >= 100.0 else 1).trim_suffix(".0")

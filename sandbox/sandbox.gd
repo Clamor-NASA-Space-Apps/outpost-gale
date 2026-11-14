@@ -66,6 +66,7 @@ var trip_km := 8.8  # the last rover trip's distance, for its title card and the
 var lamp_hinted := false  # PIP explains the helmet lights once, the first time they come on by themselves
 var offers := {}  # data/beats.json `offers`: what each choice card holds and which rules it sets
 var lost := false  # a meter ran out: the mission-lost card is up and the rules stop
+var beacon: MeshInstance3D  # the kid's map mark in the world: a pillar of the DESIGN.md `light` role, seen from afar
 var deadline := {}  # data/sols.json `deadline`: PIP's warnings while a sol's tasks run late
 var warned := {}  # "<woke sol>:<line id>" -> true: each warning once a day
 
@@ -458,6 +459,31 @@ func _wire() -> void:
 	hud.bind(sim)
 	hud.bind_view(player.cam.lens, player.body)
 	player.cam.may_capture = func() -> bool: return not overlay()
+	# the kid's own map mark (ui/components/full_map.gd): a beacon in the world, and an event for the beats
+	beacon = MeshInstance3D.new()
+	beacon.name = "MarkBeacon"
+	var pillar := CylinderMesh.new()
+	pillar.top_radius = 0.12
+	pillar.bottom_radius = 0.12
+	pillar.height = 40.0  # over the habitats and the crater's dust from across the base (art direction)
+	pillar.radial_segments = 8
+	beacon.mesh = pillar
+	beacon.material_override = Forge.HouseStyle.role(design, "light")
+	beacon.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	beacon.visible = false
+	world.add_child(beacon)
+	hud.marked.connect(func(at: Variant, id: String) -> void:
+		beacon.visible = at != null
+		if at == null:
+			return
+		var p: Vector2 = at
+		var half := float(world.data.play_half)
+		var ground: float = world.height_at(p.x, p.y) if absf(p.x) < half and absf(p.y) < half else 0.0
+		beacon.global_position = Vector3(p.x, ground + pillar.height * 0.5, p.y)
+		beacon.visible = absf(p.x) < half and absf(p.y) < half  # a far site is beyond the camera's reach: the compass points
+		beats.notify("waypoint_set")
+		if id != "":
+			beats.notify("waypoint_set:" + id))
 	if pip:
 		hud.bind_speaker(pip, player.cam.lens)
 	hud.cue.connect(audio.ui)

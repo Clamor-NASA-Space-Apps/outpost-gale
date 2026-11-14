@@ -12,6 +12,7 @@ signal retry
 signal ledger_closed
 signal cue(name: String)  # a HUD sound: audio.ui(name)
 signal map_toggled(open: bool)
+signal marked(at: Variant, id: String)  # the kid's own map mark set (world x, z; a place id or "") or cleared (null)
 signal dismissed(line_id: String)  # a fact line (say(id, {fact = true})) closed by Enter or a tap
 
 const Hud := preload("res://ui/hud.gd")
@@ -55,6 +56,10 @@ var _tasks_out: Tween  # the finished list leaving, then the next one coming in
 var compass: Control
 var minimap: Control
 var waypoint: Control
+var marker: Control  # the kid's own map mark: a light ring, apart from PIP's amber objective
+var mark = null  # its world x, z, or null
+var mark_id := ""  # the place it names, "" for open ground
+const MARK_REACH_M := 4.0  # within this the mark is reached and clears itself
 var prompt: Control
 var full_map: Control  # open while the full map shows, else null
 var camera: Camera3D
@@ -157,6 +162,12 @@ func _ready() -> void:
 	compass.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	compass.hide()  # shown once a camera is bound (bind_view)
 	waypoint = _scene("waypoint", self)
+	marker = load("res://ui/components/waypoint.tscn").instantiate()
+	marker.shape = "ring"
+	marker.tint = "light"
+	marker.glow = "hud-glow"
+	marker.dist_style = "HudNum"
+	add_child(marker)
 	bubble = _scene("speech_bubble", self)
 	bubble.dismissed.connect(func(id: String) -> void: dismissed.emit(id))  # over the whole screen: it follows PIP, or docks at an edge
 	waypoint.avoid = bubble.panel
@@ -178,6 +189,7 @@ func _ready() -> void:
 	# (layers 100 apart: a layer's panels, shapes and every font rank fit under the next; 0 is under them all)
 	Hud.layer(self, 1)
 	Hud.layer(waypoint, 101)
+	Hud.layer(marker, 101)
 	Hud.layer(bubble, 101)
 	Hud.layer(modal, 201)
 
@@ -307,6 +319,7 @@ func bind_view(cam: Camera3D, body: Node3D) -> void:
 	camera = cam
 	hero = body
 	waypoint.follow(cam, body)
+	marker.follow(cam, body)
 	compass.show()
 
 
@@ -436,6 +449,7 @@ func open_map() -> void:
 	full_map.touch = touch
 	_map_marks()
 	full_map.closed.connect(close_map)
+	full_map.marked.connect(func(at: Variant, id: String, label: String) -> void: set_mark(at, id, label))
 	add_child(full_map)
 	Hud.layer(full_map, 301)
 	_take_pointer()  # the map is used with the pointer
@@ -459,6 +473,25 @@ func _map_marks() -> void:
 		full_map.yaw = Hud.bearing(-hero.global_transform.basis.z)
 	full_map.pip = Vector2(pip.global_position.x, pip.global_position.z) if pip else null
 	full_map.objective = _objective_xz()
+	full_map.mark = mark
+	full_map.mark_id = mark_id
+
+
+## The kid's own waypoint, from a tap on the map: one at a time, on the compass with its distance, at the screen's
+## edge when off screen, and (through `marked`, the root) as a beacon in the world. null clears it.
+func set_mark(at: Variant, id := "", label := "") -> void:
+	mark = at
+	mark_id = id if at != null else ""
+	if at == null:
+		marker.hide()
+	else:
+		marker.point(Vector3(at.x, hero.global_position.y if hero else 0.0, at.y), label)
+		_cue("objective_new")
+	if full_map:
+		full_map.mark = mark
+		full_map.mark_id = mark_id
+		full_map.refresh()
+	marked.emit(at, mark_id)
 
 
 func _input(e: InputEvent) -> void:
@@ -673,10 +706,15 @@ func _follow_view() -> void:
 	var at := hero.global_position
 	var obj = _objective_xz()
 	var p = Vector2(pip.global_position.x, pip.global_position.z) if pip else null
+	if mark != null and Vector2(at.x, at.z).distance_to(mark) < MARK_REACH_M:
+		_cue("objective_done")
+		set_mark(null)  # reached
 	compass.heading = heading
 	compass.marks = {"objective": Hud.bearing(Vector3(obj.x - at.x, 0, obj.y - at.z)) if obj != null else null,
-		"pip": Hud.bearing(Vector3(p.x - at.x, 0, p.y - at.z)) if p != null else null}
-	minimap.show_view(heading, {"x": at.x, "z": at.z, "yaw": Hud.bearing(-hero.global_transform.basis.z)}, {"objective": obj, "pip": p}, _area(at))
+		"pip": Hud.bearing(Vector3(p.x - at.x, 0, p.y - at.z)) if p != null else null,
+		"mark": Hud.bearing(Vector3(mark.x - at.x, 0, mark.y - at.z)) if mark != null else null}
+	compass.mark_text = Hud.distance(Vector2(at.x, at.z).distance_to(mark)) if mark != null else ""
+	minimap.show_view(heading, {"x": at.x, "z": at.z, "yaw": Hud.bearing(-hero.global_transform.basis.z)}, {"objective": obj, "pip": p, "mark": mark}, _area(at))
 
 
 ## The area under the minimap: a field site's name when the hero is at one (world.json `sites`), else the base's plain.
@@ -702,6 +740,7 @@ func snapshot() -> Dictionary:
 		"tasks": tasks.tasks if tasks.visible else [],
 		"prompt": prompt.line.text if prompt.visible else "",
 		"map": full_map != null,
+		"mark": {"id": mark_id, "label": marker.place, "m": marker.metres(), "compass": compass.mark_text} if mark != null else {},
 		"alert": toast.title if toast.visible else "",
 		"mail": {"sent": mail.sent_label.text, "reply": mail.reply_label.text, "minutes": snappedf(mail.minutes, 0.1)} if mail.visible else {},
 		"card": String(card.name) if card else "",

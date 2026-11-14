@@ -286,6 +286,7 @@ func _hud_parts(h: Control, cues: Array[String]) -> void:
 	check(h.map_open() and h.snapshot().map, "M opens the full map")
 	var lbl: Array = h.full_map.find_children("*", "Label", true, false).map(func(l: Label) -> String: return l.text)
 	check("Mont Mercou  8.8 km" in lbl and "Curiosity  14.3 km" in lbl and "ARCHIVED" in lbl, "the map names the field sites with their real distances: %s" % [lbl])
+	await _far_cry_map(h)
 	action(&"ui_cancel")
 	action(&"ui_cancel", false)
 	await process_frame
@@ -312,8 +313,9 @@ func _hud_parts(h: Control, cues: Array[String]) -> void:
 	h.show_ledger({"sols": 1})
 	h.close_card()
 	h.bubble.hide()
+	# the objective_new inside the map: the kid's own mark set there (_far_cry_map)
 	# the second tick: the rest itself ticked done (the day's list leaving ticks inside the first one's 0.15 s window)
-	var want_cues := ["objective_new", "objective_new", "task_tick", "task_tick", "map_open", "map_close", "objective_new", "objective_done", "pip_open", "choice_open", "choice_made", "ledger_open"]
+	var want_cues := ["objective_new", "objective_new", "task_tick", "task_tick", "map_open", "objective_new", "map_close", "objective_new", "objective_done", "pip_open", "choice_open", "choice_made", "ledger_open"]
 	check(cues == want_cues, "each HUD event plays its cue once:\n  got  %s\n  want %s" % [cues, want_cues])
 	var audio: Script = load("res://audio/audio.gd")
 	for n: String in want_cues + ["mail", "alert", "danger", "tick", "select"]:
@@ -441,6 +443,60 @@ func _pip_away(h: Control) -> void:
 	h.clear_objective()
 	for n: Node in [cam, body, pip]:
 		n.queue_free()
+
+
+## The map, Far Cry style (Ravindu, 14 Nov): one view from the crater to the base, zoom clamped at both ends, a drag
+## pans, a click on a place's label marks it (the same input a finger or a mouse gives), a second click on the mark
+## clears it, and the compass carries the mark's distance.
+func _far_cry_map(h: Control) -> void:
+	var fm: Control = h.full_map
+	await process_frame
+	await process_frame
+	var mid: Vector2 = fm.view.size * 0.5
+	fm.zoom_at(1e6, mid)
+	check(is_equal_approx(fm.zoom, fm.ZOOM_MAX), "zooming in stops at %.1f px a metre (%.2f)" % [fm.ZOOM_MAX, fm.zoom])
+	fm.zoom_at(1e-6, mid)
+	check(is_equal_approx(fm.zoom, fm.zoom_min()) and fm.zoom_min() * 192000.0 < fm.view.size.x * 1.05, "zooming out stops with the whole crater in view (%.4f)" % fm.zoom)
+	await process_frame
+	var far: Array = fm.labels.map(func(l: Array) -> String: return l[0])
+	check("mercou" in far and "sharp" in far and not "greenhouse" in far, "zoomed out: the crater's places, not the base's (%s)" % [far])
+	fm.recenter()
+	await process_frame
+	var near: Array = fm.labels.map(func(l: Array) -> String: return l[0])
+	check("solar" in near and "greenhouse" in near, "at the base: its places (%s)" % [near])
+	var c0: Vector2 = fm.center
+	var press: Vector2 = fm.view.get_global_transform_with_canvas() * mid
+	for e: InputEvent in _drag_events(press, press + Vector2(60, 0)):
+		send(e)
+	await process_frame
+	check(fm.center.x < c0.x - 10.0 and fm.mark == null, "a drag pans the map and marks nothing (%.0f to %.0f)" % [c0.x, fm.center.x])
+	fm.recenter()
+	await process_frame
+	var at = fm.screen_of("solar")
+	click(at)
+	await process_frame
+	await process_frame
+	check(h.mark != null and h.mark_id == "solar" and h.snapshot().mark.label == "Solar farm", "a click on Solar farm marks it (%s)" % [h.snapshot().get("mark")])
+	check(String(h.snapshot().mark.compass).ends_with(" m") and h.compass.marks.mark != null, "the compass shows the mark and its distance (%s)" % h.snapshot().mark.compass)
+	click(fm.view.get_global_transform_with_canvas() * fm.to_view(fm.mark))
+	await process_frame
+	check(h.mark == null and h.snapshot().mark.is_empty(), "a second click on the mark clears it")
+
+
+func _drag_events(from: Vector2, to: Vector2) -> Array[InputEvent]:
+	var k := root.get_final_transform()
+	var down := InputEventMouseButton.new()
+	down.button_index = MOUSE_BUTTON_LEFT
+	down.pressed = true
+	down.position = k * from
+	var move := InputEventMouseMotion.new()
+	move.position = k * to
+	move.relative = to - from
+	move.button_mask = MOUSE_BUTTON_MASK_LEFT
+	var up := InputEventMouseButton.new()
+	up.button_index = MOUSE_BUTTON_LEFT
+	up.position = k * to
+	return [down, move, up]
 
 
 ## Each card at the width of a 360 dp phone: it asks for no more, and nothing in it spills past its edge.

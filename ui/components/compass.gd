@@ -15,6 +15,7 @@ var heading := 208.0:
 	set(v):
 		heading = fposmod(v, 360.0)
 		_redraw()
+var mark_text := ""  # the kid's map mark's distance ("120 m"), under its ring on the tape
 var marks := {"objective": 244.0, "pip": 190.0}:
 	set(v):
 		marks = v
@@ -79,7 +80,13 @@ func _draw() -> void:
 			continue
 		var off := wrapf(float(marks[m]) - heading, -180.0, 180.0)
 		var x := clampf(mid + off * PX_PER_DEG, 6.0, TAPE.x - 6.0)  # past the tape's end it waits at the edge
-		Hud.blit_at(self, "diamond" if m == "objective" else "dot", Vector2(x, 2.0), 11.0 if m == "objective" else 8.0, Hud.color("primary" if m == "objective" else "accent"))
+		match m:
+			"objective":
+				Hud.blit_at(self, "diamond", Vector2(x, 2.0), 11.0, Hud.color("primary"))
+			"mark":
+				Hud.blit_at(self, "ring", Vector2(x, 2.0), 12.0, Hud.color("light"))
+			_:
+				Hud.blit_at(self, "dot", Vector2(x, 2.0), 8.0, Hud.color("accent"))
 	# the caret under the middle
 	Hud.blit_at(self, "caret", Vector2(mid, TAPE.y + 7.5), 12.0, Hud.color("light"))
 
@@ -103,6 +110,9 @@ func _draw_numbers() -> void:
 			var col := Hud.color("hud-ink-dim")
 			col.a *= t[2]
 			_text(numbers, f, fs, str(t[0]), Vector2(t[1], 29), col)
+	if marks.get("mark") != null and mark_text != "":
+		var x := clampf(TAPE.x * 0.5 + wrapf(float(marks.mark) - heading, -180.0, 180.0) * PX_PER_DEG, 24.0, TAPE.x - 24.0)
+		_text(numbers, f, fs, mark_text, Vector2(x, TAPE.y + 26.0), Hud.color("light"))
 
 
 ## Text centred on x, its baseline at y, with the HUD's dark edge so it reads over a bright sky: the words 8 times,

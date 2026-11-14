@@ -23,6 +23,11 @@ var name_label: Label
 var dist_label: Label
 var avoid: Control  # PIP's bubble panel: the label steps clear of it (game_hud sets it)
 var stacked := false  # the label stepped over the bubble: the bubble's arrow points the way, the dot rides the label
+# its look: PIP's objective is an amber diamond; the kid's own map mark is a light ring (game_hud.gd marker)
+var shape := "diamond"
+var tint := "primary"
+var glow := "hud-glow-amber"
+var dist_style := "HudNumAmber"
 
 
 func _ready() -> void:
@@ -30,7 +35,7 @@ func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	set_meta("shapes", true)
 	name_label = Hud.label("", "HudText")
-	dist_label = Hud.label("", "HudNumAmber")
+	dist_label = Hud.label("", dist_style)
 	tag = Hud.panel("HudPanel", Hud.row([name_label, dist_label], 6))
 	tag.name = "Waypoint"
 	add_child(tag)
@@ -73,7 +78,7 @@ func _process(_delta: float) -> void:
 func _place() -> void:
 	if node and is_instance_valid(node):
 		target = node.global_position
-	dist_label.text = "%d m" % metres()
+	dist_label.text = Hud.distance(metres())
 	tag.size = tag.get_combined_minimum_size()
 	if camera == null:
 		return
@@ -100,15 +105,15 @@ func _draw() -> void:
 	var r := Rect2(tag.position, tag.size)
 	if docked and stacked:
 		var dot := Vector2(r.position.x - DOT * 0.5, r.get_center().y)
-		Hud.blit_at(self, "glow_dot", dot, DOT, Hud.color("hud-glow-amber"))
-		Hud.blit_at(self, "diamond", dot, 13.0, Hud.color("primary"))
+		Hud.blit_at(self, "glow_dot", dot, DOT, Hud.color(glow))
+		Hud.blit_at(self, shape, dot, 13.0, Hud.color(tint))
 		return
 	if docked:
 		var edge := r.get_center() + dir * (minf(r.size.x / maxf(absf(dir.x), 1e-4), r.size.y / maxf(absf(dir.y), 1e-4)) * 0.5)
-		Hud.blit_at(self, "arrow", edge + dir * ARROW * 0.5, ARROW * 1.4, Hud.color("primary"), dir.angle())
+		Hud.blit_at(self, "arrow", edge + dir * ARROW * 0.5, ARROW * 1.4, Hud.color(tint), dir.angle())
 		var dot := edge + dir * (ARROW + DOT * 0.5)
-		Hud.blit_at(self, "glow_dot", dot, DOT, Hud.color("hud-glow-amber"))
-		Hud.blit_at(self, "diamond", dot, 13.0, Hud.color("primary"))
+		Hud.blit_at(self, "glow_dot", dot, DOT, Hud.color(glow))
+		Hud.blit_at(self, shape, dot, 13.0, Hud.color(tint))
 		return
-	Hud.blit_at(self, "glow_dot", anchor, 26.0, Hud.color("hud-glow-amber"))
-	Hud.blit_at(self, "diamond", anchor, 13.0, Hud.color("primary"))
+	Hud.blit_at(self, "glow_dot", anchor, 26.0, Hud.color(glow))
+	Hud.blit_at(self, shape, anchor, 13.0, Hud.color(tint))

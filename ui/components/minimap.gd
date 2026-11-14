@@ -103,6 +103,8 @@ func _draw_marks(c: Control) -> void:
 		Hud.blit_at(c, "diamond", o + to_disc(marks.objective, r - 8.0), 11.0, Hud.color("primary"))
 	if marks.get("pip") != null:
 		Hud.blit_at(c, "dot", o + to_disc(marks.pip, r - 6.0), 8.0, Hud.color("accent"))
+	if marks.get("mark") != null:
+		Hud.blit_at(c, "ring", o + to_disc(marks.mark, r - 8.0), 12.0, Hud.color("light"))
 	# the hero: an arrow at the middle, pointing where the hero faces against where the camera looks
 	Hud.blit_at(c, "hero", o, 19.0, Hud.color("light"), deg_to_rad(float(hero.yaw) - heading))
 
