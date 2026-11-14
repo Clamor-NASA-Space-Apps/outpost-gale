@@ -329,10 +329,19 @@ func shot(name: String, _args := {}) -> void:
 		return
 	var c: Dictionary = cfg.shots[name]
 	_begin(name)
+	if c.get("mouse", false):
+		await _mouse_look(c)
+		_end()
+		shot_done.emit(name)
+		return
 	var from: Camera3D = _prev if is_instance_valid(_prev) else player.cam.lens
 	var home := {"eye": from.global_position, "rot": from.global_basis.get_rotation_quaternion(), "fov": from.fov,
 		"shift": float(from.get("shift")) if "shift" in from else 0.0}
-	_freeze([player, null if c.get("pip_moves", false) else game.pip])
+	# hero_moves: the hero walks on during the shot (the beats steer it), and the shot ends on the play camera's live
+	# pose (to_play), so it hands over without a snap wherever the walk took the hero
+	_freeze([null if c.get("hero_moves", false) else player, null if c.get("pip_moves", false) else game.pip])
+	var showed: bool = player.cam.show_body
+	player.cam.show_body = true  # this camera films the body, even while the play lens sits in the head
 	_take_clock()
 	if c.has("music"):
 		audio.music(c.music, audio.cue != c.music)  # the dawn cue may already be on from the door (audio.wake())
@@ -360,8 +369,8 @@ func shot(name: String, _args := {}) -> void:
 	var step := func(k: float) -> void:
 		var poses := [home]
 		for key: Dictionary in c.keys:
-			poses.append(_key(key))  # every frame: PIP may be moving
-		poses.append(home)
+			poses.append(home if key.get("hold", false) else _key(key))  # every frame: PIP may be moving
+		poses.append(_lens() if c.get("to_play", false) else home)
 		var lin := k * total
 		var j := 0
 		while j < cuts.size() - 2 and lin >= ts[cuts[j + 1]]:
@@ -373,6 +382,13 @@ func shot(name: String, _args := {}) -> void:
 		_events(c, lin, fired)
 		if c.get("arm", false) and k < 1.0:  # like the play camera's spring arm: never behind a wall from the hero
 			cam.global_position = _clear(cam.global_position)
+		if c.get("hero_moves", false):
+			# the body fades as one by this camera's gap to it, as the play lens fades it (follow_cam.gd): runs after
+			# the physics step set the lens's fade and before player.gd applies it
+			var fc: Node3D = player.cam
+			var p: Vector3 = fc.target.global_transform.affine_inverse() * cam.global_position
+			var gap := p.distance_to(p.clamp(fc.shell.position, fc.shell.end))
+			fc.fade = smoothstep(float(fc.t.fade_near), float(fc.t.fade_far), gap) if k < 1.0 else fc.fade
 		if lapse:
 			var s := k * total
 			var b := float(rise.break_s)
@@ -382,6 +398,7 @@ func shot(name: String, _args := {}) -> void:
 	await _run(total, step)
 	_thaw()
 	_give_clock()
+	player.cam.show_body = showed
 	_title.hide()
 	_title.modulate.a = 1.0
 	cam.near = near
@@ -389,6 +406,41 @@ func shot(name: String, _args := {}) -> void:
 	cam.fov = float(cfg.fov)
 	_end()
 	shot_done.emit(name)
+
+
+## A shot made the way a player's own mouse makes it (look_around, Ravindu's video of 14 Nov 10:09): the play camera
+## itself turns through `turn_deg` (positive turns left, as a mouse dragged left) in `turn_s` at a steady speed eased
+## in and out over `ease` of the turn, pitched up `pitch_deg` meanwhile, so its own collision, distance from the pitch
+## and framing apply. It holds `hold_s` first (while the view tilts up) and ends where it started, input locked.
+func _mouse_look(c: Dictionary) -> void:
+	var fc: Node3D = player.cam
+	var allowed: Array = player.allowed.duplicate()
+	player.allow(["none"])
+	_take_clock()
+	var yaw0: float = fc.yaw
+	var pitch0: float = fc.pitch
+	var up := deg_to_rad(float(c.pitch_deg))
+	var hold := float(c.hold_s)
+	var turn := float(c.turn_s)
+	var f := float(c.ease)
+	var total := hold + turn
+	await _run(total, func(k: float) -> void:
+		var s := k * total
+		var u := clampf((s - hold) / turn, 0.0, 1.0)
+		# a steady speed with eased ends: the speed ramps up over the first `f` of the turn and down over the last
+		var e := u * u / (2.0 * f * (1.0 - f)) if u < f else (1.0 - (1.0 - u) * (1.0 - u) / (2.0 * f * (1.0 - f)) if u > 1.0 - f else (u - f / 2.0) / (1.0 - f))
+		var yaw: float = yaw0 + deg_to_rad(float(c.turn_deg)) * e
+		var tilt := smoothstep(0.0, hold, s) * (1.0 - smoothstep(1.0 - f, 1.0, u))
+		var pitch: float = lerpf(pitch0, up, tilt)
+		fc.look(-rad_to_deg(yaw - fc.yaw), rad_to_deg(fc.pitch - pitch)))
+	_give_clock()
+	player.allow(allowed)
+
+
+## The play camera's pose now, as a shot key.
+func _lens() -> Dictionary:
+	var l: Camera3D = player.cam.lens
+	return {"eye": l.global_position, "rot": l.global_basis.get_rotation_quaternion(), "fov": l.fov, "shift": float(l.shift)}
 
 
 ## A shot's timed extras at `s` seconds in: `title` [in, out, fade] (cine_title from data/lines.json, faded in and out),
@@ -481,7 +533,7 @@ func _key(key: Dictionary) -> Dictionary:
 	if key.has("orbit"):  # the play camera's own place: behind the hero, away from what it looks at
 		var to: Vector3 = _at(key.look) - player.body.global_position
 		eye = player.body.global_position + Vector3.UP * float(key.orbit[1]) - Vector3(to.x, 0.0, to.z).normalized() * float(key.orbit[0])
-	if key.has("orbit") or key.eye[0] in ["hero", "sun"]:
+	if key.has("orbit") or key.eye[0] in ["hero", "sun", "body"]:
 		eye = _clear(eye)
 	return {"eye": eye, "rot": Basis.looking_at(_at(key.look) - eye).get_rotation_quaternion(),
 		"fov": float(key.get("fov", cfg.fov)), "shift": 0.0}
@@ -492,6 +544,8 @@ func _at(r: Array) -> Vector3:
 	match r[0]:
 		"hero":  # the hero's feet, turned the way the play camera faces (-Z ahead, +Z back toward the lens)
 			return player.body.global_position + Basis(Vector3.UP, player.cam.yaw) * o
+		"body":  # the hero's feet, turned the way the hero faces (-Z ahead, +Z behind)
+			return player.body.global_position + Basis(Vector3.UP, player.yaw) * o
 		"sun":  # the hero's feet, turned to the rising sun's bearing (-Z toward the sun)
 			return player.body.global_position + Basis(Vector3.UP, _sun_yaw) * o
 		"ground":

@@ -10,7 +10,7 @@ extends "res://addons/forge/test.gd"
 ## at the hero's pace without being caught, and is let go at the end.
 
 # s each beat may take here: its own wait plus the walking
-const BUDGET := {"wake": 4, "hatch": 3, "walk_out": 20, "face_dawn": 12, "outside": 22, "pip_hello": 32, "walk_to_me": 20,
+const BUDGET := {"wake": 4, "hatch": 3, "walk_out": 20, "turn_out": 15, "outside": 4, "pip_hello": 14, "walk_to_me": 20,
 	"side_steps": 60, "back_step": 4, "look_shot": 4, "look_mouse": 6, "try_jump": 4, "jump_fact": 6, "hurry": 10,
 	"lift": 40, "lift_fact": 2, "set_down": 10, "map": 2, "map_close": 2, "follow_solar": 120, "sun_fact": 2, "o2_visit": 120,
 	"o2_fact": 2, "garden_visit": 180, "lamps_fact": 2, "choice": 2}
@@ -69,31 +69,65 @@ func play() -> bool:
 		if part.name == &"door":
 			hatch_it = game.interactions.by_thing.get(part)
 	check(hatch_it != null and not hatch_it.open, "HAB 1 has a shut outer hatch")
+	# the real step_out shot, asked for the moment the hatch beat ends
+	beats.shot.connect(func(n: String) -> void:
+		if n == "step_out":
+			cine.shot(n))
+	cine.shot_done.connect(func(n: String) -> void: beats.notify("shot_done:" + n))
 	await _beat("wake")
 	await _beat("hatch")
 	check(hatch_it != null and hatch_it.open, "the hatch opens on the dawn")
 
-	# the real dawn shot (asked for the moment the walk ends): it holds the clock and runs it to the sunrise
-	beats.shot.connect(func(n: String) -> void:
-		if n == "dawn_reveal":
-			cine.shot(n))
-	cine.shot_done.connect(func(n: String) -> void: beats.notify("shot_done:" + n))
+	# animation #1: the real step_out shot follows the hero out of the hatch and lands on the play camera
 	# the walk out is the hero's own: the kid's keys do nothing, the controller walks at walk speed
 	var at: Vector3 = player.body.global_position
 	var top := [0.0]
 	var tried := [0]
-	await _beat("walk_out", func() -> void:
+	var space := world.get_world_3d().direct_space_state
+	var ball := PhysicsShapeQueryParameters3D.new()
+	ball.shape = SphereShape3D.new()
+	ball.shape.radius = 0.15
+	ball.exclude = [player.body.get_rid()]
+	var cam_log := {"last": Vector3.INF, "bad": "", "jump": 0.0, "frames": 0, "end": Transform3D()}
+	var film := func() -> void:
 		top[0] = maxf(top[0], player.moved)
+		var c3: Camera3D = root.get_camera_3d()
+		if c3 != cine.cam:
+			return
+		var p: Vector3 = c3.global_position
+		cam_log.frames += 1
+		cam_log.end = c3.global_transform
+		ball.transform = Transform3D(Basis(), p)
+		if cam_log.bad == "" and not space.intersect_shape(ball, 1).is_empty():
+			cam_log.bad = "inside a solid at %s" % p
+		if cam_log.last != Vector3.INF:
+			cam_log.jump = maxf(cam_log.jump, p.distance_to(cam_log.last))
+			var ray := PhysicsRayQueryParameters3D.create(cam_log.last, p)
+			ray.exclude = ball.exclude
+			if cam_log.bad == "" and p.distance_to(cam_log.last) > 0.001 and not space.intersect_ray(ray).is_empty():
+				cam_log.bad = "through a solid from %s to %s" % [cam_log.last, p]
+		cam_log.last = p
+	await _beat("walk_out", func() -> void:
+		film.call()
 		tried[0] += 1
 		if tried[0] == 30:
 			action(&"move_back", true)  # a kid pulling back: the walk goes on
 		elif tried[0] == 60:
 			action(&"move_back", false))
 	check(player.body.global_position.distance_to(at) > 5.0, "the hero walked out on its own (%.1f m)" % player.body.global_position.distance_to(at))
-	await _beat("face_dawn")
-	var sun: Vector3 = load("res://addons/forge/house_style.gd").sun_at(clock._C, clock.hour())
-	var facing := Vector2(-sin(player.yaw), -cos(player.yaw)).dot(Vector2(sun.x, sun.z).normalized())
-	check(facing > cos(deg_to_rad(25.0)), "the hero ends facing the sunrise (%.2f)" % facing)
+	check(root.get_camera_3d() == cine.cam, "the step_out shot films the walk")
+	await _beat("turn_out", film)
+	check(root.get_camera_3d() == player.cam.lens, "the play camera has the view after the shot")
+	check(cam_log.bad == "", "the shot's camera never enters or crosses a solid: %s" % cam_log.bad)
+	check(cam_log.jump < 0.25, "and never jumps between frames (%.2f m at most in a frame)" % cam_log.jump)
+	await frames(1)
+	var lens: Camera3D = player.cam.lens
+	check(lens.global_position.distance_to(cam_log.end.origin) < 0.1, "it hands over at the play camera's own pose (%.2f m off)" % lens.global_position.distance_to(cam_log.end.origin))
+	# the end frame: the hatch on the left, the rover ahead on the right, PIP in view
+	var right := lens.global_basis.x
+	var hatch_at: Vector3 = world.items.hab1.to_global(Vector3(0.0, 1.0, -2.2))
+	check((hatch_at - lens.global_position).dot(right) < 0.0, "HAB 1's hatch is on the left of the end frame")
+	check((world.items.rover.global_position - lens.global_position).dot(right) > 0.0 and lens.is_position_in_frustum(world.items.rover.global_position), "the rover is ahead on the right")
 	check(top[0] > player.walk * 0.8 and top[0] < player.walk * 1.15, "at walk speed (%.2f of %.2f m/s)" % [top[0], player.walk])
 	check(not player.touch.stick.visible, "the touch stick stays hidden: the kid is not steering")
 	check(player.allowed == ["none"], "input is blocked again after the walk (%s)" % [player.allowed])
@@ -101,13 +135,12 @@ func play() -> bool:
 	await _beat("outside")
 	await frames(30)
 	check(not hatch_it.open, "the hatch shut behind the hero")
-	check(cine.sun_clear(clock.hour(), rim_eye.call()) > 1.0, "the sun has risen over the rim when the shot hands back (%.2f deg)" % cine.sun_clear(clock.hour(), rim_eye.call()))
-	check(pip.global_position.distance_to(player.body.global_position) < 3.0, "PIP rolled up beside the hero during the wide (%.1f m)" % pip.global_position.distance_to(player.body.global_position))
-	check(clock.pinned, "and the look holds there until the lessons let it run")
+	check(clock.pinned, "the look holds until the lessons let it run")
+	check(lens.is_position_in_frustum(pip.global_position + Vector3.UP * 0.3), "PIP is in view, ahead of the hero (at %.1f, %.1f)" % [pip.global_position.x, pip.global_position.z])
 	var lessons: Array = beats.data.opening.map(func(b: Dictionary) -> String: return b.id)
-	check(lessons.slice(0, 6) == ["wake", "hatch", "walk_out", "face_dawn", "outside", "pip_hello"], "control returns with PIP's hello (%s)" % [lessons.slice(0, 6)])
-	await _beat("pip_hello", _answer.bind("focus_pip"))
-	check(pip.reached[-1] == "order", "PIP rolled up to its spot before the beat ended")
+	check(lessons.slice(0, 6) == ["wake", "hatch", "walk_out", "turn_out", "outside", "pip_hello"], "control returns with PIP's hello (%s)" % [lessons.slice(0, 6)])
+	await _beat("pip_hello")
+	check(pip.reached[-1] == "order", "PIP rolled up to its spot before the hello")
 	check(targets.has("pip") and tasks.has("task.meet_pip"), "PIP is the objective and meeting it the task (%s, %s)" % [targets, tasks])
 	await _beat("walk_to_me", func() -> void: _steer(pip.global_position, 2.0))
 	_stop()
@@ -175,19 +208,26 @@ func play() -> bool:
 	await _beat("jump_fact", func() -> void: beats.notify("dismissed"))
 
 	# hurry somewhere open, then the bag
+	var east := [false]  # east of the bags first: from the hatch side they and the sample box are in the way
 	await _beat("hurry", func() -> void:
 		if not Input.is_action_pressed(&"hurry"):
 			action(&"hurry", true)
-		_steer(_ground(8.0, 14.0)))
+		east[0] = east[0] or player.body.global_position.x > 6.0
+		_steer(_ground(8.0, 14.0) if east[0] else _ground(6.5, 5.5)))
 	action(&"hurry", false)
 	_stop()
+	var round_by := [false]  # via open ground south of the bags: from the rover's side the sample box is in the way
 	await _beat("lift", func() -> void:
 		var bag := _nearest_bag()
 		var t: Node = game.interactions.target
+		var via := _ground(3.3, 9.3)
+		round_by[0] = round_by[0] or _flat(via, player.body.global_position) < 0.6
 		if t and t.kind == "bag":
 			_stop()
 			action(&"interact", true)
 			action(&"interact", false)
+		elif not round_by[0]:
+			_steer(via)
 		elif bag:
 			_steer(bag.global_position))
 	_stop()
@@ -228,9 +268,11 @@ func play() -> bool:
 	_stop()
 	check(gap[0] > 1.5, "a hero walking after PIP never comes within 1.5 m while it leads (%.2f m)" % gap[0])
 	check(lines.has("pip.this_way"), "PIP calls 'this way' while it leads")
+	await frames(60)  # a kid reads the fact a moment: the hero stands still before PIP sets off again
 	await _beat("sun_fact", func() -> void: beats.notify("dismissed"))
 	check(not clock.pinned, "the clock runs again: the sun rises and the wings turn")
 	# a visit to each thing the choice is about, then the choice (14 Nov playtest: asked before the kid knew them)
+	crumbs = [player.body.global_position]  # a new lead: the last one's tracks walked the hero straight into PIP
 	await _beat("o2_visit", _follow_crumbs)
 	_stop()
 	check(offered.is_empty(), "no choice before the oxygen maker and the lamps are shown")

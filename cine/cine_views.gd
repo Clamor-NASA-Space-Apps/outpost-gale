@@ -4,6 +4,7 @@ extends Node3D
 ##   node ../../tools/capture-view.mjs . captures/cine_trip --scene res://cine/cine_views.tscn --scale 0.5 --views trip_drive,trip_title -- hour=11
 ##   node ../../tools/capture-view.mjs . captures/cine_launch --scene res://cine/cine_views.tscn --scale 0.5 --views launch_out,launch_window -- hour=20.5
 ##   node ../../tools/capture-view.mjs . captures/k --scene res://cine/cine_views.tscn --scale 0.5 --views dawn_reveal,look_around,focus_pip -- hour=6.5 speed=4
+## Animation #1 (the opening's step_out), frozen every quarter second: --views anim1@0,anim1@0.25,... -- speed=2
 ## The sunrise (the opening's pre-dawn 05:48, then the shot runs the clock): --views airlock@5.8,dawn_reveal@1.5,
 ## dawn_reveal@3.0,dawn_reveal@4.6,dawn_reveal@6.0,sleep_drone@6.05,sleep_drone@6.3 -- speed=4
 ## The tutorial shots (cine.shot()) start with the hero just out of HAB 1's door, facing out, and hold the picture
@@ -22,6 +23,9 @@ var _since := 0.0
 var _hold := 0.0  # seconds a pose needs to settle (a sit)
 var _start := ""  # a tutorial shot to start once the one on screen is over
 var _placed := false  # the hero is out of HAB 1 for it, the lens settling
+var _speed := 1.0  # Engine.time_scale between pictures (speed=)
+var _opening := false  # anim1@s started the real opening
+var _still := false  # hold the game still at the moment asked for (anim1@s, a tutorial shot's name@s)
 
 
 func _ready() -> void:
@@ -29,7 +33,8 @@ func _ready() -> void:
 	add_child(game)
 	for a in OS.get_cmdline_user_args():
 		if a.begins_with("speed="):  # software GL under load draws about 1 fps: game seconds per real frame go up
-			Engine.time_scale = float(a.trim_prefix("speed="))
+			_speed = float(a.trim_prefix("speed="))
+			Engine.time_scale = _speed
 		if a.begins_with("hour="):
 			game.clock.pinned = true
 			game.clock.set_hour(float(a.trim_prefix("hour=")))
@@ -43,6 +48,9 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	if _still and _want != "" and cine.beat == _want and _since + delta >= _after:
+		Engine.time_scale = 0.001  # the moment asked for, held all but still for its picture (anim1@s): 0 would give the
+		# walking hero's physics a zero delta to divide by
 	_hold = maxf(_hold - delta, 0.0)
 	if _start != "" and not cine.busy():  # the shot before it is over: put the hero out, let the lens settle, go
 		if not _placed:
@@ -73,10 +81,20 @@ const SHOT_AT := {"dawn_reveal": 3.6, "look_around": 3.6, "focus_pip": 1.5}
 
 
 func set_view(v: String) -> void:
+	Engine.time_scale = _speed
+	if v.begins_with("anim1@"):  # animation #1 (cine step_out) s seconds in, the real opening playing
+		if not _opening:
+			_opening = true
+			game.beats.start_opening()
+		_want = "step_out"
+		_after = float(v.get_slice("@", 1))
+		_still = true
+		return
 	if cine.cfg.shots.has(v.get_slice("@", 0)):
 		var name := v.get_slice("@", 0)
 		if cine.beat != name:
 			_start = name
+		_still = true
 		_want = name
 		_after = float(v.get_slice("@", 1)) if "@" in v else float(SHOT_AT[name])
 		return

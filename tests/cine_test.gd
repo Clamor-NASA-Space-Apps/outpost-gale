@@ -117,7 +117,7 @@ func play() -> bool:
 	var h_end: float = clock.hour()
 	await shoot(game, cine, "dawn_reveal", 1.0)  # again, from a clock already past the rise
 	check(is_equal_approx(clock.hour(), h_end), "a clock past the sunrise is never turned back (%.3f to %.3f)" % [h_end, clock.hour()])
-	await shoot(game, cine, "look_around", 1.0)  # a pan from beside the hero
+	await mouse_shot(game, cine, "look_around")
 	var pip: Node3D = game.pip
 	if pip:
 		var ahead: Vector3 = player.body.global_position + Vector3(1.0, 0.0, 6.0)
@@ -135,6 +135,46 @@ func play() -> bool:
 
 ## One shot from the settled play camera: it ends, says so once, never puts the camera in or through a solid or
 ## under the ground, freezes the hero (and PIP unless it films it moving), and hands back the play camera's own pose.
+## A mouse shot: the play camera itself goes round once, low and pitched up, with the hero standing and input locked,
+## and ends where it started.
+func mouse_shot(game: Node3D, cine: Node, name: String) -> void:
+	var player: Node3D = game.player
+	var fc: Node3D = player.cam
+	await frames(120)
+	var lens: Camera3D = root.get_camera_3d()
+	var yaw0: float = fc.yaw
+	var pitch0: float = fc.pitch
+	var feet: Vector3 = player.body.global_position
+	var allowed: Array = player.allowed.duplicate()
+	var done := []
+	cine.shot_done.connect(func(n: String) -> void: done.append(n))
+	var c: Dictionary = cine.cfg.shots[name]
+	cine.shot(name)
+	var turned := 0.0
+	var last: float = fc.yaw
+	var top := -INF
+	var step := 0.0
+	var left: float = float(c.hold_s) + float(c.turn_s) + 3.0
+	while cine.busy() and left > 0.0:
+		await process_frame
+		left -= root.get_process_delta_time()
+		if not cine.busy():
+			break  # it ended this frame: the input is the player's again
+		check(root.get_camera_3d() == lens, "%s turns the play camera itself" % name)
+		check(player.allowed == ["none"], "%s locks the player's input" % name)
+		step = maxf(step, absf(fc.yaw - last))
+		turned += fc.yaw - last
+		last = fc.yaw
+		top = maxf(top, fc.pitch)
+	check(not cine.busy() and done == [name], "%s ends and says so once (%s)" % [name, done])
+	check(absf(rad_to_deg(turned) - float(c.turn_deg)) < 1.0, "%s goes once round (%.1f deg)" % [name, rad_to_deg(turned)])
+	check(rad_to_deg(step) < float(c.turn_deg) / float(c.turn_s) / 60.0 * 2.0, "%s turns smoothly (at most %.2f deg a frame)" % [name, rad_to_deg(step)])
+	check(absf(rad_to_deg(top) - float(c.pitch_deg)) < 1.0, "%s looks up %.0f deg on the way (%.1f)" % [name, float(c.pitch_deg), rad_to_deg(top)])
+	check(absf(wrapf(fc.yaw - yaw0, -PI, PI)) < 0.01 and absf(fc.pitch - pitch0) < 0.01, "%s ends facing where it started" % name)
+	check(player.body.global_position.distance_to(feet) < 0.05, "%s: the hero stands still" % name)
+	check(player.allowed == allowed, "%s gives the input back" % name)
+
+
 func shoot(game: Node3D, cine: Node, name: String, far: float) -> void:
 	var player: Node3D = game.player
 	var world: Node3D = game.world

@@ -67,14 +67,16 @@
     },
     {
       "id": "walk_out",
+      "_note": "animation #1 (Ravindu's video, 14 Nov 09:50): the hero walks out through the hatch on its own while cine's step_out shot follows close behind on the hero's line and ends on the play camera; PIP waits until the hero is out (its way crosses the hatch path)",
       "do": [
-        "walk:0,6.0"
+        "walk:0,6.5",
+        "shot:step_out"
       ],
       "wait": {
         "place": {
           "at": [
             0.0,
-            6.0
+            6.5
           ],
           "r": 0.6
         },
@@ -82,51 +84,47 @@
       }
     },
     {
-      "id": "face_dawn",
-      "_note": "a few steps east, so the hero ends facing the sunrise (bearing 81) with its back to the play camera for dawn_reveal",
+      "id": "turn_out",
+      "_note": "a few steps north-east, so the play camera behind the hero ends with HAB 1's hatch on the left and the rover and bags ahead on the right (the video's end frame); the beat ends with the shot. PIP sets off now, beside the rover where the end frame sees it",
+      "pip": {
+        "go_to": [
+          7.5,
+          6.0
+        ],
+        "point_at": "hero"
+      },
       "do": [
-        "walk:3.5,5.5"
+        "walk:2.5,5.5"
       ],
       "wait": {
-        "place": {
-          "at": [
-            3.5,
-            5.5
-          ],
-          "r": 0.6
-        },
-        "max_s": 12
+        "event": "shot_done:step_out",
+        "max_s": 15
       }
     },
     {
       "id": "outside",
       "do": [
-        "close:hab1",
-        "shot:dawn_reveal"
+        "close:hab1"
       ],
       "allow": [
         "none"
       ],
       "line": "sol1.thin_air",
       "wait": {
-        "event": "shot_done:dawn_reveal",
-        "max_s": 20
+        "time": 2.5
       }
     },
     {
       "id": "pip_hello",
       "task": "task.meet_pip",
       "pip": {
-        "go_to": [
-          2.0,
-          12.0
-        ],
+        "point_at": "hero",
         "wave": true
       },
       "line": "sol1.good_morning",
       "wait": {
         "event": "pip_arrived",
-        "max_s": 30
+        "max_s": 12
       }
     },
     {
@@ -191,7 +189,7 @@
       "line": "sol1.look_around",
       "wait": {
         "event": "shot_done:look_around",
-        "max_s": 20
+        "max_s": 30
       }
     },
     {
