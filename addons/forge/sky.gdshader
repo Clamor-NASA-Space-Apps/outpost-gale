@@ -151,6 +151,9 @@ void sky() {
 		c = mix(c, forge_sky_halo_color, exp(-a / forge_sky_halo) * forge_sky_halo_strength * up);
 		c = mix(c, forge_sky_sun * 4.0, smoothstep(forge_sky_disc * 1.15, forge_sky_disc, a) * step(0.0, y));
 	}
-	// Compatibility draws into 8 bits with no debanding, and a hazy gradient bands: a 1/255 dither hides it
-	COLOR = c + (fract(sin(dot(SCREEN_UV, vec2(12.9898, 78.233))) * 43758.5453) - 0.5) / 255.0;
+	// Compatibility draws into 8 bits with no debanding, and a hazy gradient bands: rings round the sun, each one
+	// step of 255. Triangular noise two steps tall, added in gamma space, where the screen's steps are even: half a
+	// step added in linear light shrank under the tone curve and left runs of 6 to 30 px of one value (measured)
+	float n = fract(sin(dot(SCREEN_UV, vec2(12.9898, 78.233))) * 43758.5453) + fract(sin(dot(SCREEN_UV, vec2(39.346, 11.135))) * 24634.6345) - 1.0;
+	COLOR = pow(max(pow(max(c, vec3(0.0)), vec3(1.0 / 2.2)) + n * 2.0 / 255.0, vec3(0.0)), vec3(2.2));
 }

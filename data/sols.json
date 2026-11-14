@@ -704,7 +704,7 @@
       "keys": [
         "E"
       ],
-      "objective": "site_mercou_rover",
+      "objective": "rover",
       "wait": {
         "action": "use:rover"
       }

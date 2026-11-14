@@ -143,7 +143,9 @@ func setup(w: Node3D, p: Node3D, t: Dictionary, sheet: Dictionary) -> void:
 			item.set_script(Rover)
 			item.setup(world, sheet, tuning)
 			var it := _add("rover", item)
-			it.shape = _hatch(item)
+			# the hatch and a step round it: at its own size a kid beside the door, or a little off square, got no prompt
+			# (15 Nov playtest, Mont Mercou: "how does he drive home?")
+			it.shape = _hatch(item).grow(0.6)
 			it.global_position = it.middle()
 	# use spots: an empty node at the item's origin is the thing, the row's box its shape (the parts are welded into
 	# one mesh, next-lanes.md section 0 finding 3)

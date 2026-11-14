@@ -639,7 +639,10 @@ func _wire() -> void:
 		elif t == "pip" or world.data.landmarks.has(t):
 			hud.set_objective(t)
 		elif world.items.has(t):
-			hud.set_objective_node(world.items[t], "", t))
+			# the rover is boarded at its rear hatch: the waypoint stands on the hatch, not on the rover's middle, where it
+			# led a kid to the nose and no prompt
+			var at: Node3D = interactions.by_thing.get(world.items[t], world.items[t]) if t == "rover" else world.items[t]
+			hud.set_objective_node(at, "", t))
 	hud.dismissed.connect(func(_id: String) -> void: beats.notify("dismissed"))
 	hud.map_toggled.connect(func(open: bool) -> void: beats.notify("map_open" if open else "map_closed"))
 	beats.shot.connect(cine.shot)
