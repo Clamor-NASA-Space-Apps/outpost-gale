@@ -7,7 +7,8 @@ const Hud := preload("res://ui/hud.gd")
 const BAR_H := 4.0  # 6 mockup px
 
 @export var icon_name := "power"
-@export var title := "Power"  # the tooltip; the icon says it on screen
+@export var title := "Power"  # the tooltip
+@export var word := ""  # a short name beside the icon (14 Nov playtest: kids could not tell Life support from Crew health)
 @export_range(0, 100) var value := 72:
 	set(v):
 		value = clampi(v, 0, 100)
@@ -18,6 +19,7 @@ const BAR_H := 4.0  # 6 mockup px
 
 var bar := Control.new()
 var tile_icon: Hud.Icon
+var name_label: Label
 var num: Label
 var gain: Label  # a sudden rise in what feeds the meter ("+0.7 kW"), fading beside the number
 var _bump: Tween
@@ -37,7 +39,9 @@ func _ready() -> void:
 	gain.add_theme_color_override("font_color", Hud.color("light"))
 	gain.modulate.a = 0.0
 	gain.visible = false  # a faded gain still took its width from the bar (14 Nov playtest: "the power bar gets shorter")
-	for k: Control in [tile_icon, bar, num, gain]:
+	name_label = Hud.label(word, "Cap")
+	name_label.visible = word != ""
+	for k: Control in [tile_icon, name_label, bar, num, gain]:
 		add_child(k)
 	Hud.nudge(self)  # the icon on the number's capitals
 	_show()

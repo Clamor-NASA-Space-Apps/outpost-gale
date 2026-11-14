@@ -18,7 +18,7 @@ var suit_label: Label
 
 func _ready() -> void:
 	theme_type_variation = "HudPanel"
-	custom_minimum_size.x = 200  # 300 mockup px
+	custom_minimum_size.x = 236  # 300 mockup px, plus room for each meter's word
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	sol_label = Hud.label("%d" % sol, "SolNum")
 	time_label = Hud.label(time, "HudNumDim")
@@ -26,11 +26,13 @@ func _ready() -> void:
 	var top := Hud.row([Hud.label("Sol", "Cap"), sol_label, Hud.spacer(), Hud.icon("clock", 12, "on_surface_variant"), time_label], 6)
 	top.name = "SolRow"
 	var body := Hud.col([top], 7)
-	for m: Array in [["power", "power", "Power"], ["life", "oxygen", "Life support"], ["health", "health", "Crew health"]]:
+	# Life support is the shortest of air, water and food (game_hud.gd): "Supplies"; Crew health is the radiation dose
+	for m: Array in [["power", "power", "Power", "Power"], ["life", "oxygen", "Life support", "Supplies"], ["health", "health", "Crew health", "Health"]]:
 		var n: Control = Meter.instantiate()
 		n.name = m[2].replace(" ", "")
 		n.icon_name = m[1]
 		n.title = m[2]
+		n.word = m[3]
 		body.add_child(n)
 		meters[m[0]] = n
 	suit_label = Hud.label("", "HudNumDim")
@@ -38,6 +40,15 @@ func _ready() -> void:
 	suit.visible = false
 	body.add_child(suit)
 	add_child(body)
+	# one or two digits take the same room, so the row never shifts when the sol reaches 10; and the words line up
+	sol_label.custom_minimum_size.x = _wide(sol_label, "88")
+	var words: Array = meters.values().map(func(n: Control) -> float: return _wide(n.name_label, n.word))
+	for n: Control in meters.values():
+		n.name_label.custom_minimum_size.x = words.max()
+
+
+static func _wide(l: Label, text: String) -> float:
+	return ceilf(l.get_theme_font("font").get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, l.get_theme_font_size("font_size")).x)
 
 
 ## hour: the sim's clock (Earth hours through the sol). suit_min below 0 hides the suit air.

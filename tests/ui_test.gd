@@ -250,9 +250,23 @@ func _hud_parts(h: Control, cues: Array[String]) -> void:
 	await process_frame
 	check(h.snapshot().tasks == [[h.line("task.sleep"), "now"]] and h.tasks.modulate.a > 0.99 and is_equal_approx(h.tasks.position.x, x0),
 		"and only the rest comes back, in place (%s, x %.0f)" % [h.snapshot().tasks, h.tasks.position.x])
+	h._cue_at.clear()  # game time runs far ahead of the cue's real-time 0.15 s window here (it failed under load)
 	h.set_tasks([{"label_id": "task.sleep", "state": "done"}])
 	await create_timer(h.TASKS_HOLD_S + h.TASKS_LEAVE_S + 0.3).timeout
 	check(not h.tasks.visible, "a list all done leaves for good")
+	# the sol row sits the same with one digit or two, and each meter names itself in a word (14 Nov playtest: "Sol 41"
+	# looked unbalanced; kids could not tell Life support from Crew health)
+	h.clock.show_time(4, 10.0)
+	await process_frame
+	await process_frame
+	var one: Vector2 = h.clock.time_label.global_position
+	var box1: float = h.clock.sol_label.size.x
+	h.clock.show_time(24, 10.0)
+	await process_frame
+	await process_frame
+	check(h.clock.time_label.global_position.is_equal_approx(one) and is_equal_approx(h.clock.sol_label.size.x, box1), "the clock does not move when the sol reaches two digits")
+	var words: Array = h.meters.values().map(func(m: Control) -> String: return m.name_label.text if m.name_label.is_visible_in_tree() else "")
+	check(words == ["Power", "Supplies", "Health"], "each meter shows its word: %s" % [words])
 	# a brushed wing's "+kW" fades beside the power number and gives the bar its width back (14 Nov playtest: "the power
 	# bar is getting shorter and shorter")
 	var power: Control = h.meters.power
