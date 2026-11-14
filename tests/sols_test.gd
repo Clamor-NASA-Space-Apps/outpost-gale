@@ -27,7 +27,7 @@ var used_at := -1
 var lines: Array[String] = []
 var targets: Array[String] = []
 var crumbs: Array[Vector3] = []  # PIP's tracks for _crumbs()
-var _held := [Vector3.INF, 0, 0, Vector3.ZERO]  # _crumbs(): where the hero last got somewhere, when, a sidestep's end, its target
+var _held := [Vector3.INF, 0, 0, Vector3.ZERO, 0]  # _crumbs(): where the hero last got somewhere, when, a sidestep's end, its target, sidesteps at this crumb
 
 
 func _init() -> void:
@@ -292,10 +292,15 @@ func play() -> bool:
 	await _beat("s17_ripe", _follow.bind(2.0))
 	_stop()
 	beats._do("open:greenhouse")
-	var lined_gh := [false]
+	# square in front of the door, then in; where PIP waits on that spot, round it by its left and in from just
+	# outside the door (14 Nov: with no use clips the hero came later and PIP stood there first)
+	var gh_way := [Vector3(-11.0, 0.0, 4.2), Vector3(-11.0, 0.0, 2.9), Vector3(-11.0, 0.0, 0.5)]
 	await _beat("s17_go_in", func() -> void:
-		lined_gh[0] = lined_gh[0] or _flat(player.body.global_position, Vector3(-11.0, 0.0, 4.2)) < 0.4
-		_steer(Vector3(-11.0, 0.0, 0.5) if lined_gh[0] else Vector3(-11.0, 0.0, 4.2)))
+		if gh_way.size() == 3 and _flat(pip.global_position, gh_way[0]) < 1.0:
+			gh_way[0] = Vector3(-12.1, 0.0, 4.2)
+		while gh_way.size() > 1 and _flat(player.body.global_position, gh_way[0]) < 0.4:
+			gh_way.pop_front()
+		_steer(gh_way[0]))
 	_stop()
 	used_at = -1
 	await _beat("s17_pick", _use.bind("harvest", Vector3(-10.4, 0.0, -2.05)))
@@ -355,11 +360,11 @@ func play() -> bool:
 		var t: Node = game.interactions.target
 		if _flat(player.body.global_position, case.global_position) > 1.6:
 			_follow_out(case.global_position, 1.2)
-		elif t and t.kind == "bag":
+		elif t and t.kind == "bag" and (t.thing == case or case.is_ancestor_of(t.thing)):
 			_stop()
 			_press(&"interact")
 		else:
-			_steer(case.global_position, 0.6))
+			_steer(case.global_position, 0.6))  # past a cargo bag offered on the way: a player goes for the case
 	_stop()
 	check(game.interactions.carried != null and (game.interactions.carried == case or case.is_ancestor_of(game.interactions.carried)
 		or game.interactions.carried.is_ancestor_of(case)), "the hero carries the sample case (%s)" % [game.interactions.carried])
@@ -369,7 +374,7 @@ func play() -> bool:
 	_stop()
 	used_at = -1
 	await _beat("s26_set", func() -> void:
-		if game.interactions.carried and not game.interactions.busy():
+		if game.interactions.carried:
 			_press(&"interact"))
 	check(game.interactions.carried == null and _flat(case.global_position, mav) < 14.0, "the case rests by the rocket (%.1f m)" % _flat(case.global_position, mav))
 	await _beat("s26_suits", _dismiss)
@@ -532,8 +537,23 @@ func _crumbs() -> void:
 	var b: Vector3 = player.body.global_position
 	while crumbs.size() > 1 and _flat(crumbs[0], b) < 0.8:
 		crumbs.pop_front()
+		_held[4] = 0
 	if _flat(pip.global_position, b) < 2.0:
 		_stop()
+		return
+	# PIP in plain sight with room for the suit on the way: straight at it, as a kid does; its tracks only round
+	# things (they squeezed past the dish's mount, where the suit does not fit, 14 Nov)
+	var body: CollisionShape3D = player.body.find_children("*", "CollisionShape3D", false, false)[0]
+	var q := PhysicsShapeQueryParameters3D.new()
+	q.shape = body.shape
+	q.collision_mask = 2 | 4 | 64
+	q.exclude = [player.body.get_rid()]
+	q.transform = Transform3D(Basis(), b + body.position + Vector3.UP * 0.1)
+	q.motion = (pip.global_position - b) * Vector3(1, 0, 1)
+	q.motion -= q.motion.normalized() * 1.0
+	if player.get_world_3d().direct_space_state.cast_motion(q)[0] >= 1.0:
+		crumbs = [b, pip.global_position]
+		_steer(pip.global_position, 2.0)
 		return
 	# a second without getting anywhere (a lamp post on the straight line to PIP's tracks): a kid steps round it
 	var f := Engine.get_physics_frames()
@@ -544,6 +564,12 @@ func _crumbs() -> void:
 		_held[0] = b
 		_held[1] = f
 	elif f - int(_held[1]) > 60:
+		_held[4] = int(_held[4]) + 1
+		if int(_held[4]) > 1 and crumbs.size() > 1:
+			# PIP's track squeezed past something the suit does not fit by (the dish's mount, 14 Nov): a kid cuts on
+			# to the next of its tracks
+			crumbs.pop_front()
+			_held[4] = 0
 		var way: Vector3 = crumbs[0] - b
 		_held[3] = b + Vector3(-way.z, 0.0, way.x).normalized() * 1.2
 		_held[2] = f + 60
@@ -567,7 +593,7 @@ func _use(kind: String, at: Vector3) -> void:
 		return
 	_stop()
 	if used_at >= 0 and Engine.get_physics_frames() - used_at < 60 * 8:
-		return  # one use, and again only if its clip has long ended without the beat seeing it
+		return  # one use, and again only if it has long gone without the beat seeing it
 	for it: Node in game.interactions.by_thing.values():
 		if it.kind == "spot" and it.row.kind == kind and _flat(it.global_position, at) < 3.0:
 			used_at = Engine.get_physics_frames()
@@ -594,3 +620,4 @@ func _stop() -> void:
 
 func _flat(a: Vector3, b: Vector3) -> float:
 	return Vector2(a.x - b.x, a.z - b.z).length()
+
