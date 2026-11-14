@@ -424,7 +424,7 @@ func fade_close() -> void:
 		var shaders := {}
 		var visible := 0
 		for mi: MeshInstance3D in player.meshes:
-			visible += int(mi.visible and mi.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY)  # a shadow only is not drawn
+			visible += int(mi.visible)
 			for i in mi.mesh.get_surface_count():
 				var m := mi.get_surface_override_material(i) as ShaderMaterial
 				shaders["%s %.2f" % ["solid" if m.shader == player.HeroShader else "fading", m.get_shader_parameter("opacity") if m.shader != player.HeroShader else 1.0]] = true
