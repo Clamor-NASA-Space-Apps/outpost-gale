@@ -66,6 +66,7 @@ var trip_km := 8.8  # the last rover trip's distance, for its title card and the
 var lamp_hinted := false  # PIP explains the helmet lights once, the first time they come on by themselves
 var offers := {}  # data/beats.json `offers`: what each choice card holds and which rules it sets
 var lost := false  # a meter ran out: the mission-lost card is up and the rules stop
+var film := false  # P, or Settings, Demo: no HUD, no touch controls, no frame-rate line, for a screen recording
 var beacon: MeshInstance3D  # the kid's map mark in the world: a pillar of the DESIGN.md `light` role, seen from afar
 var deadline := {}  # data/sols.json `deadline`: PIP's warnings while a sol's tasks run late
 var warned := {}  # "<woke sol>:<line id>" -> true: each warning once a day
@@ -178,6 +179,7 @@ func _process(_delta: float) -> void:
 	clock.paused = clock.paused or sim.sim.awake_left() <= 0.0 or cine.holds_time()
 	sim.paused = clock.paused or lost  # one time: the rules run exactly when the sky does, at its pace (sim.pace)
 	hud.visible = not settings.is_open()
+	(fps_label.get_parent() as CanvasLayer).visible = not film  # the HUD, PIP's words and the frame-rate line
 	hud.show_prompt(interactions.prompt_label.text.trim_prefix("[E]  "))  # empty when nothing is in reach; the HUD draws its own E key
 	if not cine.busy():
 		world.room_shadow(player.room != "")  # indoors the sun's shadow reaches the room only (world.gd)
@@ -231,6 +233,9 @@ func _flash() -> void:
 
 
 func _unhandled_input(e: InputEvent) -> void:
+	if e.is_action_pressed("film"):
+		set_film(not film)  # before the shot check: a cinematic is what gets filmed
+		return
 	if cine.busy():
 		return  # E mid-shot would take the hero out of the rover
 	if e.is_action_pressed("interact"):
@@ -250,6 +255,12 @@ func _unhandled_input(e: InputEvent) -> void:
 		hop = (hop + 1) % names.size()
 		var l: Dictionary = world.landmark(names[hop])
 		player.place(l.pos, l.yaw)
+
+
+## A clean picture for a screen recording: no HUD, no frame-rate line, no touch controls. P or Settings, Demo.
+func set_film(on: bool) -> void:
+	film = on
+	player.touch.visible = not on and DisplayServer.is_touchscreen_available()
 
 
 func _design(name: String) -> Dictionary:
@@ -529,13 +540,21 @@ func _wire() -> void:
 	beats.finished.connect(func(_s: String) -> void: hud.clear_line())  # PIP's last "This way!" stayed up for good
 	offers = JSON.parse_string(FileAccess.get_file_as_string("res://data/beats.json")).get("offers", {})
 	offers.erase("_note")  # a string: the chosen handler below called .get() on it and a click on a choice did nothing
+	beats.page.connect(hud.unlock_page)
+	beats.check_offered.connect(hud.offer_check)
+	hud.checked.connect(func(id: String) -> void: beats.notify("checked:" + id))
+	# the options go as they are (text, gain, lose), with the offer's handbook pages
 	beats.choice_offered.connect(func(id: String) -> void:
-		hud.offer_choice(offers.get(id, {}).get("title", id), offers.get(id, {}).get("options", [])))
+		var o: Dictionary = offers.get(id, {})
+		hud.offer_choice(o.get("title", id), o.get("options", []), o.get("pages", [])))
 	hud.chosen.connect(func(title: String, index: int) -> void:
 		for id: String in offers:
 			if offers[id].get("title", id) == title:
-				for rule: String in offers[id].options[index].get("apply", []):
+				var picked: Dictionary = offers[id].options[index]
+				for rule: String in picked.get("apply", []):
 					sim.apply(rule)
+				var said: String = picked.get("text", "")
+				hud.log_decision(hud.lines.get(title, title), hud.lines.get(said, said))  # the words, as the card showed them
 				beats.notify("chose:" + id))
 	cine = Cine.new()
 	cine.name = "Cine"

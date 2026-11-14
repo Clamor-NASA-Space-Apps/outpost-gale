@@ -1,5 +1,5 @@
 {
-  "_note": "The beat runner's script (cine/beats.gd, design/typical-day.md section 2). A sequence is an ordered list of beats. A beat starts by applying `allow` (player.allow: only these actions work; [] everything, [\"none\"] nothing, but every beat keeps `look`: the kid can always turn the view and the hero (skills/guided-tutorial row 1); names are input actions or their family, move and look; a beat without `allow` keeps the last one; the sequence's end allows everything), running `do`, giving PIP its `pip` order, emitting its `task` (a line id for the Today list, kept until the next one), its `objective` (\"pip\", a landmark or an item id; null clears it) and its `line` (an id the HUD looks up) with opts {keys: `keys`, fact: `fact`}, then waits; when `wait` is met (or after `max_s`) it emits beat_done(id) and the next beat starts, or the one named in `then` (\"end\" stops the sequence). wait: {time: s} | {place: {at, r}} (the hero within r m of a spot) | {action: name or [names]} | {event: name or [names]} (a list waits for all); `fact: true` also waits for \"dismissed\" (the HUD's Enter or tap). Actions and events all arrive through notify(name): jump and look (the view turned look_deg) are watched by the runner, and so are move_forward, move_back, move_left, move_right and hurry (held hold_s, hurry only while really hurrying); lift and use:<what> come from the interactions, pip_arrived from PIP, chose:<id> from the rules, dismissed, map_open and map_closed from the HUD, shot_done:<name> from the cinematics. A beat with a job for the kid (keys, a fact, an objective or `nag`) pleads when ignored: at nag.at_s PIP says nag.lines (or the beat's own `nag` ids) with the beat's keys, and plays sounds and the sad bounce by level; the beat's line comes back after back_s; getting nearer a place by 1 m calms it. While PIP leads (follow_me) it calls pip.call_line every call_s. pip: go_to (drive and park; wave and point_at then happen on arrival), follow_me (lead there at the hero's pace: full speed while the hero is within lead_near_m, slowing to a stop at lead_wait_m, going on within lead_resume_m), point_at (stop and look), wave. While the beats hold PIP, a hero walking into it makes it back off once within back_m plus back_lead_s seconds of the hero's closing speed (at most back_s). do: clock:dawn (jump the look to dawn and pin it), clock:<hour> (put the look at that hour of this sol and pin it), clock:run (let it run), clock:skip (the time-lapse to the next phase), open:<item> (open its door), close:<item> (shut it, interactions.set_door), shot:<name> (a camera shot: dawn_reveal, focus_pip, look_around), hero:<start> (put the hero at a `starts` row), walk:<spot> (the hero walks there on its own at walk speed through the real controller, input still blocked; the spot as \"x,z\" or an id; it ends with the beat, so wait on the place), ghost:on|off (the Earth jump beside the hero), offer:<choice id> (choice_offered; the rules own it). A spot is [x, z], a PIP stop id (world.json pip.stops), a landmark, an item id, `pip` or `hero`; a look point is [x, z, height], a stop id (its look), an item id or `hero`. All numbers here are art direction. The opening wakes at clock:5.8, pre-dawn (the sun 3 deg under the horizon, blue twilight, not night): the sun clears the crater rim at about 06:08 seen from dawn_reveal's wide view (cine.gd sunrise_hour()), and the shot runs the clock on so it breaks over the rim while the kid watches, however slowly the walk-out went (the walk is automatic). At the old clock:dawn (06:19) the sun was already 3 deg over the rim",
+  "_note": "The beat runner's script (cine/beats.gd, design/typical-day.md section 2). A sequence is an ordered list of beats. A beat starts by applying `allow` (player.allow: only these actions work; [] everything, [\"none\"] nothing, but every beat keeps `look`: the kid can always turn the view and the hero (skills/guided-tutorial row 1); names are input actions or their family, move and look; a beat without `allow` keeps the last one; the sequence's end allows everything), running `do`, giving PIP its `pip` order, emitting its `task` (a line id for the Today list, kept until the next one), its `objective` (\"pip\", a landmark or an item id; null clears it) and its `line` (an id the HUD looks up) with opts {keys: `keys`, fact: `fact`}, unlocking its `page` (a handbook page id or a list of them: page(id) once each) and offering its `check` ({id, q, options, right, pages}: check_offered(check); the beat then needs no `wait`, it ends on checked:<id>), then waits; when `wait` is met (or after `max_s`) it emits beat_done(id) and the next beat starts, or the one named in `then` (\"end\" stops the sequence). wait: {time: s} | {place: {at, r}} (the hero within r m of a spot) | {action: name or [names]} | {event: name or [names]} (a list waits for all); `fact: true` also waits for \"dismissed\" (the HUD's Enter or tap). Actions and events all arrive through notify(name): jump and look (the view turned look_deg) are watched by the runner, and so are move_forward, move_back, move_left, move_right and hurry (held hold_s, hurry only while really hurrying); lift and use:<what> come from the interactions, pip_arrived from PIP, chose:<id> from the rules, dismissed, checked:<id>, map_open and map_closed from the HUD, shot_done:<name> from the cinematics. PIP says a beat's line once and is quiet while the kid is on the step (nearer its place by 1 m, a watched key held, the view turning, beside the leading PIP). A beat with a job for the kid (keys, an objective, a follow_me or `nag`; never a fact) reminds twice at most: after each of nag.at_s seconds without progress PIP says nag.lines (or the beat's own `nag` ids; while it leads, pip.call_line) with the beat's keys and a sound, the beat's line comes back after back_s, and after the last one PIP says no more in that beat. pip: go_to (drive and park; wave and point_at then happen on arrival), follow_me (lead there at the hero's pace: full speed while the hero is within lead_near_m, slowing to a stop at lead_wait_m, going on within lead_resume_m), point_at (stop and look), wave. While the beats hold PIP, a hero walking into it makes it back off once within back_m plus back_lead_s seconds of the hero's closing speed (at most back_s). do: clock:dawn (jump the look to dawn and pin it), clock:<hour> (put the look at that hour of this sol and pin it), clock:run (let it run), clock:skip (the time-lapse to the next phase), open:<item> (open its door), close:<item> (shut it, interactions.set_door), shot:<name> (a camera shot: dawn_reveal, focus_pip, look_around), hero:<start> (put the hero at a `starts` row), walk:<spot> (the hero walks there on its own at walk speed through the real controller, input still blocked; the spot as \"x,z\" or an id; it ends with the beat, so wait on the place), ghost:on|off (the Earth jump beside the hero), offer:<choice id> (choice_offered; the rules own it). A spot is [x, z], a PIP stop id (world.json pip.stops), a landmark, an item id, `pip` or `hero`; a look point is [x, z, height], a stop id (its look), an item id or `hero`. All numbers here are art direction. The opening wakes at clock:5.8, pre-dawn (the sun 3 deg under the horizon, blue twilight, not night): the sun clears the crater rim at about 06:08 seen from dawn_reveal's wide view (cine.gd sunrise_hour()), and the shot runs the clock on so it breaks over the rim while the kid watches, however slowly the walk-out went (the walk is automatic). At the old clock:dawn (06:19) the sun was already 3 deg over the rim",
   "watch": {
     "look_deg": 120,
     "hold_s": 0.4
@@ -12,7 +12,6 @@
     "back_m": 1.5,
     "back_s": 4.0,
     "back_lead_s": 0.8,
-    "call_s": 6.0,
     "call_line": "pip.this_way"
   },
   "ghost": {
@@ -65,13 +64,15 @@
       ],
       "allow": ["move", "look"],
       "line": "sol1.thin_air",
+      "page": "thin_air",
       "wait": {
         "time": 2.5
       }
     },
     {
       "id": "pip_hello",
-      "task": "task.meet_pip",
+      "task": "task.learn_moves",
+      "page": "pip",
       "pip": {
         "point_at": "hero",
         "wave": true
@@ -104,7 +105,6 @@
         "D"
       ],
       "allow": ["move_forward", "move_left", "move_right", "look"],
-      "task": "task.learn_moves",
       "objective": null,
       "wait": {
         "action": [
@@ -158,185 +158,70 @@
     },
     {
       "id": "jump_fact",
+      "_note": "a teaching line never stops the game (design/plans/mission-1-contracts.md): it shows for its time while the kid plays on, and its page keeps the fact in the handbook",
       "line": "sol1.weigh_less",
-      "fact": true
-    },
-    {
-      "id": "hurry",
-      "do": [
-        "ghost:off"
-      ],
-      "task": "task.lift_bag",
-      "pip": {
-        "go_to": "bags",
-        "point_at": "bags"
-      },
-      "line": "sol1.hurry",
-      "keys": [
-        "Shift",
-        "W"
-      ],
-      "allow": [
-        "move",
-        "look",
-        "jump",
-        "hurry"
-      ],
-      "objective": "bag1",
-      "wait": {
-        "action": "hurry"
-      }
-    },
-    {
-      "id": "lift",
-      "line": "sol1.can_you_lift",
-      "keys": [
-        "E"
-      ],
-      "allow": [
-        "move",
-        "look",
-        "jump",
-        "hurry",
-        "interact"
-      ],
-      "wait": {
-        "action": "lift"
-      }
-    },
-    {
-      "id": "lift_fact",
-      "line": "sol1.easy_here",
-      "fact": true,
-      "objective": null
-    },
-    {
-      "id": "set_down",
-      "task": "task.set_down",
-      "line": "sol1.set_down",
-      "keys": [
-        "E"
-      ],
-      "wait": {
-        "ever": "use:set_down"
-      }
-    },
-    {
-      "id": "map",
-      "task": "task.mark_solar",
-      "line": "sol1.map_open",
-      "keys": [
-        "M"
-      ],
-      "allow": [
-        "move",
-        "look",
-        "jump",
-        "hurry",
-        "interact",
-        "map"
-      ],
-      "objective": "solar",
-      "wait": {
-        "event": "map_open"
-      }
-    },
-    {
-      "id": "map_mark",
-      "_note": "Far Cry style (Ravindu, 14 Nov): a tap on the Solar farm's label marks it (ui/components/full_map.gd); the HUD's marked event reaches here as waypoint_set:<place id>",
-      "line": "sol1.map_mark",
-      "keys": [
-        "Mouse"
-      ],
-      "wait": {
-        "event": "waypoint_set:solar"
-      }
-    },
-    {
-      "id": "map_close",
-      "line": "sol1.map_close",
-      "keys": [
-        "M"
-      ],
-      "wait": {
-        "event": "map_closed"
-      }
+      "page": "light_on_mars",
+      "wait": {"time": 4.0}
     },
     {
       "id": "follow_solar",
-      "pip": {
-        "follow_me": "solar"
-      },
-      "task": "task.walk_marker",
-      "line": "sol1.to_marker",
+      "_note": "the tour: PIP leads to each thing the day's check and choice are about and says one line there",
+      "do": ["ghost:off"],
+      "task": "task.tour_base",
+      "pip": {"follow_me": "solar"},
+      "line": "sol1.follow_solar",
       "allow": [],
-      "objective": null,
-      "wait": {
-        "place": {
-          "at": "solar",
-          "r": 5.0
-        }
-      }
+      "objective": "pip",
+      "wait": {"place": {"at": "solar", "r": 5.0}}
     },
     {
       "id": "sun_fact",
-      "do": [
-        "clock:run"
-      ],
-      "pip": {
-        "point_at": "solar"
-      },
+      "pip": {"point_at": "solar"},
       "line": "sol1.sunlight_power",
-      "fact": true,
-      "objective": null
+      "page": ["weak_sun", "solar_wings"],
+      "objective": null,
+      "wait": {"time": 4.0}
     },
     {
       "id": "o2_visit",
-      "task": "task.meet_o2",
-      "pip": {
-        "follow_me": [4.15, 3.19]
-      },
+      "pip": {"follow_me": [4.15, 3.19]},
       "line": "sol1.follow_o2",
       "objective": "pip",
-      "wait": {
-        "place": {
-          "at": [4.15, 3.19],
-          "r": 3.5
-        }
-      }
+      "wait": {"place": {"at": [4.15, 3.19], "r": 3.5}}
     },
     {
-      "id": "o2_fact",
-      "pip": {
-        "point_at": "oxygen"
-      },
-      "line": "sol1.o2_from_water",
-      "fact": true,
-      "objective": null
+      "id": "tanks_fact",
+      "pip": {"point_at": "oxygen"},
+      "line": "sol1.air_tanks",
+      "page": "air_tanks",
+      "objective": null,
+      "wait": {"time": 4.0}
+    },
+    {
+      "id": "maker_fact",
+      "line": "sol1.air_maker",
+      "page": "air_maker",
+      "wait": {"time": 4.0}
     },
     {
       "id": "garden_visit",
-      "task": "task.follow_garden",
-      "pip": {
-        "follow_me": [8.141, 9.848]
-      },
+      "pip": {"follow_me": [8.141, 9.848]},
       "line": "sol1.follow_me",
       "objective": "pip",
-      "wait": {
-        "place": {
-          "at": [6.857, 10.051],
-          "r": 4.0
-        }
-      }
+      "wait": {"place": {"at": [6.857, 10.051], "r": 4.0}}
     },
     {
-      "id": "lamps_fact",
-      "pip": {
-        "point_at": "greenhouse"
-      },
-      "line": "sol1.lamps_light",
-      "fact": true,
-      "objective": null
+      "id": "garden_fact",
+      "pip": {"point_at": "greenhouse"},
+      "line": "sol1.garden",
+      "page": "garden",
+      "objective": null,
+      "wait": {"time": 4.0}
+    },
+    {
+      "id": "air_check",
+      "_note": "the sol's one question, asked once its three pages were shown; it ends on checked:sol1 (the HUD's card), never on a time",
+      "check": {"id": "sol1", "q": "check.sol1.q", "options": ["check.sol1.a", "check.sol1.b", "check.sol1.c"], "right": 0, "pages": ["air_tanks", "air_maker", "garden"]}
     },
     {
       "id": "choice",
@@ -351,6 +236,7 @@
     },
     {
       "id": "day_done",
+      "page": "cold_nights",
       "allow": [],
       "task": "task.sleep",
       "objective": "hab1",
@@ -384,85 +270,91 @@
     }
   ],
   "nag": {
-    "_note": "PIP ignored: the plea times (s since the step began or the kid last got nearer), its lines by level (`lines` for a key step, `place_lines` for a step that waits on a place: only there does 'Over here!' fit) and sounds by level (audio.gd SOUNDS names), the sad bounce at level 3 (s, m up, bounces a second, head down)",
-    "at_s": [
-      10,
-      25,
-      45
-    ],
-    "lines": [
-      "nag.gentle",
-      "nag.try",
-      "nag.sad"
-    ],
-    "place_lines": [
-      "nag.gentle",
-      "nag.loud",
-      "nag.sad"
-    ],
-    "sounds": [
-      "pip_hello",
-      "radio_pip",
-      "beep"
-    ],
-    "back_s": 4.0,
-    "sulk_s": 2.5,
-    "bounce_m": 0.05,
-    "bounce_hz": 0.75,
-    "droop_deg": 20
+    "_note": "PIP's quiet rules (design/plans/mission-1.md section 2). A beat's line is said once. at_s: one reminder at each of these seconds without progress (nearer the place by 1 m, a watched key held, the view turning, beside the leading PIP), then none for that beat. Its lines by reminder (`lines` for a key step, `place_lines` for a step that waits on a place: only there does 'Over here!' fit; a leading PIP says pip.call_line) and sounds by reminder (audio.gd SOUNDS names). An aside, a reminder or a call gives way to the beat's own line after back_s",
+    "at_s": [20, 60],
+    "lines": ["nag.gentle", "nag.try"],
+    "place_lines": ["nag.gentle", "nag.loud"],
+    "sounds": ["pip_hello", "radio_pip"],
+    "back_s": 4.0
   },
   "offers": {
     "_note": "Each choice a beat offers (offer:<id>): the card's title line id, its options (text line id, the rules sim choices it applies, costs shown as icons). Costs stay empty until each number has a factcheck row (workspace hard rule 3).",
     "sol1_power": {
       "title": "choice.sol1_power",
+      "pages": ["air_maker", "garden"],
       "options": [
         {
           "text": "choice.o2_maker",
+          "gain": "choice.sol1.maker_gain",
+          "lose": "choice.sol1.maker_lose",
           "apply": [
             "o2_maker_on",
             "greenhouse_off"
-          ],
-          "costs": {}
+          ]
         },
         {
           "text": "choice.greenhouse",
+          "gain": "choice.sol1.garden_gain",
+          "lose": "choice.sol1.garden_lose",
           "apply": [
             "greenhouse_on",
             "o2_maker_off"
-          ],
-          "costs": {}
+          ]
+        }
+      ]
+    },
+    "sol5_storm": {
+      "_note": "apply is empty on purpose: the root halves the dose while the hero stands in the shelter (sandbox.gd, shelter_in and shelter_out by the hero's room), so a rule set here would fight it. The kid's own place and hands make the choice real: stay inside, or go out and brush the wings",
+      "title": "choice.sol5_storm",
+      "pages": ["storm_shelter", "solar_storms"],
+      "options": [
+        {
+          "text": "choice.sol5_stay",
+          "gain": "choice.sol5.stay_gain",
+          "lose": "choice.sol5.stay_lose",
+          "apply": []
+        },
+        {
+          "text": "choice.sol5_go",
+          "gain": "choice.sol5.go_gain",
+          "lose": "choice.sol5.go_lose",
+          "apply": []
         }
       ]
     },
     "sol12_power": {
       "title": "choice.sol12_power",
+      "pages": ["cold_nights", "air_maker", "garden"],
       "options": [
         {
           "text": "choice.heat",
+          "gain": "choice.sol12.heat_gain",
+          "lose": "choice.sol12.heat_lose",
           "apply": [
             "heater_normal",
             "o2_maker_off",
             "greenhouse_off"
-          ],
-          "costs": {}
+          ]
         },
         {
           "text": "choice.o2_maker",
+          "gain": "choice.sol12.maker_gain",
+          "lose": "choice.sol12.maker_lose",
           "apply": [
             "o2_maker_on",
             "heater_low",
             "greenhouse_off"
-          ],
-          "costs": {}
+          ]
         },
         {
           "text": "choice.greenhouse",
+          "gain": "choice.sol12.garden_gain",
+          "lose": "choice.sol12.garden_lose",
           "apply": [
             "greenhouse_on",
             "heater_low",
             "o2_maker_off"
-          ],
-          "costs": {}
+          ]
         }
       ]
     }

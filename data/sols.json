@@ -1,5 +1,5 @@
 {
-  "_note": "Sols past the first (design/story.md section 4, Chapter 1), in data/beats.json's beat schema (its _note). A key per sol: beats.start_sol(sol) plays it when the kid wakes on that sol (after cine's night sleep, the rules' sim.sol). Feel first, then PIP names it (a fact waits for its dismiss); pleas when ignored. Each sol's work ends with day_done: PIP leads to HAB 1's airlock and the Today list keeps only the rest (beats.REST), and the bed opens only then (beats.may_sleep; not on Sol 5, where PIP stays in the shelter). Then free play: everything allowed, PIP let go (pip.release), the Today list says sleep and points at HAB 1, until the next night's sleep (event slept). Every number PIP says has a factcheck row, named per beat in `fact_rows`. Spots: [27.95, 9.5] is wing1's clean_panel stand, [28.5, 7] open ground south of it, short of the wing rows; [-11, 0.5] just inside the greenhouse's door. pip.place: put PIP at a spot before its order (unseen, the night has passed: a sol may end with PIP far from the base). Sol 2's dust comes from the rules: data/sim.json schedule fires dust_gust at Sol 2, 03:00, overnight. Sol 4: `do: mail` sends the visor mail (beats.send_mail, the HUD's send_mail), and the reply comes back as mail_arrived (the HUD's mail cue); `wait.ever` counts an event that came before its beat, since the valve may take longer than the 22 minute round trip. Sol 5: to_shelter ends 0.6 m from the shelter's middle, where the whole body is inside its room (player.room). Sol 5: the rules' schedule starts the ARCHIVED X12 flare at 07:00 (data/sim.json), the wiring tells the beats event:<id>, and being in the storm shelter's room sets the rules' sheltered knob (half the dose). Sol 6: the quiet sols 6 to 8 are slept through at once (`do: skip:3`, beats.skip_sols: the rules' skip_sols, then the HUD's ledger card); its close comes back as ledger_closed, and the day goes on as Sol 9. The skip lands on Sol 9's morning, so key 6 goes on with Sol 9 'First field trip': plan on the map, board the rover, `do: trip:<landmark>` (beats.trip, cine.trip_to, answered with arrived:<landmark>) to the Mont Mercou site, a sample, and the trip home Sol 10: the quiet sols 10 and 11 are slept through (`skip:2`, the rules' storm starts in Sol 11's night, data/sim.json schedule) and the look jumps to the storm under the ledger card (`clock:storm`); key 10 goes on as Sol 12 'The sky turns orange': out to PIP, a dark sky felt first, then named, the storm power choice (beats.json offers sol12_power), the reactor. Sol 13: a dusty suit brushed off in HAB 1 (use brush), then the stormy sols 13 to 16 skipped (`skip:4`), and key 13 goes on as Sol 17: the first salad from the greenhouse (use harvest). The 2018 storm's sky clears with a 43 sol e-fold (row 182), so the storm look and the rules' dim sun stay on past Sol 17: no 'clear sky' line Sol 18: the stormy sols 18 and 19 skipped (`skip:2`), and key 18 goes on as Sol 20 'The long drive' to Curiosity's sol 5070 spot (site_curiosity, 14.3 km, outside the walk-home ring): look, never touch, the trip home (the overnight in the rover and Sol 22's low battery are not played). Sol 21: the calm sols 21 to 25 skipped (`skip:5`), Sol 26: the sample case lifted and carried to the rocket (item mav) and set down, sols 26 to 30 skipped, and on Sol 31 `do: liftoff` (beats.liftoff, cine.launch, answered with launched); PIP's last lines are the result. A skip later in a sequence waits on the `event` ledger_closed, not `ever`: `ever` counts the wake's own ledger",
+  "_note": "Sols past the first (design/story.md section 4, Chapter 1), in data/beats.json's beat schema (its _note). A key per sol: beats.start_sol(sol) plays it when the kid wakes on that sol (after cine's night sleep, the rules' sim.sol). Feel first, then PIP names it, once. Mission 1 is keys 2 to 10 (design/plans/mission-1.md, mission-1-contracts.md): a teaching line shows for its `wait.time` and never stops the game, its `page` lands in the handbook, and each sol asks one `check` after its last lesson; Mission 2 (key 13 on) still has facts that wait for a dismiss. Sol 2: one wing brushed, then the kid goes to the reactor (landmark reactor, about 170 m out) on foot or in the rover (the body rides on the seat, so the place counts while driving); brushing more wings first is the kid's own trade. Sol 4: the alarm's beat shows no waypoint, the handbook's oxygen_valve page says where; its `nag` reminders say it too. Sol 5: the Shift lesson on the way to the shelter; the card sol5_storm applies nothing, the kid's own place does (the root halves the dose while the hero stands in the shelter, and wings brushed in free play give the power). Key 6: the M lesson when the trip is planned. Each sol's work ends with day_done: PIP leads to HAB 1's airlock and the Today list keeps only the rest (beats.REST), and the bed opens only then (beats.may_sleep; not on Sol 5, where PIP stays in the shelter). Then free play: everything allowed, PIP let go (pip.release), the Today list says sleep and points at HAB 1, until the next night's sleep (event slept). Every number PIP says has a factcheck row, named per beat in `fact_rows`. Spots: [27.95, 9.5] is wing1's clean_panel stand, [28.5, 7] open ground south of it, short of the wing rows; [-11, 0.5] just inside the greenhouse's door. pip.place: put PIP at a spot before its order (unseen, the night has passed: a sol may end with PIP far from the base). Sol 2's dust comes from the rules: data/sim.json schedule fires dust_gust at Sol 2, 03:00, overnight. Sol 4: `do: mail` sends the visor mail (beats.send_mail, the HUD's send_mail), and the reply comes back as mail_arrived (the HUD's mail cue); `wait.ever` counts an event that came before its beat, since the valve may take longer than the 22 minute round trip. Sol 5: to_shelter ends 0.6 m from the shelter's middle, where the whole body is inside its room (player.room). Sol 5: the rules' schedule starts the ARCHIVED X12 flare at 07:00 (data/sim.json), the wiring tells the beats event:<id>, and being in the storm shelter's room sets the rules' sheltered knob (half the dose). Sol 6: the quiet sols 6 to 8 are slept through at once (`do: skip:3`, beats.skip_sols: the rules' skip_sols, then the HUD's ledger card); its close comes back as ledger_closed, and the day goes on as Sol 9. The skip lands on Sol 9's morning, so key 6 goes on with Sol 9 'First field trip': plan on the map, board the rover, `do: trip:<landmark>` (beats.trip, cine.trip_to, answered with arrived:<landmark>) to the Mont Mercou site, a sample, and the trip home Sol 10, Mission 1's finale 'The sky goes dark': no skip, the kid wakes into the dust storm (the rules' storm starts in Sol 9's night, data/sim.json schedule; the old beat ids s12_* stay). The wake's `do` turns the look: clock:storm jumps it to the storm at noon, clock:6.5 puts it back at the rules' wake hour (sim.json wake_hour) and clock:run lets it run, so the sky is dark at the rules' hour when the kid steps out. Out to PIP, the dark sky felt first, then named: the wings, the reactor, storms that cover all of Mars; one check; the storm power choice (beats.json offers sol12_power); Mission 1's last line (m1_done); the walk home. The sleep after it lands on Sol 11 and the root skips on to key 13's Sol 13 with no ledger. Sol 13: a dusty suit brushed off in HAB 1 (use brush), then the stormy sols 13 to 16 skipped (`skip:4`), and key 13 goes on as Sol 17: the first salad from the greenhouse (use harvest). The 2018 storm's sky clears with a 43 sol e-fold (row 182), so the storm look and the rules' dim sun stay on past Sol 17: no 'clear sky' line Sol 18: the stormy sols 18 and 19 skipped (`skip:2`), and key 18 goes on as Sol 20 'The long drive' to Curiosity's sol 5070 spot (site_curiosity, 14.3 km, outside the walk-home ring): look, never touch, the trip home (the overnight in the rover and Sol 22's low battery are not played). Sol 21: the calm sols 21 to 25 skipped (`skip:5`), Sol 26: the sample case lifted and carried to the rocket (item mav) and set down, sols 26 to 30 skipped, and on Sol 31 `do: liftoff` (beats.liftoff, cine.launch, answered with launched); PIP's last lines are the result. A skip later in a sequence waits on the `event` ledger_closed, not `ever`: `ever` counts the wake's own ledger",
   "deadline": {
     "_note": "A sol's tasks belong to that sol (skills/guided-tutorial row 6): while they are not done, PIP warns at these local hours of the day it began (art direction; the sun sets about 17:50), and once more at the rules' hold before the next wake (sim.awake_left). A late night has its cost in the rules: a night's sleep is never shorter than sleep_h (data/sim.json), so a kid who stays up wakes late",
     "warn": [[16.0, "deadline.sunset"], [18.5, "deadline.night"], [22.0, "deadline.late"]],
@@ -29,9 +29,11 @@
     },
     {
       "id": "power_low",
+      "objective": null,
       "line": "sol2.power_low",
-      "fact": true,
-      "objective": null
+      "wait": {
+        "time": 4.0
+      }
     },
     {
       "id": "to_wings",
@@ -53,9 +55,12 @@
       "pip": {
         "point_at": [-8.116, -28.223, 1.3]
       },
-      "line": "sol2.see_dust",
-      "fact": true,
       "objective": null,
+      "line": "sol2.see_dust",
+      "page": "dust",
+      "wait": {
+        "time": 4.0
+      },
       "fact_rows": [
         177
       ]
@@ -71,58 +76,73 @@
       }
     },
     {
-      "id": "jumped",
-      "line": "sol2.power_jumped",
-      "fact": true
+      "id": "your_call",
+      "line": "sol2.your_call",
+      "wait": {
+        "time": 4.0
+      }
     },
     {
-      "id": "weak_sun",
-      "line": "sol2.weak_sun",
-      "fact": true,
-      "fact_rows": [
-        15
-      ]
-    },
-    {
-      "id": "opportunity",
-      "line": "sol2.opportunity",
-      "fact": true,
+      "id": "explorers",
+      "line": "sol2.explorers",
+      "page": [
+        "opportunity",
+        "insight"
+      ],
+      "wait": {
+        "time": 4.0
+      },
       "fact_rows": [
         16,
-        17
+        160
       ]
     },
     {
-      "id": "see_reactor",
+      "id": "to_reactor",
       "task": "task.s2_reactor",
       "pip": {
-        "point_at": "reactor"
+        "go_to": "reactor",
+        "point_at": [-154.457, -112.219, 2.0]
       },
-      "line": "sol2.over_there",
-      "keys": [
-        "Mouse"
-      ],
+      "line": "sol2.to_reactor",
       "objective": "reactor",
       "wait": {
-        "action": "look"
+        "place": {
+          "at": "reactor",
+          "r": 14.0
+        }
       }
     },
     {
       "id": "reactor",
+      "objective": null,
       "line": "sol2.reactor",
-      "fact": true,
+      "page": "reactor",
+      "wait": {
+        "time": 4.0
+      },
       "fact_rows": [
         210
       ]
     },
     {
-      "id": "nasa_chose",
-      "line": "sol2.nasa_chose",
-      "fact": true,
-      "fact_rows": [
-        210
-      ],
-      "objective": null
+      "id": "check",
+      "check": {
+        "id": "sol2",
+        "q": "check.sol2.q",
+        "options": [
+          "check.sol2.a",
+          "check.sol2.b",
+          "check.sol2.c"
+        ],
+        "right": 0,
+        "pages": [
+          "dust",
+          "opportunity",
+          "insight",
+          "reactor"
+        ]
+      }
     },
     {
       "id": "day_done",
@@ -145,7 +165,9 @@
       "task": "task.sleep",
       "objective": "hab1",
       "line": "sleep.when_ready",
-      "fact": true
+      "wait": {
+        "time": 4.0
+      }
     },
     {
       "id": "free",
@@ -210,20 +232,6 @@
       }
     },
     {
-      "id": "robots_planted",
-      "line": "sol3.robots_planted",
-      "fact": true,
-      "objective": null
-    },
-    {
-      "id": "lettuce_days",
-      "line": "sol3.lettuce_days",
-      "fact": true,
-      "fact_rows": [
-        29
-      ]
-    },
-    {
       "id": "plant",
       "task": "task.s3_plant",
       "line": "sol3.plant",
@@ -232,31 +240,44 @@
       ],
       "wait": {
         "action": "use:plant"
+      },
+      "page": "seeds"
+    },
+    {
+      "id": "water",
+      "line": "sol3.water",
+      "page": "water",
+      "wait": {
+        "time": 4.0
       }
-    },
-    {
-      "id": "microgreens",
-      "line": "sol3.microgreens",
-      "fact": true,
-      "fact_rows": [
-        121
-      ]
-    },
-    {
-      "id": "radish",
-      "line": "sol3.radish",
-      "fact": true,
-      "fact_rows": [
-        119
-      ]
     },
     {
       "id": "vitamins",
       "line": "sol3.vitamins",
-      "fact": true,
+      "page": "garden",
+      "wait": {
+        "time": 4.0
+      },
       "fact_rows": [
         122
       ]
+    },
+    {
+      "id": "check",
+      "check": {
+        "id": "sol3",
+        "q": "check.sol3.q",
+        "options": [
+          "check.sol3.a",
+          "check.sol3.b",
+          "check.sol3.c"
+        ],
+        "right": 0,
+        "pages": [
+          "garden",
+          "seeds"
+        ]
+      }
     },
     {
       "id": "day_done",
@@ -279,7 +300,9 @@
       "task": "task.sleep",
       "objective": "hab1",
       "line": "sleep.when_ready",
-      "fact": true
+      "wait": {
+        "time": 4.0
+      }
     },
     {
       "id": "free",
@@ -320,12 +343,20 @@
         "mail"
       ],
       "line": "sol4.mail_sent",
-      "fact": true
+      "page": [
+        "radio",
+        "mission_control"
+      ],
+      "wait": {
+        "time": 4.0
+      }
     },
     {
       "id": "light_time",
       "line": "sol4.eleven_min",
-      "fact": true,
+      "wait": {
+        "time": 4.0
+      },
       "fact_rows": [
         250
       ]
@@ -333,20 +364,29 @@
     {
       "id": "valve",
       "task": "task.s4_valve",
+      "pip": {
+        "point_at": "oxygen"
+      },
       "line": "sol4.valve",
+      "page": "oxygen_valve",
       "keys": [
-        "E"
+        "Tab"
       ],
-      "objective": "oxygen",
+      "nag": [
+        "nag.s4_valve",
+        "nag.s4_valve"
+      ],
       "wait": {
         "action": "use:o2_valve"
       }
     },
     {
       "id": "fixed",
+      "objective": null,
       "line": "sol4.no_wait",
-      "fact": true,
-      "objective": null
+      "wait": {
+        "time": 4.0
+      }
     },
     {
       "id": "reply",
@@ -359,7 +399,26 @@
     {
       "id": "reply_home",
       "line": "sol4.reply_home",
-      "fact": true
+      "wait": {
+        "time": 4.0
+      }
+    },
+    {
+      "id": "check",
+      "check": {
+        "id": "sol4",
+        "q": "check.sol4.q",
+        "options": [
+          "check.sol4.a",
+          "check.sol4.b",
+          "check.sol4.c"
+        ],
+        "right": 0,
+        "pages": [
+          "radio",
+          "mission_control"
+        ]
+      }
     },
     {
       "id": "day_done",
@@ -382,7 +441,9 @@
       "task": "task.sleep",
       "objective": "hab1",
       "line": "sleep.when_ready",
-      "fact": true
+      "wait": {
+        "time": 4.0
+      }
     },
     {
       "id": "free",
@@ -424,11 +485,15 @@
       "objective": "shelter",
       "wait": {
         "time": 3.0
-      }
+      },
+      "page": "solar_storms"
     },
     {
       "id": "to_shelter",
-      "line": "sol5.no_run",
+      "line": "sol5.hurry",
+      "keys": [
+        "Shift"
+      ],
       "wait": {
         "place": {
           "at": "shelter",
@@ -438,37 +503,62 @@
     },
     {
       "id": "half_dose",
-      "line": "sol5.half_dose",
-      "fact": true,
       "objective": null,
+      "line": "sol5.half_dose",
+      "page": "storm_shelter",
+      "wait": {
+        "time": 4.0
+      },
       "fact_rows": [
-        90,
-        37
+        90
       ]
     },
     {
       "id": "xrays",
       "line": "sol5.xrays",
-      "fact": true,
+      "wait": {
+        "time": 4.0
+      },
       "fact_rows": [
         37
       ]
     },
     {
-      "id": "stay",
-      "task": "task.s5_stay",
-      "line": "sol5.stay",
-      "fact": true,
-      "fact_rows": [
-        35
-      ]
+      "id": "check",
+      "check": {
+        "id": "sol5",
+        "q": "check.sol5.q",
+        "options": [
+          "check.sol5.a",
+          "check.sol5.b",
+          "check.sol5.c"
+        ],
+        "right": 0,
+        "pages": [
+          "storm_shelter",
+          "solar_storms"
+        ]
+      }
+    },
+    {
+      "id": "decide",
+      "do": [
+        "offer:sol5_storm"
+      ],
+      "task": "task.s5_decide",
+      "line": "sol5.decide",
+      "wait": {
+        "action": "chose:sol5_storm"
+      }
     },
     {
       "id": "sleep_hint",
       "task": "task.sleep",
       "objective": "hab1",
       "line": "sol5.sleep_hint",
-      "fact": true
+      "wait": {
+        "time": 4.0
+      }
     },
     {
       "id": "free",
@@ -506,7 +596,9 @@
       "id": "dustier",
       "allow": [],
       "line": "sol6.dustier",
-      "fact": true
+      "wait": {
+        "time": 4.0
+      }
     },
     {
       "id": "s9_plan",
@@ -528,9 +620,18 @@
       ],
       "wait": {
         "event": "map_closed"
+      }
+    },
+    {
+      "id": "s9_walk_back",
+      "line": "sol9.walk_back",
+      "page": "rover",
+      "wait": {
+        "time": 4.0
       },
       "fact_rows": [
-        232
+        232,
+        266
       ]
     },
     {
@@ -558,20 +659,20 @@
       "wait": {
         "ever": "arrived:site_mercou_rover",
         "max_s": 40
-      },
-      "fact_rows": [
-        232
-      ]
+      }
     },
     {
-      "id": "s9_outcrop",
+      "id": "s9_lake",
       "allow": [],
       "task": "task.s9_sample",
-      "line": "sol9.outcrop",
-      "fact": true,
       "objective": "mercou",
+      "line": "sol9.lake",
+      "page": "gale_lake",
+      "wait": {
+        "time": 4.0
+      },
       "fact_rows": [
-        233
+        70
       ]
     },
     {
@@ -586,11 +687,14 @@
       }
     },
     {
-      "id": "s9_water",
-      "line": "sol9.water",
-      "fact": true,
+      "id": "s9_curiosity",
+      "line": "sol9.curiosity",
+      "page": "curiosity",
+      "wait": {
+        "time": 4.0
+      },
       "fact_rows": [
-        70
+        228
       ]
     },
     {
@@ -621,6 +725,23 @@
       }
     },
     {
+      "id": "check",
+      "allow": [],
+      "check": {
+        "id": "sol9",
+        "q": "check.sol9.q",
+        "options": [
+          "check.sol9.a",
+          "check.sol9.b",
+          "check.sol9.c"
+        ],
+        "right": 0,
+        "pages": [
+          "rover"
+        ]
+      }
+    },
+    {
       "id": "day_done",
       "allow": [],
       "task": "task.sleep",
@@ -641,8 +762,10 @@
       "task": "task.sleep",
       "objective": "hab1",
       "line": "sleep.when_ready",
-      "fact": true,
-      "allow": []
+      "allow": [],
+      "wait": {
+        "time": 4.0
+      }
     },
     {
       "id": "free",
@@ -659,28 +782,18 @@
   "10": [
     {
       "id": "wake",
-      "allow": [
-        "none"
+      "allow": [],
+      "do": [
+        "clock:storm",
+        "clock:6.5",
+        "clock:run"
       ],
-      "task": "task.s10_skip",
-      "line": "sol10.quiet",
+      "task": "task.s12_storm",
       "pip": {
         "place": "airlock",
         "go_to": "airlock",
         "wave": true
       },
-      "do": [
-        "skip:2",
-        "clock:storm"
-      ],
-      "wait": {
-        "ever": "ledger_closed"
-      }
-    },
-    {
-      "id": "s12_out",
-      "allow": [],
-      "task": "task.s12_storm",
       "line": "sol12.outside",
       "objective": "pip",
       "wait": {
@@ -704,7 +817,10 @@
     {
       "id": "s12_storm",
       "line": "sol12.storm",
-      "fact": true
+      "page": "dust",
+      "wait": {
+        "time": 4.0
+      }
     },
     {
       "id": "s12_wings",
@@ -712,7 +828,50 @@
         "point_at": "solar"
       },
       "line": "sol12.wings",
-      "fact": true
+      "page": "solar_wings",
+      "wait": {
+        "time": 4.0
+      }
+    },
+    {
+      "id": "s12_reactor",
+      "line": "sol12.reactor",
+      "page": "reactor",
+      "wait": {
+        "time": 4.0
+      },
+      "fact_rows": [
+        210
+      ]
+    },
+    {
+      "id": "s12_planet",
+      "line": "sol12.planet",
+      "page": "opportunity",
+      "wait": {
+        "time": 4.0
+      },
+      "fact_rows": [
+        40
+      ]
+    },
+    {
+      "id": "check",
+      "check": {
+        "id": "sol10",
+        "q": "check.sol10.q",
+        "options": [
+          "check.sol10.a",
+          "check.sol10.b",
+          "check.sol10.c"
+        ],
+        "right": 0,
+        "pages": [
+          "opportunity",
+          "solar_wings",
+          "dust"
+        ]
+      }
     },
     {
       "id": "s12_choose",
@@ -726,23 +885,14 @@
       }
     },
     {
-      "id": "s12_reactor",
-      "pip": {
-        "point_at": "reactor"
-      },
-      "line": "sol12.reactor",
-      "fact": true,
-      "fact_rows": [
-        210
-      ]
-    },
-    {
-      "id": "s12_planet",
-      "line": "sol12.planet",
-      "fact": true,
-      "fact_rows": [
-        40
-      ]
+      "id": "m1_done",
+      "line": "sol10.m1_done",
+      "keys": [
+        "Tab"
+      ],
+      "wait": {
+        "time": 4.0
+      }
     },
     {
       "id": "day_done",
@@ -765,7 +915,9 @@
       "task": "task.sleep",
       "objective": "hab1",
       "line": "sleep.when_ready",
-      "fact": true
+      "wait": {
+        "time": 4.0
+      }
     },
     {
       "id": "free",

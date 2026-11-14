@@ -2,7 +2,8 @@ extends Control
 ## The play HUD on the visor (design/mockups/hud.png): the status card (sol, clock, three meters), Today's tasks, the
 ## compass tape, the minimap and the full map (M), the objective's waypoint, PIP's speech bubble, the use prompt,
 ## visor mail, an alert, and the cards (a choice, the sleep ledger, the causes of a lost mission, where the numbers
-## come from). It holds no rules: bind() a node with `signal changed(state: Dictionary)` (the sim's state keys) and
+## come from), and the handbook (ui/handbook.gd: Tab or the book button), with the "New page" note and the check card
+## that send the kid to it. It holds no rules: bind() a node with `signal changed(state: Dictionary)` (the sim's state keys) and
 ## it shows what it gets. Every HUD event emits `cue(name)` once (audio/audio.gd UI_SOUNDS); the sandbox plays it.
 ## Under a CanvasLayer it fills the screen and draws PHONE_SCALE larger on a touch screen, with margins clear of the
 ## settings gear and the back swipe; inside another Control (ui/hud_gallery.tscn) it fills that.
@@ -25,6 +26,8 @@ const DOSE_FULL_MSV := 1000.0
 const GAIN_STEP := 1.05  # solar power rising 5% between two states shows as a "+kW" beside the power meter
 const GAIN_MIN_KW := 0.1  # and by this much: at dawn a tiny solar number climbs fast in percent
 const TOAST_S := 6.0
+const NOTE_S := 4.0  # the "New page" note stays this long
+const WRONG_S := 1.2  # after a wrong answer PIP's "Not quite" is read before the handbook covers it
 const TASKS_HOLD_S := 1.2  # a finished day's list stays up, every box ticked, before it leaves (art direction)
 const TASKS_LEAVE_S := 0.45  # its slide and fade out
 const TASKS_SLIDE := 24.0  # px it slides left as it goes
@@ -80,6 +83,7 @@ var touch := DisplayServer.is_touchscreen_available():
 			# 48 px under a mouse, 96 scene px for a finger (addons/forge/test.gd TARGET) under PHONE_SCALE
 			var b := ceilf(96.0 / Hud.PHONE_SCALE) if v else 48.0
 			source_button.custom_minimum_size = Vector2(b, b)
+			book_button.custom_minimum_size = Vector2(b, b)
 			gear_slot.custom_minimum_size = Vector2(b, b)
 			for g: Node in gear_slot.get_children():
 				(g as Control).custom_minimum_size = Vector2(b, b)
@@ -90,7 +94,13 @@ var mail: Control
 var mail_sol := -1  # the sol the mail went out, -1 for none
 var toast: Control
 var bubble: Control  # PIP's speech bubble (components/speech_bubble.gd)
+var note: Control  # "New page: <title>", a few seconds, never a stop
+var note_label: Label
 var source_button := Button.new()
+var book_button := Button.new()  # opens and closes the handbook
+var book_mark: Label  # its "!": a page not read yet
+var handbook: Control = preload("res://ui/handbook.gd").new()
+var check := {}  # the check on its card now (design/plans/mission-1-contracts.md "A check"), {} for none
 var gear_slot := Control.new()  # where the settings gear sits; dock_gear() puts the real one in it
 var modal := Control.new()  # a card and the scrim that keeps clicks off the world behind it
 var holder := CenterContainer.new()
@@ -100,6 +110,7 @@ var card: Control  # the open card, or null
 var _events := {}
 var _failing: Array = []
 var _toast_left := 0.0
+var _note_left := 0.0
 
 
 func _ready() -> void:
@@ -123,6 +134,12 @@ func _ready() -> void:
 	toast = _scene("alert_toast", left)
 	toast.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	toast.hide()
+	note_label = Hud.label("", "HudText")
+	note = Hud.panel("HudPanel", note_label)
+	note.name = "Note"
+	note.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	note.hide()
+	left.add_child(note)
 	source_button.name = "SourceButton"
 	# the "?" is a label on the button, not its text: then it draws with the other words, not between two shapes
 	var q := Hud.label("?", "SolNum")
@@ -138,7 +155,29 @@ func _ready() -> void:
 	# corner on a laptop and a phone (the gear is the settings screen's own button, docked here by dock_gear())
 	gear_slot.name = "GearSlot"
 	gear_slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var buttons := _quiet(Hud.col([gear_slot, source_button], 12))
+	book_button.name = "BookButton"
+	book_button.tooltip_text = "Handbook (Tab)"
+	book_button.theme_type_variation = "ChoiceButton"
+	book_button.custom_minimum_size = Vector2(Hud.BUTTON_H, Hud.BUTTON_H)
+	book_button.focus_mode = Control.FOCUS_NONE
+	book_button.pressed.connect(_toggle_handbook)
+	# an open book: two pages from the atlas's outlined box, side by side (the icon set has no book)
+	var pages := Control.new()
+	pages.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	pages.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	pages.set_meta("shapes", true)
+	pages.draw.connect(func() -> void:
+		for x: float in [-13.0, 0.0]:
+			Hud.blit(pages, "box_line", Rect2(pages.size * 0.5 + Vector2(x, -9.0), Vector2(13.0, 18.0)), Hud.color("on-surface")))
+	book_button.add_child(pages)
+	book_mark = Hud.label("!", "KeyAmber")
+	book_mark.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT, Control.PRESET_MODE_MINSIZE, 4)
+	book_mark.hide()
+	book_button.add_child(book_mark)
+	# the book stands left of the "?", under the compass's end: a third row pushed the mail onto a phone's action
+	# buttons, and beside the gear it lay on the compass
+	gear_slot.size_flags_horizontal = Control.SIZE_SHRINK_END
+	var buttons := _quiet(Hud.col([gear_slot, _quiet(Hud.row([book_button, source_button], 12))], 12))
 	buttons.name = "Buttons"
 	buttons.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	var corner := _quiet(Hud.row([buttons], 14))
@@ -193,6 +232,14 @@ func _ready() -> void:
 	Hud.layer(marker, 101)
 	Hud.layer(bubble, 101)
 	Hud.layer(modal, 201)
+	# the handbook: the whole screen, over the cards (a check's card waits under it). Added after the layering above:
+	# it is a screen of its own (ui/handbook.gd), drawn in the order it builds its parts
+	handbook.name = "Handbook"
+	handbook.z_as_relative = false
+	handbook.z_index = 301
+	add_child(handbook)
+	handbook.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	handbook.closed.connect(_handbook_closed)
 
 
 func _scene(n: String, parent: Control = null) -> Control:
@@ -281,9 +328,15 @@ func show_state(s: Dictionary) -> void:
 	_failing = failing.duplicate()
 
 
-## PIP's line by id, from data/lines.json. A missing id still shows, as its own placeholder.
+## PIP's line by id, from data/lines.json, as it reads: without the asterisks that mark its key words (only PIP's
+## bubble draws those). A missing id still shows, as its own placeholder.
 func line(id: String) -> String:
-	return lines.get(id, "TBD at event: " + id)
+	return _words(lines.get(id, "TBD at event: " + id))
+
+
+## A card's words: a line id or plain words, without the asterisks.
+func _words(t: String) -> String:
+	return String(lines.get(t, t)).replace("*", "")
 
 
 ## PIP says a line from data/lines.json. It stays until the next line or clear_line(). opts: `keys`, the keys it
@@ -292,7 +345,7 @@ func line(id: String) -> String:
 func say(line_id: String, opts := {}) -> void:
 	_cue("pip_open")
 	bubble.touch = touch
-	bubble.speak(line(line_id), line_id, opts.get("keys", []), opts.get("fact", false))
+	bubble.speak(lines.get(line_id, line(line_id)), line_id, opts.get("keys", []), opts.get("fact", false))
 
 
 func clear_line() -> void:
@@ -497,7 +550,12 @@ func set_mark(at: Variant, id := "", label := "") -> void:
 
 
 func _input(e: InputEvent) -> void:
-	if e.is_action_pressed("map") and not e.is_echo():
+	if handbook.visible:
+		return  # Tab and Esc close it in its own _input (ui/handbook.gd), which runs before this one; M waits
+	if InputMap.has_action("handbook") and e.is_action_pressed("handbook") and not e.is_echo() and is_visible_in_tree() and not full_map:
+		open_handbook()
+		get_viewport().set_input_as_handled()
+	elif e.is_action_pressed("map") and not e.is_echo():
 		if full_map:
 			close_map()
 		else:
@@ -544,23 +602,115 @@ func game_unix() -> float:
 	return start_unix + ((int(state.get("sol", 1)) - 1) * Hud.SOL_H) * 3600.0
 
 
-## A choice card. `id` names the question in data/lines.json; options: [{text, costs: {state key: amount}}], two or
-## three, each text a line id or plain words. Picking one emits chosen(id, index).
-func offer_choice(id: String, options: Array) -> void:
-	var c: Control = load("res://ui/components/event_card.tscn").instantiate()
+## A choice card. `id` names the question in data/lines.json; options: [{text, gain, lose}], two or three, each a
+## line id or plain words (`costs: {state key: amount}` still shows, as tags). `pages`: handbook pages that help; the
+## card then has a Handbook button that opens the first and comes back. Picking one emits chosen(id, index).
+func offer_choice(id: String, options: Array, pages: Array = []) -> void:
+	var c := _card(line(id), options, pages)
 	c.icon_name = "alert"
-	c.title = line(id)
-	c.line = ""
-	c.options = options.map(func(o: Dictionary) -> Dictionary:
-		var t: String = o.get("text", "")
-		return {"text": lines.get(t, t), "costs": o.get("costs", {})})
-	c.width = minf(c.width, size.x / 3.0 - 24.0)  # a side third: the hero stays in the middle one
 	c.chosen.connect(func(i: int) -> void:
 		close_card()
 		_cue("choice_made")
 		chosen.emit(id, i))
 	_open(c, false, true)
 	_cue("choice_open")
+
+
+## The side card a decision and a check share: a side third wide, so the hero stays in the middle one (`share` of
+## the screen's width; a check stops the game and has a longer question, so it may take up to half).
+func _card(title: String, options: Array, pages: Array, share := 1.0 / 3.0) -> Control:
+	var c: Control = load("res://ui/components/event_card.tscn").instantiate()
+	c.title = title
+	c.line = ""
+	c.options = options.map(func(o: Dictionary) -> Dictionary:
+		return {"text": _words(o.get("text", "")), "gain": _words(o.get("gain", "")), "lose": _words(o.get("lose", "")),
+			"costs": o.get("costs", {})})
+	c.width = minf(c.width, size.x * share - 24.0)
+	c.book_button = not pages.is_empty()
+	if pages:
+		c.handbook.connect(open_handbook.bind(pages[0]))
+	return c
+
+
+## A check (contracts, "A check"): the handbook opens at the page that holds the answer; closed, it leaves the
+## question with its options in a shuffled order. Right: the pages are stamped and checked(id) goes out. Wrong: PIP
+## says so, the page opens again, and the card is back after it. No penalty, as many tries as it takes.
+## A test picks option k of `check.options` with card.buttons[card.order.find(k)].
+func offer_check(c: Dictionary) -> void:
+	var order: Array = range(c.options.size())
+	order.shuffle()
+	var k := _card(line(c.q), order.map(func(i: int) -> Dictionary: return {"text": c.options[i]}), c.get("pages", []), 0.5)
+	k.icon_name = "science"
+	k.tag = "Tag"
+	k.order = order
+	k.chosen.connect(_answer)
+	_open(k, false, true)
+	check = c
+	_cue("choice_open")
+	if k.book_button:
+		open_handbook(c.pages[0])
+
+
+func _answer(i: int) -> void:
+	var c := check
+	if i == int(c.right):
+		handbook.learned(c.get("pages", []))
+		close_card()
+		_cue("objective_done")
+		checked.emit(c.id)
+		return
+	say("check.wrong")
+	if not card.book_button:
+		return
+	for b: Button in card.buttons:
+		b.disabled = true  # no second answer while PIP's line is read
+	var k := card
+	get_tree().create_timer(WRONG_S).timeout.connect(func() -> void:
+		if card == k:  # still this check
+			for b: Button in k.buttons:
+				b.disabled = false
+			open_handbook(c.pages[0]))
+
+
+## The handbook over everything, at `page` ("" for where it was). An open card waits hidden under it and is back
+## when it closes: a key could still press a card left in sight.
+func open_handbook(page := "") -> void:
+	if handbook.visible:
+		return
+	handbook.open(page)
+	modal.hide()
+	_take_pointer()
+	_cue("map_open")
+
+
+func _toggle_handbook() -> void:
+	if handbook.visible:
+		handbook.close()
+	else:
+		open_handbook()
+
+
+func _handbook_closed() -> void:
+	modal.visible = card != null
+	_focus_card()
+	_give_pointer()
+	_cue("map_close")
+	book_mark.visible = handbook.unread() > 0
+
+
+## A page lands in the handbook: a note for a few seconds and the "!" on the book button. Never a stop.
+func unlock_page(id: String) -> void:
+	if not handbook.unlock(id):
+		return
+	note_label.text = "%s: %s" % [line("hud.new_page"), handbook.title(id)]
+	note.show()
+	_note_left = NOTE_S
+	book_mark.visible = handbook.unread() > 0
+	_cue("mail")
+
+
+func log_decision(title: String, choice: String) -> void:
+	handbook.log_decision(title, choice)
 
 
 ## The sleep ledger: the sim's skip_sols() result.
@@ -615,6 +765,7 @@ func close_card() -> void:
 		card.name = &"Closed"  # freed at the frame's end: the next card in the same parent keeps its own name (snapshot)
 		card.queue_free()
 		card = null
+		check = {}
 		_give_pointer()
 	side_card = false
 	modal.hide()
@@ -632,13 +783,13 @@ func _take_pointer() -> void:
 
 
 func _give_pointer() -> void:
-	if _looked and not (card or full_map):
+	if _looked and not (card or full_map or handbook.visible):
 		_looked = false
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 
 func is_open() -> bool:
-	return modal.visible
+	return modal.visible or handbook.visible
 
 
 func _open(c: Control, full := false, side := false) -> void:
@@ -654,9 +805,14 @@ func _open(c: Control, full := false, side := false) -> void:
 	if side:
 		_place_side()
 	_take_pointer()  # a card is used with the pointer
-	var b := c.find_children("*", "Button", true, false)
+	_focus_card()
+
+
+## Keys and a gamepad work on the open card at once.
+func _focus_card() -> void:
+	var b: Array = card.find_children("*", "Button", true, false) if card else []
 	if b:
-		(b[0] as Button).grab_focus.call_deferred()  # keys and a gamepad work at once
+		(b[0] as Button).grab_focus.call_deferred()
 
 
 ## A choice stands in a side third, mid height, on the side away from PIP's bubble; if the bubble still reaches it
@@ -664,7 +820,11 @@ func _open(c: Control, full := false, side := false) -> void:
 func _place_side() -> void:
 	const GAP := 16.0
 	card.size = card.get_combined_minimum_size()
-	var s := card.size
+	# a card taller than the screen (three long options on a phone) shrinks to fit: a smaller target beats an option
+	# off screen, and a check has no other way out
+	var k := minf(1.0, (size.y - 2.0 * GAP) / card.size.y)
+	card.scale = Vector2(k, k)
+	var s := card.size * k
 	var y := clampf((size.y - s.y) * 0.5, GAP, maxf(GAP, size.y - s.y - GAP))
 	var spots: Array[Vector2] = [Vector2(size.x - s.x - GAP, y), Vector2(GAP, y)]
 	var b := Rect2(bubble.panel.position, bubble.panel.size).grow(8.0) if bubble.visible else Rect2()
@@ -698,6 +858,9 @@ func _process(delta: float) -> void:
 	if toast.visible:
 		_toast_left -= delta
 		toast.visible = _toast_left > 0.0
+	if note.visible:
+		_note_left -= delta
+		note.visible = _note_left > 0.0
 
 
 ## The compass and the minimap turn with the camera; their markers ride with the objective and PIP.
@@ -746,22 +909,7 @@ func snapshot() -> Dictionary:
 		"alert": toast.title if toast.visible else "",
 		"mail": {"sent": mail.sent_label.text, "reply": mail.reply_label.text, "minutes": snappedf(mail.minutes, 0.1)} if mail.visible else {},
 		"card": String(card.name) if card else "",
+		"check": check.get("id", ""),
+		"note": note_label.text if note.visible else "",
+		"handbook": handbook.state(),
 	}
-
-
-# Stand-ins for lane U (design/plans/mission-1-contracts.md): the names the root wires, so every lane's check runs
-# before the real ones land.
-func unlock_page(_id: String) -> void:
-	pass
-
-
-func offer_check(check: Dictionary) -> void:
-	checked.emit.call_deferred(check.id)
-
-
-func open_handbook(_page := "") -> void:
-	pass
-
-
-func log_decision(_title: String, _choice: String) -> void:
-	pass

@@ -5,7 +5,8 @@ extends Node
 ## It moves the look clock, PIP, a door and the ghost, and holds no game state: a choice is only offered
 ## (choice_offered); the rules (lane S) own it and answer with notify("chose:<id>").
 ## A tutorial step teaches like a parent: it allows only the actions it teaches (player.allow), shows their keys, waits
-## until the kid really does it, and PIP pleads louder the longer the kid ignores it (data/beats.json nag).
+## until the kid really does it. PIP says a step's line once, stays quiet while the kid is on it, and reminds twice at
+## most (data/beats.json nag; design/plans/mission-1.md section 2).
 
 ## For the HUD: the words by id; opts {keys: key-cap names, fact: true when it waits for a dismiss}
 signal line(line_id: String, opts: Dictionary)
@@ -19,6 +20,8 @@ signal liftoff  # `do: liftoff`: the crew flies home (cine.launch); it answers n
 signal send_mail  # `do: mail`: a message to Earth leaves now (the HUD's visor mail); its reply comes back as mail_arrived
 signal beat_done(id: String)
 signal choice_offered(id: String)
+signal page(id: String)  # a handbook page a starting beat unlocks (its `page`: one id or a list)
+signal check_offered(check: Dictionary)  # a beat's `check` (the sol's question); the HUD answers notify("checked:<id>")
 signal finished(sequence: String)
 
 const Ghost := preload("res://cine/beats_ghost.gd")
@@ -49,13 +52,11 @@ var _launch := -1.0  # the hero's crouch timer last tick: its edges are a crouch
 var _got := {}  # the actions and events of this beat's wait that arrived
 var _held := {}  # s each watched input was held in this beat
 var _task := ""
-var _nag := 0  # the plea level now: 0 calm, 1 to 3
-var _next_nag := 0
-var _nag_t := 0.0  # s the kid has been ignoring this step
+var _nag := 0  # the reminders said in this beat
+var _nag_t := 0.0  # s without progress on this step
 var _best := INF  # the nearest the hero came to this beat's place
 var _pip_there := false  # PIP reached this beat's order
-var _call_t := 0.0  # s since PIP last called "this way"
-var _back := INF  # s until the beat's own line comes back after a plea or a call
+var _back := INF  # s until the beat's own line comes back after an aside, a reminder or a call
 var _walk_to := Vector3.INF  # walk:<spot>: where the hero walks on its own, INF when it does not
 var _walk_allowed: Array = []  # the kid's allowed actions, given back when the walk ends
 var _leading_out := false  # an outdoor beat waits while PIP leads the hero out (outdoors())
@@ -137,7 +138,8 @@ func notify(action: String, _info := {}) -> void:
 	_met = _met or want.all(func(a: String) -> bool: return _got.has(a))
 
 
-## The names this beat waits for, all of them: its wait's action or event (one or a list), and a fact's dismiss.
+## The names this beat waits for, all of them: its wait's action or event (one or a list), a fact's dismiss and a
+## check's answer.
 func _wants() -> Array:
 	var w: Dictionary = beat.get("wait", {})
 	var out: Array = []
@@ -146,6 +148,8 @@ func _wants() -> Array:
 			out += w[k] if w[k] is Array else [w[k]]
 	if beat.get("fact", false):
 		out.append("dismissed")
+	if beat.has("check"):
+		out.append("checked:" + str(beat.check.id))
 	return out
 
 
@@ -219,6 +223,7 @@ func _physics_process(delta: float) -> void:
 	if "look" in _wants():
 		if player.cam.idle < 0.2:  # the player's own turning, not the camera's slow glance
 			_turned += absf(wrapf(player.cam.yaw - _cam_yaw, -PI, PI))
+			_nag_t = 0.0
 		_cam_yaw = player.cam.yaw
 		_met = _met or _turned >= deg_to_rad(float(data.watch.look_deg))
 	if w.has("place"):
@@ -226,9 +231,9 @@ func _physics_process(delta: float) -> void:
 		var b: Vector3 = player.body.global_position
 		var d := Vector2(b.x - at.x, b.z - at.z).length()
 		_met = _met or d < float(w.place.r)
-		if d < _best - 1.0:  # the kid is on the way: no plea, and calm again
+		if d < _best - 1.0:  # the kid is on the way: no reminder
 			_best = d
-			_calm()
+			_nag_t = 0.0
 		# a kid who followed PIP all the way and stands beside it has arrived, from whichever side: outside the place's
 		# circle the step never ended, and PIP only pleaded "Over here!" at a kid already there
 		if beat.get("pip", {}).has("follow_me") and _pip_there:
@@ -259,46 +264,35 @@ func _inputs(delta: float) -> void:
 	for a in WATCHED:
 		if a in want and Input.is_action_pressed(a) and player.may(a) and (a != "hurry" or player.moved > player.walk * 1.1):
 			_held[a] = _held.get(a, 0.0) + delta
+			_nag_t = 0.0  # on it: no reminder
 			if _held[a] >= float(data.watch.hold_s):
 				notify(a)
 
 
-## A step the kid ignores: PIP pleads at nag.at_s (gentle, loud, sad), then again from the loud one. A beat with a job
-## for the kid (keys, a fact, an objective or its own nag lines) pleads; a shot or a wait for PIP does not.
+## A step the kid is not doing (design/plans/mission-1.md section 2): one reminder at each of nag.at_s seconds without
+## progress, then none for this beat; a leading PIP's reminder is its call. Progress starts the count again: nearer
+## the place, a watched key held, the view turning (set where those are read), or beside the leading PIP. A beat with
+## a job for the kid (keys, an objective, a lead or its own nag lines) reminds; a fact, a shot or a plain wait never.
 func _plead(delta: float) -> void:
 	_back -= delta
 	if _back <= 0.0:
 		_back = INF
 		_say(beat.line)
-	if beat.get("pip", {}).has("follow_me") and pip.leading:
-		_call_t += delta
-		if _call_t >= float(data.pip.call_s):
-			_call_t = 0.0
-			pip.call_out()
-			_say(data.pip.call_line, true)
-	if not (beat.has("keys") or beat.has("objective") or beat.get("fact", false) or beat.has("nag")):
-		return
+	var lead: bool = beat.get("pip", {}).has("follow_me")
 	var n: Dictionary = data.nag
-	var at: Array = n.at_s
-	_nag_t += delta
-	if _nag_t >= float(at[_next_nag]):
-		_nag = _next_nag + 1
-		pip.nag(_nag, n)
-		_say(beat.get("nag", n.place_lines if beat.get("wait", {}).has("place") else n.lines)[_nag - 1], true)
-		_next_nag += 1
-		if _next_nag == at.size():
-			_next_nag = 1  # the loud one again, after the same wait as from the gentle one
-			_nag_t = float(at[0])
+	if _nag >= n.at_s.size() or beat.get("fact", false) or not (lead or beat.has("keys") or beat.get("objective") != null or beat.has("nag")):
+		return
+	var gap: Vector3 = player.body.global_position - pip.global_position
+	_nag_t = 0.0 if lead and Vector2(gap.x, gap.z).length() < float(data.pip.lead_resume_m) else _nag_t + delta
+	if _nag_t < float(n.at_s[_nag]):
+		return
+	_nag += 1
+	pip.nag(_nag, n)
+	_say(data.pip.call_line if lead else beat.get("nag", n.place_lines if beat.get("wait", {}).has("place") else n.lines)[_nag - 1], true)
 
 
-func _calm() -> void:
-	_nag = 0
-	_next_nag = 0
-	_nag_t = 0.0
-	pip.calm()
-
-
-## A line with this beat's keys and fact; `aside` (a plea or a call) gives way to the beat's own line after back_s.
+## A line with this beat's keys and fact; `aside` (a warning, a reminder, a call) gives way to the beat's own line
+## after back_s.
 func _say(id: String, aside := false) -> void:
 	var opts := {"keys": beat.get("keys", []), "fact": beat.get("fact", false)}
 	line.emit(id, opts)
@@ -318,9 +312,9 @@ func _start(i: int) -> void:
 	_held = {}
 	_best = INF
 	_pip_there = false
-	_call_t = 0.0
 	_back = INF
-	_calm()
+	_nag = 0
+	_nag_t = 0.0
 	# a beat that needs the hero outdoors (an outdoor shot) never runs indoors: PIP leads the way out first, and the
 	# beat starts once the hero is out (skills/guided-tutorial row 3)
 	if beat.get("outdoors", false) and not outdoors():
@@ -334,7 +328,7 @@ func _start(i: int) -> void:
 	_enter()
 
 
-## The beat's own start: its allowed actions, commands, PIP's order, task, objective and line.
+## The beat's own start: its allowed actions, commands, PIP's order, task, objective, line, pages and check.
 func _enter() -> void:
 	if beat.has("allow"):
 		player.allow(beat.allow)
@@ -348,6 +342,11 @@ func _enter() -> void:
 		objective.emit(beat.objective if beat.objective != null else "")
 	if beat.has("line"):
 		_say(beat.line)
+	var pages: Variant = beat.get("page", [])
+	for id: String in pages if pages is Array else [pages]:
+		page.emit(id)
+	if beat.has("check"):
+		check_offered.emit(beat.check)
 
 
 ## walk:<spot>: the move keys pressed toward the spot, the way the kid would steer, so the real controller walks the

@@ -170,11 +170,11 @@ func play() -> bool:
 	cine.slept.emit(&"night", 8.0)
 	for i in 30:
 		await process_frame
-	# Sol 10's wake sleeps through 10 and 11 itself (skip:2): it starts on Sol 10 and lands on 12
-	check(beats.sequence == "sol10" and at_start[0] == 12, "after the key 6 day the next is Sol 10 (%s, sol %d at its start, %d now)" % [beats.sequence, at_start[0], sim.sol])
+	# Sol 10 is played as it comes (the dust storm, Mission 1's finale): no skip at its start
+	check(beats.sequence == "sol10" and at_start[0] == 10, "after the key 6 day the next is Sol 10 (%s, sol %d at its start, %d now)" % [beats.sequence, at_start[0], sim.sol])
 	# the day's tasks run late (skills/guided-tutorial row 6): an idle day hears PIP at each deadline hour, then at the
 	# dawn hold, once each; to bed at dawn, the kid sleeps a full night and wakes late
-	check(not beats.may_sleep(), "Sol 12's tasks are not done")
+	check(not beats.may_sleep(), "Sol 10's tasks are not done")
 	said.clear()
 	for i in 200:
 		sim.run(0.5)

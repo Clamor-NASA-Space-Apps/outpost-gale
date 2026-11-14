@@ -12,6 +12,8 @@ const KEYS := {
 	"debug_sky": [KEY_B], "debug_teleport": [KEY_T], "debug_quality": [KEY_G],
 	"fullscreen": [KEY_F],  # F11 is the browser's; a web page may go full screen only from a key or a tap
 	"settings": [KEY_ESCAPE],
+	"handbook": [KEY_TAB],  # the HUD's handbook (ui/game_hud.gd)
+	"film": [KEY_P],  # P for photo: hides every HUD layer for a screen recording, and brings them back (sandbox.gd)
 }
 const PADS := {
 	"move_forward": [JOY_AXIS_LEFT_Y, -1.0], "move_back": [JOY_AXIS_LEFT_Y, 1.0],

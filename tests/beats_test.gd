@@ -1,20 +1,23 @@
 extends "res://addons/forge/test.gd"
-## The Sol 1 opening plays end to end (cine/beats.gd, data/beats.json):
+## The Sol 1 opening plays end to end (cine/beats.gd, data/beats.json; the script is design/plans/mission-1.md, Sol 1):
 ## godot --headless --path . --fixed-fps 60 -s tests/beats_test.gd
-## The hero walks out of the airlock on its own (input blocked), the hatch shuts, the real dawn shot catches the sun
-## breaking over the crater rim; then input actions walk the hero through the rest as a kid would: to PIP, A and D, S, a look
-## round, a hop (the Earth ghost beside it rises 0.38 as high and lands sooner), a hurry, a bag lifted and set down, the map, after
-## PIP to the solar farm, the facts dismissed, the choice answered, then after PIP to the greenhouse. On the way: a
-## blocked action does nothing, an ignored step makes PIP plead louder and calm down once the kid does it, a fact
-## waits for its dismiss. Every beat ends, in the data's order, inside its time; PIP never gives up an order, leads
-## at the hero's pace without being caught, and is let go at the end.
+## The hero wakes in the airlock and the kid walks out with move and look alone; then input actions take the hero
+## through the day as a kid would: to PIP, A and D, S, a look round, a hop (the Earth ghost beside it rises 0.38 as
+## high and lands sooner), after PIP round the base (the solar wings, the air tanks and the air maker, the garden),
+## the check answered, the choice answered, home after PIP, the sleep. On the way: a teaching line never stops the
+## game, each handbook page arrives with its beat, the check waits for its answer and the choice for the check. Every
+## beat ends, in the data's order, inside its time; PIP never gives up an order, leads at the hero's pace without
+## being caught or calling after a kid who follows, and is let go at the end.
 
 # s each beat may take here: its own wait plus the walking
 const BUDGET := {"wake": 40, "outside": 4, "pip_hello": 6, "walk_to_me": 20,
-	"side_steps": 60, "back_step": 4, "look_mouse": 6, "try_jump": 4, "jump_fact": 6, "hurry": 10,
-	"lift": 40, "lift_fact": 2, "set_down": 10, "map": 2, "map_mark": 10, "map_close": 2, "follow_solar": 120, "sun_fact": 2, "o2_visit": 120,
-	"o2_fact": 2, "garden_visit": 180, "lamps_fact": 2, "choice": 2,
+	"side_steps": 10, "back_step": 4, "look_mouse": 6, "try_jump": 4, "jump_fact": 6,
+	"follow_solar": 120, "sun_fact": 6, "o2_visit": 120, "tanks_fact": 6, "maker_fact": 6,
+	"garden_visit": 180, "garden_fact": 6, "air_check": 2, "choice": 2,
 	"day_done": 120, "sleep_hint": 2, "free": 3}
+# the handbook pages Sol 1 unlocks, in the order the kid meets them (design/plans/mission-1-contracts.md)
+const PAGES: Array[String] = ["thin_air", "pip", "light_on_mars", "weak_sun", "solar_wings", "air_tanks", "air_maker", "garden", "cold_nights"]
+const TASKS: Array[String] = ["task.step_outside", "task.learn_moves", "task.tour_base", "task.choose_power", "task.sleep"]
 
 var game: Node3D
 var world: Node3D
@@ -55,12 +58,11 @@ func play() -> bool:
 	beats.shot.connect(func(n: String) -> void: shots.append(n))
 	beats.choice_offered.connect(func(id: String) -> void: offered.append(id))
 	beats.finished.connect(func(s: String) -> void: finished.append(s))
-	game.hud.map_toggled.connect(func(open: bool) -> void: beats.notify("map_open" if open else "map_closed"))
-	game.hud.marked.connect(func(at: Variant, id: String) -> void:  # as sandbox.gd wires the map's mark
-		if at != null:
-			beats.notify("waypoint_set")
-			if id != "":
-				beats.notify("waypoint_set:" + id))
+	# the HUD's part, played here: the pages are collected, and the check is answered further down as a kid would
+	var pages: Array[String] = []
+	var asked: Array[Dictionary] = []
+	beats.page.connect(func(id: String) -> void: pages.append(id))
+	beats.check_offered.connect(func(c: Dictionary) -> void: asked.append(c))
 	# Sol 1 as the sandbox starts it: shortly before sunrise, the clock running (sandbox.gd start_opening)
 	var clock: Node = game.clock
 	var cine: Node = game.cine
@@ -121,30 +123,18 @@ func play() -> bool:
 	check(not shots.has("step_out") and not shots.has("look_around"), "no camera shot in Sol 1's opening (%s)" % [shots])
 	await _beat("pip_hello")
 	check(pip.reached.size() > 0 and pip.reached[-1] == "order", "PIP waits at its spot by the door for the hello")
-	check(targets.has("pip") and tasks.has("task.meet_pip"), "PIP is the objective and meeting it the task (%s, %s)" % [targets, tasks])
+	check(targets.has("pip") and tasks.has("task.learn_moves"), "PIP is the objective and learning to move the task (%s, %s)" % [targets, tasks])
 	await _beat("walk_to_me", func() -> void: _steer(pip.global_position, 2.0))
 	_stop()
 
-	# ignored: PIP pleads louder, then calms down once the kid does it
-	var level := [0]
-	var sulked := [false]
-	var pleas := await _until(func() -> bool: return beats._nag >= 3, 50.0, func() -> void:
-		sulked[0] = sulked[0] or pip._sulk > 0.0)
-	var said := lines.filter(func(id: String) -> bool: return id.begins_with("nag."))
-	check(pleas and said == ["nag.gentle", "nag.try", "nag.sad"], "an ignored key step pleads gently, louder (no 'Over here!'), then sad (%s)" % [said])
-	await frames(2)
-	check(sulked[0] or pip._sulk > 0.0, "PIP bounces sadly at the third plea")
-	await frames(60 * 5)
-	check(lines[-1] == "sol1.keys_ad", "the step's own line comes back after a plea (%s)" % lines[-1])
+	# PIP says a step's line once and waits for the kid (its quiet rules have their own test, tests/quiet_test.gd)
 	await _beat("side_steps", func() -> void:
-		level[0] = maxi(level[0], beats._nag)
 		if not Input.is_action_pressed(&"move_left") and not beats._got.has("move_left"):
 			action(&"move_left", true)
 		elif beats._got.has("move_left") and Input.is_action_pressed(&"move_left"):
 			action(&"move_left", false)
 			action(&"move_right", true))
 	action(&"move_right", false)
-	check(beats._nag == 0 and pip._sulk <= 0.0, "calm again once the kid did it")
 	await _beat("back_step", func() -> void:
 		if not Input.is_action_pressed(&"move_back"):
 			action(&"move_back", true))
@@ -154,6 +144,7 @@ func play() -> bool:
 	await _beat("look_mouse", func() -> void: player.cam.look(6.0, 0.0))
 
 	# the hop and its Earth ghost
+	check(pages == PAGES.slice(0, 2), "stepping out and PIP's hello each left a page, the jump's not yet (%s)" % [pages])
 	var y0: float = player.body.global_position.y
 	var hero_peak := 0.0
 	var hero_air := 0.0
@@ -175,67 +166,15 @@ func play() -> bool:
 	check(absf(g.peak - expect) < 0.05 * expect, "the ghost rises as high as Earth allows (%.3f m, physics %.3f)" % [g.peak, expect])
 	check(hero_peak > 2.0 * g.peak, "the hero on Mars rises well over twice as high (%.3f m against %.3f)" % [hero_peak, g.peak])
 	check(g.air < 0.6 * hero_air, "the ghost lands sooner (%.2f s against %.2f)" % [g.air, hero_air])
-	# a fact waits for its dismiss, however long
-	await frames(60 * 4)
-	check(beats.beat.get("id", "") == "jump_fact", "a fact waits for its dismiss (%s)" % beats.beat.get("id", ""))
-	await _beat("jump_fact", func() -> void: beats.notify("dismissed"))
+	# PIP names what the kid felt, and never stops the game for it: no dismiss, the line shows for its time
+	check(beats.beat.get("id", "") == "jump_fact" and lines[-1] == "sol1.weigh_less" and pages[-1] == "light_on_mars",
+		"after the hop PIP names the gravity and its page lands (%s, %s)" % [lines[-1], pages[-1]])
+	await _beat("jump_fact")
 
-	# hurry somewhere open, then the bag
-	var east := [false]  # east of the bags first: from the hatch side they and the sample box are in the way
-	await _beat("hurry", func() -> void:
-		if not Input.is_action_pressed(&"hurry"):
-			action(&"hurry", true)
-		east[0] = east[0] or player.body.global_position.x > 6.0
-		_steer(_ground(8.0, 14.0) if east[0] else _ground(6.5, 5.5)))
-	action(&"hurry", false)
-	_stop()
-	var round_by := [false]  # via open ground south of the bags: from the rover's side the sample box is in the way
-	await _beat("lift", func() -> void:
-		var bag := _nearest_bag()
-		var t: Node = game.interactions.target
-		var via := _ground(3.3, 9.3)
-		round_by[0] = round_by[0] or _flat(via, player.body.global_position) < 0.6
-		if t and t.kind == "bag":
-			_stop()
-			action(&"interact", true)
-			action(&"interact", false)
-		elif not round_by[0]:
-			_steer(via)
-		elif bag:
-			_steer(bag.global_position))
-	_stop()
-	check(game.interactions.carried != null, "the hero lifted a bag")
-	await _beat("lift_fact", func() -> void: beats.notify("dismissed"))
-	# PIP asks for the bag back on the ground: one E once the pick-up has finished
-	var put := [false]
-	await _beat("set_down", func() -> void:
-		if not put[0]:
-			put[0] = true
-			action(&"interact", true)
-			action(&"interact", false))
-	check(game.interactions.carried == null, "the bag is down again")
-	await _beat("map", func() -> void:
-		action(&"map", true)
-		action(&"map", false))
-	# Far Cry style: a click on the Solar farm's label marks it, through the same input a finger or a mouse gives
-	var clicked := [false]
-	await _beat("map_mark", func() -> void:
-		var label = game.hud.full_map.screen_of("solar") if game.hud.full_map else null
-		if label != null and not clicked[0]:
-			clicked[0] = true
-			click(label))
-	check(game.hud.mark != null and game.hud.mark_id == "solar", "the click marked the Solar farm (%s)" % game.hud.mark_id)
-	check(game.beacon.visible, "its beacon stands in the world")
-	await _beat("map_close", func() -> void:
-		action(&"map", true)
-		action(&"map", false))
-	check(not game.hud.map_open(), "the map closed again")
-	check(game.hud.snapshot().mark.compass.ends_with(" m"), "the compass shows the mark's distance (%s)" % game.hud.snapshot().mark)
-	check(offered.is_empty(), "no choice before PIP has shown the power")
-
-	# after PIP to the solar farm: it leads at the hero's pace and the hero never catches it
+	# the tour. After PIP to the solar wings: it leads at the hero's pace and the hero never catches it
 	var gap := [INF]
 	var ahead := [false]
+	crumbs = [player.body.global_position, pip.global_position]
 	await _beat("follow_solar", func() -> void:
 		var d: float = _flat(pip.global_position, player.body.global_position)
 		var to_hero: Vector3 = player.body.global_position - pip.global_position
@@ -245,26 +184,22 @@ func play() -> bool:
 		if behind and ahead[0]:
 			gap[0] = minf(gap[0], d)
 		# a kid following keeps about PIP's own lead distance (beats.json pip lead_near_m), not one standing on PIP
-		# (pip_test walks into it); PIP slows where it steers round the battery bank on the way north (since the base
-		# turned to the sunrise, 14 Nov)
-		if d < float(beats.data.pip.lead_near_m):
-			_stop()
-		else:
-			_steer(pip.global_position))
+		# (pip_test walks into it)
+		_follow_crumbs(float(beats.data.pip.lead_near_m)))
 	_stop()
 	check(gap[0] > 1.5, "a hero walking after PIP never comes within 1.5 m while it leads (%.2f m)" % gap[0])
-	check(lines.has("pip.this_way"), "PIP calls 'this way' while it leads")
-	await frames(60)  # a kid reads the fact a moment: the hero stands still before PIP sets off again
-	await _beat("sun_fact", func() -> void: beats.notify("dismissed"))
-	check(not clock.pinned, "the clock runs again: the sun rises and the wings turn")
-	# a visit to each thing the choice is about, then the choice (14 Nov playtest: asked before the kid knew them)
+	check(not lines.has("pip.this_way"), "PIP makes no 'this way' call while the kid follows")
+	check(tasks[-1] == "task.tour_base" and targets.has("pip"), "the tour is the task, PIP the objective (%s)" % tasks[-1])
+	await _beat("sun_fact")  # the hero stands and reads: nothing to dismiss
+	check(pages.slice(-2) == ["weak_sun", "solar_wings"], "the solar wings left their two pages (%s)" % [pages])
 	# a new lead: the last one's tracks walked the hero straight into PIP; PIP's own spot first, or a hero just past
 	# PIP's resume distance and a PIP waiting for him stand still for good
 	crumbs = [player.body.global_position, pip.global_position]
 	await _beat("o2_visit", _follow_crumbs)
 	_stop()
-	check(offered.is_empty(), "no choice before the oxygen maker and the lamps are shown")
-	await _beat("o2_fact", func() -> void: beats.notify("dismissed"))
+	await _beat("tanks_fact")
+	await _beat("maker_fact")
+	check(pages.slice(-2) == ["air_tanks", "air_maker"], "the tanks and the air maker left a page each (%s)" % [pages])
 
 	# follow me: the hero dawdles first, so PIP must stop and wait, then follows PIP's own tracks
 	crumbs = [player.body.global_position, pip.global_position]
@@ -278,13 +213,35 @@ func play() -> bool:
 		_follow_crumbs())
 	_stop()
 	check(resumed[0], "PIP goes on once the hero catches up")
-	check(offered.is_empty(), "still no choice at the greenhouse door")
-	await _beat("lamps_fact", func() -> void: beats.notify("dismissed"))
-	check(offered == ["sol1_power"], "the power choice comes last, after both visits (%s)" % [offered])
+	check(asked.is_empty() and offered.is_empty(), "no question and no choice before the garden was shown")
+	await _beat("garden_fact")
+
+	# the check: one question once its pages were shown; it waits for the answer, and the choice waits behind it
+	await frames(60 * 2)
+	var words: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/lines.json"))
+	if check(asked.size() == 1 and beats.beat.get("id", "") == "air_check" and offered.is_empty(), "the check is asked once and waits for its answer, the choice behind it (%s)" % [asked]):
+		var c: Dictionary = asked[0]
+		var options: Array = c.get("options", [])
+		check(c.get("id", "") == "sol1" and options.size() == 3 and int(c.get("right", -1)) == 0 and words.get(options[0], "") == "Tanks from Earth",
+			"it is Sol 1's question with three answers, the tanks the right one (%s)" % [c])
+		check(([c.get("q", "")] + options).all(func(id: String) -> bool: return words.has(id)), "its question and answers have words in data/lines.json")
+		var holds: Array = c.get("pages", [])
+		check(holds == ["air_tanks", "air_maker", "garden"] and holds.all(func(id: String) -> bool: return pages.has(id)),
+			"the pages that hold the answer were unlocked before it was asked (%s)" % [holds])
+	await _beat("air_check", func() -> void: beats.notify("checked:sol1"))  # the HUD's answer once the kid got it right
+
+	# the decision: last, with what each option gains and loses (no number until the rules give one)
+	check(offered == ["sol1_power"], "the power choice comes last, after the tour and the check (%s)" % [offered])
+	var offer: Dictionary = game.offers.sol1_power
+	check(offer.options.size() == 2 and offer.options.all(func(o: Dictionary) -> bool:
+		return words.has(o.text) and words.has(o.get("gain", "")) and words.has(o.get("lose", "")) and not o.get("apply", []).is_empty()),
+		"each option says what it gains and what it loses, and sets a rule")
+	check(offer.get("pages", []).all(func(id: String) -> bool: return pages.has(id)) and not offer.get("pages", []).is_empty(), "its handbook pages are unlocked by now (%s)" % [offer.get("pages", [])])
+	check(beats.tasks().map(func(t: Dictionary) -> String: return t.label_id) == TASKS, "the Today list is Sol 1's five tasks (%s)" % [beats.tasks()])
 	# the sandbox's own handler of a click on the card runs clean (a string `_note` among the offers broke it: a script
 	# error, and the opening never got past the choice)
 	check(not beats.may_sleep(), "no sleep while the choice waits")
-	game.hud.chosen.emit(game.offers.sol1_power.title, 0)
+	game.hud.chosen.emit(offer.title, 0)
 	beats.notify("chose:sol1_power")  # the rules' answer (lane S)
 	await _beat("choice")
 
@@ -305,6 +262,7 @@ func play() -> bool:
 	beats.notify("slept")  # cine.slept, a night
 	await _beat("free")
 
+	check(pages == PAGES, "Sol 1 unlocked its nine handbook pages, in order (%s)" % [pages])
 	var ids: Array[String] = []
 	var own: Array[String] = []
 	for b: Dictionary in beats.data.opening:
@@ -312,7 +270,8 @@ func play() -> bool:
 		if b.has("line"):
 			own.append(b.line)
 	check(beats.done == ids, "every beat ended, in order (%s)" % [beats.done])
-	var said_own := lines.filter(func(id: String) -> bool: return not id.begins_with("nag.") and id != "pip.this_way")
+	# reminders and calls aside (PIP's quiet rules), and a step's own line said again after one
+	var said_own := lines.filter(func(id: String) -> bool: return own.has(id))
 	var firsts: Array[String] = []
 	for id: String in said_own:
 		if firsts.is_empty() or firsts[-1] != id:
@@ -323,6 +282,13 @@ func play() -> bool:
 	check(player.allowed.is_empty(), "every action works again after the opening")
 	check(beats.tasks().all(func(t: Dictionary) -> bool: return t.state == "done") and tasks[-1] == "" and targets[-1] == "",
 		"the task list is all done and the objective cleared (%s)" % [beats.tasks()])
+	# kid UX: a line is at most 8 words with at most two highlights, and only the day's last line waits for a dismiss
+	var long := own.filter(func(id: String) -> bool:
+		var text: String = words.get(id, "")
+		return text == "" or text.split(" ", false).size() > 8 or text.count("*") not in [0, 2, 4])
+	check(long.is_empty(), "every line of Sol 1 is 8 words at most, two highlights at most (%s)" % [long])
+	var stops: Array = beats.data.opening.filter(func(b: Dictionary) -> bool: return b.get("fact", false)).map(func(b: Dictionary) -> String: return b.id)
+	check(stops == ["sleep_hint"], "no teaching line stops the game (%s)" % [stops])
 	await frames(120)
 	check(pip.state != "behind" and not pip.leading, "and it no longer waits for the hero (%s)" % pip.state)
 
@@ -346,14 +312,14 @@ func _walk_out_by_look() -> void:
 		action(&"move_forward", go)
 
 
-## After PIP along its own tracks, stopping 2 m short of it.
-func _follow_crumbs() -> void:
+## After PIP along its own tracks, stopping `near` m short of it.
+func _follow_crumbs(near := 2.0) -> void:
 	if crumbs.is_empty() or pip.global_position.distance_to(crumbs[-1]) > 0.5:
 		crumbs.append(pip.global_position)
 	var b: Vector3 = player.body.global_position
 	while crumbs.size() > 1 and _flat(crumbs[0], b) < 0.8:
 		crumbs.pop_front()
-	if _flat(pip.global_position, b) < 2.0:
+	if _flat(pip.global_position, b) < near:
 		_stop()
 	else:
 		_steer(crumbs[0])
@@ -388,19 +354,6 @@ func _until(ok: Callable, seconds: float, each := Callable()) -> bool:
 	return ok.call()
 
 
-## The cinematics' answer to a shot, once it was asked for.
-func _answer(name: String) -> void:
-	if shots.has(name):
-		beats.notify("shot_done:" + name)
-
-
-func _hold(a: StringName, seconds: float) -> void:
-	action(a, true)
-	await frames(int(60 * seconds))
-	action(a, false)
-	await frames(2)
-
-
 ## Walks the hero toward `at` the way a player does: the view turned that way, the forward key held; stops within `near`.
 func _steer(at: Vector3, near := 0.3) -> void:
 	if _flat(at, player.body.global_position) < near:
@@ -421,16 +374,3 @@ func _stop() -> void:
 
 func _flat(a: Vector3, b: Vector3) -> float:
 	return Vector2(a.x - b.x, a.z - b.z).length()
-
-
-func _ground(x: float, z: float) -> Vector3:
-	return Vector3(x, world.height_at(x, z), z)
-
-
-func _nearest_bag() -> Node3D:
-	var best: Node3D = null
-	for n: Node in get_nodes_in_group("carriable"):
-		var b := n as Node3D
-		if best == null or b.global_position.distance_to(player.body.global_position) < best.global_position.distance_to(player.body.global_position):
-			best = b
-	return best

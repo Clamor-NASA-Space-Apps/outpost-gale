@@ -7,6 +7,7 @@ extends Control
 ## A line stays up until the next one or hide_line(). Under the words it can show the keys it teaches (keycaps from
 ## the atlas; on a touch screen the touch control's icon or a short word), and a fact waits for the player: Enter (or
 ## a tap on the bubble) first finishes the typing, then dismisses it (signal dismissed).
+## `*words*` in a line are its key fact: bold, in the primary colour, and the asterisks never show.
 
 signal finished  # the line is typed out
 signal dismissed(line_id: String)
@@ -29,7 +30,10 @@ var wave := Control.new()
 var speaker: Node3D
 var camera: Camera3D
 var head := 0.0  # metres from the speaker's origin to just above its top
-var text := ""
+var text := ""  # the line as it reads, without the asterisks
+var runs: Array = []  # the line in order, [words, marked]: a marked run draws bold in the primary colour
+var pieces: Array = []  # what is drawn now, [words, colour, font or null], for the tests
+var bold: Font
 var typed := 0  # letters shown so far
 var docked := false
 var dir := Vector2.DOWN  # docked: which way the speaker is
@@ -58,6 +62,18 @@ func _ready() -> void:
 	label.add_theme_font_override("normal_font", get_theme_font("font", "BubbleText"))
 	label.add_theme_font_size_override("normal_font_size", get_theme_font_size("font_size", "BubbleText"))
 	label.add_theme_color_override("font_outline_color", get_theme_color("font_outline_color", "Label"))
+	bold = get_theme_font("font", "MenuTitle")  # the same family at 700
+	# the label's dark edge is drawn here, not by Hud.edge (which leaves a label that has an "Edge" alone): that one
+	# shapes the whole line in the normal font, so after a bold run it would lie beside the words
+	var e := Control.new()
+	e.name = "Edge"
+	e.show_behind_parent = true
+	e.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	e.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	e.set_meta("edge_of", true)
+	e.draw.connect(_draw_edge.bind(e))
+	label.add_child(e)
+	label.draw.connect(e.queue_redraw)
 	wave.custom_minimum_size = Vector2(22, 12)
 	wave.draw.connect(_draw_wave)
 	wave.set_meta("shapes", true)
@@ -92,7 +108,12 @@ func follow(node: Node3D, cam: Camera3D) -> void:
 ## A line in PIP's voice. `keys`: the key names it teaches ("W", "Mouse", "Space"...); `is_fact`: it waits for
 ## Enter or a tap.
 func speak(line: String, id := "", keys: Array = [], is_fact := false) -> void:
-	text = line
+	var parts := line.split("*")
+	runs = []
+	for i in parts.size():
+		if parts[i] != "":
+			runs.append([parts[i], i % 2 == 1 and i < parts.size() - 1])  # an asterisk with no partner marks nothing
+	text = "".join(parts)
 	line_id = id
 	fact = is_fact
 	typed = 0
@@ -168,17 +189,69 @@ func typing() -> bool:
 	return visible and typed < text.length()
 
 
-## The typed letters in ink, the rest as a faint copy: the layout is the whole line from the first letter.
+## The typed letters in ink (a marked run bold, in the primary colour), the rest as a faint copy in the same fonts:
+## the layout is the whole line from the first letter.
 func _show_text() -> void:
-	label.set_meta("typed", typed)  # the dark edge (Hud.edge) is faint under the faint words too
-	label.set_meta("ghost", Hud.color("hud-ink-ghost").a)
 	label.clear()
-	label.push_color(Hud.color("on-surface"))
-	label.add_text(text.substr(0, typed))
+	pieces = []
+	var at := 0
+	for r: Array in runs:
+		var words: String = r[0]
+		var n := clampi(typed - at, 0, words.length())
+		var font: Font = bold if r[1] else null
+		if font:
+			label.push_font(font)
+		_put(words.substr(0, n), Hud.color("primary" if r[1] else "on-surface"), font)
+		_put(words.substr(n), Hud.color("hud-ink-ghost"), font)
+		if font:
+			label.pop()
+		at += words.length()
+
+
+func _put(words: String, col: Color, font: Font) -> void:
+	if words == "":
+		return
+	label.push_color(col)
+	label.add_text(words)
 	label.pop()
-	label.push_color(Hud.color("hud-ink-ghost"))
-	label.add_text(text.substr(typed))
-	label.pop()
+	pieces.append([words, col, font])
+
+
+## The dark edge round the letters, as Hud.edge draws it (the same words 8 times, 1.5 px out, from the label's own
+## glyph textures), laid out run by run in each run's font. Words not typed yet get an edge as faint as they are.
+func _draw_edge(e: Control) -> void:
+	if text == "" or not label.is_visible_in_tree():
+		return
+	var s := label.get_theme_font_size("normal_font_size")
+	var p := TextParagraph.new()
+	for r: Array in runs:
+		p.add_string(r[0], bold if r[1] else label.get_theme_font("normal_font"), s)
+	p.width = label.size.x
+	p.break_flags = TextServer.BREAK_MANDATORY | TextServer.BREAK_WORD_BOUND | TextServer.BREAK_ADAPTIVE
+	var col := label.get_theme_color("font_outline_color")
+	col.a = 1.0 - pow(1.0 - col.a, 1.0 / 3.0)  # about three copies overlap at a letter's edge
+	var faint := col
+	faint.a *= Hud.color("hud-ink-ghost").a
+	var ts := TextServerManager.get_primary_interface()
+	var ci := e.get_canvas_item()
+	var y := 0.0
+	for i in p.get_line_count():
+		var w := p.get_line_width(i)
+		var rid := p.get_line_rid(i)
+		var span := p.get_line_range(i)
+		# where the typed words end on this line, in px from its start
+		var cut := w
+		if typed < span.y:
+			cut = 0.0 if typed <= span.x else ts.shaped_text_get_grapheme_bounds(rid, typed).x
+		for k in 8:
+			var o := Vector2(0.0, y + p.get_line_ascent(i)) + Vector2.from_angle(k * TAU / 8.0) * Hud.EDGE_R
+			if cut >= w:
+				ts.shaped_text_draw(rid, ci, o, -1.0, -1.0, col)  # all typed: no clip (a clip cuts the last glyph)
+			elif cut > 0.0:
+				ts.shaped_text_draw(rid, ci, o, -1.0, cut - 0.5, col)
+			if cut < w:
+				ts.shaped_text_draw(rid, ci, o, maxf(cut, 0.01), -1.0, faint)
+		y += p.get_line_size(i).y
 
 
 func _process(delta: float) -> void:

@@ -110,11 +110,11 @@
    "factcheck": "row 177 (Gale night winds about 21 m/s, most active 17:00 to 23:00); row 181 (Spirit's power 'went up by about 50 percent' when wind cleared its panels, so dust that heavy left 1 / 1.5 of the power: 0.33 lost); all of it laid down in one night is art direction. A gust is a moment (sim.gd start()): it raises panel_dust to dust_to and is not an active event", "placeholder_keys": ["dust_to"]}
  },
  "schedule": {
-  "_note": "when events happen: the story's. Sol 5's flare comes half an hour after the 06:30 wake, so the kid has the morning's hour to reach the shelter (row 35). Sol 2's night gust dusts the wings, so the morning's power is lower and a brush lifts it (data/sols.json Sol 2). The dust storm starts in the night of Sol 11, during the skip of Sols 10 and 11, so the kid wakes into it on Sol 12 and the sky darkens on over the next sol (story.md chapter 3; rise_h 48)",
+  "_note": "when events happen: the story's. Sol 5's flare comes half an hour after the 06:30 wake, so the kid has the morning's hour to reach the shelter (row 35). Sol 2's night gust dusts the wings, so the morning's power is lower and a brush lifts it (data/sols.json Sol 2). The dust storm starts in the night of Sol 9, after the rover trip, so the kid wakes into it on Sol 10, Mission 1's finale, and the sky darkens on over the next sols (design/plans/mission-1.md; rise_h 48)",
   "placeholder": true,
   "list": [
    {"sol": 5, "hour": 7, "event": "flare_x12"},
-   {"sol": 11, "hour": 21, "event": "dust_storm"},
+   {"sol": 9, "hour": 21, "event": "dust_storm"},
    {"sol": 2, "hour": 3, "event": "dust_gust"}
   ]
  },

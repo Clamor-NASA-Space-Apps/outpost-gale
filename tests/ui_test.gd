@@ -80,7 +80,114 @@ func play() -> bool:
 	_no_colour_literals("res://ui/")
 	_no_colour_literals("res://ui/components/")
 	_loading_tokens()
+	await _mission()  # last: it registers the game's input actions (Tab)
 	return true
+
+
+## Mission 1's HUD (design/plans/mission-1-contracts.md): a highlighted line, the handbook on Tab and its "New page"
+## note, a check answered wrong then right, and a decision card's gain and lose rows.
+func _mission() -> void:
+	preload("res://player/controls.gd").register(0.2)
+	var tab := InputMap.action_get_events(&"handbook")
+	check(tab.size() == 1 and (tab[0] as InputEventKey).physical_keycode == KEY_TAB, "the handbook action is Tab")
+	var h: Control = load("res://ui/game_hud.tscn").instantiate()
+	root.add_child(h)
+	await frames(2)
+	var b: Control = h.bubble
+	var cues: Array[String] = []
+	h.cue.connect(func(n: String) -> void: cues.append(n))
+	# a highlight: *words* draw bold in the primary colour, and the asterisks show nowhere
+	var plain := "Mars gets 43% of Earth's sunlight."
+	h.lines["t.light"] = "Mars gets *43%* of Earth's sunlight."
+	h.say("t.light")
+	await process_frame
+	await process_frame
+	check(h.snapshot().subtitle == plain and h.line("t.light") == plain, "a highlighted line reads without asterisks: '%s'" % h.snapshot().subtitle)
+	check(b.label.get_parsed_text() == plain and b.typed < plain.length(), "the whole line is laid out while it types (%d typed): '%s'" % [b.typed, b.label.get_parsed_text()])
+	await create_timer(plain.length() / b.CHARS_PER_S + 0.3).timeout
+	var marked: Array = b.pieces.filter(func(p: Array) -> bool: return p[2] != null)
+	check(marked == [["43%", Hud.color("primary"), b.bold]], "the marked run is bold in the primary colour: %s" % [b.pieces])
+	var weight := TextServerManager.get_primary_interface().name_to_tag("wght")
+	var normal: FontVariation = b.label.get_theme_font("normal_font")
+	check(int((b.bold as FontVariation).variation_opentype[weight]) >= 700 and int(normal.variation_opentype[weight]) < 600, "bold is a heavier weight of the bubble's font")
+	check(b.pieces.size() == 3 and b.pieces[0] == ["Mars gets ", Hud.color("on-surface"), null], "the rest of the line is plain ink: %s" % [b.pieces])
+	h.say("follow_me")
+	check(b.pieces.all(func(p: Array) -> bool: return p[2] == null), "a line with no asterisks has no bold run")
+	h.clear_line()
+	# a new page: a note and a cue once, the game never stops, and nothing for a page already there
+	cues.clear()
+	h.unlock_page("air_tanks")
+	check(h.snapshot().note == "New page: " + h.handbook.title("air_tanks") and not h.is_open(), "a new page shows its note and stops nothing: '%s'" % h.snapshot().note)
+	check(cues == ["mail"] and h.book_mark.visible == (h.handbook.unread() > 0), "the note plays one cue, and the book shows '!' while a page is unread: %s" % [cues])
+	h.note.hide()
+	h._cue_at.clear()
+	h.unlock_page("air_tanks")
+	check(h.snapshot().note == "" and cues == ["mail"], "a page already unlocked shows no second note: '%s' %s" % [h.snapshot().note, cues])
+	h.unlock_page("garden")
+	await create_timer(h.NOTE_S + 0.2).timeout
+	check(h.snapshot().note == "", "the note leaves by itself")
+	# Tab and the book button open and close the handbook, and is_open() follows
+	for step: Array in [[&"handbook", true], [&"handbook", false], [&"", true], [&"ui_cancel", false]]:
+		if step[0] == &"":
+			h.book_button.pressed.emit()
+		else:
+			action(step[0])
+			action(step[0], false)
+		await process_frame
+		await process_frame
+		check(h.handbook.visible == step[1] and h.is_open() == step[1] and h.snapshot().handbook.open == step[1],
+			"%s leaves the handbook %s (is_open %s)" % [step[0] if step[0] else &"the book button", "open" if step[1] else "closed", h.is_open()])
+	# a check: the page first, then the card; wrong sends the kid back to the page, right stamps it, once
+	var quiz := {"id": "t1", "q": "Where does our air come from?", "options": ["From Earth", "From *tanks*", "From the wind"], "right": 1, "pages": ["air_tanks", "garden"]}
+	var done: Array = []
+	h.checked.connect(func(id: String) -> void: done.append(id))
+	h.offer_check(quiz)
+	await frames(2)
+	check(h.handbook.visible and h.snapshot().handbook.page == "air_tanks" and h.snapshot().check == "t1" and h.is_open(), "a check opens the handbook at its page first: %s" % [h.snapshot().handbook])
+	h.handbook.close()
+	await frames(2)
+	var shown: Array = h.card.buttons.map(func(k: Button) -> String: return (k.find_children("*", "Label", true, false)[0] as Label).text)
+	var want: Array = h.card.order.map(func(i: int) -> String: return String(quiz.options[i]).replace("*", ""))
+	var sorted: Array = h.card.order.duplicate()
+	sorted.sort()
+	check(h.snapshot().card == "EventCard" and h.modal.visible and not h.handbook.visible and shown == want and sorted == [0, 1, 2],
+		"the handbook closed, the check card shows its three options in the card's order: %s %s" % [shown, h.card.order])
+	h.card.book.pressed.emit()
+	await frames(2)
+	check(h.handbook.visible and not h.modal.visible, "the card's Handbook button opens the handbook over it")
+	h.handbook.close()
+	await frames(2)
+	h.card.buttons[h.card.order.find(0)].pressed.emit()  # wrong
+	check(h.snapshot().subtitle == h.line("check.wrong") and done.is_empty() and h.is_open(), "a wrong answer: PIP says '%s', nothing is emitted" % h.snapshot().subtitle)
+	await create_timer(h.WRONG_S + 0.2).timeout
+	check(h.handbook.visible and h.snapshot().handbook.page == "air_tanks", "then the page opens again: %s" % [h.snapshot().handbook])
+	h.handbook.close()
+	await frames(2)
+	check(h.modal.visible and h.snapshot().check == "t1" and not "air_tanks" in h.snapshot().handbook.learned, "and the card is back, nothing stamped yet")
+	h.card.buttons[h.card.order.find(1)].pressed.emit()  # right
+	await frames(2)
+	var learned: Array = h.snapshot().handbook.learned
+	check(done == ["t1"] and not h.is_open() and h.snapshot().check == "" and "air_tanks" in learned and "garden" in learned,
+		"the right answer emits checked once, stamps its pages and closes: %s %s" % [done, learned])
+	# a decision: what each option gains and loses, with its sign, and a way to the handbook
+	h.offer_choice("choice_power_morning", [{"text": "follow_me", "gain": "spare air", "lose": "the lettuce waits a day"},
+		{"text": "Rest", "gain": "*more* power", "lose": "less air", "costs": {"battery_pct": -20}}], ["garden"])
+	await frames(2)
+	var rows: Array = h.card.find_children("*", "Label", true, false).map(func(l: Label) -> String: return l.text)
+	check("+ spare air" in rows and "- the lettuce waits a day" in rows and "+ more power" in rows and "-20 %" in rows, "a decision shows each gain and loss with its sign: %s" % [rows])
+	check(h.card.buttons.all(func(k: Button) -> bool: return k.size.y >= Hud.BUTTON_H and k.get_global_rect().encloses((k.get_child(0) as Control).get_global_rect())),
+		"each option holds its rows and stays a touch target")
+	h.card.book.pressed.emit()
+	await frames(2)
+	check(h.handbook.visible and h.snapshot().handbook.page == "garden" and h.is_open(), "its Handbook button opens the page: %s" % [h.snapshot().handbook])
+	h.handbook.close()
+	await frames(2)
+	check(h.snapshot().card == "EventCard" and h.modal.visible, "and the decision is back when the handbook closes")
+	h.offer_choice("choice_power_morning", [{"text": "A"}, {"text": "B"}])
+	check(h.card.book == null or not h.card.book.is_inside_tree(), "a decision with no pages has no Handbook button")
+	h.close_card()
+	h.queue_free()
+	await frames(1)
 
 
 ## In the play state no two HUD parts lie on each other, in either layout: the corner panels, the compass, the
@@ -97,7 +204,7 @@ func _apart(g: Control) -> void:
 		await process_frame
 		check(h.gear_slot.get_global_rect().encloses(gear.get_global_rect().grow(-0.5)), "%s: the gear sits in its place" % layout)
 		var parts := {"status": h.status, "tasks": h.tasks, "alert": h.toast, "compass": h.compass, "minimap": h.minimap,
-			"gear": h.gear_slot, "sources": h.source_button, "mail": h.mail, "prompt": h.prompt}
+			"gear": h.gear_slot, "sources": h.source_button, "book": h.book_button, "mail": h.mail, "prompt": h.prompt}
 		for i in g.touch.size():
 			parts["touch %d" % i] = g.touch[i]
 		var names := parts.keys().filter(func(n: String) -> bool: return (parts[n] as Control).is_visible_in_tree())
@@ -511,7 +618,8 @@ func _narrow() -> void:
 		if "width" in c:
 			c.width = NARROW
 		if n == "event_card":
-			c.options.append({"text": "A third choice with longer words", "costs": {"o2_kg": -2.5, "battery_pct": -10}})
+			c.options.append({"text": "A third choice with longer words", "costs": {"o2_kg": -2.5, "battery_pct": -10},
+				"gain": "spare air for a day", "lose": "the lettuce waits a day"})
 		box.add_child(c)
 		await frames(2)
 		var card: Control = c.card if n in ["mission_lost", "full_map"] else c

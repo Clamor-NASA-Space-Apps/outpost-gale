@@ -5,7 +5,7 @@ Draft for the team's approval, 14 Nov 2026. Nothing here is built yet. Numbers w
 
 ## 0. TL;DR 🚀
 - Mission 1 is the first 10 sols: five played in full (Sols 1 to 5), three quiet ones skipped with a ledger (6 to 8),
-  the first rover trip (Sol 9), and a short close (Sol 10). The dust storm (Sol 12) opens Mission 2.
+  the first rover trip (Sol 9), and the dust storm as the finale (Sol 10).
 - Every sol asks one question, and the kid can answer it because they felt it and read it first:
   **feel it, read the page, answer the check, then decide.**
 - A **handbook** collects every lesson as a page with a real NASA photo. It is also a tool: on Sol 4 the kid fixes
@@ -99,7 +99,11 @@ The cargo bag lift stays only if carrying looks right; the jump already teaches 
 **Story.** PIP reads out what yesterday's choice did. The power meter is lower than last night. At the solar wings a
 film of dust covers the glass. You brush one and the number jumps.
 
-**Tasks:** Check the power meter · Brush the solar wings · See the reactor · Sleep
+**Tasks:** Check the power meter · Brush the solar wings · Go to the reactor · Sleep
+
+**The reactor is visited, not pointed at** (Ravindu, 14 Nov): it stands about 170 m from HAB 1. The kid walks there or
+takes the rover, and PIP's reactor lines come when the kid stands at it. The same holds for every task: the kid goes
+to the thing.
 
 **Trade-off, made by hand:** there are six wings. Each one brushed adds power and costs time outside, which is suit
 air. PIP says it once: "One clean. Five dusty. Your call."
@@ -182,9 +186,19 @@ wall, and drive home. The map lesson happens here.
 
 **Check:** Why is Mont Mercou a safe trip? We could walk back from it ✔ · The rover is fast · It is downhill
 
-### Sol 10: close
-A quiet morning and the **Mission 1 report** card: pages found, checks passed, both decisions and what they cost, the
-three meters. PIP's last line sets up Mission 2: "The sky looks strange tonight."
+### Sol 10: "The sky goes dark". What do we do when the sun is gone?
+**Story.** The finale (Ravindu, 14 Nov). You wake to a dust storm: the sky is dark and the solar wings make almost
+nothing. Everything Sol 2 taught comes true. You choose what the little power left is for, and Mission 1 ends.
+
+**Tasks:** Find out what happened to the sky · Choose what gets power · Sleep
+
+**Pages:** Dust, Opportunity, Solar wings and The reactor come back (no new page).
+
+**Check:** Why do the wings make almost nothing now? Dust hides the sun ✔ · The wings broke · Night came early
+
+**Decision: "Storm power for one"** Heat, air or plants: each option shows what it gains and what it loses.
+
+PIP's last line: "Mission 1 done! Check your handbook log."
 
 ## 5. Build order 🔧
 Rough sizes, my estimates. The cut line, if time runs short, is after step 4.

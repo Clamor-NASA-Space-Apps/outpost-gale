@@ -495,6 +495,7 @@ func _demo() -> Control:
 		["Launch home", func() -> void:
 			game.beats.skip()
 			game.cine.launch()],
+		["Hide the HUD (P)", func() -> void: game.set_film(true)],  # for a screen recording; P brings it back
 	]
 	var grid := GridContainer.new()
 	grid.columns = 2
@@ -515,7 +516,20 @@ func _demo() -> Control:
 			if n > 0:
 				game.sim.skip_sols(n)
 			game.beats.start_sol(int(k))), &"ChoiceButton"))
-	return Hud.col([Hud.label("Watch", "Cap"), grid, Hud.label("Start a sol", "Cap"), sols], 8)
+	# the look only, held so a picture or a film can be taken (the old sky key, gone from release builds): the rules'
+	# own weather is not touched. "Live clock" lets it run again
+	var sky := HFlowContainer.new()
+	sky.add_theme_constant_override("h_separation", 6)
+	sky.add_theme_constant_override("v_separation", 6)
+	for phase: String in preload("res://world/sky_clock.gd").PHASES:  # the clock is made after this screen
+		sky.add_child(_button(phase.capitalize(), run.bind(func() -> void:
+			game.clock.jump(phase)
+			game.clock.pinned = true
+			game._warm()), &"ChoiceButton"))
+	sky.add_child(_button("Live clock", run.bind(func() -> void:
+		game.clock.storm_on = false
+		game.clock.pinned = false), &"ChoiceButton"))
+	return Hud.col([Hud.label("Watch", "Cap"), grid, Hud.label("Start a sol", "Cap"), sols, Hud.label("Scenery", "Cap"), sky], 8)
 
 
 ## A preset as a card: its icon, its name, one line, and a check in the corner when it is in force.
