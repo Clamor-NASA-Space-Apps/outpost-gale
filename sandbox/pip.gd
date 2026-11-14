@@ -22,10 +22,14 @@ const THIN := 4
 const HERO := 8
 const VEHICLES := 16
 const CARRIABLES := 64
-const BLOCKERS := STATICS | THIN  # what the route graph keeps clear of: movers move, the feelers take them
-# a stall replans round the movers where they stand now too (cargo bags between HAB 1 and the solar farm, 14 Nov)
-const MOVERS := STATICS | THIN | VEHICLES | CARRIABLES
+# what the route graph keeps clear of. Bags lie where they were dropped, so they are planned round from the start
+# (planned through, the feelers steered PIP into the bag cluster by HAB 1 and it wedged there for good, 14 Nov
+# playtest); the hero and the rover move and are left to the feelers
+const BLOCKERS := STATICS | THIN | CARRIABLES
+# after a stall or a wedge it plans round the rover where it stands now too
+const MOVERS := BLOCKERS | VEHICLES
 const LIFT := 0.03  # m: sweeps start this far up, so a pebble-flat contact with the ground counts as nothing
+const TOUCH := 0.005  # m: sunk this little into something is a touch, not an overlap (a turn refused at a touch froze PIP)
 
 var world: Node3D
 var player: Node3D
@@ -34,7 +38,8 @@ var top: float  # m/s
 var accel: float  # m/s2
 var turn: float  # rad/s, in place
 var radius: float  # m, a wheel's (from the model)
-var state := "look"  # drive, look, wait, greet, flee; behind (leading, the hero fell back); back (out of the hero's way)
+var state := "look"  # drive, look, wait, greet, flee; behind (leading, the hero fell back); back (out of the hero's way);
+# reverse (wedged: backing out the way it came)
 var stop := ""  # the stop it drives to or looks at; "hero" for a greeting
 var reached: Array[String] = []  # every stop arrived at, in order (for checks)
 var passed := 0  # via points driven through (for checks)
@@ -62,6 +67,8 @@ var _doors: Array[Vector2] = []  # doorways to keep clear, (x, z)
 var _rooms: Array = []  # buildings to keep out of: [to its own space, its box there with the margin]
 var _nodes: Array[Vector3] = []  # the route graph: every stop and via point (world.json `pip`)
 var _links: Array = []  # node -> Array of node indices it reaches in a straight, clear line
+var _carry: Array[Node3D] = []  # the carriables (world.json kinds): one moved, the graph is built again
+var _carry_at := PackedVector3Array()
 var _path: Array[Vector3] = []  # the points still to drive through; the last is the target
 var _replanned := false
 var _time := 0.0
@@ -97,6 +104,12 @@ var _back_stuck := 0.0  # s backing off without moving
 var _call := 0.0  # seconds its head stays on the hero after a call or a nag
 var _sulk := 0.0  # seconds of the sad bounce left
 var _mood := {}  # the nag's look: bounce_m, bounce_hz, droop_deg (data/beats.json nag)
+var _trail: Array[Vector3] = []  # where it drove forward lately, every trail_m, newest last: the way out when wedged
+var _rev: Array[Vector3] = []  # the trail points still to back through
+var _rev_t := 0.0
+var _wedge := 0.0  # s driving without getting 5 cm or 30 degrees from _wedge_at, _wedge_yaw
+var _wedge_at := Vector3.ZERO
+var _wedge_yaw := 0.0
 
 
 func setup(w: Node3D, hero: Node3D) -> void:
@@ -130,6 +143,8 @@ func setup(w: Node3D, hero: Node3D) -> void:
 			if part.name == &"door":
 				_doors.append(Vector2(part.global_position.x, part.global_position.z))
 				leaf = true
+		if world.data.kinds.get(item.get_meta("prefab"), "") == "carriable":
+			_carry.append(item)
 		if item.get_meta("prefab") in p.rooms:
 			# its own box, in its own turned space: a box round a turned dome took in the ground beside it
 			var to := item.global_transform.affine_inverse()
@@ -160,8 +175,7 @@ func _physics_process(delta: float) -> void:
 	# the route graph on the first tick, not in setup(): during the sandbox's _ready the physics space still has the
 	# items where world.gd first added them, at the origin, and Mont Mercou's hull there cut a via point off (13 Nov)
 	if _links.is_empty():
-		for i in _nodes.size():
-			_links.append(_reach(_nodes[i]))
+		_graph()
 	_time += delta
 	_greet_cool -= delta
 	_hello_cool -= delta
@@ -175,6 +189,8 @@ func _physics_process(delta: float) -> void:
 		_hello()
 	_near = near
 	_rover_check()
+	if state not in ["drive", "flee"]:
+		_wedge = 0.0  # a wedge is a second of driving that gets nowhere, not a parked wait
 	# held by the beats, a hero walking into it: out of the way, sooner the faster the hero closes in (a lead driving
 	# away already is)
 	var closing: float = player.last_vel.dot(Vector3(-to_hero.x, 0.0, -to_hero.y).normalized())
@@ -213,6 +229,8 @@ func _physics_process(delta: float) -> void:
 			if state == "drive" and stop != "hero" and _wants_greet(to_hero):
 				_greet(hero, to_hero)
 			_drive(delta, to_hero)
+		"reverse":
+			_reverse(delta)
 	_life(delta, hero, to_hero)
 	_ground_fx()
 
@@ -235,14 +253,15 @@ func _greet(hero: Vector3, to_hero: Vector2) -> void:
 		_greet_cool = float(p.greet_cool_s)  # no way there: try again later, not every frame
 
 
-func _go(name: String, at: Vector3) -> void:
+func _go(name: String, at: Vector3, mask := BLOCKERS) -> void:
 	at.y = world.height_at(at.x, at.z)
 	if _no_go(Vector2(at.x, at.z)):
 		_look_around(1.0)
 		return
 	stop = name
 	target = at
-	_path = _route(global_position, at)
+	_graph()
+	_path = _route(global_position, at, mask)
 	_replanned = false
 	state = "drive"
 	_best = INF
@@ -252,6 +271,20 @@ func _go(name: String, at: Vector3) -> void:
 
 func _ground(at: Array) -> Vector3:
 	return Vector3(at[0], world.height_at(at[0], at[1]), at[1])
+
+
+## The route graph, built again when a bag lies somewhere else than last time (the hero carries them about, and a
+## link through a dropped bag sent PIP into it).
+func _graph() -> void:
+	var at := PackedVector3Array()
+	for c in _carry:
+		at.append(c.global_position.snapped(Vector3.ONE * 0.05))
+	if at == _carry_at and not _links.is_empty():
+		return
+	_carry_at = at
+	_links.clear()
+	for i in _nodes.size():
+		_links.append(_reach(_nodes[i]))
 
 
 ## The nodes `from` reaches in a clear straight line.
@@ -450,14 +483,12 @@ func _drive(delta: float, to_hero: Vector2) -> void:
 		_best = dist
 		_since = 0.0
 	elif _since > float(p.stuck_s):
-		if _replanned:
-			gave_up += 1 if led and stop == "order" else 0  # a flee from a rover driving off is no order given up
-			_look_around(1.0)
+		if _replanned and not (led and stop == "order"):
+			_look_around(1.0)  # wandering, stuck twice: somewhere else
 		else:
-			_replanned = true  # something moved into the way: a new route from here, round the movers too
-			_path = _route(global_position, target, MOVERS)
-			_best = INF
-			_since = 0.0
+			gave_up += 1 if _replanned else 0  # an order that needed a second retry (checks: never)
+			_replanned = true
+			_unwedge()
 		return
 	_feel -= delta
 	if _feel <= 0.0:
@@ -470,6 +501,58 @@ func _drive(delta: float, to_hero: Vector2) -> void:
 	want = minf(want, sqrt(2.0 * accel * maxf(left - float(p.arrive_m) * 0.5, 0.0)))
 	v = move_toward(v, want, accel * delta)
 	_move(new_yaw, v * delta)
+	# neither got anywhere nor turned for wedge_s: boxed in where no feeler is clear and no turn fits (between bags,
+	# 14 Nov); boxed in, it rocks a few degrees one way and back, so measured against where the wait began
+	if global_position.distance_to(_wedge_at) > 0.05 or absf(wrapf(yaw - _wedge_yaw, -PI, PI)) > 0.5:
+		_wedge_at = global_position
+		_wedge_yaw = yaw
+		_wedge = 0.0
+	_wedge += delta
+	if _wedge > float(p.wedge_s):
+		_unwedge()
+
+
+## Wedged or stalled: back out the way it came (reverse_m along the trail, or straight back with no trail), then
+## plan again from there with the movers where they stand now.
+func _unwedge() -> void:
+	_wedge = 0.0
+	_rev.clear()
+	var from := global_position
+	var left := float(p.reverse_m)
+	for i in range(_trail.size() - 1, -1, -1):
+		if left <= 0.0 or from.distance_to(_trail[i]) > float(p.trail_m) * 3.0:
+			break  # a gap: it was put down there (a cut), not driven
+		left -= from.distance_to(_trail[i])
+		from = _trail[i]
+		_rev.append(from)
+	if _rev.is_empty():
+		_rev.append(global_position + global_basis.z * left)
+	_trail.clear()
+	_rev_t = 0.0
+	v = 0.0
+	state = "reverse"
+
+
+func _reverse(delta: float) -> void:
+	while _rev.size() and Vector2(_rev[0].x - global_position.x, _rev[0].z - global_position.z).length() < 0.15:
+		_rev.pop_front()
+	_rev_t += delta
+	# out, or blocked behind too for a while: plan from here
+	if _rev.is_empty() or _rev_t > float(p.reverse_m) / top * 3.0:
+		v = 0.0
+		if stop == "flee":
+			_look_around(1.0)
+			return
+		var again := _replanned
+		_go(stop, _order.get("at", target) if stop == "order" else target, MOVERS)
+		_replanned = again
+		return
+	# tail first toward the point, turning to face away from it where a turn fits: boxed in, a turn is what fails, so
+	# it backs at once as far as the point lies behind
+	var to := Vector2(_rev[0].x - global_position.x, _rev[0].z - global_position.z)
+	var err := wrapf(atan2(to.x, to.y) - yaw, -PI, PI)
+	v = move_toward(v, top * 0.5 * clampf(-_ahead(to), 0.0, 1.0), accel * delta)
+	_move(yaw + clampf(err, -turn * delta, turn * delta), -v * delta)
 
 
 ## The heading nearest `want` whose way ahead is clear of solids, the hero, doorways and buildings. Feelers fan out
@@ -510,32 +593,47 @@ func _blocked_by_hero(to_hero: Vector2) -> bool:
 
 ## Turns to `new_yaw` and moves `step` metres ahead, each only if it stays clear of everything it must not touch.
 func _move(new_yaw: float, step: float) -> void:
-	var space := get_world_3d().direct_space_state
-	var q := PhysicsShapeQueryParameters3D.new()
-	q.shape = _shape.shape
-	q.collision_mask = collision_mask
-	q.exclude = [get_rid()]
-	# 3% smaller, as pip_test measures an overlap: touching (a rover it backed up against) is not one, and a turn
-	# refused at a touch froze PIP there for good
+	# a turn may graze (TOUCH) but never sink it deeper than it is: a turn refused at a touch froze PIP against the
+	# rover, and turns let through at a 3% smaller hull sank it into a bag a little at a time until no move was free
+	# (14 Nov playtest, wedged among the bags)
 	var turn_by := wrapf(new_yaw - yaw, -PI, PI)
+	var now := _depth(_at(global_position, yaw)) if turn_by != 0.0 or step != 0.0 else 0.0
 	# the other way round when this way is blocked: a corner against a rover swings into it one way, out the other
 	# (PIP backed against the rover froze, turning into it every frame, 14 Nov)
-	for by: float in ([turn_by, -turn_by] if turn_by != 0.0 else [0.0]):
-		q.transform = (_at(global_position, yaw + by) * _shape.transform).scaled_local(Vector3.ONE * 0.97)
-		if space.intersect_shape(q, 1).is_empty():
+	for by: float in ([turn_by, -turn_by] if turn_by != 0.0 else []):
+		var d := _depth(_at(global_position, yaw + by))
+		if d <= maxf(now, TOUCH):
 			yaw = wrapf(yaw + by, -PI, PI)
+			now = d
 			break
 	var dir := Vector3(-sin(yaw), 0.0, -cos(yaw))
-	var moved := 0.0
+	var moved := Vector3.ZERO
 	if step != 0.0:  # negative: backing up
 		var to := global_position + dir * step
 		# into a doorway or a building never; out of one (a flee or a greeting that ended there) always
 		var into := _no_go(Vector2(to.x, to.z)) and not _no_go(Vector2(global_position.x, global_position.z))
-		if test_move(_at(global_position, yaw), dir * step) or into:
+		# the sweep's travel, not the step: it starts by pushing a touching hull back out, and a step taken whole from
+		# there crept into a slanted bag a fraction of a millimetre a frame until nothing was free (14 Nov)
+		var hit := KinematicCollision3D.new()
+		if test_move(_at(global_position, yaw), dir * step, hit) or into:
 			v = 0.0
-		else:
-			moved = step
-	_place(global_position + dir * moved, yaw)
+		if not into:
+			moved = hit.get_travel() * Vector3(1.0, 0.0, 1.0)
+	_place(global_position + moved, yaw)
+
+
+## How deep its hull at `xf` sinks into anything it must not touch, in metres (0: clear).
+func _depth(xf: Transform3D) -> float:
+	var q := PhysicsShapeQueryParameters3D.new()
+	q.shape = _shape.shape
+	q.collision_mask = collision_mask
+	q.exclude = [get_rid()]
+	q.transform = xf * _shape.transform
+	var pts := get_world_3d().direct_space_state.collide_shape(q, 8)
+	var d := 0.0
+	for i in range(0, pts.size(), 2):  # pairs: the deepest point on each side
+		d = maxf(d, pts[i].distance_to(pts[i + 1]))
+	return d
 
 
 func _brake(delta: float) -> void:
@@ -551,14 +649,19 @@ func _face(at: Vector3, delta: float) -> void:
 		_move(yaw + clampf(err, -turn * delta, turn * delta), 0.0)
 
 
-## A flat transform at `at` facing `heading`, lifted off the ground a little: what the sweeps test.
+## Its pose at `at` facing `heading`, lifted off the ground a little: what the sweeps test. Tilted as it will stand
+## there, not flat: a flat hull missed bags the tilted one then sank into on a slope.
 func _at(at: Vector3, heading: float) -> Transform3D:
-	return Transform3D(Basis(Vector3.UP, heading), at + Vector3.UP * LIFT)
+	return _pose(at, heading).translated(Vector3.UP * LIFT)
+
+
+func _place(at: Vector3, heading: float) -> void:
+	global_transform = _pose(at, heading)
 
 
 ## On its four wheels at `at`: height from the ground under each, pitch and roll from front against back, left
 ## against right.
-func _place(at: Vector3, heading: float) -> void:
+func _pose(at: Vector3, heading: float) -> Transform3D:
 	var flat := Basis(Vector3.UP, heading)
 	var front := 0.0
 	var back := 0.0
@@ -579,7 +682,7 @@ func _place(at: Vector3, heading: float) -> void:
 	var track := absf(_hubs[0].x) * 2.0
 	var pitch := atan2(front - back, axle)
 	var roll := atan2(right - left, track)
-	global_transform = Transform3D(Basis.from_euler(Vector3(pitch, heading, roll)), Vector3(at.x, (front + back) / 2.0, at.z))
+	return Transform3D(Basis.from_euler(Vector3(pitch, heading, roll)), Vector3(at.x, (front + back) / 2.0, at.z))
 
 
 ## The head, eyes, status bar, wiggle and wheels: what makes it read as alive.
@@ -655,6 +758,10 @@ func _ground_fx() -> void:
 	for i in _wheels.size():
 		_wheels[i].rotate_object_local(Vector3.RIGHT, -(ahead + dyaw * _hubs[i].x) / radius)
 	_travel += absf(ahead)
+	if ahead > 0.0 and (_trail.is_empty() or _trail[-1].distance_to(at) > float(p.trail_m)):
+		_trail.append(at)
+		if _trail.size() > 16:
+			_trail.pop_front()
 	if _travel >= float(p.track_every):
 		_travel = 0.0
 		for i in _hubs.size():

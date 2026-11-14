@@ -9,7 +9,7 @@ const SOLID := 2 | 4 | 8 | 16 | 64  # statics, thin, hero, vehicles, carriables 
 
 
 func _init() -> void:
-	watchdog = 300.0
+	watchdog = 480.0
 
 
 func play() -> bool:
@@ -101,6 +101,8 @@ func play() -> bool:
 	check(pip._near, "its head is on the hero")
 	await _lead(world, player, pip)
 	await _sprint(world, player, pip)
+	await _cluster(world, player, pip)
+	await _wedged(world, player, pip)
 	await _bags(world, player, pip, false)
 	await _bags(world, player, pip, true)
 	return true
@@ -138,6 +140,91 @@ func _sprint(world: Node3D, player: Node3D, pip: Node3D) -> void:
 	print("  sprint: closest %.2f m, PIP top %.2f m/s (hero hurry %.2f)" % [gap, top, player.hurry])
 	check(top > player.hurry, "leading a sprinting kid, PIP goes faster than the hero's hurry (%.2f m/s)" % top)
 	pip.release()
+
+
+## Inside the cargo bag cluster by HAB 1 (14 Nov playtest: PIP wedged among the bags for good, "doesn't follow me"):
+## from the free spot nearest the bags' middle, orders to [2, 12], to the hero's side and past the far side of the
+## bags all arrive, never given up.
+func _cluster(world: Node3D, player: Node3D, pip: Node3D) -> void:
+	pip.release()
+	await frames(2)
+	var mid := Vector3.ZERO
+	for id: String in ["bag1", "bag2", "bag3"]:
+		mid += (world.items[id] as Node3D).global_position / 3.0
+	var hero := Vector3(-1.5, 0.0, 9.5)
+	player.place(Vector3(hero.x, world.height_at(hero.x, hero.z) + 0.05, hero.z), 90.0)
+	var far := mid + (mid - Vector3(0.0, mid.y, 0.0)).normalized() * 2.5  # beyond the bags, seen from HAB 1
+	for to: Vector3 in [Vector3(2.0, 0.0, 12.0), hero + Vector3(1.2, 0.0, 0.0), far]:
+		var start := Vector3.INF
+		for r in range(0, 12):  # the free spot nearest the middle of the bags, facing out between them
+			for k in 8:
+				var at := mid + Vector3(sin(TAU * k / 8.0), 0.0, cos(TAU * k / 8.0)) * r * 0.1
+				pip.yaw = TAU * k / 8.0
+				pip._place(Vector3(at.x, world.height_at(at.x, at.z), at.z), pip.yaw)
+				if not _overlaps(pip):
+					start = at
+					break
+			if start != Vector3.INF:
+				break
+		await frames(2)
+		var arrived := [false]
+		pip.arrived.connect(func() -> void: arrived[0] = true, CONNECT_ONE_SHOT)
+		var gave: int = pip.gave_up
+		pip.order(to)
+		var hits := 0
+		var t := 0
+		while t < 60 * 30 and not arrived[0]:
+			await frames(1)
+			t += 1
+			hits += 1 if _overlaps(pip) else 0
+		check(arrived[0], "from inside the bags (%.1f, %.1f) PIP gets to (%.1f, %.1f) in %.1f s (at %.1f, %.1f)" % [start.x, start.z, to.x, to.z, t / 60.0, pip.global_position.x, pip.global_position.z])
+		check(pip.gave_up == gave, "and never gives up on it (%d)" % (pip.gave_up - gave))
+		check(hits == 0, "and never sinks into a bag on the way out (%d frames)" % hits)
+	pip.release()
+
+
+## Boxed in on purpose: a bag snug on either side and one ahead, no room to turn. It backs out and gets round.
+func _wedged(world: Node3D, player: Node3D, pip: Node3D) -> void:
+	pip.release()
+	await frames(2)
+	var at := Vector3(2.0, 0.0, 9.5)  # open ground east of HAB 1 (the lead's start)
+	at.y = world.height_at(at.x, at.z)
+	pip.yaw = PI / 2.0  # facing -X
+	pip._place(at, pip.yaw)
+	player.place(Vector3(-1.5, world.height_at(-1.5, 13.0) + 0.05, 13.0), 0.0)
+	var keep := {}
+	var fwd := Vector3(-1.0, 0.0, 0.0)
+	var dirs := {"bag1": fwd, "bag2": Vector3(0.0, 0.0, 1.0), "bag3": Vector3(0.0, 0.0, -1.0)}
+	for id: String in dirs:
+		var bag: Node3D = world.items[id]
+		keep[id] = bag.global_transform
+		var off := 1.5
+		while off > 0.0:  # slide it in until it touches PIP, then 3 cm back
+			var p: Vector3 = at + dirs[id] * off
+			bag.global_position = Vector3(p.x, world.height_at(p.x, p.z), p.z)
+			await frames(1)
+			if _overlaps(pip):
+				p = at + dirs[id] * (off + 0.03)
+				bag.global_position = Vector3(p.x, world.height_at(p.x, p.z), p.z)
+				break
+			off -= 0.02
+	await frames(2)
+	var to := at + fwd * 5.0
+	var arrived := [false]
+	pip.arrived.connect(func() -> void: arrived[0] = true, CONNECT_ONE_SHOT)
+	pip.order(to)
+	var reversed := false
+	var t := 0
+	while t < 60 * 60 and not arrived[0]:
+		await frames(1)
+		t += 1
+		reversed = reversed or pip.state == "reverse"
+	check(reversed, "boxed in by bags, PIP backs out")
+	check(arrived[0], "and gets round them to its spot in %.1f s (at %.1f, %.1f)" % [t / 60.0, pip.global_position.x, pip.global_position.z])
+	pip.release()
+	for id: String in keep:
+		(world.items[id] as Node3D).global_transform = keep[id]
+	await frames(2)
 
 
 ## From the cargo bags by HAB 1 to the solar farm, the bags where world.json puts them (or one dropped right on the
@@ -259,7 +346,9 @@ func _lead(world: Node3D, player: Node3D, pip: Node3D) -> void:
 	pip.release()
 
 
-## PIP's hull, 3% smaller (a touch is not an overlap), against everything it must keep out of.
+## PIP's hull sunk more than a touch (pip.TOUCH, 5 mm, and 1 mm of slack) into anything it must keep out of. A hull
+## 3% smaller measured this before: it shrinks about the hull's origin on its belly, so a pebble touching the belly
+## counted as an overlap while a corner could sink a centimetre (14 Nov).
 ## Wheel prints in the ground's trail map (world/terrain.gd mark()): PIP's as faint as its data says, every print's
 ## sides faded over more than a pixel, and two tracks crossing no deeper than one (13 Nov playtest: PIP's tracks deep
 ## and thick, hard dark bands where they crossed).
@@ -293,8 +382,12 @@ func _overlaps(pip: Node3D) -> bool:
 	q.shape = cs.shape
 	q.collision_mask = SOLID
 	q.exclude = [pip.get_rid()]
-	q.transform = pip.global_transform.scaled_local(Vector3.ONE * 0.97) * cs.transform
-	return not pip.get_world_3d().direct_space_state.intersect_shape(q, 1).is_empty()
+	q.transform = pip._at(pip.global_position, pip.yaw) * cs.transform
+	var pts := pip.get_world_3d().direct_space_state.collide_shape(q, 8)
+	for i in range(0, pts.size(), 2):
+		if pts[i].distance_to(pts[i + 1]) > pip.TOUCH + 0.001:
+			return true
+	return false
 
 
 func _wheels_still(pip: Node3D) -> bool:
