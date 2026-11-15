@@ -3,7 +3,7 @@ extends "res://addons/forge/test.gd"
 ## Every clip in data/clips.json is on the hero. Each use clip (one with `planted` boots) is drawn at 12 phases on
 ## the shipped model, skinned on the CPU: no vertex under the floor, no glove inside the helmet or the chest unit,
 ## the planted boots still, the lean under the sheet's hero.lean.max, a kneel's knee on the floor and the working
-## glove where clips.json says. Then sit() through the real player on a flat floor.
+## glove where clips.json says.
 
 const MODEL := "res://models/character_suited.glb"
 const PHASES := 12
@@ -47,7 +47,6 @@ func play() -> bool:
 	await poses()
 	model.queue_free()
 	await frames(2)
-	await player_methods()
 	return true
 
 
@@ -236,39 +235,3 @@ func poses() -> void:
 				knee = minf(knee, pts[k].y)
 			check(knee - floor_y < 0.03, "%s: the knee is %.3f m over the floor at the work time" % [c, knee - floor_y])
 
-
-## The player's seat on a flat floor: sit() goes down and up (the use clips themselves are gone, 14 Nov).
-func player_methods() -> void:
-	var world := Node3D.new()
-	root.add_child(world)
-	var ground := StaticBody3D.new()
-	ground.collision_layer = 1
-	var shape := CollisionShape3D.new()
-	var box := BoxShape3D.new()
-	box.size = Vector3(40, 1, 40)
-	shape.shape = box
-	shape.position.y = -0.5
-	ground.add_child(shape)
-	world.add_child(ground)
-	var player: Node3D = load("res://player/player.gd").new()
-	player.name = "Player"
-	world.add_child(player)
-	await frames(3)
-	player.place(Vector3.ZERO, 0.0)
-	await frames(30)
-	var model: Node3D = player.model
-	# sit and stand: down onto a seat behind, idle there, up again on a move key, where it sat
-	var at: Vector3 = player.body.global_position
-	player.sit(true)
-	await frames(ceili(float(clips.sit_down.length) * Engine.physics_ticks_per_second) + 20)
-	await process_frame
-	check(player.seated and model.state == &"sit_idle", "sit(true) ends in sit_idle (%s)" % model.state)
-	action(&"move_forward", true)
-	await frames(5)
-	action(&"move_forward", false)
-	check(not player.seated and model.state == &"sit_to_stand", "a move key stands the hero up (%s)" % model.state)
-	await frames(ceili(float(clips.sit_to_stand.length) * Engine.physics_ticks_per_second) + 20)
-	await process_frame
-	check(model.state == &"idle" and player.cut.is_empty(), "sit(false) ends standing in idle (%s)" % model.state)
-	check(player.body.global_position.distance_to(at) < 0.05, "sitting and standing leave the body where it was")
-	world.queue_free()

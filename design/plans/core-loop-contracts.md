@@ -83,9 +83,9 @@ limited by cooling), 140 (perchlorate, dust likely toxic), 142 (suitports keep d
 ## H: what the kid sees
 - Crew health meter = `state.health`. While `state.hurt` is set, the meter shows why in words beside it (No air,
   Thirsty, Hungry, Tired, Cold, Solar storm). A drop of 3 or more in one state: `bump("-N")`.
-- A body row under the meters, icons first: suit air (shown outside or when not full), water, food, rest; each a
-  small gauge that pulses (under 3 times a second) under 25%. A dusty suit (`suit_dust >= 0.5`) shows a dust mark.
-  Hidden while `state.body` is false.
+- The HUD has at most four progress bars, all full size: Power, Life support, Crew health, Suit air (Ravindu,
+  15 Nov 2026). Water, food and rest have no bar: they show as the reason under Crew health, in the Today list and
+  in the base report. No hurry bar. A dusty suit (`suit_dust >= 0.5`) shows a dust mark.
 - Power shows the flow beside it: charging or draining and `net_kw` ("+2.1 kW" / "-3.4 kW").
 - `show_prompt(text: String, hold := -1.0)`: with `hold >= 0` the prompt reads "Hold" and a ring fills round the key.
   A row that needs a hold shows its ring empty before the press: the root passes 0.0 for such a target.

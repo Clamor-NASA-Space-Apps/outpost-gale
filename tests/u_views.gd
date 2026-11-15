@@ -59,5 +59,4 @@ func set_view(v: String) -> void:
 	cam.look_at_from_position(game.player.body.global_position + b.x * 0.9 * side + b.z * 0.9 + Vector3.UP * 1.7, it.middle())
 	cam.current = true
 	it.use(game.player.body)  # this spot, whatever the aim picks beside it
-	var length: float = game.player.cut.get("left", 2.1)
-	_wait = length * (float(p[1]) if p.size() > 1 else 0.5)
+	_wait = 2.1 * (float(p[1]) if p.size() > 1 else 0.5)

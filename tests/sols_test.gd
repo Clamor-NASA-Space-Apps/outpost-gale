@@ -7,7 +7,7 @@ extends "res://addons/forge/test.gd"
 ## reaches the handbook, each sol asks one check. Sol 10 is its finale, the dust storm. Mission 2 (key 13 on) still
 ## has facts the bot dismisses.
 
-# s a beat may take. A teaching line shows for 4 s (6 here); to_reactor and the day_done after it are 170 m walks
+# s a beat may take. A teaching line shows for 4 s (6 here); to_reactor and the day_done after it are 190 m walks
 const BUDGET := {"wake": 45, "power_low": 6, "to_wings": 90, "see_dust": 6, "brush": 30, "your_call": 6, "explorers": 6,
 	"to_reactor": 300, "reactor": 6, "check": 5, "sleep_hint": 6, "free": 3, "day_done": 400,
 	"to_greenhouse": 90, "go_in": 40, "plant": 30, "water": 6, "vitamins": 6,
@@ -137,13 +137,18 @@ func play() -> bool:
 	check(after[0] < before[0] - 0.01 and after[1] > before[1], "the brush cleared dust and the power coming in rose")
 	for id: String in ["your_call", "explorers"]:
 		await _beat(id)
-	# the reactor is visited (Ravindu, 14 Nov), about 170 m out. One more wing brushed first, the kid's own trade:
-	# the step waits. Then round the wing rows' north ends and on to the reactor on foot, hurrying
+	# the reactor is visited (Ravindu, 14 Nov), about 190 m out. One more wing brushed first, the kid's own trade:
+	# the step waits. Then round the wing rows' north ends and on to the reactor on foot, hurrying: 10 m short of it
+	# the step still waits (15 Nov playtest: it ended from about 10 m), and it ends beside the reactor's frame
+	var reactor := Vector3(-154.457, 0.0, -112.219)  # the item's middle, as data/sols.json to_reactor
+	var toward: Vector3 = (world.landmark("reactor").pos - reactor) * Vector3(1, 0, 1)
+	toward = toward.normalized()
 	var route: Array[Vector3] = [Vector3(-9.5, 0.0, -23.0), Vector3(-17.0, 0.0, -23.0), Vector3(-15.616, 0.0, -26.723),
-		Vector3(-17.0, 0.0, -23.0), Vector3(-50.0, 0.0, -23.0), world.landmark("reactor").pos]
+		Vector3(-17.0, 0.0, -23.0), Vector3(-50.0, 0.0, -23.0), reactor + toward * 10.0, reactor + toward * 3.0]
+	var at_ten := [""]
 	used_at = -1
 	await _beat("to_reactor", func() -> void:
-		if route.size() == 4:  # at wing 2's brush stand
+		if route.size() == 5:  # at wing 2's brush stand
 			if sim.panel_dust < after[0] - 0.01:
 				route.pop_front()
 				_hurry(true)
@@ -151,13 +156,16 @@ func play() -> bool:
 				_use("clean_panel", route[0])
 			return
 		if route.size() > 1 and _flat(player.body.global_position, route[0]) < 0.6:
+			if route.size() == 2:
+				at_ten[0] = beats.beat.get("id", "")
 			route.pop_front()
 		_steer(route[0], 0.5))
 	_hurry(false)
 	_stop()
 	check(sim.panel_dust < after[0] - 0.01, "a second wing brushed on the way cleared more dust, and the step waited (%.3f to %.3f)" % [after[0], sim.panel_dust])
-	check(player.vehicle == null and _flat(player.body.global_position, world.landmark("reactor").pos) < 14.5,
-		"the kid stands at the reactor, on foot (%.0f m off)" % _flat(player.body.global_position, world.landmark("reactor").pos))
+	check(at_ten[0] == "to_reactor", "10 m from the reactor the step still waits (%s)" % at_ten[0])
+	check(player.vehicle == null and _flat(player.body.global_position, reactor) < 4.6,
+		"the kid stands at the reactor, on foot (%.1f m from its middle)" % _flat(player.body.global_position, reactor))
 	await _beat("reactor")
 	await _beat("check", _answer)
 	check(asked == ["sol2"], "Sol 2 asked its one check (%s)" % [asked])
@@ -349,11 +357,12 @@ func play() -> bool:
 	# the storm peaks before the wake now (data/sim.json dust_storm rise_h): high all morning, no longer climbing
 	check(sim.tau > 2.0, "the sky stays dusty through Sol 10's morning (tau %.2f at the wake, %.2f now)" % [tau0, sim.tau])
 	await _sleep("sol10")
-	check(not rules.has("report:mission1"), "no report card before the morning after Sol 10 (%s)" % [rules])
+	check(not rules.has("report:mission1") and beats.next_sol() == -1,
+		"no sol's beats run the report, and nothing comes after Sol 10: the root ends the game (%s, next %d)" % [rules, beats.next_sol()])
 
 	# Sol 13: out to PIP, back in to brush the dust off, the stormy sols 13 to 16 skipped, Sol 17's first salad
 	await _wake("sol13")
-	check(rules.count("report:mission1") == 1 and rules[-1] == "report:mission1", "the wake after Sol 10's sleep runs the Mission 1 report, once (%s)" % [rules])
+	# Mission 2 and on: unreachable in play (beats.LAST_SOL), kept in data/sols.json and still played here
 	await _beat("wake", _follow.bind(2.5))
 	_stop()
 	used_at = -1

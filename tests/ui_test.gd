@@ -13,6 +13,7 @@ const MAX_DRAWS := 40  # the play HUD's share of the A16's frame (the 3D base al
 const NARROW := 360.0  # the narrowest phone width in dp a card must fit
 const Delay := preload("res://ui/radio_delay.gd")
 const Fake := preload("res://ui/fake_state.gd")
+const MeterScript := preload("res://ui/components/meter.gd")
 
 
 func _init() -> void:
@@ -213,7 +214,7 @@ func _apart(g: Control) -> void:
 		await process_frame
 		check(h.gear_slot.get_global_rect().encloses(gear.get_global_rect().grow(-0.5)), "%s: the gear sits in its place" % layout)
 		var parts := {"status": h.status, "tasks": h.tasks, "alert": h.toast, "compass": h.compass, "minimap": h.minimap,
-			"gear": h.gear_slot, "sources": h.source_button, "book": h.book_button, "mail": h.mail, "prompt": h.prompt, "hurry bar": h.stamina}
+			"gear": h.gear_slot, "sources": h.source_button, "book": h.book_button, "mail": h.mail, "prompt": h.prompt}
 		for i in g.touch.size():
 			parts["touch %d" % i] = g.touch[i]
 		var names := parts.keys().filter(func(n: String) -> bool: return (parts[n] as Control).is_visible_in_tree())
@@ -340,45 +341,57 @@ func _bound() -> void:
 	await frames(1)
 
 
-## The hero's needs (design/plans/core-loop-contracts.md, H): the body row, a low gauge, what hurts in words, the
-## power's flow, the hold ring on the prompt and the hurry bar.
+## The hero's needs (design/plans/core-loop-contracts.md, H): the suit's air, what hurts in words, the
+## power's flow, the four bars and the hold ring on the prompt.
 func _body(h: Control, fake: Node) -> void:
 	var st: Control = h.status
 	fake.emit_state()  # the checks before this one set the clock by hand
-	check(h.snapshot().body == {} and not st.needs.is_visible_in_tree() and h.snapshot().suit == "5 h 00 min",
-		"with the body off its row is hidden and the suit's time shows: %s '%s'" % [h.snapshot().body, h.snapshot().suit])
+	check(h.snapshot().body == {} and h.snapshot().health_note == "Suit air 5 h 00 min",
+		"with the body off the suit's time shows under Crew health: %s '%s'" % [h.snapshot().body, h.snapshot().health_note])
+	await frames(2)
+	var off: Vector2 = st.size  # the card's one size: checked again healthy and hurting, below
 	fake.set_values({"body": true, "outside": false, "suit_air": 1.0, "body_water": 0.2, "body_food": 0.7, "body_rest": 0.55, "suit_dust": 0.4})
 	await frames(2)
 	var b: Dictionary = h.snapshot().body
-	check(st.needs.is_visible_in_tree() and b == {"air": -1, "water": 20, "food": 70, "rest": 55, "dusty": false} and h.snapshot().suit == "",
-		"the body row shows water, food and rest; a full suit inside and a clean one show nothing: %s" % [b])
-	check(h.get_global_rect().encloses(st.get_global_rect()), "the status card with the body row is on screen: %s" % [st.get_global_rect()])
-	var water: Control = st.gauges.water
-	var food: Control = st.gauges.food
-	check(water.low() and water.num.is_visible_in_tree() and water.num.text == "!" and water.tile_icon.art == Hud.icon_texture("water") and water._pulse != null,
-		"a need under 25%% shows '!' and pulses, under its own icon: '%s'" % water.num.text)
-	check(not food.low() and not food.num.visible and food._pulse == null and food.tile_icon.art == Hud.icon_texture("food"), "a need that is met shows its own icon and no mark")
-	check(water.bar.size.x >= 12.0 and food.bar.size.x >= 20.0, "the gauges' bars have room (%.0f px low, %.0f px not)" % [water.bar.size.x, food.bar.size.x])
+	check(b == {"air": 100, "water": 20, "food": 70, "rest": 55, "dusty": false} and h.snapshot().suit == "",
+		"the rules' needs reach the HUD, and a clean suit shows no dust mark: %s" % [b])
+	check(h.get_global_rect().encloses(st.get_global_rect()), "the status card is on screen: %s" % [st.get_global_rect()])
+	# at most four progress bars on the whole HUD, all full size (Ravindu, 15 Nov 2026), and no small gauges
+	var all_bars: Array = _bars(h)
+	var four: Array = h.meters.values()
+	check(h.meters.keys() == ["power", "life", "health", "air"] and all_bars.size() == 4 and four.all(func(m: Control) -> bool: return m in all_bars and not m.compact),
+		"the HUD has four bars and no others: %s" % [all_bars.map(func(n: Node) -> String: return str(n.name))])
+	check(four.all(func(m: Control) -> bool: return m.size == four[0].size and m.bar.size == four[0].bar.size and m.bar.size.x >= 60.0),
+		"all four are one size: %s" % [four.map(func(m: Control) -> Vector2: return m.bar.size)])
 	fake.set_values({"body_water": 0.9, "body_food": 0.1, "outside": true, "suit_dust": 0.6})
 	await frames(2)
 	b = h.snapshot().body
-	check(not water.low() and not water.num.visible and water._pulse == null and is_equal_approx(water.bar.modulate.a, 1.0) and food.num.is_visible_in_tree(), "a drink clears the mark and the pulse")
-	check(b.air == 100 and b.dusty, "outside the suit's air shows, and a dusty suit its mark: %s" % [b])
-	fake.set_values({"outside": false, "suit_air": 0.5, "suit_dust": 0.0})
-	check(h.snapshot().body.air == 50 and not h.snapshot().body.dusty, "inside, a suit that is not full still shows: %s" % [h.snapshot().body])
+	check(b.air == 100 and b.dusty and h.meters.air.value == 100, "a full suit is a full bar, and a dusty suit shows its mark: %s" % [b])
+	check(st.size == off, "the card is the same size healthy as with the body off: %s, %s" % [st.size, off])
+	fake.set_values({"outside": false, "suit_air": 0.1, "suit_dust": 0.0})
+	check(h.meters.air.value == 10 and h.meters.air.low() and "!" in h.meters.air.num.text and not h.snapshot().body.dusty,
+		"a suit nearly empty shows it on its bar, with a '!': '%s'" % h.meters.air.num.text)
+	fake.set_values({"suit_air": 0.5})
 	# what hurts, in words; a small fall or a rise shows no "-N"
 	h.meters.health.gain.text = ""
 	fake.set_values({"hurt": "air", "health": 68.0})
-	check(h.snapshot().hurt == "No air" and h.meters.health.name_label.text == "No air" and h.meters.health.gain.text == "", "the meter says what hurts, and 2 points down is no bump: '%s'" % h.snapshot().hurt)
+	check(h.snapshot().hurt == "No air" and h.snapshot().health_note == "Falling: No air" and h.meters.health.name_label.text == "Crew health" and h.meters.health.gain.text == "",
+		"what hurts goes under the meter, which keeps its name, and 2 points down is no bump: '%s'" % h.snapshot().health_note)
 	fake.set_values({"hurt": "flare", "health": 90.0})
 	await frames(2)
 	check(h.snapshot().hurt == "Solar storm" and h.meters.health.gain.text == "", "a rise shows no drop: '%s'" % h.meters.health.gain.text)
+	# the worst the card ever holds: every need empty, the longest reason, a drop and a gain showing, a dusty suit
+	fake.set_values({"body_water": 0.0, "body_food": 0.0, "body_rest": 0.0, "suit_air": 0.0, "suit_dust": 1.0, "health": 14.0, "battery_pct": 3.0, "o2_kg": 0.5})
+	h.meters.power.bump("+10.0 kW")
+	await frames(2)
+	check(h.meters.health.gain.visible and st.size == off, "and the same size hurting, with a drop and a gain showing: %s, %s" % [st.size, off])
+	fake.set_values({"body_water": 0.9, "body_food": 0.1, "body_rest": 0.55, "suit_air": 0.5, "suit_dust": 0.0, "health": 90.0, "battery_pct": 81.6, "o2_kg": 16.7})
 	var bars: Array = h.meters.values().map(func(m: Control) -> float: return m.bar.size.x)
 	check(bars.min() >= 60.0 and is_equal_approx(bars.min(), bars.max()), "under the longest word the three bars stay in line: %s" % [bars])
 	# a phone's canvas is 1115 px wide under PHONE_SCALE, its compass 507 in the middle, its margin 48: 256 px are left
 	check(st.size.x <= 256.0, "and the card stays clear of a phone's compass (%.0f px wide, 256 at most)" % st.size.x)
 	fake.set_values({"hurt": ""})
-	check(h.snapshot().hurt == "" and h.meters.health.name_label.text == "Health", "nothing hurts: the meter has its name back")
+	check(h.snapshot().hurt == "" and h.snapshot().health_note == "Steady", "nothing hurts: the line under the meter says so: '%s'" % h.snapshot().health_note)
 	check(h.HURTS.keys().all(func(k: String) -> bool: return k in ["air", "thirst", "hunger", "tired", "cold", "flare", "dust"]), "every hurt the rules name has its words")
 	# an oxygen leak: a danger alert once, when it starts
 	h.toast.hide()
@@ -402,6 +415,27 @@ func _body(h: Control, fake: Node) -> void:
 	h.show_state({"sol": 1, "hour": 8.0, "battery_pct": 50.0, "o2_kg": 10.0, "water_kg": 10.0, "food_kg": 10.0})
 	check(h.snapshot().meters.health == 100 and h.snapshot().body == {} and h.snapshot().flow == "Steady", "a state without the new keys still shows: %s" % [h.snapshot().meters])
 	fake.emit_state()
+	# the base report: its key opens it, and what it stacks is the rules' own net
+	var key := InputEventAction.new()
+	key.action = "report"
+	key.pressed = true
+	h._input(key)
+	await frames(2)
+	var rep: Control = h.report
+	var net: float = rep._sum(rep.flows.power.makes) - rep._sum(rep.flows.power.uses)
+	check(rep.is_visible_in_tree() and is_equal_approx(net, float(fake.values.net_kw)) and rep.lines.net.text == "Net %+.1f kW" % float(fake.values.net_kw),
+		"the report opens on its key, and its power segments sum to the state's net: %.2f, '%s'" % [net, rep.lines.net.text])
+	var chips: int = rep.legends.makes.get_child_count() + rep.legends.uses.get_child_count()
+	check(chips == rep.flows.power.makes.size() + rep.flows.power.uses.size(), "every segment has its label under the bar (%d)" % chips)
+	var long: Array = rep.find_children("*", "Label", true, false).filter(func(l: Label) -> bool: return l.text.split(" ", false).size() > MAX_WORDS)
+	check(long.is_empty() and h.get_global_rect().encloses(rep.get_global_rect()), "its lines are short and it is on screen: %s" % [long.map(func(l: Label) -> String: return l.text)])
+	var sim: RefCounted = load("res://sim/sim.gd").new()
+	sim.step(3.0)
+	var real: Dictionary = sim.flows()
+	check(is_equal_approx(rep._sum(real.power.makes) - rep._sum(real.power.uses), float(sim.state().net_kw)) and is_equal_approx(real.power.net_kw, float(sim.state().net_kw)),
+		"the rules' flows sum to the rules' net (%.2f kW)" % float(sim.state().net_kw))
+	h._input(key)
+	check(not rep.visible, "and the same key closes it")
 	# the hold ring
 	var p: Control = h.prompt
 	h.show_prompt("Drink water", 0.0)
@@ -418,24 +452,13 @@ func _body(h: Control, fake: Node) -> void:
 	h.show_prompt("Open the door")
 	await frames(2)
 	check(h.snapshot().hold == -1.0 and p.line.text == "Open the door" and p.ring.custom_minimum_size == Vector2.ZERO, "a plain press has no ring and no 'Hold': '%s'" % p.line.text)
-	# the hurry bar
-	check(h.snapshot().stamina == -1, "the hurry bar is hidden at the start")
-	h.set_stamina(0.4)
-	await frames(2)
-	var bar: Control = h.stamina
-	check(h.snapshot().stamina == 40 and bar.is_visible_in_tree(), "set_stamina shows the bar: %s" % h.snapshot().stamina)
-	check(absf(bar.get_global_rect().get_center().x - h.get_global_rect().get_center().x) < 2.0 and bar.get_global_rect().get_center().y > h.size.y * 0.75
-		and h.get_global_rect().encloses(bar.get_global_rect()), "at the bottom centre: %s" % [bar.get_global_rect()])
-	for touch: bool in [false, true]:
-		h.touch = touch
-		await frames(2)
-		check(not bar.get_global_rect().intersects(p.get_global_rect()), "the hurry bar is clear of the prompt (touch %s): %s, %s" % [touch, bar.get_global_rect(), p.get_global_rect()])
-	h.touch = false
-	h.set_stamina(0.1)
-	check(bar.get_child(0).num.text == "!", "nearly out of breath shows '!'")
-	h.set_stamina(1.0)
-	check(h.snapshot().stamina == -1 and not bar.visible, "and it hides when full")
 	h.show_prompt("")
+
+
+## Everything on the HUD that reads as a progress bar and can be seen: the meters and any engine range.
+func _bars(h: Control) -> Array:
+	return h.find_children("*", "", true, false).filter(func(n: Node) -> bool:
+		return n is Control and (n as Control).is_visible_in_tree() and (n is Range or n.get_script() == MeterScript))
 
 
 ## The mission complete card: its words, the three meters, the causes, and its two buttons.
@@ -543,7 +566,7 @@ func _hud_parts(h: Control, cues: Array[String]) -> void:
 	await process_frame
 	check(h.clock.time_label.global_position.is_equal_approx(one) and is_equal_approx(h.clock.sol_label.size.x, box1), "the clock does not move when the sol reaches two digits")
 	var words: Array = h.meters.values().map(func(m: Control) -> String: return m.name_label.text if m.name_label.is_visible_in_tree() else "")
-	check(words == ["Power", "Supplies", "Health"], "each meter shows its word: %s" % [words])
+	check(words == ["Power", "Life support", "Crew health", "Suit air"], "the meters are named as PIP names them: %s" % [words])
 	# a brushed wing's "+kW" fades beside the power number and gives the bar its width back (14 Nov playtest: "the power
 	# bar is getting shorter and shorter")
 	var power: Control = h.meters.power

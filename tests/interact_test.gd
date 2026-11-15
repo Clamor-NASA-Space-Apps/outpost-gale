@@ -40,7 +40,7 @@ func play() -> bool:
 	var p0: Vector3 = player.body.global_position
 	game.interactions.interact()
 	await frames(2)
-	check(player.cut.is_empty() and absf(door.thing.rotation.y - shut) > 0.0, "E: the door starts to swing at once, no reach clip (cut %s)" % [player.cut])
+	check(player.model.phase == "" and absf(door.thing.rotation.y - shut) > 0.0, "E: the door starts to swing at once, no reach clip (phase %s)" % [player.model.phase])
 	await frames(60)
 	# from 1 m off its face the hero is out of its swing (the swing never starts where the leaf would meet the hero)
 	check(absf(door.thing.rotation.y - shut) > deg_to_rad(95) and player.state().player.inside.is_empty(), "and opens all the way (%.0f deg), never into the hero" % rad_to_deg(door.thing.rotation.y - shut))
@@ -56,14 +56,14 @@ func play() -> bool:
 	check(box.target != null and box.target.kind == bag.kind, "a bag is the target beside them (got %s)" % [box.target])
 	box.interact()
 	await frames(2)
-	check(player.cut.is_empty() and box.carried != null and box.carried.is_in_group("carriable"), "E: a bag is in the hands at once, no kneel")
+	check(player.model.phase == "" and box.carried != null and box.carried.is_in_group("carriable"), "E: a bag is in the hands at once, no kneel")
 	check(game.render_game_to_text().carry != "", "state says what is carried")
 	var b: Node3D = box.carried
 	check(b.get_parent() == player.body, "it rides with the hero")
 	check(_clear_of_body(b), "held out in front, the bag is not inside the body")
 	box.interact()
 	await frames(2)
-	check(box.carried == null and player.cut.is_empty(), "E: it is put down at once")
+	check(box.carried == null and player.model.phase == "", "E: it is put down at once")
 	check(absf(b.global_position.y - game.world.height_at(b.global_position.x, b.global_position.z)) < 0.05, "the bag rests on the ground")
 	await set_down_beside()
 
@@ -229,7 +229,7 @@ func galley() -> void:
 	Input.action_release(&"interact")
 	box.used.disconnect(hear)
 	# no use clips (14 Nov): the action is named for the rules once E was held long enough (15 Nov), the hero free
-	check(player.cut.is_empty() and heard == ["drink"], "E held: the drink is had once, no clip (%s)" % [heard])
+	check(player.model.phase == "" and heard == ["drink"], "E held: the drink is had once, no clip (%s)" % [heard])
 	var extra: Array = game.render_game_to_text().keys().filter(func(k: String) -> bool: return not k in keys)
 	check(extra.is_empty(), "no new state keys (%s)" % [extra])
 	check(not (spot.props.pouch as Node3D).visible, "its pouch stays put away")

@@ -13,18 +13,19 @@ extends "res://addons/forge/test.gd"
 
 # s each beat may take here: its own wait plus the walking
 const BUDGET := {"wake": 40, "outside": 4, "pip_hello": 6, "walk_to_me": 20,
-	"side_steps": 10, "back_step": 4, "look_mouse": 6, "try_jump": 4, "jump_fact": 6,
+	"side_steps": 10, "back_step": 4, "hurry": 10, "look_mouse": 6, "settings_hint": 6, "try_jump": 4, "jump_fact": 6,
 	"meter_power": 6, "meter_life": 6, "meter_health": 6, "body_on": 120, "fill_air": 60, "drink": 30, "eat": 30,
 	"follow_solar": 120, "sun_fact": 6, "o2_visit": 120, "tanks_fact": 6, "maker_fact": 6,
 	"garden_visit": 180, "garden_fact": 6, "air_check": 2, "choice": 2,
 	"day_done": 6, "sleep_hint": 6, "free": 3}
 # the handbook pages Sol 1 unlocks, in the order the kid meets them (design/plans/mission-1-contracts.md)
 const PAGES: Array[String] = ["thin_air", "pip", "light_on_mars", "three_meters", "weak_sun", "solar_wings", "air_tanks", "air_maker", "garden",
-	"your_suit", "eat_drink_sleep", "cold_nights"]
+	"your_suit", "eat_drink_sleep"]  # cold_nights waits for Sol 10's heat choice: no Sol 1 step teaches it
 const TASKS: Array[String] = ["task.step_outside", "task.learn_moves", "task.tour_base", "task.choose_power", "task.s1_body", "task.sleep"]
 # every line the advisor (sandbox/advisor.gd) and the power panel's card ask for (design/plans/core-loop-contracts.md, R)
 const NEEDS: Array[String] = ["air_out", "air_low", "leak", "dusty", "devil", "thirst", "hunger", "tired", "blackout", "power_low", "health_low"]
 const PANEL: Array[String] = ["o2_maker", "greenhouse", "recycler", "heater"]
+const Save := preload("res://sandbox/save.gd")
 
 var game: Node3D
 var world: Node3D
@@ -179,6 +180,17 @@ func play() -> bool:
 			action(&"move_back", true))
 	action(&"move_back", false)
 	await frames(30)
+	# Shift, once: the hurry locks on, and the step ends only once the hero has really hurried (stamina spent)
+	var tapped := [false]
+	await _beat("hurry", func() -> void:
+		if not tapped[0]:
+			tapped[0] = true
+			action(&"hurry", true)
+			action(&"hurry", false)
+			action(&"move_forward", true))
+	action(&"move_forward", false)
+	check("sol1.hurry" in lines and player.stamina < 1.0, "Shift taught on Sol 1, ticked after a real hurry (stamina %.2f)" % player.stamina)
+	await frames(30)
 
 	await _beat("look_mouse", func() -> void: player.cam.look(6.0, 0.0))
 
@@ -209,6 +221,8 @@ func play() -> bool:
 	check(beats.beat.get("id", "") == "jump_fact" and lines[-1] == "sol1.weigh_less" and pages[-1] == "light_on_mars",
 		"after the hop PIP names the gravity and its page lands (%s, %s)" % [lines[-1], pages[-1]])
 	await _beat("jump_fact")
+	await _beat("settings_hint")
+	check("sol1.settings" in lines, "PIP says Esc opens Settings")
 	# the three meters, one line each, once: no stop, and their page lands with the first
 	for id: String in ["meter_power", "meter_life", "meter_health"]:
 		await _beat(id)
@@ -323,7 +337,7 @@ func play() -> bool:
 	beats.notify("slept")  # cine.slept, a night
 	await _beat("free")
 
-	check(pages == PAGES, "Sol 1 unlocked its twelve handbook pages, in order (%s)" % [pages])
+	check(pages == PAGES, "Sol 1 unlocked its eleven handbook pages, in order (%s)" % [pages])
 	check(rules == ["apply:body_on"], "Sol 1 hands the root one rule, the body's start (%s)" % [rules])
 	var ids: Array[String] = []
 	var own: Array[String] = []
@@ -353,8 +367,50 @@ func play() -> bool:
 	check(stops.is_empty(), "no line stops the game, the sleep hint included (%s)" % [stops])
 	await frames(120)
 	check(pip.state != "behind" and not pip.leading, "and it no longer waits for the hero (%s)" % pip.state)
-
+	await _the_end()
 	return true
+
+
+## The game ends after Sol 10 (beats.LAST_SOL): the root's own wiring, with its own beats, as a kid meets it. Sol 10's
+## night slept shows the Mission 1 report, its Keep going the end screen, and no later sol starts; a morning saved past
+## Sol 10 by an older build opens the same end screen.
+func _the_end() -> void:
+	var own: Node = game.beats
+	own.skip()
+	own.sol_key = 10
+	check(own.next_sol() == -1, "nothing comes after Sol 10 (%d)" % own.next_sol())
+	game.cine.slept.emit(&"night", 0.0)
+	for i in 120:
+		if game.hud.is_open():
+			break
+		await physics_frame
+	check(game.over and game.hud.is_open() and game.ended == null, "Sol 10's night ends on the Mission 1 report")
+	game.hud.close_card()
+	game.hud.report_closed.emit(false)  # its Keep going
+	await frames(3)
+	check(game.ended != null and game.ended.is_visible_in_tree() and paused, "Keep going opens the end screen, the world stopped behind it")
+	var words: Array = game.ended.find_children("*", "Label", true, false).map(func(l: Label) -> String: return l.text)
+	check("Mission 1 complete!" in words and words.any(func(t: String) -> bool: return "still being built" in t), "it says Mission 1 is done and the rest is being built (%s)" % [words])
+	var back: Button = game.ended.find_children("*", "Button", true, false)[0]
+	check(root.gui_get_focus_owner() == back and back.size.y >= 48.0, "its one button is in focus, a big target (%s, %s, focus %s)" % [back.text, back.size, root.gui_get_focus_owner()])
+	await frames(30)
+	check(own.sol_key == 10 and own.sequence != "sol11" and own.beat.is_empty(), "no Sol 11 starts (%s, key %d)" % [own.sequence, own.sol_key])
+	# a morning past Sol 10 from an older build: read, and Continue lands on the same end screen
+	paused = false
+	game.ended.queue_free()
+	game.ended = null
+	await frames(2)
+	Save.file = "user://beats_test_save.json"
+	Save.write({"version": Save.VERSION, "sol": 13, "sim": game.sim.save(), "handbook": game.hud.handbook.save()})
+	var saved: Dictionary = Save.read()
+	check(int(saved.get("sol", 0)) == 13, "a checkpoint at Sol 13 still reads (%s)" % [saved.keys()])
+	game.resume = saved
+	game._resume()
+	await frames(3)
+	check(game.ended != null and paused and own.sequence != "sol13", "and Continue from it opens the end screen, not Sol 13 (%s)" % own.sequence)
+	paused = false
+	DirAccess.remove_absolute(Save.file)
+	Save.file = "-"
 
 
 ## The story's data, read from the files (design/plans/core-loop-contracts.md, T): Sol 1's hands-on steps, the rules
@@ -382,7 +438,8 @@ func _story() -> void:
 				if "report:mission1" in b.get("do", []):
 					reports.append("%s %s" % [key, b.id])
 	beats.sol_key = 10
-	check(reports == ["13 wake"] and beats.next_sol() == 13, "the Mission 1 report runs once, on the wake after Sol 10's sleep (%s)" % [reports])
+	check(reports.is_empty() and beats.next_sol() == -1, "no sol's beats run the report: the root shows it after Sol 10's night (%s)" % [reports])
+	beats.sol_key = 1
 	# PIP's lines: there, written, 8 words at most, key words marked; the cards' words: there and written
 	var pip_says: Array = NEEDS.map(func(n: String) -> String: return "need." + n)
 	pip_says += ["sol1.meter_power", "sol1.meter_life", "sol1.meter_health", "sol1.needs", "sol1.fill_air", "sol1.drink", "sol1.eat", "sol4.valve"]

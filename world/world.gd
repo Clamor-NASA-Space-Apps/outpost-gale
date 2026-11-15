@@ -228,6 +228,15 @@ func restyle(design: Dictionary) -> void:
 		# a probe also replaces the ambient light inside its box with what it captured, and faces turned from
 		# the sun went pure black there; the rig's own shade colour keeps them as DESIGN.md says
 		_probe.ambient_mode = ReflectionProbe.AMBIENT_COLOR
+		# No blend at the faces. A probe that is not `interior` fades its ambient toward the scene's over blend_distance
+		# (1 m) inside each face, and Compatibility hands that fade a scene ambient of zero (scene.glsl 4.7.2:
+		# reflection_process() runs before ambient_light is set): the last metre went dark, black at the face, and one
+		# step outside everything was lit again, a straight line that cut the hero and the solar wings in two (15 Nov
+		# playtest). The box (data/world.json probe.size) now ends on open ground, clear of every machine.
+		# ponytail: a step is left at a face, seen only on a body crossing it: Compatibility takes this probe's ambient
+		# colour as linear, so the inside is lit brighter than the scene's own ambient outside. AMBIENT_DISABLED makes
+		# both sides one, and darkens every shaded face at the base with it: a look change to show Ravindu first
+		_probe.blend_distance = 0.0
 		add_child(_probe)
 		# A room's own probe (data/world.json probe.rooms): with only the base's, glass and metal inside HAB 1 showed
 		# the rover and the sky (12 Nov playtest). Compatibility averages every probe whose box holds a pixel, so the
@@ -924,8 +933,9 @@ func _lamps(design: Dictionary) -> void:
 			n.add_child(lamp)
 
 
-## Power cables on the ground (data/world.json `cables`): a box-section strip draped on height_at() every `step` m,
-## all lines one mesh in the role's material. No body: the hero steps over a cable a few centimetres high.
+## Power cables on the ground (data/world.json `cables`): a box-section strip `lift` m over height_at() at every edge
+## of the ground's faces it crosses (_ground_edges()), so no stretch of it is under the ground; all lines one mesh
+## in the role's material. No body: the hero steps over a cable a few centimetres high.
 ## Each line runs from one device's port to another's (`ends`, "item:node", node `port_1` when left out): its first
 ## and last points move onto the ports, so it ends inside the gland box the model carries (forge/base_kit.py port())
 ## wherever the item stands; a cable that stopped beside its device read as unplugged (13 Nov playtest).
@@ -950,10 +960,9 @@ func _lay_cables(design: Dictionary) -> void:
 				line[[0, line.size() - 1][k]] = Vector2(port.global_position.x, port.global_position.z)
 		var pts: Array[Vector3] = []
 		for i in line.size() - 1:
-			var n := maxi(1, ceili(line[i].distance_to(line[i + 1]) / float(c.step)))
-			for k in n + int(i == line.size() - 2):
-				var p := line[i].lerp(line[i + 1], float(k) / n)
-				pts.append(Vector3(p.x, height_at(p.x, p.y) - h * 0.3, p.y))  # bedded a little into the dust
+			for t: float in _ground_edges(line[i], line[i + 1], i == line.size() - 2):
+				var p := line[i].lerp(line[i + 1], t)
+				pts.append(Vector3(p.x, height_at(p.x, p.y) + float(c.get("lift", 0.0)), p.y))
 		cable_paths.append(PackedVector3Array(pts))
 		_strip(st, pts, float(c.width) / 2.0, h)
 	st.generate_normals()
@@ -965,6 +974,30 @@ func _lay_cables(design: Dictionary) -> void:
 	_cables.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF  # a few pixels wide: not worth a shadow pass
 	add_child(_cables)
 	_charger(design)
+
+
+## Where the straight run a to b (x, z) crosses an edge of the ground's triangles, as shares of the run from 0, in
+## order (with 1 when `end`): every grid line and every cell's diagonal (terrain.gd height_at()). Between two of them
+## the ground is one flat face, so a cable drawn through them lies on it all the way. Drawn through a point every
+## metre it cut straight under each ridge between two points, and where a wing row's graded strip meets the slope
+## beside it the cable was under the ground for a metre at a time (15 Nov playtest: "cables are buried").
+func _ground_edges(a: Vector2, b: Vector2, end: bool) -> PackedFloat32Array:
+	var ua: Vector2 = (a - terrain.origin) / terrain.step
+	var ub: Vector2 = (b - terrain.origin) / terrain.step
+	var ts: Array[float] = [0.0]
+	for f: Vector2 in [Vector2(ua.x, ub.x), Vector2(ua.y, ub.y), Vector2(ua.x + ua.y, ub.x + ub.y)]:
+		if absf(f.y - f.x) > 1e-6:
+			for k in range(ceili(minf(f.x, f.y)), floori(maxf(f.x, f.y)) + 1):
+				ts.append((k - f.x) / (f.y - f.x))
+	ts.sort()
+	var out := PackedFloat32Array()
+	var gap := 0.01 / maxf(a.distance_to(b), 0.01)  # two crossings within a centimetre are one bend
+	for t in ts:
+		if (out.is_empty() or t - out[-1] > gap) and t < 1.0 - gap:
+			out.append(t)
+	if end:
+		out.append(1.0)
+	return out
 
 
 ## Every item's gland boxes set onto the ground: an item rests on its lowest feet and a long or level one (a 40 m
@@ -980,7 +1013,7 @@ func _glands(h: float) -> void:
 			if _gland(mi):
 				var port: Node3D = mi.get_children().filter(func(c: Node) -> bool: return str(c.name).begins_with("port"))[0]
 				var p := port.global_position
-				var up := height_at(p.x, p.z) + h * 0.2 - p.y  # the port at the bedded cable's middle (_lay_cables())
+				var up := height_at(p.x, p.z) + float(data.cables.get("lift", 0.0)) + h * 0.5 - p.y  # the port at the cable's middle (_lay_cables())
 				if up > 0.0:
 					mi.global_position.y += up
 				boxes.append(mi)

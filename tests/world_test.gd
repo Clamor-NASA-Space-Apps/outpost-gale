@@ -339,6 +339,20 @@ func _cables_clear(world: Node3D) -> void:
 			var hit := space.intersect_ray(PhysicsRayQueryParameters3D.create(from, to, world.STATICS | world.THIN))
 			if hit:
 				through.append("%s at %s" % [hit.collider.get_parent().owner.name if hit.collider.get_parent().owner else hit.collider.name, Vector2(from.x, from.z).snappedf(0.1)])
+	# no stretch of a cable is under the ground or hangs over it: the line as drawn, walked every 25 cm between its
+	# points (15 Nov playtest: "cables are buried"; a point every metre cut under each ridge between two points)
+	var lift := float(c.get("lift", 0.0))
+	var buried: Array[String] = []
+	for li in world.cable_paths.size():
+		var path: PackedVector3Array = world.cable_paths[li]
+		for i in path.size() - 1:
+			var n := maxi(1, ceili(path[i].distance_to(path[i + 1]) / 0.25))
+			for k in n + 1:
+				var p := path[i].lerp(path[i + 1], float(k) / n)
+				var over: float = p.y - world.height_at(p.x, p.z)
+				if over < -0.002 or over > lift + 0.02:
+					buried.append("line %d at %s (%.3f m)" % [li, Vector2(p.x, p.z).snappedf(0.1), over])
+	check(buried.is_empty(), "%d cable points under the ground or hanging over it, first: %s" % [buried.size(), buried.slice(0, 3)])
 	check(crossings == 0, "%d cable crossings over a path" % crossings)
 	check(through.is_empty(), "cables run through solids: %s" % [through])
 	check(loose.is_empty(), "cables that end beside their device, not in its port: %s" % [loose])

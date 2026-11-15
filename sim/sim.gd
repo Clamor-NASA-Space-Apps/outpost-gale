@@ -92,7 +92,7 @@ func state() -> Dictionary:
 		"power_out_kw": power_out_kw, "dose_msv": dose_msv, "suit_air_min": suit_air_min, "panel_dust": panel_dust,
 		"tau": tau, "events": ev, "failing": failing(), "health": health, "body_water": body_water, "body_food": body_food,
 		"body_rest": body_rest, "suit_dust": suit_dust, "suit_air": suit_air_min / n("suit", "full_min"), "outside": outside,
-		"body": knobs.body, "cold": battery_kwh <= 0.0, "net_kw": power_in_kw - power_out_kw, "hurt": hurt,
+		"body": knobs.body, "cold": battery_kwh <= 0.0, "net_kw": power_in_kw - power_out_kw, "hurt": hurt, "weak": weak(),
 		"leak": active.any(func(e: Dictionary) -> bool: return e.kind == "leak")}
 
 
@@ -149,6 +149,16 @@ func hurts() -> Dictionary:
 		if e.kind == "flare":
 			out["flare"] = out.get("flare", 0.0) + n("body", "hurt_per_msv") * _flare_rate(e)
 	return out
+
+
+## How weak the commander is, 0 (fine) to 1 (on the edge), for the hero's walk: 1 while water, food or rest is empty,
+## and rising from 0 to 1 as Crew health falls from body.weak_health to nothing. A game rule, as the body's others.
+func weak() -> float:
+	if not knobs.body:
+		return 0.0
+	if body_water <= 0.0 or body_food <= 0.0 or body_rest <= 0.0:
+		return 1.0
+	return clampf(1.0 - health / n("body", "weak_health"), 0.0, 1.0)
 
 
 ## A dust devil went over the hero: the suit is coated, and brushing it off is the fix (use `brush`).
@@ -249,8 +259,15 @@ func end_left() -> float:
 
 
 ## Real time passing while the kid is awake: step(), but it waits before the next sol's wake (awake_left()).
+## The clock waits there, the body does not: an empty gauge or a cold base costs health all the same, so staying up
+## hungry and thirsty still loses the mission (15 Nov playtest: "the bars go absolutely low, I don't even die?").
 func run(hours: float) -> Dictionary:
-	return step(minf(hours, awake_left()))
+	var go := minf(hours, awake_left())
+	if go < hours and end_left() > 0.0:
+		var h := hurts()
+		for why: String in h:
+			_harm(why, h[why] * (hours - go))
+	return step(go)
 
 
 ## Advance the rules by `hours` of game time. Returns what changed: each meter's delta, and the energy made and used.
@@ -525,4 +542,28 @@ func _diff(a: Dictionary, b: Dictionary) -> Dictionary:
 	for k: String in b:
 		if (b[k] is float or b[k] is int) and k != "sol" and k != "hour" and not is_equal_approx(float(a[k]), float(b[k])):
 			out[k] = float(b[k]) - float(a[k])
+	return out
+
+
+## What makes and uses power and each supply right now, for the base report card: the same terms _power() and
+## _tick() step with, so the card cannot disagree with the meters. Supplies are kg a sol. It changes no stock; it
+## only brings the three power readings up to this moment, as the next tick does, so state() after it agrees.
+func flows() -> Dictionary:
+	var loads := _power()
+	var crew := n("crew")
+	var sol_days := n("clock", "sol_h") / 24.0
+	var out := {"power": {"makes": {"solar": solar_in_kw, "reactor": power_in_kw - solar_in_kw}, "uses": loads,
+		"net_kw": power_in_kw - power_out_kw}, "supplies": {}, "hurts": hurts()}
+	for m: String in METERS:
+		out.supplies[m] = {"left": float(get(m)), "uses": n("per_person_day", m) * crew * sol_days, "makes": 0.0}
+	for dev: String in loads:
+		if not d.devices.has(dev):
+			continue
+		var spec: Dictionary = d.devices[dev]
+		if spec.has("o2_kg_day"):
+			var made: float = float(spec.o2_kg_day) * float(make.get(dev, 1.0)) * sol_days
+			out.supplies.o2_kg.makes += made
+			out.supplies.water_kg.uses += made * float(spec.water_per_o2)
+		if spec.has("recover"):
+			out.supplies.water_kg.makes += n("per_person_day", "water_kg") * crew * sol_days * float(spec.recover)
 	return out

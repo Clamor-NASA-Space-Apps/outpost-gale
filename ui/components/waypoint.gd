@@ -56,6 +56,12 @@ func point(at: Vector3, label: String) -> void:
 	_place()
 
 
+## Other words over the same place ("Drink water, then Eat a meal": several needs at once).
+func rename(label: String) -> void:
+	place = label
+	name_label.text = label
+
+
 ## Follow a moving thing (PIP): the diamond rides over it and the distance counts live.
 func point_node(n: Node3D, label: String) -> void:
 	point(n.global_position, label)

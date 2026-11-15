@@ -121,11 +121,38 @@ func _air() -> void:
 ## (c) Never drinking costs health within the sol; a drink stops it and a night's sleep mends some.
 func _thirst() -> void:
 	var s := body()
-	for i in 31:
+	check(s.state().weak == 0.0, "fed and watered, the commander is not weak")
+	for i in 22:
 		s.use("eat")
 		s.run(0.5)
-	check(s.health < 100.0 and s.state().hurt == "thirst" and s.state().body_water == 0.0, "a sol without a drink costs health (%.1f)" % s.health)
-	near(100.0 - s.health, (15.5 - B.water_h.value) * B.hurt_per_h.thirst, TICK * B.hurt_per_h.thirst, "8 points for each hour past empty")
+	check(s.health < 100.0 and s.state().hurt == "thirst" and s.state().body_water == 0.0, "eleven hours without a drink cost health (%.1f)" % s.health)
+	near(100.0 - s.health, (11.0 - B.water_h.value) * B.hurt_per_h.thirst, TICK * B.hurt_per_h.thirst, "%d points for each hour past empty" % B.hurt_per_h.thirst)
+	check(s.state().weak == 1.0, "an empty gauge: weak is 1, for the hero's walk (%.2f)" % s.state().weak)
+	# the whole fall: from an empty water gauge the mission is lost within 6.25 game hours (100 / hurt_per_h.thirst)
+	var dry := body()
+	dry.body_water = 0.0
+	dry.run(6.0)
+	check(dry.health > 0.0 and dry.failing().is_empty(), "six hours dry: still alive (%.1f)" % dry.health)
+	dry.run(0.25 + TICK)
+	check(dry.health == 0.0 and dry.failing() == ["health"], "an empty water gauge loses the mission within 6.25 game hours (%.1f, %s)" % [dry.health, dry.failing()])
+	# up all night: the clock waits at dawn for a sleep, the body does not
+	var late := body()
+	live(late, 24.0)
+	late.run(1.0)
+	check(late.awake_left() == 0.0, "past the night the clock waits for a sleep")
+	late.body_water = 0.0
+	late.body_food = 0.0
+	var at := late.health
+	late.run(1.0)
+	near(at - late.health, B.hurt_per_h.thirst + B.hurt_per_h.hunger + B.hurt_per_h.tired, 1e-6, "and thirst, hunger and tiredness still cost health while it waits")
+	# weak follows Crew health under body.weak_health
+	var hurt := body()
+	hurt.health = B.weak_health.value
+	check(hurt.state().weak == 0.0, "health at %d: not weak yet" % B.weak_health.value)
+	hurt.health = B.weak_health.value * 0.5
+	near(hurt.state().weak, 0.5, 1e-6, "half of it: weak 0.5")
+	hurt.knobs.body = false
+	check(hurt.state().weak == 0.0, "the body's needs off (Sol 1): never weak")
 	var top := s.top_causes()
 	check(top.size() == 1 and top[0].id == "thirst" and top[0].label == B.labels.thirst, "the causes name it, in one line for the sol: %s" % [top])
 	s.use("drink")

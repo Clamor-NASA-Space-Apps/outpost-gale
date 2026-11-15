@@ -8,15 +8,14 @@ extends Node3D
 ## Every use then happens at once, with no clip (Ravindu, 14 Nov: "a feature that doesn't exist is better than a broken
 ## implementation", as Half-Life 2's doors open with no hand on them): a door swings, a bag is in the hands, the hero
 ## is in the rover. Use spots (data/world.json `uses`) set their props' end state and emit `used(action_id)` at once:
-## the rules hook (sim.use, 14 Nov). Only a seat still plays its clips (sit down, stand up), for the story's rests,
-## and a `wiper` row its button press: the row's wiper then clears its dust by itself (Ravindu, 15 Nov: _wiper_press()).
+## the rules hook (sim.use, 14 Nov). Only a `wiper` row plays a clip, its button press, where the hero stands: the
+## row's wiper then clears its dust by itself (Ravindu, 15 Nov: _wiper_press()). No use moves the hero.
 
 const Rover := preload("res://sandbox/rover.gd")
 const CARRIABLES := 64
 const WALLS := 2  # what hides a thing from the hands (CONTRACTS.md collision layers: statics)
 const SPOT_MIN := 0.5  # m: the least a use spot's target measures on a side (art direction)
 const PRESS := 0.35  # share of the reach clip (clips.json interact) when the glove is on a wiper's button
-const STEP_S := 0.25  # s the hero takes to the button's stand, as a step up to it (art direction)
 const POINTED := 2 | 4 | 16 | 64  # what the view's centre can rest on: statics, thin statics, vehicles, carriables
 
 ## A thing used: its sound name ("door_open", "door_close", "grab", "rover", "rover_exit", "set_down") the
@@ -46,9 +45,9 @@ class Interactable extends Node3D:
 		return ""
 
 	func can_use(_hero: Node3D) -> bool:
-		if kind == "spot":  # one use at a time, and never from a seat; a sample taken is gone (row `needs`)
+		if kind == "spot":  # a sample taken is gone (row `needs`)
 			var needs: String = row.get("needs", "")
-			return not box.player.seated and box.player.cut.is_empty() and (needs == "" or (props[needs] as Node3D).visible) \
+			return (needs == "" or (props[needs] as Node3D).visible) \
 				and (not row.get("pick", false) or box.world.can_pick(get_parent().name, middle())) \
 				and (not row.has("wiper") or box.dusty(self))  # a tray with a head to eat, a row with dust to wipe
 		return not (kind == "bag" and box.carried != null)
@@ -75,21 +74,19 @@ class Interactable extends Node3D:
 
 	## A spot's stand point (global, floor origin, facing its -Z), from the row's [x, z, yaw_deg] in the item's space.
 	## Without one, where the clip's glove (row `grip`, a clips.json point: `hand`, `wheel`) meets the box's middle,
-	## facing the row's `face` (yaw_deg) or, without it, the way the hero comes from; a `seat` row ([x, z]) puts the
-	## seated hips there instead.
+	## facing the row's `face` (yaw_deg) or, without it, the way the hero comes from. Nothing moves the hero there
+	## (15 Nov): it is where a test or a capture stands it.
 	func stand() -> Transform3D:
 		if row.has("stand"):
 			var s: Array = row.stand
 			return thing.global_transform * Transform3D(Basis(Vector3.UP, deg_to_rad(s[2])), Vector3(s[0], 0.0, s[1]))
 		var at := shape.get_center()
-		if row.has("seat"):
-			at = Vector3(row.seat[0], 0.0, row.seat[1])
 		var b := Basis(Vector3.UP, deg_to_rad(float(row.get("face", 0.0))))
 		if not row.has("face"):
 			var to := at - thing.to_local(box.player.body.global_position)
 			to.y = 0.0
 			b = Basis.looking_at(to) if to.length() > 0.01 else Basis.IDENTITY
-		var p: Vector3 = box.player.model.point(&"sit_idle", "seat_hip") if row.has("seat") else box.player.model.point(StringName(row.clip), row.get("grip", "hand"))
+		var p: Vector3 = box.player.model.point(StringName(row.clip), row.get("grip", "hand"))
 		return thing.global_transform * Transform3D(b, Vector3(at.x, 0.0, at.z) - b * Vector3(p.x, 0.0, p.z))
 
 	## Where the hands at `p` could touch it, in each pose: the nearest point, the middle, and both ends of its longest
@@ -122,7 +119,7 @@ var _held: Interactable = null  # the spot being held
 var by_thing := {}  # thing -> its Interactable, to name what a ray hit
 var design: Dictionary  # the sandbox's look: role materials for the props made here
 var _swinging := {}  # door Interactable -> {goal: rad, wait: bool, moved: bool}: doors on their way
-var _wipers := {}  # a wiper row's Interactable -> {bar, panel, y, ends: [x, x] in the panel's space, at: the end it is parked at (0, 1), t: s since E (negative: parked), hero: [from, yaw] | null while it steps up}
+var _wipers := {}  # a wiper row's Interactable -> {bar, panel, y, ends: [x, x] in the panel's space, at: the end it is parked at (0, 1), t: s since E (negative: parked)}
 
 
 func setup(w: Node3D, p: Node3D, t: Dictionary, sheet: Dictionary) -> void:
@@ -292,13 +289,13 @@ func _physics_process(delta: float) -> void:
 				hold = -1.0
 				use(target)
 	if not player.may(&"interact"):
-		text = ""  # a tutorial step that blocks E shows no "E Sit" or "E Close door" that would do nothing
+		text = ""  # a tutorial step that blocks E shows no "E Close door" that would do nothing
 	# the key on a keyboard; on a phone the lit interact button says the same
 	prompt_label.text = "" if text == "" else ("[E]  " + text if not DisplayServer.is_touchscreen_available() else text)
 
 
-## What E would use (skills/character-body, Using things). In reach: from the body's axis to the nearest point of the
-## thing's box, from either side, with no wall between it and the hands. Of those, in first person (in a room) what the
+## What E would use (skills/character-body, Using things). In reach (a wiper's button: wiper_reach, an arm's length):
+## from the body's axis to the nearest point of the thing's box, from either side, with no wall between it and the hands. Of those, in first person (in a room) what the
 ## view's centre rests on, else the one nearest the aim inside the aim cone; in third person the aim is the body's
 ## heading and the cone `cone_deg`. The current target is favoured by `stick_deg`, so two things in reach do not flicker.
 func _pick() -> Interactable:
@@ -317,7 +314,8 @@ func _pick() -> Interactable:
 		var q := it.nearest(hands)
 		# height counts only past the feet or the head (Source's +use measures height the same way)
 		var up := maxf(maxf(feet.y - q.y, q.y - feet.y - head), 0.0)
-		if Vector2(Vector2(q.x - feet.x, q.z - feet.z).length(), up).length() < reach and it.can_use(hero) and _seen(space, hands, it):
+		var within: float = tuning.interact.wiper_reach if it.kind == "spot" and it.row.has("wiper") else reach
+		if Vector2(Vector2(q.x - feet.x, q.z - feet.z).length(), up).length() < within and it.can_use(hero) and _seen(space, hands, it):
 			near.append(it)
 	if first:
 		var ray := PhysicsRayQueryParameters3D.create(from, from + aim * (from.distance_to(hands) + reach), POINTED, [hero.get_rid()])
@@ -555,15 +553,9 @@ func _put_down() -> void:
 
 
 ## A use spot, at once: its sound, then each step's end state (a lettuce head picked, a lamp lit, a dish turned to
-## Earth), and `used`. A prop no `keep` holds goes back where it rested, so only what lasts is seen to change. A seat
-## still sits the hero down (sit_down, then sit_idle until a move key: the story's rests).
+## Earth), and `used`. A prop no `keep` holds goes back where it rested, so only what lasts is seen to change.
 func _play(it: Interactable) -> void:
 	var row := it.row
-	if row.has("seat"):
-		var st := it.stand()
-		var front := -st.basis.z
-		player.place(Vector3(st.origin.x, player.body.global_position.y, st.origin.z), -rad_to_deg(atan2(-front.x, -front.z)))
-		player.sit(true)
 	if row.has("sound"):
 		world.sound.emit(row.sound, it.middle())
 	for name: String in it.props:
@@ -586,15 +578,14 @@ func _wiper_add(it: Interactable, item: Node3D) -> void:
 	bar.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF  # a hand's width: its shadow is a few pixels
 	add_child(bar)
 	_wipers[it] = {"bar": bar, "panel": panel, "y": box.end.y + float(w.bar[1]) / 2.0,
-		"ends": [box.position.x + float(w.bar[0]), box.end.x - float(w.bar[0])], "at": 0, "t": -1.0, "hero": null}
+		"ends": [box.position.x + float(w.bar[0]), box.end.x - float(w.bar[0])], "at": 0, "t": -1.0}
 
 
-## E at a wiper's button: the hero steps to the spot's stand and presses it (the reach clip), and may walk off. The
-## wiper then runs by itself (_wiper_step()).
+## E at a wiper's button: the hero presses it from where it stands (the reach clip; within wiper_reach, an arm's
+## length), and may walk off. The wiper then runs by itself (_wiper_step()). The hero is never moved to the button:
+## from the old 1.6 m reach it slid there in a quarter second, a teleport (15 Nov playtest).
 func _wiper_press(it: Interactable) -> void:
-	var w: Dictionary = _wipers[it]
-	w.t = 0.0
-	w.hero = [player.body.global_position, player.yaw]
+	_wipers[it].t = 0.0
 	player.speed = 0.0
 	player.model.act(StringName(it.row.clip))
 
@@ -607,14 +598,6 @@ func _wiper_step(it: Interactable, delta: float) -> void:
 	var k := 0.0
 	if w.t >= 0.0:
 		w.t += delta
-		if w.hero:  # up to the button, facing it
-			var u: float = minf(w.t / STEP_S, 1.0)
-			var st := it.stand()
-			var at: Vector3 = (w.hero[0] as Vector3).lerp(st.origin, u)
-			player.body.global_position = Vector3(at.x, lerpf(w.hero[0].y, world.height_at(st.origin.x, st.origin.z), u), at.z)
-			player.yaw = lerp_angle(w.hero[1], atan2(st.basis.z.x, st.basis.z.z), u)
-			if u >= 1.0:
-				w.hero = null
 		var press: float = PRESS * float(player.model.clips[it.row.clip].length)
 		k = clampf((w.t - press) / float(tuning.interact.wiper_s), 0.0, 1.0)
 		if k > 0.0 and w.t - delta <= press and it.row.has("sound"):
@@ -767,6 +750,17 @@ func _mesh(m: Dictionary, clean: bool, still: bool) -> MeshInstance3D:
 		var t := TorusMesh.new()
 		t.inner_radius = m.torus[0]
 		t.outer_radius = m.torus[1]
+		mi.mesh = t
+	elif m.has("text"):  # raised lettering facing its +Z, `size` m tall: a thing says what it is (15 Nov: "drink what?")
+		var t := TextMesh.new()
+		var bold := FontVariation.new()
+		bold.base_font = load("res://ui/fonts/Exo2-wght.ttf")
+		bold.variation_opentype = {TextServerManager.get_primary_interface().name_to_tag("wght"): 700}
+		t.font = bold
+		t.text = m.text
+		t.font_size = 32  # px the outlines are cut at: round letters stay round, a word stays a few hundred triangles
+		t.pixel_size = float(m.size) / t.font_size
+		t.depth = 0.004
 		mi.mesh = t
 	else:  # a rod: cyl [r, h] standing on y, or a line between two points
 		var c := CylinderMesh.new()

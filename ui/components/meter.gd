@@ -3,7 +3,10 @@ extends HBoxContainer
 ## bar turns amber; below `low_below` it turns red, the icon becomes a warning sign and a "!" joins the number, so the
 ## state reads without colour (Kid UX). Set `value` (or call set_icon) at any time: nothing is rebuilt.
 ## `compact` is the small gauge of the body row and the hurry bar: no number; when low it keeps its own icon (the
-## only thing that names it), and a "!" and a slow pulse say so.
+## only thing that names it), and a "!" and a slow pulse say so. The "!" keeps its room when it is not shown and the
+## gain is drawn over the bar's end, so a meter is one width whatever it says (15 Nov playtest: the card grew and
+## shrank as the numbers changed). A compact gauge with a `word` (the body's four) stacks the word over its bar,
+## and the word names it, so when low its icon becomes the warning sign like a big meter's.
 
 const Hud := preload("res://ui/hud.gd")
 const BAR_H := 4.0  # 6 mockup px
@@ -21,6 +24,7 @@ const PULSE_SECONDS := 0.8  # a low compact gauge fades and returns 1.25 times a
 @export var warn_below := 50
 @export var low_below := 30
 @export var compact := false
+@export var text_px := 0  # the word's and the number's font size (the status card's four bars); 0 keeps the theme's
 
 var bar := Control.new()
 var tile_icon: Hud.Icon
@@ -34,21 +38,41 @@ var _pulse: Tween
 func _ready() -> void:
 	add_theme_constant_override("separation", 7)
 	tooltip_text = title
-	tile_icon = Hud.icon(icon_name, 15, "on_surface") as Hud.Icon
-	bar.custom_minimum_size = Vector2(12 if compact else 60, 10)
+	var stacked := compact and word != ""
+	tile_icon = Hud.icon(icon_name, 13 if stacked else 15, "on_surface") as Hud.Icon
+	bar.custom_minimum_size = Vector2(12 if compact else 60, BAR_H if stacked else 10.0)
 	bar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	bar.draw.connect(_draw_bar)
 	num = Hud.label("", "HudNum")
-	num.custom_minimum_size.x = 0 if compact else 38
+	num.custom_minimum_size.x = 6 if compact else 38
 	num.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	gain = Hud.label("", "HudNum")
 	gain.add_theme_color_override("font_color", Hud.color("light"))
 	gain.modulate.a = 0.0
-	gain.visible = false  # a faded gain still took its width from the bar (14 Nov playtest: "the power bar gets shorter")
-	name_label = Hud.label(word, "Cap")
+	gain.visible = false
+	# over the bar's right end, outside the row's layout: in the row it took its width from the bar (14 Nov: "the
+	# power bar gets shorter"), and then from the card
+	gain.set_anchors_and_offsets_preset(Control.PRESET_CENTER_RIGHT)
+	gain.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	gain.grow_vertical = Control.GROW_DIRECTION_BOTH
+	bar.add_child(gain)
+	# big, the word is plain text: the caps style's wide spacing would take the card's width before its size
+	name_label = Hud.label(word, "HudText" if text_px else "Cap")
 	name_label.visible = word != ""
-	for k: Control in [tile_icon, name_label, bar, num, gain]:
-		add_child(k)
+	if stacked:
+		add_theme_constant_override("separation", 3)
+		add_child(tile_icon)
+		var over := Hud.col([name_label, bar], 0)
+		over.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		add_child(over)
+	else:
+		for k: Control in [tile_icon, name_label, bar, num]:
+			add_child(k)
+	if text_px:
+		for l: Label in [name_label, num, gain]:
+			l.add_theme_font_size_override("font_size", text_px)
+		# the widest it ever says, so the bar beside it keeps one length
+		num.custom_minimum_size.x = ceilf(num.get_theme_font("font").get_string_size("100%!", HORIZONTAL_ALIGNMENT_LEFT, -1, num.get_theme_font_size("font_size")).x)
 	Hud.nudge(self)  # the icon on the number's capitals
 	_show()
 
@@ -80,10 +104,9 @@ func low() -> bool:
 
 func _show() -> void:
 	var l := low()
-	tile_icon.art = Hud.icon_texture("alert" if l and not compact else icon_name)
+	tile_icon.art = Hud.icon_texture("alert" if l and (not compact or word != "") else icon_name)
 	tile_icon.tint = Hud.color("danger" if l else "on_surface")
-	num.text = "!" if compact else "%d%%%s" % [value, "!" if l else ""]
-	num.visible = l or not compact
+	num.text = ("!" if l else "") if compact else "%d%%%s" % [value, "!" if l else ""]
 	if l:
 		num.add_theme_color_override("font_color", Hud.color("danger"))
 	else:

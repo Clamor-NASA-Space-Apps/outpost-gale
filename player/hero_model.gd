@@ -20,7 +20,7 @@ var chest := -1  # the bone a carried bag rides on
 var bag_at: Transform3D  # the bag's centre in the chest bone's space, in the carry pose
 var hip_sit: Vector3  # the drawn hips in drive_sit, in the hero's space: what goes on a seat
 var state := &"idle"
-var phase := ""  # "", "crouch", "air", "land", "act", "sit" (driving), "seat" (on a seat)
+var phase := ""  # "", "crouch", "air", "land", "act", "sit" (driving)
 var act_clip := &"interact"  # what the "act" phase plays: the reach, or any use clip (clips.json)
 var placed: Transform3D  # the model's own space to this node's, feet on y = 0: where clips.json's points land
 var timer := 0.0  # seconds left in a timed phase (landing, interacting)
@@ -98,8 +98,6 @@ func update(speed: float, idle: float, on_floor: bool, carrying: bool, delta: fl
 			if on_floor:
 				phase = "land"
 				timer = clips.hop_land.length
-		"seat":
-			pass  # until seat(false)
 		"land", "act":
 			if timer <= 0.0 or speed > idle:
 				phase = ""  # walking off cuts the landing or the reach short: an in-place clip would skate
@@ -116,7 +114,6 @@ func update(speed: float, idle: float, on_floor: bool, carrying: bool, delta: fl
 		"land": next = &"hop_land"
 		"act": next = act_clip
 		"sit": next = &"drive_sit"
-		"seat": next = &"sit_down" if timer > 0.0 else &"sit_idle"
 		_:
 			if speed > idle:
 				next = &"carry_move" if carrying else &"move"
@@ -165,7 +162,7 @@ func take_off() -> void:
 ## Plays a use clip once (data/clips.json; the reach by default). A second reach while one plays is ignored; another
 ## clip replaces it. Walking off ends it (update()). False when refused (the same clip playing, a hop or a landing).
 func act(clip := &"interact") -> bool:
-	if phase == "" or (phase in ["act", "seat"] and clip != act_clip):
+	if phase == "" or (phase == "act" and clip != act_clip):
 		phase = "act"
 		act_clip = clip
 		timer = clips[clip].length
@@ -173,16 +170,7 @@ func act(clip := &"interact") -> bool:
 	return false
 
 
-## Sits down onto a seat behind the hero (sit_down, then sit_idle until told), or stands up (sit_to_stand).
-func seat(on: bool) -> void:
-	if on:
-		phase = "seat"
-		timer = clips.sit_down.length
-	elif phase == "seat":
-		act(&"sit_to_stand")
-
-
-## A point a clip names (clips.json `hand`, `seat_hip`, `wheel`: the model's own space) in this node's space, where
+## A point a clip names (clips.json `hand`, `wheel`: the model's own space) in this node's space, where
 ## the body's origin is the feet and -Z the front: lets a use spot put its box where the glove will be.
 func point(clip: StringName, key: String) -> Vector3:
 	var v: Array = clips[clip][key]

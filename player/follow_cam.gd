@@ -3,7 +3,7 @@ extends Node3D
 ## distance and rebuilds the shot from them every frame. Its SpringArm3D casts a sphere of `clear` m (well over the
 ## near plane's half-diagonal) against what the target collides with, feelers either side of it slide the Lens in
 ## before the arm is blocked, and the Lens beside the arm cuts in at once only for what they missed, holds, then
-## eases out. A wall behind the target lifts the view over it before the target fades.
+## eases out slowly. Poles are looked past (_passes()). A wall behind the target lifts the view over it before the target fades.
 ## In a room (the owner's `room`) the lens eases into the hero's own eye, first person, and back out at the door
 ## (Ravindu, 15 Nov: "first person inside the greenhouse, hab and the shelter like we did in older builds").
 ## Following a vehicle (`keep`, its drawn box) the pivot is inside its hull and the hull is left out of the casts, so
@@ -49,6 +49,10 @@ var soft := INF  # m the feelers allow the arm (Lyra's predictive avoidance), IN
 var tail := INF  # m the arm's own line is free of the thin things the lens would stand in: a cut, as for a solid
 var late := 0.0  # m of the arm's sphere the near plane does not need: a cut is eased over that last bit
 var _reach := SphereShape3D.new()  # all the feelers can touch, asked once before they are cast
+var _slim := {}  # a thin body's instance id -> whether the camera looks past it (_passes())
+var _poles: Array[RID] = []  # the world's thin bodies it looks past, found once (group `thin`, world.gd)
+var _scanned := false
+var _refocus := false  # the cursor was captured when another window took the keyboard: taken back when ours has it again
 var show_body := false  # a cut is on: another camera films the body, so it is drawn even in first person
 var keep := AABB()  # a vehicle's drawn box in its own space (the owner's), none on foot: the lens stays out of it
 var out := 0.0  # m along the arm where its line leaves that box grown by vehicle_keep: the least the lens stands at
@@ -292,7 +296,9 @@ func _short(q: PhysicsShapeQueryParameters3D) -> float:
 ## Thin things (layer 3: posts, but also machines narrower than the hero) count only over the last thin_tail m before
 ## where the lens would stand, on the arm's own line too (`tail`): the lens stops before one it would stand in, where
 ## it used to pass through and show its hollow inside. Nearer the hero they are passed and draw in front of it:
-## pulling in for a post shoves the lens into the hero's back (rule 4).
+## pulling in for a post shoves the lens into the hero's back (rule 4). A pole (_passes()) never counts: walking past
+## a lamp, its mast crossed the arm's last stretch and the lens jumped a metre in and eased back out, again and again
+## as the feelers either side met and missed it (15 Nov playtest: "the hero teleports, a shaky slideshow").
 ## The ground is left to the arm: it has no edge the view could turn into. With nothing else in reach, nothing is cast.
 func _feelers(root: Vector3, length: float) -> void:
 	soft = INF
@@ -311,6 +317,12 @@ func _feelers(root: Vector3, length: float) -> void:
 	q.collision_mask = PROPS
 	if space.intersect_shape(q, 1).is_empty():
 		return
+	if not _scanned:  # once: the world is built before the first step, and its statics never change
+		_scanned = true
+		for b: Node in get_tree().get_nodes_in_group("thin"):
+			if b is CollisionObject3D and _passes(b):
+				_poles.append((b as CollisionObject3D).get_rid())
+	q.exclude = excluded + _poles  # the poles are on the thin layer alone, so the solids' casts below lose nothing
 	q.collision_mask = THIN
 	var thin := not space.intersect_shape(q, 1).is_empty()
 	q.shape = arm.shape
@@ -354,6 +366,23 @@ func _thin(space: PhysicsDirectSpaceState3D, q: PhysicsShapeQueryParameters3D, r
 	if not space.intersect_shape(q, 1).is_empty():
 		return first
 	return from + (reach - from) * _cast(space, q, root + dir * from, dir * (reach - from), THIN)
+
+
+## Whether the camera looks past thin body `b` as if it were not there: a pole (a lamp's mast, a weather mast, a
+## beacon: under tuning.json camera.pole_m across and at least four times as tall), or the hull round a tripod's feet (world.gd _feet(): mostly air).
+## The lens crossing one shows a sliver for a frame; pulling in for it moved the whole picture. Measured once a body.
+func _passes(b: CollisionObject3D) -> bool:
+	var id := b.get_instance_id()
+	if not _slim.has(id):
+		var wide := 0.0
+		var tall := 0.0
+		for cs: CollisionShape3D in b.find_children("*", "CollisionShape3D", false, false):
+			var a: AABB = cs.global_transform * cs.shape.get_debug_mesh().get_aabb()
+			wide = maxf(wide, maxf(a.size.x, a.size.z))
+			tall = maxf(tall, a.size.y)
+		# slim and at least four times as tall: a lamp with its head (0.43 m across, 2.8 m tall), not a low machine
+		_slim[id] = b.name == &"feet" or (wide < float(t.pole_m) and tall >= 4.0 * wide)
+	return _slim[id]
 
 
 ## The share of `motion` the arm's sphere may go from `at`, INF when it meets nothing (so it limits nothing).
@@ -409,7 +438,7 @@ func inside() -> bool:
 	q.shape = near
 	q.transform = Transform3D(Basis(), lens.global_position)
 	q.collision_mask = SOLIDS | THIN
-	q.exclude = excluded
+	q.exclude = excluded + _poles  # a pole is looked past, so the lens crossing one is not in a thing
 	return not space.intersect_shape(q, 1).is_empty()
 
 
@@ -433,10 +462,18 @@ func _unhandled_input(e: InputEvent) -> void:
 		look(e.screen_relative.x * t.mouse_deg_per_px, e.screen_relative.y * t.mouse_deg_per_px)
 
 
-## Another window took the keyboard: give the cursor back, or it stays hidden over the desktop.
+## Another window took the keyboard: give the cursor back, or it stays hidden over the desktop. When ours has the
+## keyboard again the view is the mouse's again, with no click (a pop-up that took the keyboard for a moment left the
+## mouse free and the view still: "the mouse locks", 15 Nov playtest on Windows). Never in a browser, which allows a
+## capture only from inside an input event, and never under a menu.
 func _notification(what: int) -> void:
 	if what in [NOTIFICATION_APPLICATION_FOCUS_OUT, NOTIFICATION_WM_WINDOW_FOCUS_OUT]:
+		_refocus = _refocus or Input.mouse_mode == Input.MOUSE_MODE_CAPTURED
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	elif what in [NOTIFICATION_APPLICATION_FOCUS_IN, NOTIFICATION_WM_WINDOW_FOCUS_IN] and _refocus:
+		_refocus = false
+		if may_capture.call() and not OS.has_feature("web"):
+			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 
 ## Sits beside the arm, not under it: the arm would snap a child both ways, and the lens must ease out.
@@ -457,7 +494,8 @@ class Lens extends Camera3D:
 		elif rig.hold > 0.0:
 			rig.hold -= delta
 		else:
-			rig.dist = minf(lerpf(rig.dist, minf(safe, rig.soft), 1.0 - exp(-rig.t.ease_rate * delta)), rig.dist + step)
+			# out again slowly (out_rate): at the feelers' own speed the picture pumped in and out past every prop
+			rig.dist = minf(lerpf(rig.dist, minf(safe, rig.soft), 1.0 - exp(-rig.t.ease_rate * delta)), rig.dist + float(rig.t.out_rate) * delta)
 		# never in a vehicle's own box, whatever cut the arm: its line leaves the box at `out`, which moves smoothly
 		# with the view, so the lens slides along the box and does not pop
 		rig.dist = maxf(rig.dist, rig.out)

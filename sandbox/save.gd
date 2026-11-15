@@ -4,7 +4,10 @@ extends RefCounted
 ## it back in place of the opening (sandbox.gd _resume()). It holds the sol, the rules, the handbook and the root's
 ## few flags that last across days; nothing of the world's loose things, so a Continue is a fresh morning.
 
-const VERSION := 1  # raise it when a checkpoint's shape changes: an older file is then ignored, never half read
+# Mission 1's last sol: the game ends after its night (sandbox.gd end_screen()). The later sols' beats stay in
+# data/sols.json for Missions 2 and 3, but cine/beats.gd next_sol() never leads to them (15 Nov: not finished)
+const LAST_SOL := 10
+const VERSION := 1# raise it when a checkpoint's shape changes: an older file is then ignored, never half read
 
 # As ui/settings.gd: "" until first asked, user://save.json in the game, "-" (none) in a test or tool run, so a check
 # never reads or overwrites a player's mission. A test that checks saving sets its own file first.
@@ -31,7 +34,9 @@ static func read() -> Dictionary:
 		return {}
 	var d: Dictionary = j.data
 	var sols: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/sols.json"))
-	if not (d.get("version") is float and int(d.version) == VERSION and d.get("sol") is float and sols.has(str(int(d.sol)))
+	# a morning past Mission 1 (saved before the game ended after Sol 10) reads too: the root shows the end screen
+	if not (d.get("version") is float and int(d.version) == VERSION and d.get("sol") is float
+			and (sols.has(str(int(d.sol))) or int(d.sol) > LAST_SOL)
 			and d.get("sim") is String and d.get("handbook") is Dictionary):
 		return {}
 	d.sim = Marshalls.base64_to_variant(d.sim)

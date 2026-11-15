@@ -200,7 +200,7 @@ func against(a: Array) -> void:
 		ball.shape.radius = cam._near_radius() - cam.arm.margin
 		ball.collision_mask = cam.THIN
 		var hit := space.intersect_shape(ball, 1)
-		return "in the thin " + _name(hit[0].collider) if hit and hit[0].collider.name != &"feet" else "", 12, false)
+		return "in the thin " + _name(hit[0].collider) if hit and not cam._passes(hit[0].collider) else "", 12, false)
 	var p: Vector3 = player.body.global_position
 	print("  against %-26s hero %.1f, %.1f: %d poses, %d frames wrong (%s)" % [a[0], p.x, p.z, r.poses, r.bad, r.first])
 	check(r.bad == 0, "%s: with the view swept all round, the lens is never inside or behind a solid (%d frames: %s)" % [a[0], r.bad, r.first])
@@ -327,7 +327,7 @@ func _read() -> void:
 	ball.shape.radius = cam._near_radius() - cam.arm.margin
 	ball.collision_mask = cam.THIN
 	hit = space.intersect_shape(ball, 1)
-	if hit and hit[0].collider.name != &"feet":  # a lamp's `feet` is the hull round its tripod (world.gd), mostly air
+	if hit and not cam._passes(hit[0].collider):  # a pole, or the hull round a lamp's tripod (mostly air): looked past (follow_cam.gd)
 		m.thin += 1
 		if m.thin_in == "":
 			m.thin_in = "%s, yaw %.0f, dist %.2f" % [_name(hit[0].collider), rad_to_deg(cam.yaw), cam.dist]

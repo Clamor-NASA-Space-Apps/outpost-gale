@@ -93,9 +93,10 @@ var bound := Rect2()
 ## [x, z, r]} or {rect: [x0, z0, x1, z1]}, ...]}}, each area in its node's space (data/world.json `rooms`).
 var rooms := {}
 var room := ""  # the one the body is in, "" outside
-## Standing up from a seat (sit_to_stand), else empty: {left: s to its end}. Input moves nothing while it plays.
-var cut := {}
-var seated := false  # on a seat (sit): input moves nothing; a move key stands the hero up
+## How worn out the body is, 0 to 1, set by the composition root from the rules (sim.state() `weak`: low Crew health,
+## an empty gauge). From tuning.json hero.weak.no_hurry up there is no hurrying on foot, and the walk slows to
+## hero.weak.walk of itself at 1 (game rules, 15 Nov playtest: "why can I still run even when I'm on the edge?").
+var weak := 0.0
 ## The tutorial's lock (allow()): only these may act; empty, everything may.
 var allowed: Array = []
 var _gate: Gate
@@ -343,10 +344,29 @@ func _live(delta: float, accel: Vector3) -> void:
 	life.update(delta, accel if not vehicle else Vector3.ZERO, carried != null, breath, b.inhale_share, look, pace)
 
 
+## A move key still down when the window has the keyboard again: the engine let go of every key when another window
+## took it, and a held key then only repeats, which presses nothing, so the hero stood until the key was let go and
+## pressed again (15 Nov playtest on Windows: "I can't move"). Its first repeat counts as the press it is.
+func _input(e: InputEvent) -> void:
+	var k := e as InputEventKey
+	if k and k.pressed and k.echo:
+		for a: StringName in [&"move_forward", &"move_back", &"move_left", &"move_right"]:
+			if k.is_action(a) and not Input.is_action_pressed(a):
+				var press := k.duplicate() as InputEventKey
+				press.echo = false
+				Input.parse_input_event(press)
+
+
 func _unhandled_input(e: InputEvent) -> void:
 	if e.is_action_pressed(&"hurry") and may(&"hurry"):
-		hurrying = not hurrying and not (_winded and vehicle == null)  # out of breath: the press does nothing yet
+		# out of breath or worn out on foot: the press does nothing yet
+		hurrying = not hurrying and not (vehicle == null and (_winded or _spent()))
 		still = 0.0  # a press standing still gives the kid the whole still time to set off
+
+
+## Too worn out to hurry on foot (tuning.json hero.weak).
+func _spent() -> bool:
+	return weak >= float(tuning.hero.weak.no_hurry)
 
 
 func _walk(delta: float) -> void:
@@ -354,14 +374,10 @@ func _walk(delta: float) -> void:
 	if not allowed.is_empty():
 		stick.x *= float(may(&"move_left") if stick.x < 0.0 else may(&"move_right"))
 		stick.y *= float(may(&"move_forward") if stick.y < 0.0 else may(&"move_back"))
-	var busy := seated or not cut.is_empty()
-	if busy:
-		_busy(stick, delta)
-		stick = Vector2.ZERO
 	var want := cam.ground_basis() * Vector3(stick.x, 0.0, stick.y)
 	still = still + delta if stick == Vector2.ZERO else 0.0
-	hurrying = hurrying and may(&"hurry") and still < tuning.hero.hurry_still_s and not _winded
-	var top := (hurry if hurrying else walk) * stick.length()
+	hurrying = hurrying and may(&"hurry") and still < tuning.hero.hurry_still_s and not _winded and not _spent()
+	var top := (hurry if hurrying else walk * lerpf(1.0, float(tuning.hero.weak.walk), clampf(weak, 0.0, 1.0))) * stick.length()
 	if stick != Vector2.ZERO:
 		var diff := wrapf(atan2(-want.x, -want.z) - yaw, -PI, PI)
 		# grip limits a turn at speed (a / v), the legs limit it standing still
@@ -382,7 +398,7 @@ func _walk(delta: float) -> void:
 
 	coyote = tuning.input.coyote if on_floor else coyote - delta
 	buffer = tuning.input.jump_buffer if Input.is_action_just_pressed(&"jump") and may(&"jump") else buffer - delta
-	if buffer > 0.0 and coyote > 0.0 and launch < 0.0 and not busy:
+	if buffer > 0.0 and coyote > 0.0 and launch < 0.0:
 		buffer = 0.0
 		coyote = 0.0
 		launch = tuning.hop.anticipation
@@ -416,7 +432,7 @@ func _walk(delta: float) -> void:
 	for c in body.get_children():
 		if c.is_in_group("carriable"):
 			carried = c
-	var steps := model.update(0.0 if busy else flat, idle_below, on_floor, carried != null, delta)
+	var steps := model.update(flat, idle_below, on_floor, carried != null, delta)
 	if carried:
 		_carry()
 	# a landing after real air time: a teleport's settle or a curb's single frame off the floor is not one
@@ -572,46 +588,14 @@ func place(pos: Vector3, yaw_deg: float) -> void:
 	last_vel = Vector3.ZERO
 	gait = "idle"
 	model.reset()
-	_end_cut()
-	seated = false
 	room = ""
 	_room()
 	cam.snap(yaw)
 	life.snap(pos + Vector3(-sin(yaw), 0.0, -cos(yaw)) * tuning.life.look_far + Vector3.UP * model.bounds.end.y * 0.9)
 
 
-## On a seat behind the hero (true: sit_down, then sit_idle; the hips go to model.point(&"sit_idle", "seat_hip")),
-## or back up (false: sit_to_stand, which no key cuts short). A move key while seated stands the hero up.
-func sit(on: bool) -> void:
-	if vehicle or on == seated:
-		return
-	seated = on
-	speed = 0.0
-	model.seat(on)
-	cam.show_body = true
-	cut = {} if on else {"left": float(model.clips.sit_to_stand.length)}
-
-
-## Seated, a move key stands the hero up; standing up, the clip runs out.
-func _busy(stick: Vector2, delta: float) -> void:
-	if seated:
-		if stick != Vector2.ZERO:
-			sit(false)
-		return
-	cut.left -= delta
-	if cut.left <= 0.0:
-		_end_cut()
-
-
-func _end_cut() -> void:
-	cut = {}
-	cam.show_body = false
-
-
 ## Drive `v` (group `vehicle`): the hero sits on its seat and stops colliding, the camera follows the vehicle.
 func enter(v: Node3D) -> void:
-	_end_cut()
-	seated = false
 	vehicle = v
 	room = ""
 	cam.room = false

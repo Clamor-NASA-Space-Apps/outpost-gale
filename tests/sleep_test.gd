@@ -1,7 +1,7 @@
 extends "res://addons/forge/test.gd"
 ## The sleep time-lapse (design/plans/next-lanes.md section 3): godot --headless --path . --fixed-fps 60 -s tests/sleep_test.gd
 ## The bed spot opens the picker and the clock waits; Night drives only the look clock to the fixed 06:30 wake with the
-## drone shot, PIP frozen, the shadows reaching further and the probes held; then the hero wakes on the bench in HAB 1,
+## drone shot, PIP frozen, the shadows reaching further and the probes held; then the hero wakes standing in the middle of HAB 1,
 ## the clock given back. A nap from a pinned 13:00 ends 20 minutes on and stays pinned. Nothing counts (hard rule 1).
 ## The lapse itself (15 Nov): the sun moves on every frame with no step much larger than the rest, and the night ends
 ## with the sun in the drone's frame, over the skyline it sees, wherever the base is turned; the drone is in no solid.
@@ -92,6 +92,18 @@ func play() -> bool:
 	player.place(stand.origin, -rad_to_deg(atan2(-face.x, -face.z)))  # Sol 2's wake moved nothing, but PIP may block
 	await frames(10)
 
+	# a door left open: the bed is refused, PIP says to close it and the waypoint is on the door; shut, the bed works
+	said.clear()
+	game.interactions.set_door("hab1", true)
+	await frames(2)
+	game.interactions.interact()
+	await frames(2)
+	check(not cine.picker.visible and not cine.busy(), "HAB 1's door open: the bed opens no picker")
+	check(said == ["need.door"] and game.hud.objective == "door", "PIP says to close it, the waypoint on the door (%s, %s)" % [said, game.hud.objective])
+	game.interactions.set_door("hab1", false)
+	await idle(3.0)
+	check(game.hud.objective != "door", "the door shut: its waypoint goes (%s)" % game.hud.objective)
+
 	# E: the picker opens and the clock waits
 	game.interactions.interact()
 	await frames(2)
@@ -165,7 +177,26 @@ func play() -> bool:
 	check(st.player.room == "hab1", "the hero wakes in HAB 1 (%s)" % st.player.room)
 	check(st.cam.first > 0.99 and not st.cam.inside, "the wake hands over to first person, the lens in no solid (%.2f)" % st.cam.first)
 	check(root.get_camera_3d() == player.cam.lens, "the play camera is back")
-	check(not player.seated and player.process_mode != Node.PROCESS_MODE_DISABLED, "the hero stands and moves again")
+	check(player.process_mode != Node.PROCESS_MODE_DISABLED, "the hero moves again")
+	# the wake (15 Nov playtest: woken in a corner, inside the donning bench, and the first step threw the hero across
+	# the room): standing in the middle of HAB 1 facing the hatch, in nothing, and a second of W walks it there smoothly
+	var woke: Vector3 = hab.to_local(player.body.global_position)
+	var hatch: Vector3 = hab.to_global(Vector3(cine.cfg.sleep.hatch[0], 0.0, cine.cfg.sleep.hatch[1])) - player.body.global_position
+	check(Vector2(woke.x, woke.z).length() < 1.0 and player.on_floor and player.inside().is_empty(),
+			"the hero wakes standing in the middle of HAB 1, in nothing (%s in its space, in %s)" % [woke, player.inside()])
+	check(absf(wrapf(atan2(-hatch.x, -hatch.z) - player.yaw, -PI, PI)) < deg_to_rad(5.0) and absf(wrapf(player.cam.yaw - player.yaw, -PI, PI)) < deg_to_rad(5.0) and absf(player.cam.pitch) < deg_to_rad(2.0),
+			"facing the hatch, the view level behind its eyes (yaw %.0f, view %.0f, pitch %.1f deg)" % [rad_to_deg(player.yaw), rad_to_deg(player.cam.yaw), rad_to_deg(player.cam.pitch)])
+	action(&"move_forward", true)
+	var last: Vector3 = player.body.global_position
+	var worst := 0.0
+	for i in 60:
+		await physics_frame
+		worst = maxf(worst, player.body.global_position.distance_to(last))
+		last = player.body.global_position
+	action(&"move_forward", false)
+	var went: Vector3 = hab.to_local(last) - woke
+	# at the worn-out pace too (player.weak: a night can end thirsty and hungry, and the walk is then 0.6 of itself)
+	check(worst < 0.1 and went.z < -0.3 and absf(went.x) < 0.3, "a second of W walks it toward the hatch, no jump (%.3f m the largest step in a frame, gone %s, weak %.2f)" % [worst, went, player.weak])
 	check(audio._dawn, "the next door opened plays the dawn cue")
 	check(audio.cue != "sleep", "the sleep cue stopped on the cut")
 	# the drone's whole path is in the open: no solid at the camera, and well over the ground

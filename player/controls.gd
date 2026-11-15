@@ -13,6 +13,7 @@ const KEYS := {
 	"fullscreen": [KEY_F],  # F11 is the browser's; a web page may go full screen only from a key or a tap
 	"settings": [KEY_ESCAPE],
 	"handbook": [KEY_TAB],  # the HUD's handbook (ui/game_hud.gd)
+	"sources": [KEY_Q, KEY_SLASH],  # the HUD's "?", where the numbers come from: Q for question, or the ? key itself
 	"film": [KEY_P],  # P for photo: hides every HUD layer for a screen recording, and brings them back (sandbox.gd)
 }
 const PADS := {

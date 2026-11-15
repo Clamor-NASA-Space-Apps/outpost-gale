@@ -5,9 +5,9 @@ extends "res://addons/forge/test.gd"
 ## godot --headless --path . -s tests/advisor_test.gd
 ## It writes user://advisor_test.json only, never a player's file.
 
-const Save := preload("res://sandbox/save.gd")
 const FILE := "user://advisor_test.json"
 
+var Save: GDScript  # loaded in play(): it leans on scripts that name the Forge autoload, unknown while this one compiles
 var game: Node3D
 var said: Array[String] = []
 
@@ -17,6 +17,7 @@ func _init() -> void:
 
 
 func play() -> bool:
+	Save = load("res://sandbox/save.gd")
 	Save.file = FILE
 	DirAccess.remove_absolute(FILE)
 	game = load("res://sandbox/sandbox.tscn").instantiate()
@@ -50,6 +51,14 @@ func play() -> bool:
 	advisor.last = -INF
 	_state({"outside": true, "suit_air": 0.0, "body_water": 0.1, "body_food": 0.1})
 	check(said == ["need.air_out", "need.thirst"], "then the next need in the table's order (%s)" % [said])
+	# every need that holds is a task on top of Today, marked urgent, and the waypoint names what waits behind it
+	check(_urgent() == ["Fill suit air", "Drink water", "Eat a meal"], "three needs: three urgent tasks on top of Today (%s)" % [_urgent()])
+	check(hud.objective == "use:refill_air" and hud.waypoint.place == "Fill suit air, then 2 more", "the waypoint stays on the most urgent and counts the rest ('%s')" % hud.waypoint.place)
+	_state({"body_water": 0.1, "body_food": 0.1})
+	check(_urgent() == ["Drink water", "Eat a meal"], "the air filled: its task leaves the list (%s)" % [_urgent()])
+	check(hud.objective == "use:drink" and hud.waypoint.place == "Drink water, then Eat a meal", "thirsty and hungry: the waypoint on the drink names both (%s, '%s')" % [hud.objective, hud.waypoint.place])
+	_state({"body_food": 0.1})
+	check(_urgent() == ["Eat a meal"] and hud.objective == "use:radio", "the thirst gone: one urgent task left, the step's waypoint back (%s, %s)" % [_urgent(), hud.objective])
 	_state({})
 	check(hud.objective == "use:radio" and advisor.said.is_empty(), "every need gone: the step's waypoint again (%s, %s)" % [hud.objective, advisor.said])
 
@@ -92,7 +101,7 @@ func play() -> bool:
 	game.sim.skip_sols(4 - int(sim.sol))
 	check(not game.lost and int(sim.sol) == 4, "Sol 4, the mission still on (sol %d)" % sim.sol)
 	game.checkpoint(4)
-	var saved := Save.read()
+	var saved: Dictionary = Save.read()
 	if not check(not saved.is_empty(), "the checkpoint is written"):
 		return true
 	for k: String in ["health", "body_water", "body_food", "body_rest", "suit_dust"]:
@@ -125,6 +134,11 @@ func play() -> bool:
 	await process_frame
 	check(fresh != again and fresh.beats.sequence == "opening" and int(fresh.sim.sim.sol) == 1, "with no checkpoint, retry starts Sol 1's opening (%s)" % fresh.beats.sequence)
 	return true
+
+
+## The words of Today's urgent rows, top down.
+func _urgent() -> Array:
+	return game.hud.tasks.tasks.filter(func(r: Array) -> bool: return r[1] == "urgent").map(func(r: Array) -> String: return r[0])
 
 
 ## One state to everyone who listens to the rules: the rules' own, with `over` on top.

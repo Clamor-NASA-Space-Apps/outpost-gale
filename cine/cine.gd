@@ -92,12 +92,14 @@ func _used(what: String, _pos: Vector3) -> void:
 	if beats and not beats.may_sleep():  # the sol's tasks first: a bed used early skipped whole sols (14 Nov playtest)
 		beats.refuse_sleep()
 		return
+	if game.has_method("may_sleep") and not game.may_sleep():
+		return  # the root says why not: a door left open (sandbox.gd may_sleep)
 	_take_clock()
 	picker.open()
 
 
 ## The sleep time-lapse: a night to the fixed wake hour, or a nap of `nap_h`. Lights out, a drone shot of the base
-## while the look clock runs on, then the wake in HAB 1: the hero on the bench by the hatch, the lights up.
+## while the look clock runs on, then the wake in HAB 1: the hero standing in the middle of it, the lights up.
 func sleep(kind: StringName) -> void:
 	if beat != "":
 		return
@@ -112,7 +114,6 @@ func sleep(kind: StringName) -> void:
 		span = 24.0  # already the wake hour: the next one
 	var lapse := clampf(float(c.lapse_per_h) * span, float(c.lapse_s[0]), float(c.lapse_s[1]))
 	_begin("sleep_drone")
-	var hab: Node3D = world.items.hab1
 	audio.play("curtain", player.body.global_position)
 	audio.duck(true)
 	audio.music("sleep", true)
@@ -141,27 +142,17 @@ func sleep(kind: StringName) -> void:
 	_give_clock()
 	clock.refresh()
 	slept.emit(kind, span)
-	_seat()
-	var sitting := get_tree().create_timer(float(player.model.clips.sit_down.length) + 0.2)
+	_wake()
 	# under the black, from inside the outdoor probe: the sky changed by hours, and a stale reflection would pop
 	await HouseStyle._redraw_probes(game, game._probe_view())
-	if sitting.time_left > 0.0:
-		await sitting.timeout
 	beat = "wake"
-	var w: Array = c.wake_cam
-	cam.look_at_from_position(hab.to_global(_v(w[0])), hab.to_global(_v(w[1])))
-	cam.make_current()
+	_give_camera()  # the wake is seen through the hero's own eyes: it stands in the room, and nothing moves it again
 	audio.duck(false)
 	audio.play("curtain", player.body.global_position)  # the curtain opens and the crew's lights come up (row 189)
 	_room_light(1.0)
 	show_card.emit({"kind": kind, "hours": span})
 	await _fade(0.0, float(cfg.fade_in_s))
 	await _wait(float(c.wake_hold_s))
-	# the hero wakes on its feet and walks out through the hatch as on any morning: the sit and the stand-up were
-	# "useless and glitchy" (15 Nov playtest)
-	var to: Vector3 = hab.to_global(Vector3(c.hatch[0], 0.0, c.hatch[1])) - player.body.global_position
-	player.place(player.body.global_position, -rad_to_deg(atan2(-to.x, -to.z)))
-	player.cam.pitch = 0.0
 	if kind == &"night":
 		audio.wake()  # the next door opened plays the dawn cue
 	_end()
@@ -182,17 +173,14 @@ func _dawn(p: Array) -> Vector3:
 	return Vector3(at.x, world.height_at(at.x, at.z) + float(p[1]), at.z)
 
 
-## The hero by the donning bench for the night, standing (no sitting down: 15 Nov playtest), facing into the room.
-func _seat() -> void:
-	var b: Array = cfg.sleep.bench
+## Where a sleep ends: the hero on its feet in the middle of HAB 1's deck, facing the hatch, the view level. It woke
+## at the donning bench, the body standing inside the bench (the sitting was cut, the spot stayed), and the first step
+## threw it out of the solid to wherever was free (15 Nov playtest: "I randomly glitch to another corner").
+func _wake() -> void:
 	var hab: Node3D = world.items.hab1
-	var seat := hab.to_global(Vector3(b[0], b[1], b[2]))
-	var face: Vector3 = hab.global_basis * Vector3(b[3], 0.0, b[4])
-	var r := atan2(-face.x, -face.z)
-	var hip: Vector3 = player.model.point(&"sit_idle", "seat_hip")
-	var feet := seat - Basis(Vector3.UP, r) * Vector3(hip.x, 0.0, hip.z)
-	feet.y = hab.to_global(Vector3(0.0, float(cfg.sleep.deck_y), 0.0)).y
-	player.place(feet, -rad_to_deg(r))
+	var at := hab.to_global(Vector3(0.0, float(cfg.sleep.deck_y), 0.0))
+	var to: Vector3 = hab.to_global(Vector3(cfg.sleep.hatch[0], 0.0, cfg.sleep.hatch[1])) - at
+	player.place(at, -rad_to_deg(atan2(-to.x, -to.z)))
 
 
 ## HAB 1's own light at share `k`: the lamp pool fades it there (half a second), else it is set at once.
@@ -813,10 +801,6 @@ func _run(s: float, step: Callable) -> void:
 
 func _ground(p: Array) -> Vector3:
 	return Vector3(p[0], float(p[1]) + world.height_at(p[0], p[2]), p[2])
-
-
-func _v(p: Array) -> Vector3:
-	return Vector3(p[0], p[1], p[2])
 
 
 ## A card's words from data/lines.json through the HUD, like PIP's (tr() had no table and showed the raw id).

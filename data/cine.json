@@ -4,7 +4,7 @@
  "fade_in_s": 0.5,
  "fov": 55.0,
  "sleep": {
-  "_note": "wake_h: a night ends at 06:30 local solar time, 22:00 plus NASA's 8.5 h sleep (factcheck row 208); nap_h: 20 min, between 10 min with no grogginess and NASA's 26 min pilot nap (rows 194, 195). lapse_s = clamp(lapse_per_h x hours, lapse_s). The drone moves from `from` to `to` looking from `at` to `at_to` (smoothstep, no orbit), each point [m right, m over the ground there, m back] about HAB 1 in a frame turned to the sun's bearing at wake_h (-Z toward the sunrise; cine.gd _dawn()), never world metres: the base's turn of 14 Nov (tools/rotate_base.py) turned world points with it and the shot lost the sun. Over HAB 1, high enough that the crater wall leaves the top of the frame to the stars, ending 30 m behind HAB 1 looking 10 deg right of the sunrise, so a night's lapse ends on the sun breaking over the rim behind the base, about a second before the wake (06:08 of the 06:30 end), whichever way the base is turned. shadow_range: m the sun's shadows reach for the drone shot (the phone preset's 25 m stops short of HAB 1). room_light: HAB 1's light while the crew sleeps, a share of its own. bench: the donning bench in HAB 1 (forge/hab_interior.py donning(): wall angle 129, 0.4 m deep, seat 0.47 m up) [x, seat y, z, face x, face z]: the hero sits facing into the room. hatch: [x, z] of the hatch's inner face, which the hero turns to after standing up. wake_cam: [from, at] in HAB 1's space, the shot of the hero waking on the bench; wake_hold_s on the bench before standing",
+  "_note": "wake_h: a night ends at 06:30 local solar time, 22:00 plus NASA's 8.5 h sleep (factcheck row 208); nap_h: 20 min, between 10 min with no grogginess and NASA's 26 min pilot nap (rows 194, 195). lapse_s = clamp(lapse_per_h x hours, lapse_s). The drone moves from `from` to `to` looking from `at` to `at_to` (smoothstep, no orbit), each point [m right, m over the ground there, m back] about HAB 1 in a frame turned to the sun's bearing at wake_h (-Z toward the sunrise; cine.gd _dawn()), never world metres: the base's turn of 14 Nov (tools/rotate_base.py) turned world points with it and the shot lost the sun. Over HAB 1, high enough that the crater wall leaves the top of the frame to the stars, ending 30 m behind HAB 1 looking 10 deg right of the sunrise, so a night's lapse ends on the sun breaking over the rim behind the base, about a second before the wake (06:08 of the 06:30 end), whichever way the base is turned. shadow_range: m the sun's shadows reach for the drone shot (the phone preset's 25 m stops short of HAB 1). room_light: HAB 1's light while the crew sleeps, a share of its own. deck_y: HAB 1's deck over its origin, m: a sleep ends with the hero standing in the middle of it (cine.gd _wake(); at the donning bench the body stood in the bench, 15 Nov). hatch: [x, z] of the hatch's inner face, which the hero wakes facing. wake_hold_s: s the wake card holds before E works again",
   "wake_h": 6.5,
   "nap_h": 0.3333,
   "lapse_per_h": 0.9,
@@ -13,9 +13,7 @@
   "shadow_range": 60.0,
   "room_light": 0.15,
   "deck_y": 0.42,
-  "bench": [-1.319, 0.872, -1.629, 0.6293, 0.7771],
   "hatch": [0.0, -2.16],
-  "wake_cam": [[0.9, 1.9, 0.5], [-1.1, 1.15, -1.45]],
   "wake_hold_s": 2.0
  },
  "trip": {

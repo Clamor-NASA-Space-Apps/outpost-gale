@@ -2,7 +2,7 @@ extends Control
 ## The play HUD on the visor (design/mockups/hud.png): the status card (sol, clock, three meters), Today's tasks, the
 ## compass tape, the minimap and the full map (M), the objective's waypoint, PIP's speech bubble, the use prompt,
 ## visor mail, an alert, and the cards (a choice, the sleep ledger, the causes of a lost mission, where the numbers
-## come from, the mission report), the hero's needs under the meters, the hurry bar, and the handbook (ui/handbook.gd: Tab or the book button), with the "New page" note and the check card
+## come from, the mission report), the four bars and what hurts under Crew health, and the handbook (ui/handbook.gd: Tab or the book button), with the "New page" note and the check card
 ## that send the kid to it. It holds no rules: bind() a node with `signal changed(state: Dictionary)` (the sim's state keys) and
 ## it shows what it gets. Every HUD event emits `cue(name)` once (audio/audio.gd UI_SOUNDS); the sandbox plays it.
 ## Under a CanvasLayer it fills the screen and draws PHONE_SCALE larger on a touch screen, with margins clear of the
@@ -35,7 +35,13 @@ const TASKS_HOLD_S := 1.2  # a finished day's list stays up, every box ticked, b
 const TASKS_LEAVE_S := 0.45  # its slide and fade out
 const TASKS_SLIDE := 24.0  # px it slides left as it goes
 const ALERT_GAP_S := 6.0  # the alert and danger cues repeat no more often than this
-const STAMINA_UP := 64  # px the hurry bar stands over the frame's bottom edge: clear of the prompt on a phone
+# px the use prompt stands over the frame's bottom edge: low in the middle, under the hero and over
+# the visor's arc and a phone's touch buttons (15 Nov playtest: in the corner a kid never learned E, or the hold)
+const PROMPT_UP := 120
+# a phone's canvas is shorter (PHONE_SCALE), so there 120 px lands on the hero: the prompt keeps the bottom centre,
+# between the stick and the Use button
+const PROMPT_UP_TOUCH := 4
+const SOURCES_CARD := "res://ui/components/sources_card.tscn"
 const PLACES := preload("res://ui/components/full_map.gd").PLACES
 # What the "where this comes from" card says beside each number, with its factcheck row
 const SOURCES := {
@@ -60,9 +66,11 @@ var _health := -1.0  # the last state's, -1 before the first: a loaded game show
 var stock := {}  # the most of each supply seen so far: Life support's 100%
 var start_unix := Time.get_unix_time_from_system()  # sol 1 is the day the game is played
 var frame := Control.new()  # everything sits inside its margins
-var meters := {}  # power, life, health
+var meters := {}  # power, life, health, air: the HUD's four bars, and there are no others
 var clock: Control  # the status card: sol, time, suit air
 var status: Control
+var report: Control  # the base report card (key R): what makes and uses power and supplies right now
+var _rules: Object  # what bind() listens to, or its `sim`: asked for flows() while the report is open
 var tasks: Control
 var _tasks_out: Tween  # the finished list leaving, then the next one coming in
 var compass: Control
@@ -74,7 +82,6 @@ var mark_id := ""  # the place it names, "" for open ground
 const MARK_REACH_M := 4.0  # within this the mark is reached and clears itself
 const SAME_PLACE_M := 20.0  # a mark this near the objective is the same place: one tag, not two (a place's middle and its landmark differ by metres)
 var prompt: Control
-var stamina: Control  # the hurry bar (set_stamina): bottom centre, over the prompt's row, hidden while full
 var full_map: Control  # open while the full map shows, else null
 var camera: Camera3D
 var hero: Node3D
@@ -88,14 +95,19 @@ var touch := DisplayServer.is_touchscreen_available():
 		if minimap:
 			minimap.touch = v
 			prompt.touch = v
-			# a phone's Use and Hop buttons hold the bottom right, so there the prompt sits at the bottom centre
-			prompt.size_flags_horizontal = Control.SIZE_SHRINK_CENTER if v else Control.SIZE_SHRINK_END
+			# a finger has no keys to read, and no Esc for settings: there the gear stays and the key caps go
+			gear_hold.visible = v
+			var up := PROMPT_UP_TOUCH if v else PROMPT_UP
+			prompt.offset_top = -up
+			prompt.offset_bottom = -up
+			for k: Control in [book_key, source_key]:
+				k.visible = not v
 			# 48 px under a mouse, 96 scene px for a finger (addons/forge/test.gd TARGET) under PHONE_SCALE
 			var b := ceilf(96.0 / Hud.PHONE_SCALE) if v else 48.0
 			source_button.custom_minimum_size = Vector2(b, b)
 			book_button.custom_minimum_size = Vector2(b, b)
 			gear_slot.custom_minimum_size = Vector2(b, b)
-			for g: Node in gear_slot.get_children():
+			for g: Node in gear_hold.get_children():
 				(g as Control).custom_minimum_size = Vector2(b, b)
 				(g as Control).size = Vector2(b, b)
 var world: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/world.json"))
@@ -112,6 +124,11 @@ var book_mark: Label  # its "!": a page not read yet
 var handbook: Control = preload("res://ui/handbook.gd").new()
 var check := {}  # the check on its card now (design/plans/mission-1-contracts.md "A check"), {} for none
 var gear_slot := Control.new()  # where the settings gear sits; dock_gear() puts the real one in it
+# the gear itself, shown only on a touch screen: a keyboard has Esc (15 Nov playtest), but the slot keeps its room so
+# the book and "?" stay clear of the compass
+var gear_hold := Control.new()
+var book_key: Control  # the key caps on the book and the "?": a kid clicks nothing while the mouse looks around
+var source_key: Control
 var modal := Control.new()  # a card and the scrim that keeps clicks off the world behind it
 var holder := CenterContainer.new()
 var scrim := ColorRect.new()
@@ -139,6 +156,14 @@ func _ready() -> void:
 	status.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	clock = status
 	meters = status.meters
+	# the base report: in the middle, over the play HUD, hidden until its key
+	report = preload("res://ui/components/base_report.gd").new()
+	report.hide()
+	var mid := _quiet(CenterContainer.new())
+	mid.z_index = 200
+	add_child(mid)
+	mid.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	mid.add_child(report)
 	tasks = _scene("tasks_card", left)
 	tasks.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	tasks.hide()
@@ -167,20 +192,22 @@ func _ready() -> void:
 	gear_slot.name = "GearSlot"
 	gear_slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	book_button.name = "BookButton"
-	book_button.tooltip_text = "Handbook (Tab)"
+	book_button.tooltip_text = "Handbook"
 	book_button.theme_type_variation = "ChoiceButton"
 	book_button.custom_minimum_size = Vector2(Hud.BUTTON_H, Hud.BUTTON_H)
 	book_button.focus_mode = Control.FOCUS_NONE
 	book_button.pressed.connect(_toggle_handbook)
-	# an open book: two pages from the atlas's outlined box, side by side (the icon set has no book)
-	var pages := Control.new()
+	# an open book (ui/icons/book.svg): two boxes side by side read as "00" (15 Nov playtest)
+	var pages := CenterContainer.new()
 	pages.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	pages.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	pages.set_meta("shapes", true)
-	pages.draw.connect(func() -> void:
-		for x: float in [-13.0, 0.0]:
-			Hud.blit(pages, "box_line", Rect2(pages.size * 0.5 + Vector2(x, -9.0), Vector2(13.0, 18.0)), Hud.color("on-surface")))
+	pages.add_child(Hud.icon("book", 30, "on-surface"))
 	book_button.add_child(pages)
+	book_key = _key_cap(book_button, "handbook")
+	source_key = _key_cap(source_button, "sources")
+	gear_hold.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	gear_hold.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	gear_slot.add_child(gear_hold)
 	book_mark = Hud.label("!", "KeyAmber")
 	book_mark.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT, Control.PRESET_MODE_MINSIZE, 4)
 	book_mark.hide()
@@ -204,24 +231,14 @@ func _ready() -> void:
 		c.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	var top := _quiet(Hud.row([left, Hud.spacer(), right], 16))
 	top.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	prompt = load("res://ui/components/prompt.tscn").instantiate()
-	prompt.size_flags_horizontal = Control.SIZE_SHRINK_END
-	frame.add_child(_quiet(Hud.col([top, prompt], 0)))
+	frame.add_child(_quiet(Hud.col([top], 0)))
 	frame.get_child(0).set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	var breath: Control = load("res://ui/components/meter.tscn").instantiate()
-	breath.icon_name = "next"
-	breath.title = "Hurry"
-	breath.word = "Hurry"
-	breath.compact = true
-	breath.low_below = status.LOW_NEED
-	breath.custom_minimum_size.x = 150
-	stamina = Hud.panel("HudPanel", breath)
-	stamina.name = "Stamina"
-	frame.add_child(stamina)
-	stamina.set_anchors_and_offsets_preset(Control.PRESET_CENTER_BOTTOM, Control.PRESET_MODE_MINSIZE, STAMINA_UP)
-	stamina.grow_horizontal = Control.GROW_DIRECTION_BOTH
-	stamina.grow_vertical = Control.GROW_DIRECTION_BEGIN
-	stamina.hide()
+	# the use prompt, low in the middle: it takes its least size and grows up and out from that point
+	prompt = load("res://ui/components/prompt.tscn").instantiate()
+	frame.add_child(prompt)
+	prompt.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+	prompt.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	prompt.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	compass = _scene("compass")
 	compass.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP, Control.PRESET_MODE_MINSIZE)
 	compass.grow_horizontal = Control.GROW_DIRECTION_BOTH
@@ -267,6 +284,26 @@ func _ready() -> void:
 	handbook.closed.connect(_handbook_closed)
 
 
+## A key cap in a HUD button's lower right corner, naming the key `action` is bound to (player/controls.gd).
+func _key_cap(b: Button, action: String) -> Control:
+	var events: Array = InputMap.action_get_events(action) if InputMap.has_action(action) else []
+	var k: Key = (events[0] as InputEventKey).physical_keycode if events and events[0] is InputEventKey else preload("res://player/controls.gd").KEYS[action][0]
+	var cap := Hud.panel("HudKey", Hud.label(OS.get_keycode_string(k), "KeyText"))
+	cap.name = "Key"
+	cap.set_meta("icon", true)
+	cap.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	b.add_child(cap)
+	cap.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
+	cap.offset_left = 6.0  # a little past the corner, like a sticker, so it never sits on the icon
+	cap.offset_right = 6.0
+	cap.offset_top = 6.0
+	cap.offset_bottom = 6.0
+	cap.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	cap.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	b.tooltip_text += " (%s)" % OS.get_keycode_string(k)
+	return cap
+
+
 func _scene(n: String, parent: Control = null) -> Control:
 	var c: Control = load("res://ui/components/%s.tscn" % n).instantiate()
 	(parent if parent else frame).add_child(c)
@@ -301,9 +338,22 @@ func _fit() -> void:
 
 ## Listen to the rules: `node` has `signal changed(state: Dictionary)`.
 func bind(node: Object) -> void:
+	_rules = node.sim if "sim" in node else node  # the base report asks the rules themselves for their flows()
 	node.changed.connect(show_state)
 	if node.has_method("state"):
 		show_state(node.state())
+
+
+## The base report card (ui/components/base_report.gd), opened and closed by its key. The game runs on under it.
+func toggle_report() -> void:
+	report.visible = not report.visible
+	_show_report()
+
+
+func _show_report() -> void:
+	# ponytail: the card redraws on every state while it is open; fill it only on a change if that ever costs
+	if report.visible and _rules and _rules.has_method("flows"):
+		report.show_flows(_rules.flows())
 
 
 func show_state(s: Dictionary) -> void:
@@ -338,12 +388,13 @@ func show_state(s: Dictionary) -> void:
 	var net := float(s.get("net_kw", float(s.get("power_in_kw", 0.0)) - float(s.get("power_out_kw", 0.0))))
 	status.flow.text = ("Steady" if absf(net) < FLOW_MIN_KW else "%s %+.1f kW" % ["Charging" if net > 0.0 else "Draining", net])
 	status.show_body(s)
+	_show_report()
 	# the suit's air shows while it runs down (outside), and hides once it is topped up again; with the body's
 	# gauges up, the suit's gauge says it
 	var suit := float(s.get("suit_air_min", -1.0))
 	stock.suit = maxf(stock.get("suit", 0.0), suit)
 	# the Mars clock: 24 local hours a sol, the sky's own time (the rules count Earth hours through a 24.66 h sol)
-	clock.show_time(int(s.sol), float(s.hour) * 24.0 / Hud.SOL_H, suit if suit < stock.suit and not status.needs.visible else -1.0)
+	clock.show_time(int(s.sol), float(s.hour) * 24.0 / Hud.SOL_H, suit if suit < stock.suit and not status.body_on else -1.0)
 	if mail_sol >= 0:
 		var was: float = mail.progress()
 		mail.set_now(float(s.hour) + (int(s.sol) - mail_sol) * Hud.SOL_H)
@@ -353,7 +404,9 @@ func show_state(s: Dictionary) -> void:
 	for e: Dictionary in s.get("events", []):
 		now[e.id] = true
 		if not _events.has(e.id):
-			alert(e.label, "%s data. Tap ? for its source." % ("LIVE" if e.live else "ARCHIVED"))
+			# a keyboard player cannot click the "?" while the mouse looks around: name its key
+			var how := "Tap ?" if touch else "Press %s" % (source_key.get_child(0) as Label).text
+			alert(e.label, "%s data. %s for its source." % ["LIVE" if e.live else "ARCHIVED", how])
 	_events = now
 	var failing: Array = s.get("failing", [])
 	for k: String in failing:
@@ -401,7 +454,7 @@ func bind_speaker(node: Node3D, cam: Camera3D) -> void:
 ## the minimap or the compass: ui/settings.gd stops placing it once it has moved.
 func dock_gear(gear: Button) -> void:
 	gear.get_parent().remove_child(gear)
-	gear_slot.add_child(gear)
+	gear_hold.add_child(gear)
 	gear.position = Vector2.ZERO
 	gear.theme_type_variation = &"ChoiceButton"  # the same glass key as the "?" under it
 	touch = touch  # sizes it as the "?" beside it
@@ -469,7 +522,8 @@ func clear_objective() -> void:
 	waypoint.hide()
 
 
-## Today's list: [{label_id, state: "done" | "now" | "next"}], words from data/lines.json. It shows as soon as it has
+## Today's list: [{label_id, state: "done" | "now" | "next" | "urgent"}], words from data/lines.json. An urgent row is
+## a need (thirst, suit air), not a task of the day: it comes and goes without the list counting as finished. It shows as soon as it has
 ## a task; a new task arrives with the objective_new cue, a task newly done ticks (task_tick).
 func set_tasks(list: Array) -> void:
 	var now := {}
@@ -483,7 +537,7 @@ func set_tasks(list: Array) -> void:
 	# a finished list (every box ticked, or its rows gone because the day's work is over) leaves with a slide and a
 	# fade, ticked to the end, and the next list comes in after it (14 Nov playtest: the done list just stayed up)
 	var ended: bool = tasks.visible and not tasks.tasks.is_empty() and (_task_states.keys().any(
-		func(id: String) -> bool: return not now.has(id)) or list.all(func(t: Dictionary) -> bool: return t.state == "done"))
+		func(id: String) -> bool: return not now.has(id) and _task_states[id] != "urgent") or list.all(func(t: Dictionary) -> bool: return t.state == "done"))
 	var was: Dictionary = _task_states
 	_task_states = now
 	if _tasks_out:
@@ -528,12 +582,6 @@ func _settle_tasks() -> void:
 ## held, and the ring round the key is that far (0 before the press); -1 for a plain press.
 func show_prompt(text: String, hold := -1.0) -> void:
 	prompt.say(text, hold)
-
-
-## How much hurry the hero has left, 0 to 1: a small bar at the bottom centre, hidden while full.
-func set_stamina(v: float) -> void:
-	stamina.visible = v < 1.0
-	stamina.get_child(0).value = roundi(100.0 * v)
 
 
 func map_open() -> bool:
@@ -598,8 +646,20 @@ func set_mark(at: Variant, id := "", label := "") -> void:
 func _input(e: InputEvent) -> void:
 	if handbook.visible:
 		return  # Tab and Esc close it in its own _input (ui/handbook.gd), which runs before this one; M waits
+	if InputMap.has_action("report") and e.is_action_pressed("report") and not e.is_echo() and is_visible_in_tree() and not full_map:
+		toggle_report()
+		get_viewport().set_input_as_handled()
+		return
 	if InputMap.has_action("handbook") and e.is_action_pressed("handbook") and not e.is_echo() and is_visible_in_tree() and not full_map:
 		open_handbook()
+		get_viewport().set_input_as_handled()
+	elif InputMap.has_action("sources") and e.is_action_pressed("sources") and not e.is_echo() and is_visible_in_tree() and not full_map:
+		# the "?" by its key: in play the mouse turns the view, so a click never reaches the button (15 Nov playtest).
+		# It toggles its own card and never replaces another one (a ledger, a check)
+		if card and card.scene_file_path == SOURCES_CARD:
+			close_card()
+		elif card == null:
+			show_sources()
 		get_viewport().set_input_as_handled()
 	elif e.is_action_pressed("map") and not e.is_echo():
 		if full_map:
@@ -749,10 +809,15 @@ func _handbook_closed() -> void:
 func unlock_page(id: String) -> void:
 	if not handbook.unlock(id):
 		return
-	note_label.text = "%s: %s" % [line("hud.new_page"), handbook.title(id)]
-	note.show()
-	_note_left = NOTE_S
+	notice("%s: %s" % [line("hud.new_page"), handbook.title(id)])
 	book_mark.visible = handbook.unread() > 0
+
+
+## A calm note on the glass for `seconds`: news, not a danger (alert() is the red one, for a meter or a hazard).
+func notice(text: String, seconds := NOTE_S) -> void:
+	note_label.text = text
+	note.show()
+	_note_left = seconds
 	_cue("mail")
 
 
@@ -833,8 +898,8 @@ func show_sources() -> void:
 		["health", "Crew health %d%%" % meters.health.value, SOURCES.health, ""],
 		["radiation", "Solar storm outside the shelter", SOURCES.flare, "archived"],
 	]
-	if status.needs.visible:
-		rows.append(["oxygen", "Suit air %d%%" % status.gauges.air.value, SOURCES.suit_air, ""])
+	if status.body_on:
+		rows.append(["oxygen", "Suit air %d%%" % meters.air.value, SOURCES.suit_air, ""])
 		rows.append(["storm", "Suit dust %d%%" % roundi(100.0 * float(s.get("suit_dust", 0.0))), SOURCES.suit_dust, ""])
 	for k: String in SUPPLIES + ["dose_msv", "panel_dust"]:
 		if s.has(k):
@@ -850,7 +915,7 @@ func show_sources() -> void:
 	for r: Dictionary in JSON.parse_string(FileAccess.get_file_as_string("res://data/nasa.json")).records.values():
 		if r.get("show", true):
 			rows.append(["radiation", "%s: %s %s" % [r.label, r.value, r.unit], r.source, "computed" if r.checked == "our maths" else "archived"])
-	var c: Control = load("res://ui/components/sources_card.tscn").instantiate()
+	var c: Control = load(SOURCES_CARD).instantiate()
 	c.rows = rows
 	c.list_h = maxf(160.0, size.y - 260.0)
 	c.closed.connect(close_card)
@@ -910,7 +975,7 @@ func _open(c: Control, full := false, side := false) -> void:
 
 ## The HUD parts a side card can lie on.
 func _under() -> Array:
-	return [status, tasks, toast, note, minimap, gear_slot.get_parent(), mail, prompt, compass, stamina]
+	return [status, tasks, toast, note, minimap, gear_slot.get_parent(), mail, prompt, compass]
 
 
 ## Keys and a gamepad work on the open card at once.
@@ -1009,12 +1074,10 @@ func _area(at: Vector3) -> String:
 func snapshot() -> Dictionary:
 	return {
 		"meters": {"power": meters.power.value, "life": meters.life.value, "lifeIcon": meters.life.icon_name, "health": meters.health.value},
-		"sol": clock.sol, "time": clock.time, "suit": clock.suit_label.text if clock.suit.visible else "",
-		"hurt": status.hurting, "flow": status.flow.text,
-		# the hero's needs in percent (air -1 while its gauge is hidden), {} while the rules do not run them
-		"body": {"air": status.gauges.air.value if status.gauges.air.visible else -1, "water": status.gauges.water.value,
-			"food": status.gauges.food.value, "rest": status.gauges.rest.value, "dusty": status.dust.visible} if status.needs.visible else {},
-		"stamina": stamina.get_child(0).value if stamina.visible else -1,
+		"sol": clock.sol, "time": clock.time, "suit": clock.suit_text,
+		"hurt": status.hurting, "flow": status.flow.text, "health_note": status.note.text,
+		# the hero's needs in percent, {} while the rules do not run them; only the suit's air has a bar
+		"body": status.body,
 		"subtitle": bubble.text if bubble.visible else "",
 		"bubble": {"typed": bubble.typed, "docked": bubble.docked, "at": bubble.panel.position.round(), "fact": bubble.fact,
 			"keys": bubble.keys_row.get_children().filter(func(k: Node) -> bool: return not k.is_queued_for_deletion()).size()} if bubble.visible else {},

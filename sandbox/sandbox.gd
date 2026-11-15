@@ -72,6 +72,8 @@ var trip_km := 8.8  # the last rover trip's distance, for its title card and the
 var lamp_hinted := false  # PIP explains the helmet lights once, the first time they come on by themselves
 var offers := {}  # data/beats.json `offers`: what each choice card holds and which rules it sets
 var lost := false  # a meter ran out: the mission-lost card is up and the rules stop
+var over := false  # Sol 10's night is slept: the Mission 1 report is up, and the end screen comes after it
+var ended: ColorRect  # the end screen (end_screen()), null until then
 var film := false  # P, or Settings, Demo: no HUD, no touch controls, no frame-rate line, for a screen recording
 var beacon: MeshInstance3D  # the kid's map mark in the world: a pillar of the DESIGN.md `light` role, seen from afar
 var deadline := {}  # data/sols.json `deadline`: PIP's warnings while a sol's tasks run late
@@ -195,7 +197,8 @@ func _process(_delta: float) -> void:
 	# over the night's time-lapse (15 Nov playtest)
 	# with the hold's ring: empty on a thing that needs E held, filling while it is (interactions.hold_shown())
 	hud.show_prompt("" if cine.busy() else interactions.prompt_label.text.trim_prefix("[E]  "), interactions.hold_shown())
-	hud.set_stamina(player.stamina)
+	# worn out (the rules' `weak`: low Crew health, an empty gauge): no hurry, a slower walk (player.gd weak)
+	player.weak = sim.sim.weak() if sim.sim.has_method("weak") else 0.0
 	if not cine.busy():
 		world.room_shadow(player.room != "")  # indoors the sun's shadow reaches the room only (world.gd)
 	var h := clock.hour()
@@ -397,6 +400,43 @@ func _restart(saved: Dictionary) -> void:
 	get_tree().reload_current_scene()
 
 
+## The end of what there is to play (Mission 1, Sols 1 to 10): black, a few warm words, and one button (a tap, a click,
+## Enter or Space) back to the start menu. The world stops behind it, so no meter runs out under it and PIP stays quiet.
+func end_screen() -> void:
+	if ended:
+		return
+	beats.skip()
+	ended = ColorRect.new()
+	ended.color = Color.BLACK
+	ended.theme = Hud.THEME
+	ended.process_mode = Node.PROCESS_MODE_ALWAYS
+	ended.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var back := Button.new()
+	back.text = hud.line("end.back")
+	back.icon = load("res://ui/icons/next.svg")
+	back.icon_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	back.custom_minimum_size = Vector2(280, Hud.BUTTON_H)
+	back.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	back.pressed.connect(func() -> void:
+		get_tree().paused = false  # a pause outlives the scene
+		get_tree().change_scene_to_file("res://ui/boot.tscn"))
+	var words := Hud.col([], 20)
+	for id: String in ["end.title", "end.body", "end.thanks"]:
+		var l := Hud.label(hud.line(id), "Title" if id == "end.title" else "", true)
+		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		l.custom_minimum_size.x = 480
+		words.add_child(l)
+	words.add_child(back)
+	var center := CenterContainer.new()
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	center.add_child(words)
+	ended.add_child(center)
+	cover.get_parent().add_child(ended)  # over the cover too: a Continue lands here while the scene still warms
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	back.grab_focus.call_deferred()  # after the report card's own close lets go of the focus
+	get_tree().paused = true
+
+
 ## The story's word to the rules (cine/beats.gd `rule`: a beat's do apply:<choice>, event:<event>, report:<id>).
 func _rule(id: String) -> void:
 	var arg := id.get_slice(":", 1)
@@ -429,15 +469,48 @@ func _panel() -> void:
 	hud.offer_choice("panel.title", options)
 
 
+## The Today list: what the hero or the base needs now on top, marked urgent, then the day's own tasks. While PIP's
+## waypoint is on a need's fix and more needs wait, its label names them too ("Drink water, then Eat a meal"; 15 Nov
+## playtest: thirsty and hungry, the waypoint said "Drink" alone).
+func _tasks() -> void:
+	var needs: Array = advisor.tasks.map(func(fix: String) -> Dictionary:
+		return {"label_id": "need.task." + fix.trim_prefix("use:"), "state": "urgent"})
+	hud.set_tasks(needs + beats.tasks())
+	var fix: String = advisor.NEEDS.get(advisor.goal, "")
+	if fix == "" or hud.objective != fix:
+		return
+	_point(fix)  # its own name back, when the others have cleared
+	var rest: Array = needs.filter(func(n: Dictionary) -> bool: return n.label_id != "need.task." + fix.trim_prefix("use:"))
+	var first: String = hud.line("need.task." + fix.trim_prefix("use:"))
+	if rest.size() == 1:
+		hud.waypoint.rename(hud.line("need.then") % [first, hud.line(rest[0].label_id)])
+	elif rest.size() > 1:
+		hud.waypoint.rename(hud.line("need.more") % [first, rest.size()])
+
+
+## The bed asks (cine.gd): no sleep with this room's door open, the air would go out all night. PIP says so, kindly,
+## and the waypoint goes on the door; shut, it lets go (the `used` wiring) and the bed works. A refusal with a
+## warning, not a loss in the morning: a kid learns from the warning (15 Nov playtest).
+func may_sleep() -> bool:
+	for part: Node3D in world.items[player.room].get_meta("parts") if world.items.has(player.room) else []:
+		var it: Node3D = interactions.by_thing.get(part)
+		if it and it.kind == "door" and it.open:
+			advisor.say.call("need.door")
+			hud.set_objective_node(it, "need.task.door", "door")
+			return false
+	return true
+
+
 ## The waypoint on `t`: "" for none, "pip", a landmark, an item, or use:<kind> for the nearest spot of that kind.
 func _point(t: String) -> void:
 	if t == "":
 		hud.clear_objective()
-	elif t == "rover" and world.items.has(t):
+	elif t in ["rover", "reactor"] and world.items.has(t):
 		# the rover itself, wherever it stands now, before the landmark of the same name (its parking spot): a kid who
 		# had driven it somewhere was sent to the empty parking place, "Rover 2 m" over bare ground (15 Nov playtest:
 		# "the game itself cannot identify where the rover is"). Boarded at its rear hatch, so the waypoint stands
-		# on the hatch, not on its middle, where it led a kid to the nose and no prompt
+		# on the hatch, not on its middle, where it led a kid to the nose and no prompt. The reactor's landmark is a
+		# viewpoint 21 m short of it: Sol 2's step asks the kid to stand at the reactor itself (15 Nov playtest)
 		hud.set_objective_node(interactions.by_thing.get(world.items[t], world.items[t]), "", t)
 	elif t.begins_with("use:"):
 		# the thing a step asks the kid to use, wherever the kid is: the nearest spot of that kind that can be used
@@ -529,6 +602,9 @@ func checkpoint(sol: int) -> void:
 ## wakes it (in HAB 1, so the rules' first word finds nobody out in a storm), the rules, the sky at the rules' hour
 ## with its storm, the handbook, then that sol's beats. The world is a fresh morning's.
 func _resume() -> void:
+	if int(resume.sol) > Save.LAST_SOL:
+		end_screen()  # a morning saved past Mission 1 by an older build: those sols are not finished
+		return
 	warned = resume.get("warned", {})
 	lamp_hinted = resume.get("lamp_hinted", false)
 	trip_km = resume.get("trip_km", trip_km)
@@ -735,13 +811,20 @@ func _wire() -> void:
 			await get_tree().process_frame
 		if lost:
 			return  # the night ran a meter out: the lost card stays, and no new day starts under it
-		if sim.sim.hour > sim.sim.n("clock", "wake_hour") + 0.25:
-			hud.alert("We slept in", "To bed late: a full 8.5 hours of sleep.")  # sim.json sleep_h, rows 188, 205
+		# up an hour or more late (a late bedtime still gets a full night, sim.json sleep_h): a calm note saying when, so
+		# the later clock makes sense. Not an alert, and not for a few minutes: it showed red after every night (15 Nov)
+		if sim.sim.hour > sim.sim.n("clock", "wake_hour") + 1.0:
+			var h := sim.sim.local_hour()
+			hud.notice(hud.line("sleep.woke_late") % ("%02d:%02d" % [int(h) % 24, int(fposmod(h, 1.0) * 60.0)]), 8.0)
 		beats.notify("slept")
 		await get_tree().physics_frame
 		await get_tree().physics_frame
 		var next := beats.next_sol()
 		if next < 0:
+			# Mission 1 is all there is to play (beats.LAST_SOL): its report, then the end screen. No checkpoint, so
+			# Continue still offers Sol 10's morning
+			over = true
+			_rule("report:mission1")
 			return
 		if sim.sim.sol < next:
 			sim.skip_sols(next - sim.sim.sol)  # the rules catch up, so the HUD's sol is the story's
@@ -761,7 +844,8 @@ func _wire() -> void:
 	beats.liftoff.connect(cine.launch)
 	cine.launched.connect(func() -> void: beats.notify("launched"))
 	# the tutorial: PIP's beats drive the Today list, the waypoint and the camera shots; the HUD and the shots answer
-	beats.task.connect(func(_id: String) -> void: hud.set_tasks(beats.tasks()))
+	beats.task.connect(func(_id: String) -> void: _tasks())
+	advisor.listed = _tasks
 	# the step's own waypoint wins over one PIP borrowed for a need, and is kept for when a later one lets go
 	beats.objective.connect(func(t: String) -> void:
 		asked = t
@@ -769,6 +853,8 @@ func _wire() -> void:
 		_point(t))
 	advisor.say = func(id: String) -> void:
 		beats.aside(id)
+		if id in ["need.dusty", "need.devil"]:
+			hud.unlock_page("toxic_dust")  # the first dusty suit is where the kid meets it; no step says it before
 		if not beats.beat.has("line"):
 			_unsay(id)  # free time: no step's line comes back over it, and it would stay up for good
 	advisor.point = func(t: String) -> void: _point(t if t != "" else asked)
@@ -782,12 +868,16 @@ func _wire() -> void:
 		if hud.objective == "use:" + what:
 			hud.clear_objective()
 		advisor.used(what)
+		if what == "door_close" and hud.objective == "door":
+			_point(asked)  # the door the bed asked for is shut: the step's own waypoint again
 		if what == "panel" and not hud.is_open():
 			_panel())
 	beats.rule.connect(_rule)
 	hud.report_closed.connect(func(again: bool) -> void:
 		if again:
 			_restart({})  # Play again: a fresh mission
+		elif over:
+			end_screen()  # after Sol 10 there is nothing more to keep going to
 		else:
 			beats.notify("report_closed"))  # Keep going: the story runs on
 	hud.dismissed.connect(func(_id: String) -> void: beats.notify("dismissed"))

@@ -9,9 +9,9 @@ extends Node3D
 ## dawn_reveal@3.0,dawn_reveal@4.6,dawn_reveal@6.0,sleep_drone@6.05,sleep_drone@6.3 -- speed=4
 ## The tutorial shots (cine.shot()) start with the hero just out of HAB 1's door, facing out, and hold the picture
 ## `SHOT_AT` seconds in; `name@s` picks another moment.
-## sleep_drone@H: the drone shot where the lapse is at hour H (a night from 22:00); wake: the hero on the bench, filmed
-## from across HAB 1; wake_door: standing at the bench facing the open hatch, first person. The others play the real
-## shot and hold the picture until it reaches the beat (busy()).
+## sleep_drone@H: the drone shot where the lapse is at hour H (a night from 22:00); wake: where a sleep ends, the hero
+## standing in the middle of HAB 1 facing the hatch, first person; wake_door: the same with the hatch open. The others
+## play the real shot and hold the picture until it reaches the beat (busy()).
 
 const Cine := preload("res://cine/cine.gd")
 
@@ -111,24 +111,12 @@ func set_view(v: String) -> void:
 		"sleep_drone":
 			cine.drone(clampf(fposmod(game.clock.hour() - 22.0, 24.0) / 8.5, 0.0, 1.0))
 			cine.cam.make_current()
-		"wake":
-			cine._seat()
-			var w: Array = cine.cfg.sleep.wake_cam
-			cine.cam.look_at_from_position(hab.to_global(cine._v(w[0])), hab.to_global(cine._v(w[1])))
-			cine.cam.make_current()
-			_hold = float(game.player.model.clips.sit_down.length) + 0.5
-		"wake_door":
-			var player: Node3D = game.player
-			player.sit(false)
-			var b: Array = cine.cfg.sleep.bench
-			var at := hab.to_global(Vector3(b[0] + b[3] * 0.6, cine.cfg.sleep.deck_y, b[2] + b[4] * 0.6))
-			var to: Vector3 = hab.to_global(Vector3(cine.cfg.sleep.hatch[0], 0.0, cine.cfg.sleep.hatch[1])) - at
-			player.place(at, -rad_to_deg(atan2(-to.x, -to.z)))
-			player.cam.pitch = 0.0
+		"wake", "wake_door":
+			cine._wake()
 			for it: Node in get_tree().get_nodes_in_group("interactable"):
-				if it.kind == "door" and hab.is_ancestor_of(it) and not it.open:
+				if v == "wake_door" and it.kind == "door" and hab.is_ancestor_of(it) and not it.open:
 					game.interactions.use(it)
-			player.cam.lens.make_current()
+			game.player.cam.lens.make_current()
 			_hold = 1.5
 		"top":  # the base straight down from 90 m, north up: a fixed frame, for pictures before and after a layout change
 			cine.cam.look_at_from_position(Vector3(0.0, 90.0, 0.0), Vector3(0.0, 0.0, 0.0), Vector3.FORWARD)

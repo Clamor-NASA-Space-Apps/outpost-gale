@@ -751,6 +751,13 @@ func _fit() -> void:
 	_full_text()  # the window changes size when it enters or leaves full screen, also by the browser's own Esc
 	var s := get_viewport().get_visible_rect().size
 	var k := maxf(1.0, minf(s.x, s.y) / 720.0) * (Hud.PHONE_SCALE if phone else 1.0)
+	# The engine draws letters at the size the window's stretch gives them, and this screen and the HUD (the same k,
+	# game_hud.gd _fit) are scaled k on top: on a phone, or in a window taller than 16:9, every letter was a smaller
+	# picture blown up k times, soft at its edges (15 Nov playtest: a half-screen window, k 1.78). Letters are drawn
+	# for the size they land on the screen; 0 hands it back to the engine where k is 1
+	var sharp := get_viewport().get_stretch_transform().get_scale().x * k if k > 1.0 else 0.0
+	if not is_equal_approx(get_viewport().oversampling_override, sharp):
+		get_viewport().oversampling_override = sharp  # sends size_changed, so _fit() runs again inside this line
 	root.scale = Vector2(k, k)
 	root.position = Vector2.ZERO
 	root.size = s / k

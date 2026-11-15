@@ -7,7 +7,7 @@ extends "res://addons/forge/test.gd"
 const Sim := preload("res://sim/sim.gd")
 const KEYS := ["sol", "hour", "o2_kg", "water_kg", "food_kg", "battery_pct", "power_in_kw", "solar_in_kw", "power_out_kw", "dose_msv",
 	"suit_air_min", "panel_dust", "tau", "events", "failing", "health", "body_water", "body_food", "body_rest", "suit_dust",
-	"suit_air", "outside", "body", "cold", "net_kw", "hurt", "leak"]
+	"suit_air", "outside", "body", "cold", "net_kw", "hurt", "weak", "leak"]
 
 var base: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/sim.json"))
 var SOL: float = base.clock.sol_h.value

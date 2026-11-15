@@ -26,6 +26,35 @@ func play() -> bool:
 	for it: Node3D in spots:
 		for s: Array in it.row.get("steps", []):
 			check(s[1] in box.VERBS and it.props.has(s[2]), "%s: step %s names a known verb and prop" % [it.row.kind, s])
+	# a spot's box lies on the thing it names, never in the air beside it: the waypoint and PIP point at its middle
+	# (15 Nov playtest: "the item itself should be the waypoint, not the approximate location"). The row's own box,
+	# before it grows to the least size E needs, and a hand's breadth round it (a screen or a plate on a wall is drawn
+	# in front of what is solid); a wing's button stands on a post that is drawn, not solid
+	var space: PhysicsDirectSpaceState3D = game.get_world_3d().direct_space_state
+	var adrift: Array[String] = []
+	for it: Node3D in spots:
+		if not it.row.has("box") or it.row.has("wiper"):
+			continue
+		var b: Array = it.row.box
+		var shape := BoxShape3D.new()
+		shape.size = Vector3(b[3] - b[0], b[4] - b[1], b[5] - b[2]) + Vector3.ONE * 0.2
+		var q := PhysicsShapeQueryParameters3D.new()
+		q.shape = shape
+		q.transform = it.thing.global_transform * Transform3D(Basis(), Vector3(b[0] + b[3], b[1] + b[4], b[2] + b[5]) / 2.0)
+		q.collision_mask = 1 | 2 | 4  # the ground (a pebble to sample), statics, thin statics
+		if space.intersect_shape(q, 1).is_empty():
+			adrift.append("%s on %s" % [it.row.kind, it.get_parent().name])
+	check(adrift.is_empty(), "every use spot's box touches the thing it names (%s)" % [adrift])
+	# and each thing a step sends the kid to says what it is: a word on it (15 Nov playtest: "Drink what? Eat what?")
+	var unnamed: Array[String] = []
+	for it: Node3D in spots:
+		if it.row.kind in ["drink", "eat", "radio", "brush", "bed", "panel", "o2_valve"] or (it.row.kind == "refill_air" and it.get_parent().name != "hab1"):
+			var words := 0
+			for spec: Dictionary in it.row.get("props", {}).values():
+				words += spec.get("meshes", []).filter(func(m: Dictionary) -> bool: return m.has("text")).size()
+			if words == 0:
+				unnamed.append("%s on %s" % [it.row.kind, it.get_parent().name])
+	check(unnamed.is_empty(), "every spot a step leads to carries its name (%s; HAB 1's air valves say AIR IN in the model)" % [unnamed])
 	var heard: Array = []
 	box.used.connect(func(what: String, _pos: Vector3) -> void: heard.append(what))
 	var keys: Array = game.render_game_to_text().keys()
@@ -114,14 +143,17 @@ func one(it: Node3D, heard: Array) -> void:
 	check(box.hold_shown() == (0.0 if hold_s > 0.0 else -1.0), "%s: the ring shows before the press only on a hold row (%s)" % [name, box.hold_shown()])
 	if hold_s > 0.0:
 		Input.action_press(&"interact")
+	var stood: Vector3 = player.body.global_position
 	box.interact()
 	await frames(2)
 	if hold_s > 0.0:
 		check(heard.is_empty() and box.hold > 0.0, "%s: held, nothing is used yet (%s, hold %.2f)" % [name, heard, box.hold])
 		await frames(int(hold_s * 60.0) + 2)
 		Input.action_release(&"interact")
-	# no spot seats the hero: the Sit spots left a kid walking seated in the air (15 Nov); only cine sits the hero
-	check(player.cut.is_empty() and not player.seated, "%s: E plays no clip and seats no one (cut %s)" % [name, player.cut])
+	# no spot moves the hero: the Sit spots left a kid walking seated in the air, and the wiper's button slid the hero
+	# to itself from 1.6 m off (15 Nov)
+	await frames(20)
+	check(player.body.global_position.distance_to(stood) < 0.05, "%s: E leaves the hero where it stood (%.2f m off)" % [name, player.body.global_position.distance_to(stood)])
 	check(heard == [row.kind], "%s: used names the action once, on the press or when the hold is full (%s)" % [name, heard])
 	for p: String in it.props:
 		var n: Node3D = it.props[p]
@@ -137,8 +169,8 @@ func one(it: Node3D, heard: Array) -> void:
 			check((it.props[p] as Node3D).visible, "%s: %s stays (%s)" % [name, p, row.props[p]])
 
 
-## A wing's row (Ravindu, 15 Nov): each has a wiper bar parked at its control post. E at the post's button steps the
-## hero to the spot's stand for the press, the bar crosses the row and parks at the other end, `clean_panel` is told
+## A wing's row (Ravindu, 15 Nov): each has a wiper bar parked at its control post. E at the post's button, from an
+## arm's length, plays the press where the hero stands, the bar crosses the row and parks at the other end, `clean_panel` is told
 ## once when it gets there, that row is clean on screen and the next still dusty. No tilt, no camera change, no jump
 ## of the clock, no second run on a clean row; the next run sends the bar back.
 func wiper(rows: Array, heard: Array) -> void:
@@ -158,7 +190,7 @@ func wiper(rows: Array, heard: Array) -> void:
 	var shown := func(row: Node3D) -> Array: return clock._panels.filter(func(p: Dictionary) -> bool: return p.row == row.get_parent()).map(func(p: Dictionary) -> float: return p.shown)
 	var st: Transform3D = it.stand()
 	var front: Vector3 = -st.basis.z
-	var off: Vector3 = st.origin - front * 0.6 + st.basis.x * 0.3  # walked up to the post, not onto the stand
+	var off: Vector3 = st.origin - front * 0.3 + st.basis.x * 0.3  # walked up to the post, not onto the stand
 	player.place(Vector3(off.x, game.world.height_at(off.x, off.z) + 0.05, off.z), rad_to_deg(atan2(front.x, -front.z)))
 	await frames(30)
 	check(not it.can_use(player.body) and box.target != it, "a row with no dust offers no wiper")
@@ -167,6 +199,16 @@ func wiper(rows: Array, heard: Array) -> void:
 	await frames(15)
 	check((shown.call(it) as Array).min() > 0.9 and clock.dusty(it.middle()), "the rules' dust shows on the row (%s)" % [(shown.call(it) as Array).min()])
 	check(box.target == it and box.prompt_label.text.ends_with("Run the wiper"), "the post offers the wiper ('%s')" % box.prompt_label.text)
+	# only from an arm's length: from further off E slid the hero to the button, a teleport (15 Nov playtest)
+	var far: Vector3 = st.origin - front * 1.1
+	player.place(Vector3(far.x, game.world.height_at(far.x, far.z) + 0.05, far.z), rad_to_deg(atan2(front.x, -front.z)))
+	box.target = null
+	await frames(15)
+	check(box.target != it, "from 1.5 m off the post offers nothing (%s)" % [box.target])
+	player.place(Vector3(off.x, game.world.height_at(off.x, off.z) + 0.05, off.z), rad_to_deg(atan2(front.x, -front.z)))
+	await frames(90)  # put down and settled: a body still landing refuses the press clip
+	check(box.target == it, "and from beside it again it does (%s)" % [box.target])
+	var stood: Vector3 = player.body.global_position
 	var tilts: Array = game.world.machines.panels.map(func(p: Dictionary) -> float: return (p.node as Node3D).rotation.x)
 	var cam: Camera3D = root.get_camera_3d()
 	var t0: float = sim.now()
@@ -174,8 +216,8 @@ func wiper(rows: Array, heard: Array) -> void:
 	box.interact()
 	await frames(30)
 	var at: Vector3 = player.body.global_position
-	check(Vector2(at.x - st.origin.x, at.z - st.origin.z).length() < 0.05 and (-player.body.global_basis.z).dot(front) > 0.99 and player.model.phase == "act",
-		"E: the hero stands at the spot's stand, facing the post, in the press (%.2f m off, %s)" % [Vector2(at.x - st.origin.x, at.z - st.origin.z).length(), player.model.phase])
+	check(at.distance_to(stood) < 0.05 and player.model.phase == "act",
+		"E: the hero presses from where it stood, moved nowhere (%.2f m off, %s)" % [at.distance_to(stood), player.model.phase])
 	check(heard.is_empty() and player.allowed.is_empty() and not it.can_use(player.body), "nothing is told yet, no input is held, and a running wiper takes no second press (%s)" % [heard])
 	var n := 30
 	while heard.is_empty() and n < 300:

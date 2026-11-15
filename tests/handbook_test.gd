@@ -2,7 +2,8 @@ extends "res://addons/forge/test.gd"
 ## The handbook (ui/handbook.gd, data/handbook.json): the data file is sound, and the screen does what
 ## design/plans/mission-1-contracts.md says: unlock, open on a page, the Learned stamp, the decision log,
 ## finger-sized buttons, close. It shows only what is found: no row for a page not unlocked, a locked category for
-## a tab with no page yet, and no count of how many pages there are.
+## a tab with no page yet, and no count of how many pages there are. The found set survives a save and load, and
+## a page's photo shows at every window size, phone or not (it vanished on a square window, 15 Nov).
 ##   godot --headless --path . --fixed-fps 60 -s tests/handbook_test.gd
 
 # the only ids a beat may name (the contracts)
@@ -170,7 +171,60 @@ func play() -> bool:
 			check(Rect2(Vector2.ZERO, screen).encloses(book._back.get_global_rect()), "%s: Back stays on the screen" % what)
 			check(book._text_scroll.get_global_rect().size.x >= 300, "%s: the words get %d px of width" % [what, book._text_scroll.get_global_rect().size.x])
 			check(book._back.get_global_rect().end.x <= screen.x - EDGE and book._scroll.get_global_rect().position.x >= EDGE, "%s: nothing to press in the back swipe's edge" % what)
+
+	# A page's photo shows at every window size, scaled the way ui/game_hud.gd _fit scales the HUD (its scale grows
+	# with the short side, so a square window left the handbook 720 px wide and the photo was dropped: 15 Nov).
+	for screen: Vector2i in [Vector2i(1280, 720), Vector2i(960, 540), Vector2i(844, 390), Vector2i(985, 1004)]:
+		for phone: bool in [false, true]:
+			var vis := await shape(screen)
+			var k: float = maxf(1.0, minf(vis.size.x, vis.size.y) / 720.0) * (Hud.PHONE_SCALE if phone else 1.0)
+			hud.scale = Vector2(k, k)
+			hud.size = vis.size / k
+			for id: String in data.pages.filter(func(p: Dictionary) -> bool: return p.photo != "").map(func(p: Dictionary) -> String: return p.id):
+				book.open(id)
+				await frames(3)
+				var what := "%s at %d x %d%s" % [id, screen.x, screen.y, " on a phone" if phone else ""]
+				var pics: Array = book._picture.find_children("*", "TextureRect", true, false)
+				var pic: Rect2 = (pics[0] as Control).get_global_rect() if pics.size() == 1 else Rect2()
+				check(pics.size() == 1 and (pics[0] as Control).is_visible_in_tree() and pic.size.x >= 60 and pic.size.y >= 60
+					and vis.encloses(pic), "%s: the photo shows, %s inside %s" % [what, pic, vis])
+				var caption: Array = book._picture.find_children("*", "Label", true, false)
+				check(caption.size() == 1 and book._left.get_global_rect().grow(1).encloses((caption[0] as Control).get_global_rect()),
+					"%s: its credit is on the page (%s in %s)" % [what, (caption[0] as Control).get_global_rect() if caption.size() == 1 else Rect2(), book._left.get_global_rect()])
+				check(book._text_scroll.get_global_rect().size.y >= 80, "%s: the words keep %d px of height" % [what, book._text_scroll.get_global_rect().size.y])
+
+	# The found set is the one source for the list, the tabs and the "!" marks, and a checkpoint keeps it
+	# (sandbox.gd writes book.save() into sandbox/save.gd's file each morning, Continue hands it to load()).
+	await shape(Vector2i(1280, 720))
+	var fresh: Control = load("res://ui/handbook.gd").new()
+	root.add_child(fresh)
+	await frames(2)
+	fresh.open()
+	await frames(2)
+	check(fresh._rows.is_empty() and IDS.keys().all(func(t: String) -> bool: return _locked(fresh, t)), "a fresh game lists no page and every category is locked")
+	for id: String in ["water", "seeds", "dust"]:
+		fresh.unlock(id)
+	(fresh._tab_buttons["base"] as Button).pressed.emit()
+	await frames(2)
+	check(fresh._rows.keys() == ["seeds", "water"], "the base tab lists only its found pages: %s" % [fresh._rows.keys()])
+	check(_marked(fresh._rows["water"]) and not _marked(fresh._rows["seeds"]), "a found page not read has its '!', the open one not")
+	check((fresh._marks["base"] as Control).visible and (fresh._marks["mars"] as Control).visible and not (fresh._marks["explorers"] as Control).visible
+		and _locked(fresh, "explorers") and not _locked(fresh, "mars"), "found pages open their tabs and mark them '!'; a tab with none stays locked, unmarked")
+	var saved: Dictionary = fresh.save()
+	var again: Control = load("res://ui/handbook.gd").new()
+	root.add_child(again)
+	await frames(2)
+	again.load(JSON.parse_string(JSON.stringify(saved)))  # as the save file hands it back
+	check(JSON.stringify(again.save()) == JSON.stringify(saved) and again.unread() == fresh.unread(), "the found set survives a save and load: %s" % [again.save()])
+	again.open()
+	await frames(2)
+	check(_locked(again, "explorers") and not _locked(again, "base") and again.state().page == "dust" and again._rows.keys() == ["dust"],
+		"and a loaded book opens on its newest page not read, and locks the same: %s" % [again._rows.keys()])
 	return true
+
+
+func _marked(row: Button) -> bool:
+	return row.find_children("*", "Label", true, false).any(func(l: Label) -> bool: return l.text == "!")
 
 
 func _page(data: Dictionary, id: String) -> Dictionary:

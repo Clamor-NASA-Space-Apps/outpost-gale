@@ -21,6 +21,15 @@ func state() -> Dictionary:
 	return values
 
 
+## The rules' flows() (sim/sim.gd), mock: the base report's bars. Its net is the state's net_kw.
+func flows() -> Dictionary:
+	var made := float(values.power_in_kw)
+	var net := float(values.net_kw)
+	return {"power": {"makes": {"solar": made, "reactor": 0.0}, "uses": {"hab": made - net - 1.5, "heater": 1.2, "moxie": 0.3}, "net_kw": net},
+		"supplies": {"o2_kg": {"left": 33.4, "uses": 1.7, "makes": 0.2}, "water_kg": {"left": 127.3, "uses": 6.6, "makes": 6.5},
+			"food_kg": {"left": 94.4, "uses": 4.9, "makes": 0.0}}, "hurts": {"thirst": 8.0}}
+
+
 func emit_state() -> void:
 	changed.emit(values)
 

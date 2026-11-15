@@ -126,6 +126,14 @@
       }
     },
     {
+      "id": "hurry",
+      "_note": "Shift locks a hurry on (player.gd hurrying) and drains the suit's stamina, the HUD's hurry bar; the step ends once the kid has really hurried for watch.hold_s (15 Nov playtest: Shift was taught only on Sol 5)",
+      "line": "sol1.hurry",
+      "keys": ["Shift"],
+      "allow": ["move", "look", "hurry"],
+      "wait": {"action": "hurry"}
+    },
+    {
       "id": "look_mouse",
       "line": "sol1.look_mouse",
       "keys": [
@@ -162,6 +170,13 @@
       "_note": "a teaching line never stops the game (design/plans/mission-1-contracts.md): it shows for its time while the kid plays on, and its page keeps the fact in the handbook",
       "line": "sol1.weigh_less",
       "page": "light_on_mars",
+      "wait": {"time": 4.0}
+    },
+    {
+      "id": "settings_hint",
+      "_note": "Esc opens Settings (input action settings), said once while the kid still learns the keys; the HUD has no gear button (15 Nov)",
+      "line": "sol1.settings",
+      "keys": ["Esc"],
       "wait": {"time": 4.0}
     },
     {
@@ -290,7 +305,6 @@
     {
       "id": "day_done",
       "_note": "the kid stands in HAB 1 by now, beside the bed: PIP says the work is done and nobody is led anywhere",
-      "page": "cold_nights",
       "allow": [],
       "task": "task.sleep",
       "objective": "hab1",

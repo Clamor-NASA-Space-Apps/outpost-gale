@@ -1,7 +1,8 @@
 extends "res://ui/hud_panel.gd"
 ## "Today" (design/mockups/hud.png): the sol's tasks, each a box and a line. Done: a teal box with a tick, the line
 ## struck through. Now: an amber box holding a small diamond, the same diamond as the waypoint it leads to. Next: an
-## empty box. Shape tells them apart as well as colour (Kid UX). set_tasks([[text, state], ...]) rebuilds the rows.
+## empty box. Urgent (a need of the hero or the base, on top): the alert mark, no box. Shape tells them apart as well
+## as colour (Kid UX). set_tasks([[text, state], ...]) rebuilds the rows.
 
 const Hud := preload("res://ui/hud.gd")
 const BOX := 12.0  # 18 mockup px
@@ -52,6 +53,10 @@ func set_tasks(t: Array) -> void:
 func _draw_box(b: Control, state: String) -> void:
 	var r := Rect2(Vector2.ZERO, b.size).grow(2.0)  # the atlas box has a px of air round its 12 px square
 	var c := b.size * 0.5
+	if state == "urgent":
+		Hud.blit(b, "glow_dot", r.grow(5.0), Hud.color("hud-glow-danger"))
+		Hud.blit_at(b, "icon_alert", c, 16.0, Hud.color("danger"))
+		return
 	if state == "now":
 		Hud.blit(b, "glow_dot", r.grow(5.0), Hud.color("hud-glow-amber"))
 	if state == "done":

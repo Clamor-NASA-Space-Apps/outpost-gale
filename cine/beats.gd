@@ -30,6 +30,8 @@ signal finished(sequence: String)
 const Ghost := preload("res://cine/beats_ghost.gd")
 const REST := "task.sleep"  # a sol's last task: once it is the task now, the day's work is done and the bed is open
 const NOT_YET := "sleep.not_yet"
+# Mission 1's last sol (sandbox/save.gd holds it: a test preloads that file, and this one needs Forge to compile)
+const LAST_SOL: int = preload("res://sandbox/save.gd").LAST_SOL
 
 var world: Node3D
 var player: Node3D
@@ -103,12 +105,12 @@ func start_sol(sol: int) -> bool:
 	return true
 
 
-## The sol whose beats come after the ones played last (data/sols.json keys), -1 after the last.
+## The sol whose beats come after the ones played last (data/sols.json keys), -1 after the last one played (LAST_SOL).
 func next_sol() -> int:
 	_load_sols()
 	var next := -1
 	for k: String in _sols:
-		if k.is_valid_int() and int(k) > sol_key and (next < 0 or int(k) < next):
+		if k.is_valid_int() and int(k) > sol_key and int(k) <= LAST_SOL and (next < 0 or int(k) < next):
 			next = int(k)
 	return next
 

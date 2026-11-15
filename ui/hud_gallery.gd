@@ -273,7 +273,6 @@ func _mock() -> void:
 	else:
 		game_hud.set_objective("pip")  # the waypoint follows PIP
 	game_hud.show_prompt("Drink water", 0.6)
-	game_hud.set_stamina(0.4)
 	game_hud.alert("Solar storm", "ARCHIVED data. Tap ? for its source.")
 	game_hud.send_mail()
 	game_hud.mail.set_now(fake.values.hour + 0.1)

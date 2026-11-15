@@ -58,10 +58,13 @@ func play() -> bool:
 	tap(world)
 	await frames(1)
 	mode(VISIBLE, "a touch on the world")
+	game.hud.touch = true  # the HUD shows the gear on a touch screen only: a keyboard has Esc (15 Nov playtest)
+	await frames(2)
 	press(MOUSE_BUTTON_LEFT, s.gear.get_global_rect().get_center())
 	await frames(1)
 	check(s.is_open(), "the gear opens the settings")
 	mode(VISIBLE, "a click on the gear")
+	game.hud.touch = false
 	press(MOUSE_BUTTON_LEFT, s.panel.get_global_rect().get_center())
 	press(MOUSE_BUTTON_LEFT, s.panel.get_global_rect().position + Vector2(4, 4))
 	press(MOUSE_BUTTON_LEFT, Vector2(4, root.get_visible_rect().size.y - 4))  # the shade beside the panel

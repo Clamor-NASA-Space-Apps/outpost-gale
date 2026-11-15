@@ -1,13 +1,16 @@
 extends "res://ui/hud_panel.gd"
-## The use prompt (design/mockups/hud.png, bottom right): the key in an amber chip and what it does. On a touch screen
-## the chip shows the Use button's icon, since there is no E to press. say("") hides it. A target that needs a hold
-## reads "Hold: ..." and a ring round the chip fills as the key stays down.
+## The use prompt: the key in an amber chip and what it does, big, low in the middle of the screen (ui/game_hud.gd
+## places it), so a kid reads it over the world and learns the key (15 Nov playtest: in the corner, small, the hold
+## was missed). On a touch screen the chip shows the Use button's icon, since there is no E to press. say("") hides
+## it. A target that needs a hold reads "Hold: ..." and a ring round the chip fills as the key stays down.
 
 const Hud := preload("res://ui/hud.gd")
 # The ring is dots from the HUD's atlas, not draw_arc: two arcs cost 7 draw calls here (measured, 15 Nov: the phone's
 # play page went from 39 to 46, over tests/ui_test.gd MAX_DRAWS), and atlas dots batch with the icons for none
 const RING_DOTS := 24
-const RING_W := 3.5  # a dot
+const RING_W := 5.0  # a dot: big enough to see fill from across the room
+const KEY_PX := 22  # the key's letter, and PromptText's 13 px raised to read as an overlay (theme sizes stay for cards)
+const TEXT_PX := 22
 
 var touch := false:
 	set(v):
@@ -25,14 +28,22 @@ var ring := CenterContainer.new()  # holds the chip, and draws the ring round it
 func _ready() -> void:
 	theme_type_variation = "HudPanel"
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	key = Hud.panel("HudKeyAmber", Hud.row([Hud.label("E", "KeyAmber"), Hud.icon("use", 14, "primary")], 0))
+	var e := Hud.label("E", "KeyAmber")
+	e.add_theme_font_size_override("font_size", KEY_PX)
+	e.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	e.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	var chip := Hud.row([e, Hud.icon("use", KEY_PX, "primary")], 0)
+	chip.alignment = BoxContainer.ALIGNMENT_CENTER
+	key = Hud.panel("HudKeyAmber", chip)
+	key.custom_minimum_size = Vector2(KEY_PX * 1.6, KEY_PX * 1.6)
 	ring.add_child(key)
 	ring.set_meta("icon", true)
 	ring.set_meta("shapes", true)
 	ring.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	ring.draw.connect(_draw_ring)
 	line = Hud.label("", "PromptText")
-	add_child(Hud.row([ring, line], 8))
+	line.add_theme_font_size_override("font_size", TEXT_PX)
+	add_child(Hud.row([ring, line], 12))
 	touch = touch
 	hide()
 

@@ -10,7 +10,8 @@ extends Control
 ## Pages come from data/handbook.json. The HUD makes it with .new(), adds it full-rect and keeps it hidden; while it
 ## is open it takes Esc and the `handbook` action itself (close(), then `closed`). State lasts for the run.
 ## One layout for every screen (_fit): buttons stay a finger tall under the HUD's phone scale, the columns share
-## the width, the picture goes when there is no room for it, and words that do not fit their panel scroll.
+## the width, the picture moves above the list and the words when the screen is narrow (never gone: it hid on a square window,
+## 15 Nov), and words that do not fit their panel scroll.
 ## API: design/plans/mission-1-contracts.md.
 
 signal closed
@@ -48,6 +49,8 @@ var _text := MarginContainer.new()  # the right page's panel
 var _text_scroll := ScrollContainer.new()  # round it: a narrow phone wraps the words past the panel's height
 var _left: Control  # the picture's panel
 var _shelf: Control  # the list's panel
+var _body: HBoxContainer  # the spread: picture, list, words
+var _outer: VBoxContainer  # header, spread, footnote; on a narrow screen the picture is a strip above the spread
 var _margin := MarginContainer.new()
 var _back := Button.new()
 var _target := TARGET  # a button's height in this node's own px (_fit)
@@ -227,6 +230,8 @@ func _build() -> void:
 		art.add_child(_tab_icons[t.id])
 		b.add_child(art)
 		_marks[t.id] = _corner(b, Hud.tag("Tag", "", "!"))
+		for side: String in ["top", "bottom"]:
+			_marks[t.id].set("offset_" + side, -10.0)  # up off the icon, which it half hid (15 Nov)
 		var lock := Hud.icon("close", 30, "on_surface")
 		lock.art = LOCK  # this screen's own sign, not in the HUD's atlas (ui/icons is the HUD lane's)
 		_locks[t.id] = _corner(b, lock)
@@ -259,8 +264,8 @@ func _build() -> void:
 	_shelf = Hud.panel("HudPanelSoft", _scroll)
 	var right := Hud.panel("HudMenu", _text_scroll)
 	right.size_flags_horizontal = SIZE_EXPAND_FILL
-	var body := Hud.row([_left, _shelf, right], GAP)
-	body.size_flags_vertical = SIZE_EXPAND_FILL
+	_body = Hud.row([_left, _shelf, right], GAP)
+	_body.size_flags_vertical = SIZE_EXPAND_FILL
 	var tab_bar := Hud.panel("HudPanelSoft", tab_row)
 	tab_bar.size_flags_vertical = SIZE_SHRINK_CENTER
 
@@ -268,13 +273,15 @@ func _build() -> void:
 	_back.pressed.connect(close)
 
 	_margin.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
-	_margin.add_child(Hud.col([Hud.row([names, tab_bar], 16), body, Hud.row([_foot, _back], 16)], 12))
+	_outer = Hud.col([Hud.row([names, tab_bar], 16), _body, Hud.row([_foot, _back], 16)], 12)
+	_margin.add_child(_outer)
 	add_child(_margin)
 
 
 ## Sizes for this screen. The HUD draws itself larger on a phone (Hud.PHONE_SCALE), so a finger's height and the
 ## swipe margin are fewer of this node's px there; the list takes a fifth of the width, the picture about half of
-## what is left, and on a screen too narrow for a picture worth looking at (a tablet) the words get its room.
+## what is left. A screen too narrow for that (a tablet, a square or tall window: the HUD's scale grows with the
+## short side, so the width in this node's px shrinks) lays the picture across the top instead, never hides it.
 func _fit() -> void:
 	if not is_inside_tree():
 		return
@@ -292,8 +299,12 @@ func _fit() -> void:
 	_back.custom_minimum_size = Vector2(_target * 2.3, _target)
 	_shelf.custom_minimum_size.x = clampf(size.x * 0.22, 210.0, 280.0)
 	var picture := minf((size.x - 2.0 * edge - _shelf.custom_minimum_size.x - 2.0 * GAP) * 0.52, 450.0)
-	_left.custom_minimum_size.x = picture
-	_left.visible = picture >= 220.0
+	var narrow := picture < 220.0
+	var home: Container = _outer if narrow else _body
+	if _left.get_parent() != home:
+		_left.reparent(home, false)
+		home.move_child(_left, 1 if narrow else 0)  # under the header, or the spread's first column
+	_left.custom_minimum_size = Vector2(0.0, roundf(size.y * 0.3)) if narrow else Vector2(picture, 0.0)
 
 
 ## What changes with the state: the title, the "!" marks, the list, and both pages. Nothing is drawn while it is
@@ -336,6 +347,10 @@ func _refresh() -> void:
 		b.add_theme_constant_override("icon_max_width", 30)
 		b.set_pressed_no_signal(id == _page)
 		b.icon = Hud.icon_texture(pages[id].get("icon", "science"))
+		for st: String in ["normal", "hover", "pressed", "hover_pressed", "focus"]:
+			var box: StyleBox = Hud.THEME.get_stylebox(st, "TabButton").duplicate()
+			box.content_margin_right += 40.0  # the "!" or the tick sits there: it hid the end of a title (15 Nov)
+			b.add_theme_stylebox_override(st, box)
 		if id not in _seen:
 			_corner(b, Hud.tag("Tag", "", "!"))
 		elif id in _learned:
@@ -371,6 +386,7 @@ func _art(p: Dictionary) -> Control:
 	r.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	r.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	r.size_flags_vertical = SIZE_EXPAND_FILL
+	r.custom_minimum_size.y = 64  # a long caption in a narrow column squeezed the photo to a sliver
 	r.mouse_filter = MOUSE_FILTER_IGNORE
 	var caption := Hud.label("%s. Credit: %s" % [p.get("shows", p.title), p.credit], "Caption", true)
 	caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER

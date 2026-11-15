@@ -72,9 +72,12 @@ func play() -> bool:
 	await start()
 	var view := game.get_viewport()
 	check(not s.is_open(), "closed at start")
+	game.hud.touch = true  # the HUD shows the gear on a touch screen only: a keyboard has Esc (15 Nov playtest)
+	await frames(2)
 	click(s.gear.get_global_rect().get_center())
 	await frames(1)
 	check(s.is_open(), "the gear opens it")
+	game.hud.touch = false
 	action(&"settings")
 	await frames(1)
 	action(&"settings", false)
