@@ -2,7 +2,7 @@
 
 [![Play in your browser](https://img.shields.io/badge/Play-in%20your%20browser-2EC4B6?style=for-the-badge)](https://clamor-nasa-space-apps.github.io/sandbox/)
 [![Download](https://img.shields.io/badge/Download-Windows%20%C2%B7%20Linux%20%C2%B7%20macOS-E07A1F?style=for-the-badge)](https://github.com/Clamor-NASA-Space-Apps/outpost-gale/releases/tag/build-sandbox)
-[![Licence: Apache 2.0](https://img.shields.io/badge/Licence-Apache%202.0-blue.svg?style=for-the-badge)](#licence)
+[![Licence: Apache 2.0](https://img.shields.io/badge/Licence-Apache%202.0-blue.svg?style=for-the-badge)](./LICENSE)
 [![Godot 4.7](https://img.shields.io/badge/Godot-4.7-478CBF?style=for-the-badge&logo=godotengine&logoColor=white)](https://godotengine.org)
 
 # Outpost Gale
@@ -132,4 +132,4 @@ Planned, not built yet:
 
 ## Licence
 
-Original work: [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0). Third-party assets keep their own licences, listed in `ASSETS.md`. Copyright (C) 2026 Team Clamor.
+Original work: [Apache License 2.0](./LICENSE). Third-party assets keep their own licences, listed in `ASSETS.md`. Copyright (C) 2026 Team Clamor.
