@@ -1,7 +1,7 @@
 <img src="docs/readme/hero.jpg" alt="Outpost Gale, a Mars mission trainer for ages 7 to 12. Keep the power, the air and the crew going. Every choice costs something." width="100%">
 
 [![Play in your browser](https://img.shields.io/badge/Play-in%20your%20browser-2EC4B6?style=for-the-badge)](https://clamor-nasa-space-apps.github.io/sandbox/)
-[![Download](https://img.shields.io/badge/Download-Windows%20%C2%B7%20Linux%20%C2%B7%20macOS-E07A1F?style=for-the-badge)](https://github.com/Clamor-NASA-Space-Apps/outpost-gale/releases/tag/build-sandbox)
+[![Download](https://img.shields.io/badge/Download-Windows%20%C2%B7%20Linux%20%C2%B7%20macOS-E07A1F?style=for-the-badge)](https://github.com/Clamor-NASA-Space-Apps/outpost-gale/releases/latest)
 [![Licence: Apache 2.0](https://img.shields.io/badge/Licence-Apache%202.0-blue.svg?style=for-the-badge)](./LICENSE)
 [![Godot 4.7](https://img.shields.io/badge/Godot-4.7-478CBF?style=for-the-badge&logo=godotengine&logoColor=white)](https://godotengine.org)
 
@@ -28,7 +28,7 @@ It is Team Clamor's entry for the challenge "Build a Junior Astronaut Mission Tr
 
 **In a browser:** [clamor-nasa-space-apps.github.io/sandbox](https://clamor-nasa-space-apps.github.io/sandbox/). Nothing to install.
 
-**Offline:** download the build for your computer from the [latest build](https://github.com/Clamor-NASA-Space-Apps/outpost-gale/releases/tag/build-sandbox) and run it.
+**Offline:** download the build for your computer from the [latest release](https://github.com/Clamor-NASA-Space-Apps/outpost-gale/releases/latest) and run it.
 
 | Key | What it does |
 |-----|--------------|
