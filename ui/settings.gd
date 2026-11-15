@@ -457,7 +457,8 @@ func _screen() -> Control:
 		exit_button = _button("Exit", quit, &"ChoiceButton")
 		exit_button.icon = load("res://ui/icons/close.svg")
 		c.add_child(_line("Leave the game", _group([exit_button])))
-	c.add_child(_demo())  # a fifth tab made the panel taller than a sideways phone
+	if OS.is_debug_build():  # the demo buttons are for showing and testing the game: a shipped build has none (playtest 15 Nov)
+		c.add_child(_demo())  # a fifth tab made the panel taller than a sideways phone
 	return c
 
 
