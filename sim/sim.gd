@@ -1,6 +1,6 @@
 extends RefCounted
 ## The rules of Outpost Gale: meters, the sol clock, choices, use spots, events and the cause log.
-## Pure data in, numbers out: no nodes, no scene tree (tests/sim_test.gd runs it headless). Every number comes from
+## Pure data in, numbers out: no nodes, no scene tree (tests/sim_test.gd, tests/body_test.gd run it headless). Every number comes from
 ## data/sim.json, which names its source. The rules clock counts Earth hours in a 24 h 39 min sol; the look clock
 ## (world/sky_clock.gd) counts 24 local hours, so local = hour * 24 / sol_h.
 
@@ -9,7 +9,8 @@ const METERS := ["o2_kg", "water_kg", "food_kg"]
 # What changes as the game runs, the plain values: a checkpoint keeps these, the tables below them and the dice
 # (save(), load()). The power figures too: they are the last tick's, not this hour's.
 const SAVED := ["sol", "hour", "o2_kg", "water_kg", "food_kg", "battery_kwh", "power_in_kw", "solar_in_kw", "power_out_kw",
-	"dose_msv", "suit_air_min", "outside", "panel_dust", "tau", "crop_age_days", "woke_sol", "energy_in_kwh", "energy_out_kwh"]
+	"dose_msv", "suit_air_min", "outside", "panel_dust", "tau", "crop_age_days", "woke_sol", "energy_in_kwh", "energy_out_kwh",
+	"health", "body_water", "body_food", "body_rest", "suit_dust", "effort", "dust_in_h"]
 
 var d: Dictionary
 var sol := 1
@@ -24,6 +25,13 @@ var power_out_kw := 0.0
 var dose_msv := 0.0
 var suit_air_min := 0.0
 var outside := false
+var effort := 1.0  # how hard the hero works: the root sets body.effort_hurry while they hurry on foot
+var health := 100.0  # Crew health, 0 to body.health. The body's needs tick only with knob `body` on, and never asleep
+var body_water := 1.0  # 1 full, 0 thirsty; body_food and body_rest the same
+var body_food := 1.0
+var body_rest := 1.0
+var suit_dust := 0.0  # 0 clean, 1 coated
+var dust_in_h := 0.0  # hours a dusty suit has been inside, unbrushed
 var panel_dust := 0.0
 var tau := 1.0
 var crop_age_days := 0.0
@@ -37,6 +45,7 @@ var energy_out_kwh := 0.0
 var _cause := {}  # knob -> log index of the choice that last set it
 var _fired := {}  # schedule index -> true
 var _rng := RandomNumberGenerator.new()
+var _asleep := false  # set round a sleep's step: the base runs on, the body waits
 
 
 func _init(data: Dictionary = {}) -> void:
@@ -49,6 +58,7 @@ func _init(data: Dictionary = {}) -> void:
 	panel_dust = n("start", "panel_dust")
 	crop_age_days = n("start", "crop_age_days")
 	suit_air_min = n("suit", "full_min")
+	health = n("body", "health")
 	tau = n("power", "tau_clear")
 	for k: String in d.knobs:
 		if k[0] != "_":
@@ -70,11 +80,20 @@ func now() -> float:
 func state() -> Dictionary:
 	var ev: Array[Dictionary] = []
 	for e in active:
-		ev.append({"id": e.id, "label": e.label, "source": e.source, "live": e.live})
+		if e.has("source"):  # the HUD tags these ARCHIVED; a story event (a leak) is not data, `leak` tells of it
+			ev.append({"id": e.id, "label": e.label, "source": e.source, "live": e.live})
+	var h := hurts()
+	var hurt := ""  # the need that costs most right now: the HUD says why the meter falls
+	for why: String in h:
+		if hurt == "" or h[why] > h[hurt]:
+			hurt = why
 	return {"sol": sol, "hour": hour, "o2_kg": o2_kg, "water_kg": water_kg, "food_kg": food_kg,
 		"battery_pct": 100.0 * battery_kwh / n("power", "battery_kwh"), "power_in_kw": power_in_kw, "solar_in_kw": solar_in_kw,
 		"power_out_kw": power_out_kw, "dose_msv": dose_msv, "suit_air_min": suit_air_min, "panel_dust": panel_dust,
-		"tau": tau, "events": ev, "failing": failing()}
+		"tau": tau, "events": ev, "failing": failing(), "health": health, "body_water": body_water, "body_food": body_food,
+		"body_rest": body_rest, "suit_dust": suit_dust, "suit_air": suit_air_min / n("suit", "full_min"), "outside": outside,
+		"body": knobs.body, "cold": battery_kwh <= 0.0, "net_kw": power_in_kw - power_out_kw, "hurt": hurt,
+		"leak": active.any(func(e: Dictionary) -> bool: return e.kind == "leak")}
 
 
 ## The rules as they stand, for a checkpoint: a copy, in the engine's own types. sandbox/save.gd keeps it as bytes,
@@ -92,7 +111,8 @@ func save() -> Dictionary:
 func load(s: Dictionary) -> void:
 	s = s.duplicate(true)
 	for k: String in SAVED:
-		set(k, s[k])
+		set(k, s.get(k, get(k)))  # a save from before the body keeps the starting values
+	battery_kwh = minf(battery_kwh, n("power", "battery_kwh"))  # and one from a bigger battery fits this one
 	make = s.make
 	knobs.merge(s.knobs, true)  # a knob the data file gained since keeps its starting value
 	active.assign(s.active)
@@ -102,17 +122,39 @@ func load(s: Dictionary) -> void:
 	_rng.state = s.rng
 
 
-## Meters at zero. Winning and losing are the story's flow; this only says what ran out.
+## What ended the mission: a stock at zero, or the crew's health. An empty battery or suit is not here: they cost
+## health (hurts()), so the kid has time to fix them.
 func failing() -> Array[String]:
 	var out: Array[String] = []
 	for m: String in METERS:
 		if get(m) <= 0.0:
 			out.append(m)
-	if battery_kwh <= 0.0:
-		out.append("battery_pct")
-	if outside and suit_air_min <= 0.0:
-		out.append("suit_air_min")
+	if health <= 0.0:
+		out.append("health")
 	return out
+
+
+## What costs health right now, why -> points a game hour: each need that is unmet (body.hurt_per_h), and a flare's
+## dose, halved in the shelter. Empty until the story switches the body on.
+func hurts() -> Dictionary:
+	var out := {}
+	if not knobs.body:
+		return out
+	var unmet := {"air": outside and suit_air_min <= 0.0, "thirst": body_water <= 0.0, "hunger": body_food <= 0.0,
+		"tired": body_rest <= 0.0, "cold": battery_kwh <= 0.0}
+	for why: String in unmet:
+		if unmet[why]:
+			out[why] = float(d.body.hurt_per_h[why])
+	for e in active:
+		if e.kind == "flare":
+			out["flare"] = out.get("flare", 0.0) + n("body", "hurt_per_msv") * _flare_rate(e)
+	return out
+
+
+## A dust devil went over the hero: the suit is coated, and brushing it off is the fix (use `brush`).
+func dust_hit() -> void:
+	if knobs.body:
+		suit_dust = 1.0
 
 
 ## A choice from data (`choices`): sets knobs. Its running cost is charged to its log entry as time passes.
@@ -130,7 +172,8 @@ func apply(choice_id: String) -> Dictionary:
 	return _diff(before, state())
 
 
-## A use spot's hook (`uses`): most have no effect, because the daily rates already count them.
+## A use spot's hook (`uses`): it meets one of the body's needs, or moves the base. The base's stocks do not pay for
+## a drink or a meal: the daily rates already count them.
 func use(action_id: String) -> Dictionary:
 	if not d.uses.has(action_id):
 		push_error("sim: no use '%s' in data/sim.json" % action_id)
@@ -141,39 +184,55 @@ func use(action_id: String) -> Dictionary:
 		var was := panel_dust
 		panel_dust *= 1.0 - float(u.clean)
 		causes[_log(action_id, "use", u.label)].effect["panel_dust"] = panel_dust - was
-	if u.has("plant"):
-		crop_age_days = 0.0
+	for k: String in u.get("set", {}):  # drink, eat, brush: a need met
+		set(k, u.set[k])
+	if u.has("refill"):
+		suit_air_min = n("suit", "full_min")
+	if u.has("ends"):  # the valve closes a leak
+		active.assign(active.filter(func(e: Dictionary) -> bool: return e.kind != u.ends))
 	if u.has("harvest"):
 		if crop_age_days < n("crop", "ready_days"):
 			return {}
 		crop_age_days = 0.0
 		food_kg += n("crop", "harvest_food_kg")
+		health = minf(health + n("body", "heal_salad"), n("body", "health"))
 	if u.has("to_hour"):
 		# to the wake hour, but never less than a full night's sleep: to bed late, up late (14 Nov playtest: the
 		# consequence of staying up)
 		var h := maxf(fposmod(n("clock", u.to_hour) - hour, n("clock", "sol_h")), n("clock", "sleep_h"))
-		var slept := step(minf(h, end_left()))
+		var slept := _sleep(minf(h, end_left()))
 		woke_sol = sol
+		if knobs.body:  # a night's sleep mends, and the morning starts with breakfast
+			body_rest = 1.0
+			health = minf(health + n("body", "heal_sleep"), n("body", "health"))
+			body_water = maxf(body_water - n("body", "sleep_water"), 0.0)
+			body_food = maxf(body_food - n("body", "sleep_food"), 0.0)
 		return slept
 	if u.has("advance_h"):
-		return step(minf(n("clock", u.advance_h), awake_left()))  # a nap never runs into the next sol's morning
+		return _sleep(minf(n("clock", u.advance_h), awake_left()))  # a nap never runs into the next sol's morning
 	_power()
 	return _diff(before, state())
 
 
-## Out on an EVA, the suit's air runs down; back in, it is refilled.
+## Out on an EVA the suit's air runs down (_body()). Coming in does not refill it: the kid fills it at a spot.
 func eva(on: bool) -> void:
 	outside = on
-	if not on:
-		suit_air_min = n("suit", "full_min")
 
 
 ## Sleep through `count` sols; the ledger says what the base used meanwhile (the sleep card).
 func skip_sols(count: int) -> Dictionary:
-	var ledger := step(minf(count * n("clock", "sol_h"), end_left()))
+	var ledger := _sleep(minf(count * n("clock", "sol_h"), end_left()))
 	ledger["sols"] = count
 	woke_sol = sol
 	return ledger
+
+
+## The crew asleep for `hours`: the clock and the base run on, the body's needs wait.
+func _sleep(hours: float) -> Dictionary:
+	_asleep = true
+	var out := step(hours)
+	_asleep = false
+	return out
 
 
 ## Hours the rules may still run before a night's sleep: up to just short of the next sol's wake. Staying up never
@@ -226,8 +285,7 @@ func top_causes(count := 3) -> Array[Dictionary]:
 		var harm := 0.0
 		for m: String in e.effect:
 			if scale.has(m):
-				var v: float = e.effect[m]
-				harm += (maxf(v, 0.0) if m == "dose_msv" else maxf(-v, 0.0)) / float(scale[m])
+				harm += maxf(-float(e.effect[m]), 0.0) / float(scale[m])
 		if harm > 0.0:
 			var r := e.duplicate(true)
 			r["harm"] = harm
@@ -329,19 +387,60 @@ func _tick(dt: float) -> void:
 	dose_msv += n("per_person_day", "dose_msv") * day
 	for e in active:
 		if e.kind == "flare":
-			var dose: float = float(e.dose_msv) * dt / float(e.duration_h)
-			if knobs.sheltered:
-				dose *= float(e.shelter_factor)
+			var dose := _flare_rate(e) * dt
 			dose_msv += dose
 			_charge(e.log, {"dose_msv": dose})
 		elif e.kind == "storm":
 			_charge(e.log, {"energy_kwh": -(solar_kw(n("power", "tau_clear")) - solar_kw(tau)) * dt})
+		elif e.kind == "leak":  # runs until the valve is closed (use `o2_valve`)
+			var lost := clampf(o2_kg, 0.0, float(e.o2_kg_h) * dt)
+			o2_kg -= lost
+			_charge(e.log, {"o2_kg": -lost})
 	panel_dust = minf(panel_dust + n("power", "dust_per_sol") * dt / n("clock", "sol_h"), 1.0)
-	crop_age_days += day
-	if outside:
-		suit_air_min = maxf(suit_air_min - dt * 60.0, 0.0)
+	if knobs.greenhouse:  # no lamps, no lettuce: the garden pays only while it costs power
+		crop_age_days += day * served
+	if knobs.body and not _asleep:
+		_body(dt)
 	for m: String in METERS:
 		set(m, maxf(get(m), 0.0))
+
+
+## The commander's own needs over `dt` awake hours: the suit's air and its dust outside, water, food and rest
+## everywhere, then what each unmet need costs in health.
+func _body(dt: float) -> void:
+	if outside:
+		suit_air_min = maxf(suit_air_min - dt * 60.0 * effort * n("body", "suit_pace"), 0.0)
+		suit_dust = minf(suit_dust + n("body", "dust_per_h_tau") * (tau - n("power", "tau_clear")) * dt, 1.0)
+	body_water = maxf(body_water - dt * effort / n("body", "water_h"), 0.0)  # hard work is sweat (row 123)
+	body_food = maxf(body_food - dt / n("body", "food_h"), 0.0)
+	body_rest = maxf(body_rest - dt / n("body", "rest_h"), 0.0)
+	var h := hurts()
+	for why: String in h:
+		_harm(why, h[why] * dt)
+	# a dusty suit worn inside: after a moment's grace to brush it off, the dust is in the cabin air (rows 140, 142)
+	dust_in_h = dust_in_h + dt if not outside and suit_dust >= n("body", "dusty") else 0.0
+	if dust_in_h >= n("body", "dust_grace_h"):
+		_harm("dust", n("body", "hurt_dust"))
+		suit_dust = 0.0
+
+
+## Health lost to `why`, charged to that harm's one log line for this sol, so top_causes() can name it.
+func _harm(why: String, points: float) -> void:
+	points = minf(points, health)
+	if points <= 0.0:
+		return
+	health -= points
+	var i := causes.size() - 1  # the log is in sol order: today's lines are at its end
+	while i >= 0 and causes[i].sol == sol and not (causes[i].kind == "harm" and causes[i].id == why):
+		i -= 1
+	if i < 0 or causes[i].sol != sol:
+		i = _log(why, "harm", d.body.labels[why])
+	_charge(i, {"health": -points})
+
+
+## A flare's dose now, mSv an hour: its whole dose spread over its hours, cut by the shelter (row 90).
+func _flare_rate(e: Dictionary) -> float:
+	return float(e.dose_msv) / float(e.duration_h) * (float(e.shelter_factor) if knobs.sheltered else 1.0)
 
 
 ## How hard each water-splitting oxygen maker runs this tick: only enough to keep the oxygen tanks full (they landed

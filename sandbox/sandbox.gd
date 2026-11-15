@@ -16,6 +16,10 @@ const Cine := preload("res://cine/cine.gd")
 const GameHud := preload("res://ui/game_hud.tscn")
 const Hud := preload("res://ui/hud.gd")
 const Save := preload("res://sandbox/save.gd")
+const Advisor := preload("res://sandbox/advisor.gd")
+# the power panel's switches: each one's on and off choice in data/sim.json (the heater: normal heat, turned down)
+const PANEL := {"o2_maker": ["o2_maker_on", "o2_maker_off"], "greenhouse": ["greenhouse_on", "greenhouse_off"],
+	"recycler": ["recycler_on", "recycler_off"], "heater": ["heater_normal", "heater_low"]}
 # sky states: DESIGN.md and its DESIGN.<state>.md siblings, as token files; the sky clock blends them by the sun
 const SKIES := ["design", "design.sunset", "design.night", "design.storm"]
 const SKY_PHASES := ["noon", "dusk", "night", "storm"]  # where _sky(i) puts the clock: each key at its own look
@@ -73,6 +77,10 @@ var beacon: MeshInstance3D  # the kid's map mark in the world: a pillar of the D
 var deadline := {}  # data/sols.json `deadline`: PIP's warnings while a sol's tasks run late
 var warned := {}  # "<woke sol>:<line id>" -> true: each warning once a day
 var resume := {}  # Continue: the checkpoint to start from (sandbox/save.gd), set by ui/boot.gd before this enters the tree
+var advisor := Advisor.new()  # sandbox/advisor.gd: PIP's word and a waypoint when the hero or the base needs something
+var asked := ""  # the waypoint the step last asked for: back once the advisor's borrowed one has done its work
+var _aboard := false  # the hero is in the rover: boarding fills the suit
+var _devil := false  # a dust devil is on the hero now: its first touch dusts the suit, once
 
 
 func _ready() -> void:
@@ -185,7 +193,9 @@ func _process(_delta: float) -> void:
 	(fps_label.get_parent() as CanvasLayer).visible = not film  # the HUD, PIP's words and the frame-rate line
 	# empty when nothing is in reach (the HUD draws its own E key), and through a cinematic: the bed's "Sleep" stood
 	# over the night's time-lapse (15 Nov playtest)
-	hud.show_prompt("" if cine.busy() else interactions.prompt_label.text.trim_prefix("[E]  "))
+	# with the hold's ring: empty on a thing that needs E held, filling while it is (interactions.hold_shown())
+	hud.show_prompt("" if cine.busy() else interactions.prompt_label.text.trim_prefix("[E]  "), interactions.hold_shown())
+	hud.set_stamina(player.stamina)
 	if not cine.busy():
 		world.room_shadow(player.room != "")  # indoors the sun's shadow reaches the room only (world.gd)
 	var h := clock.hour()
@@ -200,6 +210,22 @@ func _physics_process(_delta: float) -> void:
 	var inside: bool = player.room == "shelter"
 	if inside != bool(sim.sim.knobs.sheltered):
 		sim.apply("shelter_in" if inside else "shelter_out")
+	# the body (design/plans/core-loop-contracts.md): out of every room and the rover the suit's air runs down, a
+	# hurry on foot costs more of it, and a dust devil's first touch coats the suit
+	var rules: Object = sim.sim
+	var out: bool = player.room == "" and player.vehicle == null
+	rules.eva(out)
+	rules.effort = rules.n("body", "effort_hurry") if player.hurrying_on_foot() else 1.0
+	# the rover's cab has its own air: boarding tops the suit up, so a trip's walk at the far end starts full (the only
+	# other air points are in the buildings, 8.8 km behind at Mont Mercou)
+	if player.vehicle != null and not _aboard and rules.knobs.body:
+		sim.use("refill_air")
+	_aboard = player.vehicle != null
+	var near: bool = out and world.dust.devil_near(player.body.global_position)
+	if near and not _devil:
+		rules.dust_hit()
+		advisor.devil = true
+	_devil = near
 	if player.vehicle == null:
 		var p: Vector3 = player.body.global_position
 		var to := _net(p)
@@ -241,8 +267,8 @@ func _unhandled_input(e: InputEvent) -> void:
 	if e.is_action_pressed("film"):
 		set_film(not film)  # before the shot check: a cinematic is what gets filmed
 		return
-	if cine.busy():
-		return  # E mid-shot would take the hero out of the rover
+	if cine.busy() or lost:
+		return  # E mid-shot would take the hero out of the rover; after a loss a sleep would heal a crew called home
 	if e.is_action_pressed("interact"):
 		interactions.interact()  # out of the rover, put down the bag, or use what is in reach
 	elif e.is_action_pressed("fullscreen"):
@@ -332,6 +358,11 @@ func _warn(st: Dictionary) -> void:
 ## playtest: the autopilot's line still up after getting out of the rover). The step's own line comes back after it.
 func _hint(id: String, keys: Array) -> void:
 	hud.say(id, {"keys": keys})
+	_unsay(id)
+
+
+## PIP's line `id` goes after its few seconds, unless PIP has said something else since.
+func _unsay(id: String) -> void:
 	await get_tree().create_timer(HINT_S, false, true).timeout
 	if hud.bubble.line_id != id:
 		return  # PIP has said something else since
@@ -355,7 +386,74 @@ func _lose(failing: Array) -> void:
 	var causes: Array = sim.sim.top_causes(3)
 	if causes.is_empty():
 		causes = failing.map(func(k: String) -> String: return "%s ran out" % Hud.KEYS.get(k, ["", k])[1])
-	hud.show_causes(causes)
+	# the button says what it does: with no morning saved yet (Sol 1) it starts the mission again
+	hud.show_causes(causes, "Start again" if Save.read().is_empty() else "Try this sol again")
+
+
+## The scene again from `saved`, a checkpoint (the lost card's "Try this sol again": this morning, as Continue), or
+## from Sol 1's opening when it is empty (no morning saved yet; the report's "Play again"), as the start menu does.
+func _restart(saved: Dictionary) -> void:
+	Save.pending = saved
+	get_tree().reload_current_scene()
+
+
+## The story's word to the rules (cine/beats.gd `rule`: a beat's do apply:<choice>, event:<event>, report:<id>).
+func _rule(id: String) -> void:
+	var arg := id.get_slice(":", 1)
+	match id.get_slice(":", 0):
+		"apply":
+			sim.apply(arg)
+		"event":
+			sim.start(arg)
+		"report":
+			if not lost:
+				var book: Dictionary = hud.handbook.state()
+				hud.show_report({"title": "report.title", "lines": ["report.line1", "report.line2", "report.line3"],
+					"meters": {"power": hud.meters.power.value, "life": hud.meters.life.value, "health": hud.meters.health.value},
+					"causes": sim.sim.top_causes(3), "pages": [book.unlocked.size(), book.total]})
+
+
+## The power panel's card (used("panel")): one row for each switch, to flip it from where it stands now, with what
+## that gains and costs, and "Leave it". It is an offer like the story's (`offers`), so hud.chosen applies it.
+func _panel() -> void:
+	var options: Array = []
+	for dev: String in PANEL:
+		var on: Dictionary = sim.sim.d.choices.get(PANEL[dev][0], {}).get("set", {})
+		var is_on: bool = not on.is_empty() and on.keys().all(func(k: String) -> bool: return sim.sim.knobs.get(k) == on[k])
+		var to := "off" if is_on else "on"
+		if sim.sim.d.choices.has(PANEL[dev][1 if is_on else 0]):
+			options.append({"text": "panel.%s.%s" % [dev, to], "gain": "panel.%s.%s_gain" % [dev, to],
+				"lose": "panel.%s.%s_lose" % [dev, to], "apply": [PANEL[dev][1 if is_on else 0]]})
+	options.append({"text": "panel.close"})
+	offers["panel"] = {"title": "panel.title", "options": options}
+	hud.offer_choice("panel.title", options)
+
+
+## The waypoint on `t`: "" for none, "pip", a landmark, an item, or use:<kind> for the nearest spot of that kind.
+func _point(t: String) -> void:
+	if t == "":
+		hud.clear_objective()
+	elif t == "rover" and world.items.has(t):
+		# the rover itself, wherever it stands now, before the landmark of the same name (its parking spot): a kid who
+		# had driven it somewhere was sent to the empty parking place, "Rover 2 m" over bare ground (15 Nov playtest:
+		# "the game itself cannot identify where the rover is"). Boarded at its rear hatch, so the waypoint stands
+		# on the hatch, not on its middle, where it led a kid to the nose and no prompt
+		hud.set_objective_node(interactions.by_thing.get(world.items[t], world.items[t]), "", t)
+	elif t.begins_with("use:"):
+		# the thing a step asks the kid to use, wherever the kid is: the nearest spot of that kind that can be used
+		# now, named by its own prompt. PIP said "press E" for things a building away (15 Nov playtest: "pressing E
+		# outside does nothing", the radio to ask Earth a question)
+		var best: Node3D = null
+		for it: Node3D in interactions.by_thing.values():
+			if it.kind == "spot" and it.row.kind == t.trim_prefix("use:") and it.can_use(player.body) \
+					and (best == null or it.global_position.distance_to(player.body.global_position) < best.global_position.distance_to(player.body.global_position)):
+				best = it
+		if best:
+			hud.set_objective_node(best, String(best.row.get("prompt", t)), t)
+	elif t == "pip" or world.data.landmarks.has(t):
+		hud.set_objective(t)
+	elif world.items.has(t):
+		hud.set_objective_node(world.items[t], "", t)
 
 
 ## Every shader the scene can show compiles now, behind the cover, not on its first sight in play (the web build keeps
@@ -436,6 +534,8 @@ func _resume() -> void:
 	trip_km = resume.get("trip_km", trip_km)
 	beats._do("hero:airlock")
 	sim.load(resume.sim)
+	if not (resume.sim.knobs as Dictionary).has("body"):
+		sim.apply("body_on")  # a morning saved before the body's rules (15 Nov): past Sol 1's lesson, so they run
 	clock.storm_on = resume.get("storm", false)
 	clock.storm = 1.0 if clock.storm_on else 0.0
 	clock.set_hour(clock.hours - clock.hour() + sim.sim.local_hour())
@@ -603,6 +703,11 @@ func _wire() -> void:
 				var picked: Dictionary = offers[id].options[index]
 				for rule: String in picked.get("apply", []):
 					sim.apply(rule)
+				# what moved, in words: the rules' own answer is numbers no kid reads (15 Nov audit)
+				if not picked.get("apply", []).is_empty():
+					hud.alert(hud.line(picked.text), hud.line(picked.lose) if picked.has("lose") else "")
+				if id == "panel":
+					return  # the power panel's own card: no step waits for it, and it is no decision for the log
 				var said: String = picked.get("text", "")
 				hud.log_decision(hud.lines.get(title, title), hud.lines.get(said, said))  # the words, as the card showed them
 				beats.notify("chose:" + id))
@@ -611,6 +716,8 @@ func _wire() -> void:
 	add_child(cine)
 	cine.setup(self)
 	cine.slept.connect(func(kind: StringName, _hours: float) -> void:
+		if lost:
+			return  # no sleep counts after a loss: it heals, and the lost mission would run on
 		sim.use("sleep_night" if kind == &"night" else "nap")
 		# the rules count the lapse in Earth hours; the HUD takes the sky's minute after it. Never across a midnight
 		# (a field trip's sols), never a tool's pinned hour
@@ -626,6 +733,8 @@ func _wire() -> void:
 			return
 		while cine.busy():
 			await get_tree().process_frame
+		if lost:
+			return  # the night ran a meter out: the lost card stays, and no new day starts under it
 		if sim.sim.hour > sim.sim.n("clock", "wake_hour") + 0.25:
 			hud.alert("We slept in", "To bed late: a full 8.5 hours of sleep.")  # sim.json sleep_h, rows 188, 205
 		beats.notify("slept")
@@ -636,6 +745,8 @@ func _wire() -> void:
 			return
 		if sim.sim.sol < next:
 			sim.skip_sols(next - sim.sim.sol)  # the rules catch up, so the HUD's sol is the story's
+			if lost:
+				return
 		checkpoint(next)
 		beats.start_sol(next))
 	cine.arrived.connect(func(l: String) -> void:
@@ -651,34 +762,34 @@ func _wire() -> void:
 	cine.launched.connect(func() -> void: beats.notify("launched"))
 	# the tutorial: PIP's beats drive the Today list, the waypoint and the camera shots; the HUD and the shots answer
 	beats.task.connect(func(_id: String) -> void: hud.set_tasks(beats.tasks()))
+	# the step's own waypoint wins over one PIP borrowed for a need, and is kept for when a later one lets go
 	beats.objective.connect(func(t: String) -> void:
-		if t == "":
-			hud.clear_objective()
-		elif t == "rover" and world.items.has(t):
-			# the rover itself, wherever it stands now, before the landmark of the same name (its parking spot): a kid who
-			# had driven it somewhere was sent to the empty parking place, "Rover 2 m" over bare ground (15 Nov playtest:
-			# "the game itself cannot identify where the rover is"). Boarded at its rear hatch, so the waypoint stands
-			# on the hatch, not on its middle, where it led a kid to the nose and no prompt
-			hud.set_objective_node(interactions.by_thing.get(world.items[t], world.items[t]), "", t)
-		elif t.begins_with("use:"):
-			# the thing a step asks the kid to use, wherever the kid is: the nearest spot of that kind that can be used
-			# now, named by its own prompt. PIP said "press E" for things a building away (15 Nov playtest: "pressing E
-			# outside does nothing", the radio to ask Earth a question)
-			var best: Node3D = null
-			for it: Node3D in interactions.by_thing.values():
-				if it.kind == "spot" and it.row.kind == t.trim_prefix("use:") and it.can_use(player.body) \
-						and (best == null or it.global_position.distance_to(player.body.global_position) < best.global_position.distance_to(player.body.global_position)):
-					best = it
-			if best:
-				hud.set_objective_node(best, String(best.row.get("prompt", t)), t)
-		elif t == "pip" or world.data.landmarks.has(t):
-			hud.set_objective(t)
-		elif world.items.has(t):
-			hud.set_objective_node(world.items[t], "", t))
-	# used: its waypoint has done its work
+		asked = t
+		advisor.goal = ""
+		_point(t))
+	advisor.say = func(id: String) -> void:
+		beats.aside(id)
+		if not beats.beat.has("line"):
+			_unsay(id)  # free time: no step's line comes back over it, and it would stay up for good
+	advisor.point = func(t: String) -> void: _point(t if t != "" else asked)
+	advisor.dusty = sim.sim.n("body", "dusty")
+	for k: String in ["o2_kg", "water_kg", "food_kg"]:
+		advisor.stock[k] = sim.sim.n("start", k)
+	# used: its waypoint has done its work, the step's and PIP's alike
 	interactions.used.connect(func(what: String, _pos: Vector3) -> void:
+		if asked == "use:" + what:
+			asked = ""
 		if hud.objective == "use:" + what:
-			hud.clear_objective())
+			hud.clear_objective()
+		advisor.used(what)
+		if what == "panel" and not hud.is_open():
+			_panel())
+	beats.rule.connect(_rule)
+	hud.report_closed.connect(func(again: bool) -> void:
+		if again:
+			_restart({})  # Play again: a fresh mission
+		else:
+			beats.notify("report_closed"))  # Keep going: the story runs on
 	hud.dismissed.connect(func(_id: String) -> void: beats.notify("dismissed"))
 	hud.map_toggled.connect(func(open: bool) -> void: beats.notify("map_open" if open else "map_closed"))
 	beats.shot.connect(cine.shot)
@@ -689,18 +800,23 @@ func _wire() -> void:
 		if n == "mail":
 			beats.notify("mail_arrived"))
 	sim.changed.connect(func(st: Dictionary) -> void:
-		for e: Dictionary in st.events:
-			beats.notify("event:" + String(e.id))
+		# the loss first, before anything else acts on the state (a sleep heals even at health 0)
 		if not st.failing.is_empty() and not lost:
 			_lose(st.failing)
-		_warn(st))
+		for e: Dictionary in st.events:
+			beats.notify("event:" + String(e.id))
+		if not advisor.feed(st, overlay() or cine.busy() or lost):
+			_warn(st))  # one line at a time: the storm's and the deadline's wait for the next state
 	deadline = JSON.parse_string(FileAccess.get_file_as_string("res://data/sols.json")).get("deadline", {})
-	hud.retry.connect(func() -> void: get_tree().reload_current_scene())  # "try again from the start" (typical-day.md)
+	hud.retry.connect(func() -> void: _restart(Save.read()))  # this morning again; none saved yet (Sol 1): the start
 	player.lamps_changed.connect(func(on: bool, auto: bool) -> void:
 		if on and auto and not lamp_hinted:
 			lamp_hinted = true
 			_hint("hint.suit_lights", ["H"]))
-	beats.skip_sols.connect(func(n: int) -> void: hud.show_ledger(sim.skip_sols(n)))
+	beats.skip_sols.connect(func(n: int) -> void:
+		var ledger := sim.skip_sols(n)
+		if not lost:  # a meter that ran out on the way keeps its lost card: the ledger replaced it (15 Nov audit)
+			hud.show_ledger(ledger))
 	hud.ledger_closed.connect(func() -> void: beats.notify("ledger_closed"))
 	# the rover's autopilot (sandbox/rover_pilot.gd): a mark set aboard is where it drives, a cleared one hands the
 	# wheel back; it says on the HUD when it takes over and when it lets go
@@ -720,6 +836,9 @@ func _wire() -> void:
 			_hint("hint.autopilot", ["M"]))
 	# the opening plays when a person starts the game (through ui/boot.tscn), never in a test script (no current
 	# scene) or a tool run (--forge-job)
+	if resume.is_empty():
+		resume = Save.pending  # _restart(): the lost card's "Try this sol again"
+	Save.pending = {}
 	if not resume.is_empty():
 		_resume.call_deferred()  # Continue: the checkpoint's morning in the opening's place, at the same moment
 	elif get_tree().current_scene != null and not Array(OS.get_cmdline_user_args()).any(

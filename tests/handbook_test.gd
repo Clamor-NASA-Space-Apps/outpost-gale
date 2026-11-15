@@ -7,8 +7,8 @@ extends "res://addons/forge/test.gd"
 
 # the only ids a beat may name (the contracts)
 const IDS := {
-	"mars": ["light_on_mars", "thin_air", "weak_sun", "cold_nights", "dust", "solar_storms", "gale_lake"],
-	"base": ["air_tanks", "air_maker", "garden", "seeds", "water", "solar_wings", "reactor", "oxygen_valve", "radio",
+	"mars": ["light_on_mars", "thin_air", "weak_sun", "cold_nights", "dust", "toxic_dust", "solar_storms", "gale_lake"],
+	"base": ["three_meters", "your_suit", "eat_drink_sleep", "air_tanks", "air_maker", "garden", "seeds", "water", "solar_wings", "reactor", "oxygen_valve", "radio",
 		"storm_shelter", "rover"],
 	"explorers": ["pip", "mission_control", "opportunity", "insight", "curiosity"],
 }
@@ -19,7 +19,7 @@ func play() -> bool:
 	check(data.tabs.map(func(t: Dictionary) -> String: return t.id) == ["mars", "base", "explorers", "log"], "the four tabs, in order")
 	for t: Dictionary in data.tabs:
 		check(ResourceLoader.exists("res://ui/icons/%s.svg" % t.icon), "tab %s has an icon in ui/icons" % t.id)
-	check(data.pages.size() == 23, "23 pages, found %d" % data.pages.size())
+	check(data.pages.size() == 27, "27 pages, found %d" % data.pages.size())
 	for tab: String in IDS:
 		var got: Array = data.pages.filter(func(p: Dictionary) -> bool: return p.tab == tab).map(func(p: Dictionary) -> String: return p.id)
 		check(got == IDS[tab], "tab %s holds the contract's pages in order: %s" % [tab, got])
@@ -32,6 +32,12 @@ func play() -> bool:
 		check(p.photo == "" or ResourceLoader.exists(p.photo), id + ": its photo is imported: " + p.photo)
 		check((p.photo == "") == (p.credit == ""), id + ": a photo and its credit come together")
 		check("\u2014" not in JSON.stringify(p) and "\u2013" not in JSON.stringify(p), id + " has no long dash")
+
+	# the core loop's pages (design/plans/core-loop-contracts.md, T): three lines each, and the rows their numbers come from
+	var rows := {"three_meters": [], "your_suit": ["135", "254"], "eat_drink_sleep": ["25", "188"], "toxic_dust": ["140", "142"]}
+	for id: String in rows:
+		var p: Dictionary = _page(data, id)
+		check(p.lines.size() == 3 and rows[id].all(func(r: String) -> bool: return r in p.source), "%s: three lines, its rows named (%s)" % [id, p.source])
 
 	var book: Control = load("res://ui/handbook.gd").new()
 	root.add_child(book)
@@ -63,10 +69,10 @@ func play() -> bool:
 	book.open("air_tanks")
 	await frames(2)
 	var s: Dictionary = book.state()
-	check(s.open and s.tab == "base" and s.page == "air_tanks" and s.total == 23 and s.unlocked == ["air_tanks"],
+	check(s.open and s.tab == "base" and s.page == "air_tanks" and s.total == 27 and s.unlocked == ["air_tanks"],
 		"open(id) shows that page on its tab: %s" % s)
 	check(book.unread() == 0, "an opened page is read")
-	check("Air in tanks" in _words(book) and data.pages[7].lines[0] in _words(book), "the page's title and lines are on screen")
+	check("Air in tanks" in _words(book) and _page(data, "air_tanks").lines[0] in _words(book), "the page's title and lines are on screen")
 	check((book._rows["air_tanks"] as Button).button_pressed, "the open page is marked in the list")
 	check(book._rows.keys() == ["air_tanks"] and book._list.get_child_count() == 1, "a page not found has no row and leaves no gap: %s" % [book._rows.keys()])
 	check("The air maker" not in _words(book) and "???" not in _words(book), "nothing hints at a page not found")
@@ -93,7 +99,7 @@ func play() -> bool:
 		(book._tab_buttons[tab] as Button).pressed.emit()
 		await frames(2)
 		check(book.state().tab == tab, "the %s tab opens" % tab)
-		check(not _words(book).any(func(w: String) -> bool: return "of 23" in w), "%s tab: nothing drawn says how many pages there are" % tab)
+		check(not _words(book).any(func(w: String) -> bool: return "of 27" in w), "%s tab: nothing drawn says how many pages there are" % tab)
 		for b: Button in book.find_children("*", "Button", true, false):
 			if b.is_visible_in_tree():
 				check(b.size.y >= TARGET, "%s tab: button '%s' is %d px tall, under %d" % [tab, b.text, b.size.y, TARGET])
@@ -108,7 +114,7 @@ func play() -> bool:
 	book.open()
 	await frames(2)
 	check(book.state().page == "radio" and book.state().tab == "base", "open() goes to the newest page not read")
-	var radio: Dictionary = data.pages[15]
+	var radio: Dictionary = _page(data, "radio")
 	check(("Source: " + radio.source) in _words(book), "the page's source is on screen")
 	check(_words(book).any(func(w: String) -> bool: return w.begins_with(radio.shows) and w.ends_with(radio.credit)),
 		"what the photo shows and whose it is are on screen")
@@ -120,13 +126,13 @@ func play() -> bool:
 		check(book._text.size.y <= book._text_scroll.size.y, "%s: its words fit the panel (%d px in %d)" % [p.id, book._text.size.y, book._text_scroll.size.y])
 		check(book._picture.size.y <= book._left.size.y, "%s: its picture and caption fit the left page (%d px in %d)" % [p.id, book._picture.size.y, book._left.size.y])
 		check(book.get_rect().encloses(book._back.get_global_rect()), "%s: Back stays on the screen: %s in %s" % [p.id, book._back.get_global_rect(), book.get_rect()])
-	check(book.state().unlocked.size() == 23 and book.unread() == 0, "every page opened: all found, none unread")
+	check(book.state().unlocked.size() == 27 and book.unread() == 0, "every page opened: all found, none unread")
 
 	# keys and a gamepad: the focus starts on the open page, moves along the list, and Enter (or A) opens a page
 	book.open("rover")
 	await frames(3)
 	check(root.gui_get_focus_owner() == book._rows["rover"], "the open page's row holds the focus")
-	check(book._scroll.get_global_rect().encloses(book._rows["rover"].get_global_rect()), "the list scrolls to the open page, the last of eleven: row %s in %s" % [book._rows["rover"].get_global_rect(), book._scroll.get_global_rect()])
+	check(book._scroll.get_global_rect().encloses(book._rows["rover"].get_global_rect()), "the list scrolls to the open page, the last of its tab: row %s in %s" % [book._rows["rover"].get_global_rect(), book._scroll.get_global_rect()])
 	_press(&"ui_up")
 	await frames(2)
 	check(root.gui_get_focus_owner() == book._rows["storm_shelter"], "up moves the focus to the page above")
@@ -165,6 +171,10 @@ func play() -> bool:
 			check(book._text_scroll.get_global_rect().size.x >= 300, "%s: the words get %d px of width" % [what, book._text_scroll.get_global_rect().size.x])
 			check(book._back.get_global_rect().end.x <= screen.x - EDGE and book._scroll.get_global_rect().position.x >= EDGE, "%s: nothing to press in the back swipe's edge" % what)
 	return true
+
+
+func _page(data: Dictionary, id: String) -> Dictionary:
+	return data.pages.filter(func(p: Dictionary) -> bool: return p.id == id)[0]
 
 
 ## A locked category: its lock sign shows, and it takes no press and no focus.

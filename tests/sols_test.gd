@@ -33,6 +33,7 @@ var targets: Array[String] = []
 var pages: Array[String] = []  # every handbook page the beats unlocked (beats.page)
 var asked: Array[String] = []  # every check the beats offered, by id (beats.check_offered)
 var offered: Array[String] = []  # every choice card the beats offered
+var rules: Array[String] = []  # every rule the story handed the root (beats.rule: apply:, event:, report:)
 var crumbs: Array[Vector3] = []  # PIP's tracks for _crumbs()
 var _held := [Vector3.INF, 0, 0, Vector3.ZERO, 0]  # _crumbs(): where the hero last got somewhere, when, a sidestep's end, its target, sidesteps at this crumb
 
@@ -58,7 +59,12 @@ func play() -> bool:
 	beats.page.connect(func(id: String) -> void: pages.append(id))
 	beats.check_offered.connect(func(c: Dictionary) -> void: asked.append(String(c.id)))
 	beats.choice_offered.connect(func(id: String) -> void: offered.append(id))
-	# the wiring sandbox.gd adds (the report's lines): the visor mail, the rules' events, the shelter's knob
+	# the wiring sandbox.gd adds (the report's lines): the visor mail, the rules' events, the shelter's knob, and the
+	# story's rules through the root's own handler (the report card aside: the HUD's own test opens it)
+	beats.rule.connect(func(id: String) -> void:
+		rules.append(id)
+		if not id.begins_with("report:"):
+			game._rule(id))
 	beats.send_mail.connect(game.hud.send_mail)
 	var km := [8.8]  # the last field site's distance (world.json sites): the trip home shows the same
 	beats.trip.connect(func(l: String) -> void:
@@ -89,6 +95,7 @@ func play() -> bool:
 			if b.has("fact_rows"):
 				check(not (b.fact_rows as Array).is_empty(), "%s names its fact rows" % b.id)
 	_mission1(sols, words)
+	game.sim.apply("body_on")  # Sol 1 ended with the kid's own needs on (data/beats.json body_on), so every sol here has them
 
 	# Sol 2: the night of Sol 1 slept through (the rules' night gust dusts the wings), out to PIP, to the wings, a brush
 	var sim: Object = game.sim.sim
@@ -179,7 +186,12 @@ func play() -> bool:
 	await _beat("sent")
 	check(game.hud.mail.visible, "the visor mail shows the question on its way")
 	await _beat("light_time")
-	check(game.hud.objective == "", "the alarm shows no waypoint: the handbook says where the valve is (%s)" % game.hud.objective)
+	# the story's own step sets no waypoint: the handbook says where the valve is. The root's advisor may add one for
+	# the leak (sandbox/advisor.gd need.leak), so a kid is never stuck while the tank drops
+	check(not targets.has("use:o2_valve"), "the alarm's own step shows no waypoint: the handbook says where the valve is (HUD: '%s')" % game.hud.objective)
+	await frames(2)
+	var tank: float = sim.o2_kg
+	check(rules == ["event:o2_leak"] and sim.state().get("leak", false), "the alarm is a real leak in the rules (%s, leak %s)" % [rules, sim.state().get("leak")])
 	used_at = -1
 	await _beat("valve", func() -> void:
 		var b: Vector3 = player.body.global_position
@@ -188,6 +200,10 @@ func play() -> bool:
 		else:
 			_use("o2_valve", Vector3(2.928, 0.0, 1.865)))
 	check(pages.has("oxygen_valve"), "the alarm put the oxygen valve's page in the handbook (%s)" % [pages])
+	await frames(2)
+	print("  leak: the tank fell %.1f kg before the valve was turned" % (tank - sim.o2_kg))
+	check(sim.o2_kg < tank - 0.2, "the tank dropped as PIP said (%.1f to %.1f kg)" % [tank, sim.o2_kg])
+	check(not sim.state().get("leak", true), "and the valve stopped the leak")
 	await _beat("fixed")
 	await _beat("reply")
 	await _beat("reply_home")
@@ -251,8 +267,9 @@ func play() -> bool:
 	used_at = -1
 	var cleared := [false]
 	# the sample as a kid takes it, move keys and E only: out of the rover, round it, to the waypoint (a pebble's flag
-	# stands on it), then E once the hero stands there and the prompt offers the sample. The bot used to look the
-	# pebble up and call its use, and passed while a kid standing at the flag was offered nothing (15 Nov playtest)
+	# stands on it), then E held (the sample is a hold now, world.json hold_s) once the hero stands there and the prompt
+	# offers the sample. The bot used to look the pebble up and call its use, and passed while a kid standing at the
+	# flag was offered nothing (15 Nov playtest)
 	await _beat("s9_sample", func() -> void:
 		if player.vehicle:
 			_press(&"interact")
@@ -263,8 +280,9 @@ func play() -> bool:
 			_steer(past, 0.5)
 			return
 		_steer(world.landmark(targets[-1]).pos, 0.4)
-		if not moving and game.interactions.prompt_label.text.contains("Take a sample"):
-			_press(&"interact"))
+		if not moving and game.interactions.prompt_label.text.contains("Take a sample") and not Input.is_action_pressed(&"interact"):
+			action(&"interact", true))
+	action(&"interact", false)
 	await _beat("s9_curiosity")
 	# home the same way: round the rover to its back door (it is boarded there), then E at the prompt
 	var back := [0]
@@ -304,21 +322,38 @@ func play() -> bool:
 		await _beat(id)
 	await _beat("check", _answer)
 	check(asked == ["sol2", "sol3", "sol4", "sol5", "sol9", "sol10"], "Mission 1 asked one check a played sol (%s)" % [asked])
-	var pick: Dictionary = beats.data.offers.sol12_power.options[1]  # the oxygen maker, as a kid might tap
+	# the heat, a pick that lasts to the launch. The air maker left running does not: it drinks the water, nothing
+	# recycles, and the mission is lost on water by Sol 26 (15 Nov; the rules as designed, checked below on their own)
+	var picks: Array = beats.data.offers.sol12_power.options
+	var chosen := [false]
 	await _beat("s12_choose", func() -> void:
-		if offered.has("sol12_power") and not sim.knobs.o2_maker:
-			for rule: String in pick.apply:
+		if offered.has("sol12_power") and not chosen[0]:
+			chosen[0] = true
+			for rule: String in picks[0].apply:
 				game.sim.apply(rule)  # what the sandbox's chosen wiring does
 			beats.notify("chose:sol12_power"))
-	check(offered[-1] == "sol12_power" and sim.knobs.o2_maker and not sim.knobs.greenhouse and sim.knobs.heater_c < 21,
+	check(offered[-1] == "sol12_power" and not sim.knobs.o2_maker and not sim.knobs.greenhouse and sim.knobs.heater_c >= 21,
 		"the storm choice was offered and the pick reached the rules (%s, %s)" % [offered, sim.knobs])
+	var alone: RefCounted = load("res://sim/sim.gd").new()  # the same rules with nobody at the switches
+	var left: RefCounted = load("res://sim/sim.gd").new()
+	for r: RefCounted in [alone, left]:
+		r.skip_sols(9)
+	for rule: String in picks[1].apply:
+		alone.apply(rule)
+	for r: RefCounted in [alone, left]:
+		r.skip_sols(21)
+	check("water_kg" in alone.failing() and not "water_kg" in left.failing(),
+		"the air maker picked on Sol 10 and left on runs the water out before the launch; without it the water lasts (%.0f kg, %.0f kg)" % [alone.water_kg, left.water_kg])
 	await _beat("m1_done")  # Mission 1's last line, before the walk home
 	print("  storm: tau %.2f at the wake, %.2f now, solar %.2f kW" % [tau0, sim.tau, sim.solar_in_kw])
-	check(sim.tau > tau0, "the storm still climbs on Sol 10 (tau %.2f to %.2f)" % [tau0, sim.tau])
+	# the storm peaks before the wake now (data/sim.json dust_storm rise_h): high all morning, no longer climbing
+	check(sim.tau > 2.0, "the sky stays dusty through Sol 10's morning (tau %.2f at the wake, %.2f now)" % [tau0, sim.tau])
 	await _sleep("sol10")
+	check(not rules.has("report:mission1"), "no report card before the morning after Sol 10 (%s)" % [rules])
 
 	# Sol 13: out to PIP, back in to brush the dust off, the stormy sols 13 to 16 skipped, Sol 17's first salad
 	await _wake("sol13")
+	check(rules.count("report:mission1") == 1 and rules[-1] == "report:mission1", "the wake after Sol 10's sleep runs the Mission 1 report, once (%s)" % [rules])
 	await _beat("wake", _follow.bind(2.5))
 	_stop()
 	used_at = -1
@@ -417,7 +452,8 @@ func play() -> bool:
 			_steer(case.global_position, 0.6))  # past a cargo bag offered on the way: a player goes for the case
 	_stop()
 	check(game.interactions.carried != null and (game.interactions.carried == case or case.is_ancestor_of(game.interactions.carried)
-		or game.interactions.carried.is_ancestor_of(case)), "the hero carries the sample case (%s)" % [game.interactions.carried])
+		or game.interactions.carried.is_ancestor_of(case)), "the hero carries the sample case (%s; target %s, may use %s, failing %s, lost %s)"
+		% [game.interactions.carried, game.interactions.target, player.may(&"interact"), sim.state().failing, game.get("lost")])
 	await _beat("s26_limit", _dismiss)
 	var mav: Vector3 = world.landmark("mav").pos
 	await _beat("s26_carry", _steer.bind(mav, 0.5))
@@ -453,6 +489,13 @@ func _wake(seq: String) -> void:
 	var far: float = _flat(pip.global_position, Vector3.ZERO)
 	var s: Dictionary = beats.data.starts.airlock
 	var hab: Node3D = world.items[s.item]
+	# the kid's morning as Sol 1 taught it, all a step from the bed: suit air, a drink, a meal (the uses as the
+	# interactions tell them; the hold is hold_test's job)
+	for kind: String in ["refill_air", "drink", "eat"]:
+		for it: Node in game.interactions.by_thing.values():
+			if it.kind == "spot" and it.row.kind == kind and it.get_parent() == hab:
+				game.interactions.use(it)
+	await frames(10)
 	player.place(hab.to_global(Vector3(s.at[0], s.at[1], s.at[2])), -rad_to_deg(hab.global_rotation.y) + float(s.yaw))
 	beats._do("open:hab1")  # the kid's E on the hatch
 	await frames(30)
@@ -484,6 +527,10 @@ func _sleep(seq: String) -> void:
 	beats.notify("slept")  # cine.slept, a night
 	await _beat("free")
 	check(finished[0], "%s finished on the sleep" % seq)
+	var st: Dictionary = game.sim.sim.state()
+	print("  %s ends: health %.0f, body water %.2f, food %.2f, rest %.2f, suit air %.2f; O2 %.1f kg, water %.1f kg, battery %.0f%%" % [seq, st.get("health", -1.0),
+		st.get("body_water", -1.0), st.get("body_food", -1.0), st.get("body_rest", -1.0), st.get("suit_air", -1.0), st.o2_kg, st.water_kg, st.get("battery_pct", -1.0)])
+	check(not game.get("lost") and (st.failing as Array).is_empty(), "%s: a kid who fills up each morning ends the day with the mission alive (failing %s, health %.0f)" % [seq, st.failing, st.get("health", -1.0)])
 	var ids: Array = (beats.data[seq] as Array).map(func(b: Dictionary) -> String: return b.id)
 	check(beats.done == ids, "%s: every beat ended, in order (%s)" % [seq, beats.done])
 	var own: Array = (beats.data[seq] as Array).filter(func(b: Dictionary) -> bool: return b.has("line")).map(
@@ -525,6 +572,10 @@ func _mission1(sols: Dictionary, words: Dictionary) -> void:
 	for id: String in ["sol5_storm", "sol12_power"]:
 		for o: Dictionary in offers[id].options:
 			check(not o.has("costs") and [o.text, o.gain, o.lose].all(func(l: String) -> bool: return words.has(l)), "%s %s shows a gain and a loss" % [id, o.text])
+	# the cards and the alarm say what the rules do (design/plans/core-loop-contracts.md, T)
+	check("tank" in words["sol4.valve"], "Sol 4's alarm says the tank is dropping ('%s')" % words["sol4.valve"])
+	check("Crew health" in words["choice.sol5.go_lose"] and "Crew health" in words["choice.sol5.stay_gain"] and "wings" in words["choice.sol5.stay_lose"],
+		"Sol 5's card names the Crew health cost of going out and the dusty wings of staying")
 	# the root sets the shelter knob from where the hero stands, every tick: a rule on the card would fight it
 	check((offers.sol5_storm.options as Array).all(func(o: Dictionary) -> bool: return (o.apply as Array).is_empty()), "the Sol 5 card applies no rule")
 

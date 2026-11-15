@@ -2,10 +2,12 @@ extends "res://addons/forge/test.gd"
 ## The rules (sim/sim.gd) against their sources: godot --headless --path . -s tests/sim_test.gd
 ## Each rate over a simulated sol matches its data/sim.json row, the heater draws more at night, a flare doses half
 ## in the shelter, a storm dims the sun, the sleep ledger adds up over 5 sols, and top_causes() ranks what cost most.
+## The commander's own needs (health, thirst, the suit) have tests/body_test.gd.
 
 const Sim := preload("res://sim/sim.gd")
 const KEYS := ["sol", "hour", "o2_kg", "water_kg", "food_kg", "battery_pct", "power_in_kw", "solar_in_kw", "power_out_kw", "dose_msv",
-	"suit_air_min", "panel_dust", "tau", "events", "failing"]
+	"suit_air_min", "panel_dust", "tau", "events", "failing", "health", "body_water", "body_food", "body_rest", "suit_dust",
+	"suit_air", "outside", "body", "cold", "net_kw", "hurt", "leak"]
 
 var base: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/sim.json"))
 var SOL: float = base.clock.sol_h.value
@@ -109,13 +111,16 @@ func _power() -> void:
 	var dusty := s.power_in_kw
 	var r2 := s.use("clean_panel")
 	check(r2.get("panel_dust", 0.0) < 0.0 and s.power_in_kw > dusty, "cleaning a panel lifts the power at once")
-	# an empty battery: loads are cut to the power there is and the meter says so
+	# an empty battery: loads are cut to the power there is. It does not end the mission: the heat is off, and the
+	# cold costs the crew health for as long as it lasts
 	s = quiet()
 	s.knobs.reactor = false
 	s.battery_kwh = 1.0
 	s.hour = 0.0
 	s.step(2.0)
-	check("battery_pct" in s.failing(), "a night with no reactor and an empty battery fails the battery")
+	check(s.state().cold and s.state().net_kw < 0.0 and s.failing().is_empty(), "a night with no reactor and an empty battery is cold, not lost (%s)" % [s.failing()])
+	s.apply("body_on")
+	near(s.step(1.0).health, -base.body.hurt_per_h.cold, 1e-6, "and an hour of it costs the crew's health")
 
 
 func _flare() -> void:
@@ -177,22 +182,27 @@ func _causes() -> void:
 	s.apply("o2_maker_on")  # with full tanks, about 1.4 kW and the water for what the crew breathes
 	s.apply("heater_low")  # saves power: never a cause
 	s.apply("greenhouse_on")  # 5.67 kW
-	s.start("flare_x12")
 	s.skip_sols(3)
 	var top := s.top_causes(3)
 	var ids := top.map(func(e: Dictionary) -> String: return e.id)
-	check(top.size() == 3, "three causes")
-	check(ids[0] == "greenhouse_on" and "o2_maker_on" in ids, "the hungriest choices lead: %s" % [ids])
-	check(not ("heater_low" in ids) and not ("moxie_on" in ids), "a saving and a small cost stay out: %s" % [ids])
+	check(ids == ["greenhouse_on", "o2_maker_on", "moxie_on"], "the hungriest choices lead, a saving stays out: %s" % [ids])
 	check(top[0].harm >= top[1].harm and top[1].harm >= top[2].harm, "ranked by harm")
 	check(top[0].effect.energy_kwh < 0.0, "each cause carries its effect")
+	# what hurt the crew outranks power the reactor paid for: ten hours awake in a flare, the last two of them thirsty
+	s.apply("body_on")
+	s.start("flare_x12")
+	s.run(10.0)
+	top = s.top_causes(3)
+	ids = top.map(func(e: Dictionary) -> String: return e.id)
+	check(ids == ["thirst", "flare", "greenhouse_on"], "harm to the crew leads the choices: %s" % [ids])
+	check(top[0].kind == "harm" and top[0].label == base.body.labels.thirst and top[0].effect.health < 0.0, "a harm carries its label and the health it cost")
 
 
 func _uses() -> void:
 	var s := quiet()
 	for id: String in base.uses:
 		if id[0] != "_" and id not in ["sleep_night", "nap", "clean_panel", "harvest", "plant"]:
-			check(s.use(id).is_empty(), "use('%s') changes nothing the daily rates already count" % id)
+			check(s.use(id).is_empty(), "use('%s') moves no stock: the daily rates already count a drink and a meal" % id)
 	s.hour = 22.0
 	var sol := s.sol
 	s.use("sleep_night")
@@ -202,16 +212,30 @@ func _uses() -> void:
 	near(s.hour - h, 20.0 / 60.0, 1e-3, "a nap takes 20 minutes")
 	s.eva(true)
 	s.step(1.0)
-	near(s.suit_air_min, 420.0, 1e-6, "an hour out uses 60 of the suit's 480 minutes (row 135)")
-	s.suit_air_min = 0.0
-	check("suit_air_min" in s.failing(), "an empty suit outside fails")
+	check(s.suit_air_min == 480.0, "the suit's air waits until the story switches the body on")
+	s.apply("body_on")
+	s.step(1.0)
+	near(s.suit_air_min, 450.0, 1e-6, "an hour out uses 30 of the suit's 480 minutes (row 135, at body.suit_pace)")
+	s.effort = base.body.effort_hurry.value
+	s.step(1.0)
+	near(s.suit_air_min, 450.0 - 30.0 * 2.67, 1e-6, "an hour of hurrying uses 2.67 times that (row 254)")
+	s.effort = 1.0
 	s.eva(false)
-	check(s.suit_air_min == 480.0 and s.failing().is_empty(), "back inside the suit is refilled")
-	# the greenhouse's lettuce: 33 days (row 29), a 15 g salad each (row 121)
+	check(s.suit_air_min < 480.0 and s.failing().is_empty(), "coming inside does not refill the suit")
+	near(s.use("refill_air").get("suit_air_min", 0.0), 30.0 + 30.0 * 2.67, 1e-6, "the fill spot does")
+	# the greenhouse's lettuce: 33 days (row 29), a 15 g salad each (row 121), and only under lit lamps
 	s.crop_age_days = 30.0
 	check(s.use("harvest").is_empty(), "lettuce is not ready before 33 days")
 	s.skip_sols(3)
-	near(s.use("harvest").get("food_kg", 0.0), 0.03, 1e-6, "a harvest is two small salads")
+	check(s.use("harvest").is_empty(), "nor does it grow with the garden dark")
+	s.apply("greenhouse_on")
+	s.skip_sols(3)
+	s.use("plant")  # the kid's tray: it used to reset the bed, so the robots' lettuce was never ready
+	s.health = 80.0
+	var salad := s.use("harvest")
+	near(salad.get("food_kg", 0.0), 0.03, 1e-6, "a harvest is two small salads")
+	near(salad.get("health", 0.0), base.body.heal_salad.value, 1e-6, "and fresh food is good for the crew")
+	check(s.use("harvest").is_empty(), "the bed then starts again")
 	s.o2_kg = 0.01
 	s.step(1.0)
 	check("o2_kg" in s.failing(), "failing() lists an empty meter")
@@ -264,8 +288,13 @@ func _save() -> void:
 	a.use("clean_panel")
 	a.skip_sols(5)  # past Sol 2's gust and Sol 5's flare (the schedule)
 	a.use("sleep_night")
-	a.run(3.3)
+	a.apply("body_on")  # the body goes into the save too: hurrying outside until the suit is empty, dusty, with a leak
+	a.start("o2_leak")
+	a.effort = 2.67
+	a.run(6.3)
+	a.dust_hit()
 	check(not a.active.is_empty() and a.causes.size() > 5, "the saved rules have events running (%d) and a log (%d)" % [a.active.size(), a.causes.size()])
+	check(a.health < 100.0 and a.state().hurt == "air" and a.state().leak, "and a hurt commander (%.1f, %s)" % [a.health, a.state().hurt])
 	var bytes := Marshalls.variant_to_base64(a.save())
 	var b := Sim.new(data)
 	b.load(Marshalls.base64_to_variant(bytes))
@@ -274,8 +303,11 @@ func _save() -> void:
 	var logged := a.causes.size()
 	for s: Sim in [a, b]:
 		s.eva(false)
+		s.effort = 1.0
+		s.use("drink")
 		s.apply("moxie_on")
 		s.run(9.0)
+		s.use("o2_valve")
 		s.use("sleep_night")
 		s.start("flare_x12")
 		s.skip_sols(8)
@@ -291,6 +323,15 @@ func _save() -> void:
 	a.apply("recycler_off")
 	a.step(5.0)
 	check(Marshalls.variant_to_base64(kept) == was, "a save is a copy: the rules running on leave it alone")
+	# a save from before the body and the smaller battery (14 Nov) still loads: what it lacks keeps its start
+	for k: String in ["health", "body_water", "body_food", "body_rest", "suit_dust", "effort", "dust_in_h"]:
+		kept.erase(k)
+	kept.knobs.erase("body")
+	kept.battery_kwh = 140.0
+	var old := Sim.new(data)
+	old.load(kept)
+	check(old.health == 100.0 and old.body_water == 1.0 and old.effort == 1.0 and old.knobs.body == false and old.state().battery_pct == 100.0,
+		"an old save loads with a whole body and a full battery: %s" % [old.state()])
 
 
 func _node() -> void:

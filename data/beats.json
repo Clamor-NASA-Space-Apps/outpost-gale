@@ -1,5 +1,5 @@
 {
-  "_note": "The beat runner's script (cine/beats.gd, design/typical-day.md section 2). A sequence is an ordered list of beats. A beat starts by applying `allow` (player.allow: only these actions work; [] everything, [\"none\"] nothing, but every beat keeps `look`: the kid can always turn the view and the hero (skills/guided-tutorial row 1); names are input actions or their family, move and look; a beat without `allow` keeps the last one; the sequence's end allows everything), running `do`, giving PIP its `pip` order, emitting its `task` (a line id for the Today list, kept until the next one), its `objective` (\"pip\", a landmark or an item id; null clears it) and its `line` (an id the HUD looks up) with opts {keys: `keys`, fact: `fact`}, unlocking its `page` (a handbook page id or a list of them: page(id) once each) and offering its `check` ({id, q, options, right, pages}: check_offered(check); the beat then needs no `wait`, it ends on checked:<id>), then waits; when `wait` is met (or after `max_s`) it emits beat_done(id) and the next beat starts, or the one named in `then` (\"end\" stops the sequence). wait: {time: s} | {place: {at, r}} (the hero within r m of a spot) | {action: name or [names]} | {event: name or [names]} (a list waits for all); `fact: true` also waits for \"dismissed\" (the HUD's Enter or tap). Actions and events all arrive through notify(name): jump and look (the view turned look_deg) are watched by the runner, and so are move_forward, move_back, move_left, move_right and hurry (held hold_s, hurry only while really hurrying); lift and use:<what> come from the interactions, pip_arrived from PIP, chose:<id> from the rules, dismissed, checked:<id>, map_open and map_closed from the HUD, shot_done:<name> from the cinematics. PIP says a beat's line once and is quiet while the kid is on the step (nearer its place by 1 m, a watched key held, the view turning, beside the leading PIP). A beat with a job for the kid (keys, an objective, a follow_me or `nag`; never a fact) reminds twice at most: after each of nag.at_s seconds without progress PIP says nag.lines (or the beat's own `nag` ids; while it leads, pip.call_line) with the beat's keys and a sound, the beat's line comes back after back_s, and after the last one PIP says no more in that beat. pip: go_to (drive and park; wave and point_at then happen on arrival), follow_me (lead there at the hero's pace: full speed while the hero is within lead_near_m, slowing to a stop at lead_wait_m, going on within lead_resume_m), point_at (stop and look), wave. While the beats hold PIP, a hero walking into it makes it back off once within back_m plus back_lead_s seconds of the hero's closing speed (at most back_s). do: clock:dawn (jump the look to dawn and pin it), clock:<hour> (put the look at that hour of this sol and pin it), clock:run (let it run), clock:skip (the time-lapse to the next phase), open:<item> (open its door), close:<item> (shut it, interactions.set_door), shot:<name> (a camera shot: dawn_reveal, focus_pip, look_around), hero:<start> (put the hero at a `starts` row), walk:<spot> (the hero walks there on its own at walk speed through the real controller, input still blocked; the spot as \"x,z\" or an id; it ends with the beat, so wait on the place), ghost:on|off (the Earth jump beside the hero), offer:<choice id> (choice_offered; the rules own it). A spot is [x, z], a PIP stop id (world.json pip.stops), a landmark, an item id, `pip` or `hero`; a look point is [x, z, height], a stop id (its look), an item id or `hero`. All numbers here are art direction. The opening wakes at clock:5.8, pre-dawn (the sun 3 deg under the horizon, blue twilight, not night): the sun clears the crater rim at about 06:08 seen from dawn_reveal's wide view (cine.gd sunrise_hour()), and the shot runs the clock on so it breaks over the rim while the kid watches, however slowly the walk-out went (the walk is automatic). At the old clock:dawn (06:19) the sun was already 3 deg over the rim",
+  "_note": "The beat runner's script (cine/beats.gd, design/typical-day.md section 2). A sequence is an ordered list of beats. A beat starts by applying `allow` (player.allow: only these actions work; [] everything, [\"none\"] nothing, but every beat keeps `look`: the kid can always turn the view and the hero (skills/guided-tutorial row 1); names are input actions or their family, move and look; a beat without `allow` keeps the last one; the sequence's end allows everything), running `do`, giving PIP its `pip` order, emitting its `task` (a line id for the Today list, kept until the next one), its `objective` (\"pip\", a landmark or an item id; null clears it) and its `line` (an id the HUD looks up) with opts {keys: `keys`, fact: `fact`}, unlocking its `page` (a handbook page id or a list of them: page(id) once each) and offering its `check` ({id, q, options, right, pages}: check_offered(check); the beat then needs no `wait`, it ends on checked:<id>), then waits; when `wait` is met (or after `max_s`) it emits beat_done(id) and the next beat starts, or the one named in `then` (\"end\" stops the sequence). wait: {time: s} | {place: {at, r}} (the hero within r m of a spot) | {action: name or [names]} | {event: name or [names]} (a list waits for all); `fact: true` also waits for \"dismissed\" (the HUD's Enter or tap). Actions and events all arrive through notify(name): jump and look (the view turned look_deg) are watched by the runner, and so are move_forward, move_back, move_left, move_right and hurry (held hold_s, hurry only while really hurrying); lift and use:<what> come from the interactions, pip_arrived from PIP, chose:<id> from the rules, dismissed, checked:<id>, map_open and map_closed from the HUD, shot_done:<name> from the cinematics. PIP says a beat's line once and is quiet while the kid is on the step (nearer its place by 1 m, a watched key held, the view turning, beside the leading PIP). A beat with a job for the kid (keys, an objective, a follow_me or `nag`; never a fact) reminds twice at most: after each of nag.at_s seconds without progress PIP says nag.lines (or the beat's own `nag` ids; while it leads, pip.call_line) with the beat's keys and a sound, the beat's line comes back after back_s, and after the last one PIP says no more in that beat. pip: go_to (drive and park; wave and point_at then happen on arrival), follow_me (lead there at the hero's pace: full speed while the hero is within lead_near_m, slowing to a stop at lead_wait_m, going on within lead_resume_m), point_at (stop and look), wave. While the beats hold PIP, a hero walking into it makes it back off once within back_m plus back_lead_s seconds of the hero's closing speed (at most back_s). do: clock:dawn (jump the look to dawn and pin it), clock:<hour> (put the look at that hour of this sol and pin it), clock:run (let it run), clock:skip (the time-lapse to the next phase), open:<item> (open its door), close:<item> (shut it, interactions.set_door), shot:<name> (a camera shot: dawn_reveal, focus_pip, look_around), hero:<start> (put the hero at a `starts` row), walk:<spot> (the hero walks there on its own at walk speed through the real controller, input still blocked; the spot as \"x,z\" or an id; it ends with the beat, so wait on the place), ghost:on|off (the Earth jump beside the hero), offer:<choice id> (choice_offered; the rules own it), apply:<choice id>, event:<event id> and report:<id> (rule(<the whole command>): the root hands a choice to the rules' apply, starts a rules event, shows the report card). A spot is [x, z], a PIP stop id (world.json pip.stops), a landmark, an item id, `pip` or `hero`; a look point is [x, z, height], a stop id (its look), an item id or `hero`. All numbers here are art direction. The opening wakes at clock:5.8, pre-dawn (the sun 3 deg under the horizon, blue twilight, not night): the sun clears the crater rim at about 06:08 seen from dawn_reveal's wide view (cine.gd sunrise_hour()), and the shot runs the clock on so it breaks over the rim while the kid watches, however slowly the walk-out went (the walk is automatic). At the old clock:dawn (06:19) the sun was already 3 deg over the rim",
   "watch": {
     "look_deg": 120,
     "hold_s": 0.4
@@ -165,6 +165,23 @@
       "wait": {"time": 4.0}
     },
     {
+      "id": "meter_power",
+      "_note": "the three meters, one line each, said once, as soon as the kid can move (15 Nov playtest: 'we don't really know what our 3 indicators do'); the page keeps them. Teaching lines: the game never stops",
+      "line": "sol1.meter_power",
+      "page": "three_meters",
+      "wait": {"time": 4.0}
+    },
+    {
+      "id": "meter_life",
+      "line": "sol1.meter_life",
+      "wait": {"time": 4.0}
+    },
+    {
+      "id": "meter_health",
+      "line": "sol1.meter_health",
+      "wait": {"time": 4.0}
+    },
+    {
       "id": "follow_solar",
       "_note": "the tour: PIP leads to each thing the day's check and choice are about and says one line there",
       "do": ["ghost:off"],
@@ -236,21 +253,49 @@
       }
     },
     {
+      "id": "body_on",
+      "_note": "the kid's own needs start here (apply:body_on, the rules' knob `body`; nothing of the body ticks before it), and PIP leads home. Then hands on, each with its waypoint and each waiting for the use itself: suit air, a drink, a meal, all in HAB 1 (data/world.json uses), whose hatch the airlock opens. The numbers stay on the pages (rows 135, 254, 25, 188)",
+      "do": ["apply:body_on"],
+      "allow": [],
+      "task": "task.s1_body",
+      "objective": "hab1",
+      "pip": {"follow_me": "airlock"},
+      "line": "sol1.needs",
+      "wait": {"place": {"at": "airlock", "r": 4.0}}
+    },
+    {
+      "id": "fill_air",
+      "do": ["open:hab1"],
+      "line": "sol1.fill_air",
+      "page": "your_suit",
+      "keys": ["E"],
+      "objective": "use:refill_air",
+      "wait": {"action": "use:refill_air"}
+    },
+    {
+      "id": "drink",
+      "line": "sol1.drink",
+      "page": "eat_drink_sleep",
+      "keys": ["E"],
+      "objective": "use:drink",
+      "wait": {"action": "use:drink"}
+    },
+    {
+      "id": "eat",
+      "line": "sol1.eat",
+      "keys": ["E"],
+      "objective": "use:eat",
+      "wait": {"action": "use:eat"}
+    },
+    {
       "id": "day_done",
+      "_note": "the kid stands in HAB 1 by now, beside the bed: PIP says the work is done and nobody is led anywhere",
       "page": "cold_nights",
       "allow": [],
       "task": "task.sleep",
       "objective": "hab1",
-      "pip": {
-        "follow_me": "airlock"
-      },
       "line": "sleep.day_done",
-      "wait": {
-        "place": {
-          "at": "airlock",
-          "r": 4.0
-        }
-      }
+      "wait": {"time": 4.0}
     },
     {
       "id": "sleep_hint",
@@ -281,7 +326,7 @@
     "back_s": 4.0
   },
   "offers": {
-    "_note": "Each choice a beat offers (offer:<id>): the card's title line id, its options (text line id, the rules sim choices it applies, costs shown as icons). Costs stay empty until each number has a factcheck row (workspace hard rule 3).",
+    "_note": "Each choice a beat offers (offer:<id>): the card's title line id, its options (text line id, the rules sim choices it applies, and the `gain` and `lose` line ids that say in words what those rules do to the meters). No number on a card without a factcheck row (workspace hard rule 3).",
     "sol1_power": {
       "title": "choice.sol1_power",
       "pages": ["air_maker", "garden"],

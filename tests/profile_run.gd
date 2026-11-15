@@ -289,7 +289,7 @@ func face(kind: String, thing := "") -> Node3D:
 			var n := Vector3.AXIS_X if s.size.x < s.size.z else Vector3.AXIS_Z
 			var off: Vector3 = (it.thing.global_basis[n] * Vector3(1, 0, 1)).normalized() * (s.size[n] / 2.0 + 1.0)
 			var from: Vector3 = it.thing.exit_point() if kind == "rover" else it.middle() + (off if kind != "bag" else Vector3(0.7, 0, 0.7))
-			var to: Vector3 = it.nearest(from + Vector3.UP * box.hold) - from
+			var to: Vector3 = it.nearest(from + Vector3.UP * box.hand_y) - from
 			game.place(Vector3(from.x, 0, from.z), rad_to_deg(atan2(to.x, -to.z)))
 			return it
 	return null

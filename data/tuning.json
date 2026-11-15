@@ -100,6 +100,12 @@
   "gait_hysteresis": 0.05,
   "hurry_still_s": 0.5,
   "note_hurry": "hurry_still_s: s with no move input after which the hurry lock (player.gd hurrying: a press locks it, the next press lets go) lets go by itself, so a kid who stops and walks on later is not surprised by a run. Art direction, never shown to players",
+  "stamina": {
+   "drain_s": 20,
+   "recover_s": 12,
+   "back": 0.3,
+   "note": "player.gd stamina (0 to 1): drain_s seconds of hurrying on foot empty it from full, recover_s seconds of anything else fill it again; at 0 the hurry lock lets go and cannot be set again until it is back over `back`. A game rule, not a fact, and no number of it is shown to players. Why there is one: suited walkers were limited by their suit's cooling, not their legs (research/junior-astronaut/factcheck.md row 255)"
+  },
   "step_catch_s": 0.12,
   "note_step": "step_catch_s: s the drawn body takes to catch up a whole step (reality.json hero.step) after the body steps up or down at once: it follows at hero.step / step_catch_s m/s and is never more than a step behind. Source's SmoothViewOnStairs does this to the view (150 units/s, an 18-unit step, 18 / 150 = 0.12 s; design/research/pages/camera/source-sdk-2013-smooth-stairs.md); here the whole drawn body, so the feet do not pop up a sill (the greenhouse's 0.18 m threshold rose in one frame)",
   "smooth_deg": 60,
@@ -115,6 +121,10 @@
    "chroma": 0.4,
    "note": "Where the suit gathers the design's dust coat (DESIGN.md weathering: its colour, its amount by sky state, each role's share; the visor's share is 0), by analogy with Apollo: dust 'quickly and effectively coated' boots, gloves and suits, and wore through 'above boot' (Gaier 2005); no Mars EVA has happened. legs_top: m above the soles where the kicked-up dust has faded out (the knee is about 0.5 m up); knees: the front of the thighs, knees and shins (kneeling, falls); hands, forearms: gloves and forearms (tools and samples); torso: helmet shell, chest and back, light; pack_top: the top of the backpack, by how level it is; patch: m across a patch of thicker or thinner dust; max: the most of the coat any part shows; chroma: the share of the dust's hue the suit takes (the rest is its brightness, a grey-brown stain): with the dust's full hue the storm turned the suit orange, and an orange astronaut vanishes against Mars (project rule). Both keep the hero a dusty white with readable teal bands. All art direction, judged in day and storm captures."
   }
+ },
+ "devil": {
+  "touch_m": 6.0,
+  "note": "touch_m: m from a dust devil's middle within which its dust reaches the hero (world/dust.gd devil_near(); the rules then coat the suit). A game rule, not a fact: the column is drawn about 3 m across at the ground (dust.gd: ring radius 1.4 m times the devil's size, widening as it climbs), and its dust is thrown wider"
  },
  "audio": {
   "note": "The mix (audio/audio.gd). dB on top of the files, which are normalised (loops -20 LUFS, one-shots -3 dBFS peak). range: m, a 3D sound's cut-off, Mars sound 'falters at just 26 feet (8 meters)' (NASA/JPL 2022); unit_size: m where a 3D sound starts to fall away. fade_s: s of the inside/outside crossfade. breath: rest in breaths a minute, a resting adult takes 12 to 18 (MedlinePlus, Vital signs); hard (at the sheet's hurry speed), rise_s and fall_s (time constants: up fast, settling back slowly) and inhale_share (where in a breath the exhale starts) are art direction, never shown to players. wind: ref_speed m/s that plays at wind.db (sky states blow 4 to 6, world.json weather); gust: the swell's share; gust_hz: its slow noise frequency. habitat and machines: world.json item ids. pitch: random spread on one-shots. music: db of a cue (files at about -16 LUFS), fade_s its fade in, gap_s the least silence between two cues (rare by design: skills/living-atmosphere), art direction, never shown to players",

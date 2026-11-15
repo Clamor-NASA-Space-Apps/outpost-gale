@@ -3,8 +3,8 @@ extends "res://addons/forge/test.gd"
 ## godot --headless --path . --fixed-fps 60 -s tests/quiet_test.gd
 ## The real runner plays small sequences given through beats.data (the game's own beats stay as they are) and input
 ## actions move the hero. Walking after a leading PIP the kid hears the step's line and nothing more; standing still
-## they hear one call, or two reminders on a place step, and then no more. A beat's pages and its check reach the
-## listeners, and the root hands them to the HUD.
+## they hear one call, or two reminders on a place step, and then no more. A beat's pages, its check and its rules
+## (`do` apply:, event:, report:) reach the listeners, and the root hands them to the HUD and the rules.
 
 var game: Node3D
 var player: Node3D
@@ -99,6 +99,15 @@ func play() -> bool:
 	check(beats.done == ["two", "one", "quiz"] and beats.beat.is_empty(), "checked:t1 ends it (%s)" % [beats.done])
 	check(lines.is_empty(), "a check with no line says nothing (%s)" % [lines])
 
+	# the rules' verbs: the whole command reaches the listener, once each, in the beat's order, and says nothing
+	var rules: Array[String] = []
+	beats.rule.connect(func(id: String) -> void: rules.append(id))
+	beats.data["quiet_rules"] = [{"id": "start", "do": ["apply:body_on", "event:o2_leak", "report:mission1"], "wait": {"time": 0.2}}]
+	beats.start("quiet_rules")
+	await frames(30)
+	check(rules == ["apply:body_on", "event:o2_leak", "report:mission1"] and beats.done == ["start"] and lines.is_empty(),
+		"apply:, event: and report: each emit rule once, in order (%s)" % [rules])
+
 	# the root's wiring (sandbox.gd _wire)
 	var own: Node = game.beats
 	var hud: Control = game.hud
@@ -108,6 +117,7 @@ func play() -> bool:
 	hud.checked.emit("w")
 	await frames(3)
 	check(own.done.has("answer"), "the HUD's checked reaches the runner as checked:<id>")
+	check(not own.rule.get_connections().is_empty(), "the root listens for the story's rules (beats.rule)")
 	if not game.offers.is_empty():
 		own.choice_offered.emit(game.offers.keys()[0])
 		check(hud.card != null, "an offer opens the decision card")

@@ -29,7 +29,7 @@
   "crop_age_days": {"value": 30, "factcheck": "robots planted before the crew landed (design/plans/event-ready.md)", "placeholder": true}
  },
  "power": {
-  "battery_kwh": {"value": 140, "factcheck": "design/research/missing-assets.md section 2: 10 kW x 14 h night, our maths", "placeholder": true},
+  "battery_kwh": {"value": 60, "factcheck": "game rule, not a fact: small enough that one night with every machine on shows on the meter and a dust storm empties it in about two sols (tests/body_test.gd). The sized figure was 140 (design/research/missing-assets.md section 2: 10 kW x 14 h night, our maths)", "placeholder": true},
   "panel_m2": {"value": 290, "factcheck": "one DRA 5.0 array module of 290 m2 (design/research/sizes.md row 8, missing-assets.md section 2)", "placeholder": true},
   "yield_kwh_m2_sol": {"value": 0.658, "factcheck": "row 160 (InSight 5,000 Wh a sol) over its 7.6 m2 of panels (missing-assets.md section 2, our maths); a clean panel in clear sky"},
   "dust_per_sol": {"value": 0.002, "factcheck": "row 180 (0.2% a sol typical)"},
@@ -55,22 +55,46 @@
   "_note": "what choices set; the start values are the story's",
   "o2_maker": {"value": false, "factcheck": "the first stay runs on tanked oxygen (row 132)", "placeholder": true},
   "moxie": {"value": false, "placeholder": true},
-  "greenhouse": {"value": true, "placeholder": true},
+  "greenhouse": {"value": false, "factcheck": "story: the garden's lamps are the kid's first choice (Sol 1), so they start dark. Crops grow only while they are lit", "placeholder": true},
   "recycler": {"value": false, "factcheck": "the first stay does not recycle water (row 132)", "placeholder": true},
   "reactor": {"value": true, "factcheck": "Ravindu, 12 Nov: solar and the reactor together (missing-assets.md)", "placeholder": true},
   "heater_c": {"value": 21, "placeholder": true},
-  "sheltered": {"value": false}
+  "sheltered": {"value": false},
+  "body": {"value": false, "factcheck": "game rule, not a fact: the commander's own needs (`body`) wait until Sol 1 has taught them (choice body_on)"}
  },
  "suit": {
   "full_min": {"value": 480, "factcheck": "row 135 (new suits 8 h)"}
+ },
+ "body": {
+  "_note": "The commander's own needs, shown as Crew health. Game rules: a real body lasts days where the game's lasts hours, because a sol is 20 minutes of play and a kid must feel a need within one. They tick only with knob `body` on and never while the crew sleeps. Hours are awake game hours (1 is about 49 s of play)",
+  "health": {"value": 100, "factcheck": "game rule, not a fact: the meter runs 0 to 100; at 0 the mission is lost"},
+  "water_h": {"value": 8, "unit": "h", "factcheck": "game rule, not a fact: a full drink lasts 8 awake hours, so two drinks a sol. Real: 2 kg of drink a day and sweat is water (rows 25, 123), which is why hurrying (effort) empties it faster"},
+  "food_h": {"value": 12, "unit": "h", "factcheck": "game rule, not a fact: a meal lasts 12 awake hours, so breakfast and dinner"},
+  "rest_h": {"value": 20, "unit": "h", "factcheck": "game rule, not a fact: 20 hours awake before tiredness costs health. Real: at least 8.5 h of sleep a sol (row 188), which leaves about 16 awake"},
+  "suit_pace": {"value": 0.5, "factcheck": "game rule, not a fact: the suit's 8 h (row 135) run down at half the clock's pace. The hero walks at real speed (1 m/s) while a sol passes in 20 minutes of play, so at the clock's pace the walk to the reactor and back (170 m each way, Sol 2) emptied a full suit (15 Nov, the story test's bot: suit air 0). At half, a full suit is about 13 minutes of walking or 5 of hurrying: the reactor on foot costs under half"},
+  "effort_hurry": {"value": 2.67, "factcheck": "row 254 (a forced walk-back used 0.4 lb of oxygen an hour against Apollo's usual 0.15: 2.67 times), row 255 (suited walkers were limited by cooling). The root sets it as `effort` while the hero hurries on foot; suit air and body water drain by it"},
+  "hurt_per_h": {"air": 150, "thirst": 8, "hunger": 4, "tired": 4, "cold": 10, "factcheck": "game rule, not a fact: health points a game hour while a need is unmet. air: outside with the suit's air gone (row 135: a suit holds 8 h), 0 in 40 game minutes; cold: the battery at 0, so the heat is off"},
+  "hurt_per_msv": {"value": 4, "factcheck": "game rule, not a fact: health per mSv of a flare's dose, so the X12 day unsheltered (row 37, 8.1 mSv) costs about 32 and the water shelter halves it (row 90). The real dose was 30 chest X-rays, not deadly: never tell a kid it was"},
+  "dust_per_h_tau": {"value": 0.08, "factcheck": "game rule, not a fact: suit dust gathered an hour outside per unit of sky opacity over clear (power.tau_clear), so only in a dusty sky"},
+  "dusty": {"value": 0.5, "factcheck": "game rule, not a fact: suit dust at which coming inside unbrushed counts (the HUD's dust mark)"},
+  "dust_grace_h": {"value": 0.25, "unit": "h", "factcheck": "game rule, not a fact: about 12 s of play inside to brush the suit before the dust is in the cabin"},
+  "hurt_dust": {"value": 15, "factcheck": "game rule, not a fact: health lost once when a dusty suit comes inside. Real: Mars dust holds 0.5 to 1% perchlorate and is 'likely toxic' (row 140); suitports keep it out of the cabin (row 142)"},
+  "heal_sleep": {"value": 30, "factcheck": "game rule, not a fact: health a night's sleep gives back (row 188: 8.5 h of sleep)"},
+  "sleep_water": {"value": 0.4, "factcheck": "game rule, not a fact: share of body water a night uses, so the morning starts with a drink"},
+  "sleep_food": {"value": 0.4, "factcheck": "game rule, not a fact: share of body food a night uses, so the morning starts with breakfast"},
+  "heal_salad": {"value": 10, "factcheck": "game rule, not a fact: health a fresh salad gives. Real: a 15 g salad gives 8% of a day's vitamin C (row 121), and lettuce takes 33 days (row 29)"},
+  "labels": {"_note": "the cause-log line for each kind of harm (top_causes): one a sol",
+   "air": "Ran out of suit air", "thirst": "Went too long without water", "hunger": "Went too long without food",
+   "tired": "Stayed up too long", "cold": "The battery ran out: the base went cold", "flare": "Hit by the solar storm",
+   "dust": "Brought Mars dust inside"}
  },
  "crop": {
   "ready_days": {"value": 33, "factcheck": "row 29 (Veggie lettuce 33 days)"},
   "harvest_food_kg": {"value": 0.03, "factcheck": "row 121 (a 15 g salad, one each for 2 crew)"}
  },
  "harm_scale": {
-  "_note": "how top_causes() weighs meters against each other: a cause's share of the starting stock (o2, water, food, the battery). dose_msv 10 has no source, a game weight (placeholder)",
-  "o2_kg": 54, "water_kg": 205, "food_kg": 153, "energy_kwh": 140, "dose_msv": 10
+  "_note": "how top_causes() weighs meters against each other, game weights, not facts: a cause's share of the whole stay's stock (o2, water, food), of full health (body.health), and of the energy the base makes over the stay (reactor 10 kW x 24.66 h + 190.8 kWh of clear sun, x 30.85 sols, our maths). Energy was weighed against the battery, and a lamp the reactor paid for outranked the thirst that lost the mission. A flare's dose is no longer weighed: its cost is health (body.hurt_per_msv)",
+  "o2_kg": 54, "water_kg": 205, "food_kg": 153, "energy_kwh": 13500, "health": 100
  },
  "choices": {
   "o2_maker_on": {"label": "Run the oxygen maker", "set": {"o2_maker": true}},
@@ -84,12 +108,13 @@
   "heater_low": {"label": "Turn the heat down", "set": {"heater_c": 15}, "placeholder": true},
   "heater_normal": {"label": "Normal heat", "set": {"heater_c": 21}, "placeholder": true},
   "shelter_in": {"label": "Hide in the storm shelter", "set": {"sheltered": true}},
-  "shelter_out": {"label": "Leave the shelter", "set": {"sheltered": false}}
+  "shelter_out": {"label": "Leave the shelter", "set": {"sheltered": false}},
+  "body_on": {"label": "Your body needs air, water, food and sleep", "set": {"body": true}}
  },
  "uses": {
-  "_note": "use spots. Drinking and eating are already in the daily rates, so their use has no extra effect (counting them twice would lie)",
-  "drink": {}, "eat": {}, "o2_valve": {}, "sample": {}, "radio": {}, "brush": {}, "sit": {},
-  "plant": {"plant": true},
+  "_note": "use spots. `set` fills one of the body's needs (body). The base's stocks do not pay for a drink or a meal: the daily rates already count them (counting them twice would lie). `plant` changes nothing in the rules: the bed regrows after each harvest (row 29: cut-and-come-again), and resetting its age wiped the lettuce the robots planted",
+  "drink": {"set": {"body_water": 1.0}}, "eat": {"set": {"body_food": 1.0}}, "brush": {"set": {"suit_dust": 0.0}},
+  "refill_air": {"refill": true}, "o2_valve": {"ends": "leak"}, "sample": {}, "radio": {}, "sit": {}, "plant": {},
   "harvest": {"harvest": true},
   "clean_panel": {"label": "Cleaned a solar wing", "clean": 0.1667, "factcheck": "one of the 6 wing rows (design/research/layout.md); row 181 (Spirit +50% after its panels cleared)", "placeholder": true},
   "sleep_night": {"to_hour": "wake_hour"},
@@ -97,20 +122,22 @@
  },
  "events": {
   "flare_x12": {"label": "Solar storm", "kind": "flare", "dose_msv": 8.1, "duration_h": 24, "shelter_factor": 0.5, "chance_per_sol": 0,
-   "source": "JPL: Curiosity RAD, X12 flare of 20 May 2024 (ARCHIVED 2024-05-20)", "live": false,
-   "factcheck": "row 37 (8,100 microgray; gray to sievert taken as 1 for flare protons, warning: our assumption), row 35 (shelter up to 24 h, our duration), row 90 (5.3 cm of water halves the dose)"},
+   "source": "Curiosity's detector at Gale, 20 May 2024: from 4 to 304 μGy an hour in 71 minutes (NASA OSDR RadLab). The eruption: NASA DONKI 2024-05-20T05:36:00-CME-001. ARCHIVED 15 Nov 2026", "live": false,
+   "factcheck": "rows 281, 286 (the source line: DONKI's record of the eruption and RadLab's hourly Curiosity RAD readings, 4.49 at 05:04 and 303.99 at 06:15; the records are in data/nasa.json; RadLab's day total and JPL's 8,100 do not agree, row 289, so the screen shows the readings and never both totals), row 37 (8,100 microgray; gray to sievert taken as 1 for flare protons, warning: our assumption), row 35 (shelter up to 24 h, our duration), row 90 (5.3 cm of water halves the dose)"},
   "flare_noaa": {"label": "Solar flare M1.4", "kind": "flare", "dose_msv": 0.098, "duration_h": 24, "shelter_factor": 0.5, "chance_per_sol": 0,
    "source": "NOAA SWPC GOES X-ray flares, M1.4 peaking 2026-11-07 17:17 UTC (ARCHIVED 2026-11-07)", "live": false,
    "factcheck": "assets-cache/data-snapshots/noaa-xray-flares-latest_2026-11-07.json; the dose is row 37's scaled by peak X-ray flux (1.45e-5 / 1.2e-3 W/m2): no source, an X-ray class does not set a particle dose", "placeholder": true},
-  "dust_storm": {"label": "Dust storm", "kind": "storm", "tau_peak": 8.5, "rise_h": 48, "e_fold_sols": 43, "chance_per_sol": 0.000498,
+  "dust_storm": {"label": "Dust storm", "kind": "storm", "tau_peak": 8.5, "rise_h": 10, "e_fold_sols": 43, "chance_per_sol": 0.000498,
    "source": "Curiosity at Gale, 2018 global storm (ARCHIVED 2018)", "live": false,
-   "factcheck": "row 182 (peak opacity 8.5, clears with an e-fold of 43 sols), row 40 (a global storm about every 3 Mars years = 1 / 2009 sols, our maths); rise_h is ours", "placeholder_keys": ["rise_h"]},
+   "factcheck": "row 182 (peak opacity 8.5, clears with an e-fold of 43 sols), row 40 (a global storm about every 3 Mars years = 1 / 2009 sols, our maths); rise_h is a game rule, not a fact: 10 h, so the storm that starts on Sol 9's night is at its darkest when the kid wakes on Sol 10 (the 2018 storm took days to cover Gale)", "placeholder_keys": ["rise_h"]},
   "dust_gust": {"label": "Night wind dusted the panels", "kind": "gust", "dust_to": 0.33, "chance_per_sol": 0,
    "source": "Gale's strong night winds, and wind moving dust on and off solar panels", "live": false,
-   "factcheck": "row 177 (Gale night winds about 21 m/s, most active 17:00 to 23:00); row 181 (Spirit's power 'went up by about 50 percent' when wind cleared its panels, so dust that heavy left 1 / 1.5 of the power: 0.33 lost); all of it laid down in one night is art direction. A gust is a moment (sim.gd start()): it raises panel_dust to dust_to and is not an active event", "placeholder_keys": ["dust_to"]}
+   "factcheck": "row 177 (Gale night winds about 21 m/s, most active 17:00 to 23:00); row 181 (Spirit's power 'went up by about 50 percent' when wind cleared its panels, so dust that heavy left 1 / 1.5 of the power: 0.33 lost); all of it laid down in one night is art direction. A gust is a moment (sim.gd start()): it raises panel_dust to dust_to and is not an active event", "placeholder_keys": ["dust_to"]},
+  "o2_leak": {"label": "Oxygen leak", "kind": "leak", "o2_kg_h": 5, "chance_per_sol": 0,
+   "factcheck": "a story event with no `source`, so it is not in state().events (the HUD tags those ARCHIVED data); state().leak tells of it. game rule, not a fact: 5 kg an hour, so the tank visibly drops and is empty in about 9 game hours; it runs until the valve is closed (use o2_valve), and what leaked is gone", "placeholder_keys": ["o2_kg_h"]}
  },
  "schedule": {
-  "_note": "when events happen: the story's. Sol 5's flare comes half an hour after the 06:30 wake, so the kid has the morning's hour to reach the shelter (row 35). Sol 2's night gust dusts the wings, so the morning's power is lower and a brush lifts it (data/sols.json Sol 2). The dust storm starts in the night of Sol 9, after the rover trip, so the kid wakes into it on Sol 10, Mission 1's finale, and the sky darkens on over the next sols (design/plans/mission-1.md; rise_h 48)",
+  "_note": "when events happen: the story's. Sol 5's flare comes half an hour after the 06:30 wake, so the kid has the morning's hour to reach the shelter (row 35). Sol 2's night gust dusts the wings, so the morning's power is lower and a brush lifts it (data/sols.json Sol 2). The dust storm starts in the night of Sol 9, after the rover trip, so the kid wakes into it on Sol 10, Mission 1's finale, with the sky already at its darkest (design/plans/mission-1.md; rise_h 10)",
   "placeholder": true,
   "list": [
    {"sol": 5, "hour": 7, "event": "flare_x12"},

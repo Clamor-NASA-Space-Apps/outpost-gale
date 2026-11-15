@@ -69,6 +69,10 @@ var hurrying := false:
 		if touch:
 			touch.show_hurry(on)
 var still := 0.0  # s with no move input
+## How much hurry is left, 0 to 1 (tuning.json hero.stamina): it falls while hurrying on foot and comes back otherwise.
+## At 0 the hurry lock lets go, and on foot it cannot be set again until this is back over `back`.
+var stamina := 1.0
+var _winded := false  # ran it to 0, and not yet back over `back`
 var carried: Node3D = null  # a bag the interactions hung on the body; it rides on the chest
 var attention: Node3D = null  # what the helmet turns toward: the interactions set their target here
 var life: HeroLife
@@ -290,7 +294,15 @@ func _process(_delta: float) -> void:
 			m.set_shader_parameter("opacity", f)
 
 
+## Hurrying on its own legs, and getting somewhere: what costs stamina, and the rules' effort.
+func hurrying_on_foot() -> bool:
+	return hurrying and vehicle == null and moved > idle_below
+
+
 func _physics_process(delta: float) -> void:
+	var st: Dictionary = tuning.hero.stamina
+	stamina = clampf(stamina + (-delta / float(st.drain_s) if hurrying_on_foot() else delta / float(st.recover_s)), 0.0, 1.0)
+	_winded = stamina <= 0.0 or (_winded and stamina < float(st.back))
 	if vehicle:
 		_drive(delta)
 	else:
@@ -333,7 +345,7 @@ func _live(delta: float, accel: Vector3) -> void:
 
 func _unhandled_input(e: InputEvent) -> void:
 	if e.is_action_pressed(&"hurry") and may(&"hurry"):
-		hurrying = not hurrying
+		hurrying = not hurrying and not (_winded and vehicle == null)  # out of breath: the press does nothing yet
 		still = 0.0  # a press standing still gives the kid the whole still time to set off
 
 
@@ -348,7 +360,7 @@ func _walk(delta: float) -> void:
 		stick = Vector2.ZERO
 	var want := cam.ground_basis() * Vector3(stick.x, 0.0, stick.y)
 	still = still + delta if stick == Vector2.ZERO else 0.0
-	hurrying = hurrying and may(&"hurry") and still < tuning.hero.hurry_still_s
+	hurrying = hurrying and may(&"hurry") and still < tuning.hero.hurry_still_s and not _winded
 	var top := (hurry if hurrying else walk) * stick.length()
 	if stick != Vector2.ZERO:
 		var diff := wrapf(atan2(-want.x, -want.z) - yaw, -PI, PI)

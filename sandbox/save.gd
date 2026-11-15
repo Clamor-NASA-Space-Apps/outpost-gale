@@ -9,6 +9,8 @@ const VERSION := 1  # raise it when a checkpoint's shape changes: an older file 
 # As ui/settings.gd: "" until first asked, user://save.json in the game, "-" (none) in a test or tool run, so a check
 # never reads or overwrites a player's mission. A test that checks saving sets its own file first.
 static var file := ""
+# "Try this sol again" (sandbox.gd _restart()): the checkpoint the scene's next start takes, as Continue's from boot
+static var pending := {}
 
 
 static func _path() -> String:

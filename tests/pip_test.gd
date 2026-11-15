@@ -18,6 +18,7 @@ func play() -> bool:
 	await frames(3)
 	var world: Node3D = game.get_node("World")
 	var player: Node3D = game.get_node("Player")
+	player.tuning.hero.stamina.drain_s = 1e9  # PIP's leading is tested against a hero who can keep hurrying (hold_test has the stamina)
 	var pip: Node3D = world.items.get("pip")
 	if not check(pip != null and pip.has_method("state_text"), "the sandbox drives PIP with sandbox/pip.gd"):
 		return true

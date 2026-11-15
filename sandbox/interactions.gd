@@ -4,7 +4,8 @@ extends Node3D
 ## Every usable thing is an Interactable node in group `interactable` (CONTRACTS.md). The target is measured to the
 ## thing's shape, from either side, not to one spot beside it (skills/character-body, Using things): a door that
 ## offered E at one point outside could not be closed from inside (13 Nov playtest).
-## Every use happens at once, with no clip (Ravindu, 14 Nov: "a feature that doesn't exist is better than a broken
+## A body need is met by holding E (a use row's `hold_s`, 15 Nov: drink, eat, fill suit air; `hold`, hold_shown()).
+## Every use then happens at once, with no clip (Ravindu, 14 Nov: "a feature that doesn't exist is better than a broken
 ## implementation", as Half-Life 2's doors open with no hand on them): a door swings, a bag is in the hands, the hero
 ## is in the rover. Use spots (data/world.json `uses`) set their props' end state and emit `used(action_id)` at once:
 ## the rules hook (sim.use, 14 Nov). Only a seat still plays its clips (sit down, stand up), for the story's rests,
@@ -113,7 +114,11 @@ var tuning: Dictionary
 var target: Interactable = null
 var carried: Node3D = null
 var prompt_label: Label
-var hold: float  # m, the hands' height over the feet (reality.json hero.reach.work)
+var hand_y: float  # m, the hands' height over the feet (reality.json hero.reach.work)
+## A hold in flight (a use row's `hold_s`: E held on one target): its progress 0 to 1, and -1 with none. What the
+## HUD's ring shows is hold_shown().
+var hold := -1.0
+var _held: Interactable = null  # the spot being held
 var by_thing := {}  # thing -> its Interactable, to name what a ray hit
 var design: Dictionary  # the sandbox's look: role materials for the props made here
 var _swinging := {}  # door Interactable -> {goal: rad, wait: bool, moved: bool}: doors on their way
@@ -125,10 +130,10 @@ func setup(w: Node3D, p: Node3D, t: Dictionary, sheet: Dictionary) -> void:
 	player = p
 	tuning = t
 	design = get_parent().get("design") if get_parent() else {}
-	hold = 1.0
+	hand_y = 1.0
 	for r: Dictionary in sheet.rows:
 		if r.id == "hero.reach.work":
-			hold = r.value
+			hand_y = r.value
 	for id: String in world.items:
 		var item: Node3D = world.items[id]
 		for part: Node3D in item.get_meta("parts"):
@@ -276,6 +281,16 @@ func _physics_process(delta: float) -> void:
 		text = target.prompt()
 		target.global_position = target.middle()  # a swung door's middle, for the helmet's look
 	player.attention = target  # the helmet turns toward what can be used
+	if _held:  # a hold lasts while E stays down on the one target: _pick() drops a spot out of reach or used up
+		if target != _held or not Input.is_action_pressed(&"interact") or not player.may(&"interact"):
+			_held = null
+			hold = -1.0
+		else:
+			hold += delta / float(_held.row.hold_s)
+			if hold >= 1.0:
+				_held = null
+				hold = -1.0
+				use(target)
 	if not player.may(&"interact"):
 		text = ""  # a tutorial step that blocks E shows no "E Sit" or "E Close door" that would do nothing
 	# the key on a keyboard; on a phone the lit interact button says the same
@@ -289,7 +304,7 @@ func _physics_process(delta: float) -> void:
 func _pick() -> Interactable:
 	var hero: Node3D = player.body
 	var feet := hero.global_position
-	var hands := feet + Vector3.UP * hold
+	var hands := feet + Vector3.UP * hand_y
 	var head: float = player.model.bounds.end.y
 	var first: bool = player.room != ""
 	var lens: Camera3D = player.cam.lens
@@ -354,7 +369,16 @@ func _owner(n: Node) -> Interactable:
 	return by_thing[n] if n else null
 
 
-## The interact action: out of the rover, put down what is carried, or use the target. Each at once.
+## The ring the HUD draws round the key: a hold's progress while one is in flight, 0.0 (an empty ring, before the
+## press) on a target that needs a hold, -1 (no ring) on anything else.
+func hold_shown() -> float:
+	if hold >= 0.0:
+		return hold
+	return 0.0 if target and target.kind == "spot" and target.row.has("hold_s") and player.may(&"interact") else -1.0
+
+
+## The interact action, on its press: out of the rover, put down what is carried, or use the target, each at once.
+## A use row with `hold_s` starts a hold instead: E must stay down that long (_physics_process) before it is used.
 func interact() -> void:
 	if player.vehicle:
 		var rover: Node3D = player.vehicle
@@ -362,6 +386,9 @@ func interact() -> void:
 		used.emit("rover_exit", rover.global_position)  # not "rover": a beat waiting to board must not end on it
 	elif carried:
 		_put_down()
+	elif target and target.kind == "spot" and target.row.has("hold_s"):
+		_held = target
+		hold = 0.0
 	elif target:
 		target.use(player.body)
 
@@ -509,7 +536,7 @@ func _put_down() -> void:
 			var at := ahead + Vector3.RIGHT.rotated(Vector3.UP, TAU * k / maxi(ring * 6, 1)) * ring * 0.15
 			if ((at - hero.global_position) * Vector3(1, 0, 1)).length() < float(player.breadth) / 2.0 + 0.3:
 				continue  # never on the hero's feet
-			var down := space.intersect_ray(PhysicsRayQueryParameters3D.create(at + Vector3.UP * hold, at + Vector3.DOWN * 2.0, 1 | WALLS, [hero.get_rid()]))
+			var down := space.intersect_ray(PhysicsRayQueryParameters3D.create(at + Vector3.UP * hand_y, at + Vector3.DOWN * 2.0, 1 | WALLS, [hero.get_rid()]))
 			if down.is_empty() or (down.normal as Vector3).y < 0.9:
 				continue
 			var rest := Transform3D(b, down.position)

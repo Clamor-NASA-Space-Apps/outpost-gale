@@ -18,7 +18,7 @@ func face(kind: String) -> Node3D:
 			var n := Vector3.AXIS_X if s.size.x < s.size.z else Vector3.AXIS_Z
 			var off: Vector3 = (it.thing.global_basis[n] * Vector3(1, 0, 1)).normalized() * (s.size[n] / 2.0 + 1.0)
 			var from: Vector3 = it.thing.exit_point() if kind == "rover" else it.middle() + (off if kind != "bag" else Vector3(0.7, 0, 0.7))
-			var to: Vector3 = it.nearest(from + Vector3.UP * box.hold) - from
+			var to: Vector3 = it.nearest(from + Vector3.UP * box.hand_y) - from
 			game.place(Vector3(from.x, 0, from.z), rad_to_deg(atan2(to.x, -to.z)))
 			return it
 	check(false, "no %s interactable" % kind)
@@ -195,8 +195,8 @@ func lights(r: Node3D) -> void:
 	clock.pinned = false
 
 
-## HAB 1's galley (world.json `uses`): at its stand point, the view on the dispenser, E drinks: the consume clip and
-## the drink sound, no new state keys (motion and sound only, hard rule 1), and a move key ends it.
+## HAB 1's galley (world.json `uses`): at its stand point, the view on the dispenser, E held for the row's `hold_s`
+## drinks: the drink sound, no clip, no new state keys.
 func galley() -> void:
 	var spot: Node3D = null
 	for it: Node3D in game.get_tree().get_nodes_in_group("interactable"):
@@ -221,11 +221,15 @@ func galley() -> void:
 	var heard: Array = []
 	var hear := func(what: String, _pos: Vector3) -> void: heard.append(what)
 	box.used.connect(hear)
+	Input.action_press(&"interact")
 	box.interact()
 	await frames(2)
+	check(heard.is_empty() and box.hold > 0.0, "E down: the drink waits for its hold (%s, hold %.2f)" % [heard, box.hold])
+	await frames(int(float(spot.row.hold_s) * 60.0) + 2)
+	Input.action_release(&"interact")
 	box.used.disconnect(hear)
-	# at once (14 Nov: no use clips): the action is named for the rules on the press, and the hero is free again
-	check(player.cut.is_empty() and heard.has("drink"), "E: the drink is had at once, no clip (%s)" % [heard])
+	# no use clips (14 Nov): the action is named for the rules once E was held long enough (15 Nov), the hero free
+	check(player.cut.is_empty() and heard == ["drink"], "E held: the drink is had once, no clip (%s)" % [heard])
 	var extra: Array = game.render_game_to_text().keys().filter(func(k: String) -> bool: return not k in keys)
 	check(extra.is_empty(), "no new state keys (%s)" % [extra])
 	check(not (spot.props.pouch as Node3D).visible, "its pouch stays put away")
@@ -309,7 +313,7 @@ func hatch() -> void:
 		for x: float in [-0.4, 0.0, 0.4]:
 			for turn: float in [-20.0, 0.0, 20.0]:
 				var at: Vector3 = r.global_transform * Vector3(x, 0, back.z + dz)
-				var to: Vector3 = it.nearest(at + Vector3.UP * box.hold) - at
+				var to: Vector3 = it.nearest(at + Vector3.UP * box.hand_y) - at
 				game.place(Vector3(at.x, 0, at.z), rad_to_deg(atan2(to.x, -to.z)) + turn)
 				await frames(3)
 				if box.target != it:

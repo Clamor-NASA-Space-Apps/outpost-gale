@@ -201,7 +201,7 @@ func _board() -> void:
 		if it.kind == "rover":
 			door = it
 	var from: Vector3 = rover.exit_point()
-	var to: Vector3 = door.nearest(from + Vector3.UP * game.interactions.hold) - from
+	var to: Vector3 = door.nearest(from + Vector3.UP * game.interactions.hand_y) - from
 	game.place(Vector3(from.x, 0, from.z), rad_to_deg(atan2(to.x, -to.z)))
 	await frames(3)
 	action(&"interact")

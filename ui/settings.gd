@@ -515,6 +515,8 @@ func _demo() -> Control:
 			var n := int(k) - int(game.sim.sim.sol)
 			if n > 0:
 				game.sim.skip_sols(n)
+			if not game.sim.sim.knobs.body:
+				game.sim.apply("body_on")  # a jump lands past Sol 1's lesson, where the body's needs run
 			game.beats.start_sol(int(k))), &"ChoiceButton"))
 	# the look only, held so a picture or a film can be taken (the old sky key, gone from release builds): the rules'
 	# own weather is not touched. "Live clock" lets it run again

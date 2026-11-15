@@ -1,6 +1,6 @@
 extends "res://addons/forge/test.gd"
-## Every use spot (data/world.json `uses`) is picked from where its hero stands, plays its clip, names its action
-## once the clip has run, and puts every prop back; a wing's row is cleared by its wiper at a button's press (wiper()):
+## Every use spot (data/world.json `uses`) is picked from where its hero stands, names its action once (on the press,
+## or after its `hold_s` of E held), and puts every prop back; a wing's row is cleared by its wiper at a button's press (wiper()):
 ## godot --headless --path . --fixed-fps 60 -s tests/uses_test.gd
 
 var game: Node3D
@@ -109,11 +109,20 @@ func one(it: Node3D, heard: Array) -> void:
 	var rest := {}
 	for p: String in it.props:
 		rest[p] = [(it.props[p] as Node3D).transform, (it.props[p] as Node3D).visible]
+	# a hold row (`hold_s`): E stays down that long, a ring on the HUD, and nothing is used before it is full
+	var hold_s := float(row.get("hold_s", 0.0))
+	check(box.hold_shown() == (0.0 if hold_s > 0.0 else -1.0), "%s: the ring shows before the press only on a hold row (%s)" % [name, box.hold_shown()])
+	if hold_s > 0.0:
+		Input.action_press(&"interact")
 	box.interact()
 	await frames(2)
+	if hold_s > 0.0:
+		check(heard.is_empty() and box.hold > 0.0, "%s: held, nothing is used yet (%s, hold %.2f)" % [name, heard, box.hold])
+		await frames(int(hold_s * 60.0) + 2)
+		Input.action_release(&"interact")
 	# no spot seats the hero: the Sit spots left a kid walking seated in the air (15 Nov); only cine sits the hero
 	check(player.cut.is_empty() and not player.seated, "%s: E plays no clip and seats no one (cut %s)" % [name, player.cut])
-	check(heard == [row.kind], "%s: used names the action once, at once (%s)" % [name, heard])
+	check(heard == [row.kind], "%s: used names the action once, on the press or when the hold is full (%s)" % [name, heard])
 	for p: String in it.props:
 		var n: Node3D = it.props[p]
 		var spec: Dictionary = row.props[p]

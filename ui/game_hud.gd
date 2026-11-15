@@ -2,7 +2,7 @@ extends Control
 ## The play HUD on the visor (design/mockups/hud.png): the status card (sol, clock, three meters), Today's tasks, the
 ## compass tape, the minimap and the full map (M), the objective's waypoint, PIP's speech bubble, the use prompt,
 ## visor mail, an alert, and the cards (a choice, the sleep ledger, the causes of a lost mission, where the numbers
-## come from), and the handbook (ui/handbook.gd: Tab or the book button), with the "New page" note and the check card
+## come from, the mission report), the hero's needs under the meters, the hurry bar, and the handbook (ui/handbook.gd: Tab or the book button), with the "New page" note and the check card
 ## that send the kid to it. It holds no rules: bind() a node with `signal changed(state: Dictionary)` (the sim's state keys) and
 ## it shows what it gets. Every HUD event emits `cue(name)` once (audio/audio.gd UI_SOUNDS); the sandbox plays it.
 ## Under a CanvasLayer it fills the screen and draws PHONE_SCALE larger on a touch screen, with margins clear of the
@@ -16,13 +16,16 @@ signal map_toggled(open: bool)
 signal marked(at: Variant, id: String)  # the kid's own map mark set (world x, z; a place id or "") or cleared (null)
 signal dismissed(line_id: String)  # a fact line (say(id, {fact = true})) closed by Enter or a tap
 signal checked(id: String)  # a check answered right (design/plans/mission-1-contracts.md)
+signal report_closed(again: bool)  # the mission report's "Keep going" (false) or "Play again" (true)
 
 const Hud := preload("res://ui/hud.gd")
 const Delay := preload("res://ui/radio_delay.gd")
 const SUPPLIES := ["o2_kg", "water_kg", "food_kg"]
-# Crew health is radiation only, and reaches 0 at 1 Sv: about +5% lifetime risk of fatal cancer, and what a 500-day
-# stay at Gale adds up to (factcheck rows 32, 33). A 30-sol stay at 0.67 mSv a day costs about 2 points.
-const DOSE_FULL_MSV := 1000.0
+# Crew health is the rules' `health` (design/plans/core-loop-contracts.md): it falls while a need of the hero's is
+# not met, and the meter says which in words
+const HURTS := {"air": "No air", "thirst": "Thirsty", "hunger": "Hungry", "tired": "Tired", "cold": "Cold", "flare": "Solar storm", "dust": "Toxic dust"}
+const HEALTH_DROP := 3.0  # a fall this big between two states shows as "-N" beside the meter
+const FLOW_MIN_KW := 0.05  # under this the battery neither charges nor drains
 const GAIN_STEP := 1.05  # solar power rising 5% between two states shows as a "+kW" beside the power meter
 const GAIN_MIN_KW := 0.1  # and by this much: at dawn a tiny solar number climbs fast in percent
 const TOAST_S := 6.0
@@ -32,6 +35,7 @@ const TASKS_HOLD_S := 1.2  # a finished day's list stays up, every box ticked, b
 const TASKS_LEAVE_S := 0.45  # its slide and fade out
 const TASKS_SLIDE := 24.0  # px it slides left as it goes
 const ALERT_GAP_S := 6.0  # the alert and danger cues repeat no more often than this
+const STAMINA_UP := 64  # px the hurry bar stands over the frame's bottom edge: clear of the prompt on a phone
 const PLACES := preload("res://ui/components/full_map.gd").PLACES
 # What the "where this comes from" card says beside each number, with its factcheck row
 const SOURCES := {
@@ -40,7 +44,10 @@ const SOURCES := {
 	"water_kg": "3.2 kg each a day: NASA BVAD",  # row 25
 	"food_kg": "2.39 kg each a day: NASA BVAD",  # row 112
 	"dose_msv": "0.67 mSv a day at Gale: SwRI",  # row 32
-	"health": "0 at 1 Sv, +5% cancer risk: SwRI",  # row 33
+	"health": "Game rule: falls when a need runs out",
+	"suit_air": "A spacewalk lasts 6.5 to 8 h: NASA",  # row 135
+	"suit_dust": "Mars dust is likely toxic: NASA",  # row 140
+	"flare": "30 chest X-rays, 20 May 2024: JPL",  # row 37
 	"panel_dust": "About 0.2% a sol: Lorenz 2021",  # row 180
 	"sol": "NASA's first Mars stay: 30 sols",  # ICES-2023-265, workspace fact table
 }
@@ -49,6 +56,7 @@ var lines: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://d
 var state := {}
 var _power_in := 0.0
 var _power_hour := 0.0
+var _health := -1.0  # the last state's, -1 before the first: a loaded game shows no drop
 var stock := {}  # the most of each supply seen so far: Life support's 100%
 var start_unix := Time.get_unix_time_from_system()  # sol 1 is the day the game is played
 var frame := Control.new()  # everything sits inside its margins
@@ -66,6 +74,7 @@ var mark_id := ""  # the place it names, "" for open ground
 const MARK_REACH_M := 4.0  # within this the mark is reached and clears itself
 const SAME_PLACE_M := 20.0  # a mark this near the objective is the same place: one tag, not two (a place's middle and its landmark differ by metres)
 var prompt: Control
+var stamina: Control  # the hurry bar (set_stamina): bottom centre, over the prompt's row, hidden while full
 var full_map: Control  # open while the full map shows, else null
 var camera: Camera3D
 var hero: Node3D
@@ -110,6 +119,7 @@ var side_card := false  # the open card is a choice: compact, beside the hero, c
 var card: Control  # the open card, or null
 var _events := {}
 var _failing: Array = []
+var _leak := false
 var _toast_left := 0.0
 var _note_left := 0.0
 
@@ -198,6 +208,20 @@ func _ready() -> void:
 	prompt.size_flags_horizontal = Control.SIZE_SHRINK_END
 	frame.add_child(_quiet(Hud.col([top, prompt], 0)))
 	frame.get_child(0).set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var breath: Control = load("res://ui/components/meter.tscn").instantiate()
+	breath.icon_name = "next"
+	breath.title = "Hurry"
+	breath.word = "Hurry"
+	breath.compact = true
+	breath.low_below = status.LOW_NEED
+	breath.custom_minimum_size.x = 150
+	stamina = Hud.panel("HudPanel", breath)
+	stamina.name = "Stamina"
+	frame.add_child(stamina)
+	stamina.set_anchors_and_offsets_preset(Control.PRESET_CENTER_BOTTOM, Control.PRESET_MODE_MINSIZE, STAMINA_UP)
+	stamina.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	stamina.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	stamina.hide()
 	compass = _scene("compass")
 	compass.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP, Control.PRESET_MODE_MINSIZE)
 	compass.grow_horizontal = Control.GROW_DIRECTION_BOTH
@@ -305,12 +329,21 @@ func show_state(s: Dictionary) -> void:
 			left = f
 	meters.life.value = roundi(100.0 * left)
 	meters.life.set_icon(Hud.KEYS[worst][0])
-	meters.health.value = roundi(100.0 * clampf(1.0 - float(s.dose_msv) / DOSE_FULL_MSV, 0.0, 1.0))
-	# the suit's air shows while it runs down (outside), and hides once it is topped up again
+	var health := float(s.get("health", 100.0))
+	meters.health.value = roundi(health)
+	if _health - health >= HEALTH_DROP:
+		meters.health.bump("-%d" % roundi(_health - health))
+	_health = health
+	status.hurt(HURTS.get(s.get("hurt", ""), ""))
+	var net := float(s.get("net_kw", float(s.get("power_in_kw", 0.0)) - float(s.get("power_out_kw", 0.0))))
+	status.flow.text = ("Steady" if absf(net) < FLOW_MIN_KW else "%s %+.1f kW" % ["Charging" if net > 0.0 else "Draining", net])
+	status.show_body(s)
+	# the suit's air shows while it runs down (outside), and hides once it is topped up again; with the body's
+	# gauges up, the suit's gauge says it
 	var suit := float(s.get("suit_air_min", -1.0))
 	stock.suit = maxf(stock.get("suit", 0.0), suit)
 	# the Mars clock: 24 local hours a sol, the sky's own time (the rules count Earth hours through a 24.66 h sol)
-	clock.show_time(int(s.sol), float(s.hour) * 24.0 / Hud.SOL_H, suit if suit < stock.suit else -1.0)
+	clock.show_time(int(s.sol), float(s.hour) * 24.0 / Hud.SOL_H, suit if suit < stock.suit and not status.needs.visible else -1.0)
 	if mail_sol >= 0:
 		var was: float = mail.progress()
 		mail.set_now(float(s.hour) + (int(s.sol) - mail_sol) * Hud.SOL_H)
@@ -327,6 +360,11 @@ func show_state(s: Dictionary) -> void:
 		if k not in _failing:
 			alert("%s ran out!" % Hud.KEYS.get(k, ["", k])[1], line("failing_" + k), "danger")
 	_failing = failing.duplicate()
+	# the leak is a flag in the state, not an event: it gets its own alert, once, when it starts
+	var leak := bool(s.get("leak", false))
+	if leak and not _leak:
+		alert("Oxygen leak!", "The oxygen tank is dropping fast.", "danger")
+	_leak = leak
 
 
 ## PIP's line by id, from data/lines.json, as it reads: without the asterisks that mark its key words (only PIP's
@@ -486,9 +524,16 @@ func _settle_tasks() -> void:
 	(tasks.get_parent() as Container).queue_sort()  # its column puts it back where it belongs
 
 
-## The use prompt at the bottom right ("Open the greenhouse"); "" hides it.
-func show_prompt(text: String) -> void:
-	prompt.say(text)
+## The use prompt at the bottom right ("Open the greenhouse"); "" hides it. `hold` 0 to 1: the target needs the key
+## held, and the ring round the key is that far (0 before the press); -1 for a plain press.
+func show_prompt(text: String, hold := -1.0) -> void:
+	prompt.say(text, hold)
+
+
+## How much hurry the hero has left, 0 to 1: a small bar at the bottom centre, hidden while full.
+func set_stamina(v: float) -> void:
+	stamina.visible = v < 1.0
+	stamina.get_child(0).value = roundi(100.0 * v)
 
 
 func map_open() -> bool:
@@ -733,16 +778,49 @@ func show_ledger(d: Dictionary) -> void:
 
 
 ## The mission-lost card with what led there: the sim's top_causes() ({label, sol, effect}) or plain strings.
-func show_causes(list: Array) -> void:
-	var c: Control = load("res://ui/components/mission_lost.tscn").instantiate()
-	c.steps = list.map(func(e: Variant) -> Array:
-		if e is Dictionary:
-			return [_icon_of(e.get("effect", {})), e.get("label", ""), "Sol %d" % e.sol if e.has("sol") else ""]
-		return ["alert", str(e), ""])
+## Its main button reads `retry_label` and emits retry.
+func show_causes(list: Array, retry_label := "Try this sol again") -> void:
+	var c := _end_card(list)
+	c.retry_label = retry_label
 	c.retry.connect(func() -> void:
 		close_card()
 		retry.emit())
+	c.open_log.connect(open_handbook)  # the decisions made are in the handbook; the card is back when it closes
 	_open(c, true)
+
+
+## The mission complete card. d: {title, lines: [line ids or plain words], meters: {power, life, health} in percent,
+## causes: as show_causes takes, pages: [found, total]}; every key may be left out. "Keep going" emits
+## report_closed(false), "Play again" report_closed(true).
+func show_report(d: Dictionary) -> void:
+	var c := _end_card(d.get("causes", []))
+	c.lost = false
+	c.title = _words(d.get("title", "Mission complete"))
+	c.line = ""
+	c.lines = (d.get("lines", []) as Array).map(func(t: String) -> String: return _words(t))
+	var pages: Array = d.get("pages", [])
+	if pages.size() == 2:
+		c.lines.append("Handbook pages found: %d of %d" % [int(pages[0]), int(pages[1])])
+	c.meters = d.get("meters", {})
+	c.caption = "What cost you most"
+	c.retry_label = "Keep going"
+	c.log_label = "Play again"
+	for again: bool in [false, true]:
+		(c.open_log if again else c.retry).connect(func() -> void:
+			close_card()
+			report_closed.emit(again))
+	_open(c, true)
+	_cue("objective_done")
+
+
+## The end card (components/mission_lost.gd) with its chain of causes.
+func _end_card(causes: Array) -> Control:
+	var c: Control = load("res://ui/components/mission_lost.tscn").instantiate()
+	c.steps = causes.map(func(e: Variant) -> Array:
+		if e is Dictionary:
+			return [_icon_of(e.get("effect", {})), e.get("label", ""), "Sol %d" % e.sol if e.has("sol") else ""]
+		return ["alert", str(e), ""])
+	return c
 
 
 ## Every number on screen and where it comes from.
@@ -753,7 +831,11 @@ func show_sources() -> void:
 	var rows: Array = [
 		["battery", "Battery %d%%" % meters.power.value, SOURCES.battery_pct, ""],
 		["health", "Crew health %d%%" % meters.health.value, SOURCES.health, ""],
+		["radiation", "Solar storm outside the shelter", SOURCES.flare, "archived"],
 	]
+	if status.needs.visible:
+		rows.append(["oxygen", "Suit air %d%%" % status.gauges.air.value, SOURCES.suit_air, ""])
+		rows.append(["storm", "Suit dust %d%%" % roundi(100.0 * float(s.get("suit_dust", 0.0))), SOURCES.suit_dust, ""])
 	for k: String in SUPPLIES + ["dose_msv", "panel_dust"]:
 		if s.has(k):
 			var v: float = float(s[k]) * Hud.KEYS[k][3]
@@ -763,6 +845,11 @@ func show_sources() -> void:
 	rows.append(["dish", "Radio %d min each way" % roundi(Delay.minutes(unix)), "for %s, JPL orbits" % Hud.date(unix), "computed"])
 	for e: Dictionary in s.get("events", []):
 		rows.append(["alert", e.label, e.source, "live" if e.live else "archived"])
+	# the real records behind the solar storm (data/nasa.json: NASA DONKI and RadLab, saved 15 Nov and shipped with
+	# the game, so nothing calls NASA in play), each with its own source line; our own averages say so
+	for r: Dictionary in JSON.parse_string(FileAccess.get_file_as_string("res://data/nasa.json")).records.values():
+		if r.get("show", true):
+			rows.append(["radiation", "%s: %s %s" % [r.label, r.value, r.unit], r.source, "computed" if r.checked == "our maths" else "archived"])
 	var c: Control = load("res://ui/components/sources_card.tscn").instantiate()
 	c.rows = rows
 	c.list_h = maxf(160.0, size.y - 260.0)
@@ -823,7 +910,7 @@ func _open(c: Control, full := false, side := false) -> void:
 
 ## The HUD parts a side card can lie on.
 func _under() -> Array:
-	return [status, tasks, toast, note, minimap, gear_slot.get_parent(), mail, prompt, compass]
+	return [status, tasks, toast, note, minimap, gear_slot.get_parent(), mail, prompt, compass, stamina]
 
 
 ## Keys and a gamepad work on the open card at once.
@@ -923,6 +1010,11 @@ func snapshot() -> Dictionary:
 	return {
 		"meters": {"power": meters.power.value, "life": meters.life.value, "lifeIcon": meters.life.icon_name, "health": meters.health.value},
 		"sol": clock.sol, "time": clock.time, "suit": clock.suit_label.text if clock.suit.visible else "",
+		"hurt": status.hurting, "flow": status.flow.text,
+		# the hero's needs in percent (air -1 while its gauge is hidden), {} while the rules do not run them
+		"body": {"air": status.gauges.air.value if status.gauges.air.visible else -1, "water": status.gauges.water.value,
+			"food": status.gauges.food.value, "rest": status.gauges.rest.value, "dusty": status.dust.visible} if status.needs.visible else {},
+		"stamina": stamina.get_child(0).value if stamina.visible else -1,
 		"subtitle": bubble.text if bubble.visible else "",
 		"bubble": {"typed": bubble.typed, "docked": bubble.docked, "at": bubble.panel.position.round(), "fact": bubble.fact,
 			"keys": bubble.keys_row.get_children().filter(func(k: Node) -> bool: return not k.is_queued_for_deletion()).size()} if bubble.visible else {},
@@ -930,7 +1022,7 @@ func snapshot() -> Dictionary:
 		"area": minimap.area,
 		"objective": {"id": objective, "label": waypoint.place, "m": waypoint.metres(), "docked": waypoint.docked} if objective else {},
 		"tasks": tasks.tasks if tasks.visible else [],
-		"prompt": prompt.line.text if prompt.visible else "",
+		"prompt": prompt.text if prompt.visible else "", "hold": prompt.hold if prompt.visible else -1.0,
 		"map": full_map != null,
 		"mark": {"id": mark_id, "label": marker.place, "m": marker.metres(), "compass": compass.mark_text} if mark != null else {},
 		"alert": toast.title if toast.visible else "",

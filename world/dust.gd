@@ -26,6 +26,7 @@ var _soft: StandardMaterial3D  # one billboard material for every cloud, so one 
 var _column: StandardMaterial3D  # the dust devil's: ground-coloured, so it shows against the pale sky
 var _line: StandardMaterial3D
 var _dir: Vector3  # where the wind blows to, flat
+var _touch: float  # m, how near a devil's middle its dust reaches someone (tuning.json devil.touch_m)
 var _devil_angle := 0.0  # each devil's own angle is this times its direction plus its start (data devil.devils)
 var _haze_mat: ShaderMaterial
 var _wheel_haze_mat: ShaderMaterial  # a rover's trail: paler than a boot's puff, or it vanished against the ground
@@ -46,6 +47,7 @@ static var _shaders: Dictionary = {}  # dust.gdshader per variant: one compile s
 
 func build(world: Node3D) -> void:
 	_world = world
+	_touch = float(JSON.parse_string(FileAccess.get_file_as_string("res://data/tuning.json")).devil.touch_m)
 	var yaw := deg_to_rad(float(world.data.wind.toward_deg))
 	_dir = Vector3(sin(yaw), 0, -cos(yaw))  # CONTRACTS.md: yaw clockwise from north, north is -Z
 	var dot := GradientTexture2D.new()
@@ -183,6 +185,13 @@ func restyle(design: Dictionary, weather: Dictionary, instant := true) -> void:
 	for d: GPUParticles3D in devils:
 		switch(d, bool(weather.devil), instant)
 	switch(front, bool(weather.front), instant)
+
+
+## Whether `at` stands in a dust devil: one that is emitting, its middle within tuning.json devil.touch_m over the
+## ground. The rules coat the suit with its dust (sim.gd dust_hit()).
+func devil_near(at: Vector3) -> bool:
+	return devils.any(func(d: GPUParticles3D) -> bool:
+		return d.emitting and Vector2(d.global_position.x - at.x, d.global_position.z - at.z).length() < _touch)
 
 
 ## Turns the devil or the storm front on or off. `instant` (behind a cover: a load, a sky jump) fills it to its whole

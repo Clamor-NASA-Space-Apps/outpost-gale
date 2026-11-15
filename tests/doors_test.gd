@@ -134,7 +134,7 @@ func _floor(at: Vector3) -> Vector3:
 
 ## Stands the hero at `at` facing the nearest point of `it` turned by `turn` degrees; false where a body cannot stand.
 func _stand(it: Node3D, at: Vector3, turn: float) -> bool:
-	var to: Vector3 = it.nearest(at + Vector3.UP * box.hold) - at
+	var to: Vector3 = it.nearest(at + Vector3.UP * box.hand_y) - at
 	player.place(at + Vector3.UP * 0.05, rad_to_deg(atan2(to.x, -to.z)) + turn)
 	await frames(4)
 	var p: Vector3 = player.body.global_position
@@ -238,7 +238,7 @@ func curtain() -> void:
 	var out := (c - hab.global_position) * Vector3(1, 0, 1)
 	var at := _floor(hab.global_position + out.normalized() * (r + 0.4))
 	await _stand(it, at, 0.0)
-	var q: Vector3 = it.nearest(at + Vector3.UP * box.hold)
+	var q: Vector3 = it.nearest(at + Vector3.UP * box.hand_y)
 	var gap := Vector2(q.x - at.x, q.z - at.z).length()
 	check(gap < float(game.tuning.interact.reach), "a spot outside HAB 1's wall is within reach of the curtain (%.2f m)" % gap)
 	check(box.target != it, "and gets no prompt through the wall (got %s)" % [box.target.name if box.target else "nothing"])

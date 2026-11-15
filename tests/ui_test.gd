@@ -70,6 +70,8 @@ func play() -> bool:
 	var toast: Script = load("res://ui/components/alert_toast.gd")
 	var pulse: float = toast.get_script_constant_map().PULSE_SECONDS
 	check(1.0 / pulse <= MAX_FLASHES, "the alert pulses %.1f times a second" % (1.0 / pulse))
+	pulse = (load("res://ui/components/meter.gd") as Script).get_script_constant_map().PULSE_SECONDS
+	check(1.0 / pulse <= MAX_FLASHES, "a low gauge pulses %.1f times a second" % (1.0 / pulse))
 	await _draws(g)
 	await _apart(g)
 	g.queue_free()
@@ -211,7 +213,7 @@ func _apart(g: Control) -> void:
 		await process_frame
 		check(h.gear_slot.get_global_rect().encloses(gear.get_global_rect().grow(-0.5)), "%s: the gear sits in its place" % layout)
 		var parts := {"status": h.status, "tasks": h.tasks, "alert": h.toast, "compass": h.compass, "minimap": h.minimap,
-			"gear": h.gear_slot, "sources": h.source_button, "book": h.book_button, "mail": h.mail, "prompt": h.prompt}
+			"gear": h.gear_slot, "sources": h.source_button, "book": h.book_button, "mail": h.mail, "prompt": h.prompt, "hurry bar": h.stamina}
 		for i in g.touch.size():
 			parts["touch %d" % i] = g.touch[i]
 		var names := parts.keys().filter(func(n: String) -> bool: return (parts[n] as Control).is_visible_in_tree())
@@ -248,13 +250,15 @@ func _bound() -> void:
 	await frames(1)
 	h.bind(fake)
 	var m: Dictionary = h.snapshot().meters
-	check(m.power == 24 and m.health == 99, "bound meters: power %d (want 24), health %d (want 99)" % [m.power, m.health])
+	check(m.power == 24 and m.health == 82, "bound meters: power %d (want 24), health %d (want 82)" % [m.power, m.health])
+	check(not h.meters.health.gain.visible, "the first state shows no drop in health")
 	check(h.snapshot().alert == "Solar storm", "a new event raises an alert, got '%s'" % h.snapshot().alert)
-	fake.set_values({"battery_pct": 81.6, "o2_kg": 16.7, "dose_msv": 100.0, "sol": 13, "hour": 14.5, "suit_air_min": 300.0})
+	fake.set_values({"battery_pct": 81.6, "o2_kg": 16.7, "health": 70.4, "sol": 13, "hour": 14.5, "suit_air_min": 300.0, "body": false, "hurt": ""})
 	var s: Dictionary = h.snapshot()
 	check(s.meters.power == 82, "power follows battery_pct: %d" % s.meters.power)
 	check(s.meters.life == 50 and s.meters.lifeIcon == "oxygen", "life support is the shortest supply (oxygen at half): %s" % [s.meters])
-	check(s.meters.health == 90, "100 mSv takes crew health to 90, got %d" % s.meters.health)
+	check(s.meters.health == 70 and h.meters.health.gain.visible and h.meters.health.gain.text == "-12",
+		"crew health is the rules' health, and a drop shows beside it: %d '%s'" % [s.meters.health, h.meters.health.gain.text])
 	# the HUD shows the sky's local time: the rules' 14.5 Earth hours into a 24.66 h sol are 14:06 on a 24 h dial
 	check(s.sol == 13 and s.time == "14:06" and s.suit == "5 h 00 min", "clock and suit air: %s %s '%s'" % [s.sol, s.time, s.suit])
 	check(not "!" in h.meters.power.num.text, "the low mark goes when power recovers")
@@ -299,19 +303,165 @@ func _bound() -> void:
 	check("-5 kg" in rows and "-19.3 kg" in rows and "Oxygen" in rows, "the ledger lists its supplies: %s" % [rows])
 	h.card.button.pressed.emit()
 	check(closed[0] and not h.is_open(), "the ledger closes")
-	h.show_causes([{"label": "Rest the oxygen maker", "sol": 4, "effect": {"o2_kg": -6.0}}, {"label": "Greenhouse lights on", "sol": 6, "effect": {"battery_pct": -30.0}}, "Heaters off"])
+	await _body(h, fake)
+	var causes := [{"label": "Rest the oxygen maker", "sol": 4, "effect": {"o2_kg": -6.0}}, {"label": "Greenhouse lights on", "sol": 6, "effect": {"battery_pct": -30.0}}, "Heaters off"]
+	h.show_causes(causes)
 	await frames(2)
 	var chips: Array = h.card.find_children("*", "Label", true, false).map(func(l: Label) -> String: return l.text)
 	check(h.snapshot().card == "MissionLost" and "Rest the oxygen maker" in chips and "Sol 6" in chips and "Heaters off" in chips, "the causes card shows the three causes: %s" % [chips])
+	check(h.card.buttons[0].text == "Try this sol again", "the lost card's button says what it does: '%s'" % h.card.buttons[0].text)
+	var tries := [0]
+	h.retry.connect(func() -> void: tries[0] += 1)
+	h.show_causes(causes, "Start again")
+	await frames(2)
+	check(h.card.buttons[0].text == "Start again", "show_causes takes the retry button's words: '%s'" % h.card.buttons[0].text)
+	h.card.buttons[0].pressed.emit()
+	check(tries[0] == 1 and not h.is_open(), "and that button emits retry and closes the card")
+	h.show_causes(causes)
+	await frames(2)
+	h.card.buttons[1].pressed.emit()
+	check(h.handbook.visible, "the lost card's Mission log opens the handbook, where the decisions are")
+	h.handbook.close()
+	await frames(2)
+	check(h.snapshot().card == "MissionLost" and h.modal.visible, "and the lost card is back after it")
+	h.close_card()
+	await _report(h, causes)
 	h.show_sources()
 	await frames(2)
 	var src: Array = h.card.find_children("*", "Label", true, false).map(func(l: Label) -> String: return l.text)
 	check("COMPUTED" in src and "ARCHIVED" in src and "Oxygen 16.7 kg" in src, "the sources card tags each data value: %s" % [src])
+	check(h.SOURCES.health in src and h.SOURCES.suit_air in src and h.SOURCES.suit_dust in src and h.SOURCES.flare in src,
+		"the sources card says crew health is a game rule, with the suit, dust and storm facts: %s" % [src])
+	check(h.SOURCES.values().all(func(t: String) -> bool: return t.split(" ", false).size() <= MAX_WORDS), "every source line has at most %d words" % MAX_WORDS)
 	h.source_button.pressed.emit()
 	h.close_card()
 	h.queue_free()
 	fake.queue_free()
 	await frames(1)
+
+
+## The hero's needs (design/plans/core-loop-contracts.md, H): the body row, a low gauge, what hurts in words, the
+## power's flow, the hold ring on the prompt and the hurry bar.
+func _body(h: Control, fake: Node) -> void:
+	var st: Control = h.status
+	fake.emit_state()  # the checks before this one set the clock by hand
+	check(h.snapshot().body == {} and not st.needs.is_visible_in_tree() and h.snapshot().suit == "5 h 00 min",
+		"with the body off its row is hidden and the suit's time shows: %s '%s'" % [h.snapshot().body, h.snapshot().suit])
+	fake.set_values({"body": true, "outside": false, "suit_air": 1.0, "body_water": 0.2, "body_food": 0.7, "body_rest": 0.55, "suit_dust": 0.4})
+	await frames(2)
+	var b: Dictionary = h.snapshot().body
+	check(st.needs.is_visible_in_tree() and b == {"air": -1, "water": 20, "food": 70, "rest": 55, "dusty": false} and h.snapshot().suit == "",
+		"the body row shows water, food and rest; a full suit inside and a clean one show nothing: %s" % [b])
+	check(h.get_global_rect().encloses(st.get_global_rect()), "the status card with the body row is on screen: %s" % [st.get_global_rect()])
+	var water: Control = st.gauges.water
+	var food: Control = st.gauges.food
+	check(water.low() and water.num.is_visible_in_tree() and water.num.text == "!" and water.tile_icon.art == Hud.icon_texture("water") and water._pulse != null,
+		"a need under 25%% shows '!' and pulses, under its own icon: '%s'" % water.num.text)
+	check(not food.low() and not food.num.visible and food._pulse == null and food.tile_icon.art == Hud.icon_texture("food"), "a need that is met shows its own icon and no mark")
+	check(water.bar.size.x >= 12.0 and food.bar.size.x >= 20.0, "the gauges' bars have room (%.0f px low, %.0f px not)" % [water.bar.size.x, food.bar.size.x])
+	fake.set_values({"body_water": 0.9, "body_food": 0.1, "outside": true, "suit_dust": 0.6})
+	await frames(2)
+	b = h.snapshot().body
+	check(not water.low() and not water.num.visible and water._pulse == null and is_equal_approx(water.bar.modulate.a, 1.0) and food.num.is_visible_in_tree(), "a drink clears the mark and the pulse")
+	check(b.air == 100 and b.dusty, "outside the suit's air shows, and a dusty suit its mark: %s" % [b])
+	fake.set_values({"outside": false, "suit_air": 0.5, "suit_dust": 0.0})
+	check(h.snapshot().body.air == 50 and not h.snapshot().body.dusty, "inside, a suit that is not full still shows: %s" % [h.snapshot().body])
+	# what hurts, in words; a small fall or a rise shows no "-N"
+	h.meters.health.gain.text = ""
+	fake.set_values({"hurt": "air", "health": 68.0})
+	check(h.snapshot().hurt == "No air" and h.meters.health.name_label.text == "No air" and h.meters.health.gain.text == "", "the meter says what hurts, and 2 points down is no bump: '%s'" % h.snapshot().hurt)
+	fake.set_values({"hurt": "flare", "health": 90.0})
+	await frames(2)
+	check(h.snapshot().hurt == "Solar storm" and h.meters.health.gain.text == "", "a rise shows no drop: '%s'" % h.meters.health.gain.text)
+	var bars: Array = h.meters.values().map(func(m: Control) -> float: return m.bar.size.x)
+	check(bars.min() >= 60.0 and is_equal_approx(bars.min(), bars.max()), "under the longest word the three bars stay in line: %s" % [bars])
+	# a phone's canvas is 1115 px wide under PHONE_SCALE, its compass 507 in the middle, its margin 48: 256 px are left
+	check(st.size.x <= 256.0, "and the card stays clear of a phone's compass (%.0f px wide, 256 at most)" % st.size.x)
+	fake.set_values({"hurt": ""})
+	check(h.snapshot().hurt == "" and h.meters.health.name_label.text == "Health", "nothing hurts: the meter has its name back")
+	check(h.HURTS.keys().all(func(k: String) -> bool: return k in ["air", "thirst", "hunger", "tired", "cold", "flare", "dust"]), "every hurt the rules name has its words")
+	# an oxygen leak: a danger alert once, when it starts
+	h.toast.hide()
+	h._cue_at.clear()
+	var cues: Array[String] = []
+	var hear := func(n: String) -> void: cues.append(n)
+	h.cue.connect(hear)
+	fake.set_values({"leak": true})
+	var said: String = h.snapshot().alert
+	h.toast.hide()
+	fake.set_values({"leak": true, "hour": 14.6})
+	check(said == "Oxygen leak!" and cues == ["danger"] and h.snapshot().alert == "", "a leak raises one danger alert when it starts: '%s' %s" % [said, cues])
+	h.cue.disconnect(hear)
+	fake.set_values({"leak": false})
+	# the battery's flow
+	fake.set_values({"net_kw": 2.1})
+	var up: String = h.snapshot().flow
+	fake.set_values({"net_kw": -3.4})
+	check(up == "Charging +2.1 kW" and h.snapshot().flow == "Draining -3.4 kW", "power shows its flow in words and kW: '%s', '%s'" % [up, h.snapshot().flow])
+	# an old state, without the new keys
+	h.show_state({"sol": 1, "hour": 8.0, "battery_pct": 50.0, "o2_kg": 10.0, "water_kg": 10.0, "food_kg": 10.0})
+	check(h.snapshot().meters.health == 100 and h.snapshot().body == {} and h.snapshot().flow == "Steady", "a state without the new keys still shows: %s" % [h.snapshot().meters])
+	fake.emit_state()
+	# the hold ring
+	var p: Control = h.prompt
+	h.show_prompt("Drink water", 0.0)
+	await frames(2)
+	var chip: Vector2 = p.key.size
+	check(h.snapshot().prompt == "Drink water" and h.snapshot().hold == 0.0 and p.line.text == "Hold: Drink water",
+		"a target that needs a hold says so, its ring empty: '%s' %s" % [p.line.text, h.snapshot().hold])
+	check(p.ring.size.x >= chip.length() and p.ring.size.y >= chip.length() and p.get_global_rect().encloses(p.ring.get_global_rect()),
+		"the ring goes round the key chip inside the prompt (ring %s, chip %s)" % [p.ring.size, chip])
+	h.show_prompt("Drink water", 0.5)
+	check(h.snapshot().hold == 0.5 and p.hold == 0.5, "the hold's progress reaches the ring: %s" % p.hold)
+	h.show_prompt("Drink water", 3.0)
+	check(p.hold == 1.0, "and never passes full: %s" % p.hold)
+	h.show_prompt("Open the door")
+	await frames(2)
+	check(h.snapshot().hold == -1.0 and p.line.text == "Open the door" and p.ring.custom_minimum_size == Vector2.ZERO, "a plain press has no ring and no 'Hold': '%s'" % p.line.text)
+	# the hurry bar
+	check(h.snapshot().stamina == -1, "the hurry bar is hidden at the start")
+	h.set_stamina(0.4)
+	await frames(2)
+	var bar: Control = h.stamina
+	check(h.snapshot().stamina == 40 and bar.is_visible_in_tree(), "set_stamina shows the bar: %s" % h.snapshot().stamina)
+	check(absf(bar.get_global_rect().get_center().x - h.get_global_rect().get_center().x) < 2.0 and bar.get_global_rect().get_center().y > h.size.y * 0.75
+		and h.get_global_rect().encloses(bar.get_global_rect()), "at the bottom centre: %s" % [bar.get_global_rect()])
+	for touch: bool in [false, true]:
+		h.touch = touch
+		await frames(2)
+		check(not bar.get_global_rect().intersects(p.get_global_rect()), "the hurry bar is clear of the prompt (touch %s): %s, %s" % [touch, bar.get_global_rect(), p.get_global_rect()])
+	h.touch = false
+	h.set_stamina(0.1)
+	check(bar.get_child(0).num.text == "!", "nearly out of breath shows '!'")
+	h.set_stamina(1.0)
+	check(h.snapshot().stamina == -1 and not bar.visible, "and it hides when full")
+	h.show_prompt("")
+
+
+## The mission complete card: its words, the three meters, the causes, and its two buttons.
+func _report(h: Control, causes: Array) -> void:
+	var got: Array = []
+	h.report_closed.connect(func(again: bool) -> void: got.append(again))
+	var d := {"title": "Mission 1 complete", "lines": ["follow_me", "You kept the base *alive*."], "meters": {"power": 64.2, "life": 71, "health": 82},
+		"causes": causes, "pages": [7, 12]}
+	for again: bool in [true, false]:
+		h.show_report(d)
+		await frames(2)
+		var words: Array = h.card.find_children("*", "Label", true, false).map(func(l: Label) -> String: return l.text)
+		check(h.snapshot().card == "MissionLost" and h.is_open() and "Mission 1 complete" in words and h.line("follow_me") in words and "You kept the base alive." in words
+			and "Handbook pages found: 7 of 12" in words and "Sol 6" in words and "64%" in words and "82%" in words and not "Mission lost" in words,
+			"the report shows its title, lines, meters, pages and causes: %s" % [words])
+		check(words.all(func(t: String) -> bool: return t.split(" ", false).size() <= MAX_WORDS), "no line of the report has more than %d words" % MAX_WORDS)
+		var buttons: Array[Button] = h.card.buttons
+		check(buttons.map(func(k: Button) -> String: return k.text) == ["Keep going", "Play again"], "its two buttons: %s" % [buttons.map(func(k: Button) -> String: return k.text)])
+		check(buttons.all(func(k: Button) -> bool: return k.size.y >= Hud.BUTTON_H and get_root().get_visible_rect().encloses(k.get_global_rect())), "both are touch targets on screen")
+		buttons[1 if again else 0].pressed.emit()
+		check(got == ([true] if again else [true, false]) and not h.is_open(), "%s emits report_closed(%s) and closes: %s" % [buttons[1 if again else 0].text, again, got])
+	h.show_report({})
+	await frames(2)
+	check(h.card.buttons.size() == 2 and h.card.find_children("*", "HBoxContainer", true, false).all(func(n: Node) -> bool: return not "meter.gd" in String((n.get_script() as Script).resource_path if n.get_script() else "")),
+		"an empty report still has its two buttons, and no meters or chain")
+	h.close_card()
 
 
 ## The compass, minimap, waypoint, Today, prompt and full map follow a stand-in camera and hero; each HUD event

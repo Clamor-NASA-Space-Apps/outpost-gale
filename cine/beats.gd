@@ -18,6 +18,9 @@ signal skip_sols(count: int)  # `do: skip:<n>`: quiet sols slept through; the ru
 signal trip(landmark: String)  # `do: trip:<landmark>`: the rover trip (cine.trip_to); it answers notify("arrived:<landmark>")
 signal liftoff  # `do: liftoff`: the crew flies home (cine.launch); it answers notify("launched")
 signal send_mail  # `do: mail`: a message to Earth leaves now (the HUD's visor mail); its reply comes back as mail_arrived
+## `do: apply:<choice id>`, `event:<event id>`, `report:<id>`: the whole command, for the root. The rules own a choice
+## and an event (sim.apply, sim.start), the HUD the report card; the story only says when
+signal rule(id: String)
 signal beat_done(id: String)
 signal choice_offered(id: String)
 signal page(id: String)  # a handbook page a starting beat unlocks (its `page`: one id or a list)
@@ -468,6 +471,8 @@ func _do(command: String) -> void:
 			ghost.visible = ghost.visible and ghost.on
 		"offer":
 			choice_offered.emit(arg)
+		"apply", "event", "report":
+			rule.emit(command)
 		_:
 			push_error("beats.json: unknown command %s" % command)
 

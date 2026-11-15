@@ -4,7 +4,9 @@ extends "res://addons/forge/test.gd"
 ## The hero wakes in the airlock and the kid walks out with move and look alone; then input actions take the hero
 ## through the day as a kid would: to PIP, A and D, S, a look round, a hop (the Earth ghost beside it rises 0.38 as
 ## high and lands sooner), after PIP round the base (the solar wings, the air tanks and the air maker, the garden),
-## the check answered, the choice answered, home after PIP, the sleep. On the way: a teaching line never stops the
+## the check answered, the choice answered, home after PIP, hands on (suit air, a drink, a meal), the sleep. PIP names
+## the three meters once the kid can move, and the kid's own needs start before the hands-on steps (rule
+## apply:body_on). On the way: a teaching line never stops the
 ## game, each handbook page arrives with its beat, the check waits for its answer and the choice for the check. Every
 ## beat ends, in the data's order, inside its time; PIP never gives up an order, leads at the hero's pace without
 ## being caught or calling after a kid who follows, and is let go at the end.
@@ -12,12 +14,17 @@ extends "res://addons/forge/test.gd"
 # s each beat may take here: its own wait plus the walking
 const BUDGET := {"wake": 40, "outside": 4, "pip_hello": 6, "walk_to_me": 20,
 	"side_steps": 10, "back_step": 4, "look_mouse": 6, "try_jump": 4, "jump_fact": 6,
+	"meter_power": 6, "meter_life": 6, "meter_health": 6, "body_on": 120, "fill_air": 60, "drink": 30, "eat": 30,
 	"follow_solar": 120, "sun_fact": 6, "o2_visit": 120, "tanks_fact": 6, "maker_fact": 6,
 	"garden_visit": 180, "garden_fact": 6, "air_check": 2, "choice": 2,
-	"day_done": 120, "sleep_hint": 6, "free": 3}
+	"day_done": 6, "sleep_hint": 6, "free": 3}
 # the handbook pages Sol 1 unlocks, in the order the kid meets them (design/plans/mission-1-contracts.md)
-const PAGES: Array[String] = ["thin_air", "pip", "light_on_mars", "weak_sun", "solar_wings", "air_tanks", "air_maker", "garden", "cold_nights"]
-const TASKS: Array[String] = ["task.step_outside", "task.learn_moves", "task.tour_base", "task.choose_power", "task.sleep"]
+const PAGES: Array[String] = ["thin_air", "pip", "light_on_mars", "three_meters", "weak_sun", "solar_wings", "air_tanks", "air_maker", "garden",
+	"your_suit", "eat_drink_sleep", "cold_nights"]
+const TASKS: Array[String] = ["task.step_outside", "task.learn_moves", "task.tour_base", "task.choose_power", "task.s1_body", "task.sleep"]
+# every line the advisor (sandbox/advisor.gd) and the power panel's card ask for (design/plans/core-loop-contracts.md, R)
+const NEEDS: Array[String] = ["air_out", "air_low", "leak", "dusty", "devil", "thirst", "hunger", "tired", "blackout", "power_low", "health_low"]
+const PANEL: Array[String] = ["o2_maker", "greenhouse", "recycler", "heater"]
 
 var game: Node3D
 var world: Node3D
@@ -29,6 +36,9 @@ var out_leg := 0  # _walk_out_by_look(): 0 to the hatch, 1 out past it, 2 after 
 var crumbs: Array[Vector3] = []  # PIP's tracks, which a following bot walks
 var lines: Array[String] = []
 var shots: Array[String] = []
+var rules: Array[String] = []  # beats.rule: what the story hands the root (apply:, event:, report:)
+var in_leg := 0  # _use(): 0 to the front of HAB 1's hatch, 1 in through it, 2 inside
+var used_once := {}  # _use(): the kinds already used
 
 
 func _init() -> void:
@@ -58,6 +68,8 @@ func play() -> bool:
 	beats.shot.connect(func(n: String) -> void: shots.append(n))
 	beats.choice_offered.connect(func(id: String) -> void: offered.append(id))
 	beats.finished.connect(func(s: String) -> void: finished.append(s))
+	beats.rule.connect(func(id: String) -> void: rules.append(id))
+	_story()
 	# the HUD's part, played here: the pages are collected, and the check is answered further down as a kid would
 	var pages: Array[String] = []
 	var asked: Array[Dictionary] = []
@@ -197,6 +209,13 @@ func play() -> bool:
 	check(beats.beat.get("id", "") == "jump_fact" and lines[-1] == "sol1.weigh_less" and pages[-1] == "light_on_mars",
 		"after the hop PIP names the gravity and its page lands (%s, %s)" % [lines[-1], pages[-1]])
 	await _beat("jump_fact")
+	# the three meters, one line each, once: no stop, and their page lands with the first
+	for id: String in ["meter_power", "meter_life", "meter_health"]:
+		await _beat(id)
+	var meters := lines.filter(func(id: String) -> bool: return id.begins_with("sol1.meter_"))
+	check(meters == ["sol1.meter_power", "sol1.meter_life", "sol1.meter_health"] and pages[-1] == "three_meters",
+		"PIP names the three meters, a line each, once, and their page lands (%s, %s)" % [meters, pages[-1]])
+	check(rules.is_empty(), "the kid's own needs have not started yet (%s)" % [rules])
 
 	# the tour. After PIP to the solar wings: it leads at the hero's pace and the hero never catches it
 	var gap := [INF]
@@ -264,7 +283,7 @@ func play() -> bool:
 		return words.has(o.text) and words.has(o.get("gain", "")) and words.has(o.get("lose", "")) and not o.get("apply", []).is_empty()),
 		"each option says what it gains and what it loses, and sets a rule")
 	check(offer.get("pages", []).all(func(id: String) -> bool: return pages.has(id)) and not offer.get("pages", []).is_empty(), "its handbook pages are unlocked by now (%s)" % [offer.get("pages", [])])
-	check(beats.tasks().map(func(t: Dictionary) -> String: return t.label_id) == TASKS, "the Today list is Sol 1's five tasks (%s)" % [beats.tasks()])
+	check(beats.tasks().map(func(t: Dictionary) -> String: return t.label_id) == TASKS, "the Today list is Sol 1's six tasks (%s)" % [beats.tasks()])
 	# the sandbox's own handler of a click on the card runs clean (a string `_note` among the offers broke it: a script
 	# error, and the opening never got past the choice)
 	check(not beats.may_sleep(), "no sleep while the choice waits")
@@ -272,16 +291,31 @@ func play() -> bool:
 	beats.notify("chose:sol1_power")  # the rules' answer (lane S)
 	await _beat("choice")
 
-	# the day's work done: the Today list keeps only the rest, PIP says so at once and leads to HAB 1, and the bed opens
-	# (14 Nov playtest: "I was just sitting there. PIP was silent")
-	check(beats.beat.get("id", "") == "day_done" and lines[-1] == "sleep.day_done", "PIP says the work is done at once (%s)" % lines[-1])
-	check(beats.tasks() == [{"label_id": "task.sleep", "state": "now"}] and targets[-1] == "hab1", "only the rest is left, HAB 1 the objective (%s, %s)" % [beats.tasks(), targets[-1]])
-	check(beats.may_sleep(), "the bed opens once the work is done")
+	# the kid's own needs start now (the rules' knob, through the root), and PIP leads home at once (14 Nov playtest: "I
+	# was just sitting there. PIP was silent"). No bed yet: three things to do by hand first
+	check(beats.beat.get("id", "") == "body_on" and rules == ["apply:body_on"] and lines[-1] == "sol1.needs",
+		"after the choice the body's needs start and PIP says so (%s, %s)" % [rules, lines[-1]])
+	check(not beats.may_sleep() and targets[-1] == "hab1", "no sleep before the hands-on steps, HAB 1 the objective (%s)" % targets[-1])
 	await frames(30)
 	check(pip.leading, "PIP leads the way to HAB 1")
 	crumbs = [player.body.global_position, pip.global_position]
-	await _beat("day_done", _follow_crumbs)
+	await _beat("body_on", _follow_crumbs)
 	_stop()
+	# hands on, each with its waypoint, each waiting for the use itself: suit air, a drink, a meal (15 Nov playtest:
+	# "PIP should walk us through the exact steps where we fix ourselves")
+	for kind: String in ["refill_air", "drink", "eat"]:
+		var id: String = {"refill_air": "fill_air"}.get(kind, kind)
+		check(beats.beat.get("id", "") == id and targets[-1] == "use:" + kind, "%s: its waypoint is on the %s spot (%s)" % [id, kind, targets[-1]])
+		await frames(120)
+		check(beats.beat.get("id", "") == id, "%s waits for the use, however long it takes" % id)
+		await _beat(id, _use.bind(kind))
+	_stop()
+	check(player.room == "hab1" and pages.has("your_suit") and pages.has("eat_drink_sleep"), "the kid did all three inside HAB 1, and the suit's and the body's pages landed (room '%s', %s)" % [player.room, pages.slice(-3)])
+	# the day's work done: the Today list keeps only the rest, PIP says so at once, and the bed, a step away, opens
+	check(beats.beat.get("id", "") == "day_done" and lines[-1] == "sleep.day_done", "PIP says the work is done at once (%s)" % lines[-1])
+	check(beats.tasks() == [{"label_id": "task.sleep", "state": "now"}] and targets[-1] == "hab1", "only the rest is left, HAB 1 the objective (%s, %s)" % [beats.tasks(), targets[-1]])
+	check(beats.may_sleep(), "the bed opens once the work is done")
+	await _beat("day_done")
 	await _beat("sleep_hint", func() -> void: beats.notify("dismissed"))
 	await frames(5)
 	check(not pip.led, "PIP is let go to potter about in free play")
@@ -289,7 +323,8 @@ func play() -> bool:
 	beats.notify("slept")  # cine.slept, a night
 	await _beat("free")
 
-	check(pages == PAGES, "Sol 1 unlocked its nine handbook pages, in order (%s)" % [pages])
+	check(pages == PAGES, "Sol 1 unlocked its twelve handbook pages, in order (%s)" % [pages])
+	check(rules == ["apply:body_on"], "Sol 1 hands the root one rule, the body's start (%s)" % [rules])
 	var ids: Array[String] = []
 	var own: Array[String] = []
 	for b: Dictionary in beats.data.opening:
@@ -320,6 +355,73 @@ func play() -> bool:
 	check(pip.state != "behind" and not pip.leading, "and it no longer waits for the hero (%s)" % pip.state)
 
 	return true
+
+
+## The story's data, read from the files (design/plans/core-loop-contracts.md, T): Sol 1's hands-on steps, the rules
+## the story starts, and every line the advisor, the power panel and the end cards ask for.
+func _story() -> void:
+	var words: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/lines.json"))
+	var sols: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/sols.json"))
+	var steps: Array = beats.data.opening
+	var ids: Array = steps.map(func(b: Dictionary) -> String: return b.id)
+	var rest: int = steps.find_custom(func(b: Dictionary) -> bool: return b.get("task", "") == "task.sleep")
+	var at: int = ids.find("fill_air")
+	check(at > 0 and ids.slice(at, at + 3) == ["fill_air", "drink", "eat"] and at + 3 == rest,
+		"Sol 1: suit air, a drink and a meal by hand, the last steps before the rest (%s)" % [ids.slice(at)])
+	check("apply:body_on" in steps[at - 1].get("do", []), "the step before them starts the body's needs (%s)" % [steps[at - 1].get("do", [])])
+	for i in 3:
+		var b: Dictionary = steps[at + i]
+		var use: String = "use:" + ["refill_air", "drink", "eat"][i]
+		check(b.get("wait", {}).get("action", "") == use and b.get("objective", "") == use, "%s waits on %s with its waypoint" % [b.id, use])
+	var valve: Dictionary = (sols["4"] as Array).filter(func(b: Dictionary) -> bool: return b.id == "valve")[0]
+	check("event:o2_leak" in valve.get("do", []) and "Tab" in valve.get("keys", []) and not valve.has("objective"), "Sol 4's alarm starts the leak and stays handbook-led")
+	var reports: Array = []
+	for key: String in sols:
+		if key.is_valid_int():
+			for b: Dictionary in sols[key]:
+				if "report:mission1" in b.get("do", []):
+					reports.append("%s %s" % [key, b.id])
+	beats.sol_key = 10
+	check(reports == ["13 wake"] and beats.next_sol() == 13, "the Mission 1 report runs once, on the wake after Sol 10's sleep (%s)" % [reports])
+	# PIP's lines: there, written, 8 words at most, key words marked; the cards' words: there and written
+	var pip_says: Array = NEEDS.map(func(n: String) -> String: return "need." + n)
+	pip_says += ["sol1.meter_power", "sol1.meter_life", "sol1.meter_health", "sol1.needs", "sol1.fill_air", "sol1.drink", "sol1.eat", "sol4.valve"]
+	var cards: Array = ["panel.title", "panel.close", "failing_o2_kg", "failing_water_kg", "failing_food_kg", "failing_health", "mission_lost",
+		"report.title", "report.line1", "report.line2", "report.line3"]
+	for dev: String in PANEL:
+		for k: String in ["on", "on_gain", "on_lose", "off", "off_gain", "off_lose"]:
+			cards.append("panel.%s.%s" % [dev, k])
+	for o: Dictionary in beats.data.offers.sol1_power.options + beats.data.offers.sol5_storm.options:
+		cards += [o.gain, o.lose]
+	for id: String in pip_says + cards:
+		var text: String = words.get(id, "TBD")
+		check(not "TBD" in text and text.split(" ", false).size() <= 8, "%s is written, 8 words at most ('%s')" % [id, text])
+	for id: String in pip_says:
+		check((words.get(id, "") as String).count("*") in [2, 4], "%s marks its key words" % id)
+	check(not "\u2014" in JSON.stringify(words) and not "\u2013" in JSON.stringify(words), "no long dash in data/lines.json")
+
+
+## Into HAB 1 through its hatch (the airlock opened it), then the use of its `kind` spot as the interactions tell it,
+## once (aim and the hold are interact_test's and hold_test's job).
+func _use(kind: String) -> void:
+	var hab: Node3D = world.items.hab1
+	var b: Vector3 = player.body.global_position
+	if in_leg == 0 and _flat(b, hab.to_global(Vector3(0.0, 0.0, -5.0))) < 0.4:
+		in_leg = 1
+	if player.room == "hab1" and hab.to_local(b).z > -1.2:
+		in_leg = 2
+	if in_leg < 2:
+		_steer(hab.to_global(Vector3(0.0, 0.0, -5.0 if in_leg == 0 else -0.8)), 0.3)
+		return
+	for it: Node in game.interactions.by_thing.values():
+		if it.kind == "spot" and it.row.kind == kind and it.get_parent() == hab:
+			if _flat(it.global_position, b) > 2.0:
+				_steer(it.global_position, 1.5)
+			elif not used_once.has(kind):
+				_stop()
+				used_once[kind] = true
+				game.interactions.use(it)
+			return
 
 
 ## A kid after PIP with move and look only: the view turned toward PIP with the look keys, forward held.

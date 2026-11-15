@@ -141,6 +141,8 @@ func _walk(side: int, along: float, slant: float) -> void:
 	var out: Vector3 = d[0].rotated(Vector3.UP, deg_to_rad(slant))
 	player.place(Vector3(start.x, world.height_at(start.x, start.z) + 0.05, start.z), _yaw(out))
 	await frames(5)
+	player.stamina = 1.0  # each walk starts fresh: these runs test the world's edge, not how long a hurry lasts
+	player.tuning.hero.stamina.drain_s = 1e9
 	var tag := "walk %s %.0f, %.0f deg" % ["ESWN"[side], along, slant]
 	action(&"move_forward", true)
 	action(&"hurry", true)

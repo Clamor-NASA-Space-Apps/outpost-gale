@@ -52,6 +52,12 @@ func skip_sols(count: int) -> Dictionary:
 	return _told(sim.skip_sols(count))
 
 
+## The story starts an event of the rules (the beats' `event:<id>`: Sol 4's oxygen leak).
+func start(event_id: String) -> void:
+	sim.start(event_id)
+	changed.emit(sim.state())
+
+
 func _told(result: Dictionary) -> Dictionary:
 	changed.emit(sim.state())
 	return result

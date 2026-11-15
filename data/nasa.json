@@ -1,0 +1,78 @@
+{
+ "_note": "Real NASA records the game may show, fetched once on 15 Nov 2026 and shipped as ARCHIVED (never live). Raw responses: assets-cache/data-snapshots/*_2026-11-15.json at the workspace root. 'factcheck' is the row in research/junior-astronaut/factcheck.md; 'resource' is the item on the challenge's Resources tab. 'checked' says whether the value was seen in the saved file ('seen') or worked out from seen readings ('our maths'). Absorbed dose (Gy) only: never set these beside a sievert value. `show: false` keeps a record out of the game's sources card (ui/game_hud.gd show_sources): it is on disk for the submission, but nothing in play is about it.",
+ "records": {
+  "storm_cme_id": {
+   "label": "Solar storm, 20 May 2024",
+   "value": "2024-05-20T05:36:00-CME-001",
+   "unit": "DONKI activity ID",
+   "source": "Data: NASA DONKI, through NASA Open APIs (ARCHIVED 15 Nov 2026)",
+   "factcheck": 281,
+   "resource": "DONKI; NASA Open APIs",
+   "checked": "seen"
+  },
+  "storm_cme_speed": {
+   "label": "Speed of the cloud the Sun threw out",
+   "value": 1927,
+   "unit": "km/s",
+   "source": "Data: NASA DONKI, CME 2024-05-20T05:36:00-CME-001 (ARCHIVED 15 Nov 2026)",
+   "factcheck": 281,
+   "resource": "DONKI; NASA Open APIs",
+   "checked": "seen"
+  },
+  "storm_rad_before": {
+   "label": "Curiosity's radiation detector, before the storm (20 May 2024, 05:04)",
+   "value": 4.488919,
+   "unit": "μGy/hour",
+   "source": "Data: Curiosity RAD, from NASA OSDR RadLab (ARCHIVED 15 Nov 2026)",
+   "factcheck": 286,
+   "resource": "RadLab",
+   "checked": "seen"
+  },
+  "storm_rad_peak": {
+   "label": "Curiosity's radiation detector, storm peak (20 May 2024, 06:15)",
+   "value": 303.98798,
+   "unit": "μGy/hour",
+   "source": "Data: Curiosity RAD, from NASA OSDR RadLab (ARCHIVED 15 Nov 2026)",
+   "factcheck": 286,
+   "resource": "RadLab",
+   "checked": "seen"
+  },
+  "quiet_gale": {
+   "label": "Gale crater on a quiet day (19 May 2024), day's average",
+   "value": 3.87,
+   "unit": "μGy/hour",
+   "source": "Our average of 82 Curiosity RAD readings from NASA OSDR RadLab (ARCHIVED 15 Nov 2026)",
+   "factcheck": 288,
+   "resource": "RadLab",
+   "checked": "our maths"
+  },
+  "quiet_iss": {
+   "label": "Inside the ISS Columbus lab on the same day, day's average",
+   "value": 8.5,
+   "unit": "μGy/hour",
+   "source": "Our average of 992 DOSTEL-1 readings from NASA OSDR RadLab (ARCHIVED 15 Nov 2026)",
+   "factcheck": 288,
+   "resource": "RadLab",
+   "checked": "our maths"
+  },
+  "gannon_kp": {
+   "label": "Earth's magnetic storm of 10 to 11 May 2024, highest Kp index",
+   "value": 9.0,
+   "unit": "Kp (scale 0 to 9)",
+   "source": "Data: NASA DONKI, storm 2024-05-10T15:00:00-GST-001, Kp from NOAA (ARCHIVED 15 Nov 2026)",
+   "factcheck": 284,
+   "resource": "DONKI; NASA Open APIs",
+   "checked": "seen"
+  },
+  "bone_muscle_study": {
+   "label": "Space study on losing muscle and bone (mice on the ISS, 2019)",
+   "value": "OSD-342",
+   "unit": "OSDR study ID",
+   "source": "Data: NASA Open Science Data Repository, study OSD-342 (ARCHIVED 15 Nov 2026)",
+   "factcheck": 290,
+   "resource": "NASA OSDR",
+   "checked": "seen",
+   "show": false
+  }
+ }
+}

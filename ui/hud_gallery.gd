@@ -4,13 +4,13 @@ extends Control
 ## the picker's focus instead, so use the number keys there.
 ## Pages: hud (ui/game_hud.tscn bound to ui/fake_state.gd: meters, clock, subtitle, mail, alert), comms (visor mail,
 ## data badges), event (the choice card, a fact card), ledger (the sleep ledger), sources (where this comes from),
-## lost (mission lost and the three causes), log, credits, sleep (the sleep picker), speech (the play HUD with PIP
+## lost (mission lost and the three causes), report (mission complete), log, credits, sleep (the sleep picker), speech (the play HUD with PIP
 ## behind the camera, so his bubble docks at the edge; on the hud page it rides above the PIP marker), map (the full
 ## map over the play HUD). The stand-in hero stands at the spawn and looks west-north-west, toward the greenhouse.
 ## capture-view views: "laptop" and "phone" show the hud page; "<layout>_<page>" any other, e.g. "phone_event".
 
 const Hud := preload("res://ui/hud.gd")
-const PAGES: Array[String] = ["hud", "comms", "event", "ledger", "sources", "lost", "log", "credits", "sleep", "speech", "map", "fact"]
+const PAGES: Array[String] = ["hud", "comms", "event", "ledger", "sources", "lost", "log", "credits", "sleep", "speech", "map", "fact", "report"]
 # where the stand-in PIP stands for the camera at the origin: in view on the hud page, behind and left on speech
 const PIP_AT := {"hud": Vector3(-1.6, -1.2, -6.0), "speech": Vector3(-4.0, -0.5, 3.0), "map": Vector3(-1.6, -1.2, -6.0),
 	"fact": Vector3(-1.6, -1.2, -6.0)}
@@ -154,6 +154,9 @@ func _build() -> void:
 		_component(p, p + "_card", {}, _center(p))
 
 	_component("lost", "mission_lost")
+	_component("report", "mission_lost", {"lost": false, "title": "Mission 1 complete", "line": "", "lines": ["Ten sols on Mars. The base is yours.", "Handbook pages found: 7 of 12"],
+		"meters": {"power": 64, "life": 71, "health": 82}, "caption": "What cost you most", "steps": [["oxygen", "Oxygen leak", "Sol 4"], ["storm", "Dust storm", "Sol 10"]],
+		"retry_label": "Keep going", "log_label": "Play again"})
 	_scrim("log")
 	_pin(_component("log", "mission_log"), Control.PRESET_CENTER)
 	_component("credits", "credits")
@@ -269,7 +272,8 @@ func _mock() -> void:
 		game_hud.set_objective("greenhouse")
 	else:
 		game_hud.set_objective("pip")  # the waypoint follows PIP
-	game_hud.show_prompt("Open the greenhouse")
+	game_hud.show_prompt("Drink water", 0.6)
+	game_hud.set_stamina(0.4)
 	game_hud.alert("Solar storm", "ARCHIVED data. Tap ? for its source.")
 	game_hud.send_mail()
 	game_hud.mail.set_now(fake.values.hour + 0.1)

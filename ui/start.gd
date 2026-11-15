@@ -189,7 +189,14 @@ func _menu() -> void:
 func _credits() -> void:
 	back = _row("Back", _show_credits.bind(false))
 	var lines: Array = [Hud.label("Credits", "MenuTitle"), Hud.label("Team Clamor", "MenuStrong")]
-	for t: String in ["Data and photos: NASA. Not endorsed by NASA.", "Built with AI assistance. Sources: the project page."]:
+	# each source by name: the judges check that a resource from the challenge's list is used and credited in the game
+	# (data/nasa.json holds the records and their fact-check rows; nothing is fetched while the game runs)
+	for t: String in ["Data and photos: NASA. Not endorsed by NASA.",
+			"Space weather: NASA DONKI, through NASA Open APIs.",
+			"Radiation: Curiosity RAD, from NASA OSDR RadLab.",
+			"Terrain: HiRISE DTMs, NASA/JPL/University of Arizona, USGS.",
+			"All data is ARCHIVED, never live. Dates: the ? card.",
+			"Built with AI assistance. Sources: the project page."]:
 		lines.append(Hud.label(t, "MenuText"))
 	for l: Label in lines.slice(1):
 		l.add_theme_font_size_override("font_size", 17)  # menu text is sized for a settings row; this is all there is to read
